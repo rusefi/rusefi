@@ -1,0 +1,7 @@
+1) hi-side driver: the part number is for SOIC package but the board has MSOP package. Part number should be TC4427AEUA
+2) todo: add full 25x2 silkscreen on the back
+3) todo: hi-side net names are weird: control line indeces do not match output line indeces
+4) TODO: 5v power pin with a jumper - that's for a HD44780 so that power could be turned on/off
+5) diode part number is not exactly right: 497-2521-1-ND is a single diode, VCC side stays unprotected
+6) rename 'inj-X' to 'low-X' to reduce confusion?
+7) draw VBatt wiring on the back of the board?

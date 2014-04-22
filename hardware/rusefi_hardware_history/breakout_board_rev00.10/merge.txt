@@ -1,0 +1,2 @@
+
+add clone/pin_board_1.kicad_pcb
