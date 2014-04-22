@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<workspace>
+  <project>
+    <path>$WS_DIR$\ch.ewp</path>
+    <scc>
+      <provider>Subversion</provider>
+      <projname>notused</projname>
+      <auxprojpath>notused</auxprojpath>
+    </scc>
+  </project>
+  <batchBuild/>
+</workspace>
+
+
