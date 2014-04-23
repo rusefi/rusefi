@@ -11,16 +11,20 @@
 
 #include <stdio.h>
 #include <math.h>
-#include "error_handling.h"
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-#include "efilib.h"
+#define CH_FREQUENCY 1000
 
 #include "global.h"
+#include "error_handling.h"
+
+#include "efilib.h"
+#include "efitime.h"
+
 #include "boards.h"
 #include "engines.h"
 

@@ -16,6 +16,7 @@ extern "C"
 
 
 void testCyclicBuffer(void);
+void testOverflow64Counter(void);
 void testHistogram(void);
 void testMalfunctionCentral(void);
 void testConsoleLogic(void);

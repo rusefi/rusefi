@@ -13,6 +13,7 @@
 #include <stdarg.h>
 
 #include "main.h"
+#include "error_handling.h"
 
 extern "C"
 {
@@ -28,10 +29,10 @@ extern "C"
 #include "test_signal_executor.h"
 #include "test_util.h"
 #include "engine_configuration.h"
-#include "test_trigger_decoder.h"
-
+#include "engine_math.h"
 }
 
+#include "test_trigger_decoder.h"
 
 static engine_configuration_s ec;
 engine_configuration_s *engineConfiguration = &ec;
@@ -40,8 +41,12 @@ static float absF(float value) {
 	return value > 0 ? value : -value;
 }
 
+uint64_t getTimeNowUs(void) {
+	return 0;
+}
+
 void assertEqualsM(char *msg, float expected, float actual) {
-	if (isnan(actual) && !isnan(expected)) {
+	if (cisnan(actual) && !cisnan(expected)) {
 		printf("Unexpected: %s %.4f while expected %.4f\r\n", msg, actual, expected);
 		exit(-1);
 	}
@@ -86,6 +91,7 @@ static engine_configuration2_s ec2;
 engine_configuration2_s *engineConfiguration2 = &ec2;
 
 int main(void) {
+	testOverflow64Counter();
 	testInterpolate3d();
 	testFindIndex();
 	testInterpolate2d();
@@ -111,15 +117,16 @@ int main(void) {
 	testPinHelper();
 	testSetTableValue();
 
-	printf("Success 20130319\r\n");
+	printf("Success 20130422\r\n");
 
 //	resizeMap();
 
 	return EXIT_SUCCESS;
 }
 
-void warning(char *msg, float value) {
-	printf("Warning: %s %f\r\n", msg, value);
+
+int warning(obd_code_e code, const char *fmt, ...) {
+	printf("Warning: %s\r\n", fmt);
 }
 
 void firmwareError(const char *fmt, ...) {

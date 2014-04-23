@@ -15,7 +15,6 @@ float getVoltage(int channel) {
 	return 0;
 }
 
-
 int getAdcValue(int channel) {
 	return 0;
 }
