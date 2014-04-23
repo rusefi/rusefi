@@ -16,6 +16,10 @@ LocalVersionHolder::LocalVersionHolder() {
 	localVersion = 0;
 }
 
+int LocalVersionHolder::getVersion() {
+	return localVersion;
+}
+
 bool LocalVersionHolder::isOld() {
 	int global = getGlobalConfigurationVersion();
 	if (global > localVersion) {

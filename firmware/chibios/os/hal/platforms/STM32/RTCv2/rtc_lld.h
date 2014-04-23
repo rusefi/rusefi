@@ -36,9 +36,22 @@
 /*===========================================================================*/
 
 /**
- * @brief   Two alarm comparators available on STM32F4x.
+ * @brief   Two alarm comparators available on STM32F4x and STM32F2x.
  */
-#define RTC_ALARMS                  2
+#if !defined(STM32F0XX)
+#define RTC_ALARMS                2
+#else
+#define RTC_ALARMS                1
+#endif
+
+/**
+ * @brief   STM32F0x has no periodic wakeups.
+ */
+#if !defined(STM32F0XX)
+#define RTC_HAS_PERIODIC_WAKEUPS  TRUE
+#else
+#define RTC_HAS_PERIODIC_WAKEUPS  FALSE
+#endif
 
 /**
  * @brief   Data offsets in RTC date and time registers.
@@ -81,9 +94,11 @@
 #define RTC_USE_INTERRUPTS                FALSE
 #endif
 
+#if defined(STM32_PCLK1) /* For devices without STM32_PCLK1 (STM32F0xx) */
 #if STM32_PCLK1 < (STM32_RTCCLK * 7)
 #error "STM32_PCLK1 frequency is too low to handle RTC without ugly workaround"
 #endif
+#endif /* defined(STM32_PCLK1) */
 
 /*===========================================================================*/
 /* Driver data structures and types.                                         */
@@ -144,6 +159,7 @@ struct RTCAlarm {
   uint32_t tv_datetime;
 };
 
+#if RTC_HAS_PERIODIC_WAKEUPS
 /**
  * @brief   Structure representing an RTC periodic wakeup period.
  */
@@ -157,6 +173,7 @@ struct RTCWakeup {
    */
   uint32_t wakeup;
 };
+#endif /* RTC_HAS_PERIODIC_WAKEUPS */
 
 /**
  * @brief   Structure representing an RTC driver.
@@ -192,8 +209,10 @@ extern "C" {
   void rtc_lld_get_alarm(RTCDriver *rtcp,
                          rtcalarm_t alarm,
                          RTCAlarm *alarmspec);
+#if RTC_HAS_PERIODIC_WAKEUPS
   void rtcSetPeriodicWakeup_v2(RTCDriver *rtcp, RTCWakeup *wakeupspec);
   void rtcGetPeriodicWakeup_v2(RTCDriver *rtcp, RTCWakeup *wakeupspec);
+#endif /* RTC_HAS_PERIODIC_WAKEUPS */
   uint32_t rtc_lld_get_time_fat(RTCDriver *rtcp);
 #ifdef __cplusplus
 }

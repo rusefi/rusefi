@@ -405,7 +405,11 @@ void icu_lld_start(ICUDriver *icup) {
                        CORTEX_PRIORITY_MASK(STM32_ICU_TIM1_IRQ_PRIORITY));
       nvicEnableVector(STM32_TIM1_CC_NUMBER,
                        CORTEX_PRIORITY_MASK(STM32_ICU_TIM1_IRQ_PRIORITY));
+#if defined(STM32_TIM1CLK)
+      icup->clock = STM32_TIM1CLK;
+#else
       icup->clock = STM32_TIMCLK2;
+#endif
     }
 #endif
 #if STM32_ICU_USE_TIM2
@@ -452,7 +456,11 @@ void icu_lld_start(ICUDriver *icup) {
                        CORTEX_PRIORITY_MASK(STM32_ICU_TIM8_IRQ_PRIORITY));
       nvicEnableVector(STM32_TIM8_CC_NUMBER,
                        CORTEX_PRIORITY_MASK(STM32_ICU_TIM8_IRQ_PRIORITY));
+#if defined(STM32_TIM8CLK)
+      icup->clock = STM32_TIM8CLK;
+#else
       icup->clock = STM32_TIMCLK2;
+#endif
     }
 #endif
 #if STM32_ICU_USE_TIM9
@@ -606,6 +614,7 @@ void icu_lld_stop(ICUDriver *icup) {
  */
 void icu_lld_enable(ICUDriver *icup) {
 
+  icup->tim->EGR |= STM32_TIM_EGR_UG;
   icup->tim->SR = 0;                        /* Clear pending IRQs (if any). */
   if (icup->config->channel == ICU_CHANNEL_1) {
     if (icup->config->period_cb != NULL)

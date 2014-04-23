@@ -391,6 +391,9 @@ void sdc_lld_start_clk(SDCDriver *sdcp) {
   SDIO->CLKCR  = STM32_SDIO_DIV_LS;
   SDIO->POWER |= SDIO_POWER_PWRCTRL_0 | SDIO_POWER_PWRCTRL_1;
   SDIO->CLKCR |= SDIO_CLKCR_CLKEN;
+
+  /* Clock activation delay.*/
+  chThdSleepMilliseconds(STM32_SDC_CLOCK_ACTIVATION_DELAY);
 }
 
 /**
@@ -618,16 +621,16 @@ bool_t sdc_lld_read_aligned(SDCDriver *sdcp, uint32_t startblk,
                 SDIO_MASK_DATAENDIE;
   SDIO->DLEN  = n * MMCSD_BLOCK_SIZE;
 
-  /* Talk to card what we want from it.*/
-  if (sdc_lld_prepare_read(sdcp, startblk, n, resp) == TRUE)
-    goto error;
-
   /* Transaction starts just after DTEN bit setting.*/
   SDIO->DCTRL = SDIO_DCTRL_DTDIR |
                 SDIO_DCTRL_DBLOCKSIZE_3 |
                 SDIO_DCTRL_DBLOCKSIZE_0 |
                 SDIO_DCTRL_DMAEN |
                 SDIO_DCTRL_DTEN;
+
+  /* Talk to card what we want from it.*/
+  if (sdc_lld_prepare_read(sdcp, startblk, n, resp) == TRUE)
+    goto error;
   if (sdc_lld_wait_transaction_end(sdcp, n, resp) == TRUE)
     goto error;
 

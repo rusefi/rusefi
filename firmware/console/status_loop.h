@@ -2,7 +2,7 @@
  * @file	status_loop.h
  *
  * @date Mar 15, 2013
- * @author Andrey Belomutskiy, (c) 2012-2013
+ * @author Andrey Belomutskiy, (c) 2012-2014
  */
 
 #ifndef CONSOLE_LOOP_H_
@@ -12,6 +12,9 @@
 extern "C"
 {
 #endif /* __cplusplus */
+
+void printState(int currentCkpEventCounter);
+
 void initStatusLoop(void);
 void updateDevConsoleState(void);
 int getFullLog(void);

@@ -1,81 +1,26 @@
-Index: chibios/os/kernel/include/chdebug.h
+Index: boards/ST_STM32F4_DISCOVERY/board.h
 ===================================================================
---- chibios/os/kernel/include/chdebug.h	(revision 1050)
-+++ chibios/os/kernel/include/chdebug.h	(revision 1051)
-@@ -162,7 +162,7 @@
- #if !defined(chDbgCheck)
- #define chDbgCheck(c, func) {                                               \
-   if (!(c))                                                                 \
--    chDbgPanic(__QUOTE_THIS(func)"()");                                     \
-+    chDbgPanic(__QUOTE_THIS(func)"()", __FILE__, __LINE__);                 \
- }
- #endif /* !defined(chDbgCheck) */
- /** @} */
-@@ -201,7 +201,7 @@
- #if !defined(chDbgAssert)
- #define chDbgAssert(c, m, r) {                                              \
-   if (!(c))                                                                 \
--    chDbgPanic(m);                                                          \
-+    chDbgPanic(m, __FILE__, __LINE__);                                      \
- }
- #endif /* !defined(chDbgAssert) */
- /** @} */
-@@ -243,7 +243,7 @@
- #endif
- #if CH_DBG_ENABLED
-   extern const char *dbg_panic_msg;
--  void chDbgPanic(const char *msg);
-+  void chDbgPanic(const char *msg, char * file, int line);
- #endif
- #ifdef __cplusplus
- }
-Index: chibios/os/kernel/src/chdebug.c
+--- boards/ST_STM32F4_DISCOVERY/board.h	(revision 2723)
++++ boards/ST_STM32F4_DISCOVERY/board.h	(working copy)
+@@ -27,6 +27,7 @@
+ #define BOARD_ST_STM32F4_DISCOVERY
+ #define BOARD_NAME                  "STMicroelectronics STM32F4-Discovery"
+ 
++#define STM32_LSECLK			32768
+ 
+ /*
+  * Board oscillators-related settings.
+Index: os/kernel/src/chdebug.c
 ===================================================================
---- chibios/os/kernel/src/chdebug.c	(revision 1050)
-+++ chibios/os/kernel/src/chdebug.c	(revision 1051)
-@@ -81,7 +81,7 @@
- void dbg_check_disable(void) {
- 
-   if ((dbg_isr_cnt != 0) || (dbg_lock_cnt != 0))
--    chDbgPanic("SV#1");
-+    chDbgPanic("SV#1", __FILE__, __LINE__);
- }
- 
- /**
-@@ -92,7 +92,7 @@
- void dbg_check_suspend(void) {
- 
-   if ((dbg_isr_cnt != 0) || (dbg_lock_cnt != 0))
--    chDbgPanic("SV#2");
-+    chDbgPanic("SV#2", __FILE__, __LINE__);
- }
- 
- /**
-@@ -103,7 +103,7 @@
- void dbg_check_enable(void) {
- 
-   if ((dbg_isr_cnt != 0) || (dbg_lock_cnt != 0))
--    chDbgPanic("SV#3");
-+    chDbgPanic("SV#3", __FILE__, __LINE__);
- }
- 
- /**
+--- os/kernel/src/chdebug.c	(revision 2723)
++++ os/kernel/src/chdebug.c	(working copy)
 @@ -114,7 +114,7 @@
  void dbg_check_lock(void) {
  
    if ((dbg_isr_cnt != 0) || (dbg_lock_cnt != 0))
 -    chDbgPanic("SV#4");
-+    chDbgPanic("SV#4 misplaced chSysLock()", __FILE__, __LINE__);
++    chDbgPanic("SV#4 misplaced chSysLock()");
    dbg_enter_lock();
- }
- 
-@@ -126,7 +126,7 @@
- void dbg_check_unlock(void) {
- 
-   if ((dbg_isr_cnt != 0) || (dbg_lock_cnt <= 0))
--    chDbgPanic("SV#5");
-+    chDbgPanic("SV#5", __FILE__, __LINE__);
-   dbg_leave_lock();
  }
  
 @@ -138,7 +138,7 @@
@@ -83,86 +28,38 @@ Index: chibios/os/kernel/src/chdebug.c
  
    if ((dbg_isr_cnt <= 0) || (dbg_lock_cnt != 0))
 -    chDbgPanic("SV#6");
-+    chDbgPanic("SV#6", __FILE__, __LINE__);
++    chDbgPanic("SV#6 misplaced chSysLockFromIsr");
    dbg_enter_lock();
  }
  
-@@ -150,7 +150,7 @@
- void dbg_check_unlock_from_isr(void) {
- 
-   if ((dbg_isr_cnt <= 0) || (dbg_lock_cnt <= 0))
--    chDbgPanic("SV#7");
-+    chDbgPanic("SV#7", __FILE__, __LINE__);
-   dbg_leave_lock();
- }
- 
-@@ -163,7 +163,7 @@
- 
-   port_lock_from_isr();
-   if ((dbg_isr_cnt < 0) || (dbg_lock_cnt != 0))
--    chDbgPanic("SV#8");
-+    chDbgPanic("SV#8", __FILE__, __LINE__);
-   dbg_isr_cnt++;
-   port_unlock_from_isr();
- }
-@@ -177,7 +177,7 @@
- 
-   port_lock_from_isr();
-   if ((dbg_isr_cnt <= 0) || (dbg_lock_cnt != 0))
--    chDbgPanic("SV#9");
-+    chDbgPanic("SV#9", __FILE__, __LINE__);
-   dbg_isr_cnt--;
-   port_unlock_from_isr();
- }
 @@ -193,7 +193,7 @@
  void chDbgCheckClassI(void) {
  
    if ((dbg_isr_cnt < 0) || (dbg_lock_cnt <= 0))
 -    chDbgPanic("SV#10");
-+    chDbgPanic("SV#10 misplaced I-class function", __FILE__, __LINE__);
++    chDbgPanic("SV#10 misplaced I-class function");
  }
  
  /**
-@@ -207,7 +207,7 @@
- void chDbgCheckClassS(void) {
- 
-   if ((dbg_isr_cnt != 0) || (dbg_lock_cnt <= 0))
--    chDbgPanic("SV#11");
-+    chDbgPanic("SV#11", __FILE__, __LINE__);
- }
- 
- #endif /* CH_DBG_SYSTEM_STATE_CHECK */
-@@ -262,16 +262,24 @@
-  *          written once and then the system is halted.
-  */
- const char *dbg_panic_msg;
-+char *dbg_panic_file;
-+int dbg_panic_line;
- 
- /**
-  * @brief   Prints a panic message on the console and then halts the system.
+@@ -268,10 +268,11 @@
   *
   * @param[in] msg       the pointer to the panic message string
   */
--void chDbgPanic(const char *msg) {
++
++void chDbgPanic3(const char *msg, char * file, int line);
++
+ void chDbgPanic(const char *msg) {
 -
-+void chDbgPanic(const char *msg, char * file, int line) {
-+#if CH_DBG_ENABLED
-+	if(dbg_panic_msg!=NULL)
-+		return;
-+	dbg_panic_file = file;
-+	dbg_panic_line = line;
-   dbg_panic_msg = msg;
-+#else
-   chSysHalt();
-+#endif
+-  dbg_panic_msg = msg;
+-  chSysHalt();
++	chDbgPanic3(msg, __FILE__, __LINE__);
  }
  #endif /* CH_DBG_ENABLED */
  
-Index: chibios/os/ports/GCC/ARMCMx/chcore_v7m.h
+Index: os/ports/GCC/ARMCMx/chcore_v7m.h
 ===================================================================
---- chibios/os/ports/GCC/ARMCMx/chcore_v7m.h	(revision 1050)
-+++ chibios/os/ports/GCC/ARMCMx/chcore_v7m.h	(revision 1051)
+--- os/ports/GCC/ARMCMx/chcore_v7m.h	(revision 2723)
++++ os/ports/GCC/ARMCMx/chcore_v7m.h	(working copy)
 @@ -36,6 +36,8 @@
  #ifndef _CHCORE_V7M_H_
  #define _CHCORE_V7M_H_
@@ -190,27 +87,25 @@ Index: chibios/os/ports/GCC/ARMCMx/chcore_v7m.h
    _port_switch(ntp, otp);                                                   \
  }
  #endif
-Index: chibios/os/ports/GCC/ARMCMx/chcore.c
+Index: os/ports/GCC/ARMCMx/rules.mk
 ===================================================================
---- chibios/os/ports/GCC/ARMCMx/chcore.c	(revision 1050)
-+++ chibios/os/ports/GCC/ARMCMx/chcore.c	(revision 1051)
-@@ -34,7 +34,19 @@
-  */
- 
- #include "ch.h"
-+#include "string.h"
- 
-+static char panicMessage[200];
-+
-+void chDbgStackOverflowPanic(Thread *otp) {
-+  strcpy(panicMessage, "stack overflow: ");
-+#ifdef CH_USE_REGISTRY
-+  strcat(panicMessage, otp->p_name);
-+#endif
-+  chDbgPanic(panicMessage, __FILE__, __LINE__);
-+}
-+
-+
- /**
-  * @brief   Halts the system.
-  * @note    The function is declared as a weak symbol, it is possible
+--- os/ports/GCC/ARMCMx/rules.mk	(revision 2723)
++++ os/ports/GCC/ARMCMx/rules.mk	(working copy)
+@@ -60,7 +60,7 @@
+ ASFLAGS   = $(MCFLAGS) -Wa,-amhls=$(LSTDIR)/$(notdir $(<:.s=.lst)) $(ADEFS)
+ ASXFLAGS  = $(MCFLAGS) -Wa,-amhls=$(LSTDIR)/$(notdir $(<:.S=.lst)) $(ADEFS)
+ CFLAGS    = $(MCFLAGS) $(OPT) $(COPT) $(CWARN) -Wa,-alms=$(LSTDIR)/$(notdir $(<:.c=.lst)) $(DEFS)
+-CPPFLAGS  = $(MCFLAGS) $(OPT) $(CPPOPT) $(CPPWARN) -Wa,-alms=$(LSTDIR)/$(notdir $(<:.cpp=.lst)) $(DEFS)
++CPPFLAGS  = $(MCFLAGS) $(CPPOPT) $(CPPWARN) -Wa,-alms=$(LSTDIR)/$(notdir $(<:.cpp=.lst)) $(DEFS)
+ ifeq ($(USE_LINK_GC),yes)
+   LDFLAGS = $(MCFLAGS) -nostartfiles -T$(LDSCRIPT) -Wl,-Map=$(BUILDDIR)/$(PROJECT).map,--cref,--no-warn-mismatch,--gc-sections $(LLIBDIR)
+ else
+@@ -113,7 +113,7 @@
+ $(BUILDDIR) $(OBJDIR) $(LSTDIR):
+ ifneq ($(USE_VERBOSE_COMPILE),yes)
+ 	@echo Compiler Options
+-	@echo $(CC) -c $(CFLAGS) -I. $(IINCDIR) main.c -o main.o
++	@echo $(CPPC) -c $(CPPFLAGS) -I. $(IINCDIR) main.cpp -o main.o -llibstd++
+ 	@echo
+ endif
+ 	mkdir -p $(OBJDIR)

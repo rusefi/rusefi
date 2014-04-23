@@ -131,7 +131,7 @@ CH_IRQ_HANDLER(DMA1_Stream0_IRQHandler) {
   CH_IRQ_PROLOGUE();
 
   flags = (DMA1->LISR >> 0) & STM32_DMA_ISR_MASK;
-  DMA1->LIFCR = STM32_DMA_ISR_MASK << 0;
+  DMA1->LIFCR = flags << 0;
   if (dma_isr_redir[0].dma_func)
     dma_isr_redir[0].dma_func(dma_isr_redir[0].dma_param, flags);
 
@@ -149,7 +149,7 @@ CH_IRQ_HANDLER(DMA1_Stream1_IRQHandler) {
   CH_IRQ_PROLOGUE();
 
   flags = (DMA1->LISR >> 6) & STM32_DMA_ISR_MASK;
-  DMA1->LIFCR = STM32_DMA_ISR_MASK << 6;
+  DMA1->LIFCR = flags << 6;
   if (dma_isr_redir[1].dma_func)
     dma_isr_redir[1].dma_func(dma_isr_redir[1].dma_param, flags);
 
@@ -167,7 +167,7 @@ CH_IRQ_HANDLER(DMA1_Stream2_IRQHandler) {
   CH_IRQ_PROLOGUE();
 
   flags = (DMA1->LISR >> 16) & STM32_DMA_ISR_MASK;
-  DMA1->LIFCR = STM32_DMA_ISR_MASK << 16;
+  DMA1->LIFCR = flags << 16;
   if (dma_isr_redir[2].dma_func)
     dma_isr_redir[2].dma_func(dma_isr_redir[2].dma_param, flags);
 
@@ -185,7 +185,7 @@ CH_IRQ_HANDLER(DMA1_Stream3_IRQHandler) {
   CH_IRQ_PROLOGUE();
 
   flags = (DMA1->LISR >> 22) & STM32_DMA_ISR_MASK;
-  DMA1->LIFCR = STM32_DMA_ISR_MASK << 22;
+  DMA1->LIFCR = flags << 22;
   if (dma_isr_redir[3].dma_func)
     dma_isr_redir[3].dma_func(dma_isr_redir[3].dma_param, flags);
 
@@ -203,7 +203,7 @@ CH_IRQ_HANDLER(DMA1_Stream4_IRQHandler) {
   CH_IRQ_PROLOGUE();
 
   flags = (DMA1->HISR >> 0) & STM32_DMA_ISR_MASK;
-  DMA1->HIFCR = STM32_DMA_ISR_MASK << 0;
+  DMA1->HIFCR = flags << 0;
   if (dma_isr_redir[4].dma_func)
     dma_isr_redir[4].dma_func(dma_isr_redir[4].dma_param, flags);
 
@@ -221,7 +221,7 @@ CH_IRQ_HANDLER(DMA1_Stream5_IRQHandler) {
   CH_IRQ_PROLOGUE();
 
   flags = (DMA1->HISR >> 6) & STM32_DMA_ISR_MASK;
-  DMA1->HIFCR = STM32_DMA_ISR_MASK << 6;
+  DMA1->HIFCR = flags << 6;
   if (dma_isr_redir[5].dma_func)
     dma_isr_redir[5].dma_func(dma_isr_redir[5].dma_param, flags);
 
@@ -239,7 +239,7 @@ CH_IRQ_HANDLER(DMA1_Stream6_IRQHandler) {
   CH_IRQ_PROLOGUE();
 
   flags = (DMA1->HISR >> 16) & STM32_DMA_ISR_MASK;
-  DMA1->HIFCR = STM32_DMA_ISR_MASK << 16;
+  DMA1->HIFCR = flags << 16;
   if (dma_isr_redir[6].dma_func)
     dma_isr_redir[6].dma_func(dma_isr_redir[6].dma_param, flags);
 
@@ -257,7 +257,7 @@ CH_IRQ_HANDLER(DMA1_Stream7_IRQHandler) {
   CH_IRQ_PROLOGUE();
 
   flags = (DMA1->HISR >> 22) & STM32_DMA_ISR_MASK;
-  DMA1->HIFCR = STM32_DMA_ISR_MASK << 22;
+  DMA1->HIFCR = flags << 22;
   if (dma_isr_redir[7].dma_func)
     dma_isr_redir[7].dma_func(dma_isr_redir[7].dma_param, flags);
 
@@ -275,7 +275,7 @@ CH_IRQ_HANDLER(DMA2_Stream0_IRQHandler) {
   CH_IRQ_PROLOGUE();
 
   flags = (DMA2->LISR >> 0) & STM32_DMA_ISR_MASK;
-  DMA2->LIFCR = STM32_DMA_ISR_MASK << 0;
+  DMA2->LIFCR = flags << 0;
   if (dma_isr_redir[8].dma_func)
     dma_isr_redir[8].dma_func(dma_isr_redir[8].dma_param, flags);
 
@@ -293,7 +293,7 @@ CH_IRQ_HANDLER(DMA2_Stream1_IRQHandler) {
   CH_IRQ_PROLOGUE();
 
   flags = (DMA2->LISR >> 6) & STM32_DMA_ISR_MASK;
-  DMA2->LIFCR = STM32_DMA_ISR_MASK << 6;
+  DMA2->LIFCR = flags << 6;
   if (dma_isr_redir[9].dma_func)
     dma_isr_redir[9].dma_func(dma_isr_redir[9].dma_param, flags);
 
@@ -311,7 +311,7 @@ CH_IRQ_HANDLER(DMA2_Stream2_IRQHandler) {
   CH_IRQ_PROLOGUE();
 
   flags = (DMA2->LISR >> 16) & STM32_DMA_ISR_MASK;
-  DMA2->LIFCR = STM32_DMA_ISR_MASK << 16;
+  DMA2->LIFCR = flags << 16;
   if (dma_isr_redir[10].dma_func)
     dma_isr_redir[10].dma_func(dma_isr_redir[10].dma_param, flags);
 
@@ -329,7 +329,7 @@ CH_IRQ_HANDLER(DMA2_Stream3_IRQHandler) {
   CH_IRQ_PROLOGUE();
 
   flags = (DMA2->LISR >> 22) & STM32_DMA_ISR_MASK;
-  DMA2->LIFCR = STM32_DMA_ISR_MASK << 22;
+  DMA2->LIFCR = flags << 22;
   if (dma_isr_redir[11].dma_func)
     dma_isr_redir[11].dma_func(dma_isr_redir[11].dma_param, flags);
 
@@ -347,7 +347,7 @@ CH_IRQ_HANDLER(DMA2_Stream4_IRQHandler) {
   CH_IRQ_PROLOGUE();
 
   flags = (DMA2->HISR >> 0) & STM32_DMA_ISR_MASK;
-  DMA2->HIFCR = STM32_DMA_ISR_MASK << 0;
+  DMA2->HIFCR = flags << 0;
   if (dma_isr_redir[12].dma_func)
     dma_isr_redir[12].dma_func(dma_isr_redir[12].dma_param, flags);
 
@@ -365,7 +365,7 @@ CH_IRQ_HANDLER(DMA2_Stream5_IRQHandler) {
   CH_IRQ_PROLOGUE();
 
   flags = (DMA2->HISR >> 6) & STM32_DMA_ISR_MASK;
-  DMA2->HIFCR = STM32_DMA_ISR_MASK << 6;
+  DMA2->HIFCR = flags << 6;
   if (dma_isr_redir[13].dma_func)
     dma_isr_redir[13].dma_func(dma_isr_redir[13].dma_param, flags);
 
@@ -383,7 +383,7 @@ CH_IRQ_HANDLER(DMA2_Stream6_IRQHandler) {
   CH_IRQ_PROLOGUE();
 
   flags = (DMA2->HISR >> 16) & STM32_DMA_ISR_MASK;
-  DMA2->HIFCR = STM32_DMA_ISR_MASK << 16;
+  DMA2->HIFCR = flags << 16;
   if (dma_isr_redir[14].dma_func)
     dma_isr_redir[14].dma_func(dma_isr_redir[14].dma_param, flags);
 
@@ -401,7 +401,7 @@ CH_IRQ_HANDLER(DMA2_Stream7_IRQHandler) {
   CH_IRQ_PROLOGUE();
 
   flags = (DMA2->HISR >> 22) & STM32_DMA_ISR_MASK;
-  DMA2->HIFCR = STM32_DMA_ISR_MASK << 22;
+  DMA2->HIFCR = flags << 22;
   if (dma_isr_redir[15].dma_func)
     dma_isr_redir[15].dma_func(dma_isr_redir[15].dma_param, flags);
 

@@ -29,12 +29,13 @@
 static Logging logger;
 
 extern engine_configuration_s *engineConfiguration;
+extern board_configuration_s *boardConfiguration;
 
 void initIgnitionCentral(void) {
 	initLogging(&logger, "IgnitionCentral");
 
-	outputPinRegisterExt2("sparkout1", SPARKOUT_1_OUTPUT, engineConfiguration->ignitionPins[0], &engineConfiguration->ignitionPinMode);
-	outputPinRegisterExt2("sparkout2", SPARKOUT_2_OUTPUT, engineConfiguration->ignitionPins[1], &engineConfiguration->ignitionPinMode);
-	outputPinRegisterExt2("sparkout3", SPARKOUT_3_OUTPUT, engineConfiguration->ignitionPins[2], &engineConfiguration->ignitionPinMode);
-	outputPinRegisterExt2("sparkout4", SPARKOUT_4_OUTPUT, engineConfiguration->ignitionPins[3], &engineConfiguration->ignitionPinMode);
+	outputPinRegisterExt2("sparkout1", SPARKOUT_1_OUTPUT, boardConfiguration->ignitionPins[0], &boardConfiguration->ignitionPinMode);
+	outputPinRegisterExt2("sparkout2", SPARKOUT_2_OUTPUT, boardConfiguration->ignitionPins[1], &boardConfiguration->ignitionPinMode);
+	outputPinRegisterExt2("sparkout3", SPARKOUT_3_OUTPUT, boardConfiguration->ignitionPins[2], &boardConfiguration->ignitionPinMode);
+	outputPinRegisterExt2("sparkout4", SPARKOUT_4_OUTPUT, boardConfiguration->ignitionPins[3], &boardConfiguration->ignitionPinMode);
 }

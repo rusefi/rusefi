@@ -15,7 +15,4 @@ void setNissanPrimeraEngineConfiguration(engine_configuration_s *engineConfigura
 	engineConfiguration->triggerConfig.skippedToothCount = 2;
 }
 
-void setNissanPrimeraengine_configuration2_s(engine_configuration_s *engineConfiguration, engine_configuration2_s *engineConfiguration2) {
-}
-
 #endif /* EFI_SUPPORT_NISSAN_PRIMERA */

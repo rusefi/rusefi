@@ -28,6 +28,7 @@
 #include "eficonsole.h"
 #include "console_io.h"
 #include "rusefi.h"
+#include "svnversion.h"
 
 static Logging logger;
 
@@ -36,7 +37,7 @@ static char fatalErrorMessage[200];
 void fatal3(char *msg, char *file, int line) {
 	strcpy(fatalErrorMessage, msg);
 #if EFI_CUSTOM_PANIC_METHOD
-	chDbgPanic(fatalErrorMessage, file, line);
+	chDbgPanic3(fatalErrorMessage, file, line);
 #else
 	chDbgPanic(fatalErrorMessage);
 #endif
@@ -47,11 +48,11 @@ static void myfatal(void) {
 }
 
 static void sayHello(void) {
-	print("*** rusEFI (c) Andrey Belomutskiy, 2012-2014. All rights reserved.\r\n");
-	printMsg(&logger, "rusEFI VERSION=%d", getVersion());
-	print("*** Chibios Kernel:       %s\r\n", CH_KERNEL_VERSION);
-	print("*** Compiled:     " __DATE__ " - " __TIME__ " \r\n");
-	print("COMPILER=%s\r\n", __VERSION__);
+	printMsg(&logger, "*** rusEFI (c) Andrey Belomutskiy, 2012-2014. All rights reserved.");
+	printMsg(&logger, "rusEFI v%d@%d", getRusEfiVersion(), SVN_VERSION);
+	printMsg(&logger, "*** Chibios Kernel:       %s", CH_KERNEL_VERSION);
+	printMsg(&logger, "*** Compiled:     " __DATE__ " - " __TIME__ "");
+	printMsg(&logger, "COMPILER=%s", __VERSION__);
 	printMsg(&logger, "CH_FREQUENCY=%d", CH_FREQUENCY);
 #ifdef SERIAL_SPEED
 	printMsg(&logger, "SERIAL_SPEED=%d", SERIAL_SPEED);

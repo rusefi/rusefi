@@ -26,18 +26,20 @@
 #include "fuel_math.h"
 #include "wave_chart.h"
 #include "settings.h"
-
+#include "signal_executor.h"
 
 WaveChart waveChart;
 
 void initAlgo(void) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	initSettings();
+	initSignalExecutor();
 #endif
 
 #if EFI_WAVE_CHART
 	initWaveChart(&waveChart);
 #endif
+
 
 	prepareFuelMap();
 	prepareTimingMap();

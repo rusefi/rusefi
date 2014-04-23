@@ -187,6 +187,7 @@ void rtc_lld_set_alarm(RTCDriver *rtcp,
       rtcp->id_rtc->CR &= ~RTC_CR_ALRAE;
     }
   }
+#if RTC_ALARMS == 2
   else{
     if (alarmspec != NULL){
       rtcp->id_rtc->CR &= ~RTC_CR_ALRBE;
@@ -201,6 +202,7 @@ void rtc_lld_set_alarm(RTCDriver *rtcp,
       rtcp->id_rtc->CR &= ~RTC_CR_ALRBE;
     }
   }
+#endif /* RTC_ALARMS == 2 */
 }
 
 /**
@@ -217,8 +219,10 @@ void rtc_lld_get_alarm(RTCDriver *rtcp,
                        RTCAlarm *alarmspec) {
   if (alarm == 1)
     alarmspec->tv_datetime = rtcp->id_rtc->ALRMAR;
+#if RTC_ALARMS == 2
   else
     alarmspec->tv_datetime = rtcp->id_rtc->ALRMBR;
+#endif
 }
 
 /**
@@ -231,6 +235,7 @@ void rtc_lld_get_alarm(RTCDriver *rtcp,
  *
  * @api
  */
+#if RTC_HAS_PERIODIC_WAKEUPS
 void rtcSetPeriodicWakeup_v2(RTCDriver *rtcp, RTCWakeup *wakeupspec){
   chDbgCheck((wakeupspec->wakeup != 0x30000),
               "rtc_lld_set_periodic_wakeup, forbidden combination");
@@ -249,6 +254,7 @@ void rtcSetPeriodicWakeup_v2(RTCDriver *rtcp, RTCWakeup *wakeupspec){
     rtcp->id_rtc->CR &= ~RTC_CR_WUTE;
   }
 }
+#endif /* RTC_HAS_PERIODIC_WAKEUPS */
 
 /**
  * @brief     Gets time of periodic wakeup.
@@ -260,11 +266,13 @@ void rtcSetPeriodicWakeup_v2(RTCDriver *rtcp, RTCWakeup *wakeupspec){
  *
  * @api
  */
+#if RTC_HAS_PERIODIC_WAKEUPS
 void rtcGetPeriodicWakeup_v2(RTCDriver *rtcp, RTCWakeup *wakeupspec){
   wakeupspec->wakeup  = 0;
   wakeupspec->wakeup |= rtcp->id_rtc->WUTR;
   wakeupspec->wakeup |= (((uint32_t)rtcp->id_rtc->CR) & 0x7) << 16;
 }
+#endif /* RTC_HAS_PERIODIC_WAKEUPS */
 
 /**
  * @brief   Get current time in format suitable for usage in FatFS.

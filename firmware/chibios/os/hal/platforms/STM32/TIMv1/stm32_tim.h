@@ -181,7 +181,7 @@
 
 #define STM32_TIM_CCMR1_OC1M_MASK           ((7U << 4) | (1U << 16))
 #define STM32_TIM_CCMR1_OC1M(n)             ((((n) & 7) << 4) |             \
-                                             (((n) >> 2) << 16))
+                                             (((n) >> 3) << 16))
 
 #define STM32_TIM_CCMR1_OC1CE               (1U << 7)
 
@@ -193,7 +193,7 @@
 
 #define STM32_TIM_CCMR1_OC2M_MASK           ((7U << 12) | (1U << 24))
 #define STM32_TIM_CCMR1_OC2M(n)             ((((n) & 7) << 12) |            \
-                                             (((n) >> 2) << 24))
+                                             (((n) >> 3) << 24))
 
 #define STM32_TIM_CCMR1_OC2CE               (1U << 15)
 /** @} */
@@ -227,7 +227,7 @@
 
 #define STM32_TIM_CCMR2_OC3M_MASK           ((7U << 4) | (1U << 16))
 #define STM32_TIM_CCMR2_OC3M(n)             ((((n) & 7) << 4) |             \
-                                             (((n) >> 2) << 16))
+                                             (((n) >> 3) << 16))
 
 #define STM32_TIM_CCMR2_OC3CE               (1U << 7)
 
@@ -239,7 +239,7 @@
 
 #define STM32_TIM_CCMR2_OC4M_MASK           ((7U << 12) | (1U << 24))
 #define STM32_TIM_CCMR2_OC4M(n)             ((((n) & 7) << 12) |            \
-                                             (((n) >> 2) << 24))
+                                             (((n) >> 3) << 24))
 
 #define STM32_TIM_CCMR2_OC4CE               (1U << 15)
 /** @} */

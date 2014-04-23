@@ -76,6 +76,8 @@ static char portNameBuffer[20];
 
 char *hwPortname(brain_pin_e brainPin) {
 	GPIO_TypeDef *hwPort = getHwPort(brainPin);
+	if (hwPort == GPIO_NULL)
+		return "NONE";
 	int hwPin = getHwPin(brainPin);
 	portNameStream.eos = 0; // reset
 	chprintf((BaseSequentialStream *) &portNameStream, "%s%d", portname(hwPort), hwPin);

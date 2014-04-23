@@ -22,11 +22,11 @@ static int lastGoodValue = DEFAULT_IDLE_DUTY;
 
 void idleInit(IdleValveState *idle) {
 	idle->value = DEFAULT_IDLE_DUTY;
-	setTargetRpm(idle, DEFAULT_TARGET_RPM);
+	setIdleRpm(idle, DEFAULT_TARGET_RPM);
 	idle->timeOfLastIdleChange = 0;
 }
 
-void setTargetRpm(IdleValveState *idle, int targetRpm) {
+void setIdleRpm(IdleValveState *idle, int targetRpm) {
 	idle->targetRpmRangeLeft = (int)(targetRpm * 0.93);
 	idle->targetRpmRangeRight = (int)(targetRpm * 1.07);
 }

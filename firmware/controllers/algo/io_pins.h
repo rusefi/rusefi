@@ -2,13 +2,15 @@
  * @file	io_pins.h
  *
  * @date Jan 24, 2013
- * @author Andrey Belomutskiy, (c) 2012-2013
+ * @author Andrey Belomutskiy, (c) 2012-2014
  */
 
 #ifndef STATUS_LEDS_H_
 #define STATUS_LEDS_H_
 
 #include "main.h"
+
+#define GPIO_NULL NULL
 
 typedef enum {
 	LED_CRANKING, // Orange on-board LED
@@ -31,6 +33,12 @@ typedef enum {
 	SPARKOUT_4_OUTPUT,
 	SPARKOUT_5_OUTPUT,
 	SPARKOUT_6_OUTPUT,
+	SPARKOUT_7_OUTPUT,
+	SPARKOUT_8_OUTPUT,
+	SPARKOUT_9_OUTPUT,
+	SPARKOUT_10_OUTPUT,
+	SPARKOUT_11_OUTPUT,
+	SPARKOUT_12_OUTPUT,
 
 	INJECTOR_1_OUTPUT,
 	INJECTOR_2_OUTPUT,
@@ -38,6 +46,12 @@ typedef enum {
 	INJECTOR_4_OUTPUT,
 	INJECTOR_5_OUTPUT,
 	INJECTOR_6_OUTPUT,
+	INJECTOR_7_OUTPUT,
+	INJECTOR_8_OUTPUT,
+	INJECTOR_9_OUTPUT,
+	INJECTOR_10_OUTPUT,
+	INJECTOR_11_OUTPUT,
+	INJECTOR_12_OUTPUT,
 
 	ELECTRONIC_THROTTLE_CONTROL_1,
 	ELECTRONIC_THROTTLE_CONTROL_2,
@@ -79,6 +93,12 @@ typedef enum {
 	SPI_CS_3,
 	SPI_CS_4,
 	SPI_CS_SD_MODULE,
+
+
+	/**
+	 * This output pin is used to turn alternator on or off
+	 */
+	ALTERNATOR_SWITCH,
 
 } io_pin_e;
 

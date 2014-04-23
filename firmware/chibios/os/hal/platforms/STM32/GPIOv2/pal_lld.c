@@ -36,21 +36,29 @@
                          RCC_AHBENR_GPIOCEN | RCC_AHBENR_GPIODEN |          \
                          RCC_AHBENR_GPIOEEN | RCC_AHBENR_GPIOHEN)
 #define AHB_LPEN_MASK   AHB_EN_MASK
-#elif defined(STM32F0XX)
+
+#elif defined(STM32F030) || defined(STM32F0XX_MD)
 #define AHB_EN_MASK     (RCC_AHBENR_GPIOAEN | RCC_AHBENR_GPIOBEN |          \
                          RCC_AHBENR_GPIOCEN | RCC_AHBENR_GPIODEN |          \
                          RCC_AHBENR_GPIOFEN)
+
+#elif defined(STM32F0XX_LD)
+#define AHB_EN_MASK     (RCC_AHBENR_GPIOAEN | RCC_AHBENR_GPIOBEN |          \
+                         RCC_AHBENR_GPIOCEN | RCC_AHBENR_GPIOFEN)
+
 #elif defined(STM32F2XX)
 #define AHB1_EN_MASK    (RCC_AHB1ENR_GPIOAEN | RCC_AHB1ENR_GPIOBEN |        \
                          RCC_AHB1ENR_GPIOCEN | RCC_AHB1ENR_GPIODEN |        \
                          RCC_AHB1ENR_GPIOEEN | RCC_AHB1ENR_GPIOFEN |        \
                          RCC_AHB1ENR_GPIOGEN | RCC_AHB1ENR_GPIOHEN |        \
                          RCC_AHB1ENR_GPIOIEN)
+
 #define AHB1_LPEN_MASK  AHB1_EN_MASK
 #elif defined(STM32F30X) || defined(STM32F37X)
 #define AHB_EN_MASK     (RCC_AHBENR_GPIOAEN | RCC_AHBENR_GPIOBEN |          \
                          RCC_AHBENR_GPIOCEN | RCC_AHBENR_GPIODEN |          \
                          RCC_AHBENR_GPIOEEN | RCC_AHBENR_GPIOFEN)
+
 #elif defined(STM32F4XX)
 #define AHB1_EN_MASK    (RCC_AHB1ENR_GPIOAEN | RCC_AHB1ENR_GPIOBEN |        \
                          RCC_AHB1ENR_GPIOCEN | RCC_AHB1ENR_GPIODEN |        \
@@ -58,6 +66,7 @@
                          RCC_AHB1ENR_GPIOGEN | RCC_AHB1ENR_GPIOHEN |        \
                          RCC_AHB1ENR_GPIOIEN)
 #define AHB1_LPEN_MASK  AHB1_EN_MASK
+
 #else
 #error "missing or unsupported platform for GPIOv2 PAL driver"
 #endif
@@ -121,10 +130,18 @@ void _pal_lld_init(const PALConfig *config) {
   /*
    * Initial GPIO setup.
    */
+#if STM32_HAS_GPIOA
   initgpio(GPIOA, &config->PAData);
+#endif
+#if STM32_HAS_GPIOB
   initgpio(GPIOB, &config->PBData);
+#endif
+#if STM32_HAS_GPIOC
   initgpio(GPIOC, &config->PCData);
+#endif
+#if STM32_HAS_GPIOD
   initgpio(GPIOD, &config->PDData);
+#endif
 #if STM32_HAS_GPIOE
   initgpio(GPIOE, &config->PEData);
 #endif

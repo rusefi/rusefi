@@ -2,7 +2,7 @@
  * @file engines.h
  *
  * @date Aug 30, 2013
- * @author Andrey Belomutskiy, (c) 2012-2013
+ * @author Andrey Belomutskiy, (c) 2012-2014
  */
 
 #ifndef ENGINE_H_

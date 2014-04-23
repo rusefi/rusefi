@@ -2,7 +2,7 @@
  * @file	tunerstudio_algo.h
  *
  * @date Oct 22, 2013
- * @author Andrey Belomutskiy, (c) 2012-2013
+ * @author Andrey Belomutskiy, (c) 2012-2014
  */
 
 #ifndef TUNERSTUDIO_ALGO_H_
@@ -26,6 +26,8 @@ void handleTestCommand(void);
 void handleQueryCommand(void);
 void handleOutputChannelsCommand(void);
 
+char *getWorkingPageAddr(int pageIndex);
+int getTunerStudioPageSize(int pageIndex);
 void handleValueWriteCommand(void);
 void handlePageReadCommand(void);
 void handleBurnCommand(void);

@@ -39,6 +39,7 @@
 extern "C" {
 #endif
   void chvprintf(BaseSequentialStream *chp, const char *fmt, va_list ap);
+  char *ftoa(char *p, double num, unsigned long precision);
 #ifdef __cplusplus
 }
 #endif

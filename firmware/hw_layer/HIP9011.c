@@ -56,6 +56,7 @@ static SPIDriver *driver = &SPID2;
 #define HIP_ADVANCED_MODE 0x71
 
 static msg_t ivThread(int param) {
+	chRegSetThreadName("HIP");
 
 	int counter = 0;
 

@@ -3,13 +3,15 @@
  * @brief   Shaft position sensor(s) decoder header
  *
  * @date Jan 1, 2013
- * @author Andrey Belomutskiy, (c) 2012-2013
+ * @author Andrey Belomutskiy, (c) 2012-2014
  */
 
 #ifndef RPM_REPORTER_H_
 #define RPM_REPORTER_H_
 
 #include <time.h>
+
+#define NOISY_RPM -1
 
 typedef struct {
 	volatile int rpm;
@@ -35,6 +37,7 @@ void initRpmCalculator(void);
  */
 int getRpm(void);
 int isCranking(void);
+int getLastRpmEventTime(void);
 
 int getRevolutionCounter(void);
 float getCrankshaftAngle(time_t time);

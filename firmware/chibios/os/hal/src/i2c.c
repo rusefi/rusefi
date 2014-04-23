@@ -264,7 +264,7 @@ msg_t i2cMasterReceiveTimeout(I2CDriver *i2cp,
 #if I2C_USE_MUTUAL_EXCLUSION || defined(__DOXYGEN__)
 /**
  * @brief   Gains exclusive access to the I2C bus.
- * @details This function tries to gain ownership to the SPI bus, if the bus
+ * @details This function tries to gain ownership to the I2C bus, if the bus
  *          is already being used then the invoking thread is queued.
  * @pre     In order to use this function the option @p I2C_USE_MUTUAL_EXCLUSION
  *          must be enabled.

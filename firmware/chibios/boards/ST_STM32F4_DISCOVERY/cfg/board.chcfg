@@ -10,7 +10,13 @@
   <board_name>STMicroelectronics STM32F4-Discovery</board_name>
   <board_id>ST_STM32F4_DISCOVERY</board_id>
   <board_functions></board_functions>
-  <clocks HSEFrequency="8000000" HSEBypass="false" LSEFrequency="0" VDD="300" />
+  <subtype>STM32F40_41xxx</subtype>
+  <clocks
+    HSEFrequency="8000000"
+    HSEBypass="false"
+    LSEFrequency="0"
+    LSEBypass="false"
+    VDD="300" />
   <ports>
     <GPIOA>
       <pin0

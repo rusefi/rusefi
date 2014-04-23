@@ -4,7 +4,7 @@
  *
  *
  * @date Sep 8, 2013
- * @author Andrey Belomutskiy, (c) 2012-2013
+ * @author Andrey Belomutskiy, (c) 2012-2014
  */
 
 
@@ -13,9 +13,18 @@
 
 #include "signal_executor.h"
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif /* __cplusplus */
+
 void initInjectorCentral(void);
 int isInjectionEnabled(void);
 int isInjectorEnabled(int cylinderId);
 void assertCylinderId(int cylinderId, char *msg);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* INJECTOR_CENTRAL_H_ */

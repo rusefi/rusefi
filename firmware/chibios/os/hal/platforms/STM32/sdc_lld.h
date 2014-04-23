@@ -82,7 +82,14 @@
  * @brief   Read timeout in milliseconds.
  */
 #if !defined(SDC_READ_TIMEOUT_MS) || defined(__DOXYGEN__)
-#define SDC_READ_TIMEOUT_MS                 5
+#define SDC_READ_TIMEOUT_MS                 25
+#endif
+
+/**
+ * @brief   Card clock activation delay in milliseconds.
+ */
+#if !defined(STM32_SDC_CLOCK_ACTIVATION_DELAY) || defined(__DOXYGEN__)
+#define STM32_SDC_CLOCK_ACTIVATION_DELAY    10
 #endif
 
 /**

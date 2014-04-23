@@ -50,17 +50,11 @@
 /**
  * This is the buffer into which all the data providers write
  */
-static char pendingBuffer[OUTPUT_BUFFER];
+static char pendingBuffer[OUTPUT_BUFFER] __attribute__((section(".ccm")));
 /**
  * We copy all the pending data into this buffer once we are ready to push it out
  */
 static char outputBuffer[OUTPUT_BUFFER];
-/**
- * ... and we need another buffer for to make the message with with control sum
- * TODO: if needed we can eliminate this buffer by making some space in the start
- * of the 'outputBuffer' into which we would put the control sum when time comes
- */
-static char ioBuffer[OUTPUT_BUFFER];
 
 static MemoryStream intermediateLoggingBuffer;
 static uint8_t intermediateLoggingBufferData[INTERMEDIATE_LOGGING_BUFFER_SIZE]; //todo define max-printf-buffer
@@ -112,9 +106,9 @@ void vappendPrintf(Logging *logging, const char *fmt, va_list arg) {
 		fatal("intermediateLoggingBufferInited not inited!");
 		return;
 	}
-	int isLocked = dbg_lock_cnt != 0;
-	int icsr_vectactive = dbg_isr_cnt > 0;
-	if (isLocked) {
+	int is_locked = isLocked();
+	int icsr_vectactive = isIsrContext();
+	if (is_locked) {
 		vappendPrintfI(logging, fmt, arg);
 	} else {
 		if (icsr_vectactive == 0) {
@@ -260,6 +254,8 @@ static void commonSimpleMsg(Logging *logging, char *msg, int value) {
 	appendPrintf(logging, "%s%d", msg, value);
 }
 
+static char header[16];
+
 /**
  * this method should invoked on the main thread only
  */
@@ -274,18 +270,21 @@ static void printWithLength(char *line) {
 	 * whole buffer then to invoke 'chSequentialStreamPut' once per character.
 	 */
 	int len = strlen(line);
-	strcpy(ioBuffer, "line:");
-	char *p = ioBuffer + strlen(ioBuffer);
+	strcpy(header, "line:");
+	char *p = header + strlen(header);
 	p = itoa10(p, len);
 	*p++ = ':';
-	strcpy(p, line);
+	*p++ = '\0';
+
+	p = line;
 	p += len;
 	*p++ = '\r';
 	*p++ = '\n';
 
 	if (!is_serial_ready())
 		return;
-	consoleOutputBuffer((const int8_t *)ioBuffer, p - ioBuffer);
+	consoleOutputBuffer((const int8_t *)header, strlen(header));
+	consoleOutputBuffer((const int8_t *)line, p - line);
 }
 
 void printLine(Logging *logging) {

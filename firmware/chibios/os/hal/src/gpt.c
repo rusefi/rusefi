@@ -93,7 +93,7 @@ void gptObjectInit(GPTDriver *gptp) {
  */
 void gptStart(GPTDriver *gptp, const GPTConfig *config) {
 
-  chDbgCheck((gptp != NULL) && (config != NULL), "ptStart");
+  chDbgCheck((gptp != NULL) && (config != NULL), "gptStart");
 
   chSysLock();
   chDbgAssert((gptp->state == GPT_STOP) || (gptp->state == GPT_READY),

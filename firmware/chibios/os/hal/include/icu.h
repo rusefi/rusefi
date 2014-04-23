@@ -147,8 +147,10 @@ typedef void (*icucallback_t)(ICUDriver *icup);
  * @notapi
  */
 #define _icu_isr_invoke_width_cb(icup) {                                    \
-  (icup)->state = ICU_IDLE;                                                 \
-  (icup)->config->width_cb(icup);                                           \
+  if ((icup)->state != ICU_WAITING) {                                       \
+    (icup)->state = ICU_IDLE;                                               \
+    (icup)->config->width_cb(icup);                                         \
+  }                                                                         \
 }
 
 /**

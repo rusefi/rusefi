@@ -40,7 +40,7 @@
 /**
  * @brief   OTG_FS FIFO memory size in words.
  */
-#define STM32_OTG1_FIFO_MEM_SIZE        384
+#define STM32_OTG1_FIFO_MEM_SIZE        320
 
 /**
  * @brief   OTG_HS FIFO memory size in words.

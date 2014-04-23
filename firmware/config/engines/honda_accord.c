@@ -14,17 +14,3 @@ void setHondaAccordConfiguration(engine_configuration_s *engineConfiguration) {
 	engineConfiguration->triggerConfig.skippedToothCount = 2;
 }
 
-void setHondaAccordConfiguration2(engine_configuration_s *engineConfiguration, engine_configuration2_s *engineConfiguration2) {
-
-
-	EventHandlerConfiguration *config = &engineConfiguration2->engineEventConfiguration;
-
-	float x = 10;
-
-	resetEventList(&config->ignitionEvents);
-	registerActuatorEvent(&config->ignitionEvents, 0, addOutputSignal(SPARKOUT_1_OUTPUT), x);
-	registerActuatorEvent(&config->ignitionEvents, 0, addOutputSignal(SPARKOUT_1_OUTPUT), x + 180);
-	registerActuatorEvent(&config->ignitionEvents, 0, addOutputSignal(SPARKOUT_1_OUTPUT), x + 360);
-	registerActuatorEvent(&config->ignitionEvents, 0, addOutputSignal(SPARKOUT_4_OUTPUT), x + 540);
-}
-

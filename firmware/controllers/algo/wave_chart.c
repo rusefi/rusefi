@@ -39,7 +39,12 @@
  * This is the number of events in the digital chart which would be displayed
  * on the 'digital sniffer' pane
  */
+#if EFI_PROD_CODE
 static volatile int chartSize = 100;
+#else
+// need more events for automated test
+static volatile int chartSize = 200;
+#endif
 
 static int isChartActive = TRUE;
 //static int isChartActive = FALSE;
@@ -61,7 +66,7 @@ void resetWaveChart(WaveChart *chart) {
 	appendPrintf(&chart->logging, "wave_chart%s", DELIMETER);
 }
 
-static char LOGGING_BUFFER[5000];
+static char LOGGING_BUFFER[5000] __attribute__((section(".ccm")));
 
 static void printStatus(void) {
 	scheduleIntValue(&logger, "chart", isChartActive);

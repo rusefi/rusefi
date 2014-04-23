@@ -387,6 +387,29 @@
 /** @} */
 
 /**
+ * @name    BKPSRAM specific RCC operations
+ * @{
+ */
+/**
+ * @brief   Enables the BKPSRAM peripheral clock.
+ *
+ * @param[in] lp        low power enable flag
+ *
+ * @api
+ */
+#define rccEnableBKPSRAM(lp) rccEnableAHB1(RCC_AHB1ENR_BKPSRAMEN, lp)
+
+/**
+ * @brief   Disables the BKPSRAM peripheral clock.
+ *
+ * @param[in] lp        low power enable flag
+ *
+ * @api
+ */
+#define rccDisableBKPSRAM(lp) rccDisableAHB1(RCC_AHB1ENR_BKPSRAMEN, lp)
+/** @} */
+
+/**
  * @name    PWR interface specific RCC operations
  * @{
  */
@@ -754,6 +777,81 @@
  * @api
  */
 #define rccResetSPI3() rccResetAPB1(RCC_APB1RSTR_SPI3RST)
+
+/**
+ * @brief   Enables the SPI4 peripheral clock.
+ *
+ * @param[in] lp        low power enable flag
+ *
+ * @api
+ */
+#define rccEnableSPI4(lp) rccEnableAPB2(RCC_APB2ENR_SPI4EN, lp)
+
+/**
+ * @brief   Disables the SPI4 peripheral clock.
+ *
+ * @param[in] lp        low power enable flag
+ *
+ * @api
+ */
+#define rccDisableSPI4(lp) rccDisableAPB2(RCC_APB2ENR_SPI4EN, lp)
+
+/**
+ * @brief   Resets the SPI4 peripheral.
+ *
+ * @api
+ */
+#define rccResetSPI4() rccResetAPB2(RCC_APB2RSTR_SPI4RST)
+
+/**
+ * @brief   Enables the SPI5 peripheral clock.
+ *
+ * @param[in] lp        low power enable flag
+ *
+ * @api
+ */
+#define rccEnableSPI5(lp) rccEnableAPB2(RCC_APB2ENR_SPI5EN, lp)
+
+/**
+ * @brief   Disables the SPI5 peripheral clock.
+ *
+ * @param[in] lp        low power enable flag
+ *
+ * @api
+ */
+#define rccDisableSPI5(lp) rccDisableAPB2(RCC_APB2ENR_SPI5EN, lp)
+
+/**
+ * @brief   Resets the SPI5 peripheral.
+ *
+ * @api
+ */
+#define rccResetSPI5() rccResetAPB2(RCC_APB2RSTR_SPI5RST)
+
+/**
+ * @brief   Enables the SPI6 peripheral clock.
+ *
+ * @param[in] lp        low power enable flag
+ *
+ * @api
+ */
+#define rccEnableSPI6(lp) rccEnableAPB2(RCC_APB2ENR_SPI6EN, lp)
+
+/**
+ * @brief   Disables the SPI6 peripheral clock.
+ *
+ * @param[in] lp        low power enable flag
+ *
+ * @api
+ */
+#define rccDisableSPI6(lp) rccDisableAPB2(RCC_APB2ENR_SPI6EN, lp)
+
+/**
+ * @brief   Resets the SPI6 peripheral.
+ *
+ * @api
+ */
+#define rccResetSPI6() rccResetAPB2(RCC_APB2RSTR_SPI6RST)
 /** @} */
 
 /**
@@ -1236,6 +1334,36 @@
  * @api
  */
 #define rccResetUSART6() rccResetAPB2(RCC_APB2RSTR_USART6RST)
+/** @} */
+
+/**
+ * @name    LTDC peripheral specific RCC operations
+ * @{
+ */
+/**
+ * @brief   Enables the LTDC peripheral clock.
+ *
+ * @param[in] lp        low power enable flag
+ *
+ * @api
+ */
+#define rccEnableLTDC(lp) rccEnableAPB2(RCC_APB2ENR_LTDCEN, lp)
+
+/**
+ * @brief   Disables the LTDC peripheral clock.
+ *
+ * @param[in] lp        low power enable flag
+ *
+ * @api
+ */
+#define rccDisableLTDC(lp) rccDisableAPB2(RCC_APB2ENR_LTDCEN, lp)
+
+/**
+ * @brief   Resets the LTDC peripheral.
+ *
+ * @api
+ */
+#define rccResetLTDC() rccResetAPB2(RCC_APB2RSTR_LTDCRST)
 /** @} */
 
 /*===========================================================================*/

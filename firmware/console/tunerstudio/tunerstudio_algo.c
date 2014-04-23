@@ -45,6 +45,7 @@
 #include "tunerstudio_algo.h"
 #include "tunerstudio_configuration.h"
 #include "engine_configuration.h"
+#include "tunerstudio.h"
 
 #ifndef FALSE
 #define FALSE 0
@@ -60,7 +61,7 @@ TunerStudioOutputChannels tsOutputChannels;
  * this is a local copy of the configuration. Any changes to this copy
  * have no effect until this copy is explicitly propagated to the main working copy
  */
-engine_configuration_s tsContstants;
+persistent_config_s configWorkingCopy;
 
 int tunerStudioHandleCommand(short command) {
 	if (command == 'H') {
@@ -111,12 +112,6 @@ void handleOutputChannelsCommand(void) {
 	tsState.outputChannelsCommandCounter++;
 	// this method is invoked too often to print any debug information
 	tunerStudioWriteData((const uint8_t *) &tsOutputChannels, sizeof(TunerStudioOutputChannels));
-}
-
-void handlePageReadCommand(void) {
-	tsState.readPageCommandsCounter++;
-	tunerStudioDebug("got C (Constants)");
-	tunerStudioWriteData((const uint8_t *) &tsContstants, sizeof(engine_configuration_s));
 }
 
 void handleTestCommand(void) {

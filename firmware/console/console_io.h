@@ -2,7 +2,7 @@
  * @file	console_io.h
  *
  * @date Dec 29, 2012
- * @author Andrey Belomutskiy, (c) 2012-2013
+ * @author Andrey Belomutskiy, (c) 2012-2014
  */
 #pragma once
 #ifndef CONSOLE_IO_H_

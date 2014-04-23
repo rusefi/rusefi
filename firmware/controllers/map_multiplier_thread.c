@@ -15,6 +15,9 @@
 #include "main_trigger_callback.h"
 #include "wave_math.h"
 #include "allsensors.h"
+#include "engine_math.h"
+
+extern engine_configuration_s *engineConfiguration;
 
 static Logging logger;
 
@@ -60,10 +63,10 @@ static void maThread(int param) {
 
 		// ideally this should be atomic, but hopefully it's good enough
 		int rpm = getRpm();
-		float key = getMaf();
+		float load = getEngineLoad();
 		float afr = getAfr();
 
-		addAfr(rpm, key, afr);
+		addAfr(rpm, load, afr);
 		int total = runMapAdjustments(mapCallback);
 		if (total > 0) {
 //			scheduleSimpleMsg(&logger, "map adjusted for maf ", 100 * key);

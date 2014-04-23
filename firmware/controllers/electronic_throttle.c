@@ -29,6 +29,8 @@
 #include "tps.h"
 #include "io_pins.h"
 #include "engine_configuration.h"
+#include "pwm_generator.h"
+#include "pwm_generator_logic.h"
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
 
@@ -44,7 +46,8 @@ static PwmConfig etbPwm;
 
 static float prevTps;
 
-extern EngineConfiguration *engineConfiguration;
+extern engine_configuration_s *engineConfiguration;
+extern board_configuration_s *boardConfiguration;
 
 static msg_t etbThread(void *arg) {
 	while (TRUE) {
@@ -52,7 +55,7 @@ static msg_t etbThread(void *arg) {
 
 		if (tps != prevTps) {
 			prevTps = tps;
-			scheduleSimpleMsg(&logger, "tps=", (int) tps);
+			scheduleMsg(&logger, "tps=%d", (int) tps);
 		}
 
 		// this thread is activated 10 times per second
@@ -64,7 +67,7 @@ static msg_t etbThread(void *arg) {
 }
 
 static void setThrottleConsole(int level) {
-	scheduleSimpleMsg(&logger, "setting throttle=", level);
+	scheduleMsg(&logger, "setting throttle=%d", level);
 
 	etbPwm.multiWave.switchTimes[0] = 0.01 + (min(level, 98)) / 100.0;
 	print("st = %f\r\n", etbPwm.multiWave.switchTimes[0]);
@@ -77,11 +80,15 @@ void initElectronicThrottle(void) {
 	engineConfiguration->tpsMax = 898;
 
 	// these two lines are controlling direction
-	outputPinRegister("etb1", ELECTRONIC_THROTTLE_CONTROL_1, ETB_CONTROL_LINE_1_PORT, ETB_CONTROL_LINE_1_PIN);
-	outputPinRegister("etb2", ELECTRONIC_THROTTLE_CONTROL_2, ETB_CONTROL_LINE_2_PORT, ETB_CONTROL_LINE_2_PIN);
+//	outputPinRegister("etb1", ELECTRONIC_THROTTLE_CONTROL_1, ETB_CONTROL_LINE_1_PORT, ETB_CONTROL_LINE_1_PIN);
+//	outputPinRegister("etb2", ELECTRONIC_THROTTLE_CONTROL_2, ETB_CONTROL_LINE_2_PORT, ETB_CONTROL_LINE_2_PIN);
 
 	// this line used for PWM
-	wePlainInit("etb", &etbPwm, ETB_CONTROL_LINE_3_PORT, ETB_CONTROL_LINE_3_PIN, 0, 0.80, 500);
+	startSimplePwm(&etbPwm, "etb",
+			boardConfiguration->electronicThrottlePin1,
+			ELECTRONIC_THROTTLE_CONTROL_1,
+			0.80,
+			500);
 
 	addConsoleActionI("e", setThrottleConsole);
 	chThdCreateStatic(etbTreadStack, sizeof(etbTreadStack), NORMALPRIO, (tfunc_t) etbThread, NULL);

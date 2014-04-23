@@ -2,7 +2,7 @@
  * @file pwm_generator.h
  *
  * @date May 28, 2013
- * @author Andrey Belomutskiy, (c) 2012-2013
+ * @author Andrey Belomutskiy, (c) 2012-2014
  */
 
 #ifndef PWM_GENERATOR_H_
@@ -22,8 +22,9 @@ extern "C"
 
 void applyPinState(PwmConfig *state, int stateIndex);
 
-void wePlainInit(char *msg, PwmConfig *state, GPIO_TypeDef * port, int pin,
-		float dutyCycle, float freq, io_pin_e ioPin);
+void setSimplePwmDutyCycle(PwmConfig *state, float dutyCycle);
+void startSimplePwm(PwmConfig *state, char *msg, brain_pin_e brainPin, io_pin_e ioPin,
+		float dutyCycle, float frequency);
 
 void initPwmGenerator(void);
 #ifdef __cplusplus

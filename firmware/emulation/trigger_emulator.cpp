@@ -20,7 +20,7 @@
 #include "trigger_emulator_algo.h"
 
 extern engine_configuration_s *engineConfiguration;
-extern engine_configuration2_s *engineConfiguration2;
+extern board_configuration_s *boardConfiguration;
 
 extern PwmConfig configuration;
 
@@ -31,11 +31,11 @@ void initTriggerEmulator(void) {
 	configuration.outputPins[0] = TRIGGER_EMILATOR_PRIMARY;
 	configuration.outputPins[1] = TRIGGER_EMILATOR_SECONDARY;
 
-	outputPinRegister("distributor ch1", configuration.outputPins[0],
-	PRIMARY_SHAFT_POSITION_EMULATION_PORT, PRIMARY_SHAFT_POSITION_EMULATION_PIN);
+	outputPinRegisterExt2("distributor ch1", configuration.outputPins[0], boardConfiguration->triggerSimulatorPins[0],
+			&boardConfiguration->triggerSimulatorPinModes[0]);
 
-	outputPinRegister("distributor ch2", configuration.outputPins[1],
-	SECONDARY_SHAFT_POSITION_EMULATION_PORT, SECONDARY_SHAFT_POSITION_EMULATION_PIN);
+	outputPinRegisterExt2("distributor ch2", configuration.outputPins[1], boardConfiguration->triggerSimulatorPins[1],
+			&boardConfiguration->triggerSimulatorPinModes[1]);
 
 	initTriggerEmulatorLogic(applyPinState);
 #else

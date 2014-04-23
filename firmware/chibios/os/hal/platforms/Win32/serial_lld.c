@@ -128,7 +128,7 @@ static bool_t inint(SerialDriver *sdp) {
 
   if (sdp->com_data != INVALID_SOCKET) {
     int i;
-    uint8_t data[16];
+    uint8_t data[32];
 
     /*
      * Input.

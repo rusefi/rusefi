@@ -64,6 +64,10 @@ void cyclic_buffer::add(int value)
   ++count;
 }
 
+void cyclic_buffer::clear() {
+	count = 0;
+}
+
 int cyclic_buffer::sum(int length)
 {
   if(length > count)

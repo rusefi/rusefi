@@ -13,14 +13,14 @@
 #include "main.h"
 #include "ford_1995_inline_6.h"
 #include "engine_math.h"
-#include "thermistors.h"
+#include "allsensors.h"
 
 #if EFI_SUPPORT_1995_FORD_INLINE_6 || defined(__DOXYGEN__)
 
 /**
  * @brief Default values for persistent properties
  */
-void setFordInline6(engine_configuration_s *engineConfiguration) {
+void setFordInline6(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
 	engineConfiguration->cylindersCount = 6;
 
 	/**
@@ -30,6 +30,8 @@ void setFordInline6(engine_configuration_s *engineConfiguration) {
 
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
 	engineConfiguration->firingOrder = FO_1_THEN_5_THEN_3_THEN_6_THEN_2_THEN_4;
+	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
+	engineConfiguration->injectionMode = IM_BATCH;
 
 	/**
 	 * 0.5ms dweel time just to be sure it would fit within camshaft revolution, dwell is not controlled by us anyway
@@ -45,6 +47,9 @@ void setFordInline6(engine_configuration_s *engineConfiguration) {
 	engineConfiguration->triggerConfig.useRiseEdge = TRUE;
 	engineConfiguration->needSecondTriggerInput = FALSE;
 
+	engineConfiguration->globalTriggerAngleOffset = 0;
+	engineConfiguration->ignitionOffset = 13;
+
 
 	setThermistorConfiguration(&engineConfiguration->cltThermistorConf, -10, 160310, 60, 7700, 120.00, 1180);
 	engineConfiguration->cltThermistorConf.bias_resistor = 2700;
@@ -52,13 +57,37 @@ void setFordInline6(engine_configuration_s *engineConfiguration) {
 	setThermistorConfiguration(&engineConfiguration->iatThermistorConf, -10, 160310, 60, 7700, 120.00, 1180);
 	engineConfiguration->iatThermistorConf.bias_resistor = 2700;
 
-	engineConfiguration->tpsAdcChannel = 7; // input channel 3 is PA7, that's ADC7
-	engineConfiguration->cltAdcChannel = 0; // input channel 9 is PA0, that's ADC0
-	engineConfiguration->iatAdcChannel = 11; // input channel 12 is PC1, that's ADC11
+	// 12ch analog board pinout:
+	// input channel 3 is PA7, that's ADC7
+	// input channel 5 is PA4, that's ADC4
+	// input channel 6 is PA3, that's ADC3
+	// input channel 7 is PA2, that's ADC2
+	// input channel 8 is PA1, that's ADC1
+	// input channel 9 is PA0, that's ADC0
+	// input channel 10 is PC3, that's ADC13
+	// input channel 12 is PC1, that's ADC11
 
-	// divided by 2 because of voltage divider, then converted into 10bit ADC value (TunerStudio format)
-	engineConfiguration->tpsMin = (1.250 / 2) * 1024 / 3.3;
-	engineConfiguration->tpsMax = (4.538 / 2) * 1024 / 3.3;
+	engineConfiguration->tpsAdcChannel = 4;
+	engineConfiguration->iatAdcChannel = 2;
+	engineConfiguration->cltAdcChannel = 1;
+	engineConfiguration->afrSensor.afrAdcChannel = 11;
+
+	// 6 channel output board
+	// output 1 is PB9
+	// output 3 is PE3
+	// output 5 is PC13
+	// output 6 is PC15
+
+	boardConfiguration->fuelPumpPin = GPIOC_13;
+	boardConfiguration->injectionPins[0] = GPIOB_9;
+	boardConfiguration->injectionPins[1] = GPIOE_3;
+	boardConfiguration->ignitionPins[0] = GPIOC_15;
+
+	boardConfiguration->injectionPins[2] = GPIO_NONE;
+	boardConfiguration->fanPin = GPIO_NONE;
+
+	engineConfiguration->tpsMin = convertVoltageTo10bitADC(1.250);
+	engineConfiguration->tpsMax = convertVoltageTo10bitADC(4.538);
 
 	engineConfiguration->map.config.mapType = MT_MPX4250;
 	engineConfiguration->map.channel = 2; // input channel 8 is ADC2
@@ -66,13 +95,6 @@ void setFordInline6(engine_configuration_s *engineConfiguration) {
 	//	engineConfiguration->vBattAdcChannel = 0; //
 //	engineConfiguration->mafAdcChannel = 1;
 
-}
-
-/**
- * @brief These settings are not persistent yet
- */
-void setFordInline6_2(engine_configuration_s *engineConfiguration, engine_configuration2_s *engineConfiguration2) {
-	initializeIgnitionActions(engineConfiguration, engineConfiguration2);
 }
 
 #endif /* EFI_SUPPORT_1995_FORD_INLINE_6 */

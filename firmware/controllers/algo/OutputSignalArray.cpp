@@ -28,8 +28,13 @@ void OutputSignalList::clear() {
 	size = 0;
 }
 
+int OutputSignalList::getSize() {
+	return size;
+}
+
+
 OutputSignal * OutputSignalList::add(io_pin_e ioPin) {
-	if(size==OUTPUT_SIGNAL_MAX_SIZE) {
+	if (size == OUTPUT_SIGNAL_MAX_SIZE) {
 		firmwareError("Too many signals, adding %d", ioPin);
 		return NULL;
 	}

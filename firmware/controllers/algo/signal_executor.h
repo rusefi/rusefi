@@ -3,7 +3,7 @@
  * @brief   Asynchronous output signal header
  *
  * @date Feb 10, 2013
- * @author Andrey Belomutskiy, (c) 2012-2013
+ * @author Andrey Belomutskiy, (c) 2012-2014
  */
 
 #ifndef SPARKOUT_H_
@@ -37,6 +37,14 @@ struct scheduling_struct {
 #if EFI_SIGNAL_EXECUTOR_SINGLE_TIMER
 	volatile time_t moment;
 #endif /* EFI_SIGNAL_EXECUTOR_SINGLE_TIMER */
+
+	volatile uint64_t momentUs;
+#if EFI_SIGNAL_EXECUTOR_ONE_TIMER
+	schfunc_t callback;
+	void *param;
+#endif
+
+	scheduling_s *next;
 };
 
 typedef enum {
@@ -65,10 +73,11 @@ struct OutputSignal_struct {
 	time_t hi_time;
 
 	/**
-	 * this timer is used to wait for the time to activate the thread
+	 * We are alternating instances so that events which extend into next revolution are not overriden while
+	 * scheduling next revolution events
 	 */
-	scheduling_s signalTimerUp;
-	scheduling_s signalTimerDown;
+	scheduling_s signalTimerUp[2];
+	scheduling_s signalTimerDown[2];
 
 	executor_status_t status;
 
@@ -84,14 +93,15 @@ struct OutputSignal_struct {
 extern "C"
 {
 #endif /* __cplusplus */
-void resetOutputSignals(void);
-OutputSignal * addOutputSignal(io_pin_e ioPin);
-void initOutputSignal(OutputSignal *signal, io_pin_e ioPin);
-void scheduleOutput(OutputSignal *signal, int delay, int dwell, time_t now);
-void initOutputSignalBase(OutputSignal *signal);
-void scheduleOutputBase(OutputSignal *signal, int offset, int duration);
 
-void scheduleTask(scheduling_s *scheduling, int delay, schfunc_t callback, void *param);
+void initOutputSignal(OutputSignal *signal, io_pin_e ioPin);
+void scheduleOutput(OutputSignal *signal, float delayMs, float durationMs, time_t now);
+void initOutputSignalBase(OutputSignal *signal);
+void scheduleOutputBase(OutputSignal *signal, float delayMs, float durationMs);
+
+void initSignalExecutor(void);
+void initSignalExecutorImpl(void);
+void scheduleTask(scheduling_s *scheduling, float delay, schfunc_t callback, void *param);
 void scheduleByAngle(scheduling_s *timer, float angle, schfunc_t callback, void *param);
 
 #ifdef __cplusplus

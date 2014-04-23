@@ -27,6 +27,7 @@
 #define BOARD_ST_STM32F4_DISCOVERY
 #define BOARD_NAME                  "STMicroelectronics STM32F4-Discovery"
 
+#define STM32_LSECLK			32768
 
 /*
  * Board oscillators-related settings.
@@ -40,7 +41,6 @@
 #define STM32_HSECLK                8000000
 #endif
 
-
 /*
  * Board voltages.
  * Required for performance limits calculation.
@@ -48,9 +48,9 @@
 #define STM32_VDD                   300
 
 /*
- * MCU type as defined in the ST header file stm32f4xx.h.
+ * MCU type as defined in the ST header.
  */
-#define STM32F4XX
+#define STM32F40_41xxx
 
 /*
  * IO pins assignments.

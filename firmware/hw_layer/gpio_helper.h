@@ -3,7 +3,7 @@
  * @brief   General I/O helper
  *
  * @date Aug 25, 2013
- * @author Andrey Belomutskiy, (c) 2012-2013
+ * @author Andrey Belomutskiy, (c) 2012-2014
  */
 
 #ifndef GPIO_HELPER_H_

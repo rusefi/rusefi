@@ -4,7 +4,7 @@
  *
  *
  * @date Jul 23, 2013
- * @author Andrey Belomutskiy, (c) 2012-2013
+ * @author Andrey Belomutskiy, (c) 2012-2014
  */
 
 #ifndef MAP_MULTIPLIER_H_

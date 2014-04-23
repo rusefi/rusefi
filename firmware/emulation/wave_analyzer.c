@@ -13,7 +13,6 @@
 #include "main.h"
 #include "wave_analyzer.h"
 #include "eficonsole.h"
-#include "wave_math.h"
 #include "data_buffer.h"
 #include "pin_repository.h"
 #include "engine_state.h"

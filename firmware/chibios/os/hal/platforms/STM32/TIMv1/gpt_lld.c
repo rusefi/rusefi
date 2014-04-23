@@ -488,7 +488,11 @@ void gpt_lld_start(GPTDriver *gptp) {
       rccResetTIM1();
       nvicEnableVector(STM32_TIM1_UP_NUMBER,
                        CORTEX_PRIORITY_MASK(STM32_GPT_TIM1_IRQ_PRIORITY));
+#if defined(STM32_TIM1CLK)
+      gptp->clock = STM32_TIM1CLK;
+#else
       gptp->clock = STM32_TIMCLK2;
+#endif
     }
 #endif
 #if STM32_GPT_USE_TIM2
@@ -555,7 +559,11 @@ void gpt_lld_start(GPTDriver *gptp) {
       rccResetTIM8();
       nvicEnableVector(STM32_TIM8_UP_NUMBER,
                        CORTEX_PRIORITY_MASK(STM32_GPT_TIM8_IRQ_PRIORITY));
+#if defined(STM32_TIM8CLK)
+      gptp->clock = STM32_TIM8CLK;
+#else
       gptp->clock = STM32_TIMCLK2;
+#endif
     }
 #endif
 

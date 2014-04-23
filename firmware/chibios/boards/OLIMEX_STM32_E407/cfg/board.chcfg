@@ -22,8 +22,14 @@
         <identifier>MII_KS8721_ID</identifier>
         <bus_type>RMII</bus_type>
     </ethernet_phy>
-    <clocks HSEFrequency="12000000" HSEBypass="false" LSEFrequency="32768"
-        VDD="330" />
+    <subtype>STM32F40_41xxx</subtype>
+    <clocks
+       HSEFrequency="12000000"
+       HSEBypass="false"
+       LSEFrequency="32768"
+       LSEBypass="false"
+       VDD="330"
+    />
     <ports>
         <GPIOA>
             <pin0 ID="BUTTON_WKUP" Type="PushPull" Speed="Maximum" Resistor="Floating"

@@ -99,6 +99,10 @@ int isIsrContext(void) {
 	return dbg_isr_cnt > 0;
 }
 
+int isLocked(void) {
+	return dbg_lock_cnt > 0;
+}
+
 void chVTSetAny(VirtualTimer *vtp, systime_t time, vtfunc_t vtfunc, void *par) {
 	if (isIsrContext()) {
 		chSysLockFromIsr()

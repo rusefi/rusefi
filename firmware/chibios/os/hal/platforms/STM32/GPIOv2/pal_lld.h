@@ -185,31 +185,39 @@ typedef struct {
  *          or whole ports can be reprogrammed at later time.
  */
 typedef struct {
+#if STM32_HAS_GPIOA || defined(__DOXYGEN__)
   /** @brief Port A setup data.*/
   stm32_gpio_setup_t    PAData;
+#endif
+#if STM32_HAS_GPIOB || defined(__DOXYGEN__)
   /** @brief Port B setup data.*/
   stm32_gpio_setup_t    PBData;
+#endif
+#if STM32_HAS_GPIOC || defined(__DOXYGEN__)
   /** @brief Port C setup data.*/
   stm32_gpio_setup_t    PCData;
+#endif
+#if STM32_HAS_GPIOD || defined(__DOXYGEN__)
   /** @brief Port D setup data.*/
   stm32_gpio_setup_t    PDData;
-#if STM32_HAS_GPIOE
+#endif
+#if STM32_HAS_GPIOE || defined(__DOXYGEN__)
   /** @brief Port E setup data.*/
   stm32_gpio_setup_t    PEData;
 #endif
-#if STM32_HAS_GPIOF
+#if STM32_HAS_GPIOF || defined(__DOXYGEN__)
   /** @brief Port F setup data.*/
   stm32_gpio_setup_t    PFData;
 #endif
-#if STM32_HAS_GPIOG
+#if STM32_HAS_GPIOG || defined(__DOXYGEN__)
   /** @brief Port G setup data.*/
   stm32_gpio_setup_t    PGData;
 #endif
-#if STM32_HAS_GPIOH
+#if STM32_HAS_GPIOH || defined(__DOXYGEN__)
   /** @brief Port H setup data.*/
   stm32_gpio_setup_t    PHData;
 #endif
-#if STM32_HAS_GPIOI
+#if STM32_HAS_GPIOI || defined(__DOXYGEN__)
   /** @brief Port I setup data.*/
   stm32_gpio_setup_t    PIData;
 #endif

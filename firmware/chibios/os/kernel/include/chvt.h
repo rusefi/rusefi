@@ -214,6 +214,32 @@ typedef struct {
  * @api
  */
 #define chTimeNow() (vtlist.vt_systime)
+
+/**
+ * @brief   Returns the elapsed time since the specified start time.
+ *
+ * @param[in] start     start time
+ * @return              The elapsed time.
+ *
+ * @api
+ */
+#define chTimeElapsedSince(start) (chTimeNow() - (start))
+
+/**
+ * @brief   Checks if the current system time is within the specified time
+ *          window.
+ * @note    When start==end then the function returns always true because the
+ *          whole time range is specified.
+ *
+ * @param[in] start     the start of the time window (inclusive)
+ * @param[in] end       the end of the time window (non inclusive)
+ * @retval TRUE         current time within the specified time window.
+ * @retval FALSE        current time not within the specified time window.
+ *
+ * @api
+ */
+#define chTimeIsWithin(start, end)                                          \
+  (chTimeElapsedSince(start) < ((end) - (start)))
 /** @} */
 
 extern VTList vtlist;
@@ -227,7 +253,6 @@ extern "C" {
   void _vt_init(void);
   void chVTSetI(VirtualTimer *vtp, systime_t time, vtfunc_t vtfunc, void *par);
   void chVTResetI(VirtualTimer *vtp);
-  bool_t chTimeIsWithin(systime_t start, systime_t end);
 #ifdef __cplusplus
 }
 #endif

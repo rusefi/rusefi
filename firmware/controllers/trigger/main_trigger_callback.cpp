@@ -1,5 +1,5 @@
 /**
- * @file    main_trigger_callback.c
+ * @file    main_trigger_callback.cpp
  * @brief   Main logic is here!
  *
  * See http://rusefi.com/docs/html/
@@ -24,8 +24,7 @@
 #include "main.h"
 #include "main_trigger_callback.h"
 
-extern "C"
-{
+extern "C" {
 //#include "settings.h"
 #include "trigger_central.h"
 #include "rpm_calculator.h"
@@ -43,6 +42,9 @@ extern "C"
 #include "fuel_math.h"
 #include "histogram.h"
 #include "rfiutil.h"
+#include "LocalVersionHolder.h"
+
+static LocalVersionHolder localVersion;
 
 int isInjectionEnabled(void);
 
@@ -74,25 +76,29 @@ static void handleFuelInjectionEvent(ActuatorEvent *event, int rpm) {
 		return;
 	}
 
-	int fuelTicks = (int) (getFuelMs(rpm) * engineConfiguration->globalFuelCorrection * TICKS_IN_MS);
-	if (fuelTicks < 0) {
-		scheduleMsg(&logger, "ERROR: negative injectionPeriod %d", fuelTicks);
+	float fuelMs = getFuelMs(rpm) * engineConfiguration->globalFuelCorrection;
+	if (fuelMs < 0) {
+		scheduleMsg(&logger, "ERROR: negative injectionPeriod %f", fuelMs);
 		return;
 	}
 
-	int delay = (int) (getOneDegreeTime(rpm) * event->angleOffset);
+	float delay = getOneDegreeTimeMs(rpm) * event->angleOffset;
 
-	if (isCranking())
-		scheduleMsg(&logger, "crankingFuel=%d", fuelTicks);
+//	if (isCranking())
+//		scheduleMsg(&logger, "crankingFuel=%f for CLT=%fC", fuelMs, getCoolantTemperature());
 
-	scheduleOutput(event->actuator, delay, fuelTicks, chTimeNow());
+	scheduleOutput(event->actuator, delay, fuelMs, chTimeNow());
 }
 
-static void handleFuel(ShaftEvents ckpSignalType, int eventIndex) {
+static void handleFuel(int eventIndex) {
 	if (!isInjectionEnabled())
 		return;
 	chDbgCheck(eventIndex < engineConfiguration2->triggerShape.shaftPositionEventCount, "event index");
 
+	/**
+	 * Ignition events are defined by addFuelEvents() according to selected
+	 * fueling strategy
+	 */
 	ActuatorEventList *source =
 			isCranking() ?
 					&engineConfiguration2->engineEventConfiguration.crankingInjectionEvents :
@@ -115,9 +121,9 @@ static void handleFuel(ShaftEvents ckpSignalType, int eventIndex) {
 static void handleSparkEvent(ActuatorEvent *event, int rpm) {
 	if (rpm == 0)
 		return;
-	float advance = getAdvance(rpm, getEngineLoad());
+//	float advance = getAdvance(rpm, getEngineLoad());
 
-	float sparkAdvanceMs = getOneDegreeTimeMs(rpm) * advance;
+//	float sparkAdvanceMs = getOneDegreeTimeMs(rpm) * advance;
 
 	float dwellMs = getSparkDwellMs(rpm);
 	if (dwellMs < 0)
@@ -126,7 +132,7 @@ static void handleSparkEvent(ActuatorEvent *event, int rpm) {
 	if (dwellMs <= 0)
 		return; // hard RPM limit was hit
 
-	float sparkDelay = (int) (getOneDegreeTimeMs(rpm) * event->angleOffset + sparkAdvanceMs - dwellMs);
+	float sparkDelay = getOneDegreeTimeMs(rpm) * event->angleOffset;
 	int isIgnitionError = sparkDelay < 0;
 	ignitionErrorDetection.add(isIgnitionError);
 	if (isIgnitionError) {
@@ -135,12 +141,16 @@ static void handleSparkEvent(ActuatorEvent *event, int rpm) {
 		//return;
 	}
 
-	scheduleOutput(event->actuator, sparkDelay * TICKS_IN_MS, dwellMs * TICKS_IN_MS, chTimeNow());
+	scheduleOutput(event->actuator, sparkDelay, dwellMs, chTimeNow());
 }
 
-static void handleSpark(ShaftEvents ckpSignalType, int eventIndex) {
+static void handleSpark(int eventIndex) {
 	int rpm = getRpm();
 
+	/**
+	 * Ignition schedule is defined once per revolution
+	 * See initializeIgnitionActions()
+	 */
 	findEvents(eventIndex, &engineConfiguration2->engineEventConfiguration.ignitionEvents, &events);
 	if (events.size == 0)
 		return;
@@ -164,9 +174,35 @@ void showMainHistogram(void) {
  */
 static void onShaftSignal(ShaftEvents ckpSignalType, int eventIndex) {
 	chDbgCheck(eventIndex < engineConfiguration2->triggerShape.shaftPositionEventCount, "event index");
+
+	int rpm = getRpm();
+	if (rpm == NOISY_RPM) {
+		scheduleMsg(&logger, "noisy trigger");
+		return;
+	}
 	int beforeCallback = hal_lld_get_counter_value();
-	handleFuel(ckpSignalType, eventIndex);
-	handleSpark(ckpSignalType, eventIndex);
+	if (eventIndex == 0) {
+		if (localVersion.isOld())
+			prepareOutputSignals(engineConfiguration, engineConfiguration2);
+
+		/**
+		 * TODO: warning. there is a bit of a hack here, todo: improve.
+		 * currently output signals/times signalTimerUp from the previous revolutions could be
+		 * still used because they have crossed the revolution boundary
+		 * but we are already reporpousing the output signals, but everything works because we
+		 * are not affecting that space in memory. todo: use two instances of 'ignitionSignals'
+		 */
+
+		float dwellMs = getSparkDwellMs(rpm);
+		float advance = getAdvance(rpm, getEngineLoad());
+
+		float dwellAngle = dwellMs / getOneDegreeTimeMs(rpm);
+
+		initializeIgnitionActions(advance - dwellAngle, engineConfiguration, engineConfiguration2);
+	}
+
+	handleFuel(eventIndex);
+	handleSpark(eventIndex);
 	int diff = hal_lld_get_counter_value() - beforeCallback;
 	if (diff > 0)
 		hsAdd(&mainLoopHisto, diff);
@@ -177,8 +213,16 @@ static void showTriggerHistogram(void) {
 	showMainHistogram();
 }
 
+static void showMainInfo(void) {
+	int rpm = getRpm();
+	float el = getEngineLoad();
+	scheduleMsg(&logger, "rpm %d engine_load %f", rpm, el);
+	scheduleMsg(&logger, "fuel %fms timing %f", getFuelMs(rpm), getAdvance(rpm, el));
+}
+
 void initMainEventListener() {
 	addConsoleAction("performanceinfo", showTriggerHistogram);
+	addConsoleAction("maininfo", showMainInfo);
 
 	initLogging(&logger, "main event handler");
 	printMsg(&logger, "initMainLoop: %d", chTimeNow());

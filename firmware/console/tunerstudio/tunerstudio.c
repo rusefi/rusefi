@@ -36,15 +36,21 @@
 #include "tunerstudio_algo.h"
 #include "tunerstudio_configuration.h"
 #include "malfunction_central.h"
+#include "wave_math.h"
 
 #if EFI_TUNER_STUDIO
 
 static Logging logger;
 
 extern engine_configuration_s *engineConfiguration;
+extern board_configuration_s *boardConfiguration;
+extern persistent_config_s configWorkingCopy;
+extern FlashState flashState;
 
 extern SerialUSBDriver SDU1;
 #define CONSOLE_DEVICE &SDU1
+
+int previousWriteReport = 0;
 
 #if EFI_TUNER_STUDIO_OVER_USB
 #define ts_serail_ready() is_usb_serial_ready()
@@ -58,13 +64,13 @@ static WORKING_AREA(TS_WORKING_AREA, UTILITY_THREAD_STACK_SIZE);
 static int tsCounter = 0;
 static int writeCounter = 0;
 
+static short pageId;
+
 static TunerStudioWriteRequest writeRequest;
 
 extern TunerStudioOutputChannels tsOutputChannels;
 
-extern engine_configuration_s tsContstants;
-
-char *constantsAsPtr = (char *) &tsContstants;
+//char *constantsAsPtr = (char *) &configWorkingCopy;
 
 extern TunerStudioState tsState;
 
@@ -76,10 +82,13 @@ static void printStats(void) {
 #endif /* EFI_TUNER_STUDIO_OVER_USB */
 	scheduleMsg(&logger, "TunerStudio total/error counter=%d/%d", tsCounter, tsState.errorCounter);
 	scheduleMsg(&logger, "TunerStudio H counter=%d", tsState.queryCommandCounter);
-	scheduleMsg(&logger, "TunerStudio O counter=%d size=%d", tsState.outputChannelsCommandCounter, sizeof(tsOutputChannels));
-	scheduleMsg(&logger, "TunerStudio C counter=%d size=%d", tsState.readPageCommandsCounter, sizeof(tsContstants));
-	scheduleMsg(&logger, "TunerStudio B counter=%d size=%d", tsState.burnCommandCounter, sizeof(tsContstants));
+	scheduleMsg(&logger, "TunerStudio O counter=%d size=%d", tsState.outputChannelsCommandCounter,
+			sizeof(tsOutputChannels));
+	scheduleMsg(&logger, "TunerStudio C counter=%d", tsState.readPageCommandsCounter);
+	scheduleMsg(&logger, "TunerStudio B counter=%d", tsState.burnCommandCounter);
 	scheduleMsg(&logger, "TunerStudio W counter=%d", writeCounter);
+	scheduleMsg(&logger, "page 0 size=%d", getTunerStudioPageSize(0));
+	scheduleMsg(&logger, "page 1 size=%d", getTunerStudioPageSize(1));
 }
 
 void tunerStudioWriteData(const uint8_t * buffer, int size) {
@@ -88,9 +97,30 @@ void tunerStudioWriteData(const uint8_t * buffer, int size) {
 
 void tunerStudioDebug(char *msg) {
 #if EFI_TUNER_STUDIO_VERBOSE
-	print("%s\r\n", msg);
+	scheduleMsg(&logger, "%s", msg);
 	printStats();
 #endif
+}
+
+char *getWorkingPageAddr(int pageIndex) {
+	switch (pageIndex) {
+	case 0:
+		return (char*) &configWorkingCopy.engineConfiguration;
+	case 1:
+		return (char*) &configWorkingCopy.boardConfiguration;
+	}
+	return NULL;
+}
+
+int getTunerStudioPageSize(int pageIndex) {
+	switch (pageIndex) {
+	case 0:
+		return sizeof(configWorkingCopy.engineConfiguration);
+	case 1:
+		return sizeof(configWorkingCopy.boardConfiguration);
+	}
+	return 0;
+
 }
 
 /**
@@ -99,20 +129,53 @@ void tunerStudioDebug(char *msg) {
 void handleValueWriteCommand(void) {
 	writeCounter++;
 
-	tunerStudioDebug("got W (Write)");
+	//tunerStudioDebug("got W (Write)"); // we can get a lot of these
+
+	int recieved = chSequentialStreamRead(TS_SERIAL_DEVICE, (uint8_t *)&pageId, 2);
+	if (recieved != 2) {
+		tsState.errorCounter++;
+		return;
+	}
+#if EFI_TUNER_STUDIO_VERBOSE
+//	scheduleMsg(&logger, "Page number %d\r\n", pageId); // we can get a lot of these
+#endif
 
 	int size = sizeof(TunerStudioWriteRequest);
-	print("Reading %d\r\n", size);
+//	scheduleMsg(&logger, "Reading %d\r\n", size);
 
-	int recieved = chSequentialStreamRead(TS_SERIAL_DEVICE, (uint8_t *)&writeRequest, size);
-	print("got %d\r\n", recieved);
+	recieved = chSequentialStreamRead(TS_SERIAL_DEVICE, (uint8_t *)&writeRequest, size);
+//	scheduleMsg(&logger, "got %d", recieved);
 
 //	unsigned char offset = writeBuffer[0];
 //	unsigned char value = writeBuffer[1];
 //
-	print("offset %d: value=%d\r\n", writeRequest.offset, writeRequest.value);
-	constantsAsPtr[writeRequest.offset] = writeRequest.value;
+
+	int now = chTimeNow();
+	if (overflowDiff(now, previousWriteReport) > 5 * TICKS_IN_MS) {
+		previousWriteReport = now;
+//		scheduleMsg(&logger, "page %d offset %d: value=%d", pageId, writeRequest.offset, writeRequest.value);
+	}
+
+	getWorkingPageAddr(pageId)[writeRequest.offset] = writeRequest.value;
+
+//	scheduleMsg(&logger, "va=%d", configWorkingCopy.boardConfiguration.idleValvePin);
 }
+
+void handlePageReadCommand(void) {
+	tsState.readPageCommandsCounter++;
+	tunerStudioDebug("got C (Constants)");
+	int recieved = chSequentialStreamRead(TS_SERIAL_DEVICE, (uint8_t *)&pageId, 2);
+	if (recieved != 2) {
+		tsState.errorCounter++;
+		return;
+	}
+#if EFI_TUNER_STUDIO_VERBOSE
+	scheduleMsg(&logger, "Page number %d", pageId);
+#endif
+
+	tunerStudioWriteData((const uint8_t *) getWorkingPageAddr(pageId), getTunerStudioPageSize(pageId));
+}
+
 
 /**
  * 'Burn' command is a command to commit the changes
@@ -122,9 +185,23 @@ void handleBurnCommand(void) {
 
 	tunerStudioDebug("got B (Burn)");
 
+	int recieved = chSequentialStreamRead(TS_SERIAL_DEVICE, (uint8_t *)&pageId, 2);
+	if (recieved != 2) {
+		tsState.errorCounter++;
+		return;
+	}
+#if EFI_TUNER_STUDIO_VERBOSE
+	scheduleMsg(&logger, "Page number %d\r\n", pageId);
+#endif
+
 	// todo: how about some multi-threading?
-	memcpy(engineConfiguration, &tsContstants, sizeof(engine_configuration_s));
+	memcpy(&flashState.persistentConfiguration, &configWorkingCopy, sizeof(persistent_config_s));
+
+	scheduleMsg(&logger, "va1=%d", configWorkingCopy.boardConfiguration.idleValvePin);
+	scheduleMsg(&logger, "va2=%d", flashState.persistentConfiguration.boardConfiguration.idleValvePin);
+
 	writeToFlash();
+	incrementGlobalConfigurationVersion();
 }
 
 static msg_t tsThreadEntryPoint(void *arg) {
@@ -159,7 +236,7 @@ static msg_t tsThreadEntryPoint(void *arg) {
 extern engine_configuration_s *engineConfiguration;
 
 void syncTunerStudioCopy(void) {
-	memcpy(&tsContstants, engineConfiguration, sizeof(engine_configuration_s));
+	memcpy(&configWorkingCopy, &flashState.persistentConfiguration, sizeof(persistent_config_s));
 }
 
 void startTunerStudioConnectivity(void) {

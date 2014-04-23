@@ -77,6 +77,9 @@
   ((uint32_t)(((I2C_SR2_MSL | I2C_SR2_BUSY | I2C_SR2_TRA) << 16) |          \
               I2C_SR1_BTF | I2C_SR1_TXE))
 
+#define I2C_EV9_MASTER_ADD10                                                \
+  ((uint32_t)(((I2C_SR2_MSL | I2C_SR2_BUSY) << 16) | I2C_SR1_ADD10))
+
 #define I2C_EV_MASK 0x00FFFFFF
 
 #define I2C_ERROR_MASK                                                      \
@@ -297,7 +300,16 @@ static void i2c_lld_serve_event_interrupt(I2CDriver *i2cp) {
      done by the DMA.*/
   switch (I2C_EV_MASK & (event | (regSR2 << 16))) {
   case I2C_EV5_MASTER_MODE_SELECT:
-    dp->DR = i2cp->addr;
+    if ((i2cp->addr >> 8) > 0) { 
+      /* 10-bit address: 1 1 1 1 0 X X R/W */
+      dp->DR = 0xF0 | (0x6 & (i2cp->addr >> 8)) | (0x1 & i2cp->addr);
+    } else {
+      dp->DR = i2cp->addr;
+    }
+    break;
+  case I2C_EV9_MASTER_ADD10:
+    /* Set second addr byte (10-bit addressing)*/
+    dp->DR = (0xFF & (i2cp->addr >> 1));
     break;
   case I2C_EV6_MASTER_REC_MODE_SELECTED:
     dp->CR2 &= ~I2C_CR2_ITEVTEN;

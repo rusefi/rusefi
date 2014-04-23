@@ -143,9 +143,7 @@ static void set_error(SerialDriver *sdp, uint16_t sr) {
     sts |= SD_FRAMING_ERROR;
   if (sr & USART_SR_NE)
     sts |= SD_NOISE_ERROR;
-  chSysLockFromIsr();
   chnAddFlagsI(sdp, sts);
-  chSysUnlockFromIsr();
 }
 
 /**
@@ -156,25 +154,27 @@ static void set_error(SerialDriver *sdp, uint16_t sr) {
 static void serve_interrupt(SerialDriver *sdp) {
   USART_TypeDef *u = sdp->usart;
   uint16_t cr1 = u->CR1;
-  uint16_t sr = u->SR;  /* SR reset step 1.*/
-  uint16_t dr = u->DR;  /* SR reset step 2.*/
+  uint16_t sr = u->SR;
 
-  /* Error condition detection.*/
-  if (sr & (USART_SR_ORE | USART_SR_NE | USART_SR_FE  | USART_SR_PE))
-    set_error(sdp, sr);
   /* Special case, LIN break detection.*/
   if (sr & USART_SR_LBD) {
     chSysLockFromIsr();
     chnAddFlagsI(sdp, SD_BREAK_DETECTED);
     chSysUnlockFromIsr();
-    u->SR &= ~USART_SR_LBD;
+    u->SR = ~USART_SR_LBD;
   }
+
   /* Data available.*/
-  if (sr & USART_SR_RXNE) {
-    chSysLockFromIsr();
-    sdIncomingDataI(sdp, (uint8_t)dr);
-    chSysUnlockFromIsr();
+  chSysLockFromIsr();
+  while (sr & USART_SR_RXNE) {
+    /* Error condition detection.*/
+    if (sr & (USART_SR_ORE | USART_SR_NE | USART_SR_FE  | USART_SR_PE))
+      set_error(sdp, sr);
+    sdIncomingDataI(sdp, u->DR);
+    sr = u->SR;
   }
+  chSysUnlockFromIsr();
+
   /* Transmission buffer empty.*/
   if ((cr1 & USART_CR1_TXEIE) && (sr & USART_SR_TXE)) {
     msg_t b;
@@ -188,13 +188,14 @@ static void serve_interrupt(SerialDriver *sdp) {
       u->DR = b;
     chSysUnlockFromIsr();
   }
+
   /* Physical transmission end.*/
   if (sr & USART_SR_TC) {
     chSysLockFromIsr();
     chnAddFlagsI(sdp, CHN_TRANSMISSION_END);
     chSysUnlockFromIsr();
-    u->CR1 = cr1 & ~USART_CR1_TCIE;
-    u->SR &= ~USART_SR_TC;
+    u->CR1 = cr1 & ~(USART_CR1_TXEIE | USART_CR1_TCIE);
+    u->SR = ~USART_SR_TC;
   }
 }
 

@@ -9,6 +9,7 @@
 #include "rpm_calculator.h"
 #include "analog_chart.h"
 #include "status_loop.h"
+#include "engine_configuration.h"
 
 static char LOGGING_BUFFER[5000];
 static Logging logging;
@@ -16,11 +17,18 @@ static Logging logging;
 static int pendingData = FALSE;
 static int initialized = FALSE;
 
+extern engine_configuration_s *engineConfiguration;
+
 void acAddData(float angle, float value) {
 	if (!initialized)
 		return; // this is possible because of initialization sequence
 
-	if (getRevolutionCounter() % 20 != 0) {
+	if( engineConfiguration->analogChartFrequency < 1) {
+		//todofirmwareError()
+		return;
+	}
+
+	if (getRevolutionCounter() % engineConfiguration->analogChartFrequency != 0) {
 		if (pendingData) {
 			// message terminator
 			appendPrintf(&logging, DELIMETER);

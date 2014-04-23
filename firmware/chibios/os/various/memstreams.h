@@ -84,7 +84,8 @@ typedef struct {
 #ifdef __cplusplus
 extern "C" {
 #endif
-  void msObjectInit(MemoryStream *msp, uint8_t *buffer, size_t size, size_t eos);
+  void msObjectInit(MemoryStream *msp, uint8_t *buffer,
+                    size_t size, size_t eos);
 #ifdef __cplusplus
 }
 #endif

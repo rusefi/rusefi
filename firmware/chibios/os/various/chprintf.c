@@ -71,7 +71,11 @@ static char *ltoa(char *p, long num, unsigned radix) {
 }
 
 #if CHPRINTF_USE_FLOAT
-static char *ftoa(char *p, double num, unsigned long precision) {
+char *ftoa(char *p, double num, unsigned long precision) {
+    if (num < 0) {
+      *p++ = '-';
+      return ftoa(p, -num, precision);
+    }
   long l;
   if (isnan(num)) {
     *p++ = 'N';
@@ -216,10 +220,6 @@ void chvprintf(BaseSequentialStream *chp, const char *fmt, va_list ap) {
 
       f = (float) va_arg(ap, double);
 
-      if (f < 0) {
-        *p++ = '-';
-        f = -f;
-      }
       p = ftoa(p, f, precision);
       break;
 #endif

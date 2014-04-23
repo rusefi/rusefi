@@ -2,7 +2,7 @@
  * @file	main.h
  *
  * @date Nov 29, 2012
- * @author Andrey Belomutskiy, (c) 2012-2013
+ * @author Andrey Belomutskiy, (c) 2012-2014
  */
 #pragma once
 #ifndef MAIN_H_
@@ -15,13 +15,15 @@ extern "C"
 {
 #endif /* __cplusplus */
 
+#include "global.h"
+
 #include "eficonsole.h"
 #include "eficonsole_logic.h"
 #include "efilib.h"
 #include "rusefi.h"
 
-#include "global.h"
 #include "efifeatures.h"
+#include "efitime.h"
 #include "engines.h"
 
 #include "datalogging.h"
@@ -59,12 +61,11 @@ extern "C"
 void updateHD44780lcd(void);
 int systicks2ms(int systicks);
 
-void lockAnyContext(void);
+int lockAnyContext(void);
 void unlockAnyContext(void);
 
 #ifdef __cplusplus
 }
 #endif
-
 
 #endif /* MAIN_H_ */

@@ -10,6 +10,7 @@
 #include "pin_repository.h"
 #include "io_pins.h"
 #include "rtc_helper.h"
+#include "rfiutil.h"
 
 #include "adc_inputs.h"
 
@@ -23,10 +24,11 @@
 #include "histogram.h"
 #include "mmc_card.h"
 #include "neo6m.h"
-#include "lcd_2x16.h"
+#include "lcd_HD44780.h"
 #include "eficonsole_logic.h"
 #include "flash_main.h"
 #include "trigger_central.h"
+#include "svnversion.h"
 
 McpAdcState adcState;
 
@@ -90,6 +92,7 @@ void initHardware() {
 	initHistogramsModule();
 
 
+
 	/**
 	 * We need the LED_ERROR pin even before we read configuration
 	 */
@@ -122,8 +125,9 @@ void initHardware() {
 	initTriggerCentral();
 	initShaftPositionInputCapture();
 
-#if EFI_FILE_LOGGING
 	initSpiModules();
+
+#if EFI_FILE_LOGGING
 	initMmcCard();
 #endif /* EFI_FILE_LOGGING */
 
@@ -142,6 +146,11 @@ void initHardware() {
 #if EFI_HD44780_LCD
 //	initI2Cmodule();
 	lcd_HD44780_init();
+
+	char buffer[16];
+	itoa10(buffer, SVN_VERSION);
+	lcd_HD44780_print_string(buffer);
+
 #endif
 
 	addConsoleActionII("i2c", sendI2Cbyte);

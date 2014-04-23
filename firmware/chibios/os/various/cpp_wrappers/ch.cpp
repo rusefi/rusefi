@@ -106,7 +106,7 @@ namespace chibios_rt {
 
   void ThreadReference::stop(void) {
 
-    chDbgPanic("invoked unimplemented method stop()", __FILE__, __LINE__);
+    chDbgPanic("invoked unimplemented method stop()");
   }
 
   msg_t ThreadReference::suspend(void) {

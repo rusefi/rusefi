@@ -3,7 +3,7 @@
  *
  *
  * @date Oct 28, 2013
- * @author Andrey Belomutskiy, (c) 2012-2013
+ * @author Andrey Belomutskiy, (c) 2012-2014
  */
 
 #ifndef SIGNAL_EXECUTOR_HW_TIMER_H_

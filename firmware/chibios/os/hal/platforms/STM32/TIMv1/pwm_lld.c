@@ -410,7 +410,11 @@ void pwm_lld_start(PWMDriver *pwmp) {
                        CORTEX_PRIORITY_MASK(STM32_PWM_TIM1_IRQ_PRIORITY));
       nvicEnableVector(STM32_TIM1_CC_NUMBER,
                        CORTEX_PRIORITY_MASK(STM32_PWM_TIM1_IRQ_PRIORITY));
+#if defined(STM32_TIM1CLK)
+      pwmp->clock = STM32_TIM1CLK;
+#else
       pwmp->clock = STM32_TIMCLK2;
+#endif
     }
 #endif
 #if STM32_PWM_USE_TIM2
@@ -458,7 +462,11 @@ void pwm_lld_start(PWMDriver *pwmp) {
                        CORTEX_PRIORITY_MASK(STM32_PWM_TIM8_IRQ_PRIORITY));
       nvicEnableVector(STM32_TIM8_CC_NUMBER,
                        CORTEX_PRIORITY_MASK(STM32_PWM_TIM8_IRQ_PRIORITY));
+#if defined(STM32_TIM8CLK)
+      pwmp->clock = STM32_TIM8CLK;
+#else
       pwmp->clock = STM32_TIMCLK2;
+#endif
     }
 #endif
 #if STM32_PWM_USE_TIM9

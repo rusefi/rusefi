@@ -2,6 +2,9 @@
 rm -rf .dep/
 
 rm -rf build\rusefi.hex
+
+java -jar ../java_tools/version2header.jar
+
 echo Starting compilation
 make
 

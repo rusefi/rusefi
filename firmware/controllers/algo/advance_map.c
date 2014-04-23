@@ -40,14 +40,17 @@ float getBaseAdvance(int rpm, float engineLoad) {
 }
 
 float getAdvance(int rpm, float engineLoad) {
-	if (isCrankingR(rpm))
-		return engineConfiguration->crankingChargeAngle;
-
-	return getBaseAdvance(rpm, engineLoad) + engineConfiguration->ignitionOffset;
+	float angle;
+	if (isCrankingR(rpm)) {
+		angle = engineConfiguration->crankingTimingAngle;
+	} else {
+		angle = getBaseAdvance(rpm, engineLoad);
+	}
+	return fixAngle(angle + engineConfiguration->ignitionOffset);
 }
 
 void prepareTimingMap(void) {
-	for (int k = 0; k < FUEL_LOAD_COUNT; k++)
-		timing_ptrs[k] = engineConfiguration->fuelTable[k];
+	for (int k = 0; k < AD_LOAD_COUNT; k++)
+		timing_ptrs[k] = engineConfiguration->ignitionTable[k];
 	initialized = TRUE;
 }

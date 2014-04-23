@@ -100,6 +100,9 @@ int isValidIntakeAirTemperature(float temperature) {
 	return !cisnan(temperature) && temperature > -50 && temperature < 100;
 }
 
+/**
+ * @return coolant temperature, in Celcius
+ */
 float getCoolantTemperature(void) {
 	float temperature = getTemperatureC(&engineConfiguration2->clt);
 	if (!isValidCoolantTemperature(temperature))
@@ -142,8 +145,10 @@ void prepareThermistorCurve(ThermistorConf * config) {
 
 float getIntakeAirTemperature(void) {
 	float temperature = getTemperatureC(&engineConfiguration2->iat);
-	if (!isValidIntakeAirTemperature(temperature))
+	if (!isValidIntakeAirTemperature(temperature)) {
+		warning(OBD_PCM_Processor_Fault, "unrealistic intake temperature %f", temperature);
 		return NAN;
+	}
 	return temperature;
 }
 
