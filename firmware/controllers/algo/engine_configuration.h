@@ -3,7 +3,7 @@
  * @brief	Main engine configuration data structure.
  *
  * @date Oct 30, 2013
- * @author Andrey Belomutskiy, (c) 2012-2013
+ * @author Andrey Belomutskiy, (c) 2012-2014
  */
 
 #ifndef ENGINE_CONFIGURATION_H_
@@ -28,7 +28,6 @@ typedef struct {
 	 */
 	short int crankingRpm;
 } cranking_parameters_s;
-
 
 /**
  * @brief Here we store information about which injector or spark should be fired when.
@@ -56,8 +55,7 @@ typedef enum {
 	/**
 	 * You would use this value if you want to see a detailed graph of your trigger events
 	 */
-	AC_TRIGGER = 1,
-	AC_MAP = 2,
+	AC_TRIGGER = 1, AC_MAP = 2,
 
 	Internal_ForceMyEnumIntSize_analog_chart_mode = ENUM_SIZE_HACK,
 } analog_chart_e;
@@ -152,22 +150,25 @@ typedef struct {
 	// WARNING: by default, our small enums are ONE BYTE. but if the are surrounded by non-enums - alignments do the trick
 	engine_type_e engineType;
 
-
 	float fuelTable[FUEL_LOAD_COUNT][FUEL_RPM_COUNT]; // size 1024, offset 1816
 	float fuelLoadBins[FUEL_LOAD_COUNT]; // offset 2840
 	// RPM is float and not integer in order to use unified methods for interpolation
 	float fuelRpmBins[FUEL_RPM_COUNT]; // offset 3542
 
-	// WARNING: by default, our small enums are ONE BYTE. this one is made 4-byte with the 'ENUM_SIZE_HACK' hack
-	pin_output_mode_e injectionPinMode;
-	pin_output_mode_e ignitionPinMode;
-	pin_output_mode_e idlePinMode;
-	pin_output_mode_e fuelPumpPinMode;
-	pin_output_mode_e malfunctionIndicatorPinMode;
+	int unused[3];
+
+	injection_mode_e crankingInjectionMode;
+	injection_mode_e injectionMode;
+
 
 	/**
-	 * This is the angle between Top Dead Center (TDC) and the first trigger event.
-	 * Knows this angle allows us to control timing and other angles in reference to TDC.
+	 * Inside rusEfi all the angles are handled in relation to the trigger synchronization event
+	 * which depends on the trigger shape and has nothing to do wit Top Dead Center (TDC)
+	 *
+	 * For engine configuration humans need angles from TDC.
+	 *
+	 * This field is the angle between Top Dead Center (TDC) and the first trigger event.
+	 * Knowing this angle allows us to control timing and other angles in reference to TDC.
 	 */
 	float globalTriggerAngleOffset;
 	/**
@@ -224,14 +225,13 @@ typedef struct {
 	int HD44780height;
 
 	int tpsAdcChannel;
-	brain_pin_e ignitionPins[12];
+	int overrideCrankingIgnition;
+	int analogChartFrequency;
+	int unused5[10];
 
 	trigger_config_s triggerConfig;
 
 	int needSecondTriggerInput;
-	brain_pin_e injectionPins[12];
-	brain_pin_e fuelPumpPin;
-	brain_pin_e idleValvePin;
 	int vBattAdcChannel;
 
 	float globalFuelCorrection;
@@ -245,7 +245,63 @@ typedef struct {
 
 	float injectionOffset;
 
+	float crankingTimingAngle;
+
+	float diffLoadEnrichmentCoef;
 } engine_configuration_s;
+
+typedef struct {
+	// WARNING: by default, our small enums are ONE BYTE. this one is made 4-byte with the 'ENUM_SIZE_HACK' hack
+	brain_pin_e idleValvePin;
+	pin_output_mode_e idleValvePinMode;
+
+	brain_pin_e fuelPumpPin;
+	pin_output_mode_e fuelPumpPinMode;
+
+	brain_pin_e injectionPins[12];
+	pin_output_mode_e injectionPinMode;
+
+	brain_pin_e ignitionPins[12];
+	pin_output_mode_e ignitionPinMode;
+
+	brain_pin_e malfunctionIndicatorPin;
+	pin_output_mode_e malfunctionIndicatorPinMode;
+
+	brain_pin_e fanPin;
+	pin_output_mode_e fanPinMode;
+
+	brain_pin_e electronicThrottlePin1;
+	pin_output_mode_e electronicThrottlePin1Mode;
+
+	brain_pin_e idleSwitchPin;
+	pin_input_mode_e idleSwitchPinMode;
+
+	brain_pin_e alternatorControlPin;
+	pin_output_mode_e alternatorControlPinMode;
+
+	brain_pin_e HD44780_rs;
+	brain_pin_e HD44780_e;
+	brain_pin_e HD44780_db4;
+	brain_pin_e HD44780_db5;
+	brain_pin_e HD44780_db6;
+	brain_pin_e HD44780_db7;
+
+	brain_pin_e triggerSimulatorPins[2];
+	pin_output_mode_e triggerSimulatorPinModes[2];
+
+	/**
+	 * Digital Potentiometer is used by stock ECU stimulation code
+	 */
+	spi_device_e digitalPotentiometerSpiDevice;
+	brain_pin_e digitalPotentiometerChipSelect[4];
+
+
+} board_configuration_s;
+
+typedef struct {
+	engine_configuration_s engineConfiguration;
+	board_configuration_s boardConfiguration;
+} persistent_config_s;
 
 /**
  * this part of the structure is separate just because so far
@@ -258,31 +314,35 @@ typedef struct {
 	Thermistor iat;
 	Thermistor clt;
 
-
 	int crankAngleRange;
-
 
 	trigger_shape_s triggerShape;
 
 	cranking_ignition_mode_e crankingIgnitionMode;
 
 	EventHandlerConfiguration engineEventConfiguration;
+
+	int isInjectionEnabledFlag;
 } engine_configuration2_s;
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif /* __cplusplus */
 
 char* getConfigurationName(engine_configuration_s *engineConfiguration);
-void setDefaultConfiguration(engine_configuration_s *engineConfiguration);
+void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration);
+void setWholeFuelMap(engine_configuration_s *engineConfiguration, float value);
 void setConstantDwell(engine_configuration_s *engineConfiguration, float dwellMs);
 void setDefaultNonPersistentConfiguration(engine_configuration2_s *engineConfiguration2);
 void printConfiguration(engine_configuration_s *engineConfiguration, engine_configuration2_s *engineConfiguration2);
 void printFloatArray(char *prefix, float array[], int size);
 
-void resetConfigurationExt(engine_type_e engineType, engine_configuration_s *engineConfiguration, engine_configuration2_s *engineConfiguration2);
-void applyNonPersistentConfiguration(engine_configuration_s *engineConfiguration, engine_configuration2_s *engineConfiguration2, engine_type_e engineType);
+void resetConfigurationExt(engine_type_e engineType,
+		engine_configuration_s *engineConfiguration,
+		engine_configuration2_s *engineConfiguration2,
+		board_configuration_s *boardConfiguration);
+void applyNonPersistentConfiguration(engine_configuration_s *engineConfiguration,
+		engine_configuration2_s *engineConfiguration2, engine_type_e engineType);
 
 void incrementGlobalConfigurationVersion(void);
 int getGlobalConfigurationVersion(void);
@@ -290,6 +350,5 @@ int getGlobalConfigurationVersion(void);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-
 
 #endif /* ENGINE_CONFIGURATION_H_ */

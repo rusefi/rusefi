@@ -50,7 +50,7 @@ int is_usb_serial_ready(void) {
 
 #endif
 
-#ifdef EFI_SERIAL_OVER_USB
+#if EFI_SERIAL_OVER_USB
 int is_serial_ready(void) {
 	return is_usb_serial_ready();
 }

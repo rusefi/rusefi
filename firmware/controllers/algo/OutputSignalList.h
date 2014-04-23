@@ -24,13 +24,15 @@
 #include "signal_executor.h"
 #include "io_pins.h"
 
-#define OUTPUT_SIGNAL_MAX_SIZE 40
+// todo: this value is too low for 6 cyl engine, get it back to 60
+#define OUTPUT_SIGNAL_MAX_SIZE 60
 
 class OutputSignalList {
 public:
 	OutputSignalList();
 	void clear();
 	OutputSignal * add(io_pin_e ioPin);
+	int getSize();
 
 private:
 	int size;

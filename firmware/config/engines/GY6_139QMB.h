@@ -12,6 +12,5 @@
 #include "engine_configuration.h"
 
 void setGy6139qmbDefaultEngineConfiguration(engine_configuration_s *engineConfiguration);
-void setGy6139qmbengine_configuration2_s(engine_configuration_s *engineConfiguration, engine_configuration2_s *engineConfiguration2);
 
 #endif /* GY6_139QMB_H_ */

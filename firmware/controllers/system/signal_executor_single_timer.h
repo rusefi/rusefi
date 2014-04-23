@@ -2,7 +2,7 @@
  * @file	signal_executor_single_timer.h
  *
  * @author Dobrin Georgiev
- * @author Andrey Belomutskiy, (c) 2012-2013
+ * @author Andrey Belomutskiy, (c) 2012-2014
  * @date Nov 27, 2013
  */
 

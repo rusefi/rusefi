@@ -10,7 +10,6 @@
 
 #include "engine_configuration.h"
 
-void setFordInline6(engine_configuration_s *engineConfiguration);
-void setFordInline6_2(engine_configuration_s *engineConfiguration, engine_configuration2_s *engineConfiguration2);
+void setFordInline6(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration);
 
 #endif /* FORD_1995_INLINE_6_H_ */

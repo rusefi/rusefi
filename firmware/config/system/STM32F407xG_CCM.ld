@@ -145,6 +145,10 @@ SECTIONS
         . = ALIGN(4);
         *(.bss.default_heap)
         . = ALIGN(4);
+		*(.ccm)
+		. = ALIGN(4);
+		*(.ccm.*)
+		. = ALIGN(4);
         PROVIDE(_cmm_end = .);
     } > ccmram
 

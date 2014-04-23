@@ -25,6 +25,7 @@
 #include "allsensors.h"
 #include "interpolation.h"
 #include "trigger_decoder.h"
+#include "engine_math.h"
 
 #if EFI_PROD_CODE
 #include "tunerstudio.h"
@@ -41,6 +42,10 @@
 #include "GY6_139QMB.h"
 #include "mazda_miata_nb.h"
 #include "mazda_323.h"
+#include "saturn_ion.h"
+#include "MiniCooperR50.h"
+#include "ford_escort_gt.h"
+#include "citroenBerlingoTU3JP.h"
 
 #define ADC_CHANNEL_FAST_ADC 256
 
@@ -75,13 +80,24 @@ void initBpsxD1Sensor(afr_sensor_s *sensor) {
 	sensor->value2 = 19;
 }
 
+void setWholeFuelMap(engine_configuration_s *engineConfiguration, float value) {
+	for (int l = 0; l < FUEL_LOAD_COUNT; l++) {
+		for (int r = 0; r < FUEL_RPM_COUNT; r++) {
+			engineConfiguration->fuelTable[l][r] = value;
+		}
+	}
+}
 
 /**
  * @brief	Global default engine configuration
  * This method sets the default global engine configuration. These values are later overridden by engine-specific defaults
  * and the settings saves in flash memory.
  */
-void setDefaultConfiguration(engine_configuration_s *engineConfiguration) {
+void setDefaultConfiguration(engine_configuration_s *engineConfiguration,
+		board_configuration_s *boardConfiguration) {
+	memset(engineConfiguration, 0, sizeof(engine_configuration_s));
+	memset(boardConfiguration, 0, sizeof(board_configuration_s));
+
 	engineConfiguration->injectorLag = 0.0;
 
 	for (int i = 0; i < IAT_CURVE_SIZE; i++) {
@@ -114,12 +130,16 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration) {
 
 	setConstantDwell(engineConfiguration, 4); // 4ms is global default dwell
 
-	for (int k = 0; k < FUEL_LOAD_COUNT; k++) {
-		for (int r = 0; r < FUEL_RPM_COUNT; r++) {
-			// 3ms would be the global default
-			engineConfiguration->fuelTable[k][r] = 3;
-		}
-	}
+	setFuelLoadBin(engineConfiguration, 1.2, 4.4);
+	setFuelRpmBin(engineConfiguration, 800, 7000);
+	setTimingLoadBin(engineConfiguration, 1.2, 4.4);
+	setTimingRpmBin(engineConfiguration, 800, 7000);
+
+	setTableBin(engineConfiguration->map.config.samplingAngleBins, MAP_ANGLE_SIZE, 800, 7000);
+	setTableBin(engineConfiguration->map.config.samplingWindowBins, MAP_ANGLE_SIZE, 800, 7000);
+
+	// set_whole_timing_map 3
+	setWholeFuelMap(engineConfiguration, 3);
 
 	setThermistorConfiguration(&engineConfiguration->cltThermistorConf, 0, 9500, 23.8889, 2100, 48.8889, 1000);
 	engineConfiguration->cltThermistorConf.bias_resistor =  1500;
@@ -141,16 +161,16 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration) {
 
 	engineConfiguration->map.channel = ADC_CHANNEL_FAST_ADC;
 
-	engineConfiguration->injectionPinMode = OM_DEFAULT;
-	engineConfiguration->ignitionPinMode = OM_DEFAULT;
-	engineConfiguration->idlePinMode = OM_DEFAULT;
-	engineConfiguration->fuelPumpPinMode = OM_DEFAULT;
-	engineConfiguration->malfunctionIndicatorPinMode = OM_DEFAULT;
+	engineConfiguration->firingOrder = FO_1_THEN_3_THEN_4_THEN2;
+	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
+	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 
+	engineConfiguration->ignitionMode = IM_ONE_COIL;
 	engineConfiguration->globalTriggerAngleOffset = 0;
 	engineConfiguration->injectionOffset = 0;
 	engineConfiguration->ignitionOffset = 0;
-
+	engineConfiguration->overrideCrankingIgnition = TRUE;
+	engineConfiguration->analogChartFrequency = 20;
 
 	engineConfiguration->engineLoadMode = LM_MAF;
 
@@ -158,6 +178,9 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration) {
 
 	engineConfiguration->fanOnTemperature = 75;
 	engineConfiguration->fanOffTemperature = 70;
+
+	engineConfiguration->tpsMin = convertVoltageTo10bitADC(1.250);
+	engineConfiguration->tpsMax = convertVoltageTo10bitADC(4.538);
 
 	engineConfiguration->can_nbc_type = CAN_BUS_NBC_BMW;
 	engineConfiguration->can_sleep_period = 50;
@@ -199,21 +222,52 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration) {
 
 	engineConfiguration->needSecondTriggerInput = TRUE;
 
-	engineConfiguration->injectionPins[0] = GPIOB_9;
-	engineConfiguration->injectionPins[1] = GPIOB_8;
-	engineConfiguration->injectionPins[2] = GPIOE_3;
-	engineConfiguration->injectionPins[3] = GPIOE_5;
-	engineConfiguration->injectionPins[4] = GPIOE_6;
-//	engineConfiguration->injectionPins[5] = GPIOE_5;
-
-	engineConfiguration->ignitionPins[0] = GPIOC_7;
-	engineConfiguration->ignitionPins[1] = GPIOE_4; // todo: update this value
-	engineConfiguration->ignitionPins[2] = GPIOE_0; // todo: update this value
-	engineConfiguration->ignitionPins[3] = GPIOE_1; // todo: update this value
-
 	engineConfiguration->map.config.mapType = MT_CUSTOM;
 	engineConfiguration->map.config.Min = 0;
 	engineConfiguration->map.config.Max = 500;
+
+	engineConfiguration->diffLoadEnrichmentCoef = 1;
+
+	boardConfiguration->idleValvePin = GPIOE_2;
+	boardConfiguration->idleValvePinMode = OM_DEFAULT;
+	boardConfiguration->fuelPumpPin = GPIOC_13;
+	boardConfiguration->fuelPumpPinMode = OM_DEFAULT;
+	boardConfiguration->electronicThrottlePin1 = GPIOC_9;
+
+	boardConfiguration->injectionPins[0] = GPIOB_9;
+	boardConfiguration->injectionPins[1] = GPIOB_8;
+	boardConfiguration->injectionPins[2] = GPIOE_3;
+	boardConfiguration->injectionPins[3] = GPIOE_5;
+	boardConfiguration->injectionPins[4] = GPIOE_6;
+	boardConfiguration->injectionPins[5] = GPIOC_12;
+	boardConfiguration->injectionPinMode = OM_DEFAULT;
+
+	boardConfiguration->ignitionPins[0] = GPIOC_7;
+	boardConfiguration->ignitionPins[1] = GPIOE_4; // todo: update this value
+	boardConfiguration->ignitionPins[2] = GPIOE_0; // todo: update this value
+	boardConfiguration->ignitionPins[3] = GPIOE_1; // todo: update this value
+	boardConfiguration->ignitionPinMode = OM_DEFAULT;
+
+	boardConfiguration->malfunctionIndicatorPin = GPIOC_9;
+	boardConfiguration->malfunctionIndicatorPinMode = OM_DEFAULT;
+
+	boardConfiguration->fanPin = GPIOC_15;
+	boardConfiguration->fanPinMode = OM_DEFAULT;
+
+	boardConfiguration->idleSwitchPin = GPIOC_8;
+
+	boardConfiguration->triggerSimulatorPins[0] = GPIOD_1;
+	boardConfiguration->triggerSimulatorPins[1] = GPIOD_2;
+
+	boardConfiguration->triggerSimulatorPinModes[0] = OM_DEFAULT;
+	boardConfiguration->triggerSimulatorPinModes[1] = OM_DEFAULT;
+
+	boardConfiguration->HD44780_rs = GPIOE_9;
+	boardConfiguration->HD44780_e = GPIOE_11;
+	boardConfiguration->HD44780_db4 = GPIOE_13;
+	boardConfiguration->HD44780_db5 = GPIOE_15;
+	boardConfiguration->HD44780_db6 = GPIOB_11;
+	boardConfiguration->HD44780_db7 = GPIOB_13;
 }
 
 void setDefaultNonPersistentConfiguration(engine_configuration2_s *engineConfiguration2) {
@@ -226,11 +280,14 @@ void setDefaultNonPersistentConfiguration(engine_configuration2_s *engineConfigu
 	engineConfiguration2->hasCltSensor = TRUE;
 }
 
-void resetConfigurationExt(engine_type_e engineType, engine_configuration_s *engineConfiguration, engine_configuration2_s *engineConfiguration2) {
+void resetConfigurationExt(engine_type_e engineType,
+		engine_configuration_s *engineConfiguration,
+		engine_configuration2_s *engineConfiguration2,
+		board_configuration_s *boardConfiguration) {
 	/**
 	 * Let's apply global defaults first
 	 */
-	setDefaultConfiguration(engineConfiguration);
+	setDefaultConfiguration(engineConfiguration, boardConfiguration);
 	engineConfiguration->engineType = engineType;
 	/**
 	 * And override them with engine-specific defaults
@@ -238,12 +295,12 @@ void resetConfigurationExt(engine_type_e engineType, engine_configuration_s *eng
 	switch (engineType) {
 #if EFI_SUPPORT_DODGE_NEON || defined(__DOXYGEN__)
 	case DODGE_NEON_1995:
-		setDodgeNeonEngineConfiguration(engineConfiguration);
+		setDodgeNeonEngineConfiguration(engineConfiguration, boardConfiguration);
 		break;
 #endif /* EFI_SUPPORT_DODGE_NEON */
 #if EFI_SUPPORT_FORD_ASPIRE || defined(__DOXYGEN__)
 	case FORD_ASPIRE_1996:
-		setFordAspireEngineConfiguration(engineConfiguration);
+		setFordAspireEngineConfiguration(engineConfiguration, boardConfiguration);
 		break;
 #endif /* EFI_SUPPORT_FORD_ASPIRE */
 #if EFI_SUPPORT_FORD_FIESTA || defined(__DOXYGEN__)
@@ -251,22 +308,39 @@ void resetConfigurationExt(engine_type_e engineType, engine_configuration_s *eng
 		setFordFiestaDefaultEngineConfiguration(engineConfiguration);
 		break;
 #endif /* EFI_SUPPORT_FORD_FIESTA */
+#if EFI_SUPPORT_NISSAN_PRIMERA || defined(__DOXYGEN__)
+	case NISSAN_PRIMERA:
+		setNissanPrimeraEngineConfiguration(engineConfiguration);
+		break;
+#endif
 	case HONDA_ACCORD:
 		setHondaAccordConfiguration(engineConfiguration);
 		break;
 #if EFI_SUPPORT_1995_FORD_INLINE_6 || defined(__DOXYGEN__)
 	case FORD_INLINE_6_1995:
-		setFordInline6(engineConfiguration);
+		setFordInline6(engineConfiguration, boardConfiguration);
 		break;
 #endif /* EFI_SUPPORT_1995_FORD_INLINE_6 */
 	case GY6_139QMB:
 		setGy6139qmbDefaultEngineConfiguration(engineConfiguration);
 		break;
 	case MAZDA_MIATA_NB:
-		setMazdaMiataNbEngineConfiguration(engineConfiguration);
+		setMazdaMiataNbEngineConfiguration(engineConfiguration, boardConfiguration);
 		break;
 	case MAZDA_323:
 		setMazda323EngineConfiguration(engineConfiguration);
+		break;
+	case SATURN_ION_2004:
+		setSaturnIonEngineConfiguration(engineConfiguration);
+		break;
+	case MINI_COOPER_R50:
+		setMiniCooperR50(engineConfiguration, boardConfiguration);
+		break;
+	case FORD_ESCORT_GT:
+		setFordEscortGt(engineConfiguration, boardConfiguration);
+		break;
+	case CITROEN_TU3JP:
+		setCitroenBerlingoTU3JPConfiguration(engineConfiguration, boardConfiguration);
 		break;
 	default:
 		firmwareError("Unexpected engine type: %d", engineType);
@@ -280,51 +354,17 @@ void resetConfigurationExt(engine_type_e engineType, engine_configuration_s *eng
 }
 
 void applyNonPersistentConfiguration(engine_configuration_s *engineConfiguration, engine_configuration2_s *engineConfiguration2, engine_type_e engineType) {
+// todo: this would require 'initThermistors() to re-establish a reference, todo: fix
+//	memset(engineConfiguration2, 0, sizeof(engine_configuration2_s));
+
+
+	engineConfiguration2->isInjectionEnabledFlag = TRUE;
+
 	initializeTriggerShape(engineConfiguration, engineConfiguration2);
 	chDbgCheck(engineConfiguration2->triggerShape.size != 0, "size is zero");
 	chDbgCheck(engineConfiguration2->triggerShape.shaftPositionEventCount, "shaftPositionEventCount is zero");
 
-	switch (engineConfiguration->engineType) {
-#if EFI_SUPPORT_DODGE_NEON
-	case DODGE_NEON_1995:
-		setDodgeNeonengine_configuration2_s(engineConfiguration, engineConfiguration2);
-		break;
-#endif /* EFI_SUPPORT_DODGE_NEON */
-#if EFI_SUPPORT_FORD_ASPIRE
-	case FORD_ASPIRE_1996:
-		setFordAspireengine_configuration2_s(engineConfiguration, engineConfiguration2);
-		break;
-#endif /* EFI_SUPPORT_FORD_ASPIRE */
-#if EFI_SUPPORT_FORD_FIESTA
-	case FORD_FIESTA:
-		setFordFiestaengine_configuration2_s(engineConfiguration, engineConfiguration2);
-		break;
-#endif /* EFI_SUPPORT_FORD_FIESTA */
-#if EFI_SUPPORT_NISSAN_PRIMERA
-		case NISSAN_PRIMERA:
-		setNissanPrimeraengine_configuration2_s(engineConfiguration, engineConfiguration2);
-		break;
-#endif /* EFI_SUPPORT_NISSAN_PRIMERA */
-	case HONDA_ACCORD:
-		setHondaAccordConfiguration2(engineConfiguration, engineConfiguration2);
-		break;
-#if EFI_SUPPORT_1995_FORD_INLINE_6 || defined(__DOXYGEN__)
-	case FORD_INLINE_6_1995:
-		setFordInline6_2(engineConfiguration, engineConfiguration2);
-		break;
-#endif /* EFI_SUPPORT_1995_FORD_INLINE_6 */
-	case GY6_139QMB:
-		setGy6139qmbengine_configuration2_s(engineConfiguration, engineConfiguration2);
-		break;
-	case MAZDA_MIATA_NB:
-		setMazdaMiataNb_configuration2_s(engineConfiguration, engineConfiguration2);
-		break;
-	case MAZDA_323:
-		setMazda323configuration2_s(engineConfiguration, engineConfiguration2);
-		break;
-	default:
-		fatal("Unexpected engine type")
-		;
-	}
+	prepareOutputSignals(engineConfiguration, engineConfiguration2);
+	initializeIgnitionActions(0, engineConfiguration, engineConfiguration2);
 
 }

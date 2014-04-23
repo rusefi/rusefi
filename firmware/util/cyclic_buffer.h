@@ -29,6 +29,7 @@ class cyclic_buffer
   public:
     void add(int value);
     int sum(int length);
+    void clear();
 
 
   private:

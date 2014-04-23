@@ -2,7 +2,7 @@
  * global.h
  *
  * @date May 27, 2013
- * @author Andrey Belomutskiy, (c) 2012-2013
+ * @author Andrey Belomutskiy, (c) 2012-2014
  */
 
 #ifndef GLOBAL_H_
@@ -14,6 +14,8 @@
 #include <string.h>
 
 #include "rusefi_enums.h"
+#include "obd_error_codes.h"
+#include "error_handling.h"
 
 /* definition to expand macro then apply to pragma message */
 #define VALUE_TO_STRING(x) #x

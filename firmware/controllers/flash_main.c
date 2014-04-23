@@ -31,26 +31,33 @@
 #include "GY6_139QMB.h"
 
 static engine_type_e defaultEngineType = FORD_ASPIRE_1996;
+//static engine_type_e defaultEngineType = DODGE_NEON_1995;
 
 static Logging logger;
 
 #if defined __GNUC__
-static FlashState flashState __attribute__((section(".ccm")));
+FlashState flashState __attribute__((section(".ccm")));
 #else
-static FlashState flashState;
+FlashState flashState;
 #endif
 
-engine_configuration_s *engineConfiguration = &flashState.configuration;
+engine_configuration_s *engineConfiguration = &flashState.persistentConfiguration.engineConfiguration;
+board_configuration_s *boardConfiguration = &flashState.persistentConfiguration.boardConfiguration;
+
 extern engine_configuration2_s * engineConfiguration2;
 
 #define FLASH_ADDR 0x08060000
 
 #define FLASH_USAGE sizeof(FlashState)
 
+crc flashStateCrc(FlashState *state) {
+	return calc_crc((const crc*) &state->persistentConfiguration, sizeof(persistent_config_s));
+}
+
 void writeToFlash(void) {
 	flashState.version = FLASH_DATA_VERSION;
 	scheduleMsg(&logger, "FLASH_DATA_VERSION=%d", flashState.version);
-	crc result = calc_crc((const crc*) &flashState.configuration, sizeof(engine_configuration_s));
+	crc result = flashStateCrc(&flashState);
 	flashState.value = result;
 	scheduleMsg(&logger, "Reseting flash=%d", FLASH_USAGE);
 	flashErase(FLASH_ADDR, FLASH_USAGE);
@@ -61,37 +68,37 @@ void writeToFlash(void) {
 	scheduleMsg(&logger, "Flashed: %d", result);
 }
 
-static int isValid(FlashState *state) {
+static int isValidCrc(FlashState *state) {
 	if (state->version != FLASH_DATA_VERSION) {
 		scheduleMsg(&logger, "Unexpected flash version: %d", state->version);
 		return FALSE;
 	}
-	crc result = calc_crc((const crc*) &state->configuration, sizeof(engine_configuration_s));
-	if (result != state->value) {
-		scheduleMsg(&logger, "CRC got: %d", result);
-		scheduleMsg(&logger, "CRC expected: %d", state->value);
-	}
-	return result == state->value;
+	crc result = flashStateCrc(state);
+	int isValidCrc = result == state->value;
+	if (!isValidCrc)
+		scheduleMsg(&logger, "CRC got %d while %d expected", result, state->value);
+	return isValidCrc;
 }
 
 static void doResetConfiguration(void) {
-	resetConfigurationExt(defaultEngineType, engineConfiguration, engineConfiguration2);
+	resetConfigurationExt(engineConfiguration->engineType, engineConfiguration, engineConfiguration2, boardConfiguration);
 }
 
 static void readFromFlash(void) {
 
 	flashRead(FLASH_ADDR, (char *) &flashState, FLASH_USAGE);
-	engineConfiguration->firmwareVersion = getVersion();
 
 	setDefaultNonPersistentConfiguration(engineConfiguration2);
 
-	if (!isValid(&flashState)) {
-		scheduleMsg(&logger, "Not valid flash state, setting default");
-		doResetConfiguration();
+	if (!isValidCrc(&flashState)) {
+		scheduleMsg(&logger, "Need to reset flash to default");
+		resetConfigurationExt(defaultEngineType, engineConfiguration, engineConfiguration2, boardConfiguration);
 	} else {
-		scheduleMsg(&logger, "Got valid state from flash!");
+		scheduleMsg(&logger, "Got valid configuration from flash!");
 		applyNonPersistentConfiguration(engineConfiguration, engineConfiguration2, engineConfiguration->engineType);
 	}
+	// we can only change the state after the CRC check
+	engineConfiguration->firmwareVersion = getRusEfiVersion();
 }
 
 void initFlash(void) {

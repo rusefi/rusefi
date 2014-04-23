@@ -7,7 +7,7 @@
  * http://rusefi.com/forum/viewtopic.php?f=3&t=498
  *
  * @date Mar 8, 2014
- * @author Andrey Belomutskiy, (c) 2012-2013
+ * @author Andrey Belomutskiy, (c) 2012-2014
  */
 
 #ifndef MAZDA_323_H_
@@ -17,6 +17,5 @@
 #include "engine_configuration.h"
 
 void setMazda323EngineConfiguration(engine_configuration_s *engineConfiguration);
-void setMazda323configuration2_s(engine_configuration_s *engineConfiguration, engine_configuration2_s *engineConfiguration2);
 
 #endif /* MAZDA_323_H_ */

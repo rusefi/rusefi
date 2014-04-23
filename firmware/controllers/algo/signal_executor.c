@@ -38,22 +38,15 @@
 
 #endif /* EFI_WAVE_ANALYZER */
 
-#define OUTPUT_SIGNAL_COUNT 40
+#if EFI_PROD_CODE || EFI_SIMULATOR
+	static Logging logger;
+#endif
 
-static OutputSignal signals[OUTPUT_SIGNAL_COUNT];
-int outputSignalCount;
-
-void resetOutputSignals(void) {
-	outputSignalCount = 0;
-}
-
-OutputSignal * addOutputSignal(io_pin_e ioPin) {
-	chDbgCheck(outputSignalCount < OUTPUT_SIGNAL_COUNT, "too many output signals");
-	OutputSignal *signal = &signals[outputSignalCount++];
-
-	initOutputSignal(signal, ioPin);
-
-	return signal;
+void initSignalExecutor(void) {
+#if EFI_PROD_CODE || EFI_SIMULATOR
+	initLogging(&logger, "s exec");
+#endif
+	initSignalExecutorImpl();
 }
 
 void initOutputSignalBase(OutputSignal *signal) {
@@ -66,10 +59,22 @@ static void turnHigh(OutputSignal *signal) {
 #if EFI_DEFAILED_LOGGING
 	signal->hi_time = chTimeNow();
 #endif /* EFI_DEFAILED_LOGGING */
+	io_pin_e pin = signal->io_pin;
 	// turn the output level ACTIVE
 	// todo: this XOR should go inside the setOutputPinValue method
-	setOutputPinValue(signal->io_pin, TRUE);
+	setOutputPinValue(pin, TRUE);
 	// sleep for the needed duration
+
+#if EFI_PROD_CODE || EFI_SIMULATOR
+	if(
+			pin == SPARKOUT_1_OUTPUT ||
+			pin == SPARKOUT_3_OUTPUT) {
+//		time_t now = chTimeNow();
+//		float an = getCrankshaftAngle(now);
+//		scheduleMsg(&logger, "spark up%d %d", pin, now);
+//		scheduleMsg(&logger, "spark angle %d %f", (int)an, an);
+	}
+#endif
 
 #if EFI_WAVE_CHART
 	addWaveChartEvent(signal->name, "up", "");
@@ -99,18 +104,28 @@ static void turnLow(OutputSignal *signal) {
  * @param	dwell	the number of ticks of output duration
  *
  */
-void scheduleOutput(OutputSignal *signal, int delay, int dwell, time_t now) {
-	chDbgCheck(dwell >= 0, "dwell cannot be negative");
 
-	scheduleOutputBase(signal, delay, dwell);
+int getRevolutionCounter(void);
 
-	scheduleTask(&signal->signalTimerUp, delay, (schfunc_t) &turnHigh, (void *) signal);
-	scheduleTask(&signal->signalTimerDown, delay + dwell, (schfunc_t) &turnLow, (void*)signal);
+void scheduleOutput(OutputSignal *signal, float delayMs, float durationMs, time_t now) {
+	if (durationMs < 0) {
+		firmwareError("duration cannot be negative: %d", durationMs);
+		return;
+	}
+
+	scheduleOutputBase(signal, delayMs, durationMs);
+
+	int index = getRevolutionCounter() % 2;
+	scheduling_s * sUp = &signal->signalTimerUp[index];
+	scheduling_s * sDown = &signal->signalTimerDown[index];
+
+	scheduleTask(sUp, TICKS_IN_MS * delayMs, (schfunc_t) &turnHigh, (void *) signal);
+	scheduleTask(sDown, TICKS_IN_MS * (delayMs + durationMs), (schfunc_t) &turnLow, (void*)signal);
 
 	signal->last_scheduling_time = now;
 }
 
-void scheduleOutputBase(OutputSignal *signal, int offset, int duration) {
+void scheduleOutputBase(OutputSignal *signal, float delayMs, float durationMs) {
 	/**
 	 * it's better to check for the exact 'TRUE' value since otherwise
 	 * we would accept any memory garbage

@@ -17,12 +17,14 @@
 #include "trigger_decoder.h"
 #include "console_io.h"
 
+extern board_configuration_s *boardConfiguration;
+
 static pin_output_mode_e *pinDefaultState[IO_PIN_COUNT];
 static OutputPin outputs[IO_PIN_COUNT];
 static io_pin_e leds[] = { LED_CRANKING, LED_RUNNING, LED_ERROR, LED_COMMUNICATION_1, LED_DEBUG, LED_EXT_1,
 		LED_CHECK_ENGINE };
 
-static GPIO_TypeDef *PORTS[] = {GPIOA, GPIOB, GPIOC, GPIOD, GPIOE, GPIOF, GPIOG, GPIOH};
+static GPIO_TypeDef *PORTS[] = { GPIOA, GPIOB, GPIOC, GPIOD, GPIOE, GPIOF, GPIOG, GPIOH };
 
 static pin_output_mode_e DEFAULT_OUTPUT = OM_DEFAULT;
 
@@ -53,6 +55,8 @@ inline static void assertOMode(pin_output_mode_e mode) {
  * @brief Sets the value according to current electrical settings
  */
 void setOutputPinValue(io_pin_e pin, int logicValue) {
+	if (outputs[pin].port == GPIO_NULL)
+		return;
 	chDbgCheck(pinDefaultState[pin]!=NULL, "pin mode not initialized");
 	pin_output_mode_e mode = *pinDefaultState[pin];
 	setPinValue(&outputs[pin], getElectricalValue(logicValue, mode), logicValue);
@@ -101,7 +105,13 @@ static void errBlinkingThread(void *arg) {
 	}
 }
 
-void outputPinRegisterExt(char *msg, io_pin_e ioPin, GPIO_TypeDef *port, uint32_t pin, pin_output_mode_e *outputMode) {
+static void outputPinRegisterExt(char *msg, io_pin_e ioPin, GPIO_TypeDef *port, uint32_t pin, pin_output_mode_e *outputMode) {
+	if (port == GPIO_NULL) {
+		// that's for GRIO_NONE
+		outputs[ioPin].port = port;
+		return;
+	}
+
 	assertOMode(*outputMode);
 	iomode_t mode = (*outputMode == OM_DEFAULT || *outputMode == OM_INVERTED) ?
 	PAL_MODE_OUTPUT_PUSHPULL :
@@ -113,10 +123,14 @@ void outputPinRegisterExt(char *msg, io_pin_e ioPin, GPIO_TypeDef *port, uint32_
 }
 
 GPIO_TypeDef * getHwPort(brain_pin_e brainPin) {
+	if (brainPin == GPIO_NONE)
+		return GPIO_NULL;
 	return PORTS[brainPin / 16];
 }
 
 int getHwPin(brain_pin_e brainPin) {
+	if (brainPin == GPIO_NONE)
+		return -1;
 	return brainPin % 16;
 }
 
@@ -154,12 +168,13 @@ void initOutputPins(void) {
 	outputPinRegister("is running status", LED_RUNNING, LED_RUNNING_STATUS_PORT, LED_RUNNING_STATUS_PIN);
 	outputPinRegister("communication status 1", LED_COMMUNICATION_1, LED_COMMUNICATION_PORT, LED_COMMUNICATION_PIN);
 
-	outputPinRegister("ext led 1", LED_EXT_1, EXTRA_LED_1_PORT, EXTRA_LED_1_PIN);
+//	outputPinRegister("ext led 1", LED_EXT_1, EXTRA_LED_1_PORT, EXTRA_LED_1_PIN);
 //	outputPinRegister("ext led 2", LED_EXT_2, EXTRA_LED_2_PORT, EXTRA_LED_2_PIN);
 //	outputPinRegister("ext led 3", LED_EXT_3, EXTRA_LED_2_PORT, EXTRA_LED_3_PIN);
-	outputPinRegister("alive1", LED_DEBUG, GPIOD, 6);
+//	outputPinRegister("alive1", LED_DEBUG, GPIOD, 6);
 
-	outputPinRegister("MalfunctionIndicator", LED_CHECK_ENGINE, LED_CHECK_ENGINE_PORT, LED_CHECK_ENGINE_PIN);
+	outputPinRegister("MalfunctionIndicator", LED_CHECK_ENGINE, getHwPort(boardConfiguration->malfunctionIndicatorPin),
+			getHwPin(boardConfiguration->malfunctionIndicatorPin));
 
 	outputPinRegister("spi CS1", SPI_CS_1, SPI_CS1_PORT, SPI_CS1_PIN);
 	outputPinRegister("spi CS2", SPI_CS_2, SPI_CS2_PORT, SPI_CS2_PIN);
@@ -168,9 +183,11 @@ void initOutputPins(void) {
 	outputPinRegister("spi CS5", SPI_CS_SD_MODULE, SPI_SD_MODULE_PORT, SPI_SD_MODULE_PIN);
 
 	// todo: should we move this code closer to the fuel pump logic?
-	outputPinRegister("fuel pump relay", FUEL_PUMP_RELAY, FUEL_PUMP_PORT, FUEL_PUMP_PIN);
+	outputPinRegister("fuel pump relay", FUEL_PUMP_RELAY, getHwPort(boardConfiguration->fuelPumpPin),
+			getHwPin(boardConfiguration->fuelPumpPin));
 
-	outputPinRegister("fan relay", FAN_RELAY, FAN_RELAY_PORT, FAN_RELAY_PIN);
+	outputPinRegister("fan relay", FAN_RELAY, getHwPort(boardConfiguration->fanPin),
+			getHwPin(boardConfiguration->fanPin));
 
 	initialLedsBlink();
 

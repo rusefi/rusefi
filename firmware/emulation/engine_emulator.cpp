@@ -98,7 +98,9 @@ void initEngineEmulator(void) {
 	initTimePerfActions();
 #endif
 
-//	initPotentiometers();
+#if EFI_POTENTIOMETER
+	initPotentiometers();
+#endif /* EFI_POTENTIOMETER */
 
 	//initECUstimulator();
 	initTriggerEmulator();

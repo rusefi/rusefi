@@ -10,4 +10,8 @@ ENGINES_SRC = $(PROJECT_DIR)/config/engines/audi_aan.c \
 	$(PROJECT_DIR)/config/engines/GY6_139QMB.c \
 	$(PROJECT_DIR)/config/engines/mazda_323.c
 
-ENGINES_SRC_CPP = $(PROJECT_DIR)/config/engines/ford_aspire.cpp 
+ENGINES_SRC_CPP = $(PROJECT_DIR)/config/engines/ford_aspire.cpp \
+	$(PROJECT_DIR)/config/engines/MiniCooperR50.cpp \
+	$(PROJECT_DIR)/config/engines/ford_escort_gt.cpp \
+	$(PROJECT_DIR)/config/engines/citroenBerlingoTU3JP.cpp \
+	$(PROJECT_DIR)/config/engines/saturn_ion.cpp

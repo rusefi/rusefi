@@ -5,11 +5,13 @@
  * @note this file should probably not include any other files
  *
  * @date Jan 14, 2014
- * @author Andrey Belomutskiy, (c) 2012-2013
+ * @author Andrey Belomutskiy, (c) 2012-2014
  */
 
 #ifndef RUSEFI_ENUMS_H_
 #define RUSEFI_ENUMS_H_
+
+#include "efifeatures.h"
 
 // for now I want all enums to be 32 bit integers. At some point maybe we will make the one-byte
 // this is about offsets and sizes in TunerStudio
@@ -58,6 +60,14 @@ typedef enum {
 
 	MAZDA_323 = 11,
 
+	SATURN_ION_2004 = 12,
+
+	MINI_COOPER_R50 = 13,
+
+	FORD_ESCORT_GT = 14,
+
+	CITROEN_TU3JP = 15,
+
 	Internal_ForceMyEnumIntSize_engine_type = ENUM_SIZE_HACK,
 } engine_type_e;
 
@@ -67,6 +77,9 @@ typedef enum {
 	TT_DODGE_NEON = 2,
 	TT_MAZDA_MIATA_NA = 3,
 	TT_MAZDA_MIATA_NB = 4,
+	TT_GM_7X = 5,
+	TT_MINI_COOPER_R50 = 6,
+	TT_FORD_ESCORT_GT = 7,
 
 	Internal_ForceMyEnumIntSize_trigger_type = ENUM_SIZE_HACK,
 } trigger_type_e;
@@ -127,11 +140,20 @@ typedef enum {
 	 * GND for logical ON, VCC for logical OFF
 	 */
 	OM_INVERTED = 1,
+	/**
+	 * logical OFF is floating, logical ON is GND
+	 */
 	OM_OPENDRAIN = 2,
 	OM_OPENDRAIN_INVERTED = 3,
 
 	Internal_ForceMyEnumIntSize_pin_output_mode = ENUM_SIZE_HACK,
 } pin_output_mode_e;
+
+typedef enum {
+	PI_DEFAULT = 0,
+
+	Internal_ForceMyEnumIntSize_pin_input_mode = ENUM_SIZE_HACK,
+} pin_input_mode_e;
 
 typedef enum {
 	FO_ONE_CYLINDER = 1,
@@ -154,6 +176,14 @@ typedef enum {
 	Internal_ForceMyEnumIntSize_ignition_mode = ENUM_SIZE_HACK,
 } ignition_mode_e;
 
+typedef enum {
+	IM_SIMULTANEOUS = 0,
+	IM_SEQUENTIAL = 1,
+	IM_BATCH = 2,
+
+	Internal_ForceMyEnumIntSize_injection_mode = ENUM_SIZE_HACK,
+} injection_mode_e;
+
 /**
  * @brief Ignition Mode while cranking
  */
@@ -165,6 +195,14 @@ typedef enum {
 } cranking_ignition_mode_e;
 
 typedef enum {
+	SPI_NONE = 0,
+	SPI_DEVICE_1 = 1,
+	SPI_DEVICE_2 = 2,
+
+	Internal_ForceMyEnumIntSize_spi_device = ENUM_SIZE_HACK,
+} spi_device_e;
+
+typedef enum {
 	IE_NO_ERROR = 0,
 	IE_UNEXPECTED_FIRING_ORDER = 1,
 
@@ -172,7 +210,7 @@ typedef enum {
 } internal_error_e;
 
 /**
- * Hardware pin
+ * Hardware pin. This enum is platform-specific.
  */
 typedef enum {
 	GPIOA_0 = 0,
@@ -259,6 +297,8 @@ typedef enum {
 	GPIOE_13 = 77,
 	GPIOE_14 = 78,
 	GPIOE_15 = 79,
+
+	GPIO_NONE = 80,
 
 	Internal_ForceMyEnumIntSize_cranking_brain_pin = ENUM_SIZE_HACK,
 } brain_pin_e;

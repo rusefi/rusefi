@@ -102,11 +102,11 @@ static msg_t consoleThreadThreadEntryPoint(void *arg) {
 #if EFI_SERIAL_OVER_USB
 #else
 #if EFI_SERIAL_OVER_UART
-static SerialConfig serialConfig = { SERIAL_SPEED, 0, USART_CR2_STOP1_BITS | USART_CR2_LINEN, 0 };
+static SerialConfig serialConfig = {SERIAL_SPEED, 0, USART_CR2_STOP1_BITS | USART_CR2_LINEN, 0};
 #endif /* EFI_SERIAL_OVER_UART */
 #endif /* EFI_SERIAL_OVER_USB */
 
-#if ! defined EFI_SERIAL_OVER_USB && ! EFI_SIMULATOR
+#if ! EFI_SERIAL_OVER_USB && ! EFI_SIMULATOR
 int is_serial_ready(void) {
 	return TRUE;
 }
@@ -143,7 +143,10 @@ void startChibiosConsole(void (*console_line_callback_p)(char *)) {
 
 extern cnt_t dbg_isr_cnt;
 
-void lockAnyContext(void) {
+int lockAnyContext(void) {
+	int is_locked = isLocked();
+	if (is_locked)
+		return TRUE;
 	if (isIsrContext()) {
 		chSysLockFromIsr()
 		;
@@ -151,6 +154,7 @@ void lockAnyContext(void) {
 		chSysLock()
 		;
 	}
+	return FALSE;
 }
 
 void lockOutputBuffer(void) {

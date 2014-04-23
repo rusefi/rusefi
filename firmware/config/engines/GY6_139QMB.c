@@ -13,10 +13,11 @@ void setGy6139qmbDefaultEngineConfiguration(engine_configuration_s *engineConfig
 	engineConfiguration->rpmHardLimit = 9000;
 	engineConfiguration->crankingSettings.crankingRpm = 800;
 	engineConfiguration->analogInputDividerCoefficient = 1.52;
- 	engineConfiguration->engineLoadMode = LM_MAP;
+	engineConfiguration->engineLoadMode = LM_MAP;
 	engineConfiguration->globalTriggerAngleOffset = 15;
 	engineConfiguration->analogChartMode = AC_MAP;
- 	engineConfiguration->cylindersCount = 1;	engineConfiguration->rpmMultiplier = 1;
+	engineConfiguration->cylindersCount = 1;
+	engineConfiguration->rpmMultiplier = 1;
 
 	engineConfiguration->firingOrder = FO_ONE_CYLINDER;
 
@@ -26,9 +27,5 @@ void setGy6139qmbDefaultEngineConfiguration(engine_configuration_s *engineConfig
 	engineConfiguration->triggerConfig.totalToothCount = 1;
 	engineConfiguration->triggerConfig.skippedToothCount = 0;
 	engineConfiguration->triggerConfig.isSynchronizationNeeded = FALSE;
-	engineConfiguration->needSecondTriggerInput  = FALSE;
+	engineConfiguration->needSecondTriggerInput = FALSE;
 }
-
-void setGy6139qmbengine_configuration2_s(engine_configuration_s *engineConfiguration, engine_configuration2_s *engineConfiguration2) {
-}
-

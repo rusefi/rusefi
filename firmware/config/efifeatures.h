@@ -1,10 +1,10 @@
-/*
+/**
  * @file efifeatures.h
  *
  * @brief In this header we can configure which firmware modules are used.
  *
  * @date Aug 29, 2013
- * @author Andrey Belomutskiy, (c) 2012-2013
+ * @author Andrey Belomutskiy, (c) 2012-2014
  */
 
 #ifndef EFIFEATURES_H_
@@ -50,10 +50,11 @@
 #define EFI_SHAFT_POSITION_INPUT TRUE
 
 /**
- * MCP42010 digital potentiometer supporrt. This could be useful if you are stimulating some
+ * MCP42010 digital potentiometer support. This could be useful if you are stimulating some
  * stock ECU
  */
 #define EFI_POTENTIOMETER FALSE
+//#define EFI_POTENTIOMETER TRUE
 
 #define EFI_INTERNAL_ADC TRUE
 
@@ -116,5 +117,8 @@
 
 //#define EFI_IDLE_CONTROL TRUE
 #define EFI_IDLE_CONTROL FALSE
+
+//#define EFI_ELECTRONIC_THROTTLE_BODY TRUE
+#define EFI_ELECTRONIC_THROTTLE_BODY FALSE
 
 #endif /* EFIFEATURES_H_ */

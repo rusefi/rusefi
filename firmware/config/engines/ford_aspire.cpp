@@ -1,6 +1,8 @@
 /**
- * @file    ford_aspire.c
+ * @file    ford_aspire.cpp
  * @brief	1996 Ford Aspire default engine configuration
+ *
+ * FORD_ASPIRE_1996 = 3
  *
  * @date Sep 9, 2013
  * @author Andrey Belomutskiy, (c) 2012-2014
@@ -19,51 +21,12 @@
 #if EFI_SUPPORT_FORD_ASPIRE || defined(__DOXYGEN__)
 
 /**
- * Just the default RPM bin - with TunerStudio you can adjust even the bins
- */
-
-static float default_fuel_maf_bins[FUEL_LOAD_COUNT] = {/*0*/ 1.200000,
-/*1*/ 1.413333,
-/*2*/ 1.626667,
-/*3*/ 1.840000,
-/*4*/ 2.053333,
-/*5*/ 2.266667,
-/*6*/ 2.480000,
-/*7*/ 2.693333,
-/*8*/ 2.906667,
-/*9*/ 3.120000,
-/*10*/ 3.333333,
-/*11*/ 3.546667,
-/*12*/ 3.760000,
-/*13*/ 3.973333,
-/*14*/ 4.186667,
-/*15*/ 4.400000,
-};
-static float default_fuel_rpm_bins[FUEL_RPM_COUNT] = {/*0*/ 800.000000,
-/*1*/ 1213.333374,
-/*2*/ 1626.666748,
-/*3*/ 2040.000000,
-/*4*/ 2453.333496,
-/*5*/ 2866.666748,
-/*6*/ 3280.000000,
-/*7*/ 3693.333496,
-/*8*/ 4106.666992,
-/*9*/ 4520.000000,
-/*10*/ 4933.333496,
-/*11*/ 5346.666992,
-/*12*/ 5760.000000,
-/*13*/ 6173.333496,
-/*14*/ 6586.666992,
-/*15*/ 7000.000000,
-};
-
-/**
  * This is just the default map which is stored into flash memory in case flash is empty
  * The convenient way to override these default would be to tune this map using TunerStudio software
  * with which rusEfi is integrated
  */
 static float default_fuel_table[FUEL_LOAD_COUNT][FUEL_RPM_COUNT] = {
-/* RPM			800.000000	1213.333374	1626.666748	2040.000000	2453.333496	2866.666748	3280.000000	3693.333496	4106.666992	4520.000000	4933.333496	5346.666992	5760.000000	6173.333496	6586.666992	7000.000000*/
+/* RPM					800.000000	1213.333374	1626.666748	2040.000000	2453.333496	2866.666748	3280.000000	3693.333496	4106.666992	4520.000000	4933.333496	5346.666992	5760.000000	6173.333496	6586.666992	7000.000000*/
 /* Load 1.200000 */{	1.542000,	1.547600,	1.551867,	1.570000,	1.550000,	0.908666,	0.794800,	0.775200,	0.791733,	0.800000,	0.798667,	0.805733,	0.810000,	0.810000,	0.810000,	0.810000},
 /* Load 1.413333 */{	1.532133,	1.565325,	1.551244,	1.552773,	1.546018,	0.802089,	0.810000,	0.788507,	0.808898,	0.744987,	0.701378,	0.711404,	0.744667,	0.810000,	0.810000,	0.810000},
 /* Load 1.626667 */{	1.543600,	1.545573,	1.555956,	1.545973,	1.415333,	0.115288,	0.000000,	0.000000,	0.000000,	0.000000,	0.000000,	0.000000,	0.000000,	0.000000,	0.000000,	0.000000},
@@ -80,41 +43,6 @@ static float default_fuel_table[FUEL_LOAD_COUNT][FUEL_RPM_COUNT] = {
 /* Load 3.973333 */{	16.975599,	15.343084,	15.305715,	15.287172,	15.288801,	15.484089,	15.928854,	15.780366,	15.669041,	15.836693,	16.123335,	15.054674,	14.972587,	14.610000,	14.610000,	14.610000},
 /* Load 4.186667 */{	16.961868,	15.368391,	15.210348,	15.290641,	15.263707,	15.485778,	15.827333,	15.802435,	15.677885,	15.827120,	15.997155,	16.027468,	15.478480,	15.190000,	15.190000,	15.190000},
 /* Load 4.400000 */{	17.010000,	15.250000,	15.680000,	15.440000,	15.270000,	15.470000,	15.800000,	15.730000,	15.600000,	15.790000,	16.120001,	16.110001,	15.630000,	15.150000,	15.150000,	15.150000}
-};
-
-static float default_timing_maf_table[AD_LOAD_COUNT] = {/*0*/ 1.200000,
-/*1*/ 1.413333,
-/*2*/ 1.626667,
-/*3*/ 1.840000,
-/*4*/ 2.053333,
-/*5*/ 2.266667,
-/*6*/ 2.480000,
-/*7*/ 2.693333,
-/*8*/ 2.906667,
-/*9*/ 3.120000,
-/*10*/ 3.333333,
-/*11*/ 3.546667,
-/*12*/ 3.760000,
-/*13*/ 3.973333,
-/*14*/ 4.186667,
-/*15*/ 4.400000,
-};
-static float default_timing_rpm_table[AD_RPM_COUNT] = {/*0*/ 800.000000,
-/*1*/ 1213.333374,
-/*2*/ 1626.666748,
-/*3*/ 2040.000000,
-/*4*/ 2453.333496,
-/*5*/ 2866.666748,
-/*6*/ 3280.000000,
-/*7*/ 3693.333496,
-/*8*/ 4106.666992,
-/*9*/ 4520.000000,
-/*10*/ 4933.333496,
-/*11*/ 5346.666992,
-/*12*/ 5760.000000,
-/*13*/ 6173.333496,
-/*14*/ 6586.666992,
-/*15*/ 7000.000000,
 };
 
 static float default_timing_table[AD_LOAD_COUNT][AD_RPM_COUNT] = {
@@ -137,84 +65,18 @@ static float default_timing_table[AD_LOAD_COUNT][AD_RPM_COUNT] = {
 /* Load 4.400000 */{	0.350000,	5.590000,	0.502000,	0.910000,	0.864000,	0.954000,	1.324000,	-7.436000,	1.170000,	1.054000,	2.058000,	2.098000,	2.636000,	-12.352000,	-12.352000,	-12.352000}
 };
 
-static void configureAspireEngineEventHandler(engine_configuration_s *e,  trigger_shape_s * s, EventHandlerConfiguration *config) {
-
-	resetEventList(&config->crankingInjectionEvents);
-//	registerActuatorEventExt(e, s, &config->crankingInjectionEvents, addOutputSignal(INJECTOR_1_OUTPUT), x);
-//	registerActuatorEventExt(e, s, &config->crankingInjectionEvents, addOutputSignal(INJECTOR_2_OUTPUT), x);
-//	registerActuatorEventExt(e, s, &config->crankingInjectionEvents, addOutputSignal(INJECTOR_3_OUTPUT), x);
-//	registerActuatorEventExt(e, s, &config->crankingInjectionEvents, addOutputSignal(INJECTOR_4_OUTPUT), x);
-//	registerActuatorEventExt(e, s, &config->crankingInjectionEvents, addOutputSignal(INJECTOR_1_OUTPUT), x + 180);
-//	registerActuatorEventExt(e, s, &config->crankingInjectionEvents, addOutputSignal(INJECTOR_2_OUTPUT), x + 180);
-//	registerActuatorEventExt(e, s, &config->crankingInjectionEvents, addOutputSignal(INJECTOR_3_OUTPUT), x + 180);
-//	registerActuatorEventExt(e, s, &config->crankingInjectionEvents, addOutputSignal(INJECTOR_4_OUTPUT), x + 180);
-//	registerActuatorEventExt(e, s, &config->crankingInjectionEvents, addOutputSignal(INJECTOR_1_OUTPUT), x + 360);
-//	registerActuatorEventExt(e, s, &config->crankingInjectionEvents, addOutputSignal(INJECTOR_2_OUTPUT), x + 360);
-//	registerActuatorEventExt(e, s, &config->crankingInjectionEvents, addOutputSignal(INJECTOR_3_OUTPUT), x + 360);
-//	registerActuatorEventExt(e, s, &config->crankingInjectionEvents, addOutputSignal(INJECTOR_4_OUTPUT), x + 360);
-//	registerActuatorEventExt(e, s, &config->crankingInjectionEvents, addOutputSignal(INJECTOR_1_OUTPUT), x + 540);
-//	registerActuatorEventExt(e, s, &config->crankingInjectionEvents, addOutputSignal(INJECTOR_2_OUTPUT), x + 540);
-//	registerActuatorEventExt(e, s, &config->crankingInjectionEvents, addOutputSignal(INJECTOR_3_OUTPUT), x + 540);
-//	registerActuatorEventExt(e, s, &config->crankingInjectionEvents, addOutputSignal(INJECTOR_4_OUTPUT), x + 540);
-
-	registerActuatorEvent(&config->crankingInjectionEvents, 1, addOutputSignal(INJECTOR_1_OUTPUT), 0);
-	registerActuatorEvent(&config->crankingInjectionEvents, 1, addOutputSignal(INJECTOR_2_OUTPUT), 0);
-	registerActuatorEvent(&config->crankingInjectionEvents, 1, addOutputSignal(INJECTOR_3_OUTPUT), 0);
-	registerActuatorEvent(&config->crankingInjectionEvents, 1, addOutputSignal(INJECTOR_4_OUTPUT), 0);
-	registerActuatorEvent(&config->crankingInjectionEvents, 3, addOutputSignal(INJECTOR_1_OUTPUT), 0);
-	registerActuatorEvent(&config->crankingInjectionEvents, 3, addOutputSignal(INJECTOR_2_OUTPUT), 0);
-	registerActuatorEvent(&config->crankingInjectionEvents, 3, addOutputSignal(INJECTOR_3_OUTPUT), 0);
-	registerActuatorEvent(&config->crankingInjectionEvents, 3, addOutputSignal(INJECTOR_4_OUTPUT), 0);
-	registerActuatorEvent(&config->crankingInjectionEvents, 6, addOutputSignal(INJECTOR_1_OUTPUT), 0);
-	registerActuatorEvent(&config->crankingInjectionEvents, 6, addOutputSignal(INJECTOR_2_OUTPUT), 0);
-	registerActuatorEvent(&config->crankingInjectionEvents, 6, addOutputSignal(INJECTOR_3_OUTPUT), 0);
-	registerActuatorEvent(&config->crankingInjectionEvents, 6, addOutputSignal(INJECTOR_4_OUTPUT), 0);
-	registerActuatorEvent(&config->crankingInjectionEvents, 8, addOutputSignal(INJECTOR_1_OUTPUT), 0);
-	registerActuatorEvent(&config->crankingInjectionEvents, 8, addOutputSignal(INJECTOR_2_OUTPUT), 0);
-	registerActuatorEvent(&config->crankingInjectionEvents, 8, addOutputSignal(INJECTOR_3_OUTPUT), 0);
-	registerActuatorEvent(&config->crankingInjectionEvents, 8, addOutputSignal(INJECTOR_4_OUTPUT), 0);
-
-	addFuelEvents(e, s, config);
-
-
-//	i = 1;
-//	registerActuatorEventExt(e, s, &config->injectionEvents, addOutputSignal(INJECTOR_1_OUTPUT + getCylinderId(e->firingOrder,i ) - 1), x + i * 720 / 4);
-//	registerActuatorEventExt(e, s, &config->injectionEvents, addOutputSignal(INJECTOR_4_OUTPUT), x + 360);
-//	registerActuatorEventExt(e, s, &config->injectionEvents, addOutputSignal(INJECTOR_2_OUTPUT), x + 540);
-//	registerActuatorEvent(&config->injectionEvents, 1, addOutputSignal(INJECTOR_4_OUTPUT), 0);
-//	registerActuatorEvent(&config->injectionEvents, 3, addOutputSignal(INJECTOR_2_OUTPUT), 0);
-//	registerActuatorEvent(&config->injectionEvents, 6, addOutputSignal(INJECTOR_1_OUTPUT), 0);
-//	registerActuatorEvent(&config->injectionEvents, 8, addOutputSignal(INJECTOR_3_OUTPUT), 0);
-
-	float y = -106 + 360;
-	float x = 74;
-
-	resetEventList(&config->ignitionEvents);
-//	registerActuatorEvent(&config->ignitionEvents, 1, addOutputSignal(SPARKOUT_1_OUTPUT), 0);
-//	registerActuatorEvent(&config->ignitionEvents, 3, addOutputSignal(SPARKOUT_1_OUTPUT), 0);
-//	registerActuatorEvent(&config->ignitionEvents, 6, addOutputSignal(SPARKOUT_1_OUTPUT), 0);
-//	registerActuatorEvent(&config->ignitionEvents, 8, addOutputSignal(SPARKOUT_1_OUTPUT), 0);
-	registerActuatorEventExt(e, s, &config->ignitionEvents, addOutputSignal(SPARKOUT_1_OUTPUT), x);
-	registerActuatorEventExt(e, s, &config->ignitionEvents, addOutputSignal(SPARKOUT_1_OUTPUT), x + 180);
-	registerActuatorEventExt(e, s, &config->ignitionEvents, addOutputSignal(SPARKOUT_1_OUTPUT), x + 360);
-	registerActuatorEventExt(e, s, &config->ignitionEvents, addOutputSignal(SPARKOUT_1_OUTPUT), x + 540);
-}
-
 static void setDefaultMaps(engine_configuration_s *engineConfiguration) {
-	for (int i = 0; i < FUEL_LOAD_COUNT; i++)
-		engineConfiguration->fuelLoadBins[i] = default_fuel_maf_bins[i];
-	for (int i = 0; i < FUEL_RPM_COUNT; i++)
-		engineConfiguration->fuelRpmBins[i] = default_fuel_rpm_bins[i];
+
+	setFuelLoadBin(engineConfiguration, 1.2, 4.4);
+	setFuelRpmBin(engineConfiguration, 800, 7000);
+	setTimingLoadBin(engineConfiguration, 1.2, 4.4);
+	setTimingRpmBin(engineConfiguration, 800, 7000);
+
 	for (int k = 0; k < FUEL_LOAD_COUNT; k++) {
 		for (int r = 0; r < FUEL_RPM_COUNT; r++) {
 			engineConfiguration->fuelTable[k][r] = default_fuel_table[k][r];
 		}
 	}
-
-	for (int i = 0; i < AD_LOAD_COUNT; i++)
-		engineConfiguration->ignitionLoadBins[i] = default_timing_maf_table[i];
-	for (int i = 0; i < AD_RPM_COUNT; i++)
-		engineConfiguration->ignitionRpmBins[i] = default_timing_rpm_table[i];
 
 	for (int k = 0; k < AD_LOAD_COUNT; k++) {
 		for (int r = 0; r < AD_RPM_COUNT; r++) {
@@ -223,7 +85,7 @@ static void setDefaultMaps(engine_configuration_s *engineConfiguration) {
 	}
 }
 
-void setFordAspireEngineConfiguration(engine_configuration_s *engineConfiguration) {
+void setFordAspireEngineConfiguration(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
 	engineConfiguration->tpsMin = 1;
 	engineConfiguration->tpsMax = 1000;
 
@@ -236,39 +98,46 @@ void setFordAspireEngineConfiguration(engine_configuration_s *engineConfiguratio
 	engineConfiguration->crankingSettings.fuelAtMaxTempMs = 8;
 
 	engineConfiguration->crankingSettings.coolantTempMinC = 0; // 20ms at 0C
-	engineConfiguration->crankingSettings.fuelAtMinTempMs = 20;
+	engineConfiguration->crankingSettings.fuelAtMinTempMs = 15;
 
 //	engineConfiguration->ignitionPinMode = OM_INVERTED;
 
 	engineConfiguration->cylindersCount = 4;
 	engineConfiguration->firingOrder = FO_1_THEN_3_THEN_4_THEN2;
 	engineConfiguration->globalTriggerAngleOffset = 175;
-	engineConfiguration->ignitionOffset = 35;
-	engineConfiguration->injectionOffset = 254;
+	engineConfiguration->ignitionOffset = 98 - 11;
+	engineConfiguration->injectionOffset = 59;
 
 	setDefaultMaps(engineConfiguration);
 	engineConfiguration->crankingSettings.crankingRpm = 550;
-	engineConfiguration->crankingChargeAngle = 65;
+	engineConfiguration->crankingChargeAngle = 70;
+	engineConfiguration->crankingTimingAngle = 26 + 11;
 
-	for (int i = 0; i < DWELL_CURVE_SIZE; i++) {
-		engineConfiguration->sparkDwellBins[i] = 0;
-		engineConfiguration->sparkDwell[i] = -1;
-	}
-
-	engineConfiguration->sparkDwellBins[5] = 1;
-	engineConfiguration->sparkDwell[5] = 4;
-
-	engineConfiguration->sparkDwellBins[6] = 4500;
-	engineConfiguration->sparkDwell[6] = 4;
-
-	engineConfiguration->sparkDwellBins[7] = 12500;
-	engineConfiguration->sparkDwell[7] = 0;
-
+	setSingleCoilDwell(engineConfiguration);
+	engineConfiguration->ignitionMode = IM_ONE_COIL;
 	engineConfiguration->triggerConfig.triggerType = TT_FORD_ASPIRE;
 	engineConfiguration->triggerConfig.isSynchronizationNeeded = FALSE;
 
+
+	boardConfiguration->injectionPins[4] = GPIO_NONE;
+	boardConfiguration->injectionPins[5] = GPIO_NONE;
+
 	engineConfiguration->HD44780width = 20;
 	engineConfiguration->HD44780height = 4;
+
+	// Frankenstein analog input #1: adc1
+	// Frankenstein analog input #2: adc3
+	// Frankenstein analog input #3: adc13
+	// Frankenstein analog input #4: adc11
+	// Frankenstein analog input #5: adc
+	// Frankenstein analog input #6: adc
+	// Frankenstein analog input #7: adc
+	// Frankenstein analog input #8: adc
+	// Frankenstein analog input #9: adc
+	// Frankenstein analog input #10: adc
+	// Frankenstein analog input #11: adc
+	// Frankenstein analog input #12: adc
+
 
 	engineConfiguration->tpsAdcChannel = 3; // 15 is the old value
 	engineConfiguration->vBattAdcChannel = 0; // 1 is the old value
@@ -278,16 +147,6 @@ void setFordAspireEngineConfiguration(engine_configuration_s *engineConfiguratio
 //	engineConfiguration->iatAdcChannel =
 
 	engineConfiguration->map.config.mapType = MT_DENSO183;
-}
-
-void setFordAspireengine_configuration2_s(engine_configuration_s *engineConfiguration, engine_configuration2_s *engineConfiguration2) {
-
-
-	configureAspireEngineEventHandler(engineConfiguration,
-
-			&engineConfiguration2->triggerShape,
-
-			&engineConfiguration2->engineEventConfiguration);
 }
 
 #endif /* EFI_SUPPORT_FORD_ASPIRE */

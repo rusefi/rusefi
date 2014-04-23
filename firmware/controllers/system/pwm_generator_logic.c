@@ -38,7 +38,7 @@ static time_t togglePwmState(PwmConfig *state) {
 			 */
 			return TICKS_IN_MS;
 		}
-		if (state->cycleCallback != NULL )
+		if (state->cycleCallback != NULL)
 			state->cycleCallback(state);
 		chDbgAssert(state->period != 0, "period not initialized", NULL);
 		if (state->safe.period != state->period) {
@@ -62,6 +62,10 @@ static time_t togglePwmState(PwmConfig *state) {
 	scheduleMsg(&logger, "%s: nextSwitchTime %d", state->name, nextSwitchTime);
 #endif
 	time_t timeToSwitch = nextSwitchTime - chTimeNow();
+	if (timeToSwitch < 1) {
+//todo: introduce error and test this error handling		warning(OBD_PCM_Processor_Fault, "PWM: negative switch time");
+		timeToSwitch = 1;
+	}
 
 	state->safe.phaseIndex++;
 	if (state->safe.phaseIndex == state->multiWave.phaseCount) {
@@ -77,28 +81,28 @@ static void timerCallback(PwmConfig *state) {
 	scheduleTask(&state->scheduling, timeToSleep, (schfunc_t) timerCallback, state);
 }
 
-static msg_t deThread(PwmConfig *state) {
-	chRegSetThreadName("Wave");
-
-#if DEBUG_PWM
-	scheduleMsg(&logger, "Thread started for %s", state->name);
-#endif
-
-//	setPadValue(state, state->idleState); todo: currently pin is always zero at first iteration.
-// we can live with that for now
-	// todo: figure out overflow
-
-	while (TRUE) {
-		time_t timeToSwitch = togglePwmState(state);
-#if DEBUG_PWM
-		scheduleMsg(&logger, "%s: sleep %d", state->name, timeToSwitch);
-#endif
-		chThdSleep(timeToSwitch);
-	}
-#if defined __GNUC__
-	return -1;
-#endif
-}
+//static msg_t deThread(PwmConfig *state) {
+//	chRegSetThreadName("Wave");
+//
+//#if DEBUG_PWM
+//	scheduleMsg(&logger, "Thread started for %s", state->name);
+//#endif
+//
+////	setPadValue(state, state->idleState); todo: currently pin is always zero at first iteration.
+//// we can live with that for now
+//	// todo: figure out overflow
+//
+//	while (TRUE) {
+//		time_t timeToSwitch = togglePwmState(state);
+//#if DEBUG_PWM
+//		scheduleMsg(&logger, "%s: sleep %d", state->name, timeToSwitch);
+//#endif
+//		chThdSleep(timeToSwitch);
+//	}
+//#if defined __GNUC__
+//	return -1;
+//#endif
+//}
 
 /**
  * Incoming parameters are potentially just values on current stack, so we have to copy
@@ -123,8 +127,14 @@ void weComplexInit(char *msg, PwmConfig *state, int phaseCount, float *switchTim
 
 	chDbgCheck(state->period != 0, "period is not initialized");
 	chDbgCheck(phaseCount > 1, "count is too small");
-	chDbgCheck(phaseCount <= PWM_PHASE_MAX_COUNT, "count is too large");
-	chDbgCheck(switchTimes[phaseCount - 1] == 1, "last switch time has to be 1");
+	if (phaseCount > PWM_PHASE_MAX_COUNT) {
+		firmwareError("too many phases in PWM");
+		return;
+	}
+	if (switchTimes[phaseCount - 1] != 1) {
+		firmwareError("last switch time has to be 1");
+		return;
+	}
 	chDbgCheck(waveCount > 0, "waveCount should be positive");
 	checkSwitchTimes(phaseCount, switchTimes);
 
@@ -139,8 +149,8 @@ void weComplexInit(char *msg, PwmConfig *state, int phaseCount, float *switchTim
 	state->safe.period = -1;
 	state->safe.iteration = -1;
 	state->name = msg;
-	chThdCreateStatic(state->deThreadStack, sizeof(state->deThreadStack), NORMALPRIO, (tfunc_t) deThread, state);
+//	chThdCreateStatic(state->deThreadStack, sizeof(state->deThreadStack), NORMALPRIO, (tfunc_t) deThread, state);
 
-//	timerCallback(state);
+	timerCallback(state);
 
 }

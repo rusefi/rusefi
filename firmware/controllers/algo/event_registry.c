@@ -39,7 +39,7 @@ static void copyActuatorEvent(ActuatorEvent *source, ActuatorEvent*target) {
 
 void registerActuatorEvent(ActuatorEventList *list, int eventIndex, OutputSignal *actuator, float angleOffset) {
 	if (list->size == MAX_EVENT_COUNT) {
-		fatal("registerActuatorEvent");
+		fatal("registerActuatorEvent() too many events");
 		return;
 	}
 	ActuatorEvent *e = &list->events[list->size++];

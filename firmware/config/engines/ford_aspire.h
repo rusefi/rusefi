@@ -3,7 +3,7 @@
  * @brief	1996 Ford Aspire default engine configuration
  *
  * @date Aug 30, 2013
- * @author Andrey Belomutskiy, (c) 2012-2013
+ * @author Andrey Belomutskiy, (c) 2012-2014
  *
  * http://rusefi.com/forum/viewtopic.php?t=375
  *
@@ -19,8 +19,7 @@ extern "C"
 {
 #endif /* __cplusplus */
 
-void setFordAspireEngineConfiguration(engine_configuration_s *engineConfiguration);
-void setFordAspireengine_configuration2_s(engine_configuration_s *engineConfiguration, engine_configuration2_s *engineConfiguration2);
+void setFordAspireEngineConfiguration(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration);
 
 #ifdef __cplusplus
 }

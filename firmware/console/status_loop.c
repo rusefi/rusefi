@@ -51,16 +51,19 @@
 #include "engine_math.h"
 #include "idle_thread.h"
 #include "engine_configuration.h"
-#include "lcd_2x16.h"
 #include "rfiutil.h"
+#include "svnversion.h"
 
 #if EFI_PROD_CODE
 // todo: move this logic to algo folder!
 #include "rtc_helper.h"
+#include "lcd_HD44780.h"
 #endif
 
 // this 'true' value is needed for simulator
 static volatile int fullLog = TRUE;
+int warningEnabled = TRUE;
+//int warningEnabled = FALSE;
 
 extern engine_configuration_s * engineConfiguration;
 extern engine_configuration2_s * engineConfiguration2;
@@ -68,6 +71,11 @@ extern engine_configuration2_s * engineConfiguration2;
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
 static Logging logger;
+
+static void setWarningEnabled(int value) {
+	warningEnabled = value;
+}
+
 #endif /* EFI_PROD_CODE || EFI_SIMULATOR */
 
 #if EFI_FILE_LOGGING
@@ -138,6 +146,32 @@ void printSensors(void) {
 #endif /* EFI_FILE_LOGGING */
 }
 
+void printState(int currentCkpEventCounter) {
+	printSensors();
+
+	int rpm = getRpm();
+	debugInt(&logger, "ckp_c", currentCkpEventCounter);
+	debugInt(&logger, "fuel_lag", getRevolutionCounter());
+
+//	debugInt(&logger, "idl", getIdleSwitch());
+
+//	debugFloat(&logger, "table_spark", getAdvance(rpm, getMaf()), 2);
+
+	float engineLoad = getEngineLoad();
+	debugFloat(&logger, "fuel_base", getBaseFuel(rpm, engineLoad), 2);
+//	debugFloat(&logger, "fuel_iat", getIatCorrection(getIntakeAirTemperature()), 2);
+//	debugFloat(&logger, "fuel_clt", getCltCorrection(getCoolantTemperature()), 2);
+//	debugFloat(&logger, "fuel_lag", getInjectorLag(getVBatt()), 2);
+	debugFloat(&logger, "fuel", getRunningFuel(rpm, engineLoad), 2);
+
+	debugFloat(&logger, "timing", getAdvance(rpm, engineLoad), 2);
+
+//		float map = getMap();
+//		float fuel = getDefaultFuel(rpm, map);
+//		debugFloat(&logger, "d_fuel", fuel, 2);
+
+}
+
 #define INITIAL_FULL_LOG TRUE
 //#define INITIAL_FULL_LOG FALSE
 
@@ -149,8 +183,6 @@ volatile int needToReportStatus = FALSE;
 static int prevCkpEventCounter = -1;
 
 static Logging logger2;
-
-static time_t timeOfPreviousWarning = (systime_t) -10 * CH_FREQUENCY;
 
 static void printStatus(void) {
 	needToReportStatus = TRUE;
@@ -203,7 +235,7 @@ static void printVersion(systime_t nowSeconds) {
 	if (overflowDiff(nowSeconds, timeOfPreviousPrintVersion) < 4)
 		return;
 	timeOfPreviousPrintVersion = nowSeconds;
-	appendPrintf(&logger, "rusEfiVersion%s%d %s%s", DELIMETER, getVersion(), getConfigurationName(engineConfiguration),
+	appendPrintf(&logger, "rusEfiVersion%s%d@%d %s%s", DELIMETER, getRusEfiVersion(), SVN_VERSION, getConfigurationName(engineConfiguration),
 			DELIMETER);
 }
 
@@ -240,33 +272,14 @@ void updateDevConsoleState(void) {
 
 	timeOfPreviousReport = nowSeconds;
 
-	int rpm = getRpm();
 
 	prevCkpEventCounter = currentCkpEventCounter;
 
-	printSensors();
+	printState(currentCkpEventCounter);
 
-	debugInt(&logger, "ckp_c", currentCkpEventCounter);
-
-//	debugInt(&logger, "idl", getIdleSwitch());
-
-//	debugFloat(&logger, "table_spark", getAdvance(rpm, getMaf()), 2);
-
-	float engineLoad = getMaf();
-	debugFloat(&logger, "fuel_base", getBaseFuel(rpm, engineLoad), 2);
-	debugFloat(&logger, "fuel_iat", getIatCorrection(getIntakeAirTemperature()), 2);
-	debugFloat(&logger, "fuel_clt", getCltCorrection(getCoolantTemperature()), 2);
-	debugFloat(&logger, "fuel_lag", getInjectorLag(getVBatt()), 2);
-	debugFloat(&logger, "fuel", getRunningFuel(rpm, engineLoad), 2);
-
-	debugFloat(&logger, "timing", getAdvance(rpm, engineLoad), 2);
-
-//		float map = getMap();
-//		float fuel = getDefaultFuel(rpm, map);
-//		debugFloat(&logger, "d_fuel", fuel, 2);
 
 #if EFI_WAVE_ANALYZER
-	printWave(&logger);
+//	printWave(&logger);
 #endif
 
 	finishStatusLine();
@@ -298,40 +311,28 @@ static void showFuelMap(int rpm, int key100) {
 	scheduleMsg(&logger2, "fuel map value = %f", value);
 }
 
-/**
- * @returns TRUE in case there are too many warnings
- */
-// todo: extract to 'error_handling.c'
-int warning(const char *fmt, ...) {
-	time_t now = chTimeNow();
-	if (overflowDiff(now, timeOfPreviousWarning) < CH_FREQUENCY)
-		return TRUE; // we just had another warning, let's not spam
-	timeOfPreviousWarning = now;
-
-	resetLogging(&logger); // todo: is 'reset' really needed here?
-	appendMsgPrefix(&logger);
-	va_list ap;
-	va_start(ap, fmt);
-	vappendPrintf(&logger, fmt, ap);
-	va_end(ap);
-	append(&logger, DELIMETER);
-	scheduleLogging(&logger);
-
-	return FALSE;
-}
-
 static char buffer[10];
 static char dateBuffer[30];
 
 void updateHD44780lcd(void) {
 
-	lcd_HD44780_set_position(0, 12);
+	lcd_HD44780_set_position(0, 9);
+	lcd_HD44780_print_char('R');
+	lcd_HD44780_set_position(0, 10);
+
 	char * ptr = itoa10(buffer, getRpm());
 	ptr[0] = 0;
 	int len = ptr - buffer;
 	for (int i = 0; i < 6 - len; i++)
-		lcd_HD44780_print_char('_');
+		lcd_HD44780_print_char(' ');
 
+	lcd_HD44780_print_string(buffer);
+
+
+	lcd_HD44780_set_position(2, 0);
+	lcd_HD44780_print_char('C');
+
+	ftoa(buffer, getCoolantTemperature(), 100);
 	lcd_HD44780_print_string(buffer);
 
 #if EFI_PROD_CODE
@@ -345,6 +346,7 @@ void updateHD44780lcd(void) {
 static WORKING_AREA(lcdThreadStack, UTILITY_THREAD_STACK_SIZE);
 
 static void lcdThread(void *arg) {
+	chRegSetThreadName("lcd");
 	while (true) {
 #if EFI_HD44780_LCD
 		updateHD44780lcd();
@@ -356,6 +358,7 @@ static void lcdThread(void *arg) {
 static WORKING_AREA(tsThreadStack, UTILITY_THREAD_STACK_SIZE);
 
 static void tsStatusThread(void *arg) {
+	chRegSetThreadName("tuner s");
 	while (true) {
 #if EFI_TUNER_STUDIO
 		// sensor state for EFI Analytics Tuner Studio
@@ -372,6 +375,7 @@ void initStatusLoop(void) {
 
 	setFullLog(INITIAL_FULL_LOG);
 	addConsoleActionI(FULL_LOGGING_KEY, setFullLog);
+	addConsoleActionI("warn", setWarningEnabled);
 
 #if EFI_PROD_CODE
 	initLogging(&logger2, "main event handler");

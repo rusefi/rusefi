@@ -30,7 +30,8 @@
 
 #if EFI_SIGNAL_EXECUTOR_SLEEP || defined(__DOXYGEN__)
 
-void scheduleTask(scheduling_s *scheduling, int delay, schfunc_t callback, void *param) {
+void scheduleTask(scheduling_s *scheduling, float delayF, schfunc_t callback, void *param) {
+	int delay = delayF;
 	if (delay == 0) {
 		/**
 		 * in case of zero delay, we should invoke the callback
@@ -48,16 +49,15 @@ void scheduleTask(scheduling_s *scheduling, int delay, schfunc_t callback, void 
 	unlockAnyContext();
 }
 
-void scheduleByAngle(scheduling_s *timer, float angle, schfunc_t callback, void *param) {
-	int delay = (int)(getOneDegreeTime(getRpm()) * angle);
-	scheduleTask(timer, delay, callback, param);
-}
-
 void initOutputSignal(OutputSignal *signal, io_pin_e ioPin) {
 	signal->io_pin = ioPin;
 	signal->name = getPinName(ioPin);
 //	signal->duration = 0;
 	initOutputSignalBase(signal);
+}
+
+void initSignalExecutorImpl(void) {
+
 }
 
 #endif /* EFI_SIGNAL_EXECUTOR_SLEEP */

@@ -10,12 +10,13 @@
 #include "poten.h"
 #include "eficonsole.h"
 #include "pin_repository.h"
+#include "engine_configuration.h"
 
 /**
  * MCP42010 digital potentiometer driver
  *
  *
- * 1	CS		pin select						PB12
+ * 1	CS		pin select						PB12		PA10
  * 2	SCK		serial clock					PA5			PC10
  * 3	SI		serial input		(MOSI)		PA7			PC12
  * 4	Vss 	ground
@@ -34,6 +35,14 @@
  *
  */
 
+SPIDriver * getDigiralPotDevice(void) {
+#if STM32_SPI_USE_SPI2 || defined(__DOXYGEN__)
+//	return &SPID2;
+#endif
+	return &SPID3;
+}
+
+
 //#define POTEN_CS_PORT GPIOB
 //#define POTEN_CS_PIN 12
 
@@ -42,15 +51,13 @@
 
 // PA13 & PA14 are system pins
 
-// chip select
-#define POTEN_CS_PORT GPIOE
-#define POTEN_CS_PIN 15
-
-#define _POT_SPI &SPID2
-
 //// chip select
-//#define POTEN_CS_PORT GPIOA
-//#define POTEN_CS_PIN 10
+//#define POTEN_CS_PORT GPIOE
+//#define POTEN_CS_PIN 15
+
+// chip select
+#define POTEN_CS_PORT GPIOA
+#define POTEN_CS_PIN 10
 //#define POT_SPI &SPID3
 
 
@@ -123,7 +130,7 @@ void initPotentiometers() {
 #if EFI_POTENTIOMETER
 	initLogging(&logger, "potentiometer");
 
-	initPotentiometer(&config0, _POT_SPI, POTEN_CS_PORT, POTEN_CS_PIN);
+	initPotentiometer(&config0, getDigiralPotDevice(), POTEN_CS_PORT, POTEN_CS_PIN);
 
 	addConsoleActionI("pot0", setPotResistance0);
 	addConsoleActionI("pot1", setPotResistance1);

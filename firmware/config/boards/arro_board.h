@@ -34,12 +34,19 @@
 #define STM32_ICU_USE_TIM8                  FALSE
 #define STM32_ICU_USE_TIM9                  TRUE // wave input
 
+// todo: switch to continues ADC conversion for slow ADC?
+#define EFI_INTERNAL_SLOW_ADC_PWM	&PWMD8
+// todo: switch to continues ADC conversion for fast ADC?
+#define EFI_INTERNAL_FAST_ADC_PWM	&PWMD4
+
+
 #define STM32_PWM_USE_TIM1                  FALSE
 #define STM32_PWM_USE_TIM2                  FALSE
 #define STM32_PWM_USE_TIM3                  FALSE
+//
 #define STM32_PWM_USE_TIM4                  TRUE // fast adc
-#define STM32_PWM_USE_TIM5                  TRUE // slow adc
-#define STM32_PWM_USE_TIM8                  FALSE
+#define STM32_PWM_USE_TIM5                  FALSE
+#define STM32_PWM_USE_TIM8                  TRUE // slow adc
 #define STM32_PWM_USE_TIM9                  FALSE
 
 #define STM32_SPI_USE_SPI1                  FALSE
@@ -51,9 +58,6 @@
 
 #define STM32_I2C_I2C1_RX_DMA_STREAM        STM32_DMA_STREAM_ID(1, 5)
 #define STM32_I2C_I2C1_TX_DMA_STREAM        STM32_DMA_STREAM_ID(1, 6)
-
-#define EFI_INTERNAL_SLOW_ADC_PWM	&PWMD5
-#define EFI_INTERNAL_FAST_ADC_PWM	&PWMD4
 
 #define EFI_CAN_DEVICE CAND2
 #define EFI_CAN_RX_PORT GPIOB
@@ -199,20 +203,6 @@
 #define SECONDARY_SHAFT_POSITION_INPUT_PIN 5
 #define SECONDARY_SHAFT_POSITION_INPUT_CHANNEL ICU_CHANNEL_1
 
-
-#define IDLE_VALVE_PORT GPIOE
-#define IDLE_VALVE_PIN 2
-
-// todo: migrate to dynamic pin definition
-/* Check Engine light */
-#define LED_CHECK_ENGINE_PORT GPIOC
-#define LED_CHECK_ENGINE_PIN 9
-
-// todo: migrate to dynamic pin definition
-/* Fuel pump */
-#define FUEL_PUMP_PORT GPIOC
-#define FUEL_PUMP_PIN 13
-
 /* Logic analyzer */
 #define LOGIC_ANALYZER_1_DRIVER ICUD1
 #define LOGIC_ANALYZER_1_PORT GPIOA
@@ -222,34 +212,11 @@
 #define LOGIC_ANALYZER_2_PORT GPIOE
 #define LOGIC_ANALYZER_2_PIN 7
 
-/* Additional PINs on top of the standard discovery pins */
-#define EXTRA_LED_1_PORT GPIOC
-#define EXTRA_LED_1_PIN 14
-
-#define EXTRA_LED_2_PORT GPIOE
-#define EXTRA_LED_2_PIN 9
-
-#define EXTRA_LED_3_PORT GPIOE
-#define EXTRA_LED_3_PIN 11
-
-#define PRIMARY_SHAFT_POSITION_EMULATION_PIN 1
-#define PRIMARY_SHAFT_POSITION_EMULATION_PORT GPIOD
-
-#define SECONDARY_SHAFT_POSITION_EMULATION_PORT GPIOD
-#define SECONDARY_SHAFT_POSITION_EMULATION_PIN 2
-
-// todo: migrate to dynamic pin definition
-#define IDLE_SWITCH_PORT GPIOC
-#define IDLE_SWITCH_PIN 8
-
 //#define ETB_CONTROL_LINE_1_PORT GPIOE
 //#define ETB_CONTROL_LINE_1_PIN 0
 //
 //#define ETB_CONTROL_LINE_2_PORT GPIOB
 //#define ETB_CONTROL_LINE_2_PIN 8
-
-#define ETB_CONTROL_LINE_3_PORT GPIOC
-#define ETB_CONTROL_LINE_3_PIN 9
 
 //#define CONSOLE_PORT GPIOB
 //#define CONSOLE_TX_PIN 10
@@ -298,8 +265,8 @@
 
 #define EFI_SIGNAL_EXECUTOR_SLEEP TRUE
 #define EFI_SIGNAL_EXECUTOR_SINGLE_TIMER FALSE
+#define EFI_SIGNAL_EXECUTOR_ONE_TIMER FALSE
 #define EFI_SIGNAL_EXECUTOR_HW_TIMER FALSE
-
 
 //#define EFI_SIGNAL_EXECUTOR_SLEEP FALSE
 //#define EFI_SIGNAL_EXECUTOR_SINGLE_TIMER TRUE
@@ -312,22 +279,5 @@
 #define GPS_PORT GPIOB
 #define GPS_SERIAL_TX_PIN 6
 #define GPS_SERIAL_RX_PIN 7
-
-#define HD44780_PORT_RS	GPIOE
-#define HD44780_PIN_RS	9
-#define HD44780_PORT_E	GPIOE
-#define HD44780_PIN_E	11
-#define HD44780_PORT_DB4	GPIOE
-#define HD44780_PIN_DB4	13
-#define HD44780_PORT_DB5	GPIOE
-#define HD44780_PIN_DB5	15
-#define HD44780_PORT_DB6	GPIOB
-#define HD44780_PIN_DB6	11
-#define HD44780_PORT_DB7	GPIOB
-#define HD44780_PIN_DB7	13
-
-// todo: migrate to dynamic pin definition
-#define FAN_RELAY_PORT GPIOC
-#define FAN_RELAY_PIN 15
 
 #endif /*ARRO_BOARD_H_*/

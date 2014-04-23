@@ -55,7 +55,7 @@
  * for example we would need to fire up the spark at 700 degrees. Before we can fire up the spark
  * at 700 degrees, we need to charge the ignition coil, for example this dwell time is 4ms - that
  * means we need to turn on the coil at '4 ms before 700 degrees'. Let's  assume that the engine is
- * current at 600 RPM - that means 360 degrees would take 100 ms so 4ms is 14.4 degrees at current RPM which
+ * current at 600 RPM - that means 360 degrees would take 100ms so 4ms is 14.4 degrees at current RPM which
  * means we need to start charting the coil at 685.6 degrees.
  *
  * The position sensors at our disposal are not providing us the current position at any moment of time -
@@ -64,16 +64,19 @@
  *
  * So, for this particular sensor the most precise scheduling would be possible if we schedule coil charting
  * as '85.6 degrees after the 600 degrees position sensor event', and spark firing as
- * '10 degrees after the 690 position sensor event'
+ * '10 degrees after the 690 position sensor event'. Considering current RPM, we calculate that '10 degress after' is
+ * 2.777ms, so we schedule spark firing at '2.777ms after the 690 position sensor event', thus combining trigger events
+ * with time-based offset.
  *
  *
  * @section sec_fuel_injection Fuel Injection
  *
- * See fuel_math.c for details on fuel amount logic
  *
  * @sectuion sec_misc
  *
- * See rpm_calculator.c for details on how getRpm() is calculated
+ * <BR>See main_trigger_callback.cpp for main trigger event handler
+ * <BR>See fuel_math.cpp for details on fuel amount logic
+ * <BR>See rpm_calculator.c for details on how getRpm() is calculated
  *
  */
 
@@ -86,7 +89,7 @@ extern "C" {
 #include "eficonsole.h"
 #include "hardware.h"
 #include "engine_controller.h"
-#include "lcd_2x16.h"
+#include "lcd_HD44780.h"
 #include "status_loop.h"
 #include "pin_repository.h"
 
@@ -108,6 +111,8 @@ bool hasFirmwareError = FALSE;
 
 void runRusEfi(void) {
 	msObjectInit(&errorMessageStream, errorMessageBuffer, sizeof(errorMessageBuffer), 0);
+
+	initErrorHandling();
 
 	/**
 	 * First data structure keeps track of which hardware I/O pins are used by whom
@@ -191,7 +196,7 @@ void onFatalError(const char *msg, char * file, int line) {
 
 void DebugMonitorVector(void) {
 
-	chDbgPanic("DebugMonitorVector", __FILE__, __LINE__);
+	chDbgPanic3("DebugMonitorVector", __FILE__, __LINE__);
 
 	while (TRUE)
 		;
@@ -199,7 +204,7 @@ void DebugMonitorVector(void) {
 
 void UsageFaultVector(void) {
 
-	chDbgPanic("UsageFaultVector", __FILE__, __LINE__);
+	chDbgPanic3("UsageFaultVector", __FILE__, __LINE__);
 
 	while (TRUE)
 		;
@@ -207,7 +212,7 @@ void UsageFaultVector(void) {
 
 void BusFaultVector(void) {
 
-	chDbgPanic("BusFaultVector", __FILE__, __LINE__);
+	chDbgPanic3("BusFaultVector", __FILE__, __LINE__);
 
 	while (TRUE)
 		;
@@ -215,11 +220,45 @@ void BusFaultVector(void) {
 
 void HardFaultVector(void) {
 
-	chDbgPanic("HardFaultVector", __FILE__, __LINE__);
+	chDbgPanic3("HardFaultVector", __FILE__, __LINE__);
 
 	while (TRUE)
 		;
 }
+
+
+extern int main_loop_started;
+
+int hasFatalError(void);
+
+void onFatalError(const char *msg, char * file, int line);
+
+char *dbg_panic_file;
+int dbg_panic_line;
+
+extern "C" {
+void chDbgPanic3(const char *msg, char * file, int line);
+}
+
+void chDbgPanic3(const char *msg, char * file, int line) {
+	if (hasFatalError())
+		return;
+	dbg_panic_file = file;
+	dbg_panic_line = line;
+	dbg_panic_msg = msg;
+	onFatalError(dbg_panic_msg, dbg_panic_file, dbg_panic_line);
+}
+
+static char panicMessage[200];
+
+void chDbgStackOverflowPanic(Thread *otp) {
+  strcpy(panicMessage, "stack overflow: ");
+#ifdef CH_USE_REGISTRY
+  strcat(panicMessage, otp->p_name);
+#endif
+  chDbgPanic3(panicMessage, __FILE__, __LINE__);
+}
+
 
 void firmwareError(const char *fmt, ...) {
 	if (hasFirmwareError)
@@ -234,6 +273,6 @@ void firmwareError(const char *fmt, ...) {
 	errorMessageStream.buffer[errorMessageStream.eos] = 0; // need to terminate explicitly
 }
 
-int getVersion(void) {
-	return 20140319;
+int getRusEfiVersion(void) {
+	return 20140422;
 }

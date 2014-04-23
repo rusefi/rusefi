@@ -2,7 +2,7 @@
  * pin_repository.h
  *
  * @date Jan 15, 2013
- * @author Andrey Belomutskiy, (c) 2012-2013
+ * @author Andrey Belomutskiy, (c) 2012-2014
  */
 
 /**

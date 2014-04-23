@@ -747,6 +747,7 @@ INPUT                  = . \
 	controllers/algo \
 	controllers/sensors \
 	controllers/system \
+	controllers/trigger \
 	emulation \
 	hw_layer/lcd \
 	hw_layer
