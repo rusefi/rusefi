@@ -10,7 +10,7 @@ PROJECT_DIR = ../firmware
 ifeq ($(USE_OPT),)
 # -O2 is needed for mingw, without it there is a linking issue to isnanf?!?!
   #USE_OPT = $(RFLAGS) -O2 -fgnu89-inline -ggdb -fomit-frame-pointer -falign-functions=16 -std=gnu99 -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers
-  USE_OPT = -c -Wall -O2
+  USE_OPT = -c -Wall -O0 -ggdb -g3
 endif
 
 # C specific options here (added to USE_OPT).
@@ -86,13 +86,19 @@ CSRC =	$(UTILSRC) \
 	$(CONTROLLERS_MATH_SRC) \
 	$(CONTROLLERS_SENSORS_SRC) \
 	$(ENGINES_SRC) \
+	$(PROJECT_DIR)/controllers/trigger/trigger_mazda.c \
+	$(PROJECT_DIR)/controllers/trigger/trigger_structure.c \
 	$(TEST_SRC_C)
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
 CPPSRC = $(UTILSRC_CPP) \
 	$(CONTROLLERS_ALGO_SRC_CPP) \
+	$(PROJECT_DIR)/controllers/trigger/trigger_chrysler.cpp \
+	$(PROJECT_DIR)/controllers/trigger/trigger_gm.cpp \
+	$(PROJECT_DIR)/controllers/trigger/trigger_decoder.cpp \
 	$(ENGINES_SRC_CPP) \
+	$(CONTROLLERS_MATH_SRC_CPP) \
 	$(TEST_SRC_CPP) \
 	main.cpp
 
@@ -125,6 +131,7 @@ INCDIR = . \
 	$(PROJECT_DIR)/controllers/sensors \
 	$(PROJECT_DIR)/controllers/algo \
 	$(PROJECT_DIR)/controllers/math \
+	$(PROJECT_DIR)/controllers/trigger \
 	$(PROJECT_DIR)/ext_algo \
 	test_data_structures \
 	test_basic_math

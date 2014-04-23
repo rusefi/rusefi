@@ -22,14 +22,15 @@
 #include "trigger_emulator_algo.h"
 #include "main_trigger_callback.h"
 #include "allsensors.h"
-
+#include "analog_chart.h"
 
 extern WaveChart waveChart;
 
-static engine_configuration_s ec;
+static persistent_config_s config;
 static engine_configuration2_s ec2;
 
-engine_configuration_s * engineConfiguration = &ec;
+engine_configuration_s * engineConfiguration = &config.engineConfiguration;
+board_configuration_s *boardConfiguration = &config.boardConfiguration;
 engine_configuration2_s *engineConfiguration2 = &ec2;
 
 void setOutputPinValue(io_pin_e pin, int logicValue) {
@@ -79,11 +80,13 @@ void rusEfiFunctionalTest(void) {
 
 	initStatusLoop();
 
-	resetConfigurationExt(FORD_ASPIRE_1996, engineConfiguration, engineConfiguration2);
+	resetConfigurationExt(FORD_ASPIRE_1996, engineConfiguration, engineConfiguration2, boardConfiguration);
 
 	initThermistors();
 	initAlgo();
 	initRpmCalculator();
+
+	initAnalogChart();
 
 	initTriggerEmulatorLogic(triggerEmulatorCallback);
 
@@ -96,7 +99,7 @@ void rusEfiFunctionalTest(void) {
 void printPendingMessages(void) {
 	printPending();
 	if (getFullLog()) {
-		printSensors();
+		printState(getCrankEventCounter());
 		finishStatusLine();
 		publishChartIfFull(&waveChart);
 	}
@@ -144,11 +147,10 @@ void onFatalError(const char *msg, char * file, int line) {
 	exit(-1);
 }
 
-int warning(const char *fmt, ...) {
+int warning(obd_code_e code, const char *fmt, ...) {
 	printf("Warning: %s\r\n", fmt);
 	return 0;
 }
-
 
 void firmwareError(const char *fmt, ...) {
 	fatal3((char*)fmt, __FILE__, __LINE__);
@@ -158,6 +160,15 @@ int hasFatalError(void) {
 	return false;
 }
 
-int getVersion(void) {
+void chDbgPanic3(const char *msg, char * file, int line) {
+	onFatalError(msg, file, line);
+}
+
+uint64_t getTimeNowUs(void) {
+
+	return chTimeNow() * (1000000 / CH_FREQUENCY);
+}
+
+int getRusEfiVersion(void) {
 	return 239;
 }

@@ -11,11 +11,7 @@
 #include <time.h>
 #include <string.h>
 
-#define EFI_SUPPORT_FORD_ASPIRE TRUE
-#define EFI_SUPPORT_DODGE_NEON TRUE
-#define EFI_SUPPORT_1995_FORD_INLINE_6 TRUE
-#define EFI_SUPPORT_FORD_FIESTA TRUE
-#define EFI_SUPPORT_NISSAN_PRIMERA TRUE
+#include "efitime.h"
 
 #define TRUE 1
 #define FALSE 0

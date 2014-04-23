@@ -16,8 +16,17 @@
 
 #define EFI_CONSOLE_UART_DEVICE (&testStream)
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif /* __cplusplus */
+
 //float getVoltageDivided(int);
 int getAdcValue(int channel);
 void initFakeBoard(void);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* BOARDS_FT_H_ */

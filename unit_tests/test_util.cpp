@@ -16,9 +16,25 @@
 #include "eficonsole_logic.h"
 
 #include "nmea.h"
+#include "efilib2.h"
 
 static cyclic_buffer sb;
 
+
+void testOverflow64Counter(void) {
+	print("*************************************** testOverflow64Counter\r\n");
+
+	Overflow64Counter o;
+	assertEquals(0, o.get());
+	o.offer(10);
+	assertEquals(10, o.get());
+
+	o.offer(20);
+	assertEquals(20, o.get());
+
+	o.offer(0); // overflow
+	assertEquals(4294967296, o.get());
+}
 
 void testCyclicBuffer(void) {
 	print("*************************************** testCyclicBuffer\r\n");

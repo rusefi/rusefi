@@ -97,7 +97,7 @@ CSRC =	${PORTSRC} \
        ${TESTSRC} \
        ${HALSRC} \
        ${PLATFORMSRC} \
-	$(TRIGGERSRC) \
+	$(TRIGGER_SRC) \
 	$(SYSTEMSRC) \
 	$(CONSOLESRC) \
 	$(CONSOLEUTILSRC) \
@@ -110,16 +110,18 @@ CSRC =	${PORTSRC} \
        ${CHIBIOS}/os/various/memstreams.c \
 	$(UTILSRC) \
        simulator/rusEfiFunctionalTest.c \
-	$(PROJECT_DIR)/controllers/settings.c \
        simulator/boards.c \
+	$(PROJECT_DIR)/emulation/analog_chart.c \
 	main.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
 CPPSRC = $(UTILSRC_CPP) \
 	$(CONTROLLERS_ALGO_SRC_CPP) \
-	$(CONTROLLERSSRC_CPP) \
+	$(PROJECT_DIR)/controllers/settings.cpp \
+	$(TRIGGER_SRC_CPP) \
 	$(SYSTEMSRC_CPP) \
+	$(CONTROLLERS_MATH_SRC_CPP) \
 	$(ENGINES_SRC_CPP) \
 	$(TEST_SRC_CPP)
 # C sources to be compiled in ARM mode regardless of the global setting.
@@ -157,6 +159,7 @@ $(PORTINC) $(KERNINC) $(TESTINC) \
 	$(PROJECT_DIR)/controllers/sensors \
 	$(PROJECT_DIR)/controllers/system \
 	$(PROJECT_DIR)/hw_layer/algo \
+	$(PROJECT_DIR)/emulation \
 	$(PROJECT_DIR)/controllers/algo \
 	$(PROJECT_DIR)/controllers/math \
 	$(PROJECT_DIR)/controllers/math \

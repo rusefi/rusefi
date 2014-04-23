@@ -1,2 +1,2 @@
 
-int getVersion(void);
+int getRusEfiVersion(void);
