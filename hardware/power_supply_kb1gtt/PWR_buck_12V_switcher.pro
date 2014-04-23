@@ -1,4 +1,4 @@
-update=1/3/2014 6:08:56 AM
+update=4/2/2014 5:59:21 AM
 last_client=eeschema
 [common]
 NetDir=
@@ -14,21 +14,23 @@ EquName1=devcms
 version=1
 [pcbnew]
 version=1
-PadDrlX=0
-PadDimH=138
-PadDimV=276
-BoardThickness=630
-TxtPcbV=800
-TxtPcbH=600
-TxtModV=600
-TxtModH=600
-TxtModW=100
-VEgarde=100
-DrawLar=100
-EdgeLar=100
-TxtLar=170
-MSegLar=39
-LastNetListRead=o5e.net
+LastNetListRead=PWR_buck_12V_switcher.net
+UseCmpFile=0
+PadDrill=0.000000000000
+PadDrillOvalY=0.000000000000
+PadSizeH=0.350520000000
+PadSizeV=0.701040000000
+PcbTextSizeV=2.032000000000
+PcbTextSizeH=1.524000000000
+PcbTextThickness=0.431800000000
+ModuleTextSizeV=1.524000000000
+ModuleTextSizeH=1.524000000000
+ModuleTextSizeThickness=0.254000000000
+SolderMaskClearance=0.254000000000
+SolderMaskMinWidth=0.000000000000
+DrawSegmentWidth=0.254000000000
+BoardOutlineThickness=0.254000000000
+ModuleOutlineThickness=0.099060000000
 [pcbnew/libraries]
 LibDir=
 LibName1=connect

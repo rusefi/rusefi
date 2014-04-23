@@ -5,3 +5,5 @@
 5) diode part number is not exactly right: 497-2521-1-ND is a single diode, VCC side stays unprotected
 6) rename 'inj-X' to 'low-X' to reduce confusion?
 7) draw VBatt wiring on the back of the board?
+8) VP label silkscreen should be improved
+9) need to double-check "5v 3v GND" silkscreen on both sides

@@ -10513,10 +10513,10 @@
       (xy 3.3401 -0.50546) (xy 3.34264 -0.09398) (xy 3.34518 -0.04318) (xy 3.34518 -0.04318)) (layer B.SilkS) (width 0.00254))
   )
 
-  (gr_text "Frankenstein 0.2" (at 153.416 157.1625) (layer B.SilkS)
+  (gr_text "Frankenstein 0.11" (at 153.416 157.1625) (layer B.SilkS)
     (effects (font (size 1.5 1.5) (thickness 0.3)) (justify mirror))
   )
-  (gr_text "Frankenstein 0.2" (at 153.416 157.1625) (layer F.SilkS)
+  (gr_text "Frankenstein 0.11" (at 153.416 157.1625) (layer F.SilkS)
     (effects (font (size 1.5 1.5) (thickness 0.3)))
   )
   (gr_text PB13 (at 124.5235 172.2755) (layer B.SilkS)
