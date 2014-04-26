@@ -92,7 +92,7 @@ static msg_t ivThread(int param) {
 		if (!isIdleControlActive)
 			continue;
 
-		int nowSec = chTimeNowSeconds();
+		int nowSec = getTimeNowSeconds();
 
 		int newValue = getIdle(&idle, getRpm(), nowSec);
 

@@ -9,7 +9,7 @@
 #include "error_handling.h"
 #include "wave_math.h"
 
-static time_t timeOfPreviousWarning = (systime_t) -10 * CH_FREQUENCY;
+static time_t timeOfPreviousWarning = -10;
 
 static Logging logger;
 
@@ -19,8 +19,8 @@ extern int warningEnabled;
  * @returns TRUE in case there are too many warnings
  */
 int warning(obd_code_e code, const char *fmt, ...) {
-	time_t now = chTimeNow();
-	if (overflowDiff(now, timeOfPreviousWarning) < CH_FREQUENCY || !warningEnabled)
+	int now = getTimeNowSeconds();
+	if (now == timeOfPreviousWarning || !warningEnabled)
 		return TRUE; // we just had another warning, let's not spam
 	timeOfPreviousWarning = now;
 
