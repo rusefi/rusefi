@@ -25,8 +25,8 @@
 
 extern engine_configuration_s *engineConfiguration;
 
-static volatile uint32_t ckpPeriod; // different between current crank signal and previous crank signal
-static volatile int previousCrankSignalStart = 0;
+static volatile uint32_t ckpPeriodUs; // difference between current crank signal and previous crank signal
+static volatile uint64_t previousCrankSignalStart = 0;
 
 #define MAX_ICU_COUNT 5
 
@@ -44,36 +44,36 @@ static void ensureInitialized(WaveReader *reader) {
 #ifdef EFI_WAVE_ANALYZER
 
 static void waAnaWidthCallback(WaveReader *reader) {
-	systime_t now = chTimeNow();
+	uint64_t nowUs = getTimeNowUs();
 	reader->eventCounter++;
-	reader->lastActivityTime = now;
+	reader->lastActivityTimeUs = nowUs;
 	addWaveChartEvent(reader->name, "up", "");
 
-	int width = overflowDiff(now, reader->periodEventTime);
-	reader->last_wave_low_width = width;
+	uint64_t width = nowUs - reader->periodEventTimeUs;
+	reader->last_wave_low_widthUs = width;
 
-	reader->signalPeriod = overflowDiff(now, reader->widthEventTime);
-	reader->widthEventTime = now;
+	reader->signalPeriodUs = nowUs - reader->widthEventTimeUs;
+	reader->widthEventTimeUs = nowUs;
 }
 
 static void waIcuPeriodCallback(WaveReader *reader) {
-	systime_t now = chTimeNow();
+	uint64_t nowUs = getTimeNowUs();
 	reader->eventCounter++;
-	reader->lastActivityTime = now;
+	reader->lastActivityTimeUs = nowUs;
 	addWaveChartEvent(reader->name, "down", "");
 
-	int width = overflowDiff(now, reader->widthEventTime);
-	reader->last_wave_high_width = width;
+	uint64_t width = nowUs - reader->widthEventTimeUs;
+	reader->last_wave_high_widthUs = width;
 
-	reader->periodEventTime = now;
+	reader->periodEventTimeUs = nowUs;
 
 	//scheduleSimpleMsg(&irqLogging, "co", reader->chart.counter);
 
 //	dbAdd(&wavePeriodTime, now);
 
-	int period = ckpPeriod;  // local copy of volatile variable
+	int period = ckpPeriodUs;  // local copy of volatile variable
 
-	int offset = overflowDiff(now, previousCrankSignalStart);
+	uint64_t offset = nowUs - previousCrankSignalStart;
 
 	if (offset > period / 2) {
 		/**
@@ -81,7 +81,7 @@ static void waIcuPeriodCallback(WaveReader *reader) {
 		 */
 		offset -= period;
 	}
-	reader->waveOffsetSystimer = offset;
+	reader->waveOffsetUs = offset;
 
 	// we want only the low phase length, so we subsctract high width from period
 //	processSignal(1, &dataPinReader, last_period - last_adc_response_width);
@@ -140,9 +140,9 @@ static void initWave(char *name, int index, ICUDriver *driver, ioportid_t port, 
 static void onWaveShaftSignal(ShaftEvents ckpSignalType, int index) {
 	if (index != 0)
 		return;
-	systime_t now = chTimeNow();
-	ckpPeriod = overflowDiff(now, previousCrankSignalStart);
-	previousCrankSignalStart = now;
+	uint64_t nowUs = getTimeNowUs();
+	ckpPeriodUs = nowUs - previousCrankSignalStart;
+	previousCrankSignalStart = nowUs;
 }
 
 static WORKING_AREA(waThreadStack, UTILITY_THREAD_STACK_SIZE);
@@ -165,39 +165,39 @@ static msg_t waThread(void *arg) {
 int getWaveLowWidth(int index) {
 	WaveReader *reader = &readers[index];
 	ensureInitialized(reader);
-	return reader->last_wave_low_width;
+	return reader->last_wave_low_widthUs;
 }
 
-int getWaveHighWidth(int index) {
+float getWaveHighWidthMs(int index) {
 	WaveReader *reader = &readers[index];
 	ensureInitialized(reader);
-	if (overflowDiff(chTimeNow(), reader->lastActivityTime) > 4 * ckpPeriod)
+	if (getTimeNowUs() - reader->lastActivityTimeUs > 4 * US_PER_SECOND)
 		return 0; // dwell time has expired
-	return reader->last_wave_high_width;
+	return reader->last_wave_high_widthUs / 1000.0;
 }
 
-int getWaveOffset(int index) {
+uint64_t getWaveOffset(int index) {
 	WaveReader *reader = &readers[index];
 	ensureInitialized(reader);
-	return reader->waveOffsetSystimer;
+	return reader->waveOffsetUs;
 }
 
-int getSignalPeriod(int index) {
+float getSignalPeriodMs(int index) {
 	WaveReader *reader = &readers[index];
 	ensureInitialized(reader);
-	return reader->signalPeriod;
+	return reader->signalPeriodUs / 1000.0;
 }
 
 int getWidthEventTime(int index) {
 	WaveReader *reader = &readers[index];
 	ensureInitialized(reader);
-	return reader->widthEventTime;
+	return reader->widthEventTimeUs;
 }
 
-int getPeriodEventTime(int index) {
+uint64_t getPeriodEventTime(int index) {
 	WaveReader *reader = &readers[index];
 	ensureInitialized(reader);
-	return reader->periodEventTime;
+	return reader->periodEventTimeUs;
 }
 
 int waveBufferReported = 0;
@@ -206,19 +206,19 @@ static void reportWave(Logging *logging, int index) {
 //	int counter = getEventCounter(index);
 //	debugInt2(logging, "ev", index, counter);
 
-	int dwell = getWaveHighWidth(index);
-	int period = getSignalPeriod(index);
+	float dwellMs = getWaveHighWidthMs(index);
+	float periodMs = getSignalPeriodMs(index);
 
 	appendPrintf(logging, "duty%d%s", index, DELIMETER);
-	appendFloat(logging, 100.0 * dwell / period, 2);
+	appendFloat(logging, 100.0 * dwellMs / periodMs, 2);
 	appendPrintf(logging, "%s", DELIMETER);
 
 	appendPrintf(logging, "dwell%d%s", index, DELIMETER);
-	appendFloat(logging, ((float) dwell) / TICKS_IN_MS, 2);
+	appendFloat(logging, dwellMs, 2);
 	appendPrintf(logging, "%s", DELIMETER);
 
 	appendPrintf(logging, "period%d%s", index, DELIMETER);
-	appendFloat(logging, ((float) period) / TICKS_IN_MS, 2);
+	appendFloat(logging, periodMs, 2);
 	appendPrintf(logging, "%s", DELIMETER);
 
 //	int crank = getCrankPeriod();

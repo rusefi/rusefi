@@ -20,15 +20,15 @@ typedef struct {
 	char *name;
 	volatile int eventCounter;
 
-	volatile systime_t lastActivityTime; // timestamp in systimer ticks
-	volatile int periodEventTime; // time of signal faoo (systimer ticks)
-	volatile int widthEventTime; // time of signal rise (systimer ticks)
+	volatile uint64_t lastActivityTimeUs; // timestamp in microseconds ticks
+	volatile uint64_t periodEventTimeUs; // time of signal fall in microseconds
+	volatile uint64_t widthEventTimeUs; // time of signal rise in microseconds
 
-	volatile int signalPeriod; // period between two signal rises (systimer ticks)
+	volatile uint64_t signalPeriodUs; // period between two signal rises in microseconds
 
-	volatile int waveOffsetSystimer; // offset from CKP signal in systimer ticks
-	volatile int last_wave_low_width; // time period in systimer ticks
-	volatile int last_wave_high_width; // time period in systimer ticks
+	volatile uint64_t waveOffsetUs; // offset from CKP signal in systimer ticks
+	volatile uint64_t last_wave_low_widthUs; // time period in systimer ticks
+	volatile uint64_t last_wave_high_widthUs; // time period in systimer ticks
 } WaveReader;
 
 #ifdef __cplusplus
@@ -40,16 +40,16 @@ void initWaveAnalyzer(void);
 void pokeWaveInfo(void);
 void reportWaveInfo(void);
 int getWaveLowWidth(int index);
-int getWaveHighWidth(int index);
-int getWaveOffset(int index);
+float getWaveHighWidthMs(int index);
+uint64_t getWaveOffset(int index);
 
 int getWaveMode(int index);
 
 int getEventCounter(int index);
 
-int getSignalPeriod(int index);
+float getSignalPeriodMs(int index);
 int getWidthEventTime(int index);
-int getPeriodEventTime(int index);
+uint64_t getPeriodEventTime(int index);
 
 //int getCrankStart();
 //int getCrankPeriod();

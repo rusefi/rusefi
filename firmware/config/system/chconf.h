@@ -65,7 +65,7 @@ void chDbgPanic3(const char *msg, char * file, int line);
  * that's 266Hz camshaft
  * for timing measures we need 95760 Hz precision
  */
-#define CH_FREQUENCY 100000
+#define CH_FREQUENCY 1000
 
 /*===========================================================================*/
 /**
