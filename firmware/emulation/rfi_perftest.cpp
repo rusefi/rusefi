@@ -198,7 +198,7 @@ int rtcStartTime;
 #include "chrtclib.h"
 
 static void timeInfo(void) {
-	scheduleMsg(&logger, "chTimeNow as seconds = %d", chTimeNowSeconds());
+	scheduleMsg(&logger, "chTimeNow as seconds = %d", getTimeNowSeconds());
 	scheduleMsg(&logger, "hal seconds = %d", halTime.get() / 168000000LL);
 
 	int unix = rtcGetTimeUnixSec(&RTCD1) - rtcStartTime;
