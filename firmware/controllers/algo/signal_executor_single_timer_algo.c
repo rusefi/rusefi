@@ -66,7 +66,7 @@ inline time_t toggleSignalIfNeeded(OutputSignal *out, time_t now) {
 //		addWaveChartEvent(out->name, out->status ? "up" : "down", "");
 #endif /* EFI_WAVE_ANALYZER */
 
-		out->last_scheduling_time = now; /* store last update */
+//		out->last_scheduling_time = now; /* store last update */
 		estimated = now + GET_DURATION(out); /* update estimation */
 	}
 	return estimated - now;

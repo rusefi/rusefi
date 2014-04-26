@@ -50,7 +50,7 @@ extern FlashState flashState;
 extern SerialUSBDriver SDU1;
 #define CONSOLE_DEVICE &SDU1
 
-int previousWriteReport = 0;
+static efitimems_t previousWriteReportMs = 0;
 
 #if EFI_TUNER_STUDIO_OVER_USB
 #define ts_serail_ready() is_usb_serial_ready()
@@ -150,9 +150,9 @@ void handleValueWriteCommand(void) {
 //	unsigned char value = writeBuffer[1];
 //
 
-	int now = chTimeNow();
-	if (overflowDiff(now, previousWriteReport) > 5 * TICKS_IN_MS) {
-		previousWriteReport = now;
+	efitimems_t nowMs = currentTimeMillis();
+	if (nowMs - previousWriteReportMs > 5) {
+		previousWriteReportMs = nowMs;
 //		scheduleMsg(&logger, "page %d offset %d: value=%d", pageId, writeRequest.offset, writeRequest.value);
 	}
 
@@ -218,7 +218,7 @@ static msg_t tsThreadEntryPoint(void *arg) {
 		}
 		if (!wasReady) {
 			wasReady = TRUE;
-//			scheduleSimpleMsg(&logger, "ts channel is now ready ", chTimeNow());
+//			scheduleSimpleMsg(&logger, "ts channel is now ready ", hTimeNow());
 		}
 
 		short command = (short) chSequentialStreamGet(TS_SERIAL_DEVICE);

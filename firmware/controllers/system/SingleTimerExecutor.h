@@ -1,8 +1,8 @@
-/*
- * SingleTimerExecutor.h
+/**
+ * @file SingleTimerExecutor.h
  *
- *  Created on: Apr 18, 2014
- *      Author: Andrey
+ * @date: Apr 18, 2014
+ * @author Andrey Belomutskiy, (c) 2012-2014
  */
 
 #ifndef SINGLETIMEREXECUTOR_H_
@@ -15,7 +15,10 @@ class Executor {
 public:
 	Executor();
 	void schedule(scheduling_s *scheduling, uint64_t nowUs, int delayUs, schfunc_t callback, void *param);
-	EventQueue eq;
+	void execute(uint64_t now);
+private:
+	EventQueue queue;
+	void setTimer(uint64_t now);
 };
 
 #endif /* SINGLETIMEREXECUTOR_H_ */

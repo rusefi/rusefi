@@ -38,12 +38,12 @@ static Logging logger;
  * @return true if there was a full shaft revolution within the last second
  */
 int isRunning() {
-	time_t now = chTimeNow();
-	return overflowDiff(now, rpmState.lastRpmEventTime) < CH_FREQUENCY;
+	uint64_t nowUs = getTimeNowUs();
+	return nowUs - rpmState.lastRpmEventTimeUs < US_PER_SECOND;
 }
 
-int getLastRpmEventTime(void) {
-	return rpmState.lastRpmEventTime;
+uint64_t getLastRpmEventTime(void) {
+	return rpmState.lastRpmEventTimeUs;
 }
 
 int isCranking(void) {
@@ -63,12 +63,12 @@ int getRpm() {
 /**
  * @return Current crankshaft angle, 0 to 720 for four-stroke
  */
-float getCrankshaftAngle(time_t time) {
-	int timeSinceZeroAngle = overflowDiff(time, rpmState.lastRpmEventTime);
+float getCrankshaftAngle(uint64_t timeUs) {
+	uint64_t timeSinceZeroAngle = timeUs - rpmState.lastRpmEventTimeUs;
 
-	float cRevolutionTime = getCrankshaftRevolutionTime(rpmState.rpm);
+	float cRevolutionTimeMs = getCrankshaftRevolutionTimeMs(rpmState.rpm);
 
-	return 360 * timeSinceZeroAngle / cRevolutionTime;
+	return 360.0 * timeSinceZeroAngle / cRevolutionTimeMs / 1000;
 }
 
 int getRevolutionCounter(void) {
@@ -81,9 +81,9 @@ int getRevolutionCounter(void) {
  *
  * @return TRUE if noise is detected
  */
-static int isNoisySignal(rpm_s * rpmState, int now) {
-	int diff = overflowDiff(now, rpmState->lastRpmEventTime);
-	return diff == 0;
+static int isNoisySignal(rpm_s * rpmState, uint64_t nowUs) {
+	uint64_t diff = nowUs - rpmState->lastRpmEventTimeUs;
+	return diff < 1000; // that's 1ms
 }
 
 static char shaft_signal_msg_index[15];
@@ -114,35 +114,35 @@ static void shaftPositionCallback(ShaftEvents ckpSignalType, int index) {
 	if (index != 0) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
 		if (engineConfiguration->analogChartMode == AC_TRIGGER)
-			acAddData(getCrankshaftAngle(chTimeNow()), 1000 * ckpSignalType + index);
+			acAddData(getCrankshaftAngle(getTimeNowUs()), 1000 * ckpSignalType + index);
 #endif
 		return;
 	}
 	rpmState.revolutionCounter++;
 
-	time_t now = chTimeNow();
+	uint64_t nowUs = getTimeNowUs();
 
 	int hadRpmRecently = isRunning();
 
 	if (hadRpmRecently) {
-		if (isNoisySignal(&rpmState, now)) {
+		if (isNoisySignal(&rpmState, nowUs)) {
 			// unexpected state. Noise?
 			rpmState.rpm = NOISY_RPM;
 		} else {
-			int diff = now - rpmState.lastRpmEventTime;
+			uint64_t diff = nowUs - rpmState.lastRpmEventTimeUs;
 			// 60000 because per minute
 			// * 2 because each revolution of crankshaft consists of two camshaft revolutions
 			// / 4 because each cylinder sends a signal
 			// need to measure time from the previous non-skipped event
 
-			int rpm = (int)(60000 * TICKS_IN_MS / engineConfiguration->rpmMultiplier / diff);
+			int rpm = (int)(60 * US_PER_SECOND / engineConfiguration->rpmMultiplier / diff);
 			rpmState.rpm = rpm > UNREALISTIC_RPM ? NOISY_RPM : rpm;
 		}
 	}
-	rpmState.lastRpmEventTime = now;
+	rpmState.lastRpmEventTimeUs = nowUs;
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	if (engineConfiguration->analogChartMode == AC_TRIGGER)
-		acAddData(getCrankshaftAngle(now), index);
+		acAddData(getCrankshaftAngle(nowUs), index);
 #endif
 }
 
@@ -169,13 +169,13 @@ void initRpmCalculator(void) {
 	rpmState.rpm = 0;
 
 	// we need this initial to have not_running at first invocation
-	rpmState.lastRpmEventTime = (time_t)-10 * CH_FREQUENCY;
+	rpmState.lastRpmEventTimeUs = (uint64_t)-10 * US_PER_SECOND;
 
 	registerShaftPositionListener(&shaftPositionCallback, "rpm reporter");
 	registerShaftPositionListener(&tdcMarkCallback, "chart TDC mark");
 }
 
 void scheduleByAngle(scheduling_s *timer, float angle, schfunc_t callback, void *param) {
-	int delay = (int)(getOneDegreeTime(getRpm()) * angle);
-	scheduleTask(timer, delay, callback, param);
+	float delayMs = getOneDegreeTimeMs(getRpm()) * angle;
+	scheduleTask(timer, MS2US(delayMs), callback, param);
 }

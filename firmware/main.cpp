@@ -24,6 +24,9 @@ int main(void) {
 	halInit();
 	chSysInit();
 
+	// looks like this holds a random value on start? Let's set a nice clean zero
+	DWT_CYCCNT = 0;
+
 	runRusEfi();
 	return 0;
 }

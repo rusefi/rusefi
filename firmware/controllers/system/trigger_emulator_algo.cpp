@@ -24,22 +24,22 @@ static LocalVersionHolder localVersion;
 
 void setTriggerEmulatorRPM(int rpm) {
 	if (rpm == 0) {
-		configuration.period = NAN;
+		configuration.periodMs = NAN;
 	} else {
 		float gRpm = rpm * engineConfiguration->rpmMultiplier / 60.0; // per minute converted to per second
-		configuration.period = frequency2period(gRpm);
+		configuration.periodMs = frequency2period(gRpm);
 	}
 	scheduleMsg(&logger, "Emulating position sensor(s). RPM=%d", rpm);
 }
 
 static void updateTriggerShapeIfNeeded(PwmConfig *state) {
 	if(localVersion.isOld()) {
-		scheduleMsg(&logger, "Stimulator: updating trigger shape: %d/%d %d", localVersion.getVersion(), getGlobalConfigurationVersion(), chTimeNow());
+		scheduleMsg(&logger, "Stimulator: updating trigger shape: %d/%d %d", localVersion.getVersion(), getGlobalConfigurationVersion(), currentTimeMillis());
 
 		trigger_shape_s *s = &engineConfiguration2->triggerShape;
 		int *pinStates[2] = {s->wave.waves[0].pinStates, s->wave.waves[1].pinStates};
 		copyPwmParameters(state, s->size, s->wave.switchTimes, 2, pinStates);
-		state->safe.period = -1; // this would cause loop re-initialization
+		state->safe.periodMs = -1; // this would cause loop re-initialization
 	}
 }
 

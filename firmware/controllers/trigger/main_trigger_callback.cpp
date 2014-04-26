@@ -87,7 +87,7 @@ static void handleFuelInjectionEvent(ActuatorEvent *event, int rpm) {
 //	if (isCranking())
 //		scheduleMsg(&logger, "crankingFuel=%f for CLT=%fC", fuelMs, getCoolantTemperature());
 
-	scheduleOutput(event->actuator, delay, fuelMs, chTimeNow());
+	scheduleOutput(event->actuator, delay, fuelMs);
 }
 
 static void handleFuel(int eventIndex) {
@@ -141,7 +141,7 @@ static void handleSparkEvent(ActuatorEvent *event, int rpm) {
 		//return;
 	}
 
-	scheduleOutput(event->actuator, sparkDelay, dwellMs, chTimeNow());
+	scheduleOutput(event->actuator, sparkDelay, dwellMs);
 }
 
 static void handleSpark(int eventIndex) {
@@ -200,6 +200,11 @@ static void onShaftSignal(ShaftEvents ckpSignalType, int eventIndex) {
 
 		initializeIgnitionActions(advance - dwellAngle, engineConfiguration, engineConfiguration2);
 	}
+	if(rpm==0) {
+		// this happens while we just start cranking
+		// todo: check for 'trigger->is_synchnonized?'
+		return;
+	}
 
 	handleFuel(eventIndex);
 	handleSpark(eventIndex);
@@ -225,7 +230,7 @@ void initMainEventListener() {
 	addConsoleAction("maininfo", showMainInfo);
 
 	initLogging(&logger, "main event handler");
-	printMsg(&logger, "initMainLoop: %d", chTimeNow());
+	printMsg(&logger, "initMainLoop: %d", currentTimeMillis());
 	initHistogram(&mainLoopHisto, "main callback");
 
 	if (!isInjectionEnabled())

@@ -15,7 +15,7 @@
 
 typedef struct {
 	volatile int rpm;
-	volatile time_t lastRpmEventTime;
+	volatile uint64_t lastRpmEventTimeUs;
 	/**
 	 * This counter is incremented with each revolution of one of the shafts. Could be
 	 * crankshaft could be camshaft.
@@ -37,10 +37,10 @@ void initRpmCalculator(void);
  */
 int getRpm(void);
 int isCranking(void);
-int getLastRpmEventTime(void);
+uint64_t getLastRpmEventTime(void);
 
 int getRevolutionCounter(void);
-float getCrankshaftAngle(time_t time);
+float getCrankshaftAngle(uint64_t timeUs);
 int isRunning(void);
 void addWaveChartEvent(char *name, char *msg, char *msg2);
 

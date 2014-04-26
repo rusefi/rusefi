@@ -13,11 +13,23 @@
 #include <stdint.h>
 #include "efifeatures.h"
 
+/**
+ * integer time in milliseconds
+ * 32 bit 4B / 1000 = 4M seconds = 1111.11 hours = 46 days.
+ * Please restart your ECU every 46 days? :)
+ */
+typedef uint32_t efitimems_t;
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif /* __cplusplus */
+
+#define US_PER_SECOND 1000000
+
+#define MS2US(MS_TIME) ((MS_TIME) * 1000)
+
+#define US_TO_TI_TEMP 10
 
 // todo: implement a function to work with times considering counter overflow
 #define overflowDiff(now, time) ((now) - (time))
@@ -29,6 +41,18 @@ extern "C"
  * The primary implementation counts the number of CPU cycles from MCU reset.
  */
 uint64_t getTimeNowUs(void);
+
+uint64_t getHalTimer(void);
+
+/**
+ * @brief   Returns the number of milliseconds since the board initialization.
+ */
+efitimems_t currentTimeMillis(void);
+
+/**
+ * @brief   Current system time in seconds.
+ */
+int getTimeNowSeconds(void);
 
 #ifdef __cplusplus
 }
