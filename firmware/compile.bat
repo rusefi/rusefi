@@ -3,7 +3,7 @@ rm -rf .dep/
 
 rm -rf build\rusefi.hex
 
-java -jar ../java_tools/version2header.jar
+call update_version.bat
 
 echo Starting compilation
 make

@@ -115,7 +115,7 @@ void printSensors(void) {
 #endif /* EFI_FILE_LOGGING */
 
 	// current time, in milliseconds
-	int nowMs = chTimeNow() / TICKS_IN_MS;
+	int nowMs = currentTimeMillis();
 	float sec = ((float) nowMs) / 1000;
 	reportSensorF("time", sec, 3);
 
@@ -263,7 +263,7 @@ void updateDevConsoleState(void) {
 	if (!fullLog)
 		return;
 
-	systime_t nowSeconds = chTimeNowSeconds();
+	systime_t nowSeconds = getTimeNowSeconds();
 	printVersion(nowSeconds);
 
 	int currentCkpEventCounter = getCrankEventCounter();
