@@ -55,7 +55,7 @@ void startSimplePwm(PwmConfig *state, char *msg, brain_pin_e brainPin, io_pin_e 
 
 	outputPinRegister(msg, state->outputPins[0], port, pin);
 
-	state->period = frequency2period(frequency);
+	state->periodMs = frequency2period(frequency);
 	weComplexInit(msg, state, 2, switchTimes, 1, pinStates, NULL, applyPinState);
 }
 
