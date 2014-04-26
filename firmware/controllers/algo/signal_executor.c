@@ -51,13 +51,13 @@ void initSignalExecutor(void) {
 
 void initOutputSignalBase(OutputSignal *signal) {
 	signal->status = IDLE;
-	signal->last_scheduling_time = 0;
+//	signal->last_scheduling_time = 0;
 	signal->initialized = TRUE;
 }
 
 static void turnHigh(OutputSignal *signal) {
 #if EFI_DEFAILED_LOGGING
-	signal->hi_time = chTimeNow();
+//	signal->hi_time = hTimeNow();
 #endif /* EFI_DEFAILED_LOGGING */
 	io_pin_e pin = signal->io_pin;
 	// turn the output level ACTIVE
@@ -69,7 +69,7 @@ static void turnHigh(OutputSignal *signal) {
 	if(
 			pin == SPARKOUT_1_OUTPUT ||
 			pin == SPARKOUT_3_OUTPUT) {
-//		time_t now = chTimeNow();
+//		time_t now = hTimeNow();
 //		float an = getCrankshaftAngle(now);
 //		scheduleMsg(&logger, "spark up%d %d", pin, now);
 //		scheduleMsg(&logger, "spark angle %d %f", (int)an, an);
@@ -87,7 +87,7 @@ static void turnLow(OutputSignal *signal) {
 	setOutputPinValue(signal->io_pin, FALSE);
 
 #if EFI_DEFAILED_LOGGING
-	systime_t after = chTimeNow();
+	systime_t after = hTimeNow();
 	debugInt(&signal->logging, "a_time", after - signal->hi_time);
 	scheduleLogging(&signal->logging);
 #endif /* EFI_DEFAILED_LOGGING */
@@ -107,7 +107,7 @@ static void turnLow(OutputSignal *signal) {
 
 int getRevolutionCounter(void);
 
-void scheduleOutput(OutputSignal *signal, float delayMs, float durationMs, time_t now) {
+void scheduleOutput(OutputSignal *signal, float delayMs, float durationMs) {
 	if (durationMs < 0) {
 		firmwareError("duration cannot be negative: %d", durationMs);
 		return;
@@ -119,10 +119,10 @@ void scheduleOutput(OutputSignal *signal, float delayMs, float durationMs, time_
 	scheduling_s * sUp = &signal->signalTimerUp[index];
 	scheduling_s * sDown = &signal->signalTimerDown[index];
 
-	scheduleTask(sUp, TICKS_IN_MS * delayMs, (schfunc_t) &turnHigh, (void *) signal);
-	scheduleTask(sDown, TICKS_IN_MS * (delayMs + durationMs), (schfunc_t) &turnLow, (void*)signal);
+	scheduleTask(sUp, MS2US(delayMs), (schfunc_t) &turnHigh, (void *) signal);
+	scheduleTask(sDown, MS2US(delayMs + durationMs), (schfunc_t) &turnLow, (void*)signal);
 
-	signal->last_scheduling_time = now;
+//	signal->last_scheduling_time = now;
 }
 
 void scheduleOutputBase(OutputSignal *signal, float delayMs, float durationMs) {

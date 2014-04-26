@@ -9,6 +9,7 @@
 #define TRIGGER_STRUCTURE_H_
 
 #include "rusefi_enums.h"
+#include "stdint.h"
 
 #define PWM_PHASE_MAX_COUNT 150
 #define PWM_PHASE_MAX_WAVE_PER_PWM 2
@@ -28,8 +29,8 @@ typedef struct {
 
 	int current_index;
 
-	int toothed_previous_duration;
-	int toothed_previous_time;
+	uint64_t toothed_previous_duration;
+	uint64_t toothed_previous_time;
 
 } trigger_state_s;
 

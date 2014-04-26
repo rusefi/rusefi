@@ -30,9 +30,9 @@
 
 #if EFI_SIGNAL_EXECUTOR_SLEEP || defined(__DOXYGEN__)
 
-void scheduleTask(scheduling_s *scheduling, float delayF, schfunc_t callback, void *param) {
-	int delay = delayF;
-	if (delay == 0) {
+void scheduleTask(scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) {
+	int delaySt = delayUs * CH_FREQUENCY / 1000000;
+	if (delaySt == 0) {
 		/**
 		 * in case of zero delay, we should invoke the callback
 		 */
@@ -45,7 +45,7 @@ void scheduleTask(scheduling_s *scheduling, float delayF, schfunc_t callback, vo
 	if (isArmed)
 		chVTResetI(&scheduling->timer);
 
-	chVTSetI(&scheduling->timer, delay, (vtfunc_t)callback, param);
+	chVTSetI(&scheduling->timer, delaySt, (vtfunc_t)callback, param);
 	unlockAnyContext();
 }
 

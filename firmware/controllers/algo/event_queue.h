@@ -16,12 +16,13 @@ class EventQueue {
 public:
 	EventQueue();
 
-	void schedule(scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param);
-	void schedule(scheduling_s *scheduling, uint64_t nowUs, int delayUs, schfunc_t callback, void *param);
+	void insertTask(scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param);
+	void insertTask(scheduling_s *scheduling, uint64_t nowUs, int delayUs, schfunc_t callback, void *param);
 
-	void execute(uint64_t now);
+	void executeAll(uint64_t now);
 
-	uint64_t getNextEventTime(void);
+	uint64_t getNextEventTime(uint64_t nowUs);
+	void clear(void);
 private:
 	scheduling_s *head;
 };

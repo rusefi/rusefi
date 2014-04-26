@@ -68,7 +68,7 @@ static inline int noSynchronizationResetNeeded(trigger_state_s const *shaftPosit
  * @brief This method changes the state of trigger_state_s data structure according to the trigger event
  */
 void processTriggerEvent(trigger_state_s *shaftPositionState, trigger_shape_s const *triggerShape,
-		trigger_config_s const *triggerConfig, ShaftEvents signal, time_t now) {
+		trigger_config_s const *triggerConfig, ShaftEvents signal, uint64_t nowUs) {
 
 	int isLessImportant = (triggerConfig->useRiseEdge && signal != SHAFT_PRIMARY_UP)
 			|| (!triggerConfig->useRiseEdge && signal != SHAFT_PRIMARY_DOWN);
@@ -81,7 +81,7 @@ void processTriggerEvent(trigger_state_s *shaftPositionState, trigger_shape_s co
 		return;
 	}
 
-	int currentDuration = overflowDiff(now, shaftPositionState->toothed_previous_time);
+	int64_t currentDuration = nowUs - shaftPositionState->toothed_previous_time;
 	chDbgCheck(currentDuration >= 0, "negative duration?");
 
 // todo: skip a number of signal from the beginning
@@ -114,7 +114,7 @@ void processTriggerEvent(trigger_state_s *shaftPositionState, trigger_shape_s co
 	}
 
 	shaftPositionState->toothed_previous_duration = currentDuration;
-	shaftPositionState->toothed_previous_time = now;
+	shaftPositionState->toothed_previous_time = nowUs;
 
 }
 

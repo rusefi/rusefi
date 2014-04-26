@@ -26,7 +26,7 @@ extern engine_configuration_s *engineConfiguration;
 extern engine_configuration2_s *engineConfiguration2;
 
 // we need this initial to have not_running at first invocation
-static volatile time_t previousShaftEventTime = (time_t) -10 * CH_FREQUENCY;
+static volatile uint64_t previousShaftEventTime = (efitimems_t) -10 * US_PER_SECOND;
 
 static IntListenerArray triggerListeneres;
 
@@ -58,16 +58,16 @@ void hwHandleShaftSignal(ShaftEvents signal) {
 	chDbgCheck(eventIndex >= 0 && eventIndex < HW_EVENT_TYPES, "signal type");
 	hwEventCounters[eventIndex]++;
 
-	time_t now = chTimeNow();
+	uint64_t nowUs = getTimeNowUs();
 
-	if (overflowDiff(now, previousShaftEventTime) > CH_FREQUENCY) {
+	if (nowUs - previousShaftEventTime > US_PER_SECOND) {
 		/**
 		 * We are here if there is a time gap between now and previous shaft event - that means the engine is not runnig.
 		 * That means we have lost synchronization since the engine is not running :)
 		 */
 		triggerState.shaft_is_synchronized = FALSE;
 	}
-	previousShaftEventTime = now;
+	previousShaftEventTime = nowUs;
 	// this is not atomic, but it's fine here
 	shaftEventCounter++;
 
@@ -75,7 +75,7 @@ void hwHandleShaftSignal(ShaftEvents signal) {
 	 * This invocation changes the state of
 	 */
 	processTriggerEvent(&triggerState, &engineConfiguration2->triggerShape, &engineConfiguration->triggerConfig, signal,
-			now);
+			nowUs);
 
 	if (!triggerState.shaft_is_synchronized)
 		return; // we should not propagate event if we do not know where we are

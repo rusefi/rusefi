@@ -18,7 +18,7 @@ typedef struct {
 	 * a copy so that all phases are executed on the same period, even if another thread
 	 * would be adjusting PWM parameters
 	 */
-	float period;
+	float periodMs;
 	/**
 	 * Iteration counter
 	 */
@@ -26,7 +26,7 @@ typedef struct {
 	/**
 	 * Start time of current iteration
 	 */
-	systime_t start;
+	uint64_t startUs;
 	int phaseIndex;
 } pwm_config_safe_state_s;
 
@@ -46,9 +46,8 @@ struct PwmConfig_struct {
 	 * float value of PWM period
 	 * PWM generation is not happening while this value is zero
 	 */
-	float period;
+	float periodMs;
 
-	WORKING_AREA(deThreadStack, UTILITY_THREAD_STACK_SIZE);
 	scheduling_s scheduling;
 
 	pwm_config_safe_state_s safe;

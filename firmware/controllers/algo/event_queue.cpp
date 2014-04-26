@@ -1,5 +1,11 @@
 /**
  * @file event_queue.cpp
+ * This is a data structure which keeps track of all pending events
+ * Implemented as a linked list, which is fine since the number of
+ * pending events is pretty low
+ * todo: MAYBE migrate to a better data structure, but that's low priority
+ *
+ * this data structure is NOT thread safe
  *
  * @date Apr 17, 2014
  * @author Andrey Belomutskiy, (c) 2012-2014
@@ -13,8 +19,7 @@ EventQueue::EventQueue() {
 	head = NULL;
 }
 
-void EventQueue::schedule(scheduling_s *scheduling, uint64_t nowUs, int delayUs,
-		schfunc_t callback, void *param) {
+void EventQueue::insertTask(scheduling_s *scheduling, uint64_t nowUs, int delayUs, schfunc_t callback, void *param) {
 	if (callback == NULL)
 		firmwareError("NULL callback");
 	uint64_t time = nowUs + delayUs;
@@ -37,38 +42,48 @@ void EventQueue::schedule(scheduling_s *scheduling, uint64_t nowUs, int delayUs,
 	LL_PREPEND(head, scheduling);
 }
 
-void EventQueue::schedule(scheduling_s *scheduling, int delayUs,
-		schfunc_t callback, void *param) {
-	schedule(scheduling, getTimeNowUs(), delayUs, callback, param);
+void EventQueue::insertTask(scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) {
+	insertTask(scheduling, getTimeNowUs(), delayUs, callback, param);
 }
 
-uint64_t EventQueue::getNextEventTime(void) {
+/**
+ * Get the timestamp of the soonest pending action
+ */
+uint64_t EventQueue::getNextEventTime(uint64_t nowUs) {
 	scheduling_s * elt;
 	// this is a large value which is expected to be larger than any real time
 	uint64_t result = EMPTY_QUEUE;
 
 	LL_FOREACH(head, elt)
 	{
+		if (elt->momentUs <= nowUs) {
+			// todo: I am not so sure about this branch
+			continue;
+		}
 		if (elt->momentUs < result)
 			result = elt->momentUs;
-
 	}
 	return result;
 }
 
-void EventQueue::execute(uint64_t now) {
+/**
+ * Invoke all pending actions prior to specified timestamp
+ */
+void EventQueue::executeAll(uint64_t now) {
 	scheduling_s * elt, *tmp;
-
-//	DL_FOREACH_SAFE()
 
 // here we need safe iteration because we are removing elements
 	LL_FOREACH_SAFE(head, elt, tmp)
 	{
-		if (elt->momentUs < now) {
+		if (elt->momentUs <= now) {
 			LL_DELETE(head, elt);
 #if EFI_SIGNAL_EXECUTOR_ONE_TIMER
 			elt->callback(elt->param);
 #endif /* EFI_SIGNAL_EXECUTOR_ONE_TIMER */
 		}
 	}
+}
+
+void EventQueue::clear(void) {
+	head = NULL;
 }
