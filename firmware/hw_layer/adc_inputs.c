@@ -72,7 +72,7 @@ static void adc_callback_slow(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 
 		adcCallbackCounter_slow++;
 
-		newState.time = chTimeNow();
+//		newState.time = chimeNow();
 		for (int i = 0; i < EFI_ADC_SLOW_CHANNELS_COUNT; i++) {
 			int value = getAvgAdcValue(i, slowAdcState.samples, ADC_GRP1_BUF_DEPTH_SLOW, EFI_ADC_SLOW_CHANNELS_COUNT);
 			newState.adc_data[i] = value;

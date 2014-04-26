@@ -8,6 +8,7 @@ HW_LAYERESRC = $(PROJECT_DIR)/hw_layer/hardware.c \
 	$(PROJECT_DIR)/hw_layer/lcd/lcd_HD44780.c \
 	$(PROJECT_DIR)/hw_layer/can_hw.c \
 	$(PROJECT_DIR)/hw_layer/HIP9011.c \
+	$(PROJECT_DIR)/hw_layer/microsecond_timer.c \
 	$(PROJECT_DIR)/hw_layer/serial_over_usb/usbcfg.c \
 	$(PROJECT_DIR)/hw_layer/serial_over_usb/usbconsole.c \
 	$(PROJECT_DIR)/hw_layer/flash.c \

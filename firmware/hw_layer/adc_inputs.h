@@ -37,7 +37,7 @@ int getInternalAdcValue(int index);
 // this structure contains one multi-channel ADC state snapshot
 typedef struct {
 	volatile adcsample_t adc_data[ADC_MAX_SLOW_CHANNELS_COUNT];
-	time_t time;
+//	time_t time;
 } adc_state;
 
 typedef struct {
