@@ -36,7 +36,7 @@ public class PotCommand {
             @Override
             public void stateChanged(ChangeEvent e) {
                 Double Vout = (Double) voltageSpinner.getValue();
-                int d = getPotResistance(Vout);
+                int d = getPotResistance(Vout, SensorCentral.getInstance().getValue(Sensor.VREF) * VOLTAGE_CORRECTION);
                 potSpinner.setValue(d);
             }
         });
@@ -86,8 +86,7 @@ public class PotCommand {
         CommandQueue.getInstance().write("pot" + channel + " " + resistance);
     }
 
-    public static int getPotResistance(Double vout) {
-        double vRef = SensorCentral.getInstance().getValue(Sensor.VREF) * VOLTAGE_CORRECTION;
+    public static int getPotResistance(Double vout, double vRef) {
         double r = getR1InVoltageDividor3(vout, vRef, MAF_CHANNEL_ECU_INTERNAL_RESISTANCE);
         MessagesCentral.getInstance().postMessage(PotCommand.class, "VRef=" + vRef + ", needed resistance: " + r);
         // pot command accept resistance and does the conversion itself

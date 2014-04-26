@@ -58,7 +58,7 @@ public enum FileLog {
         if (fileLog == null)
             return;
         try {
-            fileLog.write((fullLine + "\r\n").getBytes());
+            fileLog.write((new Date() + ": " + fullLine + "\r\n").getBytes());
             fileLog.flush();
             System.out.println(fullLine);
         } catch (IOException e) {

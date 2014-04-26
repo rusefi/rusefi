@@ -22,6 +22,11 @@ public class SerialConnector implements LinkConnector {
     }
 
     @Override
+    public boolean hasError() {
+        return false;
+    }
+
+    @Override
     public void send(String command) throws InterruptedException {
         PortHolder.getInstance().packAndSend(command);
     }

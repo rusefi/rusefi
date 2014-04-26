@@ -40,7 +40,7 @@ public class EcuStimulator {
     private static final int RPM_MIN = 400;
     private static final int RPM_MAX = 6000;
     private static final int RPM_INCREMENT = 250;
-    private static final Sensor DWELL_SENSOR = Sensor.DWELL1;
+    private static final Sensor DWELL_SENSOR = Sensor.DWELL0;
 
     private static final String TABLE_FILE_NAME = "table" + RPM_INCREMENT + "_" + MAF_INCREMENT + ".csv";
 
@@ -111,10 +111,14 @@ public class EcuStimulator {
 
     private static void runSimulation(int rpm, ResultListener resultListener, final Sensor dwellSensor) {
         for (double maf = MAF_MIN; maf <= MAF_MAX; maf += MAF_INCREMENT) {
-            setPotVoltage(maf, Sensor.MAF);
+            //setPotVoltage(maf, Sensor.MAF);
+            setPotVoltage(maf, null);
             setRpm(rpm);
             sleepRuntime(SLEEP_TIME);
 
+            /**
+             * We are making a number of measurements and then we take the middle one
+             */
             final List<Double> dwells = new ArrayList<Double>(MEASURES);
             final List<Double> advances = new ArrayList<Double>(MEASURES);
 
@@ -125,9 +129,9 @@ public class EcuStimulator {
                 public void onTime(double time) {
                     if (latch.getCount() == 0)
                         return;
-                    double dwell0 = getValue(dwellSensor);
+                    double dwell = getValue(dwellSensor);
                     double advance = 0;//getValue(Sensor.ADVANCE0);
-                    dwells.add(dwell0);
+                    dwells.add(dwell);
                     advances.add(advance);
                     latch.countDown();
                 }
@@ -147,7 +151,6 @@ public class EcuStimulator {
             double dwellDiff = Math.abs(dwells.get(0) - dwells.get(MEASURES - 1));
             if (dwellDiff > 1)
                 System.out.println("dwells " + dwells);
-
 
             double dwell = dwells.get(MEASURES / 2);
             double advance = advances.get(MEASURES / 2);
@@ -188,23 +191,32 @@ public class EcuStimulator {
         log("Result: " + actual + " while setting " + rpm);
     }
 
-    public static void setPotVoltage(double voltage, Sensor sensor) {
-        log("Current voltage: " + getValue(sensor) + ", setting " + voltage);
+    public static void setPotVoltage(double targetVoltage, Sensor sensor) {
+        if (sensor != null)
+            log("Current targetVoltage: " + getValue(sensor) + ", setting " + targetVoltage);
         int attempt = 0;
-        int resistance = PotCommand.getPotResistance(voltage);
+        //double vRef = SensorCentral.getInstance().getValue(Sensor.VREF) * PotCommand.VOLTAGE_CORRECTION;
+        double vRef = 4.7;
+        int resistance = PotCommand.getPotResistance(targetVoltage, vRef);
         if (resistance <= 0) {
-            log("Invalid resistance " + resistance + ". Invalid voltage " + voltage + "?");
+            log("Invalid resistance " + resistance + ". Invalid targetVoltage " + targetVoltage + "?");
             return;
         }
 
-        double actual;
-        do {
+        if (sensor == null) {
             PotCommand.requestPotChange(1, resistance);
-            sleepRuntime(50);
-            actual = getValue(sensor);
-            log("Got: " + actual + " on attempt=" + attempt + " while setting " + voltage + " for " + sensor);
-        } while (attempt++ < 10 && Math.abs(voltage - actual) > 0.2);
-        log("Result: " + actual + " while setting " + voltage);
+            sleepRuntime(1000);
+        } else {
+
+            double actual;
+            do {
+                PotCommand.requestPotChange(1, resistance);
+                sleepRuntime(50);
+                actual = getValue(sensor);
+                log("Got: " + actual + " on attempt=" + attempt + " while setting " + targetVoltage + " for " + sensor);
+            } while (attempt++ < 10 && Math.abs(targetVoltage - actual) > 0.2);
+            log("Result: " + actual + " while setting " + targetVoltage);
+        }
     }
 
     private static void log(String message) {

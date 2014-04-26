@@ -8,6 +8,7 @@ import com.irnems.core.SensorCentral;
 import com.irnems.ui.widgets.AnyCommand;
 import com.irnems.ui.widgets.UpDownImage;
 import com.rusefi.io.LinkManager;
+import com.rusefi.ui.ChartScrollControl;
 import com.rusefi.waves.RevolutionLog;
 import com.rusefi.waves.WaveChart;
 import com.rusefi.waves.WaveChartParser;
@@ -38,6 +39,7 @@ public class WavePanel extends JPanel {
     private final ZoomControl zoomControl = new ZoomControl();
     private final ChartStatusPanel statusPanel = new ChartStatusPanel(zoomControl);
     private final UpDownImage crank = register("crank");
+    private ChartScrollControl scrollControl;
 
     private boolean isPaused;
 
@@ -86,12 +88,13 @@ public class WavePanel extends JPanel {
 
         buttonPanel.add(zoomControl);
 
-        buttonPanel.add(ChartRepository.getInstance().createControls(new ChartRepository.CRListener() {
+        scrollControl = ChartRepository.getInstance().createControls(new ChartRepository.CRListener() {
             @Override
             public void onDigitalChart(String chart) {
                 displayChart(chart);
             }
-        }));
+        });
+        buttonPanel.add(scrollControl.getContent());
 
         add(buttonPanel, BorderLayout.NORTH);
         add(imagePanel, BorderLayout.CENTER);
@@ -180,5 +183,10 @@ public class WavePanel extends JPanel {
         image.addMouseMotionListener(statusPanel.motionAdapter);
         images.put(name, image);
         return image;
+    }
+
+    public void reloadFile() {
+        displayChart(ChartRepository.getInstance().getChart(0));
+        scrollControl.reset();
     }
 }

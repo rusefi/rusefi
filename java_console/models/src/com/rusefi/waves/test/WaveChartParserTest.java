@@ -52,7 +52,7 @@ public class WaveChartParserTest {
         for (WaveReport.UpDown ud : wr.getList()) {
             assertTrue(isCloseEnough(238.75, rl.getCrankAngleByTime(ud.upTime)));
 
-            assertTrue(isCloseEnough(0.308, ud.getDutyCycle(rl)));
+            assertTrue(ud.getDutyCycle(rl) + "", isCloseEnough(0.0307, ud.getDutyCycle(rl)));
         }
     }
 

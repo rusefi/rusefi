@@ -19,11 +19,11 @@ public class ExecHelper {
         Thread.currentThread().setName("Main simulation");
 
         try {
-            FileLog.rlog("Binary size: " + new File(SIMULATOR_COMMAND).length());
+            FileLog.MAIN.logLine("Binary size: " + new File(SIMULATOR_COMMAND).length());
 
-            FileLog.rlog("Executing " + SIMULATOR_COMMAND);
+            FileLog.MAIN.logLine("Executing " + SIMULATOR_COMMAND);
             ExecHelper.simulatorProcess = Runtime.getRuntime().exec(SIMULATOR_COMMAND);
-            FileLog.rlog("simulatorProcess: " + ExecHelper.simulatorProcess);
+            FileLog.MAIN.logLine("simulatorProcess: " + ExecHelper.simulatorProcess);
 
             BufferedReader input =
                     new BufferedReader(new InputStreamReader(ExecHelper.simulatorProcess.getInputStream()));
@@ -35,7 +35,7 @@ public class ExecHelper {
                 FileLog.SIMULATOR_CONSOLE.logLine(line);
             }
 
-            FileLog.rlog("exitValue: " + simulatorProcess.exitValue());
+            FileLog.MAIN.logLine("exitValue: " + simulatorProcess.exitValue());
 
             System.out.println("end of console");
             input.close();
@@ -65,7 +65,7 @@ public class ExecHelper {
 
     static void destroy() {
         if (simulatorProcess != null) {
-            FileLog.rlog("Destroying sub-process...");
+            FileLog.MAIN.logLine("Destroying sub-process...");
             simulatorProcess.destroy();
         }
     }

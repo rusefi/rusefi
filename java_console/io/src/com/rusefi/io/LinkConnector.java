@@ -10,4 +10,6 @@ public interface LinkConnector {
     void send(String command) throws InterruptedException;
 
     void restart();
+
+    boolean hasError();
 }
