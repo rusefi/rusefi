@@ -91,7 +91,7 @@ void mapAveragingCallback(adcsample_t value) {
 
 	if (engineConfiguration->analogChartMode == AC_MAP)
 		if (perRevolutionCounter % FAST_MAP_CHART_SKIP_FACTOR == 0)
-			acAddData(getCrankshaftAngle(chTimeNow()), currentPressure);
+			acAddData(getCrankshaftAngle(getTimeNowUs()), currentPressure);
 
 	currentMaxPressure = maxF(currentMaxPressure, currentPressure);
 

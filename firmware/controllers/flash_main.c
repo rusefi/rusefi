@@ -62,9 +62,9 @@ void writeToFlash(void) {
 	scheduleMsg(&logger, "Reseting flash=%d", FLASH_USAGE);
 	flashErase(FLASH_ADDR, FLASH_USAGE);
 	scheduleMsg(&logger, "Flashing with CRC=%d", result);
-	time_t now = chTimeNow();
+	efitimems_t nowMs = currentTimeMillis();
 	result = flashWrite(FLASH_ADDR, (const char *) &flashState, FLASH_USAGE);
-	scheduleMsg(&logger, "Flash programmed in (ms): %d", chTimeNow() - now);
+	scheduleMsg(&logger, "Flash programmed in (ms): %d", currentTimeMillis() - nowMs);
 	scheduleMsg(&logger, "Flashed: %d", result);
 }
 
