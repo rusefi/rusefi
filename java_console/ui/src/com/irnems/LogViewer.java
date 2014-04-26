@@ -3,11 +3,16 @@ package com.irnems;
 import com.irnems.core.EngineState;
 import com.irnems.file.FileUtils;
 import com.irnems.ui.WavePanel;
+import com.irnems.ui.widgets.UpDownImage;
+import com.rusefi.FIleItem;
+import com.rusefi.io.LinkManager;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileFilter;
 
@@ -19,13 +24,15 @@ public class LogViewer extends JPanel {
     public static final FileFilter FILE_FILTER = new FileFilter() {
         @Override
         public boolean accept(File pathname) {
-            return pathname.getName().startsWith("rfi_report");
+            return pathname.getName().contains("MAIN_rfi_report");
         }
     };
     private final JLabel folderLabel = new JLabel();
-    private final DefaultListModel<String> fileListModel = new DefaultListModel<String>();
-    private final JList<String> fileList = new JList<String>(fileListModel);
+    private final JLabel fileLabel = new JLabel();
+    private final DefaultListModel<FIleItem> fileListModel = new DefaultListModel<FIleItem>();
+    private final JList<FIleItem> fileList = new JList<FIleItem>(fileListModel);
     private String currentFolder;
+    private static JPanel descPanel = new JPanel();
 
 
 //    int currentChartIndex = 0;
@@ -54,30 +61,44 @@ public class LogViewer extends JPanel {
 
         folderPanel.add(folderButton);
         folderPanel.add(folderLabel);
+        folderPanel.add(fileLabel);
 
-        folderPanel.setBackground(Color.red);
+        //folderPanel.setBackground(Color.red);
 
         add(folderPanel, BorderLayout.NORTH);
 
-
-        JPanel descPanel = new JPanel();
-        descPanel.add(new JLabel("Total digital charts: "));
-        descPanel.add(new JLabel("" + ChartRepository.getInstance().getSize()));
-
+        refreshCountPanel();
 
         JPanel boxPanel = new JPanel();
         boxPanel.setLayout(new BoxLayout(boxPanel, BoxLayout.X_AXIS));
         boxPanel.setBorder(BorderFactory.createLineBorder(Color.cyan));
 
-        boxPanel.add(fileList);
-        boxPanel.add(descPanel);
+        fileList.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    FIleItem selectedItem = fileList.getSelectedValue();
+                    openFile(selectedItem.getFile());
+                }
+            }
+        });
 
+        JScrollPane scrollPane = new JScrollPane(fileList);
+        boxPanel.add(scrollPane);
+        boxPanel.add(descPanel);
 
         add(boxPanel);
     }
 
+    private void refreshCountPanel() {
+        descPanel.removeAll();
+        descPanel.add(new JLabel("Total digital charts: "));
+        descPanel.add(new JLabel("" + ChartRepository.getInstance().getSize()));
+        UpDownImage.trueRepaint(descPanel);
+    }
+
     private void openFolder(String folderName) {
-        folderLabel.setText(folderName);
+        folderLabel.setText("Current folder: " + folderName);
         currentFolder = folderName;
 
         File folder = new File(folderName);
@@ -89,13 +110,13 @@ public class LogViewer extends JPanel {
         for (File file : files)
             fileListModel.addElement(getFileDesc(file));
 
-        if (files.length > 0)
+        if (files.length > 0 && LinkManager.isLogViewer())
             openFile(files[0]);
 
     }
 
-    private String getFileDesc(File file) {
-        return file.getName() + " " + file.getUsableSpace();
+    private FIleItem getFileDesc(File file) {
+        return new FIleItem(file);
     }
 
 
@@ -127,6 +148,7 @@ public class LogViewer extends JPanel {
 //
 //
     private void openFile(File file) {
+        fileLabel.setText("Current file: " + file.getName());
         String filename = file.getAbsolutePath();
         EngineState.EngineStateListener listener = new EngineState.EngineStateListenerImpl() {
         };
@@ -145,6 +167,7 @@ public class LogViewer extends JPanel {
         FileUtils.readFile2(filename, engineState);
 
         if (ChartRepository.getInstance().getSize() > 0)
-            WavePanel.getInstance().displayChart(ChartRepository.getInstance().getChart(0));
+            WavePanel.getInstance().reloadFile();
+        refreshCountPanel();
     }
 }

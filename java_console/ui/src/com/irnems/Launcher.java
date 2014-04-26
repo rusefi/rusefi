@@ -20,7 +20,7 @@ import javax.swing.*;
  * @see WavePanel
  */
 public class Launcher extends FrameHelper {
-    private static final Object CONSOLE_VERSION = "20140304";
+    private static final Object CONSOLE_VERSION = "20140407";
 
     public Launcher(String port) {
         FileLog.MAIN.start();
@@ -40,7 +40,7 @@ public class Launcher extends FrameHelper {
 //        tabbedPane.addTab("live map adjustment", new Live3DReport().getControl());
         tabbedPane.add("MessagesCentral", new MsgPanel(true));
 
-//        tabbedPane.add("Log Viewer", new LogViewer());
+        tabbedPane.add("Log Viewer", new LogViewer());
 
         tabbedPane.setSelectedIndex(2);
 //        tabbedPane.setSelectedIndex(5);

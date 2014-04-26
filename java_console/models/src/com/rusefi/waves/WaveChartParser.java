@@ -16,6 +16,8 @@ public class WaveChartParser {
      * This method unpacks a mixed-key message into a Map of messages by key
      */
     public static WaveChart unpackToMap(String value) {
+        if (value == null)
+            throw new NullPointerException("value");
         FileLog.rlog(": " + value);
 
         String[] array = value.split(DELI);

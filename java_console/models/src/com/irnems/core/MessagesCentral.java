@@ -26,7 +26,7 @@ public class MessagesCentral {
     }
 
     public void postMessage(final Class clazz, final String message) {
-        FileLog.rlog("postMessage " + clazz.getSimpleName() + ": " + message);
+        FileLog.MAIN.logLine("postMessage " + clazz.getSimpleName() + ": " + message);
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {

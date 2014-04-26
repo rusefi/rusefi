@@ -18,6 +18,7 @@ public class TcpConnector implements LinkConnector {
     public static final String LOCALHOST = "localhost";
     private final int port;
     private BufferedWriter writer;
+    private boolean withError;
 
     public TcpConnector(String port) {
         this.port = getTcpPort(port);
@@ -78,12 +79,18 @@ public class TcpConnector implements LinkConnector {
     }
 
     @Override
+    public boolean hasError() {
+        return withError;
+    }
+
+    @Override
     public void send(String command) throws InterruptedException {
         FileLog.rlog("Writing " + command);
         try {
             writer.write(command + "\r\n");
             writer.flush();
         } catch (IOException e) {
+            withError = true;
             System.err.println("err in send");
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }

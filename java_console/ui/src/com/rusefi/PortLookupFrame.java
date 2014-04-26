@@ -1,6 +1,7 @@
 package com.rusefi;
 
 import com.irnems.Launcher;
+import com.rusefi.io.LinkManager;
 import com.rusefi.io.tcp.TcpConnector;
 import jssc.SerialPortList;
 
@@ -22,6 +23,7 @@ public class PortLookupFrame {
         java.util.List<String> ports = new ArrayList<String>();
         ports.addAll(Arrays.asList(SerialPortList.getPortNames()));
         ports.addAll(TcpConnector.getAvailablePorts());
+        ports.add(LinkManager.LOG_VIEWER);
 
 
         if (ports.size() == 0) {

@@ -47,10 +47,10 @@ class PortHolder {
     public boolean open(String port, DataListener listener) {
         SerialPort serialPort = new SerialPort(port);
         try {
-            FileLog.rlog("Opening " + port + " @ " + BAUD_RATE);
+            FileLog.MAIN.logLine("Opening " + port + " @ " + BAUD_RATE);
             boolean opened = serialPort.openPort();//Open serial port
             if (!opened)
-                FileLog.rlog("opened: " + opened);
+                FileLog.MAIN.logLine("opened: " + opened);
             serialPort.setParams(BAUD_RATE, 8, 1, 0);//Set params.
             int mask = SerialPort.MASK_RXCHAR;
             //Set the prepared mask
@@ -81,7 +81,7 @@ class PortHolder {
                     serialPort.closePort();
                     serialPort = null;
                 } catch (SerialPortException e) {
-                    FileLog.rlog("Error while closing: " + e);
+                    FileLog.MAIN.logLine("Error while closing: " + e);
                 } finally {
                     portLock.notifyAll();
                 }
@@ -93,7 +93,7 @@ class PortHolder {
      * this method blocks till a connection is available
      */
     public void packAndSend(String command) throws InterruptedException {
-        FileLog.rlog("Sending [" + command + "]");
+        FileLog.MAIN.logLine("Sending [" + command + "]");
         MessagesCentral.getInstance().postMessage(CommandQueue.class, "Sending [" + command + "]");
 
         long now = System.currentTimeMillis();
