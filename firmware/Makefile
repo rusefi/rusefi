@@ -18,7 +18,7 @@ endif
 
 # C++ specific options here (added to USE_OPT).
 ifeq ($(USE_CPPOPT),)
-  USE_CPPOPT = -fno-rtti -fno-exceptions -fno-use-cxa-atexit
+  USE_CPPOPT = -std=c++11 -fno-rtti -fno-exceptions -fno-use-cxa-atexit
 endif
 
 # Enable this if you want the linker to remove unused code and data
@@ -122,7 +122,7 @@ CSRC = $(PORTSRC) \
 	$(CONSOLEUTILSRC) \
 	$(HALSRC) \
 	$(EMULATIONSRC) \
-	$(HW_LAYERESRC) \
+	$(HW_LAYERSRC) \
 	$(CONTROLLERSSRC) \
 	$(CONTROLLERS_ALGO_SRC) \
 	$(CONTROLLERS_MATH_SRC) \
@@ -141,6 +141,9 @@ CPPSRC = $(CHCPPSRC) \
 	$(CONTROLLERS_ALGO_SRC_CPP) \
 	$(SYSTEMSRC_CPP) \
 	$(ENGINES_SRC_CPP) \
+	$(HW_LAYER_SRC_CPP) \
+	$(CONSOLE_SRC_CPP) \
+	$(CONTROLLERS_SENSORS_SRC_CPP) \
 	$(CONTROLLERS_SRC_CPP) \
 	$(UTILSRC_CPP) \
 	$(CONTROLLERS_MATH_SRC_CPP) \

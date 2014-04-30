@@ -14,13 +14,14 @@
 #include "flash_main.h"
 #include "adc_inputs.h"
 #include "engine_controller.h"
-#include "rusefi.h"
 #include "thermistors.h"
 #include "adc_inputs.h"
 #include "interpolation.h"
 #include "tps.h"
+#include "ec2.h"
 
 #if EFI_PROD_CODE
+#include "rusefi.h"
 #include "pin_repository.h"
 #endif /* EFI_PROD_CODE */
 
@@ -51,7 +52,7 @@ void printFloatArray(char *prefix, float array[], int size) {
 	scheduleLogging(&logger);
 }
 
-char* getConfigurationName(engine_configuration_s *engineConfiguration) {
+const char* getConfigurationName(engine_configuration_s *engineConfiguration) {
 	switch (engineConfiguration->engineType) {
 #if EFI_SUPPORT_DODGE_NEON
 	case DODGE_NEON_1995:

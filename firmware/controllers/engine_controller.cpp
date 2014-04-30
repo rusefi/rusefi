@@ -48,6 +48,9 @@
 #include "adc_inputs.h"
 #include "algo.h"
 #include "efilib2.h"
+#include "ec2.h"
+#include "PwmTester.h"
+
 
 #define _10_MILLISECONDS (10 * TICKS_IN_MS)
 
@@ -182,7 +185,7 @@ static void fuelPumpOn(ShaftEvents signal, int index) {
 }
 
 static void initFuelPump(void) {
-	registerShaftPositionListener(&fuelPumpOn, "fuel pump");
+	addTriggerEventListener(&fuelPumpOn, "fuel pump");
 	fuelPumpOn(SHAFT_PRIMARY_UP, 0);
 }
 
@@ -194,13 +197,13 @@ char * getPinNameByAdcChannel(int hwChannel, uint8_t *buffer) {
 
 static uint8_t pinNameBuffer[16];
 
-static void printAnalogChannelInfoExt(char *name, int hwChannel,
+static void printAnalogChannelInfoExt(const char *name, int hwChannel,
 		float voltage) {
 	scheduleMsg(&logger, "%s ADC%d %s value=%fv", name, hwChannel,
 			getPinNameByAdcChannel(hwChannel, pinNameBuffer), voltage);
 }
 
-static void printAnalogChannelInfo(char *name, int hwChannel) {
+static void printAnalogChannelInfo(const char *name, int hwChannel) {
 	printAnalogChannelInfoExt(name, hwChannel, getVoltageDivided(hwChannel));
 }
 
@@ -247,10 +250,8 @@ void initEngineContoller(void) {
 	chThdCreateStatic(csThreadStack, sizeof(csThreadStack), LOWPRIO,
 			(tfunc_t) csThread, NULL);
 
-#if EFI_SIGNAL_EXECUTOR_SINGLE_TIMER
-	initOutputScheduler();
-#endif
 	initInjectorCentral();
+	initPwmTester();
 	initIgnitionCentral();
 	initMalfunctionCentral();
 

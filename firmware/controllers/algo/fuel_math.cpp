@@ -36,6 +36,7 @@
 #include "allsensors.h"
 #include "engine_math.h"
 #include "rpm_calculator.h"
+#include "accel_enrichment.h"
 
 static float *fuel_ptrs[FUEL_LOAD_COUNT];
 static int initialized = FALSE;
@@ -114,6 +115,9 @@ float getRunningFuel(int rpm, float engineLoad) {
 	float iatCorrection = getIatCorrection(getIntakeAirTemperature());
 	float cltCorrection = getCltCorrection(getCoolantTemperature());
 	float injectorLag = getInjectorLag(getVBatt());
+
+	float accelEnrichment = getAccelEnrichment();
+	// todo: accelEnrichment
 
 	return baseFuel * cltCorrection * iatCorrection + injectorLag;
 }

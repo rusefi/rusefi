@@ -22,8 +22,8 @@ typedef struct {
 	int currentLogicValue;
 } OutputPin;
 
-void initOutputPin(char *msg, OutputPin *outputPin, GPIO_TypeDef *port, uint32_t pinNumber);
-void initOutputPinExt(char *msg, OutputPin *outputPin, GPIO_TypeDef *port, uint32_t pinNumber, iomode_t mode);
+void initOutputPin(const char *msg, OutputPin *outputPin, GPIO_TypeDef *port, uint32_t pinNumber);
+void initOutputPinExt(const char *msg, OutputPin *outputPin, GPIO_TypeDef *port, uint32_t pinNumber, iomode_t mode);
 int getLogicPinValue(OutputPin * outputPin);
 void setPinValue(OutputPin * outputPin, int electricalValue, int logicValue);
 

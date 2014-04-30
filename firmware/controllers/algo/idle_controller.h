@@ -32,6 +32,11 @@ typedef struct {
 	int timeOfLastIdleChange;
 } IdleValveState;
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif /* __cplusplus */
+
 void idleInit(IdleValveState *idle);
 int getIdle(IdleValveState *idle, int currentRpm, int time);
 void setIdleRpm(IdleValveState *idle, int targetRpm);
@@ -40,5 +45,10 @@ void setIdleRpm(IdleValveState *idle, int targetRpm);
 int max(int i1, int i2);
 int min(int i1, int i2);
 float maxF(float i1, float i2);
+void idleDebug(char *msg, int value);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* IDLE_CONTROLLER_H_ */

@@ -8,6 +8,10 @@
 #ifndef LISTENER_ARRAY_H_
 #define LISTENER_ARRAY_H_
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif /* __cplusplus */
 
 #define MAX_INT_LISTENER_COUNT 15
 
@@ -29,5 +33,9 @@ void invokeCallbacks(IntListenerArray *array, int value);
 void invokeJustArgCallbacks(IntListenerArray *array);
 void invokeArgIntCallbacks(IntListenerArray *array, int value);
 void invokeIntIntCallbacks(IntListenerArray *array, int value, int value2);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* LISTENER_ARRAY_H_ */

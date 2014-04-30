@@ -23,7 +23,7 @@ Overflow64Counter::Overflow64Counter() {
 }
 
 void Overflow64Counter::offer(uint32_t value) {
-	if(value < currentValue) {
+	if (value < currentValue) {
 		// new value less than previous value means there was an overflow in that 32 bit counter
 		currentBase += 0x100000000LL;
 	}

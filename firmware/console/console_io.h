@@ -29,9 +29,18 @@
  #define CONSOLE_CHANNEL EFI_CONSOLE_UART_DEVICE
 #endif
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif /* __cplusplus */
+
 void consolePutChar(int x);
 void consoleOutputBuffer(const int8_t *buf, int size);
 void startChibiosConsole(void (*console_line_callback_p)(char *));
 int is_serial_ready(void);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* CONSOLE_IO_H_ */

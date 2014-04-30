@@ -15,9 +15,6 @@ extern "C"
 {
 #endif /* __cplusplus */
 
-
-int cisnan(float f);
-
 //float getDefaultVE(int rpm);
 
 float getDefaultFuel(int rpm, float map);
@@ -35,17 +32,10 @@ float getTriggerEventAngle(int triggerEventIndex);
 float getEngineLoadT(engine_configuration_s *engineConfiguration);
 #define getEngineLoad() getEngineLoadT(engineConfiguration)
 
-void initializeIgnitionActions(float baseAngle, engine_configuration_s *engineConfiguration, engine_configuration2_s *engineConfiguration2);
-void addFuelEvents(engine_configuration_s const *e,  engine_configuration2_s *engineConfiguration2, ActuatorEventList *list, injection_mode_e mode);
-
 float getSparkDwellMsT(engine_configuration_s *engineConfiguration, int rpm);
 #define getSparkDwellMs(rpm) getSparkDwellMsT(engineConfiguration, rpm)
 
-void registerActuatorEventExt(engine_configuration_s const *engineConfiguration, trigger_shape_s * s, ActuatorEventList *list, OutputSignal *actuator, float angleOffset);
-
 int getCylinderId(firing_order_e firingOrder, int index);
-void prepareOutputSignals(engine_configuration_s *engineConfiguration,
-		engine_configuration2_s *engineConfiguration2);
 
 void setTableBin(float array[], int size, float l, float r);
 void setFuelRpmBin(engine_configuration_s *engineConfiguration, float l, float r);

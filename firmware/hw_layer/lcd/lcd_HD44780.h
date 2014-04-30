@@ -5,14 +5,23 @@
  * @author Andrey Belomutskiy, (c) 2012-2014
  */
 
-#ifndef LCD_2X16_H_
-#define LCD_2X16_H_
+#ifndef LCD_HD44780_H_
+#define LCD_HD44780_H_
 
-extern void lcd_HD44780_init(void);
-extern void lcd_HD44780_set_position(uint8_t row, uint8_t column);
-extern void lcd_HD44780_print_char(char data);
-extern void lcd_HD44780_print_string(char *string);
+#ifdef __cplusplus
+extern "C"
+{
+#endif /* __cplusplus */
+
+void lcd_HD44780_init(void);
+void lcd_HD44780_set_position(uint8_t row, uint8_t column);
+void lcd_HD44780_print_char(char data);
+void lcd_HD44780_print_string(char *string);
 
 void lcdShowFatalMessage(char *message);
 
-#endif /* LCD_2X16_H_ */
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
+
+#endif /* LCD_HD44780_H_ */

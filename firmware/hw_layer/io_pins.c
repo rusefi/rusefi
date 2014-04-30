@@ -14,7 +14,7 @@
 #include "gpio_helper.h"
 #include "status_loop.h"
 #include "main_trigger_callback.h"
-#include "trigger_decoder.h"
+#include "engine_configuration.h"
 #include "console_io.h"
 
 extern board_configuration_s *boardConfiguration;
@@ -92,6 +92,9 @@ static void comBlinkingThread(void *arg) {
 	}
 }
 
+// todo: fix this, should be a proper declaration in a .h file
+int isTriggerDecoderError(void);
+
 static void errBlinkingThread(void *arg) {
 	chRegSetThreadName("err blinking");
 	while (TRUE) {
@@ -105,7 +108,7 @@ static void errBlinkingThread(void *arg) {
 	}
 }
 
-static void outputPinRegisterExt(char *msg, io_pin_e ioPin, GPIO_TypeDef *port, uint32_t pin, pin_output_mode_e *outputMode) {
+static void outputPinRegisterExt(const char *msg, io_pin_e ioPin, GPIO_TypeDef *port, uint32_t pin, pin_output_mode_e *outputMode) {
 	if (port == GPIO_NULL) {
 		// that's for GRIO_NONE
 		outputs[ioPin].port = port;
@@ -134,14 +137,14 @@ int getHwPin(brain_pin_e brainPin) {
 	return brainPin % 16;
 }
 
-void outputPinRegisterExt2(char *msg, io_pin_e ioPin, brain_pin_e brainPin, pin_output_mode_e *outputMode) {
+void outputPinRegisterExt2(const char *msg, io_pin_e ioPin, brain_pin_e brainPin, pin_output_mode_e *outputMode) {
 	GPIO_TypeDef *hwPort = getHwPort(brainPin);
 	int hwPin = getHwPin(brainPin);
 
 	outputPinRegisterExt(msg, ioPin, hwPort, hwPin, outputMode);
 }
 
-void outputPinRegister(char *msg, io_pin_e ioPin, GPIO_TypeDef *port, uint32_t pin) {
+void outputPinRegister(const char *msg, io_pin_e ioPin, GPIO_TypeDef *port, uint32_t pin) {
 	outputPinRegisterExt(msg, ioPin, port, pin, &DEFAULT_OUTPUT);
 }
 

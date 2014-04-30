@@ -36,6 +36,11 @@ void chDbgPanic3(const char *msg, char * file, int line);
 
 void initErrorHandling(void);
 
+// todo: better place for this shared declaration?
+int getRusEfiVersion(void);
+
+#define efiAssert(x, y) chDbgAssert(x, y, NULL)
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

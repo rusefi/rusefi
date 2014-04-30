@@ -12,7 +12,6 @@
 #include "efifeatures.h"
 #include "sensor_types.h"
 #include "can_header.h"
-#include "trigger_structure.h"
 #include "event_registry.h"
 #include "rusefi_enums.h"
 
@@ -83,6 +82,26 @@ typedef struct {
 } afr_sensor_s;
 
 #define DWELL_COUNT 8
+
+/**
+ * @brief Trigger wheel(s) configuration
+ */
+typedef struct {
+	trigger_type_e triggerType;
+
+	int isSynchronizationNeeded;
+
+	int totalToothCount;
+	int skippedToothCount;
+
+	float syncRatioFrom;
+	float syncRatioTo;
+
+	int useRiseEdge;
+
+} trigger_config_s;
+
+
 /**
  * @brief	Engine configuration.
  * 		Values in this data structure are adjustable and persisted in on-board flash RAM.
@@ -303,46 +322,17 @@ typedef struct {
 	board_configuration_s boardConfiguration;
 } persistent_config_s;
 
-/**
- * this part of the structure is separate just because so far
- * these fields are not integrated with Tuner Studio. Step by step :)
- */
-typedef struct {
-	int hasMapSensor;
-	int hasCltSensor;
-
-	Thermistor iat;
-	Thermistor clt;
-
-	int crankAngleRange;
-
-	trigger_shape_s triggerShape;
-
-	cranking_ignition_mode_e crankingIgnitionMode;
-
-	EventHandlerConfiguration engineEventConfiguration;
-
-	int isInjectionEnabledFlag;
-} engine_configuration2_s;
 
 #ifdef __cplusplus
 extern "C" {
 #endif /* __cplusplus */
 
-char* getConfigurationName(engine_configuration_s *engineConfiguration);
+const char* getConfigurationName(engine_configuration_s *engineConfiguration);
 void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration);
 void setWholeFuelMap(engine_configuration_s *engineConfiguration, float value);
 void setConstantDwell(engine_configuration_s *engineConfiguration, float dwellMs);
-void setDefaultNonPersistentConfiguration(engine_configuration2_s *engineConfiguration2);
-void printConfiguration(engine_configuration_s *engineConfiguration, engine_configuration2_s *engineConfiguration2);
 void printFloatArray(char *prefix, float array[], int size);
 
-void resetConfigurationExt(engine_type_e engineType,
-		engine_configuration_s *engineConfiguration,
-		engine_configuration2_s *engineConfiguration2,
-		board_configuration_s *boardConfiguration);
-void applyNonPersistentConfiguration(engine_configuration_s *engineConfiguration,
-		engine_configuration2_s *engineConfiguration2, engine_type_e engineType);
 
 void incrementGlobalConfigurationVersion(void);
 int getGlobalConfigurationVersion(void);

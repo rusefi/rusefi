@@ -241,7 +241,7 @@ void initWaveAnalyzer(void) {
 	initWave("input2 E5", 1, &LOGIC_ANALYZER_2_DRIVER, LOGIC_ANALYZER_2_PORT, LOGIC_ANALYZER_2_PIN, 1);
 	//	initWave("input0 C6", 2, &WAVE_TIMER, WAVE_INPUT_PORT, WAVE_INPUT_PIN, 0);
 
-	registerShaftPositionListener(&onWaveShaftSignal, "wave analyzer");
+	addTriggerEventListener(&onWaveShaftSignal, "wave analyzer");
 
 	addConsoleActionII("wm", setWaveModeSilent);
 

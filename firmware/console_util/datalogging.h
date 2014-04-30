@@ -28,7 +28,7 @@ typedef enum {
 // todo: migrate to external buffer so that different instances have different
 // size of buffers?
 typedef struct {
-	char *name;
+	const char *name;
 	char SMALL_BUFFER[40];
 	// todo: explicitly default buffer externally so that we do not have default_buffer where we do not need it?
 	char DEFAULT_BUFFER[200];
@@ -52,8 +52,8 @@ uint32_t loggingSize(Logging *logging);
 
 int isInitialized(Logging *logging);
 
-void initLogging(Logging *logging, char *name);
-void initLoggingExt(Logging *logging, char *name, char *buffer, int bufferSize);
+void initLogging(Logging *logging, const char *name);
+void initLoggingExt(Logging *logging, const char *name, char *buffer, int bufferSize);
 
 void debugInt(Logging *logging, char *caption, int value);
 void logInt(Logging *logging, LoggingPoints loggingPoint, int value);

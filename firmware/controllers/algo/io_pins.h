@@ -24,8 +24,8 @@ typedef enum {
 	LED_EMULATOR,
 
 	IDLE_VALVE,
-	TRIGGER_EMILATOR_PRIMARY,
-	TRIGGER_EMILATOR_SECONDARY,
+	TRIGGER_EMULATOR_PRIMARY,
+	TRIGGER_EMULATOR_SECONDARY,
 
 	SPARKOUT_1_OUTPUT,
 	SPARKOUT_2_OUTPUT,
@@ -119,7 +119,7 @@ int getElectricalValue(int logicalValue, pin_output_mode_e mode);
 int getOutputPinValue(io_pin_e pin);
 void setDefaultPinState(io_pin_e pin, pin_output_mode_e *defaultState);
 
-void outputPinRegisterExt2(char *msg, io_pin_e ioPin, brain_pin_e brainPin, pin_output_mode_e *outputMode);
+void outputPinRegisterExt2(const char *msg, io_pin_e ioPin, brain_pin_e brainPin, pin_output_mode_e *outputMode);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

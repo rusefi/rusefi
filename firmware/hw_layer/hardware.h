@@ -8,6 +8,14 @@
 #ifndef HARDWARE_H_
 #define HARDWARE_H_
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif /* __cplusplus */
+
 void initHardware(void);
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* HARDWARE_H_ */

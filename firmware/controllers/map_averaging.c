@@ -149,6 +149,6 @@ float getMap(void) {
 
 void initMapAveraging(void) {
 	initLogging(&logger, "Map Averaging");
-	registerShaftPositionListener(&shaftPositionCallback, "rpm reporter");
+	addTriggerEventListener(&shaftPositionCallback, "rpm reporter");
 	addConsoleAction("faststat", showMapStats);
 }

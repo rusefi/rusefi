@@ -31,7 +31,7 @@ extern "C"
 {
 #endif /* __cplusplus */
 
-void addWaveChartEvent3(WaveChart *chart, char *name, char *msg, char *msg2);
+void addWaveChartEvent3(WaveChart *chart, const char *name, const char *msg, const char *msg2);
 void publishChart(WaveChart *chart);
 void initWaveChart(WaveChart *chart);
 void resetWaveChart(WaveChart *chart);
