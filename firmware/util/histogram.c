@@ -79,7 +79,7 @@ int histogramGetIndex(int64_t value) {
 /**
  * @brief Reset histogram_s to orignal state
  */
-void initHistogram(histogram_s *h, char *name) {
+void initHistogram(histogram_s *h, const char *name) {
 	if(strlen(name) > sizeof(h->name) - 1)
 		firmwareError("Histogram name [%s] too long", name);
 	strcpy(h->name, name);

@@ -16,7 +16,7 @@ typedef void (*ShaftPositionListener)(ShaftEvents signal, int index);
 extern "C"
 {
 #endif /* __cplusplus */
-void addTriggerEventListener(ShaftPositionListener handler, char *name);
+void addTriggerEventListener(ShaftPositionListener handler, const char *name);
 int getCrankEventCounter(void);
 int isSignalDecoderError(void);
 void hwHandleShaftSignal(ShaftEvents signal);

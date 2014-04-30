@@ -43,7 +43,7 @@ static void printIntArray(int array[], int size) {
 	print("\r\n");
 }
 
-void printFloatArray(char *prefix, float array[], int size) {
+void printFloatArray(const char *prefix, float array[], int size) {
 	appendMsgPrefix(&logger);
 	appendPrintf(&logger, prefix);
 	for (int j = 0; j < size; j++)
