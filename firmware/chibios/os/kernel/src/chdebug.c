@@ -269,7 +269,7 @@ const char *dbg_panic_msg;
  * @param[in] msg       the pointer to the panic message string
  */
 
-void chDbgPanic3(const char *msg, char * file, int line);
+void chDbgPanic3(const char *msg, const char * file, int line);
 
 void chDbgPanic(const char *msg) {
 	chDbgPanic3(msg, __FILE__, __LINE__);

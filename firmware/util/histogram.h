@@ -37,7 +37,7 @@ typedef struct {
 
 void initHistogramsModule(void);
 int histogramGetIndex(int64_t value);
-void initHistogram(histogram_s *h, char *name);
+void initHistogram(histogram_s *h, const char *name);
 void hsAdd(histogram_s *h, int64_t value);
 int hsReport(histogram_s *h, int* report);
 

@@ -183,10 +183,10 @@ void scheduleReset(void) {
 }
 
 extern "C" {
-void onFatalError(const char *msg, char * file, int line);
+void onFatalError(const char *msg, const char * file, int line);
 }
 
-void onFatalError(const char *msg, char * file, int line) {
+void onFatalError(const char *msg, const char * file, int line) {
 	onDbgPanic();
 	lcdShowFatalMessage((char *) msg);
 	if (!main_loop_started) {
@@ -235,14 +235,14 @@ int hasFatalError(void);
 
 void onFatalError(const char *msg, char * file, int line);
 
-char *dbg_panic_file;
+const char *dbg_panic_file;
 int dbg_panic_line;
 
 extern "C" {
-void chDbgPanic3(const char *msg, char * file, int line);
+void chDbgPanic3(const char *msg, const char * file, int line);
 }
 
-void chDbgPanic3(const char *msg, char * file, int line) {
+void chDbgPanic3(const char *msg, const char * file, int line) {
 	if (hasFatalError())
 		return;
 	dbg_panic_file = file;
@@ -276,5 +276,5 @@ void firmwareError(const char *fmt, ...) {
 }
 
 int getRusEfiVersion(void) {
-	return 20140429;
+	return 20140430;
 }

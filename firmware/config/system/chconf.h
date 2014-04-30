@@ -43,7 +43,7 @@
 extern "C"
 {
 #endif
-void chDbgPanic3(const char *msg, char * file, int line);
+void chDbgPanic3(const char *msg, const char * file, int line);
 #ifdef __cplusplus
 }
 #endif
