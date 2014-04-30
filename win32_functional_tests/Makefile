@@ -21,7 +21,7 @@ endif
 
 # C++ specific options here (added to USE_OPT).
 ifeq ($(USE_CPPOPT),)
-  USE_CPPOPT = -fno-rtti -fpermissive -fno-exceptions -fno-use-cxa-atexit
+  USE_CPPOPT = -std=c++11 -fno-rtti -fpermissive -fno-exceptions -fno-use-cxa-atexit
 endif
 
 # Enable this if you want the linker to remove unused code and data
@@ -109,7 +109,6 @@ CSRC =	${PORTSRC} \
        ${CHIBIOS}/os/various/chprintf.c \
        ${CHIBIOS}/os/various/memstreams.c \
 	$(UTILSRC) \
-       simulator/rusEfiFunctionalTest.c \
        simulator/boards.c \
 	$(PROJECT_DIR)/emulation/analog_chart.c \
 	main.c
@@ -121,8 +120,11 @@ CPPSRC = $(UTILSRC_CPP) \
 	$(PROJECT_DIR)/controllers/settings.cpp \
 	$(TRIGGER_SRC_CPP) \
 	$(SYSTEMSRC_CPP) \
+	$(CONSOLE_SRC_CPP) \
+	$(CONTROLLERS_SENSORS_SRC_CPP) \
 	$(CONTROLLERS_MATH_SRC_CPP) \
 	$(ENGINES_SRC_CPP) \
+	$(PROJECT_DIR)/simulator/rusEfiFunctionalTest.cpp \
 	$(TEST_SRC_CPP)
 # C sources to be compiled in ARM mode regardless of the global setting.
 # NOTE: Mixing ARM and THUMB mode enables the -mthumb-interwork compiler

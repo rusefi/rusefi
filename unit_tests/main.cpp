@@ -14,6 +14,8 @@
 
 #include "main.h"
 #include "error_handling.h"
+#include "ec2.h"
+
 
 extern "C"
 {
@@ -23,7 +25,6 @@ extern "C"
 #include "test_interpolation_3d.h"
 #include "test_find_index.h"
 #include "test_fuel_map.h"
-#include "test_engine_math.h"
 #include "test_event_registry.h"
 #include "test_sensors.h"
 #include "test_signal_executor.h"
@@ -32,6 +33,7 @@ extern "C"
 #include "engine_math.h"
 }
 
+#include "test_engine_math.h"
 #include "test_trigger_decoder.h"
 
 static engine_configuration_s ec;
@@ -45,7 +47,7 @@ uint64_t getTimeNowUs(void) {
 	return 0;
 }
 
-void assertEqualsM(char *msg, float expected, float actual) {
+void assertEqualsM(const char *msg, float expected, float actual) {
 	if (cisnan(actual) && !cisnan(expected)) {
 		printf("Unexpected: %s %.4f while expected %.4f\r\n", msg, actual, expected);
 		exit(-1);
@@ -64,7 +66,7 @@ void assertEquals(float expected, float actual) {
 	assertEqualsM("", expected, actual);
 }
 
-void assertTrueM(char *msg, float actual) {
+void assertTrueM(const char *msg, float actual) {
 	assertEqualsM(msg, TRUE, actual);
 }
 
@@ -72,7 +74,7 @@ void assertTrue(float actual) {
 	assertTrueM("", actual);
 }
 
-void assertFalseM(char *msg, float actual) {
+void assertFalseM(const char *msg, float actual) {
 	assertEqualsM(msg, FALSE, actual);
 }
 
@@ -117,7 +119,7 @@ int main(void) {
 	testPinHelper();
 	testSetTableValue();
 
-	printf("Success 20130422\r\n");
+	printf("Success 20130429\r\n");
 
 //	resizeMap();
 

@@ -40,12 +40,12 @@ void print(const char *fmt, ...);
 
 #define chDbgCheck(x, y) chDbgAssert(x, y, NULL)
 
-void assertEqualsM(char *msg, float expected, float actual);
+void assertEqualsM(const char *msg, float expected, float actual);
 void assertEquals(float expected, float actual);
 void assertTrue(float actual);
-void assertTrueM(char *msg, float actual);
+void assertTrueM(const char *msg, float actual);
 void assertFalse(float actual);
-void assertFalseM(char *msg, float actual);
+void assertFalseM(const char *msg, float actual);
 
 float getIntakeAirTemperature(void);
 float getCoolantTemperature(void);

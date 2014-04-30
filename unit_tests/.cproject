@@ -71,7 +71,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="controllers_trigger/trigger_central.c|controllers_trigger/rpm_calculator.c|controllers_trigger/main_trigger_callback.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="controllers_trigger/trigger_central.cpp|controllers_trigger/rpm_calculator.cpp|controllers_trigger/trigger_central.c|controllers_trigger/rpm_calculator.c|controllers_trigger/main_trigger_callback.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -119,7 +119,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="controllers_trigger/trigger_central.c|controllers_trigger/rpm_calculator.c|controllers_trigger/main_trigger_callback.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="controllers_trigger/trigger_central.cpp|controllers_trigger/rpm_calculator.cpp|controllers_trigger/trigger_central.c|controllers_trigger/rpm_calculator.c|controllers_trigger/main_trigger_callback.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
