@@ -10,6 +10,15 @@
 
 typedef unsigned char crc;
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif /* __cplusplus */
+
 crc calc_crc(const crc message[], int nBytes);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* CRC_H_ */

@@ -23,6 +23,7 @@
 
 #include "main.h"
 #include "main_trigger_callback.h"
+#include "ec2.h"
 
 extern "C" {
 //#include "settings.h"
@@ -66,16 +67,6 @@ static Logging logger;
 static ActuatorEventList events;
 
 static void handleFuelInjectionEvent(ActuatorEvent *event, int rpm) {
-//	int cylinderId = event->actuatorId;
-//	if (cylinderId == 0)
-//		return; // no cylinder should be fired at this event
-//	assertCylinderId(cylinderId, "onShaftSignal");
-
-	if (rpm > engineConfiguration->rpmHardLimit) {
-		scheduleMsg(&logger, "RPM above hard limit %d", rpm);
-		return;
-	}
-
 	float fuelMs = getFuelMs(rpm) * engineConfiguration->globalFuelCorrection;
 	if (fuelMs < 0) {
 		scheduleMsg(&logger, "ERROR: negative injectionPeriod %f", fuelMs);
@@ -119,8 +110,8 @@ static void handleFuel(int eventIndex) {
 }
 
 static void handleSparkEvent(ActuatorEvent *event, int rpm) {
-	if (rpm == 0)
-		return;
+	efiAssert(rpm != 0, "non-zero RPM expected here");
+
 //	float advance = getAdvance(rpm, getEngineLoad());
 
 //	float sparkAdvanceMs = getOneDegreeTimeMs(rpm) * advance;
@@ -128,9 +119,6 @@ static void handleSparkEvent(ActuatorEvent *event, int rpm) {
 	float dwellMs = getSparkDwellMs(rpm);
 	if (dwellMs < 0)
 		firmwareError("invalid dwell: %f at %d", dwellMs, rpm);
-
-	if (dwellMs <= 0)
-		return; // hard RPM limit was hit
 
 	float sparkDelay = getOneDegreeTimeMs(rpm) * event->angleOffset;
 	int isIgnitionError = sparkDelay < 0;
@@ -176,10 +164,20 @@ static void onShaftSignal(ShaftEvents ckpSignalType, int eventIndex) {
 	chDbgCheck(eventIndex < engineConfiguration2->triggerShape.shaftPositionEventCount, "event index");
 
 	int rpm = getRpm();
+	if (rpm == 0) {
+		// this happens while we just start cranking
+		// todo: check for 'trigger->is_synchnonized?'
+		return;
+	}
 	if (rpm == NOISY_RPM) {
 		scheduleMsg(&logger, "noisy trigger");
 		return;
 	}
+	if (rpm > engineConfiguration->rpmHardLimit) {
+		warning(OBD_PCM_Processor_Fault, "skipping stroke due to rpm=%d", rpm);
+		return;
+	}
+
 	int beforeCallback = hal_lld_get_counter_value();
 	if (eventIndex == 0) {
 		if (localVersion.isOld())
@@ -189,7 +187,7 @@ static void onShaftSignal(ShaftEvents ckpSignalType, int eventIndex) {
 		 * TODO: warning. there is a bit of a hack here, todo: improve.
 		 * currently output signals/times signalTimerUp from the previous revolutions could be
 		 * still used because they have crossed the revolution boundary
-		 * but we are already reporpousing the output signals, but everything works because we
+		 * but we are already repurposing the output signals, but everything works because we
 		 * are not affecting that space in memory. todo: use two instances of 'ignitionSignals'
 		 */
 
@@ -199,11 +197,6 @@ static void onShaftSignal(ShaftEvents ckpSignalType, int eventIndex) {
 		float dwellAngle = dwellMs / getOneDegreeTimeMs(rpm);
 
 		initializeIgnitionActions(advance - dwellAngle, engineConfiguration, engineConfiguration2);
-	}
-	if(rpm==0) {
-		// this happens while we just start cranking
-		// todo: check for 'trigger->is_synchnonized?'
-		return;
 	}
 
 	handleFuel(eventIndex);
@@ -236,7 +229,7 @@ void initMainEventListener() {
 	if (!isInjectionEnabled())
 		printMsg(&logger, "!!!!!!!!!!!!!!!!!!! injection disabled");
 
-	registerShaftPositionListener(&onShaftSignal, "main loop");
+	addTriggerEventListener(&onShaftSignal, "main loop");
 }
 
 int isIgnitionTimingError(void) {

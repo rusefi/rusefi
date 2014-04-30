@@ -35,7 +35,7 @@ typedef enum {
 } ACTION_PARAMETER_TYPE;
 
 typedef struct {
-	char *token;
+	const char *token;
 	int parameterType;
 	void (*callback)(void);
 } TokenCallback;
@@ -52,17 +52,17 @@ typedef void (*VoidCharPtr)(char *);
 typedef void (*VoidCharPtrCharPtrCharPtr)(char *, char *, char *);
 
 char *validateSecureLine(char *line);
-int strEqual(char *str1, char *str2);
+int strEqual(const char *str1, const char *str2);
 void resetConsoleActions(void);
 void helpCommand(void);
 void initConsoleLogic(void);
 void handleConsoleLine(char *line);
-void addConsoleAction(char *token, Void callback);
-void addConsoleActionI(char *token, VoidInt callback);
-void addConsoleActionII(char *token, VoidIntInt callback);
-void addConsoleActionF(char *token, VoidFloat callback);
-void addConsoleActionS(char *token, VoidCharPtr callback);
-void addConsoleActionSSS(char *token, VoidCharPtrCharPtrCharPtr callback);
+void addConsoleAction(const char *token, Void callback);
+void addConsoleActionI(const char *token, VoidInt callback);
+void addConsoleActionII(const char *token, VoidIntInt callback);
+void addConsoleActionF(const char *token, VoidFloat callback);
+void addConsoleActionS(const char *token, VoidCharPtr callback);
+void addConsoleActionSSS(const char *token, VoidCharPtrCharPtrCharPtr callback);
 
 
 #ifdef __cplusplus

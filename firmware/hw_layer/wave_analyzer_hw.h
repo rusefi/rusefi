@@ -22,8 +22,17 @@ typedef struct {
 	IntListenerArray periodListeners;
 } WaveReaderHw;
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif /* __cplusplus */
+
 void initWaveAnalyzerDriver(WaveReaderHw *hw, ICUDriver *driver,
 		ioportid_t port, int pin);
 void setWaveReaderMode(WaveReaderHw *hw, int mode);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* WAVE_ANALYZER_HW_H_ */

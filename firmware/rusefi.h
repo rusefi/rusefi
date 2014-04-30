@@ -9,7 +9,6 @@
 #define RUSEFI_H_
 
 void runRusEfi(void);
-int getRusEfiVersion(void);
 void scheduleReset(void);
 
 #ifdef __cplusplus

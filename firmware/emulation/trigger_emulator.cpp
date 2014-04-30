@@ -22,19 +22,19 @@
 extern engine_configuration_s *engineConfiguration;
 extern board_configuration_s *boardConfiguration;
 
-extern PwmConfig configuration;
+extern PwmConfig triggerSignal;
 
 void initTriggerEmulator(void) {
 #if EFI_EMULATE_POSITION_SENSORS
 	print("Emulating %s\r\n", getConfigurationName(engineConfiguration));
 
-	configuration.outputPins[0] = TRIGGER_EMILATOR_PRIMARY;
-	configuration.outputPins[1] = TRIGGER_EMILATOR_SECONDARY;
+	triggerSignal.outputPins[0] = TRIGGER_EMULATOR_PRIMARY;
+	triggerSignal.outputPins[1] = TRIGGER_EMULATOR_SECONDARY;
 
-	outputPinRegisterExt2("distributor ch1", configuration.outputPins[0], boardConfiguration->triggerSimulatorPins[0],
+	outputPinRegisterExt2("distributor ch1", triggerSignal.outputPins[0], boardConfiguration->triggerSimulatorPins[0],
 			&boardConfiguration->triggerSimulatorPinModes[0]);
 
-	outputPinRegisterExt2("distributor ch2", configuration.outputPins[1], boardConfiguration->triggerSimulatorPins[1],
+	outputPinRegisterExt2("distributor ch2", triggerSignal.outputPins[1], boardConfiguration->triggerSimulatorPins[1],
 			&boardConfiguration->triggerSimulatorPinModes[1]);
 
 	initTriggerEmulatorLogic(applyPinState);

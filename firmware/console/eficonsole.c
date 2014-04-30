@@ -27,7 +27,6 @@
 #include <chprintf.h>
 #include "eficonsole.h"
 #include "console_io.h"
-#include "rusefi.h"
 #include "svnversion.h"
 
 static Logging logger;

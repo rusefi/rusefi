@@ -10,7 +10,6 @@
 
 #include "global.h"
 #include "signal_executor.h"
-#include "trigger_structure.h"
 
 #define MAX_EVENT_COUNT 40
 

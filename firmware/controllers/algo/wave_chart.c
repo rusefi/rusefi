@@ -66,7 +66,7 @@ void resetWaveChart(WaveChart *chart) {
 	appendPrintf(&chart->logging, "wave_chart%s", DELIMETER);
 }
 
-static char LOGGING_BUFFER[5000] __attribute__((section(".ccm")));
+static char WAVE_LOGGING_BUFFER[5000] __attribute__((section(".ccm")));
 
 static void printStatus(void) {
 	scheduleIntValue(&logger, "chart", isChartActive);
@@ -109,7 +109,7 @@ void publishChart(WaveChart *chart) {
 /**
  * @brief	Register a change in sniffed signal
  */
-void addWaveChartEvent3(WaveChart *chart, char *name, char * msg, char * msg2) {
+void addWaveChartEvent3(WaveChart *chart, const char *name, const char * msg, const char * msg2) {
 	chDbgCheck(chart->isInitialized, "chart not initialized");
 #if DEBUG_WAVE
 	scheduleSimpleMsg(&debugLogging, "current", chart->counter);
@@ -132,7 +132,7 @@ void initWaveChart(WaveChart *chart) {
 
 	printStatus();
 
-	initLoggingExt(&chart->logging, "wave chart", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
+	initLoggingExt(&chart->logging, "wave chart", WAVE_LOGGING_BUFFER, sizeof(WAVE_LOGGING_BUFFER));
 	chart->isInitialized = TRUE;
 #if DEBUG_WAVE
 	initLoggingExt(&debugLogging, "wave chart debug", &debugLogging.DEFAULT_BUFFER, sizeof(debugLogging.DEFAULT_BUFFER));

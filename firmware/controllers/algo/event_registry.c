@@ -25,7 +25,7 @@
 #include "engine_math.h"
 
 extern engine_configuration_s *engineConfiguration;
-extern engine_configuration2_s *engineConfiguration2;
+//extern engine_configuration2_s *engineConfiguration2;
 
 void resetEventList(ActuatorEventList *list) {
 	list->size = 0;

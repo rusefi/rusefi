@@ -84,6 +84,12 @@ typedef enum {
 	Internal_ForceMyEnumIntSize_trigger_type = ENUM_SIZE_HACK,
 } trigger_type_e;
 
+typedef enum {
+	SHAFT_PRIMARY_UP = 0,
+	SHAFT_PRIMARY_DOWN = 1,
+	SHAFT_SECONDARY_UP = 2,
+	SHAFT_SECONDARY_DOWN = 3,
+} ShaftEvents;
 
 /**
  * This enum is used to select your desired Engine Load calculation algorithm

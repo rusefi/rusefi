@@ -89,6 +89,8 @@ extern "C" {
 #include "eficonsole.h"
 #include "hardware.h"
 #include "engine_controller.h"
+#include "ec2.h"
+#include "trigger_structure.h"
 #include "lcd_HD44780.h"
 #include "status_loop.h"
 #include "pin_repository.h"
@@ -274,5 +276,5 @@ void firmwareError(const char *fmt, ...) {
 }
 
 int getRusEfiVersion(void) {
-	return 20140424;
+	return 20140429;
 }

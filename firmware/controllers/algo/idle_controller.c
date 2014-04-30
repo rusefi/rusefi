@@ -15,7 +15,7 @@
 
 #include "idle_controller.h"
 
-void idleDebug(char *msg, int value);
+// todo: move this to "idle_controller.h"
 int isCranking(void);
 
 static int lastGoodValue = DEFAULT_IDLE_DUTY;

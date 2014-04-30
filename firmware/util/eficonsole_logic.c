@@ -30,7 +30,7 @@ void resetConsoleActions(void) {
 	consoleActionCount = 0;
 }
 
-static void doAddAction(char *token, int type, Void callback) {
+static void doAddAction(const char *token, int type, Void callback) {
 	if (consoleActionCount == CONSOLE_MAX_ACTIONS) {
 		fatal("Too many console actions\r\n");
 		return;
@@ -44,33 +44,33 @@ static void doAddAction(char *token, int type, Void callback) {
 /**
  * @brief	Register console action without parameters
  */
-void addConsoleAction(char *token, Void callback) {
+void addConsoleAction(const char *token, Void callback) {
 	doAddAction(token, NO_PARAMETER, callback);
 }
 
 /**
  * @brief	Register a console command with one Integer parameter
  */
-void addConsoleActionI(char *token, VoidInt callback) {
+void addConsoleActionI(const char *token, VoidInt callback) {
 	doAddAction(token, ONE_PARAMETER, (Void) callback);
 }
 
 /**
  * @brief	Register a console command with two Integer parameters
  */
-void addConsoleActionII(char *token, VoidIntInt callback) {
+void addConsoleActionII(const char *token, VoidIntInt callback) {
 	doAddAction(token, TWO_INTS_PARAMETER, (Void) callback);
 }
 
-void addConsoleActionS(char *token, VoidCharPtr callback) {
+void addConsoleActionS(const char *token, VoidCharPtr callback) {
 	doAddAction(token, STRING_PARAMETER, (Void) callback);
 }
 
-void addConsoleActionSSS(char *token, VoidCharPtrCharPtrCharPtr callback) {
+void addConsoleActionSSS(const char *token, VoidCharPtrCharPtrCharPtr callback) {
 	doAddAction(token, STRING3_PARAMETER, (Void) callback);
 }
 
-void addConsoleActionF(char *token, VoidFloat callback) {
+void addConsoleActionF(const char *token, VoidFloat callback) {
 	doAddAction(token, FLOAT_PARAMETER, (Void) callback);
 }
 
@@ -172,7 +172,7 @@ int tokenLength(char *msgp) {
 	return result;
 }
 
-int strEqual(char *str1, char *str2) {
+int strEqual(const char *str1, const char *str2) {
 	// todo: there must be a standard function?!
 	int len1 = strlen(str1);
 	int len2 = strlen(str2);

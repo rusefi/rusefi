@@ -15,6 +15,8 @@ extern "C"
 
 #include "trigger_structure.h"
 #include "engine_configuration.h"
+#include "ec2.h"
+
 
 void initializeMazdaMiataNbShape(trigger_shape_s *s);
 void configureMazdaProtegeLx(engine_configuration_s *engineConfiguration,

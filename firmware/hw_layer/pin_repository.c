@@ -18,7 +18,7 @@
 #include "rusefi.h"
 
 #define PIN_REPO_SIZE 7 * 16
-char *PIN_USED[PIN_REPO_SIZE];
+const char *PIN_USED[PIN_REPO_SIZE];
 static int initialized = FALSE;
 
 static Logging logger;
@@ -63,7 +63,7 @@ static int getPortIndex(GPIO_TypeDef* port) {
 
 static void reportPins(void) {
 	for (int i = 0; i < PIN_REPO_SIZE; i++) {
-		char *name = PIN_USED[i];
+		const char *name = PIN_USED[i];
 		if (name != NULL)
 			print("ping %d: %s\r\n", i, name);
 	}
@@ -99,7 +99,7 @@ void initPinRepository(void) {
 	addConsoleAction("pins", reportPins);
 }
 
-static inline void markUsed(int index, char *msg) {
+static inline void markUsed(int index, const char *msg) {
 	PIN_USED[index] = msg;
 	totalPinsUsed++;
 }
@@ -107,7 +107,7 @@ static inline void markUsed(int index, char *msg) {
 /**
  * This method would set an error condition if pin is already used
  */
-void mySetPadMode(char *msg, ioportid_t port, ioportmask_t pin, iomode_t mode) {
+void mySetPadMode(const char *msg, ioportid_t port, ioportmask_t pin, iomode_t mode) {
 	if (!initialized)
 		fatal("repo not initialized");
 	print("%s on %s:%d\r\n", msg, portname(port), pin);

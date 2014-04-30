@@ -12,6 +12,15 @@
 
 #include "main.h"
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif /* __cplusplus */
+
 float getAfr(void);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif

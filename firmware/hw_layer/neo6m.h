@@ -10,7 +10,16 @@
 #ifndef NEO6M_H_
 #define NEO6M_H_
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif /* __cplusplus */
+
 void initGps(void);
 float getCurrentSpeed(void);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* NEO6M_H_ */

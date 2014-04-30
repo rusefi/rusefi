@@ -6,6 +6,7 @@ rm -rf build\rusefi.hex
 call update_version.bat
 
 echo Starting compilation
+rem the important piece
 make
 
 rem cd build
@@ -31,9 +32,11 @@ cd ../firmware
 
 
 cd build
+rem Generate human-readable version of the .map memory usage report
 java -jar ../../java_tools/gcc_map_reader.jar > ../../firmware_binary/rusefi_ram_report.txt
 cd ..
 
+rem file, let's program the board right away
 flash.bat
 exit
 

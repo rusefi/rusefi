@@ -20,6 +20,7 @@ extern "C"
 int indexOf(const char *string, char ch);
 float atoff(const char *string);
 int atoi(const char *string);
+int cisnan(float f);
 
 #ifdef __cplusplus
 }

@@ -180,7 +180,7 @@ static char* get2ndCaption(int loggingPoint) {
 	return NULL;
 }
 
-void initLoggingExt(Logging *logging, char *name, char *buffer, int bufferSize) {
+void initLoggingExt(Logging *logging, const char *name, char *buffer, int bufferSize) {
 	print("Init logging\r\n");
 	logging->name = name;
 	logging->buffer = buffer;
@@ -193,7 +193,7 @@ int isInitialized(Logging *logging) {
 	return logging->isInitialized == MAGIC_LOGGING_FLAG;
 }
 
-void initLogging(Logging *logging, char *name) {
+void initLogging(Logging *logging, const char *name) {
 	initLoggingExt(logging, name, logging->DEFAULT_BUFFER, sizeof(logging->DEFAULT_BUFFER));
 }
 
@@ -236,22 +236,6 @@ void debugFloat(Logging *logging, char *caption, float value, int precision) {
 
 	appendFloat(logging, value, precision);
 	append(logging, DELIMETER);
-}
-/*
-void logInt(Logging *logging, LoggingPoints loggingPoint, int value) {
-	char *caption = getCaption(loggingPoint);
-	debugInt(logging, caption, value);
-}
-
-void logFloat(Logging *logging, LoggingPoints loggingPoint, float value) {
-	debugFloat(logging, getCaption(loggingPoint), value, 2);
-}
-*/
-
-static void commonSimpleMsg(Logging *logging, char *msg, int value) {
-	resetLogging(logging);
-	appendMsgPrefix(logging);
-	appendPrintf(logging, "%s%d", msg, value);
 }
 
 static char header[16];

@@ -12,7 +12,16 @@
 
 #include "ff.h"
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif /* __cplusplus */
+
 void initMmcCard(void);
 void appendToLog(char *line);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* MMC_CARD_H_ */

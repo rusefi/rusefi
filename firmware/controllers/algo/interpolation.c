@@ -14,7 +14,7 @@
 
 #include "main.h"
 #include "interpolation.h"
-#include "engine_math.h"
+//#include "engine_math.h"
 
 #define INTERPOLATION_A(x1, y1, x2, y2) ((y1 - y2) / (x1 - x2))
 

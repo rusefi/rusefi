@@ -17,6 +17,8 @@ extern "C"
 
 #include "trigger_structure.h"
 #include "engine_configuration.h"
+#include "ec2.h"
+
 
 int isTriggerDecoderError(void);
 void processTriggerEvent(trigger_state_s *shaftPositionState, trigger_shape_s const*triggerShape, trigger_config_s const*triggerConfig, ShaftEvents signal, uint64_t nowUs);

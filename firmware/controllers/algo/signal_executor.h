@@ -22,10 +22,6 @@
 #include "signal_executor_sleep.h"
 #endif /* EFI_SIGNAL_EXECUTOR_SLEEP */
 
-#if EFI_SIGNAL_EXECUTOR_SINGLE_TIMER
-#include "signal_executor_single_timer.h"
-#endif /* EFI_SIGNAL_EXECUTOR_SINGLE_TIMER */
-
 typedef void (*schfunc_t)(void *);
 
 typedef struct scheduling_struct scheduling_s;
@@ -34,9 +30,6 @@ struct scheduling_struct {
 #if EFI_SIGNAL_EXECUTOR_SLEEP
 	VirtualTimer timer;
 #endif /* EFI_SIGNAL_EXECUTOR_SLEEP */
-#if EFI_SIGNAL_EXECUTOR_SINGLE_TIMER
-	volatile time_t moment;
-#endif /* EFI_SIGNAL_EXECUTOR_SINGLE_TIMER */
 
 	volatile uint64_t momentUs;
 #if EFI_SIGNAL_EXECUTOR_ONE_TIMER
