@@ -8,7 +8,7 @@
 #include "trigger_gm.h"
 
 void configureGmTriggerShape(trigger_shape_s *s) {
-	triggerShapeInit(s);
+	s->reset();
 
 	// all angles are x2 here - so, 5 degree width is 10
 	float w = 10;

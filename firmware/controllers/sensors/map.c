@@ -5,6 +5,7 @@
 #include "adc_inputs.h"
 #include "interpolation.h"
 #include "error_handling.h"
+#include "map.h"
 
 extern engine_configuration_s * engineConfiguration;
 
@@ -23,13 +24,8 @@ float getMAPValueMPX_4250(float voltage) {
 	return interpolate(0, 8, 5, 260, voltage);
 }
 
-/**
- * @brief	MAP value decoded according to current settings
- * @returns kPa value
- */
-float getMapByVoltage(float voltage) {
-	MapConf_s * config = &engineConfiguration->map.config;
-	switch (config->mapType) {
+float decodePressure(float voltage, air_pressure_sensor_config_s * config) {
+	switch (config->sensorType) {
 	case MT_CUSTOM:
 		return interpolate(0, config->Min, 5, config->Max, voltage);
 	case MT_DENSO183:
@@ -37,15 +33,26 @@ float getMapByVoltage(float voltage) {
 	case MT_MPX4250:
 		return getMAPValueMPX_4250(voltage);
 	default:
-		firmwareError("Unknown MAP type: %d", config->mapType);
+		firmwareError("Unknown MAP type: %d", config->sensorType);
 		return NAN;
 	}
-	// todo: here is the place where we should read the settings and decide
-	// todo: how to translate voltage into pressure
-//	return getMAPValueHonda_Denso183(voltage);
+}
+
+/**
+ * @brief	MAP value decoded according to current settings
+ * @returns kPa value
+ */
+float getMapByVoltage(float voltage) {
+	air_pressure_sensor_config_s * config = &engineConfiguration->map.sensor;
+	return decodePressure(voltage, config);
 }
 
 float getRawMap(void) {
-	float voltage = getVoltageDivided(engineConfiguration->map.channel);
+	float voltage = getVoltageDivided(engineConfiguration->map.sensor.hwChannel);
 	return getMapByVoltage(voltage);
+}
+
+float getBaroPressure(void) {
+	float voltage = getVoltageDivided(engineConfiguration->baroSensor.hwChannel);
+	return decodePressure(voltage, &engineConfiguration->baroSensor);
 }

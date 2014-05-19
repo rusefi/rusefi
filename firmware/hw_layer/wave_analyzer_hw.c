@@ -18,8 +18,7 @@ static void icuPeriordCallBack(ICUDriver *driver);
  * CORE_CLOCK / 33.33333 = TICKS * 65536
  * 168000000 / 33.333333 / 65536 = 76.90
  */
-static ICUConfig wave_icucfg = { ICU_INPUT_ACTIVE_LOW, CORE_CLOCK / 100,
-		icuWidthCallback, icuPeriordCallBack };
+static ICUConfig wave_icucfg = { ICU_INPUT_ACTIVE_LOW, CORE_CLOCK / 100, icuWidthCallback, icuPeriordCallBack };
 
 static int registeredIcuCount = 0;
 static WaveReaderHw* registeredIcus[8];
@@ -35,24 +34,28 @@ static WaveReaderHw * findWaveReaderHw(ICUDriver *driver) {
 static void icuWidthCallback(ICUDriver *driver) {
 	/*
 	 * see comment in icuPeriordCallBack
-	int rowWidth = icuGetWidth(driver);
-	*/
+	 int rowWidth = icuGetWidth(driver);
+	 */
 	WaveReaderHw * hw = findWaveReaderHw(driver);
 	invokeJustArgCallbacks(&hw->widthListeners);
 }
 
 static void icuPeriordCallBack(ICUDriver *driver) {
-/*
- * 	we do not use timer period at all - we just need the event. For all time characteristics,
- * 	we use system time
- * 	int period = icuGetPeriod(driver);
- */
+	/*
+	 * 	we do not use timer period at all - we just need the event. For all time characteristics,
+	 * 	we use system time
+	 * 	int period = icuGetPeriod(driver);
+	 */
 
 	WaveReaderHw * hw = findWaveReaderHw(driver);
 	invokeJustArgCallbacks(&hw->periodListeners);
 }
 
 static int getAlternateFunctions(ICUDriver *driver) {
+	if (driver == NULL) {
+		firmwareError("getAlternateFunctions(NULL)");
+		return -1;
+	}
 #if STM32_ICU_USE_TIM1
 	if (driver == &ICUD1)
 		return GPIO_AF_TIM1;
@@ -71,14 +74,34 @@ static int getAlternateFunctions(ICUDriver *driver) {
 #endif
 #if STM32_ICU_USE_TIM9
 	if (driver == &ICUD9)
-	return GPIO_AF_TIM9;
+		return GPIO_AF_TIM9;
 #endif
 	fatal("No such driver");
 	return -1;
 }
 
-void initWaveAnalyzerDriver(WaveReaderHw *hw, ICUDriver *driver,
-		ioportid_t port, int pin) {
+ICUDriver * getInputCaptureDriver(brain_pin_e hwPin) {
+#if STM32_ICU_USE_TIM1
+	if (hwPin == GPIOA_8)
+		return &ICUD1;
+#endif
+#if STM32_ICU_USE_TIM2
+	if (hwPin == GPIOA_5)
+		return &ICUD2;
+#endif
+#if STM32_ICU_USE_TIM3
+	if (hwPin == GPIOC_6)
+		return &ICUD3;
+#endif
+#if STM32_ICU_USE_TIM9
+	if (hwPin == GPIOE_7)
+		return &ICUD9;
+#endif
+
+	return NULL;
+}
+
+void initWaveAnalyzerDriver(WaveReaderHw *hw, ICUDriver *driver, ioportid_t port, int pin) {
 	hw->driver = driver;
 	hw->port = port;
 	hw->pin = pin;

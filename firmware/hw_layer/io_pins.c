@@ -13,9 +13,12 @@
 #include "pin_repository.h"
 #include "gpio_helper.h"
 #include "status_loop.h"
-#include "main_trigger_callback.h"
 #include "engine_configuration.h"
 #include "console_io.h"
+
+#if EFI_ENGINE_CONTROL
+#include "main_trigger_callback.h"
+#endif /* EFI_ENGINE_CONTROL */
 
 extern board_configuration_s *boardConfiguration;
 
@@ -76,7 +79,7 @@ void setDefaultPinState(io_pin_e pin, pin_output_mode_e *outputMode) {
 static void comBlinkingThread(void *arg) {
 	chRegSetThreadName("comm blinking");
 	while (TRUE) {
-		int delay = is_serial_ready() ? 100 : 33;
+		int delay = isConsoleReady() ? 100 : 33;
 
 		setOutputPinValue(LED_COMMUNICATION_1, 0);
 		setOutputPinValue(LED_EXT_1, 1);
@@ -97,6 +100,7 @@ int isTriggerDecoderError(void);
 
 static void errBlinkingThread(void *arg) {
 	chRegSetThreadName("err blinking");
+#if EFI_ENGINE_CONTROL
 	while (TRUE) {
 		int delay = 33;
 		if (isTriggerDecoderError() || isIgnitionTimingError())
@@ -106,9 +110,11 @@ static void errBlinkingThread(void *arg) {
 			setOutputPinValue(LED_ERROR, 0);
 		chThdSleepMilliseconds(delay);
 	}
+#endif /* EFI_ENGINE_CONTROL */
 }
 
-static void outputPinRegisterExt(const char *msg, io_pin_e ioPin, GPIO_TypeDef *port, uint32_t pin, pin_output_mode_e *outputMode) {
+static void outputPinRegisterExt(const char *msg, io_pin_e ioPin, GPIO_TypeDef *port, uint32_t pin,
+		pin_output_mode_e *outputMode) {
 	if (port == GPIO_NULL) {
 		// that's for GRIO_NONE
 		outputs[ioPin].port = port;
@@ -128,12 +134,20 @@ static void outputPinRegisterExt(const char *msg, io_pin_e ioPin, GPIO_TypeDef *
 GPIO_TypeDef * getHwPort(brain_pin_e brainPin) {
 	if (brainPin == GPIO_NONE)
 		return GPIO_NULL;
+	if (brainPin > GPIO_NONE) {
+		firmwareError("Invalid brain_pin_e: %d", brainPin);
+		return GPIO_NULL;
+	}
 	return PORTS[brainPin / 16];
 }
 
 int getHwPin(brain_pin_e brainPin) {
 	if (brainPin == GPIO_NONE)
 		return -1;
+	if (brainPin > GPIO_NONE) {
+		firmwareError("Invalid brain_pin_e: %d", brainPin);
+		return -1;
+	}
 	return brainPin % 16;
 }
 
@@ -163,7 +177,7 @@ static void initialLedsBlink(void) {
 }
 
 void initPrimaryPins(void) {
-	outputPinRegister("error", LED_ERROR, LED_ERROR_PORT, LED_ERROR_PIN);
+	outputPinRegister("LED_ERROR", LED_ERROR, LED_ERROR_PORT, LED_ERROR_PIN);
 }
 
 void initOutputPins(void) {

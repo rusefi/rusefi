@@ -59,6 +59,17 @@
 #define CH_TRACE_BUFFER_SIZE        64
 #endif
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif /* __cplusplus */
+
+void chDbgPanic3(const char *msg, const char * file, int line);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
+
 /**
  * @brief   Fill value for thread stack area in debug mode.
  */

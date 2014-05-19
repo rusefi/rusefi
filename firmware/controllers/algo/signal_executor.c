@@ -39,7 +39,7 @@
 #endif /* EFI_WAVE_ANALYZER */
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
-	static Logging logger;
+static Logging logger;
 #endif
 
 void initSignalExecutor(void) {
@@ -47,6 +47,12 @@ void initSignalExecutor(void) {
 	initLogging(&logger, "s exec");
 #endif
 	initSignalExecutorImpl();
+}
+
+void initOutputSignal(OutputSignal *signal, io_pin_e ioPin) {
+	signal->io_pin = ioPin;
+	signal->name = getPinName(ioPin);
+	initOutputSignalBase(signal);
 }
 
 void initOutputSignalBase(OutputSignal *signal) {
@@ -66,9 +72,7 @@ static void turnHigh(OutputSignal *signal) {
 	// sleep for the needed duration
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
-	if(
-			pin == SPARKOUT_1_OUTPUT ||
-			pin == SPARKOUT_3_OUTPUT) {
+	if (pin == SPARKOUT_1_OUTPUT || pin == SPARKOUT_3_OUTPUT) {
 //		time_t now = hTimeNow();
 //		float an = getCrankshaftAngle(now);
 //		scheduleMsg(&logger, "spark up%d %d", pin, now);
@@ -97,6 +101,8 @@ static void turnLow(OutputSignal *signal) {
 #endif /* EFI_WAVE_ANALYZER */
 }
 
+int getRevolutionCounter(void);
+
 /**
  *
  * @param	delay	the number of ticks before the output signal
@@ -104,12 +110,13 @@ static void turnLow(OutputSignal *signal) {
  * @param	dwell	the number of ticks of output duration
  *
  */
-
-int getRevolutionCounter(void);
-
 void scheduleOutput(OutputSignal *signal, float delayMs, float durationMs) {
 	if (durationMs < 0) {
 		firmwareError("duration cannot be negative: %d", durationMs);
+		return;
+	}
+	if (cisnan(durationMs)) {
+		firmwareError("NaN in scheduleOutput", durationMs);
 		return;
 	}
 
@@ -119,8 +126,8 @@ void scheduleOutput(OutputSignal *signal, float delayMs, float durationMs) {
 	scheduling_s * sUp = &signal->signalTimerUp[index];
 	scheduling_s * sDown = &signal->signalTimerDown[index];
 
-	scheduleTask(sUp, MS2US(delayMs), (schfunc_t) &turnHigh, (void *) signal);
-	scheduleTask(sDown, MS2US(delayMs + durationMs), (schfunc_t) &turnLow, (void*)signal);
+	scheduleTask(sUp, (int)MS2US(delayMs), (schfunc_t) &turnHigh, (void *) signal);
+	scheduleTask(sDown, (int)MS2US(delayMs + durationMs), (schfunc_t) &turnLow, (void*) signal);
 
 //	signal->last_scheduling_time = now;
 }
@@ -134,7 +141,6 @@ void scheduleOutputBase(OutputSignal *signal, float delayMs, float durationMs) {
 //	signal->offset = offset;
 //	signal->duration = duration;
 }
-
 
 char *getPinName(io_pin_e io_pin) {
 	switch (io_pin) {

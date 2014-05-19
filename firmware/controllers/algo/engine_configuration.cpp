@@ -31,7 +31,6 @@
 #include "tunerstudio.h"
 #endif
 
-
 #include "audi_aan.h"
 #include "dodge_neon.h"
 #include "ford_aspire.h"
@@ -48,8 +47,6 @@
 #include "ford_escort_gt.h"
 #include "citroenBerlingoTU3JP.h"
 
-#define ADC_CHANNEL_FAST_ADC 256
-
 static volatile int globalConfigurationVersion = 0;
 
 int getGlobalConfigurationVersion(void) {
@@ -59,7 +56,6 @@ int getGlobalConfigurationVersion(void) {
 void incrementGlobalConfigurationVersion(void) {
 	globalConfigurationVersion++;
 }
-
 
 /**
  * @brief Sets the same dwell time across the whole getRpm() range
@@ -94,8 +90,7 @@ void setWholeFuelMap(engine_configuration_s *engineConfiguration, float value) {
  * This method sets the default global engine configuration. These values are later overridden by engine-specific defaults
  * and the settings saves in flash memory.
  */
-void setDefaultConfiguration(engine_configuration_s *engineConfiguration,
-		board_configuration_s *boardConfiguration) {
+void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
 	memset(engineConfiguration, 0, sizeof(engine_configuration_s));
 	memset(boardConfiguration, 0, sizeof(board_configuration_s));
 
@@ -136,14 +131,14 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration,
 	setTimingLoadBin(engineConfiguration, 1.2, 4.4);
 	setTimingRpmBin(engineConfiguration, 800, 7000);
 
-	setTableBin(engineConfiguration->map.config.samplingAngleBins, MAP_ANGLE_SIZE, 800, 7000);
-	setTableBin(engineConfiguration->map.config.samplingWindowBins, MAP_ANGLE_SIZE, 800, 7000);
+	setTableBin(engineConfiguration->map.samplingAngleBins, MAP_ANGLE_SIZE, 800, 7000);
+	setTableBin(engineConfiguration->map.samplingWindowBins, MAP_ANGLE_SIZE, 800, 7000);
 
 	// set_whole_timing_map 3
 	setWholeFuelMap(engineConfiguration, 3);
 
 	setThermistorConfiguration(&engineConfiguration->cltThermistorConf, 0, 9500, 23.8889, 2100, 48.8889, 1000);
-	engineConfiguration->cltThermistorConf.bias_resistor =  1500;
+	engineConfiguration->cltThermistorConf.bias_resistor = 1500;
 
 	setThermistorConfiguration(&engineConfiguration->iatThermistorConf, 32, 9500, 75, 2100, 120, 1000);
 // todo: this value is way off! I am pretty sure temp coeffs are off also
@@ -160,7 +155,6 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration,
 	engineConfiguration->crankingSettings.coolantTempMinC = -40; // 6ms at -40C
 	engineConfiguration->crankingSettings.fuelAtMinTempMs = 6;
 
-
 	engineConfiguration->analogInputDividerCoefficient = 2;
 
 	engineConfiguration->crankingChargeAngle = 70;
@@ -169,7 +163,8 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration,
 
 	engineConfiguration->analogChartMode = AC_TRIGGER;
 
-	engineConfiguration->map.channel = ADC_CHANNEL_FAST_ADC;
+	engineConfiguration->map.sensor.hwChannel = 4;
+	engineConfiguration->baroSensor.hwChannel = 4;
 
 	engineConfiguration->firingOrder = FO_1_THEN_3_THEN_4_THEN2;
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
@@ -184,7 +179,7 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration,
 
 	engineConfiguration->engineLoadMode = LM_MAF;
 
-	engineConfiguration->vbattDividerCoeff = ((float)(15 + 65)) / 15;
+	engineConfiguration->vbattDividerCoeff = ((float) (15 + 65)) / 15;
 
 	engineConfiguration->fanOnTemperature = 75;
 	engineConfiguration->fanOffTemperature = 70;
@@ -203,7 +198,6 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration,
 	engineConfiguration->rpmMultiplier = 0.5;
 	engineConfiguration->cylindersCount = 4;
 
-
 	engineConfiguration->displayMode = DM_HD44780;
 
 	engineConfiguration->logFormat = LF_NATIVE;
@@ -214,10 +208,8 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration,
 	engineConfiguration->triggerConfig.isSynchronizationNeeded = TRUE;
 	engineConfiguration->triggerConfig.useRiseEdge = TRUE;
 
-
 	engineConfiguration->HD44780width = 16;
 	engineConfiguration->HD44780height = 2;
-
 
 	engineConfiguration->tpsAdcChannel = 3;
 	engineConfiguration->vBattAdcChannel = 5;
@@ -232,9 +224,11 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration,
 
 	engineConfiguration->needSecondTriggerInput = TRUE;
 
-	engineConfiguration->map.config.mapType = MT_CUSTOM;
-	engineConfiguration->map.config.Min = 0;
-	engineConfiguration->map.config.Max = 500;
+	engineConfiguration->map.sensor.sensorType = MT_MPX4250;
+
+	engineConfiguration->baroSensor.sensorType = MT_CUSTOM;
+	engineConfiguration->baroSensor.Min = 0;
+	engineConfiguration->baroSensor.Max = 500;
 
 	engineConfiguration->diffLoadEnrichmentCoef = 1;
 
@@ -278,6 +272,25 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration,
 	boardConfiguration->HD44780_db5 = GPIOE_15;
 	boardConfiguration->HD44780_db6 = GPIOB_11;
 	boardConfiguration->HD44780_db7 = GPIOB_13;
+
+	memset(boardConfiguration->adcHwChannelEnabled, 0, sizeof(boardConfiguration->adcHwChannelEnabled));
+	boardConfiguration->adcHwChannelEnabled[0] = ADC_SLOW;
+	boardConfiguration->adcHwChannelEnabled[1] = ADC_SLOW;
+	boardConfiguration->adcHwChannelEnabled[2] = ADC_SLOW;
+	boardConfiguration->adcHwChannelEnabled[3] = ADC_SLOW;
+	boardConfiguration->adcHwChannelEnabled[4] = ADC_FAST;
+
+	boardConfiguration->adcHwChannelEnabled[6] = ADC_SLOW;
+	boardConfiguration->adcHwChannelEnabled[7] = ADC_SLOW;
+	boardConfiguration->adcHwChannelEnabled[11] = ADC_SLOW;
+	boardConfiguration->adcHwChannelEnabled[12] = ADC_SLOW;
+	boardConfiguration->adcHwChannelEnabled[13] = ADC_SLOW;
+
+	boardConfiguration->primaryTriggerInputPin = GPIOC_6;
+	boardConfiguration->secondaryTriggerInputPin = GPIOA_5;
+	boardConfiguration->primaryLogicAnalyzerPin = GPIOA_8;
+	boardConfiguration->secondaryLogicAnalyzerPin = GPIOE_7;
+
 }
 
 void setDefaultNonPersistentConfiguration(engine_configuration2_s *engineConfiguration2) {
@@ -290,10 +303,8 @@ void setDefaultNonPersistentConfiguration(engine_configuration2_s *engineConfigu
 	engineConfiguration2->hasCltSensor = TRUE;
 }
 
-void resetConfigurationExt(engine_type_e engineType,
-		engine_configuration_s *engineConfiguration,
-		engine_configuration2_s *engineConfiguration2,
-		board_configuration_s *boardConfiguration) {
+void resetConfigurationExt(Logging * logger, engine_type_e engineType, engine_configuration_s *engineConfiguration,
+		engine_configuration2_s *engineConfiguration2, board_configuration_s *boardConfiguration) {
 	/**
 	 * Let's apply global defaults first
 	 */
@@ -356,7 +367,7 @@ void resetConfigurationExt(engine_type_e engineType,
 		firmwareError("Unexpected engine type: %d", engineType);
 
 	}
-	applyNonPersistentConfiguration(engineConfiguration, engineConfiguration2, engineType);
+	applyNonPersistentConfiguration(logger, engineConfiguration, engineConfiguration2, engineType);
 
 #if EFI_TUNER_STUDIO
 	syncTunerStudioCopy();
@@ -366,18 +377,27 @@ void resetConfigurationExt(engine_type_e engineType,
 engine_configuration2_s::engine_configuration2_s() {
 }
 
-void applyNonPersistentConfiguration(engine_configuration_s *engineConfiguration, engine_configuration2_s *engineConfiguration2, engine_type_e engineType) {
+void applyNonPersistentConfiguration(Logging * logger, engine_configuration_s *engineConfiguration,
+		engine_configuration2_s *engineConfiguration2, engine_type_e engineType) {
 // todo: this would require 'initThermistors() to re-establish a reference, todo: fix
 //	memset(engineConfiguration2, 0, sizeof(engine_configuration2_s));
-
-
+#if EFI_PROD_CODE
+	printMsg(logger, "applyNonPersistentConfiguration()");
+#endif
 	engineConfiguration2->isInjectionEnabledFlag = TRUE;
 
-	initializeTriggerShape(engineConfiguration, engineConfiguration2);
-	chDbgCheck(engineConfiguration2->triggerShape.size != 0, "size is zero");
-	chDbgCheck(engineConfiguration2->triggerShape.shaftPositionEventCount, "shaftPositionEventCount is zero");
+	initializeTriggerShape(logger, engineConfiguration, engineConfiguration2);
+	if (engineConfiguration2->triggerShape.getSize() == 0) {
+		firmwareError("size is zero");
+		return;
+	}
+	if (engineConfiguration2->triggerShape.shaftPositionEventCount == 0) {
+		firmwareError("shaftPositionEventCount is zero");
+		return;
+	}
 
 	prepareOutputSignals(engineConfiguration, engineConfiguration2);
-	initializeIgnitionActions(0, engineConfiguration, engineConfiguration2);
+	// todo: looks like this is here only for unit tests. todo: remove
+	initializeIgnitionActions(0, engineConfiguration, engineConfiguration2, 0, &engineConfiguration2->engineEventConfiguration.ignitionEvents[0]);
 
 }

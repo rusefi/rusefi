@@ -30,6 +30,7 @@ extern "C"
 void initWaveAnalyzerDriver(WaveReaderHw *hw, ICUDriver *driver,
 		ioportid_t port, int pin);
 void setWaveReaderMode(WaveReaderHw *hw, int mode);
+ICUDriver * getInputCaptureDriver(brain_pin_e hwPin);
 
 #ifdef __cplusplus
 }

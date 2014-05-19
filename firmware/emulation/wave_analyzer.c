@@ -21,7 +21,10 @@
 #include "trigger_central.h"
 #include "rfiutil.h"
 
+
 #define CHART_RESET_DELAY 1
+
+extern board_configuration_s *boardConfiguration;
 
 extern engine_configuration_s *engineConfiguration;
 
@@ -237,8 +240,8 @@ void initWaveAnalyzer(void) {
 #ifdef EFI_WAVE_ANALYZER
 	initLogging(&logger, "wave");
 
-	initWave("input1 A8", 0, &LOGIC_ANALYZER_1_DRIVER, LOGIC_ANALYZER_1_PORT, LOGIC_ANALYZER_1_PIN, 1);
-	initWave("input2 E5", 1, &LOGIC_ANALYZER_2_DRIVER, LOGIC_ANALYZER_2_PORT, LOGIC_ANALYZER_2_PIN, 1);
+	initWave("input1 A8", 0, getInputCaptureDriver(boardConfiguration->primaryLogicAnalyzerPin), getHwPort(boardConfiguration->primaryLogicAnalyzerPin), getHwPin(boardConfiguration->primaryLogicAnalyzerPin), 1);
+	initWave("input2 E5", 1, getInputCaptureDriver(boardConfiguration->secondaryLogicAnalyzerPin), getHwPort(boardConfiguration->secondaryLogicAnalyzerPin), getHwPin(boardConfiguration->secondaryLogicAnalyzerPin), 1);
 	//	initWave("input0 C6", 2, &WAVE_TIMER, WAVE_INPUT_PORT, WAVE_INPUT_PIN, 0);
 
 	addTriggerEventListener(&onWaveShaftSignal, "wave analyzer");

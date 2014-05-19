@@ -8,14 +8,14 @@
 #ifndef CRC_H_
 #define CRC_H_
 
-typedef unsigned char crc;
+typedef unsigned char crc_t;
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif /* __cplusplus */
 
-crc calc_crc(const crc message[], int nBytes);
+crc_t calc_crc(const crc_t message[], int nBytes);
 
 #ifdef __cplusplus
 }

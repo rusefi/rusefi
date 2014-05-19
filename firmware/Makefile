@@ -95,6 +95,7 @@ include controllers/controllers.mk
 include $(PROJECT_DIR)/util/util.mk
 include $(PROJECT_DIR)/config/engines/engines.mk
 include $(PROJECT_DIR)/controllers/algo/algo.mk
+include $(PROJECT_DIR)/controllers/core/core.mk
 include $(PROJECT_DIR)/controllers/math/math.mk
 include $(PROJECT_DIR)/controllers/sensors/sensors.mk
 include $(PROJECT_DIR)/controllers/system/system.mk
@@ -125,6 +126,7 @@ CSRC = $(PORTSRC) \
 	$(HW_LAYERSRC) \
 	$(CONTROLLERSSRC) \
 	$(CONTROLLERS_ALGO_SRC) \
+	$(CONTROLLERS_CORE_SRC) \
 	$(CONTROLLERS_MATH_SRC) \
 	$(CONTROLLERS_SENSORS_SRC) \
 	$(PLATFORMSRC) \
@@ -137,6 +139,7 @@ CSRC = $(PORTSRC) \
 # setting.
 CPPSRC = $(CHCPPSRC) \
 	$(TRIGGER_SRC_CPP) \
+	$(TRIGGER_DECODERS_SRC_CPP) \
 	$(EMULATIONSRC_CPP) \
 	$(CONTROLLERS_ALGO_SRC_CPP) \
 	$(SYSTEMSRC_CPP) \
@@ -146,6 +149,7 @@ CPPSRC = $(CHCPPSRC) \
 	$(CONTROLLERS_SENSORS_SRC_CPP) \
 	$(CONTROLLERS_SRC_CPP) \
 	$(UTILSRC_CPP) \
+	$(CONTROLLERS_CORE_SRC_CPP) \
 	$(CONTROLLERS_MATH_SRC_CPP) \
 	rusefi.cpp \
 	main.cpp
@@ -198,6 +202,7 @@ INCDIR = $(PORTINC) $(KERNINC) $(TESTINC) \
 	controllers/sensors \
 	controllers/system \
 	controllers/algo \
+	controllers/core \
 	controllers/math \
 	controllers/trigger
 	

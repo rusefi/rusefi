@@ -43,8 +43,7 @@ extern "C"
 {
 #endif /* __cplusplus */
 
-
-void lockOutputBuffer(void);
+bool_t lockOutputBuffer(void);
 void unlockOutputBuffer(void);
 
 void initIntermediateLoggingBuffer(void);
@@ -55,10 +54,10 @@ int isInitialized(Logging *logging);
 void initLogging(Logging *logging, const char *name);
 void initLoggingExt(Logging *logging, const char *name, char *buffer, int bufferSize);
 
-void debugInt(Logging *logging, char *caption, int value);
+void debugInt(Logging *logging, const char *caption, int value);
 void logInt(Logging *logging, LoggingPoints loggingPoint, int value);
 
-void debugFloat(Logging *logging, char *text, float value, int precision);
+void debugFloat(Logging *logging, const char *text, float value, int precision);
 void logFloat(Logging *logging, LoggingPoints loggingPoint, float value);
 void appendFloat(Logging *logging, float value, int precision);
 
@@ -74,7 +73,7 @@ void printMsg(Logging *logging, const char *fmt, ...);
 char* getCaption(LoggingPoints loggingPoint);
 void appendPrintf(Logging *logging, const char *fmt, ...);
 void vappendPrintf(Logging *logging, const char *fmt, va_list arg);
-void append(Logging *logging, char *text);
+void append(Logging *logging, const char *text);
 /**
  * this method copies the line into the intermediate buffer for later output by
  * the main thread

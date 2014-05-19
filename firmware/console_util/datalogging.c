@@ -50,7 +50,11 @@
 /**
  * This is the buffer into which all the data providers write
  */
+#if defined __GNUC__
 static char pendingBuffer[OUTPUT_BUFFER] __attribute__((section(".ccm")));
+#else
+static char pendingBuffer[OUTPUT_BUFFER];
+#endif
 /**
  * We copy all the pending data into this buffer once we are ready to push it out
  */
@@ -60,13 +64,9 @@ static MemoryStream intermediateLoggingBuffer;
 static uint8_t intermediateLoggingBufferData[INTERMEDIATE_LOGGING_BUFFER_SIZE]; //todo define max-printf-buffer
 static bool intermediateLoggingBufferInited = FALSE;
 
-static int validateBuffer(Logging *logging, int extraLen, char *text) {
+static int validateBuffer(Logging *logging, int extraLen, const char *text) {
 	if (logging->buffer == NULL) {
-		strcpy(logging->SMALL_BUFFER, "Logging not initialized: ");
-		strcat(logging->SMALL_BUFFER, logging->name);
-		strcat(logging->SMALL_BUFFER, "/");
-		strcat(logging->SMALL_BUFFER, text);
-		fatal(logging->SMALL_BUFFER);
+		firmwareError("Logging not initialized: %s", logging->name);
 		return TRUE;
 	}
 
@@ -84,7 +84,7 @@ static int validateBuffer(Logging *logging, int extraLen, char *text) {
 	return FALSE;
 }
 
-void append(Logging *logging, char *text) {
+void append(Logging *logging, const char *text) {
 	chDbgCheck(text!=NULL, "append NULL");
 	int extraLen = strlen(text);
 	int errcode = validateBuffer(logging, extraLen, text);
@@ -181,7 +181,7 @@ static char* get2ndCaption(int loggingPoint) {
 }
 
 void initLoggingExt(Logging *logging, const char *name, char *buffer, int bufferSize) {
-	print("Init logging\r\n");
+	print("Init logging %s\r\n", name);
 	logging->name = name;
 	logging->buffer = buffer;
 	logging->bufferSize = bufferSize;
@@ -197,7 +197,7 @@ void initLogging(Logging *logging, const char *name) {
 	initLoggingExt(logging, name, logging->DEFAULT_BUFFER, sizeof(logging->DEFAULT_BUFFER));
 }
 
-void debugInt(Logging *logging, char *caption, int value) {
+void debugInt(Logging *logging, const char *caption, int value) {
 	append(logging, caption);
 	append(logging, DELIMETER);
 	appendPrintf(logging, "%d%s", value, DELIMETER);
@@ -207,30 +207,30 @@ void appendFloat(Logging *logging, float value, int precision) {
 	// todo: this implementation is less than perfect
 	switch (precision) {
 	case 1:
-	  appendPrintf(logging, "%..10f",  value);
-	  break;
+		appendPrintf(logging, "%..10f", value);
+		break;
 	case 2:
-	  appendPrintf(logging, "%..100f",  value);
-	  break;
+		appendPrintf(logging, "%..100f", value);
+		break;
 	case 3:
-	  appendPrintf(logging, "%..1000f",  value);
-	  	  break;
+		appendPrintf(logging, "%..1000f", value);
+		break;
 	case 4:
-	  appendPrintf(logging, "%..10000f",  value);
-	  	  break;
+		appendPrintf(logging, "%..10000f", value);
+		break;
 	case 5:
-	  appendPrintf(logging, "%..100000f",  value);
-	  	  break;
+		appendPrintf(logging, "%..100000f", value);
+		break;
 	case 6:
-	  appendPrintf(logging, "%..1000000f",  value);
-	  	  break;
+		appendPrintf(logging, "%..1000000f", value);
+		break;
 
 	default:
-	  appendPrintf(logging, "%f",  value);
+		appendPrintf(logging, "%f", value);
 	}
 }
 
-void debugFloat(Logging *logging, char *caption, float value, int precision) {
+void debugFloat(Logging *logging, const char *caption, float value, int precision) {
 	append(logging, caption);
 	append(logging, DELIMETER);
 
@@ -265,10 +265,10 @@ static void printWithLength(char *line) {
 	*p++ = '\r';
 	*p++ = '\n';
 
-	if (!is_serial_ready())
+	if (!isConsoleReady())
 		return;
-	consoleOutputBuffer((const int8_t *)header, strlen(header));
-	consoleOutputBuffer((const int8_t *)line, p - line);
+	consoleOutputBuffer((const int8_t *) header, strlen(header));
+	consoleOutputBuffer((const int8_t *) line, p - line);
 }
 
 void printLine(Logging *logging) {
@@ -286,7 +286,10 @@ void appendMsgPostfix(Logging *logging) {
 
 void resetLogging(Logging *logging) {
 	char *buffer = logging->buffer;
-	chDbgCheck(buffer!=NULL, "null buffer");
+	if (buffer == NULL) {
+		firmwareError("Null buffer: %s", logging->name);
+		return;
+	}
 	logging->linePointer = buffer;
 }
 
@@ -336,7 +339,7 @@ void scheduleLogging(Logging *logging) {
 	// this could be done without locking
 	int newLength = strlen(logging->buffer);
 
-	lockOutputBuffer();
+	bool_t alreadyLocked = lockOutputBuffer();
 	// I hope this is fast enough to operate under sys lock
 	int curLength = strlen(pendingBuffer);
 	if (curLength + newLength >= OUTPUT_BUFFER) {
@@ -348,13 +351,15 @@ void scheduleLogging(Logging *logging) {
 //		strcpy(fatalMessage, "datalogging.c: output buffer overflow: ");
 //		strcat(fatalMessage, logging->name);
 //		fatal(fatalMessage);
-		unlockOutputBuffer();
+		if (!alreadyLocked)
+			unlockOutputBuffer();
 		resetLogging(logging);
 		return;
 	}
 
 	strcat(pendingBuffer, logging->buffer);
-	unlockOutputBuffer();
+	if (!alreadyLocked)
+		unlockOutputBuffer();
 	resetLogging(logging);
 }
 
@@ -375,7 +380,6 @@ void printPending() {
 	if (strlen(outputBuffer) > 0)
 		printWithLength(outputBuffer);
 }
-
 
 void initIntermediateLoggingBuffer(void) {
 	msObjectInit(&intermediateLoggingBuffer, intermediateLoggingBufferData, INTERMEDIATE_LOGGING_BUFFER_SIZE, 0);

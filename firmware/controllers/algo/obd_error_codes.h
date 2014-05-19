@@ -359,7 +359,7 @@ typedef enum {
 	//P0338 Crankshaft Position Sensor A Circuit High Input
 	//P0339 Crankshaft Position Sensor A Circuit Intermittent
 	//P0340 Camshaft Position Sensor Circuit Malfunction
-	//P0341 Camshaft Position Sensor Circuit Range/Performance
+	 OBD_Camshaft_Position_Sensor_Circuit_Range_Performance = 341,
 	//P0342 Camshaft Position Sensor Circuit Low Input
 	//P0343 Camshaft Position Sensor Circuit High Input
 	//P0344 Camshaft Position Sensor Circuit Intermittent

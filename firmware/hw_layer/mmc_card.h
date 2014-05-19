@@ -10,8 +10,6 @@
 #ifndef MMC_CARD_H_
 #define MMC_CARD_H_
 
-#include "ff.h"
-
 #ifdef __cplusplus
 extern "C"
 {

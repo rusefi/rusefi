@@ -2,13 +2,13 @@
  * @file	trigger_chrysler.cpp
  *
  * @date Mar 24, 2014
- * @author Andrey Belomutskiy, (c) 2012-2013
+ * @author Andrey Belomutskiy, (c) 2012-2014
  */
 
 #include "trigger_chrysler.h"
 
 void configureNeonTriggerShape(trigger_shape_s *s) {
-	triggerShapeInit(s);
+	s->reset();
 
 	// voodoo magic - we always need 720 at the end
 	int base = 720 - 560;

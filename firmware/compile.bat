@@ -18,17 +18,17 @@ if errorlevel 1 goto error
 echo Build complete success.
 
 
-svn info > ../firmware_binary/version.txt
-cp config/features.h ../firmware_binary
-cp build/rusefi.hex ../firmware_binary
-cp build/rusefi.elf ../firmware_binary
+rem svn info > ../firmware_binary/version.txt
+rem cp config/features.h ../firmware_binary
+rem cp build/rusefi.hex ../firmware_binary
+rem cp build/rusefi.elf ../firmware_binary
 
-cp tunerstudio/rusefi.ini ../firmware_binary
+rem cp tunerstudio/rusefi.ini ../firmware_binary
 
-cd ../firmware_binary
-del firmaware_binary.zip
-7z a firmaware_binary.zip rusefi.hex rusefi.ini features.h flash.bat
-cd ../firmware
+rem cd ../firmware_binary
+rem del firmaware_binary.zip
+rem 7z a firmaware_binary.zip rusefi.hex rusefi.ini features.h flash.bat
+rem cd ../firmware
 
 
 cd build

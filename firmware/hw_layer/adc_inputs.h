@@ -32,16 +32,18 @@ int getInternalAdcValue(int index);
 
 /* Depth of the conversion buffer, channels are sampled X times each.*/
 #define ADC_GRP1_BUF_DEPTH_SLOW      1
-#define ADC_MAX_SLOW_CHANNELS_COUNT 12
+#define ADC_MAX_CHANNELS_COUNT 16
+
+//typedef struct
 
 // this structure contains one multi-channel ADC state snapshot
 typedef struct {
-	volatile adcsample_t adc_data[ADC_MAX_SLOW_CHANNELS_COUNT];
+	volatile adcsample_t adc_data[ADC_MAX_CHANNELS_COUNT];
 //	time_t time;
 } adc_state;
 
 typedef struct {
-	adcsample_t samples[ADC_MAX_SLOW_CHANNELS_COUNT * ADC_GRP1_BUF_DEPTH_SLOW];
+	adcsample_t samples[ADC_MAX_CHANNELS_COUNT * ADC_GRP1_BUF_DEPTH_SLOW];
 
 
 } adc_hw_helper_s;

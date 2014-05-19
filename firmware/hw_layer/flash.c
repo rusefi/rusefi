@@ -3,6 +3,10 @@
  * @brief	Lower-level code related to internal flash memory
  */
 
+#include "main.h"
+
+#if EFI_INTERNAL_FLASH
+
 #include "flash.h"
 #include <string.h>
 
@@ -260,3 +264,5 @@ int flashWrite(flashaddr_t address, const char* buffer, size_t size) {
 
 	return FLASH_RETURN_SUCCESS;
 }
+
+#endif /* EFI_INTERNAL_FLASH */

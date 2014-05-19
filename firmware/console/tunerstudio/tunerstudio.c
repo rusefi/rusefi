@@ -45,7 +45,7 @@ static Logging logger;
 extern engine_configuration_s *engineConfiguration;
 extern board_configuration_s *boardConfiguration;
 extern persistent_config_s configWorkingCopy;
-extern FlashState flashState;
+extern persistent_config_container_s persistentState;
 
 extern SerialUSBDriver SDU1;
 #define CONSOLE_DEVICE &SDU1
@@ -195,10 +195,10 @@ void handleBurnCommand(void) {
 #endif
 
 	// todo: how about some multi-threading?
-	memcpy(&flashState.persistentConfiguration, &configWorkingCopy, sizeof(persistent_config_s));
+	memcpy(&persistentState.persistentConfiguration, &configWorkingCopy, sizeof(persistent_config_s));
 
 	scheduleMsg(&logger, "va1=%d", configWorkingCopy.boardConfiguration.idleValvePin);
-	scheduleMsg(&logger, "va2=%d", flashState.persistentConfiguration.boardConfiguration.idleValvePin);
+	scheduleMsg(&logger, "va2=%d", persistentState.persistentConfiguration.boardConfiguration.idleValvePin);
 
 	writeToFlash();
 	incrementGlobalConfigurationVersion();
@@ -236,7 +236,7 @@ static msg_t tsThreadEntryPoint(void *arg) {
 extern engine_configuration_s *engineConfiguration;
 
 void syncTunerStudioCopy(void) {
-	memcpy(&configWorkingCopy, &flashState.persistentConfiguration, sizeof(persistent_config_s));
+	memcpy(&configWorkingCopy, &persistentState.persistentConfiguration, sizeof(persistent_config_s));
 }
 
 void startTunerStudioConnectivity(void) {
@@ -268,7 +268,7 @@ void updateTunerStudioState() {
 	tsOutputChannels.air_fuel_ratio = getAfr();
 	tsOutputChannels.v_batt = getVBatt();
 	tsOutputChannels.tpsADC = getTPS10bitAdc();
-	tsOutputChannels.atmospherePressure = getAtmosphericPressure();
+	tsOutputChannels.atmospherePressure = getBaroPressure();
 	tsOutputChannels.manifold_air_pressure = getMap();
 	tsOutputChannels.checkEngine = hasErrorCodes();
 }

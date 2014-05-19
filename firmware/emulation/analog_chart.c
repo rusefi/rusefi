@@ -11,6 +11,8 @@
 #include "status_loop.h"
 #include "engine_configuration.h"
 
+#if EFI_ANALOG_CHART
+
 static char LOGGING_BUFFER[5000];
 static Logging logging;
 
@@ -43,8 +45,7 @@ void acAddData(float angle, float value) {
 		pendingData = TRUE;
 		resetLogging(&logging);
 		// message header
-		appendPrintf(&logging, "msg%s", DELIMETER);
-		appendPrintf(&logging, "analog_chart|");
+		appendPrintf(&logging, "analog_chart%s", DELIMETER);
 	}
 
 	if (loggingSize(&logging) < sizeof(LOGGING_BUFFER) - 100)
@@ -55,3 +56,5 @@ void initAnalogChart(void) {
 	initLoggingExt(&logging, "analog chart", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
 	initialized = TRUE;
 }
+
+#endif /* EFI_ANALOG_CHART */

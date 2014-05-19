@@ -17,6 +17,7 @@
 
 
 #define EFI_WAVE_CHART TRUE
+#define EFI_ANALOG_CHART TRUE
 
 //#define SERIAL_SPEED (8 * 115200)
 //#define SERIAL_SPEED (2 * 115200)
@@ -43,11 +44,21 @@
  */
 #define EFI_CLI_SUPPORT TRUE
 
+#define EFI_INTERNAL_FLASH TRUE
 
 /**
  * Usually you need shaft position input, but maybe you do not need it?
  */
 #define EFI_SHAFT_POSITION_INPUT TRUE
+
+#define EFI_ANALOG_INPUTS TRUE
+
+/**
+ * Maybe we are just sniffing what's going on?
+ */
+#define EFI_ENGINE_CONTROL TRUE
+
+#define EFI_SPEED_DENSITY TRUE
 
 /**
  * MCP42010 digital potentiometer support. This could be useful if you are stimulating some
@@ -65,6 +76,8 @@
 #define EFI_HD44780_LCD TRUE
 
 #define EFI_IDLE_CONTROL FALSE
+
+#define EFI_FUEL_PUMP TRUE
 
 #define EFI_ENGINE_EMULATOR TRUE
 #define EFI_EMULATE_POSITION_SENSORS TRUE
@@ -120,5 +133,11 @@
 
 //#define EFI_ELECTRONIC_THROTTLE_BODY TRUE
 #define EFI_ELECTRONIC_THROTTLE_BODY FALSE
+
+#define EFI_MALFUNCTION_INDICATOR TRUE
+//#define EFI_MALFUNCTION_INDICATOR FALSE
+
+#define EFI_MAP_AVERAGING TRUE
+//#define EFI_MAP_AVERAGING FALSE
 
 #endif /* EFIFEATURES_H_ */

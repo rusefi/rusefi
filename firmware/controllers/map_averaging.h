@@ -13,10 +13,8 @@ extern "C"
 {
 #endif /* __cplusplus */
 
-
 void mapAveragingCallback(adcsample_t newValue);
 void initMapAveraging(void);
-float getAtmosphericPressure(void);
 
 #ifdef __cplusplus
 }

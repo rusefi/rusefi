@@ -86,8 +86,8 @@ static void setDefaultMaps(engine_configuration_s *engineConfiguration) {
 }
 
 void setFordAspireEngineConfiguration(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
-	engineConfiguration->tpsMin = 1;
-	engineConfiguration->tpsMax = 1000;
+	engineConfiguration->tpsMin = 100;
+	engineConfiguration->tpsMax = 750;
 
 	engineConfiguration->rpmHardLimit = 7000;
 
@@ -139,14 +139,14 @@ void setFordAspireEngineConfiguration(engine_configuration_s *engineConfiguratio
 	// Frankenstein analog input #12: adc
 
 
-	engineConfiguration->tpsAdcChannel = 3; // 15 is the old value
-	engineConfiguration->vBattAdcChannel = 0; // 1 is the old value
-//	engineConfiguration->map.channel = 1;
+	engineConfiguration->tpsAdcChannel = 3;
+	engineConfiguration->vBattAdcChannel = 0;
+	engineConfiguration->map.sensor.hwChannel = 4;
 	engineConfiguration->mafAdcChannel = 1;
 	engineConfiguration->cltAdcChannel = 11;
 //	engineConfiguration->iatAdcChannel =
 
-	engineConfiguration->map.config.mapType = MT_DENSO183;
+	engineConfiguration->map.sensor.sensorType = MT_DENSO183;
 }
 
 #endif /* EFI_SUPPORT_FORD_ASPIRE */

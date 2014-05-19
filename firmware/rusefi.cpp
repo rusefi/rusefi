@@ -1,5 +1,5 @@
 /**
- * @file	rusefi.c
+ * @file	rusefi.cpp
  * @brief Initialization code and main status reporting look
  *
  * @date Dec 25, 2013
@@ -91,13 +91,16 @@ extern "C" {
 #include "engine_controller.h"
 #include "ec2.h"
 #include "trigger_structure.h"
-#include "lcd_HD44780.h"
 #include "status_loop.h"
 #include "pin_repository.h"
 
 #include "status_loop.h"
 #include "memstreams.h"
 }
+
+#if EFI_HD44780_LCD
+#include "lcd_HD44780.h"
+#endif /* EFI_HD44780_LCD */
 
 #if EFI_ENGINE_EMULATOR
 #include "engine_emulator.h"
@@ -109,7 +112,7 @@ int main_loop_started = FALSE;
 
 static MemoryStream errorMessageStream;
 uint8_t errorMessageBuffer[200];
-bool hasFirmwareError = FALSE;
+static bool hasFirmwareErrorFlag = FALSE;
 
 void runRusEfi(void) {
 	msObjectInit(&errorMessageStream, errorMessageBuffer, sizeof(errorMessageBuffer), 0);
@@ -132,7 +135,7 @@ void runRusEfi(void) {
 	/**
 	 * Initialize hardware drivers
 	 */
-	initHardware();
+	initHardware(&logging);
 
 	initStatusLoop();
 	/**
@@ -182,20 +185,6 @@ void scheduleReset(void) {
 	unlockAnyContext();
 }
 
-extern "C" {
-void onFatalError(const char *msg, const char * file, int line);
-}
-
-void onFatalError(const char *msg, const char * file, int line) {
-	onDbgPanic();
-	lcdShowFatalMessage((char *) msg);
-	if (!main_loop_started) {
-		print("fatal %s %s:%d\r\n", msg, file, line);
-		chThdSleepSeconds(1);
-		chSysHalt();
-	}
-}
-
 void DebugMonitorVector(void) {
 
 	chDbgPanic3("DebugMonitorVector", __FILE__, __LINE__);
@@ -228,44 +217,28 @@ void HardFaultVector(void) {
 		;
 }
 
-
 extern int main_loop_started;
 
-int hasFatalError(void);
-
 void onFatalError(const char *msg, char * file, int line);
-
-const char *dbg_panic_file;
-int dbg_panic_line;
-
-extern "C" {
-void chDbgPanic3(const char *msg, const char * file, int line);
-}
-
-void chDbgPanic3(const char *msg, const char * file, int line) {
-	if (hasFatalError())
-		return;
-	dbg_panic_file = file;
-	dbg_panic_line = line;
-	dbg_panic_msg = msg;
-	onFatalError(dbg_panic_msg, dbg_panic_file, dbg_panic_line);
-}
 
 static char panicMessage[200];
 
 void chDbgStackOverflowPanic(Thread *otp) {
-  strcpy(panicMessage, "stack overflow: ");
+	strcpy(panicMessage, "stack overflow: ");
 #ifdef CH_USE_REGISTRY
-  strcat(panicMessage, otp->p_name);
+	strcat(panicMessage, otp->p_name);
 #endif
-  chDbgPanic3(panicMessage, __FILE__, __LINE__);
+	chDbgPanic3(panicMessage, __FILE__, __LINE__);
 }
 
+bool_t hasFirmwareError(void) {
+	return hasFirmwareErrorFlag;
+}
 
 void firmwareError(const char *fmt, ...) {
-	if (hasFirmwareError)
+	if (hasFirmwareErrorFlag)
 		return;
-	hasFirmwareError = TRUE;
+	hasFirmwareErrorFlag = TRUE;
 	errorMessageStream.eos = 0; // reset
 	va_list ap;
 	va_start(ap, fmt);
@@ -276,5 +249,5 @@ void firmwareError(const char *fmt, ...) {
 }
 
 int getRusEfiVersion(void) {
-	return 20140430;
+	return 20140515;
 }

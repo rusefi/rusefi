@@ -67,10 +67,26 @@ void setFordInline6(engine_configuration_s *engineConfiguration, board_configura
 	// input channel 10 is PC3, that's ADC13
 	// input channel 12 is PC1, that's ADC11
 
+	memset(boardConfiguration->adcHwChannelEnabled, 0, sizeof(boardConfiguration->adcHwChannelEnabled));
+	boardConfiguration->adcHwChannelEnabled[1] = ADC_SLOW;
+	boardConfiguration->adcHwChannelEnabled[2] = ADC_SLOW;
+	boardConfiguration->adcHwChannelEnabled[3] = ADC_SLOW;
+	boardConfiguration->adcHwChannelEnabled[4] = ADC_SLOW;
+
+	boardConfiguration->adcHwChannelEnabled[7] = ADC_SLOW;
+	boardConfiguration->adcHwChannelEnabled[11] = ADC_SLOW;
+	boardConfiguration->adcHwChannelEnabled[15] = ADC_FAST;
+
+
 	engineConfiguration->tpsAdcChannel = 4;
 	engineConfiguration->iatAdcChannel = 2;
 	engineConfiguration->cltAdcChannel = 1;
 	engineConfiguration->afrSensor.afrAdcChannel = 11;
+
+	engineConfiguration->map.sensor.sensorType = MT_MPX4250;
+	engineConfiguration->map.sensor.hwChannel = 15;
+	engineConfiguration->baroSensor.sensorType = MT_MPX4250;
+	engineConfiguration->baroSensor.hwChannel = 7;
 
 	// 6 channel output board
 	// output 1 is PB9
@@ -89,11 +105,14 @@ void setFordInline6(engine_configuration_s *engineConfiguration, board_configura
 	engineConfiguration->tpsMin = convertVoltageTo10bitADC(1.250);
 	engineConfiguration->tpsMax = convertVoltageTo10bitADC(4.538);
 
-	engineConfiguration->map.config.mapType = MT_MPX4250;
-	engineConfiguration->map.channel = 2; // input channel 8 is ADC2
-
 	//	engineConfiguration->vBattAdcChannel = 0; //
 //	engineConfiguration->mafAdcChannel = 1;
+
+	boardConfiguration->primaryTriggerInputPin = GPIOA_8;
+	boardConfiguration->secondaryTriggerInputPin = GPIOA_5;
+	boardConfiguration->primaryLogicAnalyzerPin = GPIOC_6;
+	boardConfiguration->secondaryLogicAnalyzerPin = GPIOE_7;
+
 
 }
 

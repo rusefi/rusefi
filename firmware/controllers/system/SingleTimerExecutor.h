@@ -8,17 +8,31 @@
 #ifndef SINGLETIMEREXECUTOR_H_
 #define SINGLETIMEREXECUTOR_H_
 
-#include "signal_executor.h"
+#include "scheduler.h"
 #include "event_queue.h"
 
 class Executor {
 public:
 	Executor();
 	void schedule(scheduling_s *scheduling, uint64_t nowUs, int delayUs, schfunc_t callback, void *param);
-	void execute(uint64_t now);
+	void execute(uint64_t nowUs);
 private:
 	EventQueue queue;
-	void setTimer(uint64_t now);
+	bool_t reentrantLock;
+	void doExecute(uint64_t nowUs);
+	void lock(void);
+	void unlock(void);
 };
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif /* __cplusplus */
+
+void initSignalExecutorImpl(void);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* SINGLETIMEREXECUTOR_H_ */

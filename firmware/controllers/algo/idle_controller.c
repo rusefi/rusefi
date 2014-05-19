@@ -14,6 +14,7 @@
  */
 
 #include "idle_controller.h"
+#include "efilib.h"
 
 // todo: move this to "idle_controller.h"
 int isCranking(void);
@@ -31,25 +32,12 @@ void setIdleRpm(IdleValveState *idle, int targetRpm) {
 	idle->targetRpmRangeRight = (int)(targetRpm * 1.07);
 }
 
-int min(int i1, int i2) {
-	return i1 < i2 ? i1 : i2;
-}
-
-int max(int i1, int i2) {
-	return i1 > i2 ? i1 : i2;
-}
-
-float maxF(float i1, float i2) {
-	return i1 > i2 ? i1 : i2;
-}
-
-
 /**
  * @brief	sets new idle valve duty cycle: checks the bounds and reports new value
  */
 static int setNewValue(IdleValveState *idle, int currentRpm, int now, char * msg, int newValue) {
-	newValue = max(newValue, MIN_IDLE);
-	newValue = min(newValue, MAX_IDLE);
+	newValue = maxI(newValue, MIN_IDLE);
+	newValue = minI(newValue, MAX_IDLE);
 
 	if (idle->value != newValue) {
 		idleDebug(msg, currentRpm);

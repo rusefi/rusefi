@@ -23,10 +23,8 @@
  */
 
 #include "main.h"
-#include "signal_executor.h"
+#include "scheduler.h"
 #include "datalogging.h"
-//#include "rpm_calculator.h"
-//#include "engine_math.h"
 
 #if EFI_SIGNAL_EXECUTOR_SLEEP || defined(__DOXYGEN__)
 
@@ -47,13 +45,6 @@ void scheduleTask(scheduling_s *scheduling, int delayUs, schfunc_t callback, voi
 
 	chVTSetI(&scheduling->timer, delaySt, (vtfunc_t)callback, param);
 	unlockAnyContext();
-}
-
-void initOutputSignal(OutputSignal *signal, io_pin_e ioPin) {
-	signal->io_pin = ioPin;
-	signal->name = getPinName(ioPin);
-//	signal->duration = 0;
-	initOutputSignalBase(signal);
 }
 
 void initSignalExecutorImpl(void) {

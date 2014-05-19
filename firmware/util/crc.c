@@ -10,8 +10,8 @@
 #define TOPBIT (1 << (WIDTH - 1))
 #define POLYNOMIAL 0xD8
 
-crc calc_crc(const crc message[], int nBytes) {
-	crc remainder = 0;
+crc_t calc_crc(const crc_t message[], int nBytes) {
+	crc_t remainder = 0;
 
 	/*
 	 * Perform modulo-2 division, a byte at a time.

@@ -133,7 +133,9 @@ static msg_t benchThread(int param) {
 		needToRunBench = FALSE;
 		runBench(brainPin, pin, onTime, offTime, count);
 	}
+#if defined __GNUC__
 	return 0;
+#endif
 }
 
 void initInjectorCentral(void) {

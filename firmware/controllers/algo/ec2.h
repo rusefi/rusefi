@@ -1,11 +1,12 @@
 /**
- * ec2.h
+ * @file ec2.h
  *
  * this is a mess because some code is still in C and some is
  * already in C++. trigger structure is C++
+ * TODO: rename? merge? Do something with this file
  *
- *  Created on: Apr 26, 2014
- *      Author: Andrey
+ * @date Apr 26, 2014
+ * @author Andrey Belomutskiy, (c) 2012-2014
  */
 
 #ifndef EC2_H_
@@ -46,18 +47,16 @@ public:
 void prepareOutputSignals(engine_configuration_s *engineConfiguration,
 		engine_configuration2_s *engineConfiguration2);
 
-void initializeIgnitionActions(float baseAngle, engine_configuration_s *engineConfiguration, engine_configuration2_s *engineConfiguration2);
+void initializeIgnitionActions(float baseAngle, engine_configuration_s *engineConfiguration, engine_configuration2_s *engineConfiguration2, float dwellMs, ActuatorEventList *list);
 void addFuelEvents(engine_configuration_s const *e,  engine_configuration2_s *engineConfiguration2, ActuatorEventList *list, injection_mode_e mode);
 
 void registerActuatorEventExt(engine_configuration_s const *engineConfiguration, trigger_shape_s * s, ActuatorEventList *list, OutputSignal *actuator, float angleOffset);
 
-
-
-void resetConfigurationExt(engine_type_e engineType,
+void resetConfigurationExt(Logging * logger, engine_type_e engineType,
 		engine_configuration_s *engineConfiguration,
 		engine_configuration2_s *engineConfiguration2,
 		board_configuration_s *boardConfiguration);
-void applyNonPersistentConfiguration(engine_configuration_s *engineConfiguration,
+void applyNonPersistentConfiguration(Logging * logger, engine_configuration_s *engineConfiguration,
 		engine_configuration2_s *engineConfiguration2, engine_type_e engineType);
 
 

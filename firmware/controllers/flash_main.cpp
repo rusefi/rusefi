@@ -36,45 +36,42 @@ static engine_type_e defaultEngineType = FORD_ASPIRE_1996;
 
 static Logging logger;
 
-#if defined __GNUC__
-FlashState flashState __attribute__((section(".ccm")));
-#else
-FlashState flashState;
-#endif
+extern persistent_config_container_s persistentState;
 
-engine_configuration_s *engineConfiguration = &flashState.persistentConfiguration.engineConfiguration;
-board_configuration_s *boardConfiguration = &flashState.persistentConfiguration.boardConfiguration;
+extern engine_configuration_s *engineConfiguration;
+extern board_configuration_s *boardConfiguration;
 
 extern engine_configuration2_s * engineConfiguration2;
 
 #define FLASH_ADDR 0x08060000
 
-#define FLASH_USAGE sizeof(FlashState)
+#define PERSISTENT_SIZE sizeof(persistent_config_container_s)
 
-crc flashStateCrc(FlashState *state) {
-	return calc_crc((const crc*) &state->persistentConfiguration, sizeof(persistent_config_s));
+crc_t flashStateCrc(persistent_config_container_s *state) {
+	return calc_crc((const crc_t*) &state->persistentConfiguration, sizeof(persistent_config_s));
 }
 
 void writeToFlash(void) {
-	flashState.version = FLASH_DATA_VERSION;
-	scheduleMsg(&logger, "FLASH_DATA_VERSION=%d", flashState.version);
-	crc result = flashStateCrc(&flashState);
-	flashState.value = result;
-	scheduleMsg(&logger, "Reseting flash=%d", FLASH_USAGE);
-	flashErase(FLASH_ADDR, FLASH_USAGE);
+	persistentState.size = PERSISTENT_SIZE;
+	persistentState.version = FLASH_DATA_VERSION;
+	scheduleMsg(&logger, "FLASH_DATA_VERSION=%d", persistentState.version);
+	crc_t result = flashStateCrc(&persistentState);
+	persistentState.value = result;
+	scheduleMsg(&logger, "Reseting flash, size=%d", PERSISTENT_SIZE);
+	flashErase(FLASH_ADDR, PERSISTENT_SIZE);
 	scheduleMsg(&logger, "Flashing with CRC=%d", result);
 	efitimems_t nowMs = currentTimeMillis();
-	result = flashWrite(FLASH_ADDR, (const char *) &flashState, FLASH_USAGE);
+	result = flashWrite(FLASH_ADDR, (const char *) &persistentState, PERSISTENT_SIZE);
 	scheduleMsg(&logger, "Flash programmed in (ms): %d", currentTimeMillis() - nowMs);
 	scheduleMsg(&logger, "Flashed: %d", result);
 }
 
-static int isValidCrc(FlashState *state) {
+static int isValidCrc(persistent_config_container_s *state) {
 	if (state->version != FLASH_DATA_VERSION) {
 		scheduleMsg(&logger, "Unexpected flash version: %d", state->version);
 		return FALSE;
 	}
-	crc result = flashStateCrc(state);
+	crc_t result = flashStateCrc(state);
 	int isValidCrc = result == state->value;
 	if (!isValidCrc)
 		scheduleMsg(&logger, "CRC got %d while %d expected", result, state->value);
@@ -82,30 +79,33 @@ static int isValidCrc(FlashState *state) {
 }
 
 static void doResetConfiguration(void) {
-	resetConfigurationExt(engineConfiguration->engineType, engineConfiguration, engineConfiguration2, boardConfiguration);
+	resetConfigurationExt(&logger, engineConfiguration->engineType, engineConfiguration, engineConfiguration2,
+			boardConfiguration);
 }
 
 static void readFromFlash(void) {
+	printMsg(&logger, "readFromFlash()");
 
-	flashRead(FLASH_ADDR, (char *) &flashState, FLASH_USAGE);
+	flashRead(FLASH_ADDR, (char *) &persistentState, PERSISTENT_SIZE);
 
 	setDefaultNonPersistentConfiguration(engineConfiguration2);
 
-	if (!isValidCrc(&flashState)) {
-		scheduleMsg(&logger, "Need to reset flash to default");
-		resetConfigurationExt(defaultEngineType, engineConfiguration, engineConfiguration2, boardConfiguration);
+	if (!isValidCrc(&persistentState) || persistentState.size != PERSISTENT_SIZE) {
+		printMsg(&logger, "Need to reset flash to default");
+		resetConfigurationExt(&logger, defaultEngineType, engineConfiguration, engineConfiguration2,
+				boardConfiguration);
 	} else {
-		scheduleMsg(&logger, "Got valid configuration from flash!");
-		applyNonPersistentConfiguration(engineConfiguration, engineConfiguration2, engineConfiguration->engineType);
+		printMsg(&logger, "Got valid configuration from flash!");
+		applyNonPersistentConfiguration(&logger, engineConfiguration, engineConfiguration2,
+				engineConfiguration->engineType);
 	}
 	// we can only change the state after the CRC check
 	engineConfiguration->firmwareVersion = getRusEfiVersion();
 }
 
 void initFlash(void) {
-	initLogging(&logger, "Flash memory");
 	print("initFlash()\r\n");
-
+	initLogging(&logger, "Flash memory");
 
 	addConsoleAction("readconfig", readFromFlash);
 	addConsoleAction("writeconfig", writeToFlash);

@@ -8,12 +8,14 @@
 #ifndef HARDWARE_H_
 #define HARDWARE_H_
 
+#include "main.h"
+
 #ifdef __cplusplus
 extern "C"
 {
 #endif /* __cplusplus */
 
-void initHardware(void);
+void initHardware(Logging *logging);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

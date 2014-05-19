@@ -23,8 +23,6 @@ void finishStatusLine(void);
 void setFullLog(int value);
 void startStatusThreads(void);
 void sayOsHello(void);
-int hasFatalError(void);
-void onDbgPanic(void);
 
 #ifdef __cplusplus
 }
