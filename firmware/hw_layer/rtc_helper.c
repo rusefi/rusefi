@@ -23,14 +23,19 @@ static void date_help(void) {
 }
 
 void date_set_tm(struct tm *timp) {
+#if EFI_RTC
 	rtcSetTimeTm(&RTCD1, timp);
+#endif /* EFI_RTC */
 }
 
 void date_get_tm(struct tm *timp) {
+#if EFI_RTC
 	rtcGetTimeTm(&RTCD1, timp);
+#endif /* EFI_RTC */
 }
 
 void dateToString(char *lcd_str) {
+#if EFI_RTC
 	// todo:
 	// re-implement this along the lines of 	chvprintf("%04u-%02u-%02u %02u:%02u:%02u\r\n", timp.tm_year + 1900, timp.tm_mon + 1, timp.tm_mday, timp.tm_hour,
 	// timp.tm_min, timp.tm_sec);
@@ -81,9 +86,13 @@ void dateToString(char *lcd_str) {
 		lcd_str[12] = buff[0];
 		lcd_str[13] = buff[1];
 	}
+#else
+	lcd_str[0] = 0;
+#endif /* EFI_RTC */
 }
 
 static void date_get(void) {
+#if EFI_RTC
 	static time_t unix_time;
 	struct tm timp;
 	
@@ -100,9 +109,11 @@ static void date_get(void) {
 		appendMsgPostfix(&logger);
 		scheduleLogging(&logger);
 	}
+#endif
 }
 
 static void date_set(char *strDate) {
+#if EFI_RTC
 	if (strlen(strDate) > 0) {
 		time_t unix_time = (double) atoff(strDate);
 		if (unix_time > 0) {
@@ -112,13 +123,18 @@ static void date_set(char *strDate) {
 		}
 	}
 	scheduleMsg(&logger, "date_set Date parameter %s is wrong\r\n", strDate);
+#endif
 }
 
 void initRtc(void) {
 	initLogging(&logger, "rtc");
+#if EFI_RTC
+	printMsg(&logger, "initRtc()");
+
 	// yes, it's my begin time  and we always start from this one 1391894433 - 2014-02-08 21:20:03
 	rtcSetTimeUnixSec(&RTCD1, 1391894433);
 	addConsoleAction("date_get", date_get);
 	addConsoleActionS("date_set", date_set);
 	addConsoleAction("date_help", date_help);
+#endif
 }

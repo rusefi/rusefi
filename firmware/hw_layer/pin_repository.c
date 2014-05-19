@@ -12,7 +12,6 @@
 #include "main.h"
 #include "pin_repository.h"
 #include "eficonsole.h"
-#include "eficonsole_logic.h"
 #include "memstreams.h"
 #include "chprintf.h"
 #include "rusefi.h"
@@ -108,8 +107,10 @@ static inline void markUsed(int index, const char *msg) {
  * This method would set an error condition if pin is already used
  */
 void mySetPadMode(const char *msg, ioportid_t port, ioportmask_t pin, iomode_t mode) {
-	if (!initialized)
-		fatal("repo not initialized");
+	if (!initialized) {
+		firmwareError("repository not initialized");
+		return;
+	}
 	print("%s on %s:%d\r\n", msg, portname(port), pin);
 
 	appendPrintf(&logger, "msg,%s", msg);
@@ -121,9 +122,6 @@ void mySetPadMode(const char *msg, ioportid_t port, ioportmask_t pin, iomode_t m
 
 	if (PIN_USED[index] != NULL) {
 		firmwareError("Pin %s%d requested by %s but already used by %s", portname(port), pin, msg, PIN_USED[index]);
-//		print("!!!!!!!!!!!!! Already used [%s] %d\r\n", msg, pin);
-//		print("!!!!!!!!!!!!! Already used by [%s]\r\n", PIN_USED[index]);
-//		fatal("pin already used");
 		return;
 	}
 	markUsed(index, msg);

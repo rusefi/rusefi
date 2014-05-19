@@ -57,6 +57,10 @@ static void sayHello(void) {
 	printMsg(&logger, "SERIAL_SPEED=%d", SERIAL_SPEED);
 #endif
 
+#ifdef CORTEX_MAX_KERNEL_PRIORITY
+	printMsg(&logger, "CORTEX_MAX_KERNEL_PRIORITY=%d", CORTEX_MAX_KERNEL_PRIORITY);
+#endif
+
 #ifdef STM32_ADCCLK
 	printMsg(&logger, "STM32_ADCCLK=%d", STM32_ADCCLK);
 	printMsg(&logger, "STM32_TIMCLK1=%d", STM32_TIMCLK1);
@@ -136,7 +140,7 @@ void sendOutConfirmation(char *value, int i) {
  * This methods prints the message to whatever is configured as our primary console
  */
 void print(const char *format, ...) {
-	if (!is_serial_ready())
+	if (!isConsoleReady())
 		return;
 	va_list ap;
 	va_start(ap, format);
@@ -148,7 +152,7 @@ void initializeConsole() {
 	initIntermediateLoggingBuffer();
 	initConsoleLogic();
 
-	startChibiosConsole(&handleConsoleLine);
+	startConsole(&handleConsoleLine);
 
 	initLogging(&logger, "console");
 

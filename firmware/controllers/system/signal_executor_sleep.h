@@ -8,7 +8,4 @@
 #ifndef SIGNAL_EXECUTOR_SLEEP_H_
 #define SIGNAL_EXECUTOR_SLEEP_H_
 
-#include "global.h"
-#include "efifeatures.h"
-
 #endif /* SIGNAL_EXECUTOR_SLEEP_H_ */

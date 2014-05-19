@@ -94,6 +94,8 @@ static void initECUstimulator(void) {
 }
 
 void initEngineEmulator(void) {
+	if (hasFirmwareError())
+		return;
 #if EFI_PERF_METRICS
 	initTimePerfActions();
 #endif

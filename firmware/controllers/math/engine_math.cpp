@@ -136,13 +136,20 @@ int isCrankingRT(engine_configuration_s *engineConfiguration, int rpm) {
 OutputSignalList ignitionSignals;
 OutputSignalList injectonSignals;
 
+
+static void registerSparkEvent(engine_configuration_s const *engineConfiguration, trigger_shape_s * s,
+		ActuatorEventList *list, OutputSignal *actuator, float angleOffset) {
+
+	registerActuatorEventExt(engineConfiguration, s, list,
+			actuator, angleOffset);
+}
+
 void initializeIgnitionActions(float baseAngle, engine_configuration_s *engineConfiguration,
-		engine_configuration2_s *engineConfiguration2) {
+		engine_configuration2_s *engineConfiguration2, float dwellMs, ActuatorEventList *list) {
 	chDbgCheck(engineConfiguration->cylindersCount > 0, "cylindersCount");
 	ignitionSignals.clear();
 
-	EventHandlerConfiguration *config = &engineConfiguration2->engineEventConfiguration;
-	resetEventList(&config->ignitionEvents);
+	resetEventList(list);
 
 	switch (engineConfiguration->ignitionMode) {
 	case IM_ONE_COIL:
@@ -150,7 +157,7 @@ void initializeIgnitionActions(float baseAngle, engine_configuration_s *engineCo
 			// todo: extract method
 			float angle = baseAngle + 720.0 * i / engineConfiguration->cylindersCount;
 
-			registerActuatorEventExt(engineConfiguration, &engineConfiguration2->triggerShape, &config->ignitionEvents,
+			registerSparkEvent(engineConfiguration, &engineConfiguration2->triggerShape, list,
 					ignitionSignals.add(SPARKOUT_1_OUTPUT), angle);
 		}
 		break;
@@ -160,10 +167,10 @@ void initializeIgnitionActions(float baseAngle, engine_configuration_s *engineCo
 
 			int wastedIndex = i % (engineConfiguration->cylindersCount / 2);
 
-			int id = (getCylinderId(engineConfiguration->firingOrder, wastedIndex) - 1);
+			int id = getCylinderId(engineConfiguration->firingOrder, wastedIndex) - 1;
 			io_pin_e ioPin = (io_pin_e) (SPARKOUT_1_OUTPUT + id);
 
-			registerActuatorEventExt(engineConfiguration, &engineConfiguration2->triggerShape, &config->ignitionEvents,
+			registerSparkEvent(engineConfiguration, &engineConfiguration2->triggerShape, list,
 					ignitionSignals.add(ioPin), angle);
 
 		}
@@ -174,7 +181,7 @@ void initializeIgnitionActions(float baseAngle, engine_configuration_s *engineCo
 			float angle = baseAngle + 720.0 * i / engineConfiguration->cylindersCount;
 
 			io_pin_e pin = (io_pin_e) ((int) SPARKOUT_1_OUTPUT + getCylinderId(engineConfiguration->firingOrder, i) - 1);
-			registerActuatorEventExt(engineConfiguration, &engineConfiguration2->triggerShape, &config->ignitionEvents,
+			registerSparkEvent(engineConfiguration, &engineConfiguration2->triggerShape, list,
 					ignitionSignals.add(pin), angle);
 		}
 		break;
@@ -231,13 +238,14 @@ float getSparkDwellMsT(engine_configuration_s *engineConfiguration, int rpm) {
 		float angle = engineConfiguration->crankingChargeAngle;
 		return getOneDegreeTimeMs(rpm) * angle;
 	}
+	efiAssert(!cisnan(rpm), "invalid rpm");
 
 	return interpolate2d(rpm, engineConfiguration->sparkDwellBins, engineConfiguration->sparkDwell, DWELL_CURVE_SIZE);
 }
 
 void registerActuatorEventExt(engine_configuration_s const *engineConfiguration, trigger_shape_s * s,
 		ActuatorEventList *list, OutputSignal *actuator, float angleOffset) {
-	chDbgCheck(s->size > 0, "uninitialized trigger_shape_s");
+	chDbgCheck(s->getSize() > 0, "uninitialized trigger_shape_s");
 
 	angleOffset = fixAngle(angleOffset + engineConfiguration->globalTriggerAngleOffset);
 
@@ -248,17 +256,23 @@ void registerActuatorEventExt(engine_configuration_s const *engineConfiguration,
 
 	// let's find the last trigger angle which is less or equal to the desired angle
 	int i;
-	for (i = 0; i < s->size - 1; i++) {
+	for (i = 0; i < s->getSize() - 1; i++) {
 		// todo: we need binary search here
-		float angle = fixAngle(s->wave.getSwitchTime((triggerIndexOfZeroEvent + i + 1) % s->size) * 720 - firstAngle);
+		float angle = fixAngle(
+				s->wave.getSwitchTime((triggerIndexOfZeroEvent + i + 1) % s->getSize()) * 720 - firstAngle);
 		if (angle > angleOffset)
 			break;
 	}
 	// explicit check for zero to avoid issues where logical zero is not exactly zero due to float nature
 	float angle =
-			i == 0 ? 0 : fixAngle(s->wave.getSwitchTime((triggerIndexOfZeroEvent + i) % s->size) * 720 - firstAngle);
+			i == 0 ?
+					0 :
+					fixAngle(s->wave.getSwitchTime((triggerIndexOfZeroEvent + i) % s->getSize()) * 720 - firstAngle);
 
-	chDbgCheck(angleOffset >= angle, "angle constraint violation in registerActuatorEventExt()");
+	if (angleOffset < angle) {
+		firmwareError("angle constraint violation in registerActuatorEventExt(): %f/%f", angleOffset, angle);
+		return;
+	}
 
 	registerActuatorEvent(list, i, actuator, angleOffset - angle);
 }
@@ -266,13 +280,6 @@ void registerActuatorEventExt(engine_configuration_s const *engineConfiguration,
 //float getTriggerEventAngle(int triggerEventIndex) {
 //	return 0;
 //}
-
-/**
- * there is some BS related to isnan in MinGW, so let's have all the issues in one place
- */
-int cisnan(float f) {
-	return *(((int*) (&f))) == 0x7FC00000;
-}
 
 static int order_1_THEN_3_THEN_4_THEN2[] = { 1, 3, 4, 2 };
 

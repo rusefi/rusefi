@@ -4,7 +4,7 @@
  * FORD_ESCORT_GT = 14
  *
  * @date Apr 11, 2014
- * @author Andrey Belomutskiy, (c) 2012-2013
+ * @author Andrey Belomutskiy, (c) 2012-2014
  */
 
 #include "ford_escort_gt.h"

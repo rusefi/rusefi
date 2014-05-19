@@ -13,6 +13,8 @@
 #include "histogram.h"
 #include "main.h"
 
+#if EFI_HISTOGRAMS
+
 #define H_ACCURACY 0.05
 #define H_CONFIDENCE 0.8
 #define LONG_MAX_INT 0x7fffffffffffffffL
@@ -152,3 +154,5 @@ int hsReport(histogram_s *h, int* report) {
 
 	return index;
 }
+
+#endif /* EFI_HISTOGRAMS */

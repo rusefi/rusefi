@@ -54,8 +54,14 @@
 
 #define _10_MILLISECONDS (10 * TICKS_IN_MS)
 
-extern engine_configuration_s *engineConfiguration;
-extern board_configuration_s *boardConfiguration;
+#if defined __GNUC__
+persistent_config_container_s persistentState __attribute__((section(".ccm")));
+#else
+persistent_config_container_s persistentState;
+#endif
+
+engine_configuration_s *engineConfiguration = &persistentState.persistentConfiguration.engineConfiguration;
+board_configuration_s *boardConfiguration = &persistentState.persistentConfiguration.boardConfiguration;
 
 /**
  * CH_FREQUENCY is the number of system ticks in a second
@@ -213,6 +219,8 @@ static void printAnalogInfo(void) {
 	printAnalogChannelInfo("IAT", engineConfiguration->iatAdcChannel);
 	printAnalogChannelInfo("MAF", engineConfiguration->mafAdcChannel);
 	printAnalogChannelInfo("AFR", engineConfiguration->afrSensor.afrAdcChannel);
+	printAnalogChannelInfo("MAP", engineConfiguration->map.sensor.hwChannel);
+	printAnalogChannelInfo("BARO", engineConfiguration->baroSensor.hwChannel);
 	printAnalogChannelInfoExt("Vbatt", engineConfiguration->vBattAdcChannel,
 			getVBatt());
 }
@@ -220,19 +228,23 @@ static void printAnalogInfo(void) {
 static WORKING_AREA(csThreadStack, UTILITY_THREAD_STACK_SIZE);// declare thread stack
 
 void initEngineContoller(void) {
+	if (hasFirmwareError())
+		return;
 	initLogging(&logger, "Engine Controller");
 
 	initSensors();
 
 	initPwmGenerator();
 
+#if EFI_ANALOG_CHART
 	initAnalogChart();
+#endif /* EFI_ANALOG_CHART */
 
 	initAlgo();
 
-#ifdef EFI_WAVE_ANALYZER
+#if EFI_WAVE_ANALYZER
 	initWaveAnalyzer();
-#endif
+#endif /* EFI_WAVE_ANALYZER */
 
 	/**
 	 * there is an implicit dependency on the fact that 'tachometer' listener is the 1st listener - this case
@@ -258,13 +270,21 @@ void initEngineContoller(void) {
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	initElectronicThrottle();
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
-	initMalfunctionIndicator();
-	initMapAveraging();
 
+#if EFI_MALFUNCTION_INDICATOR
+	initMalfunctionIndicator();
+#endif /* EFI_MALFUNCTION_INDICATOR */
+
+#if EFI_MAP_AVERAGING
+	initMapAveraging();
+#endif /* EFI_MAP_AVERAGING */
+
+#if EFI_ENGINE_CONTROL
 	/**
 	 * This method initialized the main listener which actually runs injectors & ignition
 	 */
 	initMainEventListener();
+#endif /* EFI_ENGINE_CONTROL */
 
 #if EFI_IDLE_CONTROL
 	startIdleThread();
@@ -272,7 +292,10 @@ void initEngineContoller(void) {
 	scheduleMsg(&logger, "no idle control");
 #endif
 
+#if EFI_FUEL_PUMP
 	initFuelPump();
+#endif
+
 
 	addConsoleAction("analoginfo", printAnalogInfo);
 }

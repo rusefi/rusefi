@@ -21,27 +21,19 @@
 #include "main.h"
 #include "trigger_structure.h"
 
-single_wave_s::single_wave_s(int *ps) {
-	this->pinStates = ps;
-}
-
-multi_wave_s::multi_wave_s(float *switchTimes, single_wave_s *waves) {
-	this->switchTimes = switchTimes;
-	this->waves = waves;
-}
-
-void multi_wave_s::reset(void) {
-	phaseCount = 0;
-	waveCount = 0;
-}
-
-float multi_wave_s::getSwitchTime(int index) const {
-	return switchTimes[index];
+trigger_shape_helper::trigger_shape_helper() {
+	waves[0].init(pinStates0);
+	waves[1].init(pinStates1);
 }
 
 trigger_shape_s::trigger_shape_s() :
-		wave(switchTimes, h.waves) {
+		wave(switchTimes, NULL) {
 	reset();
+	wave.waves = h.waves;
+}
+
+int trigger_shape_s::getSize() {
+	return size;
 }
 
 void trigger_shape_s::reset() {
@@ -68,42 +60,42 @@ void clearTriggerState(trigger_state_s *state) {
 	state->current_index = 0;
 }
 
-void triggerShapeInit(trigger_shape_s *trigger) {
-	// todo: inline & remove method
-	trigger->reset();
-}
-
-void triggerAddEvent(trigger_shape_s *trigger, float angle, trigger_wheel_e waveIndex, trigger_value_e state) {
+void trigger_shape_s::addEvent(float angle, trigger_wheel_e waveIndex, trigger_value_e state) {
 	angle /= 720;
-	if (trigger->size == 0) {
-		trigger->size = 1;
+	if (size == 0) {
+		size = 1;
 		for (int i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
-			single_wave_s *wave = &trigger->wave.waves[i];
+			single_wave_s *wave = &this->wave.waves[i];
 
-			efiAssert(wave!=NULL, "wave is NULL");
-			efiAssert(wave->pinStates!=NULL, "wave pinStates is NULL");
-			wave->pinStates[0] = trigger->initialState[i];
+			if (wave == NULL) {
+				firmwareError("wave is NULL");
+				return;
+			}
+			if (wave->pinStates == NULL) {
+				firmwareError("wave pinStates is NULL");
+				return;
+			}
+			wave->pinStates[0] = initialState[i];
 		}
 
-		trigger->wave.setSwitchTime(0, angle);
-		trigger->wave.waves[waveIndex].pinStates[0] = state;
+		wave.setSwitchTime(0, angle);
+		wave.waves[waveIndex].pinStates[0] = state;
 		return;
 	}
 
 //	if(angle!=trigger->wave.switchTimes[trigger->currentIndex])
 
-	int index = trigger->size++;
+	int index = size++;
 
 	for (int i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++)
-		trigger->wave.waves[i].pinStates[index] = trigger->wave.getChannelState(i, index - 1);
-	trigger->wave.setSwitchTime(index, angle);
-	trigger->wave.waves[waveIndex].pinStates[index] = state;
+		wave.waves[i].pinStates[index] = wave.getChannelState(i, index - 1);
+	wave.setSwitchTime(index, angle);
+	wave.waves[waveIndex].pinStates[index] = state;
 }
 
-void checkSwitchTimes2(int size, float *switchTimes) {
-
-	for (int i = 0; i < size - 1; i++)
-		chDbgCheck(switchTimes[i] < switchTimes[i + 1], "invalid switchTimes");
+void triggerAddEvent(trigger_shape_s *trigger, float angle, trigger_wheel_e waveIndex, trigger_value_e state) {
+	// todo: inline this method
+	trigger->addEvent(angle, waveIndex, state);
 }
 
 void multi_wave_s::checkSwitchTimes(int size) {

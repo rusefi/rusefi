@@ -193,7 +193,9 @@ static void runTests(const int count) {
 
 extern Overflow64Counter halTime;
 
-int rtcStartTime;
+#if EFI_RTC
+static int rtcStartTime;
+#endif
 
 #include "chrtclib.h"
 
@@ -201,13 +203,16 @@ static void timeInfo(void) {
 	scheduleMsg(&logger, "chTimeNow as seconds = %d", getTimeNowSeconds());
 	scheduleMsg(&logger, "hal seconds = %d", halTime.get() / 168000000LL);
 
+#if EFI_RTC
 	int unix = rtcGetTimeUnixSec(&RTCD1) - rtcStartTime;
 	scheduleMsg(&logger, "unix seconds = %d", unix);
-
+#endif
 }
 
 void initTimePerfActions() {
+#if EFI_RTC
 	rtcStartTime = rtcGetTimeUnixSec(&RTCD1);
+#endif
 
 
 	initLogging(&logger, "perftest");

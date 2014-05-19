@@ -8,17 +8,8 @@
 #ifndef TRIGGER_CHRYSLER_H_
 #define TRIGGER_CHRYSLER_H_
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
-
 #include "trigger_structure.h"
 
 void configureNeonTriggerShape(trigger_shape_s *s);
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
 
 #endif /* TRIGGER_CHRYSLER_H_ */

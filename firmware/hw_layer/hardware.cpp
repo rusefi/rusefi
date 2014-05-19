@@ -6,6 +6,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2014
  */
 
+#include "main.h"
 #include "hardware.h"
 #include "pin_repository.h"
 #include "io_pins.h"
@@ -25,12 +26,22 @@
 #include "mmc_card.h"
 #include "neo6m.h"
 #include "lcd_HD44780.h"
-#include "eficonsole_logic.h"
+#include "settings.h"
+
+#if EFI_INTERNAL_FLASH
 #include "flash_main.h"
+#endif /* EFI_INTERNAL_FLASH */
+
 #include "trigger_central.h"
 #include "svnversion.h"
+#include "engine_configuration.h"
+#include "ec2.h"
 
 McpAdcState adcState;
+
+extern engine_configuration_s *engineConfiguration;
+extern engine_configuration2_s * engineConfiguration2;
+extern board_configuration_s *boardConfiguration;
 
 static void initSpiModule(SPIDriver *driver, ioportid_t sckPort, ioportmask_t sckPin, ioportid_t misoPort,
 		ioportmask_t misoPin, ioportid_t mosiPort, ioportmask_t mosiPin, int af) {
@@ -72,7 +83,7 @@ void initI2Cmodule(void) {
 			PAL_MODE_ALTERNATE(EFI_I2C_AF) | PAL_STM32_OTYPE_OPENDRAIN);
 }
 
-static char txbuf[1];
+//static char txbuf[1];
 
 static void sendI2Cbyte(int addr, int data) {
 //	i2cAcquireBus(&I2CD1);
@@ -81,16 +92,18 @@ static void sendI2Cbyte(int addr, int data) {
 //	i2cReleaseBus(&I2CD1);
 }
 
-void initHardware() {
+void initHardware(Logging *logger) {
+	printMsg(logger, "initHardware()");
 	// todo: enable protection. it's disabled because it takes
 	// 10 extra seconds to re-flash the chip
 	//flashProtect();
 
+#if EFI_HISTOGRAMS
 	/**
 	 * histograms is a data structure for CPU monitor, it does not depend on configuration
 	 */
 	initHistogramsModule();
-
+#endif /* EFI_HISTOGRAMS */
 
 
 	/**
@@ -98,11 +111,22 @@ void initHardware() {
 	 */
 	initPrimaryPins();
 
+	if (hasFirmwareError())
+		return;
+
+#if EFI_INTERNAL_FLASH
 	/**
 	 * this call reads configuration from flash memory or sets default configuration
 	 * if flash state does not look right.
 	 */
 	initFlash();
+#else
+	engineConfiguration->engineType = FORD_ASPIRE_1996;
+	resetConfigurationExt(logger, engineConfiguration->engineType, engineConfiguration, engineConfiguration2, boardConfiguration);
+#endif /* EFI_INTERNAL_FLASH */
+
+	if (hasFirmwareError())
+		return;
 
 	initRtc();
 
@@ -123,7 +147,10 @@ void initHardware() {
 
 	// todo: figure out better startup logic
 	initTriggerCentral();
+
+#if EFI_SHAFT_POSITION_INPUT
 	initShaftPositionInputCapture();
+#endif /* EFI_SHAFT_POSITION_INPUT */
 
 	initSpiModules();
 
@@ -146,12 +173,14 @@ void initHardware() {
 #if EFI_HD44780_LCD
 //	initI2Cmodule();
 	lcd_HD44780_init();
+	if (hasFirmwareError())
+		return;
 
 	char buffer[16];
 	itoa10((uint8_t*)buffer, SVN_VERSION);
 	lcd_HD44780_print_string(buffer);
 
-#endif
+#endif /* EFI_HD44780_LCD */
 
 	addConsoleActionII("i2c", sendI2Cbyte);
 
@@ -167,5 +196,5 @@ void initHardware() {
 //	}
 
 	initBoardTest();
-
+	printMsg(logger, "initHardware() OK!");
 }

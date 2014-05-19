@@ -32,7 +32,6 @@
 #include "eficonsole.h"
 #include "status_loop.h"
 
-
 #define CHART_DELIMETER	"!"
 
 /**
@@ -66,7 +65,11 @@ void resetWaveChart(WaveChart *chart) {
 	appendPrintf(&chart->logging, "wave_chart%s", DELIMETER);
 }
 
+#if defined __GNUC__
 static char WAVE_LOGGING_BUFFER[5000] __attribute__((section(".ccm")));
+#else
+static char WAVE_LOGGING_BUFFER[5000];
+#endif
 
 static void printStatus(void) {
 	scheduleIntValue(&logger, "chart", isChartActive);
@@ -116,12 +119,13 @@ void addWaveChartEvent3(WaveChart *chart, const char *name, const char * msg, co
 #endif
 	if (isWaveChartFull(chart))
 		return;
-	lockOutputBuffer(); // we have multiple threads writing to the same output buffer
+	bool_t alreadyLocked = lockOutputBuffer(); // we have multiple threads writing to the same output buffer
 	appendPrintf(&chart->logging, "%s%s%s%s", name, CHART_DELIMETER, msg, CHART_DELIMETER);
 	int time100 = getTimeNowUs() / 10;
 	appendPrintf(&chart->logging, "%d%s%s", time100, msg2, CHART_DELIMETER);
 	chart->counter++;
-	unlockOutputBuffer();
+	if (!alreadyLocked)
+		unlockOutputBuffer();
 }
 
 void initWaveChart(WaveChart *chart) {

@@ -19,16 +19,22 @@
  */
 
 #include "main.h"
+
+#if EFI_MAP_AVERAGING
+
 #include "map_averaging.h"
-#include "idle_controller.h" // that's for min/max. todo: move these somewhere?
 #include "trigger_central.h"
 #include "adc_inputs.h"
 #include "map.h"
-#include "analog_chart.h"
 #include "engine_state.h"
 #include "engine_configuration.h"
 #include "interpolation.h"
 #include "signal_executor.h"
+
+#if EFI_ANALOG_CHART
+#include "analog_chart.h"
+#endif /* EFI_ANALOG_CHART */
+
 
 #define FAST_MAP_CHART_SKIP_FACTOR 16
 
@@ -52,7 +58,6 @@ static volatile float v_mapAccumulator = 0;
  */
 static volatile int mapMeasurementsCounter = 0;
 
-static float atmosphericPressure;
 static float currentMaxPressure;
 
 /**
@@ -62,12 +67,8 @@ static float v_averagedMapValue;
 
 extern engine_configuration_s *engineConfiguration;
 
-static scheduling_s startTimer;
-static scheduling_s endTimer;
-
-float getAtmosphericPressure(void) {
-	return atmosphericPressure;
-}
+static scheduling_s startTimer[2];
+static scheduling_s endTimer[2];
 
 static void startAveraging(void*arg) {
 	chSysLockFromIsr()
@@ -119,36 +120,64 @@ static void endAveraging(void *arg) {
  */
 static void shaftPositionCallback(ShaftEvents ckpEventType, int index) {
 	// this callback is invoked on interrupt thread
+
 	if (index != 0)
+		return;
+
+	int rpm = getRpm();
+	if(!isValidRpm(rpm))
 		return;
 
 	perRevolution = perRevolutionCounter;
 	perRevolutionCounter = 0;
 
-	atmosphericPressure = currentMaxPressure;
 	currentMaxPressure = 0;
 
-	MapConf_s * config = &engineConfiguration->map.config;
+	MAP_sensor_config_s * config = &engineConfiguration->map;
 
-	float a_samplingStart = interpolate2d(getRpm(), config->samplingAngleBins, config->samplingAngle,
-			MAP_ANGLE_SIZE);
-	float a_samplingWindow = interpolate2d(getRpm(), config->samplingWindowBins, config->samplingWindow,
-			MAP_WINDOW_SIZE);
+	float startAngle = interpolate2d(rpm, config->samplingAngleBins, config->samplingAngle, MAP_ANGLE_SIZE);
+	float windowAngle = interpolate2d(rpm, config->samplingWindowBins, config->samplingWindow, MAP_WINDOW_SIZE);
 
-	scheduleByAngle(&startTimer, a_samplingStart, startAveraging, NULL);
-	scheduleByAngle(&endTimer, a_samplingStart + a_samplingWindow, endAveraging, NULL);
+	int structIndex = getRevolutionCounter() % 2;
+	// todo: schedule this based on closest trigger event, same as ignition works
+	scheduleByAngle(&startTimer[structIndex], startAngle, startAveraging, NULL);
+	scheduleByAngle(&endTimer[structIndex], startAngle + windowAngle, endAveraging, NULL);
 }
 
 static void showMapStats(void) {
 	scheduleMsg(&logger, "per revolution %d", perRevolution);
 }
 
+float getMapVoltage(void) {
+	return v_averagedMapValue;
+}
+
+/**
+ * because of MAP window averaging, MAP is only available while engine is spinning
+ */
 float getMap(void) {
+	if (getRpm() == 0)
+		return getRawMap(); // maybe return NaN and have a
 	return getMapByVoltage(v_averagedMapValue);
 }
 
 void initMapAveraging(void) {
 	initLogging(&logger, "Map Averaging");
+
+	startTimer[0].name = "map start0";
+	startTimer[1].name = "map start1";
+	endTimer[0].name = "map end0";
+	endTimer[1].name = "map end1";
+
+
 	addTriggerEventListener(&shaftPositionCallback, "rpm reporter");
 	addConsoleAction("faststat", showMapStats);
 }
+
+#else
+
+float getMap(void) {
+	return getRawMap();
+}
+
+#endif /* EFI_MAP_AVERAGING */

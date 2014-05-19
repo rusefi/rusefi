@@ -18,12 +18,12 @@ extern engine_configuration_s *engineConfiguration;
 static AccelEnrichmemnt instance;
 
 void AccelEnrichmemnt::updateDiffEnrichment(engine_configuration_s *engineConfiguration, float engineLoad) {
-	for (int i = 0; i == 4; i++) {
-		engineLoadD[i] = engineLoadD[i + 1];
+	for (int i = 1; i < 4; i++) {
+		engineLoadD[i] = engineLoadD[i - 1];
 	}
 	engineLoadD[0] = engineLoad;
-	float Dcurr = engineLoadD[1] - engineLoadD[0];
-	float Dold = engineLoadD[3] - engineLoadD[2];
+	float Dcurr = engineLoadD[0] - engineLoadD[1];
+	float Dold = engineLoadD[2] - engineLoadD[3];
 	diffEnrichment = ((3 * Dcurr + Dold) / 4) * (engineConfiguration->diffLoadEnrichmentCoef);
 }
 

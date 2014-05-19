@@ -8,18 +8,8 @@
 #ifndef TRIGGER_GM_H_
 #define TRIGGER_GM_H_
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
-
 #include "trigger_structure.h"
 
 void configureGmTriggerShape(trigger_shape_s *s);
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-
 
 #endif /* TRIGGER_GM_H_ */

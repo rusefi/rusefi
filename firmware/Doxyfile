@@ -743,8 +743,9 @@ INPUT                  = . \
 	util \
 	console \
 	controllers \
-	controllers/math \
 	controllers/algo \
+	controllers/core \
+	controllers/math \
 	controllers/sensors \
 	controllers/system \
 	controllers/trigger \

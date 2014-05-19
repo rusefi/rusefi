@@ -18,7 +18,7 @@ extern "C"
 #include "global.h"
 
 #include "eficonsole.h"
-#include "eficonsole_logic.h"
+#include "cli_registry.h"
 #include "efilib.h"
 #include "rusefi.h"
 
@@ -51,7 +51,7 @@ extern "C"
 void updateHD44780lcd(void);
 int systicks2ms(int systicks);
 
-int lockAnyContext(void);
+bool_t lockAnyContext(void);
 void unlockAnyContext(void);
 
 #ifdef __cplusplus

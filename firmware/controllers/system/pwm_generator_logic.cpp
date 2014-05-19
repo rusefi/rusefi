@@ -1,14 +1,18 @@
-/*
+/**
  * @file    pwm_generator_logic.c
+ *
+ * This PWM implementation keep track of when it would be the next time to toggle the signal.
+ * It constantly sets timer to that next toggle time, then sets the timer again from the callback, and so on.
  *
  * @date Mar 2, 2014
  * @author Andrey Belomutskiy, (c) 2012-2014
  */
 
 #include "pwm_generator_logic.h"
-#include "engine_math.h"
 
-PwmConfig::PwmConfig(float *st, single_wave_s *waves) : multiWave(st, waves) {
+PwmConfig::PwmConfig(float *st, single_wave_s *waves) :
+		multiWave(st, waves) {
+	scheduling.name = "PwmConfig";
 }
 
 static uint64_t getNextSwitchTimeUs(PwmConfig *state) {
@@ -28,6 +32,9 @@ static uint64_t getNextSwitchTimeUs(PwmConfig *state) {
 	return state->safe.startUs + timeToSwitchUs;
 }
 
+/**
+ * @return Next time for signal toggle
+ */
 static uint64_t togglePwmState(PwmConfig *state) {
 #if DEBUG_PWM
 	scheduleMsg(&logger, "togglePwmState phaseIndex=%d iteration=%d", state->safe.phaseIndex, state->safe.iteration);
@@ -64,10 +71,11 @@ static uint64_t togglePwmState(PwmConfig *state) {
 #if DEBUG_PWM
 	scheduleMsg(&logger, "%s: nextSwitchTime %d", state->name, nextSwitchTime);
 #endif
-	uint64_t timeToSwitch = nextSwitchTimeUs - getTimeNowUs();
+	// signed value is needed here
+	int64_t timeToSwitch = nextSwitchTimeUs - getTimeNowUs();
 	if (timeToSwitch < 1) {
 //todo: introduce error and test this error handling		warning(OBD_PCM_Processor_Fault, "PWM: negative switch time");
-		timeToSwitch = 10;
+		timeToSwitch = 1000;
 	}
 
 	state->safe.phaseIndex++;
@@ -80,7 +88,6 @@ static uint64_t togglePwmState(PwmConfig *state) {
 
 static void timerCallback(PwmConfig *state) {
 	time_t timeToSleepUs = togglePwmState(state);
-	// parameter here is still in systicks
 	scheduleTask(&state->scheduling, timeToSleepUs, (schfunc_t) timerCallback, state);
 }
 
@@ -102,11 +109,14 @@ void copyPwmParameters(PwmConfig *state, int phaseCount, float *switchTimes, int
 	}
 }
 
-void weComplexInit(const char *msg, PwmConfig *state, int phaseCount, float *switchTimes, int waveCount, int **pinStates,
-		pwm_cycle_callback *cycleCallback, pwm_gen_callback *stateChangeCallback) {
+void weComplexInit(const char *msg, PwmConfig *state, int phaseCount, float *switchTimes, int waveCount,
+		int **pinStates, pwm_cycle_callback *cycleCallback, pwm_gen_callback *stateChangeCallback) {
 
 	chDbgCheck(state->periodMs != 0, "period is not initialized");
-	chDbgCheck(phaseCount > 1, "count is too small");
+	if (phaseCount == 0) {
+		firmwareError("signal length cannot be zero");
+		return;
+	}
 	if (phaseCount > PWM_PHASE_MAX_COUNT) {
 		firmwareError("too many phases in PWM");
 		return;

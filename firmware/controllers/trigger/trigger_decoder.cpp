@@ -22,10 +22,12 @@
 #include "obd_error_codes.h"
 #include "trigger_decoder.h"
 #include "cyclic_buffer.h"
-extern "C" {
 #include "trigger_mazda.h"
 #include "trigger_chrysler.h"
 #include "trigger_gm.h"
+#include "trigger_bmw.h"
+
+extern "C" {
 #include "trigger_structure.h"
 #include "wave_math.h"
 }
@@ -142,11 +144,11 @@ void initializeSkippedToothTriggerShapeExt(engine_configuration2_s *engineConfig
 	initializeSkippedToothTriggerShape(s, totalTeethCount, skippedCount);
 
 	s->shaftPositionEventCount = ((totalTeethCount - skippedCount) * 2);
-	s->wave.checkSwitchTimes(s->size);
+	s->wave.checkSwitchTimes(s->getSize());
 }
 
 static void configureFordAspireTriggerShape(trigger_shape_s * s) {
-	triggerShapeInit(s);
+	s->reset();
 
 	s->shaftPositionEventCount = 10;
 
@@ -163,8 +165,14 @@ static void configureFordAspireTriggerShape(trigger_shape_s * s) {
 	triggerAddEvent(s, 720, T_PRIMARY, TV_LOW);
 }
 
-void initializeTriggerShape(engine_configuration_s *engineConfiguration,
+/**
+ * External logger is needed because at this point our logger is not yet initialized
+ */
+void initializeTriggerShape(Logging *logger, engine_configuration_s *engineConfiguration,
 		engine_configuration2_s *engineConfiguration2) {
+#if EFI_PROD_CODE
+	printMsg(logger, "initializeTriggerShape()");
+#endif
 	trigger_config_s *tt = &engineConfiguration->triggerConfig;
 	switch (tt->triggerType) {
 
@@ -192,13 +200,17 @@ void initializeTriggerShape(engine_configuration_s *engineConfiguration,
 		configureMazdaProtegeLx(engineConfiguration, engineConfiguration2);
 		return;
 
+	case TT_MINI_COOPER_R50:
+		configureMiniCooperTriggerShape(engineConfiguration, engineConfiguration2);
+		return;
+
 	default:
 		firmwareError("initializeTriggerShape() not implemented: %d", tt->triggerType);
 		;
 	}
 }
 
-int findTriggerZeroEventIndex(trigger_shape_s const * shape, trigger_config_s const*triggerConfig) {
+int findTriggerZeroEventIndex(trigger_shape_s * shape, trigger_config_s const*triggerConfig) {
 
 	trigger_state_s state;
 	clearTriggerState(&state);
@@ -209,11 +221,11 @@ int findTriggerZeroEventIndex(trigger_shape_s const * shape, trigger_config_s co
 
 	for (int i = 0; i < 100; i++) {
 
-		int stateIndex = i % shape->size;
+		int stateIndex = i % shape->getSize();
 
-		int loopIndex = i / shape->size;
+		int loopIndex = i / shape->getSize();
 
-		int time = 10000 * (loopIndex + shape->wave.getSwitchTime(stateIndex));
+		int time = (int)(10000 * (loopIndex + shape->wave.getSwitchTime(stateIndex)));
 
 		int newPrimaryWheelState = shape->wave.getChannelState(0, stateIndex);
 		int newSecondaryWheelState = shape->wave.getChannelState(1, stateIndex);

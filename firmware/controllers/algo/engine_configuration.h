@@ -10,6 +10,7 @@
 #define ENGINE_CONFIGURATION_H_
 
 #include "efifeatures.h"
+#include "crc.h"
 #include "sensor_types.h"
 #include "can_header.h"
 #include "event_registry.h"
@@ -34,7 +35,7 @@ typedef struct {
 typedef struct {
 	ActuatorEventList crankingInjectionEvents;
 	ActuatorEventList injectionEvents;
-	ActuatorEventList ignitionEvents;
+	ActuatorEventList ignitionEvents[2];
 } EventHandlerConfiguration;
 
 #define FUEL_RPM_COUNT 16
@@ -135,7 +136,7 @@ typedef struct {
 
 	cranking_parameters_s crankingSettings;
 
-	map_s map;
+	MAP_sensor_config_s map;
 
 	// todo: merge with channel settings, use full-scale Thermistor here!
 	ThermistorConf cltThermistorConf; // size 40 (10*4), offset 336
@@ -267,7 +268,11 @@ typedef struct {
 	float crankingTimingAngle;
 
 	float diffLoadEnrichmentCoef;
+
+	air_pressure_sensor_config_s baroSensor;
 } engine_configuration_s;
+
+#define HW_MAX_ADC_INDEX 16
 
 typedef struct {
 	// WARNING: by default, our small enums are ONE BYTE. this one is made 4-byte with the 'ENUM_SIZE_HACK' hack
@@ -314,6 +319,12 @@ typedef struct {
 	spi_device_e digitalPotentiometerSpiDevice;
 	brain_pin_e digitalPotentiometerChipSelect[4];
 
+	adc_channel_mode_e adcHwChannelEnabled[HW_MAX_ADC_INDEX];
+
+	brain_pin_e primaryTriggerInputPin;
+	brain_pin_e secondaryTriggerInputPin;
+	brain_pin_e primaryLogicAnalyzerPin;
+	brain_pin_e secondaryLogicAnalyzerPin;
 
 } board_configuration_s;
 
@@ -322,6 +333,12 @@ typedef struct {
 	board_configuration_s boardConfiguration;
 } persistent_config_s;
 
+typedef struct {
+	int version;
+	int size;
+	persistent_config_s persistentConfiguration;
+	crc_t value;
+} persistent_config_container_s;
 
 #ifdef __cplusplus
 extern "C" {

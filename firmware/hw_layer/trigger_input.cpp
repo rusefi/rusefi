@@ -6,27 +6,39 @@
  * @author Andrey Belomutskiy, (c) 2012-2014
  */
 
-#include "trigger_input.h"
+#include "main.h"
 
+#if EFI_SHAFT_POSITION_INPUT
+
+#include "trigger_input.h"
 #include "wave_analyzer_hw.h"
 #include "pin_repository.h"
 #include "trigger_structure.h"
 #include "trigger_central.h"
 #include "engine_configuration.h"
+#include "wave_analyzer_hw.h"
 
 static WaveReaderHw primaryCrankInput;
 static WaveReaderHw secondaryCrankInput;
 
 extern engine_configuration_s *engineConfiguration;
+extern board_configuration_s *boardConfiguration;
 
-#if EFI_SHAFT_POSITION_INPUT
+
+static inline ICUDriver *getPrimaryInputCaptureDriver(void) {
+	return getInputCaptureDriver(boardConfiguration->primaryTriggerInputPin);
+}
+
+static inline ICUDriver *getSecondaryInputCaptureDriver(void) {
+	return getInputCaptureDriver(boardConfiguration->secondaryTriggerInputPin);
+}
 
 /**
  * that's hardware timer input capture IRQ entry point
  * 'width' events happens before the 'period' event
  */
 static void shaft_icu_width_callback(ICUDriver *icup) {
-	int isPrimary = icup == &PRIMARY_SHAFT_POSITION_INPUT_DRIVER;
+	int isPrimary = icup == getPrimaryInputCaptureDriver();
 	if (!isPrimary && !engineConfiguration->needSecondTriggerInput)
 		return;
 	//	icucnt_t last_width = icuGetWidth(icup); so far we are fine with system time
@@ -36,7 +48,7 @@ static void shaft_icu_width_callback(ICUDriver *icup) {
 }
 
 static void shaft_icu_period_callback(ICUDriver *icup) {
-	int isPrimary = icup == &PRIMARY_SHAFT_POSITION_INPUT_DRIVER;
+	int isPrimary = icup == getPrimaryInputCaptureDriver();
 	if (!isPrimary && !engineConfiguration->needSecondTriggerInput)
 		return;
 
@@ -50,36 +62,35 @@ static void shaft_icu_period_callback(ICUDriver *icup) {
  */
 static ICUConfig shaft_icucfg = { ICU_INPUT_ACTIVE_LOW, 100000, /* 100kHz ICU clock frequency.   */
 shaft_icu_width_callback, shaft_icu_period_callback };
-#endif
 
 void initShaftPositionInputCapture(void) {
 
-#if EFI_SHAFT_POSITION_INPUT
 
 	// initialize primary Input Capture Unit pin
-	initWaveAnalyzerDriver(&primaryCrankInput, &PRIMARY_SHAFT_POSITION_INPUT_DRIVER, PRIMARY_SHAFT_POSITION_INPUT_PORT,
-	PRIMARY_SHAFT_POSITION_INPUT_PIN);
+	initWaveAnalyzerDriver(&primaryCrankInput, getPrimaryInputCaptureDriver(),
+			getHwPort(boardConfiguration->primaryTriggerInputPin),
+			getHwPin(boardConfiguration->primaryTriggerInputPin));
 	/**
 	 * Start primary Input Capture Unit using given configuration
 	 * @see shaft_icucfg for callback entry points
 	 */
-	shaft_icucfg.channel = PRIMARY_SHAFT_POSITION_INPUT_CHANNEL;
-	print("initShaftPositionInputCapture 1 %s:%d\r\n", portname(PRIMARY_SHAFT_POSITION_INPUT_PORT),
-	PRIMARY_SHAFT_POSITION_INPUT_PIN);
-	icuStart(&PRIMARY_SHAFT_POSITION_INPUT_DRIVER, &shaft_icucfg);
-	icuEnable(&PRIMARY_SHAFT_POSITION_INPUT_DRIVER);
+	shaft_icucfg.channel = ICU_CHANNEL_1;
+	print("initShaftPositionInputCapture 1 %s:%d\r\n", portname(getHwPort(boardConfiguration->primaryTriggerInputPin)),
+			getHwPin(boardConfiguration->primaryTriggerInputPin));
+	icuStart(getPrimaryInputCaptureDriver(), &shaft_icucfg);
+	icuEnable(getPrimaryInputCaptureDriver());
 
 	// initialize secondary Input Capture Unit pin
-	initWaveAnalyzerDriver(&secondaryCrankInput, &SECONDARY_SHAFT_POSITION_INPUT_DRIVER,
-	SECONDARY_SHAFT_POSITION_INPUT_PORT,
-	SECONDARY_SHAFT_POSITION_INPUT_PIN);
-	shaft_icucfg.channel = SECONDARY_SHAFT_POSITION_INPUT_CHANNEL;
-	print("initShaftPositionInputCapture 2 %s:%d\r\n", portname(SECONDARY_SHAFT_POSITION_INPUT_PORT),
-	SECONDARY_SHAFT_POSITION_INPUT_PIN);
-	icuStart(&SECONDARY_SHAFT_POSITION_INPUT_DRIVER, &shaft_icucfg);
-	icuEnable(&SECONDARY_SHAFT_POSITION_INPUT_DRIVER);
+	initWaveAnalyzerDriver(&secondaryCrankInput, getSecondaryInputCaptureDriver(),
+			getHwPort(boardConfiguration->secondaryTriggerInputPin),
+			getHwPin(boardConfiguration->secondaryTriggerInputPin));
+	shaft_icucfg.channel = ICU_CHANNEL_1;
+	print("initShaftPositionInputCapture 2 %s:%d\r\n", portname(getHwPort(boardConfiguration->secondaryTriggerInputPin)),
+			getHwPin(boardConfiguration->secondaryTriggerInputPin));
+	icuStart(getSecondaryInputCaptureDriver(), &shaft_icucfg);
+	icuEnable(getSecondaryInputCaptureDriver());
 
-#else
 	print("crank input disabled\r\n");
-#endif
 }
+
+#endif /* EFI_SHAFT_POSITION_INPUT */

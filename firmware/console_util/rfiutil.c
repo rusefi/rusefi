@@ -129,6 +129,7 @@ void chVTSetAny(VirtualTimer *vtp, systime_t time, vtfunc_t vtfunc, void *par) {
  * @brief This function knows how to print a histogram_s summary
  */
 void printHistogram(Logging *logging, histogram_s *histogram) {
+#if EFI_HISTOGRAMS
 	int report[5];
 	int len = hsReport(histogram, report);
 
@@ -140,4 +141,5 @@ void printHistogram(Logging *logging, histogram_s *histogram) {
 	appendPrintf(logging, "*");
 	appendMsgPostfix(logging);
 	scheduleLogging(logging);
+#endif /* EFI_HISTOGRAMS */
 }

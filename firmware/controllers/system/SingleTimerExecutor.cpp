@@ -12,6 +12,8 @@
 
 #include "SingleTimerExecutor.h"
 #include "efitime.h"
+#include "rfiutil.h"
+
 #if EFI_PROD_CODE
 #include "microsecond_timer.h"
 #endif
@@ -26,28 +28,60 @@ static void executorCallback(void *arg) {
 	instance.execute(getTimeNowUs());
 }
 
-void Executor::setTimer(uint64_t nowUs) {
-	uint64_t nextEventTime = queue.getNextEventTime(nowUs);
-	setHardwareUsTimer(nextEventTime - nowUs);
+Executor::Executor() {
+	reentrantLock = FALSE;
 }
 
-Executor::Executor() {
+void Executor::lock(void) {
+	lockAnyContext();
+}
+
+void Executor::unlock(void) {
+	unlockAnyContext();
 }
 
 void Executor::schedule(scheduling_s *scheduling, uint64_t nowUs, int delayUs, schfunc_t callback, void *param) {
+	if (!reentrantLock) {
+		// this would guard the queue and disable interrupts
+		lock();
+	}
 	queue.insertTask(scheduling, nowUs, delayUs, callback, param);
-	setTimer(nowUs);
+	if (!reentrantLock) {
+		doExecute(nowUs);
+		unlock();
+	}
 }
 
-void Executor::execute(uint64_t now) {
+void Executor::execute(uint64_t nowUs) {
+	lock();
+	doExecute(nowUs);
+	unlock();
+}
+
+/*
+ * this private method is executed under lock
+ */
+void Executor::doExecute(uint64_t nowUs) {
 	/**
-	 * Let's execute actions we should execute at this point
+	 * Let's execute actions we should execute at this point.
+	 * reentrantLock takes care of the use case where the actions we are executing are scheduling
+	 * further invocations
 	 */
-	queue.executeAll(now);
+	reentrantLock = TRUE;
+	queue.executeAll(nowUs);
+	if (!isLocked()) {
+		firmwareError("Someone has stolen my lock");
+		return;
+	}
+	reentrantLock = FALSE;
 	/**
 	 * Let's set up the timer for the next execution
 	 */
-	setTimer(now);
+	uint64_t nextEventTime = queue.getNextEventTime(nowUs);
+	efiAssert(nextEventTime > nowUs, "setTimer constraint");
+	if (nextEventTime == EMPTY_QUEUE)
+		return; // no pending events in the queue
+	setHardwareUsTimer(nextEventTime - nowUs);
 }
 
 /**
@@ -60,18 +94,16 @@ void Executor::execute(uint64_t now) {
  * @param [in] dwell the number of ticks of output duration.
  */
 void scheduleTask(scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) {
+	efiAssert(delayUs >= 0, "delayUs"); // todo: remove this line?
+	if (delayUs < 0) {
+		firmwareError("Negative delayUs");
+		return;
+	}
 	if (delayUs == 0) {
 		callback(param);
 		return;
 	}
-	// todo: eliminate this /100. Times still come as systick times here
 	instance.schedule(scheduling, getTimeNowUs(), delayUs, callback, param);
-}
-
-void initOutputSignal(OutputSignal *signal, io_pin_e ioPin) {
-	signal->io_pin = ioPin;
-	signal->name = getPinName(ioPin);
-	initOutputSignalBase(signal);
 }
 
 void initSignalExecutorImpl(void) {

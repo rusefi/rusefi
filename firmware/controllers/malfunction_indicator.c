@@ -30,6 +30,8 @@
 #include "malfunction_central.h"
 #include "malfunction_indicator.h"
 
+#if EFI_MALFUNCTION_INDICATOR
+
 #define MFI_LONG_BLINK	1500
 #define MFI_SHORT_BLINK	400
 #define MFI_BLINK_SEPARATOR 400
@@ -102,3 +104,5 @@ void initMalfunctionIndicator(void) {
 	addError(OBD_Engine_Coolant_Temperature_Circuit_Malfunction);
 	addError(OBD_Intake_Air_Temperature_Circuit_Malfunction);
 }
+
+#endif /* EFI_MALFUNCTION_INDICATOR */

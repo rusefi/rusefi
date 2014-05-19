@@ -41,10 +41,6 @@ void idleInit(IdleValveState *idle);
 int getIdle(IdleValveState *idle, int currentRpm, int time);
 void setIdleRpm(IdleValveState *idle, int targetRpm);
 
-// todo: move these somewhere else!
-int max(int i1, int i2);
-int min(int i1, int i2);
-float maxF(float i1, float i2);
 void idleDebug(char *msg, int value);
 
 #ifdef __cplusplus

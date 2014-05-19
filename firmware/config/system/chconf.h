@@ -39,15 +39,6 @@
 #ifndef _CHCONF_H_
 #define _CHCONF_H_
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-void chDbgPanic3(const char *msg, const char * file, int line);
-#ifdef __cplusplus
-}
-#endif
-
 #define chDbgCheck(c, func) {                                               \
   if (!(c))                                                                 \
     chDbgPanic3(__QUOTE_THIS(func)"()", __FILE__, __LINE__);                \
@@ -55,6 +46,8 @@ void chDbgPanic3(const char *msg, const char * file, int line);
 
 
 #define PORT_IDLE_THREAD_STACK_SIZE     256
+
+#define PORT_INT_REQUIRED_STACK 128
 
 #define CHPRINTF_USE_FLOAT          TRUE
 

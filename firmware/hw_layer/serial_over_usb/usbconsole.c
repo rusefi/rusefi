@@ -51,7 +51,7 @@ int is_usb_serial_ready(void) {
 #endif
 
 #if EFI_SERIAL_OVER_USB
-int is_serial_ready(void) {
+int isConsoleReady(void) {
 	return is_usb_serial_ready();
 }
 #endif

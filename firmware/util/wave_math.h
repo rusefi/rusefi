@@ -12,11 +12,10 @@
 
 #include "global.h"
 
-// number of milliseconds in one period of given frequency (per second)
-#define frequency2period(freq) (((float)1000) / (freq))
+// todo: looks like it's time to remove this file?
 
-float floatmod(float value, float divider);
-int waveState(time_t start, time_t now, float waveLen, float leftSide,
-		float rightSide);
+//float floatmod(float value, float divider);
+//int waveState(time_t start, time_t now, float waveLen, float leftSide,
+//		float rightSide);
 
 #endif /* WAVE_MATH_H_ */

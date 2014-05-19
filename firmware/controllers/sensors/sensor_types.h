@@ -13,6 +13,13 @@
 
 #include "rusefi_enums.h"
 
+typedef struct {
+	float Min;
+	float Max;
+	air_pressure_sensor_type_e sensorType;
+	int hwChannel;
+} air_pressure_sensor_config_s;
+
 /**
  * @brief MAP averaging configuration
  */
@@ -29,15 +36,9 @@ typedef struct {
 	 */
 	float samplingWindow[MAP_WINDOW_SIZE];
 
-	float Min;
-	float Max;
-	map_type_e mapType;
-} MapConf_s;
+	air_pressure_sensor_config_s sensor;
 
-typedef struct {
-	MapConf_s config;
-	int channel;
-} map_s;
+} MAP_sensor_config_s;
 
 
 /**

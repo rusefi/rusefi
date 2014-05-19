@@ -13,14 +13,15 @@
 
 #include <string.h>
 #include "main.h"
+
+#if EFI_UART_GPS
+
 #include "console_io.h"
 #include "eficonsole.h"
 #include "pin_repository.h"
 #include "nmea.h"
 #include "neo6m.h"
 #include "rtc_helper.h"
-
-#if EFI_UART_GPS
 
 static Logging logging;
 

@@ -17,7 +17,6 @@
 #include "engine_math.h"
 #include "ec2.h"
 
-
 extern engine_configuration_s *engineConfiguration;
 extern engine_configuration2_s *engineConfiguration2;
 
@@ -71,7 +70,10 @@ float convertKelvinToFahrenheit(float kelvin) {
 }
 
 float getKelvinTemperature(float resistance, ThermistorConf *thermistor) {
-	chDbgCheck(thermistor!=NULL, "thermistor pointer is NULL");
+	if (thermistor == NULL) {
+		firmwareError("thermistor pointer is NULL");
+		return NAN;
+	}
 
 	float kelvinTemperature = convertResistanceToKelvinTemperature(resistance, thermistor);
 	return kelvinTemperature;
@@ -85,7 +87,10 @@ float getResistance(Thermistor *thermistor) {
 }
 
 float getTemperatureC(Thermistor *thermistor) {
-	chDbgCheck(initialized, "initialized");
+	if (!initialized) {
+		firmwareError("thermstr not initialized");
+		return NAN;
+	}
 	float resistance = getResistance(thermistor);
 
 	float kelvinTemperature = getKelvinTemperature(resistance, thermistor->config);

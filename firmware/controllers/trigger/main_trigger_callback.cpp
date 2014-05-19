@@ -22,18 +22,18 @@
  */
 
 #include "main.h"
+
+#if EFI_ENGINE_CONTROL
+
 #include "main_trigger_callback.h"
 #include "ec2.h"
 
 extern "C" {
-//#include "settings.h"
 #include "trigger_central.h"
 #include "rpm_calculator.h"
 #include "signal_executor.h"
 #include "eficonsole.h"
 #include "engine_math.h"
-//#include "injector_central.h"
-//#include "ignition_central.h"
 #include "engine_configuration.h"
 #include "interpolation.h"
 #include "advance_map.h"
@@ -50,8 +50,6 @@ static LocalVersionHolder localVersion;
 int isInjectionEnabled(void);
 
 }
-
-// todo: move this to engine_configuration2_s for now
 
 extern engine_configuration_s *engineConfiguration;
 extern engine_configuration2_s *engineConfiguration2;
@@ -81,7 +79,7 @@ static void handleFuelInjectionEvent(ActuatorEvent *event, int rpm) {
 	scheduleOutput(event->actuator, delay, fuelMs);
 }
 
-static void handleFuel(int eventIndex) {
+static void handleFuel(int eventIndex, int rpm) {
 	if (!isInjectionEnabled())
 		return;
 	chDbgCheck(eventIndex < engineConfiguration2->triggerShape.shaftPositionEventCount, "event index");
@@ -99,10 +97,6 @@ static void handleFuel(int eventIndex) {
 	if (events.size == 0)
 		return;
 
-//	scheduleSimpleMsg(&logger, "eventId size=", events.size);
-
-	int rpm = getRpm();
-
 	for (int i = 0; i < events.size; i++) {
 		ActuatorEvent *event = &events.events[i];
 		handleFuelInjectionEvent(event, rpm);
@@ -110,15 +104,11 @@ static void handleFuel(int eventIndex) {
 }
 
 static void handleSparkEvent(ActuatorEvent *event, int rpm) {
-	efiAssert(rpm != 0, "non-zero RPM expected here");
-
-//	float advance = getAdvance(rpm, getEngineLoad());
-
-//	float sparkAdvanceMs = getOneDegreeTimeMs(rpm) * advance;
-
 	float dwellMs = getSparkDwellMs(rpm);
-	if (dwellMs < 0)
+	if (cisnan(dwellMs) || dwellMs < 0) {
 		firmwareError("invalid dwell: %f at %d", dwellMs, rpm);
+		return;
+	}
 
 	float sparkDelay = getOneDegreeTimeMs(rpm) * event->angleOffset;
 	int isIgnitionError = sparkDelay < 0;
@@ -132,14 +122,15 @@ static void handleSparkEvent(ActuatorEvent *event, int rpm) {
 	scheduleOutput(event->actuator, sparkDelay, dwellMs);
 }
 
-static void handleSpark(int eventIndex) {
-	int rpm = getRpm();
+static void handleSpark(int eventIndex, int rpm, ActuatorEventList *list) {
+	if (!isValidRpm(rpm))
+		return; // this might happen for instance in case of a single trigger event after a pause
 
 	/**
 	 * Ignition schedule is defined once per revolution
 	 * See initializeIgnitionActions()
 	 */
-	findEvents(eventIndex, &engineConfiguration2->engineEventConfiguration.ignitionEvents, &events);
+	findEvents(eventIndex, list, &events);
 	if (events.size == 0)
 		return;
 
@@ -158,9 +149,10 @@ void showMainHistogram(void) {
 }
 
 /**
- * This is the main entry point into the primary shaft signal handler signal. Both injection and ignition are controlled from this method.
+ * This is the main trigger event handler.
+ * Both injection and ignition are controlled from this method.
  */
-static void onShaftSignal(ShaftEvents ckpSignalType, int eventIndex) {
+static void onTriggerEvent(ShaftEvents ckpSignalType, int eventIndex) {
 	chDbgCheck(eventIndex < engineConfiguration2->triggerShape.shaftPositionEventCount, "event index");
 
 	int rpm = getRpm();
@@ -170,7 +162,7 @@ static void onShaftSignal(ShaftEvents ckpSignalType, int eventIndex) {
 		return;
 	}
 	if (rpm == NOISY_RPM) {
-		scheduleMsg(&logger, "noisy trigger");
+		warning(OBD_Camshaft_Position_Sensor_Circuit_Range_Performance, "noisy trigger");
 		return;
 	}
 	if (rpm > engineConfiguration->rpmHardLimit) {
@@ -179,6 +171,9 @@ static void onShaftSignal(ShaftEvents ckpSignalType, int eventIndex) {
 	}
 
 	int beforeCallback = hal_lld_get_counter_value();
+
+	int revolutionIndex = getRevolutionCounter() % 2;
+
 	if (eventIndex == 0) {
 		if (localVersion.isOld())
 			prepareOutputSignals(engineConfiguration, engineConfiguration2);
@@ -191,19 +186,29 @@ static void onShaftSignal(ShaftEvents ckpSignalType, int eventIndex) {
 		 * are not affecting that space in memory. todo: use two instances of 'ignitionSignals'
 		 */
 
+		/**
+		 * Within one engine cycle all cylinders are fired with same timing advance.
+		 * todo: one day we can control cylinders individually
+		 */
 		float dwellMs = getSparkDwellMs(rpm);
+		if (cisnan(dwellMs) || dwellMs < 0) {
+			firmwareError("invalid dwell: %f at %d", dwellMs, rpm);
+			return;
+		}
 		float advance = getAdvance(rpm, getEngineLoad());
 
 		float dwellAngle = dwellMs / getOneDegreeTimeMs(rpm);
 
-		initializeIgnitionActions(advance - dwellAngle, engineConfiguration, engineConfiguration2);
+		initializeIgnitionActions(advance - dwellAngle, engineConfiguration, engineConfiguration2, dwellMs, &engineConfiguration2->engineEventConfiguration.ignitionEvents[revolutionIndex]);
 	}
 
-	handleFuel(eventIndex);
-	handleSpark(eventIndex);
+	handleFuel(eventIndex, rpm);
+	handleSpark(eventIndex, rpm, &engineConfiguration2->engineEventConfiguration.ignitionEvents[revolutionIndex]);
+#if EFI_HISTOGRAMS
 	int diff = hal_lld_get_counter_value() - beforeCallback;
 	if (diff > 0)
 		hsAdd(&mainLoopHisto, diff);
+#endif /* EFI_HISTOGRAMS */
 }
 
 static void showTriggerHistogram(void) {
@@ -224,14 +229,18 @@ void initMainEventListener() {
 
 	initLogging(&logger, "main event handler");
 	printMsg(&logger, "initMainLoop: %d", currentTimeMillis());
+#if EFI_HISTOGRAMS
 	initHistogram(&mainLoopHisto, "main callback");
+#endif /* EFI_HISTOGRAMS */
 
 	if (!isInjectionEnabled())
 		printMsg(&logger, "!!!!!!!!!!!!!!!!!!! injection disabled");
 
-	addTriggerEventListener(&onShaftSignal, "main loop");
+	addTriggerEventListener(&onTriggerEvent, "main loop");
 }
 
 int isIgnitionTimingError(void) {
 	return ignitionErrorDetection.sum(6) > 4;
 }
+
+#endif /* EFI_ENGINE_CONTROL */

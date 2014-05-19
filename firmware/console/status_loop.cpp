@@ -39,6 +39,10 @@
 #include "mmc_card.h"
 #include "console_io.h"
 
+#define PRINT_FIRMWARE_ONCE TRUE
+
+static bool_t firmwareErrorReported = FALSE;
+
 #include "advance_map.h"
 #if EFI_TUNER_STUDIO
 #include "tunerstudio.h"
@@ -83,7 +87,7 @@ static void setWarningEnabled(int value) {
 static Logging fileLogger;
 #endif /* EFI_FILE_LOGGING */
 
-static void reportSensorF(char *caption, float value, int precision) {
+static void reportSensorF(const char *caption, float value, int precision) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	debugFloat(&logger, caption, value, precision);
 #endif /* EFI_PROD_CODE || EFI_SIMULATOR */
@@ -125,7 +129,9 @@ void printSensors(void) {
 
 	if (engineConfiguration2->hasMapSensor) {
 		reportSensorF(getCaption(LP_MAP), getMap(), 2);
+		reportSensorF("map_r", getRawMap(), 2);
 	}
+	reportSensorF("baro", getBaroPressure(), 2);
 
 	reportSensorF("afr", getAfr(), 2);
 	reportSensorF("vref", getVRef(), 2);
@@ -200,11 +206,7 @@ extern char *dbg_panic_file;
 extern int dbg_panic_line;
 #endif
 
-void onDbgPanic(void) {
-	setOutputPinValue(LED_ERROR, 1);
-}
-
-int hasFatalError(void) {
+bool_t hasFatalError(void) {
 	return dbg_panic_msg != NULL;
 }
 
@@ -236,30 +238,33 @@ static void printVersion(systime_t nowSeconds) {
 	if (overflowDiff(nowSeconds, timeOfPreviousPrintVersion) < 4)
 		return;
 	timeOfPreviousPrintVersion = nowSeconds;
-	appendPrintf(&logger, "rusEfiVersion%s%d@%d %s%s", DELIMETER, getRusEfiVersion(), SVN_VERSION, getConfigurationName(engineConfiguration),
+	appendPrintf(&logger, "rusEfiVersion%s%d@%d %s%s", DELIMETER, getRusEfiVersion(), SVN_VERSION,
+			getConfigurationName(engineConfiguration),
 			DELIMETER);
 }
 
 static systime_t timeOfPreviousReport = (systime_t) -1;
 
-extern bool hasFirmwareError;
 extern char errorMessageBuffer[200];
 
 /**
  * @brief Sends all pending data to dev console
  */
 void updateDevConsoleState(void) {
-	if (!is_serial_ready())
+	if (!isConsoleReady())
 		return;
 	checkIfShouldHalt();
 	printPending();
 
-	pokeAdcInputs();
-
-	if (hasFirmwareError) {
-		printMsg(&logger, "firmware error: %s", errorMessageBuffer);
+	if (hasFirmwareError()) {
+		if (!firmwareErrorReported || !PRINT_FIRMWARE_ONCE)
+			printMsg(&logger, "firmware error: %s", errorMessageBuffer);
+		firmwareErrorReported = TRUE;
+		warningEnabled = FALSE;
 		return;
 	}
+
+	pokeAdcInputs();
 
 	if (!fullLog)
 		return;
@@ -273,11 +278,9 @@ void updateDevConsoleState(void) {
 
 	timeOfPreviousReport = nowSeconds;
 
-
 	prevCkpEventCounter = currentCkpEventCounter;
 
 	printState(currentCkpEventCounter);
-
 
 #if EFI_WAVE_ANALYZER
 //	printWave(&logger);
@@ -321,14 +324,13 @@ void updateHD44780lcd(void) {
 	lcd_HD44780_print_char('R');
 	lcd_HD44780_set_position(0, 10);
 
-	char * ptr = itoa10((uint8_t*)buffer, getRpm());
+	char * ptr = itoa10((uint8_t*) buffer, getRpm());
 	ptr[0] = 0;
 	int len = ptr - buffer;
 	for (int i = 0; i < 6 - len; i++)
 		lcd_HD44780_print_char(' ');
 
 	lcd_HD44780_print_string(buffer);
-
 
 	lcd_HD44780_set_position(2, 0);
 	lcd_HD44780_print_char('C');

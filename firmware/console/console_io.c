@@ -26,6 +26,8 @@
 #endif
 #include "rfiutil.h"
 
+static bool_t isSerialConsoleStarted = FALSE;
+
 /**
  * @brief   Reads a whole line from the input channel.
  *
@@ -40,7 +42,7 @@ static bool_t getConsoleLine(BaseSequentialStream *chp, char *line, unsigned siz
 	char *p = line;
 
 	while (TRUE) {
-		if (!is_serial_ready()) {
+		if (!isConsoleReady()) {
 			// we better do not read from USB serial before it is ready
 			chThdSleepMilliseconds(10);
 			continue;
@@ -96,7 +98,9 @@ static msg_t consoleThreadThreadEntryPoint(void *arg) {
 
 		(console_line_callback)(consoleInput);
 	}
+#if defined __GNUC__
 	return FALSE;
+#endif        
 }
 
 #if EFI_SERIAL_OVER_USB
@@ -107,8 +111,8 @@ static SerialConfig serialConfig = {SERIAL_SPEED, 0, USART_CR2_STOP1_BITS | USAR
 #endif /* EFI_SERIAL_OVER_USB */
 
 #if ! EFI_SERIAL_OVER_USB && ! EFI_SIMULATOR
-int is_serial_ready(void) {
-	return TRUE;
+int isConsoleReady(void) {
+	return isSerialConsoleStarted;
 }
 #endif
 
@@ -120,7 +124,7 @@ void consoleOutputBuffer(const int8_t *buf, int size) {
 	chSequentialStreamWrite(CONSOLE_CHANNEL, buf, size);
 }
 
-void startChibiosConsole(void (*console_line_callback_p)(char *)) {
+void startConsole(void (*console_line_callback_p)(char *)) {
 	console_line_callback = console_line_callback_p;
 #if EFI_SERIAL_OVER_USB
 	usb_serial_start();
@@ -136,6 +140,8 @@ void startChibiosConsole(void (*console_line_callback_p)(char *)) {
 	// cannot use pin repository here because pin repository prints to console
 	palSetPadMode(EFI_CONSOLE_RX_PORT, EFI_CONSOLE_RX_PIN, PAL_MODE_ALTERNATE(EFI_CONSOLE_AF));
 	palSetPadMode(EFI_CONSOLE_TX_PORT, EFI_CONSOLE_TX_PIN, PAL_MODE_ALTERNATE(EFI_CONSOLE_AF));
+
+	isSerialConsoleStarted = TRUE;
 #endif /* EFI_SERIAL_OVER_UART */
 #endif /* EFI_SERIAL_OVER_USB */
 	chThdCreateStatic(consoleThreadStack, sizeof(consoleThreadStack), NORMALPRIO, consoleThreadThreadEntryPoint, NULL);
@@ -143,9 +149,12 @@ void startChibiosConsole(void (*console_line_callback_p)(char *)) {
 
 extern cnt_t dbg_isr_cnt;
 
-int lockAnyContext(void) {
-	int is_locked = isLocked();
-	if (is_locked)
+/**
+ * @return TRUE if already in locked context
+ */
+bool_t lockAnyContext(void) {
+	int alreadyLocked = isLocked();
+	if (alreadyLocked)
 		return TRUE;
 	if (isIsrContext()) {
 		chSysLockFromIsr()
@@ -157,8 +166,8 @@ int lockAnyContext(void) {
 	return FALSE;
 }
 
-void lockOutputBuffer(void) {
-	lockAnyContext();
+bool_t lockOutputBuffer(void) {
+	return lockAnyContext();
 }
 
 void unlockAnyContext(void) {

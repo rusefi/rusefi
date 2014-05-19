@@ -10,15 +10,8 @@
 #define FLASH_MAIN_H_
 
 #include "engine_configuration.h"
-#include "crc.h"
 
-#define FLASH_DATA_VERSION 2727
-
-typedef struct {
-	int version;
-	persistent_config_s persistentConfiguration;
-	crc value;
-} FlashState;
+#define FLASH_DATA_VERSION 3002
 
 #ifdef __cplusplus
 extern "C"
