@@ -97,7 +97,7 @@ typedef enum {
 	SHAFT_PRIMARY_DOWN = 1,
 	SHAFT_SECONDARY_UP = 2,
 	SHAFT_SECONDARY_DOWN = 3,
-} ShaftEvents;
+} trigger_event_e;
 
 /**
  * This enum is used to select your desired Engine Load calculation algorithm
@@ -178,6 +178,14 @@ typedef enum {
 	FO_1_8_4_3_6_5_7_2 = 6,
 	Internal_ForceMyEnumIntSize_firing_order = ENUM_SIZE_HACK,
 } firing_order_e;
+
+// todo: better enum name
+typedef enum {
+	FOUR_STROKE_CRANK_SENSOR = 0,
+	FOUR_STROKE_CAM_SENSOR = 1,
+
+	Internal_ForceMyEnumIntSize_operation_mode_e = ENUM_SIZE_HACK,
+} operation_mode_e;
 
 /**
  * @brief Ignition Mode

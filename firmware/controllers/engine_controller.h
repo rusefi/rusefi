@@ -18,7 +18,7 @@ extern "C"
 {
 #endif /* __cplusplus */
 
-char * getPinNameByAdcChannel(int hwChannel, uint8_t *buffer);
+char * getPinNameByAdcChannel(int hwChannel, char *buffer);
 void initEngineContoller(void);
 
 #ifdef __cplusplus

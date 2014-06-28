@@ -40,9 +40,11 @@
  */
 #if EFI_PROD_CODE
 static volatile int chartSize = 100;
+#define WAVE_LOGGING_SIZE 5000
 #else
 // need more events for automated test
-static volatile int chartSize = 200;
+static volatile int chartSize = 400;
+#define WAVE_LOGGING_SIZE 35000
 #endif
 
 static int isChartActive = TRUE;
@@ -65,11 +67,7 @@ void resetWaveChart(WaveChart *chart) {
 	appendPrintf(&chart->logging, "wave_chart%s", DELIMETER);
 }
 
-#if defined __GNUC__
-static char WAVE_LOGGING_BUFFER[5000] __attribute__((section(".ccm")));
-#else
-static char WAVE_LOGGING_BUFFER[5000];
-#endif
+static char WAVE_LOGGING_BUFFER[WAVE_LOGGING_SIZE] CCM_OPTIONAL;
 
 static void printStatus(void) {
 	scheduleIntValue(&logger, "chart", isChartActive);
@@ -113,13 +111,13 @@ void publishChart(WaveChart *chart) {
  * @brief	Register a change in sniffed signal
  */
 void addWaveChartEvent3(WaveChart *chart, const char *name, const char * msg, const char * msg2) {
-	chDbgCheck(chart->isInitialized, "chart not initialized");
+	efiAssertVoid(chart->isInitialized, "chart not initialized");
 #if DEBUG_WAVE
 	scheduleSimpleMsg(&debugLogging, "current", chart->counter);
 #endif
 	if (isWaveChartFull(chart))
 		return;
-	bool_t alreadyLocked = lockOutputBuffer(); // we have multiple threads writing to the same output buffer
+	bool alreadyLocked = lockOutputBuffer(); // we have multiple threads writing to the same output buffer
 	appendPrintf(&chart->logging, "%s%s%s%s", name, CHART_DELIMETER, msg, CHART_DELIMETER);
 	int time100 = getTimeNowUs() / 10;
 	appendPrintf(&chart->logging, "%d%s%s", time100, msg2, CHART_DELIMETER);

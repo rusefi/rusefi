@@ -45,7 +45,7 @@ int isTriggerDecoderError(void) {
 	return errorDetection.sum(6) > 4;
 }
 
-static inline int isSynchronizationGap(trigger_state_s const *shaftPositionState, trigger_shape_s const *triggerShape,
+static inline int isSynchronizationGap(TriggerState const *shaftPositionState, trigger_shape_s const *triggerShape,
 		trigger_config_s const *triggerConfig, const int currentDuration) {
 	if (!triggerConfig->isSynchronizationNeeded)
 		return FALSE;
@@ -54,8 +54,8 @@ static inline int isSynchronizationGap(trigger_state_s const *shaftPositionState
 			&& currentDuration < shaftPositionState->toothed_previous_duration * triggerConfig->syncRatioTo;
 }
 
-static inline int noSynchronizationResetNeeded(trigger_state_s const *shaftPositionState,
-		trigger_shape_s const *triggerShape, trigger_config_s const*triggerConfig) {
+static inline int noSynchronizationResetNeeded(TriggerState *shaftPositionState, trigger_shape_s const *triggerShape,
+		trigger_config_s const*triggerConfig) {
 	if (triggerConfig->isSynchronizationNeeded)
 		return FALSE;
 	if (!shaftPositionState->shaft_is_synchronized)
@@ -63,14 +63,14 @@ static inline int noSynchronizationResetNeeded(trigger_state_s const *shaftPosit
 	/**
 	 * in case of noise the counter could be above the expected number of events
 	 */
-	return shaftPositionState->current_index >= triggerShape->shaftPositionEventCount - 1;
+	return shaftPositionState->getCurrentIndex() >= triggerShape->shaftPositionEventCount - 1;
 }
 
 /**
  * @brief This method changes the state of trigger_state_s data structure according to the trigger event
  */
-void processTriggerEvent(trigger_state_s *shaftPositionState, trigger_shape_s const *triggerShape,
-		trigger_config_s const *triggerConfig, ShaftEvents signal, uint64_t nowUs) {
+void TriggerState::processTriggerEvent(trigger_shape_s const*triggerShape, trigger_config_s const*triggerConfig,
+		trigger_event_e signal, uint64_t nowUs) {
 
 	int isLessImportant = (triggerConfig->useRiseEdge && signal != SHAFT_PRIMARY_UP)
 			|| (!triggerConfig->useRiseEdge && signal != SHAFT_PRIMARY_DOWN);
@@ -79,12 +79,12 @@ void processTriggerEvent(trigger_state_s *shaftPositionState, trigger_shape_s co
 		/**
 		 * For less important events we simply increment the index.
 		 */
-		shaftPositionState->current_index++;
+		nextTriggerEvent();
 		return;
 	}
 
-	int64_t currentDuration = nowUs - shaftPositionState->toothed_previous_time;
-	chDbgCheck(currentDuration >= 0, "negative duration?");
+	int64_t currentDuration = nowUs - toothed_previous_time;
+	efiAssertVoid(currentDuration >= 0, "negative duration?");
 
 // todo: skip a number of signal from the beginning
 
@@ -92,36 +92,35 @@ void processTriggerEvent(trigger_state_s *shaftPositionState, trigger_shape_s co
 //	scheduleMsg(&logger, "from %f to %f %d %d", triggerConfig->syncRatioFrom, triggerConfig->syncRatioTo, currentDuration, shaftPositionState->toothed_previous_duration);
 //	scheduleMsg(&logger, "ratio %f", 1.0 * currentDuration/ shaftPositionState->toothed_previous_duration);
 #else
-	if (shaftPositionState->toothed_previous_duration != 0) {
+	if (toothed_previous_duration != 0) {
 //		printf("ratio %f: cur=%d pref=%d\r\n", 1.0 * currentDuration / shaftPositionState->toothed_previous_duration,
 //				currentDuration, shaftPositionState->toothed_previous_duration);
 	}
 #endif
 
-	if (noSynchronizationResetNeeded(shaftPositionState, triggerShape, triggerConfig)
-			|| isSynchronizationGap(shaftPositionState, triggerShape, triggerConfig, currentDuration)) {
+	if (noSynchronizationResetNeeded(this, triggerShape, triggerConfig)
+			|| isSynchronizationGap(this, triggerShape, triggerConfig, currentDuration)) {
 		/**
 		 * We can check if things are fine by comparing the number of events in a cycle with the expected number of event.
 		 */
-		int isDecodingError = shaftPositionState->current_index != triggerShape->shaftPositionEventCount - 1;
+		int isDecodingError = getCurrentIndex() != triggerShape->shaftPositionEventCount - 1;
 		errorDetection.add(isDecodingError);
 
 		if (isTriggerDecoderError())
 			warning(OBD_PCM_Processor_Fault, "trigger decoding issue");
 
-		shaftPositionState->shaft_is_synchronized = TRUE;
-		shaftPositionState->current_index = 0;
+		shaft_is_synchronized = TRUE;
+		nextRevolution(triggerShape->shaftPositionEventCount);
 	} else {
-		shaftPositionState->current_index++;
+		nextTriggerEvent();
 	}
 
-	shaftPositionState->toothed_previous_duration = currentDuration;
-	shaftPositionState->toothed_previous_time = nowUs;
-
+	toothed_previous_duration = currentDuration;
+	toothed_previous_time = nowUs;
 }
 
 static void initializeSkippedToothTriggerShape(trigger_shape_s *s, int totalTeethCount, int skippedCount) {
-	efiAssert(s != NULL, "trigger_shape_s is NULL");
+	efiAssertVoid(s != NULL, "trigger_shape_s is NULL");
 	s->reset();
 
 	float toothWidth = 0.5;
@@ -140,6 +139,8 @@ static void initializeSkippedToothTriggerShape(trigger_shape_s *s, int totalTeet
 
 void initializeSkippedToothTriggerShapeExt(engine_configuration2_s *engineConfiguration2, int totalTeethCount,
 		int skippedCount) {
+	efiAssertVoid(totalTeethCount > 0, "totalTeethCount is zero");
+
 	trigger_shape_s *s = &engineConfiguration2->triggerShape;
 	initializeSkippedToothTriggerShape(s, totalTeethCount, skippedCount);
 
@@ -208,43 +209,49 @@ void initializeTriggerShape(Logging *logger, engine_configuration_s *engineConfi
 		firmwareError("initializeTriggerShape() not implemented: %d", tt->triggerType);
 		;
 	}
+	if (engineConfiguration2->triggerShape.shaftPositionEventCount != engineConfiguration2->triggerShape.getSize())
+		firmwareError("trigger size or shaftPositionEventCount?");
 }
 
+/**
+ * Trigger shape is defined in a way which is convenient for trigger shape definition
+ * On the other hand, trigger decoder indexing begins from synchronization event.
+ *
+ * This function finds the index of synchronization event within trigger_shape_s
+ */
 int findTriggerZeroEventIndex(trigger_shape_s * shape, trigger_config_s const*triggerConfig) {
 
-	trigger_state_s state;
-	clearTriggerState(&state);
+	TriggerState state;
 	errorDetection.clear();
 
 	int primaryWheelState = FALSE;
 	int secondaryWheelState = FALSE;
 
-	for (int i = 0; i < 100; i++) {
+	for (int i = 0; i < 4 * PWM_PHASE_MAX_COUNT; i++) {
 
 		int stateIndex = i % shape->getSize();
 
 		int loopIndex = i / shape->getSize();
 
-		int time = (int)(10000 * (loopIndex + shape->wave.getSwitchTime(stateIndex)));
+		int time = (int) (10000 * (loopIndex + shape->wave.getSwitchTime(stateIndex)));
 
 		int newPrimaryWheelState = shape->wave.getChannelState(0, stateIndex);
 		int newSecondaryWheelState = shape->wave.getChannelState(1, stateIndex);
 
 		if (primaryWheelState != newPrimaryWheelState) {
 			primaryWheelState = newPrimaryWheelState;
-			ShaftEvents s = primaryWheelState ? SHAFT_PRIMARY_UP : SHAFT_PRIMARY_DOWN;
-			processTriggerEvent(&state, shape, triggerConfig, s, time);
+			trigger_event_e s = primaryWheelState ? SHAFT_PRIMARY_UP : SHAFT_PRIMARY_DOWN;
+			state.processTriggerEvent(shape, triggerConfig, s, time);
 		}
 
 		if (secondaryWheelState != newSecondaryWheelState) {
 			secondaryWheelState = newSecondaryWheelState;
-			ShaftEvents s = secondaryWheelState ? SHAFT_SECONDARY_UP : SHAFT_SECONDARY_DOWN;
-			processTriggerEvent(&state, shape, triggerConfig, s, time);
+			trigger_event_e s = secondaryWheelState ? SHAFT_SECONDARY_UP : SHAFT_SECONDARY_DOWN;
+			state.processTriggerEvent(shape, triggerConfig, s, time);
 		}
 
-		if (state.shaft_is_synchronized) {
+		if (state.shaft_is_synchronized)
 			return stateIndex;
-		}
 	}
 	firmwareError("findTriggerZeroEventIndex() failed");
 	return -1;

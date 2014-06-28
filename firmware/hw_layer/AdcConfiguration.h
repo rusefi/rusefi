@@ -15,6 +15,7 @@ public:
 	int internalAdcIndexByHardwareIndex[20];
 	int size();
 	void init(void);
+	int conversionCount;
 private:
 	ADCConversionGroup* hwConfig;
 	/**

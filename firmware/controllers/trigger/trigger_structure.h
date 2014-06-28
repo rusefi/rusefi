@@ -12,19 +12,38 @@
 
 #include "rusefi_enums.h"
 #include "EfiWave.h"
+#include "engine_configuration.h"
 
-typedef struct {
+class trigger_shape_s;
+
+class TriggerState {
+public:
+	TriggerState();
+	int getCurrentIndex();
+	int getTotalRevolutionCounter();
+	uint64_t getTotalEventCounter();
+	uint64_t getStartOfRevolutionIndex();
+	void nextRevolution(int triggerEventCount);
+	void nextTriggerEvent();
+	void processTriggerEvent(trigger_shape_s const*triggerShape, trigger_config_s const*triggerConfig, trigger_event_e signal, uint64_t nowUs);
+
+
 	/**
 	 * TRUE if we know where we are
 	 */
 	unsigned char shaft_is_synchronized;
 
-	int current_index;
-
 	uint64_t toothed_previous_duration;
 	uint64_t toothed_previous_time;
-
-} trigger_state_s;
+private:
+	void clear();
+	/**
+	 * index within trigger revolution, from 0 to trigger event count
+	 */
+	int current_index;
+	uint64_t totalEventCountBase;
+	int totalRevolutionCounter;
+};
 
 typedef enum {
 	TV_LOW = 0,
@@ -67,9 +86,14 @@ public:
 	// tood: maybe even automate this flag calculation?
 	int initialState[PWM_PHASE_MAX_WAVE_PER_PWM];
 
+	/**
+	 * index of synchronization event within trigger_shape_s
+	 * See findTriggerZeroEventIndex()
+	 */
 	int triggerShapeSynchPointIndex;
 private:
 	float switchTimes[PWM_PHASE_MAX_COUNT];
+	float previousAngle;
 };
 
 #ifdef __cplusplus
@@ -77,7 +101,6 @@ extern "C"
 {
 #endif /* __cplusplus */
 
-void clearTriggerState(trigger_state_s *state);
 void triggerAddEvent(trigger_shape_s *trigger, float angle, trigger_wheel_e waveIndex, trigger_value_e state);
 
 #ifdef __cplusplus

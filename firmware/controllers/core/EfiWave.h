@@ -7,7 +7,9 @@
 #ifndef EFI_WAVE_H_
 #define EFI_WAVE_H_
 
-#define PWM_PHASE_MAX_COUNT 150
+#include "engine_configuration.h"
+
+#define PWM_PHASE_MAX_COUNT 250
 #define PWM_PHASE_MAX_WAVE_PER_PWM 2
 
 /**
@@ -21,18 +23,19 @@ public:
 	int *pinStates;
 };
 
+class trigger_shape_s;
+
 class multi_wave_s {
 public:
+	multi_wave_s();
 	multi_wave_s(float *st, single_wave_s *waves);
+	void init(float *st, single_wave_s *waves);
 	void reset(void);
 	float getSwitchTime(int phaseIndex) const;
+	float getAngle(int phaseIndex, engine_configuration_s const *engineConfiguration, trigger_shape_s * s) const;
 	void setSwitchTime(int phaseIndex, float value);
 	void checkSwitchTimes(int size);
 	int getChannelState(int channelIndex, int phaseIndex) const;
-	/**
-	 * Number of events in the cycle
-	 */
-	int phaseCount;
 	/**
 	 * Number of signal wires
 	 */

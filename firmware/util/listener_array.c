@@ -9,8 +9,7 @@
 #include "main.h"
 
 void registerCallback(IntListenerArray *array, IntListener handler, void *arg) {
-	if (array->currentListenersCount == MAX_INT_LISTENER_COUNT)
-		fatal("Too many callbacks");
+	efiAssertVoid(array->currentListenersCount < MAX_INT_LISTENER_COUNT, "Too many callbacks");
 	int index = array->currentListenersCount++;
 	array->callbacks[index] = handler;
 	array->args[index] = arg;
@@ -44,3 +43,13 @@ void invokeIntIntCallbacks(IntListenerArray *array, int value, int value2) {
 	}
 }
 
+void invokeIntIntVoidCallbacks(IntListenerArray *array, int value, int value2) {
+	for (int i = 0; i < array->currentListenersCount; i++) {
+		IntIntVoidListener listener = (IntIntVoidListener)array->callbacks[i];
+		(listener)(value, value2, array->args[i]);
+	}
+}
+
+void clearCallbacks(IntListenerArray *array) {
+	array->currentListenersCount = 0;
+}

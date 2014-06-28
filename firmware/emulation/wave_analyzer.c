@@ -40,8 +40,7 @@ extern WaveChart waveChart;
 static Logging logger;
 
 static void ensureInitialized(WaveReader *reader) {
-	if (!reader->hw.started)
-		fatal("wave analyzer NOT INITIALIZED");
+	efiAssertVoid(reader->hw.started, "wave analyzer NOT INITIALIZED");
 }
 
 #ifdef EFI_WAVE_ANALYZER
@@ -115,7 +114,7 @@ int getEventCounter(int index) {
 
 static void initWave(char *name, int index, ICUDriver *driver, ioportid_t port, int pin, int mode) {
 	waveReaderCount++;
-	chDbgCheck(index < MAX_ICU_COUNT, "too many ICUs");
+	efiAssertVoid(index < MAX_ICU_COUNT, "too many ICUs");
 	WaveReader *reader = &readers[index];
 	WaveReaderHw *hw = &reader->hw;
 
@@ -140,7 +139,7 @@ static void initWave(char *name, int index, ICUDriver *driver, ioportid_t port, 
 //	return ckpPeriod;
 //}
 
-static void onWaveShaftSignal(ShaftEvents ckpSignalType, int index) {
+static void onWaveShaftSignal(trigger_event_e ckpSignalType, int index, void *arg) {
 	if (index != 0)
 		return;
 	uint64_t nowUs = getTimeNowUs();
@@ -148,18 +147,19 @@ static void onWaveShaftSignal(ShaftEvents ckpSignalType, int index) {
 	previousCrankSignalStart = nowUs;
 }
 
-static WORKING_AREA(waThreadStack, UTILITY_THREAD_STACK_SIZE);
+static THD_WORKING_AREA(waThreadStack, UTILITY_THREAD_STACK_SIZE);
 
 //static Logging logger;
 
 static msg_t waThread(void *arg) {
 	chRegSetThreadName("Wave Analyzer");
-
+#if EFI_WAVE_CHART
 	while (TRUE) {
 		chThdSleepSeconds(CHART_RESET_DELAY);
 
 		publishChartIfFull(&waveChart);
 	}
+#endif /* EFI_WAVE_CHART */
 #if defined __GNUC__
 	return -1;
 #endif
@@ -244,7 +244,7 @@ void initWaveAnalyzer(void) {
 	initWave("input2 E5", 1, getInputCaptureDriver(boardConfiguration->secondaryLogicAnalyzerPin), getHwPort(boardConfiguration->secondaryLogicAnalyzerPin), getHwPin(boardConfiguration->secondaryLogicAnalyzerPin), 1);
 	//	initWave("input0 C6", 2, &WAVE_TIMER, WAVE_INPUT_PORT, WAVE_INPUT_PIN, 0);
 
-	addTriggerEventListener(&onWaveShaftSignal, "wave analyzer");
+	addTriggerEventListener(&onWaveShaftSignal, "wave analyzer", NULL);
 
 	addConsoleActionII("wm", setWaveModeSilent);
 

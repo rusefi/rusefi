@@ -11,6 +11,8 @@
 #include <math.h>
 #include "efilib.h"
 
+#define _MAX_FILLER 11
+
 /**
  * there is some BS related to isnan in MinGW, so let's have all the issues in one place
  */
@@ -20,6 +22,15 @@ int cisnan(float f) {
 
 int minI(int i1, int i2) {
 	return i1 < i2 ? i1 : i2;
+}
+
+float efiRound(float value, float precision) {
+	int a = value / precision;
+	return a * precision;
+}
+
+float absF(float value) {
+	return value > 0 ? value : -value;
 }
 
 int absI(int32_t value) {
@@ -67,6 +78,47 @@ int atoi(const char *string) {
 }
 
 static char todofixthismesswithcopy[100];
+
+static char *ltoa_internal(char *p, long num, unsigned radix) {
+	int i;
+	char *q;
+
+	q = p + _MAX_FILLER;
+	do {
+		i = (int) (num % radix);
+		i += '0';
+		if (i > '9')
+			i += 'A' - '0' - 10;
+		*--q = i;
+	} while ((num /= radix) != 0);
+
+	i = (int) (p + _MAX_FILLER - q);
+	do
+		*p++ = *q++;
+	while (--i);
+
+	return p;
+}
+
+static char* itoa_signed(char *p, int num, unsigned radix) {
+	if (num < 0) {
+		*p++ = '-';
+		char *end = ltoa_internal(p, -num, radix);
+		*end = 0;
+		return end;
+	}
+	char *end = ltoa_internal(p, num, radix);
+	*end = 0;
+	return end;
+}
+
+/**
+ * Integer to string
+ */
+char* itoa10(char *p, int num) {
+// todo: unit test
+	return itoa_signed(p, num, 10);
+}
 
 // string to float
 float atoff(const char *param) {

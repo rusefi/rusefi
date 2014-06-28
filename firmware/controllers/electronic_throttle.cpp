@@ -38,11 +38,11 @@ static Logging logger;
 /**
  * @brief Control Thread stack
  */
-static WORKING_AREA(etbTreadStack, UTILITY_THREAD_STACK_SIZE);
+static THD_WORKING_AREA(etbTreadStack, UTILITY_THREAD_STACK_SIZE);
 /**
  * @brief Pulse-Width Modulation state
  */
-static PwmConfig etbPwm;
+static SimplePwm etbPwm;
 
 static float prevTps;
 
@@ -69,7 +69,7 @@ static msg_t etbThread(void *arg) {
 static void setThrottleConsole(int level) {
 	scheduleMsg(&logger, "setting throttle=%d", level);
 
-	etbPwm.multiWave.switchTimes[0] = 0.01 + (min(level, 98)) / 100.0;
+	etbPwm.multiWave.switchTimes[0] = 0.01 + (minI(level, 98)) / 100.0;
 	print("st = %f\r\n", etbPwm.multiWave.switchTimes[0]);
 }
 
@@ -84,11 +84,11 @@ void initElectronicThrottle(void) {
 //	outputPinRegister("etb2", ELECTRONIC_THROTTLE_CONTROL_2, ETB_CONTROL_LINE_2_PORT, ETB_CONTROL_LINE_2_PIN);
 
 	// this line used for PWM
-	startSimplePwm(&etbPwm, "etb",
+	startSimplePwmExt(&etbPwm, "etb",
 			boardConfiguration->electronicThrottlePin1,
 			ELECTRONIC_THROTTLE_CONTROL_1,
-			0.80,
-			500);
+			500,
+			0.80);
 
 	addConsoleActionI("e", setThrottleConsole);
 	chThdCreateStatic(etbTreadStack, sizeof(etbTreadStack), NORMALPRIO, (tfunc_t) etbThread, NULL);

@@ -14,6 +14,9 @@
 #include "rusefi_enums.h"
 
 typedef struct {
+	/**
+	 * kPa value at zero volts
+	 */
 	float Min;
 	float Max;
 	air_pressure_sensor_type_e sensorType;

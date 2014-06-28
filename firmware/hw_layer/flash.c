@@ -135,7 +135,7 @@ int flashErase(flashaddr_t address, size_t size) {
 	return FLASH_RETURN_SUCCESS;
 }
 
-bool_t flashIsErased(flashaddr_t address, size_t size) {
+bool flashIsErased(flashaddr_t address, size_t size) {
 	/* Check for default set bits in the flash memory
 	 * For efficiency, compare flashdata_t values as much as possible,
 	 * then, fallback to byte per byte comparison. */
@@ -155,7 +155,7 @@ bool_t flashIsErased(flashaddr_t address, size_t size) {
 	return TRUE;
 }
 
-bool_t flashCompare(flashaddr_t address, const char* buffer, size_t size) {
+bool flashCompare(flashaddr_t address, const char* buffer, size_t size) {
 	/* For efficiency, compare flashdata_t values as much as possible,
 	 * then, fallback to byte per byte comparison. */
 	while (size >= sizeof(flashdata_t)) {

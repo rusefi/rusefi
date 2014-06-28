@@ -51,6 +51,7 @@ typedef struct {
 
 #define getAdcValue(hwChannel) getInternalAdcValue(hwChannel)
 
+// todo: migrate to adcToVoltageInputDividerCoefficient
 #define adcToVoltsDivided(adc) (adcToVolts(adc) * engineConfiguration->analogInputDividerCoefficient)
 
 #endif /* ADC_INPUTS_H_ */

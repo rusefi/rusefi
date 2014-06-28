@@ -40,9 +40,9 @@
 #include "accel_enrichment.h"
 #endif /* EFI_ACCEL_ENRICHMENT */
 
-static float *fuel_ptrs[FUEL_LOAD_COUNT];
-static int initialized = FALSE;
 extern engine_configuration_s *engineConfiguration;
+
+static Map3D1616 fuelMap;
 
 /**
  * @brief	Initialize fuel map data structure
@@ -50,9 +50,7 @@ extern engine_configuration_s *engineConfiguration;
  * is to prepare the fuel map data structure for 3d interpolation
  */
 void prepareFuelMap(void) {
-	for (int k = 0; k < FUEL_LOAD_COUNT; k++)
-		fuel_ptrs[k] = engineConfiguration->fuelTable[k];
-	initialized = TRUE;
+	fuelMap.init(engineConfiguration->fuelTable);
 }
 
 /**
@@ -86,11 +84,9 @@ float getInjectorLag(float vBatt) {
 }
 
 float getBaseFuel(int rpm, float engineLoad) {
-	chDbgCheck(initialized, "fuel map initialized");
-	efiAssert(!cisnan(engineLoad), "invalid el");
-	efiAssert(!cisnan(engineLoad), "invalid rpm");
-	return interpolate3d(engineLoad, engineConfiguration->fuelLoadBins, FUEL_LOAD_COUNT, rpm,
-			engineConfiguration->fuelRpmBins, FUEL_RPM_COUNT, fuel_ptrs);
+	efiAssert(!cisnan(engineLoad), "invalid el", NAN);
+	return fuelMap.getValue(engineLoad, engineConfiguration->fuelLoadBins, rpm,
+			engineConfiguration->fuelRpmBins);
 }
 
 float getCrankingFuel(void) {
@@ -157,7 +153,7 @@ inline static int getElectricalValue1(pin_output_mode_e mode) {
 
 // todo: this method is here for unit test visibility. todo: move to a bette place!
 int getElectricalValue(int logicalValue, pin_output_mode_e mode) {
-	chDbgCheck(mode <= OM_OPENDRAIN_INVERTED, "invalid pin_output_mode_e");
+	efiAssert(mode <= OM_OPENDRAIN_INVERTED, "invalid pin_output_mode_e", -1);
 
 	return logicalValue ? getElectricalValue1(mode) : getElectricalValue0(mode);
 }

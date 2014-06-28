@@ -17,12 +17,11 @@ extern "C" {
 #include "fuel_math.h"
 #include "pin_repository.h"
 #include "poten.h"
-#include "rfi_perftest.h"
 }
 #include "trigger_emulator.h"
 
 
-static WORKING_AREA(eeThreadStack, UTILITY_THREAD_STACK_SIZE);
+static THD_WORKING_AREA(eeThreadStack, UTILITY_THREAD_STACK_SIZE);
 
 #define DIAG_PORT GPIOD
 #define DIAG_PIN 0
@@ -62,7 +61,7 @@ static msg_t eeThread(void *arg) {
 
 	while (TRUE) {
 		while (!flag)
-			chThdSleepMilliseconds(10);
+			chThdSleepMilliseconds(200);
 		flag = FALSE;
 		emulate();
 	}
@@ -96,9 +95,6 @@ static void initECUstimulator(void) {
 void initEngineEmulator(void) {
 	if (hasFirmwareError())
 		return;
-#if EFI_PERF_METRICS
-	initTimePerfActions();
-#endif
 
 #if EFI_POTENTIOMETER
 	initPotentiometers();

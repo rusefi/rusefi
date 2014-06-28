@@ -29,7 +29,7 @@ float getTempK(float resistance);
  * converts Kelvin temperature into Celcius temperature
  */
 float convertKelvinToCelcius(float tempK);
-float convertCelciustoKelvin(float tempC);
+float convertCelciusToKelvin(float tempC);
 
 float convertCelciustoF(float tempC);
 float convertFtoCelcius(float tempF);

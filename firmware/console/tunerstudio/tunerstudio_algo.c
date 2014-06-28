@@ -2,6 +2,8 @@
  * @file	tunerstudio_algo.c
  * @brief	Tuner Studio plain protocol implementation
  *
+ * This implementation would not happen without the documentation
+ * provided by Jon Zeeff (jon@zeeff.com)
  *
  * Tuner Studio has a really simple protocol, a minimal implementation
  * capable of displaying current engine state on the gauges would
@@ -63,17 +65,34 @@ TunerStudioOutputChannels tsOutputChannels;
  */
 persistent_config_s configWorkingCopy;
 
-int tunerStudioHandleCommand(short command) {
-	if (command == 'H') {
-		handleQueryCommand();
-	} else if (command == 'O') {
+int tunerStudioHandleCommand(char *data, int incomingPacketSize) {
+	char command = data[0];
+	data++;
+	if (command == TS_HELLO_COMMAND) {
+		tunerStudioDebug("got CRC Query");
+		handleQueryCommand(TRUE);
+	} else if (command == TS_OUTPUT_COMMAND) {
 		handleOutputChannelsCommand();
-	} else if (command == 'W') {
-		handleValueWriteCommand();
-	} else if (command == 'B') {
-		handleBurnCommand();
-	} else if (command == 'C') {
-		handlePageReadCommand();
+	} else if (command == TS_PAGE_COMMAND) {
+		uint16_t page = *(uint16_t *) data;
+		handlePageSelectCommand(page);
+	} else if (command == TS_CHUNK_WRITE_COMMAND) {
+		uint16_t offset = *(uint16_t *) data;
+		uint16_t count = *(uint16_t *) (data + 2);
+		handleWriteChunkCommand(offset, count, data + 4);
+	} else if (command == TS_SINGLE_WRITE_COMMAND) {
+		uint16_t page = *(uint16_t *) data;
+		uint16_t offset = *(uint16_t *) (data + 2);
+		uint8_t value = data[4];
+		handleWriteValueCommand(page, offset, value);
+	} else if (command == TS_BURN_COMMAND) {
+		uint16_t page = *(uint16_t *) data;
+		handleBurnCommand(page);
+	} else if (command == TS_READ_COMMAND) {
+		uint16_t page = *(uint16_t *) data;
+		uint16_t offset = *(uint16_t *) (data + 2);
+		uint16_t count = *(uint16_t *) (data + 4);
+		handlePageReadCommand(page, offset, count);
 	} else if (command == 't' || command == 'T') {
 		handleTestCommand();
 	} else if (command == 'F') {
@@ -86,23 +105,23 @@ int tunerStudioHandleCommand(short command) {
 		 * Currently on some firmware versions the F command is not used and is just ignored by the firmware as a unknown command."
 		 */
 	} else {
-#if EFI_TUNER_STUDIO_OVER_USB
-		/**
-		 * With TTL there is a real chance of corrupted messages.
-		 * With serial-over-USB we are not expecting communication errors
-		 */
-//		fatal("unexpected TunerStudio command in USB mode");
-#endif /* EFI_TUNER_STUDIO_OVER_USB */
+		tunerStudioDebug("ignoring unexpected");
 		tsState.errorCounter++;
 		return FALSE;
 	}
 	return TRUE;
 }
 
-void handleQueryCommand(void) {
+void handleQueryCommand(int needCrc) {
 	tsState.queryCommandCounter++;
 	tunerStudioDebug("got H (queryCommand)");
-	tunerStudioWriteData((const uint8_t *) TS_SIGNATURE, strlen(TS_SIGNATURE) + 1);
+	if (needCrc) {
+		// Query with CRC takes place while re-establishing connection
+		tunerStudioWriteCrcPacket(TS_RESPONSE_OK, (const uint8_t *) TS_SIGNATURE, strlen(TS_SIGNATURE) + 1);
+	} else {
+		// Query without CRC takes place on TunerStudio startup
+		tunerStudioWriteData((const uint8_t *) TS_SIGNATURE, strlen(TS_SIGNATURE) + 1);
+	}
 }
 
 /**
@@ -111,7 +130,7 @@ void handleQueryCommand(void) {
 void handleOutputChannelsCommand(void) {
 	tsState.outputChannelsCommandCounter++;
 	// this method is invoked too often to print any debug information
-	tunerStudioWriteData((const uint8_t *) &tsOutputChannels, sizeof(TunerStudioOutputChannels));
+	tunerStudioWriteCrcPacket(TS_RESPONSE_OK, (const uint8_t *) &tsOutputChannels, sizeof(TunerStudioOutputChannels));
 }
 
 void handleTestCommand(void) {
@@ -119,6 +138,6 @@ void handleTestCommand(void) {
 	 * this is NOT a standard TunerStudio command, this is my own
 	 * extension of the protocol to simplify troubleshooting
 	 */
-	tunerStudioDebug("got T (Test)\r\n");
+	tunerStudioDebug("got T (Test)");
 	tunerStudioWriteData((const uint8_t *) "alive\r\n", 7);
 }

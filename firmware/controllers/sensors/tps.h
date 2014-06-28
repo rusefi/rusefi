@@ -12,11 +12,6 @@
 
 #include "global.h"
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
-
 float getTPS(void);
 int convertVoltageTo10bitADC(float voltage);
 int getTPS10bitAdc(void);
@@ -38,9 +33,5 @@ typedef struct {
 
 void saveTpsState(time_t now, float curValue);
 float getTpsRateOfChange(void);
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
 
 #endif

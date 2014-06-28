@@ -13,7 +13,7 @@
 #define GPIO_NULL NULL
 
 typedef enum {
-	LED_CRANKING, // Orange on-board LED
+	LED_WARNING, // Orange on-board LED
 	LED_RUNNING, // Green on-board LED
 	LED_ERROR, // Red on-board LED
 	LED_COMMUNICATION_1, // Blue on-board LED

@@ -8,13 +8,18 @@
 #ifndef TUNERSTUDIO_H_
 #define TUNERSTUDIO_H_
 
-#if EFI_TUNER_STUDIO_OVER_USB
-#define TS_SERIAL_DEVICE (&SDU1)
-#else
-#define TS_SERIAL_DEVICE &SD3
-#define TS_SERIAL_SPEED 115200
+#include "tunerstudio_configuration.h"
 
-#endif /* EFI_TUNER_STUDIO_OVER_USB */
+#if defined __GNUC__
+typedef struct
+	__attribute__((packed)) {
+#else
+		typedef __packed struct {
+#endif
+			short int offset;
+			short int count;
+
+		} TunerStudioWriteChunkRequest;
 
 #if defined __GNUC__
 typedef struct
@@ -25,19 +30,19 @@ typedef struct
 
 			short int offset;
 			unsigned char value;
-		} TunerStudioWriteRequest;
+		} TunerStudioWriteValueRequest;
 
 #ifdef __cplusplus
-extern "C"
-{
+		extern "C" {
 #endif /* __cplusplus */
 
 		void startTunerStudioConnectivity(void);
 		void syncTunerStudioCopy(void);
-		void updateTunerStudioState(void);
+		void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels);
+		void tunerStudioWriteCrcPacket(const uint8_t command, const void *buf, const uint16_t size);
 
 #ifdef __cplusplus
-}
+		}
 #endif /* __cplusplus */
 
 #endif /* TUNERSTUDIO_H_ */

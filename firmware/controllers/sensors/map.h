@@ -6,6 +6,8 @@ extern "C"
 {
 #endif /* __cplusplus */
 
+#include "sensor_types.h"
+
 /**
  * @return Raw MAP sensor value right now
  */
@@ -17,8 +19,7 @@ float getBaroPressure(void);
 float getMap(void);
 float getMapVoltage(void);
 float getMapByVoltage(float voltage);
-float getMAPValueHonda_Denso183(float volts);
-float getMAPValueMPX_4250(float volts);
+float decodePressure(float voltage, air_pressure_sensor_config_s * config);
 
 #ifdef __cplusplus
 }

@@ -1,6 +1,8 @@
 
 EMULATIONSRC = emulation/hw_layer/poten.c \
 	emulation/analog_chart.c \
+	emulation/test/test.c \
+	emulation/test/testbmk.c \
 	emulation/wave_analyzer.c
 	
 EMULATIONSRC_CPP = emulation/trigger_emulator.cpp \

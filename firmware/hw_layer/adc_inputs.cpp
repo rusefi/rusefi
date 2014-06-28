@@ -21,6 +21,7 @@
 AdcConfiguration::AdcConfiguration(ADCConversionGroup* hwConfig) {
 	this->hwConfig = hwConfig;
 	channelCount = 0;
+	conversionCount = 0;
 
 	hwConfig->sqr1 = 0;
 	hwConfig->sqr2 = 0;
@@ -35,9 +36,13 @@ AdcConfiguration::AdcConfiguration(ADCConversionGroup* hwConfig) {
 #define PWM_FREQ_SLOW 5000   /* PWM clock frequency. I wonder what does this setting mean?  */
 #define PWM_PERIOD_SLOW 500  /* PWM period (in PWM ticks).    */
 
+/**
+ * 8000 RPM is 133Hz
+ * If we want to sample MAP once per 5 degrees we need 133Hz * (360 / 5) = 9576Hz of fast ADC
+ */
 // todo: migrate to continues ADC mode?
-#define PWM_FREQ_FAST 1500000   /* PWM clock frequency. I wonder what does this setting mean?  */
-#define PWM_PERIOD_FAST 50  /* PWM period (in PWM ticks).    */
+#define PWM_FREQ_FAST 100000   /* PWM clock frequency. I wonder what does this setting mean?  */
+#define PWM_PERIOD_FAST 10  /* PWM period (in PWM ticks).    */
 
 #define ADC_SLOW_DEVICE ADCD1
 
@@ -121,7 +126,7 @@ ADC_TwoSamplingDelay_20Cycles,   // cr1
 // Conversion group sequence 1...6
 		};
 
-static AdcConfiguration slowAdc(&adcgrpcfgSlow);
+AdcConfiguration slowAdc(&adcgrpcfgSlow);
 
 static ADCConversionGroup adcgrpcfg_fast = { FALSE, 0 /* num_channels */, adc_callback_fast, NULL,
 /* HW dependent part.*/
@@ -142,7 +147,7 @@ ADC_TwoSamplingDelay_5Cycles,   // cr1
 static AdcConfiguration fastAdc(&adcgrpcfg_fast);
 
 static void pwmpcb_slow(PWMDriver *pwmp) {
-#ifdef EFI_INTERNAL_ADC
+#if EFI_INTERNAL_ADC
 	(void) pwmp;
 
 	/* Starts an asynchronous ADC conversion operation, the conversion
@@ -161,11 +166,12 @@ static void pwmpcb_slow(PWMDriver *pwmp) {
 	adcStartConversionI(&ADC_SLOW_DEVICE, &adcgrpcfgSlow, slowAdcState.samples, ADC_GRP1_BUF_DEPTH_SLOW);
 	chSysUnlockFromIsr()
 	;
+	slowAdc.conversionCount++;
 #endif
 }
 
 static void pwmpcb_fast(PWMDriver *pwmp) {
-#ifdef EFI_INTERNAL_ADC
+#if EFI_INTERNAL_ADC
 	(void) pwmp;
 
 	/*
@@ -186,6 +192,7 @@ static void pwmpcb_fast(PWMDriver *pwmp) {
 	adcStartConversionI(&ADC_FAST_DEVICE, &adcgrpcfg_fast, samples_fast, ADC_GRP1_BUF_DEPTH_FAST);
 	chSysUnlockFromIsr()
 	;
+	fastAdc.conversionCount++;
 #endif
 }
 
@@ -213,7 +220,7 @@ PWM_OUTPUT_DISABLED, NULL }, { PWM_OUTPUT_DISABLED, NULL } },
 /* HW dependent part.*/
 0 };
 
-static void initAdcPin(ioportid_t port, int pin, char *msg) {
+static void initAdcPin(ioportid_t port, int pin, const char *msg) {
 	print("adc %s\r\n", msg);
 	mySetPadMode("adc input", port, pin, PAL_MODE_INPUT_ANALOG);
 }
@@ -254,7 +261,7 @@ GPIO_TypeDef* getAdcChannelPort(int hwChannel) {
 	case ADC_CHANNEL_IN15:
 		return GPIOC;
 	default:
-		fatal("Unknown hw channel")
+		firmwareError("Unknown hw channel")
 		;
 		return NULL;
 	}
@@ -296,7 +303,7 @@ int getAdcChannelPin(int hwChannel) {
 	case ADC_CHANNEL_IN15:
 		return 5;
 	default:
-		fatal("Unknown hw channel")
+		firmwareError("Unknown hw channel")
 		;
 		return -1;
 	}
@@ -344,6 +351,7 @@ int AdcConfiguration::getAdcHardwareIndexByInternalIndex(int index) {
 }
 
 static void printFullAdcReport(void) {
+	scheduleMsg(&logger, "fast %d slow %d", fastAdc.conversionCount, slowAdc.conversionCount);
 
 	for (int index = 0; index < slowAdc.size(); index++) {
 		appendMsgPrefix(&logger);
@@ -412,7 +420,7 @@ void initAdcInputs() {
 
 	addConsoleActionI(ADC_DEBUG_KEY, &setAdcDebugReporting);
 
-#ifdef EFI_INTERNAL_ADC
+#if EFI_INTERNAL_ADC
 	/*
 	 * Initializes the ADC driver.
 	 */
@@ -459,7 +467,7 @@ void initAdcInputs() {
 	addConsoleActionI("adc", printAdcValue);
 	addConsoleAction("fadc", printFullAdcReport);
 #else
-	printSimpleMsg(&logger, "ADC disabled", 0);
+	printMsg(&logger, "ADC disabled");
 #endif
 }
 

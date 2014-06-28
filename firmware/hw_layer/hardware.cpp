@@ -177,7 +177,7 @@ void initHardware(Logging *logger) {
 		return;
 
 	char buffer[16];
-	itoa10((uint8_t*)buffer, SVN_VERSION);
+	itoa10(buffer, SVN_VERSION);
 	lcd_HD44780_print_string(buffer);
 
 #endif /* EFI_HD44780_LCD */

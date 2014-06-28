@@ -1,5 +1,5 @@
 /**
- * @file	GY6_139QMB.c
+ * @file	GY6_139QMB.cpp
  * @brief	139qmb default engine configuration
  *
  * @date Feb 13, 2014
@@ -7,6 +7,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2014
  */
 
+#include "main.h"
 #include "GY6_139QMB.h"
 
 void setGy6139qmbDefaultEngineConfiguration(engine_configuration_s *engineConfiguration) {
@@ -17,7 +18,7 @@ void setGy6139qmbDefaultEngineConfiguration(engine_configuration_s *engineConfig
 	engineConfiguration->globalTriggerAngleOffset = 15;
 	engineConfiguration->analogChartMode = AC_MAP;
 	engineConfiguration->cylindersCount = 1;
-	engineConfiguration->rpmMultiplier = 1;
+	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 
 	engineConfiguration->firingOrder = FO_ONE_CYLINDER;
 

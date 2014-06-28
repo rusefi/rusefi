@@ -17,10 +17,12 @@ extern "C"
 
 typedef void (*IntListener)(int value);
 typedef void (*IntIntListener)(int value1, int value2);
+// todo: reorder parameters for consistency?
+typedef void (*IntIntVoidListener)(int value1, int value2, void *arg);
 
+// todo: rename 'Arg' to 'Void'?
 typedef void (*ArgListener)(void *arg);
 typedef void (*ArgIntListener)(void *arg, int value);
-
 
 typedef struct {
 	int currentListenersCount;
@@ -33,6 +35,8 @@ void invokeCallbacks(IntListenerArray *array, int value);
 void invokeJustArgCallbacks(IntListenerArray *array);
 void invokeArgIntCallbacks(IntListenerArray *array, int value);
 void invokeIntIntCallbacks(IntListenerArray *array, int value, int value2);
+void invokeIntIntVoidCallbacks(IntListenerArray *array, int value, int value2);
+void clearCallbacks(IntListenerArray *array);
 
 #ifdef __cplusplus
 }

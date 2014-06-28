@@ -12,7 +12,7 @@
 #include "mcp3208.h"
 
 #define getAdcValue(channel) getMcp3208adc(channel)
-#define adcToVoltsDivided(adc) ((((float) 5.0) * adc / 4095))
+#define adcToVoltsDivided(adc) (5.0f / 4095 * adc)
 #define getVoltageDivided(channel) adcToVoltsDivided(getAdcValue(channel))
 
 #endif /* ADC_EXTERNAL_H_ */

@@ -19,14 +19,15 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "engine_math.h"
 #include "main.h"
+#include "engine_math.h"
 #include "engine_configuration.h"
 #include "interpolation.h"
 #include "allsensors.h"
 #include "io_pins.h"
 #include "OutputSignalList.h"
 #include "trigger_decoder.h"
+#include "event_registry.h"
 
 /*
  * default Volumetric Efficiency
@@ -36,40 +37,19 @@
 //		return interpolate(5000, 1.1, 8000, 1, rpm);
 //	return interpolate(500, 0.5, 5000, 1.1, rpm);
 //}
-//#define K_AT_MIN_RPM_MIN_TPS 0.25
-//#define K_AT_MIN_RPM_MAX_TPS 0.25
-//#define K_AT_MAX_RPM_MIN_TPS 0.25
-//#define K_AT_MAX_RPM_MAX_TPS 0.9
-//
-//#define rpmMin 500
-//#define rpmMax 8000
-//
-//#define tpMin 0
-//#define tpMax 100
-//
-//  http://rusefi.com/math/t_charge.html
-// /
-//float getTCharge(int rpm, int tps, float coolantTemp, float airTemp) {
-//	float minRpmKcurrentTPS = interpolate(tpMin, K_AT_MIN_RPM_MIN_TPS, tpMax,
-//	K_AT_MIN_RPM_MAX_TPS, tps);
-//	float maxRpmKcurrentTPS = interpolate(tpMin, K_AT_MAX_RPM_MIN_TPS, tpMax,
-//	K_AT_MAX_RPM_MAX_TPS, tps);
-//
-//	float Tcharge_coff = interpolate(rpmMin, minRpmKcurrentTPS, rpmMax,
-//			maxRpmKcurrentTPS, rpm);
-//
-//	float Tcharge = coolantTemp * (1 - Tcharge_coff) + airTemp * Tcharge_coff;
-//
-//	return Tcharge;
-//}
-#define MAX_STARTING_FUEL 15
-#define MIN_STARTING_FUEL 8
-
 /**
  * @return time needed to rotate crankshaft by one degree, in milliseconds.
+ * @deprecated
  */
 float getOneDegreeTimeMs(int rpm) {
 	return 1000.0 * 60 / 360 / rpm;
+}
+
+/**
+ * @return time needed to rotate crankshaft by one degree, in microseconds.
+ */
+float getOneDegreeTimeUs(int rpm) {
+	return 1000000.0 * 60 / 360 / rpm;
 }
 
 /**
@@ -136,34 +116,39 @@ int isCrankingRT(engine_configuration_s *engineConfiguration, int rpm) {
 OutputSignalList ignitionSignals;
 OutputSignalList injectonSignals;
 
-
 static void registerSparkEvent(engine_configuration_s const *engineConfiguration, trigger_shape_s * s,
-		ActuatorEventList *list, OutputSignal *actuator, float angleOffset) {
+		IgnitionEventList *list, OutputSignal *actuator, float localAdvance, float dwell) {
 
-	registerActuatorEventExt(engineConfiguration, s, list,
-			actuator, angleOffset);
+	IgnitionEvent *event = list->getNextActuatorEvent();
+	if (event == NULL)
+		return; // error already reported
+
+	event->advance = localAdvance;
+
+	registerActuatorEventExt(engineConfiguration, s, &event->actuator, actuator, localAdvance - dwell);
 }
 
-void initializeIgnitionActions(float baseAngle, engine_configuration_s *engineConfiguration,
-		engine_configuration2_s *engineConfiguration2, float dwellMs, ActuatorEventList *list) {
-	chDbgCheck(engineConfiguration->cylindersCount > 0, "cylindersCount");
+void initializeIgnitionActions(float advance, float dwellAngle, engine_configuration_s *engineConfiguration,
+		engine_configuration2_s *engineConfiguration2, IgnitionEventList *list) {
+
+	efiAssertVoid(engineConfiguration->cylindersCount > 0, "cylindersCount");
 	ignitionSignals.clear();
 
-	resetEventList(list);
+	list->resetEventList();
 
 	switch (engineConfiguration->ignitionMode) {
 	case IM_ONE_COIL:
 		for (int i = 0; i < engineConfiguration->cylindersCount; i++) {
 			// todo: extract method
-			float angle = baseAngle + 720.0 * i / engineConfiguration->cylindersCount;
+			float localAdvance = advance + 720.0 * i / engineConfiguration->cylindersCount;
 
 			registerSparkEvent(engineConfiguration, &engineConfiguration2->triggerShape, list,
-					ignitionSignals.add(SPARKOUT_1_OUTPUT), angle);
+					ignitionSignals.add(SPARKOUT_1_OUTPUT), localAdvance, dwellAngle);
 		}
 		break;
 	case IM_WASTED_SPARK:
 		for (int i = 0; i < engineConfiguration->cylindersCount; i++) {
-			float angle = baseAngle + 720.0 * i / engineConfiguration->cylindersCount;
+			float localAdvance = advance + 720.0 * i / engineConfiguration->cylindersCount;
 
 			int wastedIndex = i % (engineConfiguration->cylindersCount / 2);
 
@@ -171,18 +156,18 @@ void initializeIgnitionActions(float baseAngle, engine_configuration_s *engineCo
 			io_pin_e ioPin = (io_pin_e) (SPARKOUT_1_OUTPUT + id);
 
 			registerSparkEvent(engineConfiguration, &engineConfiguration2->triggerShape, list,
-					ignitionSignals.add(ioPin), angle);
+					ignitionSignals.add(ioPin), localAdvance, dwellAngle);
 
 		}
 
 		break;
 	case IM_INDIVIDUAL_COILS:
 		for (int i = 0; i < engineConfiguration->cylindersCount; i++) {
-			float angle = baseAngle + 720.0 * i / engineConfiguration->cylindersCount;
+			float localAdvance = advance + 720.0 * i / engineConfiguration->cylindersCount;
 
 			io_pin_e pin = (io_pin_e) ((int) SPARKOUT_1_OUTPUT + getCylinderId(engineConfiguration->firingOrder, i) - 1);
-			registerSparkEvent(engineConfiguration, &engineConfiguration2->triggerShape, list,
-					ignitionSignals.add(pin), angle);
+			registerSparkEvent(engineConfiguration, &engineConfiguration2->triggerShape, list, ignitionSignals.add(pin),
+					localAdvance, dwellAngle);
 		}
 		break;
 
@@ -193,7 +178,7 @@ void initializeIgnitionActions(float baseAngle, engine_configuration_s *engineCo
 
 void addFuelEvents(engine_configuration_s const *e, engine_configuration2_s *engineConfiguration2,
 		ActuatorEventList *list, injection_mode_e mode) {
-	resetEventList(list);
+	list->resetEventList();
 
 	trigger_shape_s *s = &engineConfiguration2->triggerShape;
 
@@ -204,7 +189,7 @@ void addFuelEvents(engine_configuration_s const *e, engine_configuration2_s *eng
 		for (int i = 0; i < e->cylindersCount; i++) {
 			io_pin_e pin = (io_pin_e) ((int) INJECTOR_1_OUTPUT + getCylinderId(e->firingOrder, i) - 1);
 			float angle = baseAngle + i * 720.0 / e->cylindersCount;
-			registerActuatorEventExt(e, s, list, injectonSignals.add(pin), angle);
+			registerActuatorEventExt(e, s, list->getNextActuatorEvent(), injectonSignals.add(pin), angle);
 		}
 		break;
 	case IM_SIMULTANEOUS:
@@ -213,7 +198,7 @@ void addFuelEvents(engine_configuration_s const *e, engine_configuration2_s *eng
 
 			for (int j = 0; j < e->cylindersCount; j++) {
 				io_pin_e pin = (io_pin_e) ((int) INJECTOR_1_OUTPUT + j);
-				registerActuatorEventExt(e, s, list, injectonSignals.add(pin), angle);
+				registerActuatorEventExt(e, s, list->getNextActuatorEvent(), injectonSignals.add(pin), angle);
 			}
 		}
 		break;
@@ -221,7 +206,7 @@ void addFuelEvents(engine_configuration_s const *e, engine_configuration2_s *eng
 		for (int i = 0; i < e->cylindersCount; i++) {
 			io_pin_e pin = (io_pin_e) ((int) INJECTOR_1_OUTPUT + (i % 2));
 			float angle = baseAngle + i * 720.0 / e->cylindersCount;
-			registerActuatorEventExt(e, s, list, injectonSignals.add(pin), angle);
+			registerActuatorEventExt(e, s, list->getNextActuatorEvent(), injectonSignals.add(pin), angle);
 		}
 		break;
 	default:
@@ -238,52 +223,75 @@ float getSparkDwellMsT(engine_configuration_s *engineConfiguration, int rpm) {
 		float angle = engineConfiguration->crankingChargeAngle;
 		return getOneDegreeTimeMs(rpm) * angle;
 	}
-	efiAssert(!cisnan(rpm), "invalid rpm");
+	efiAssert(!cisnan(rpm), "invalid rpm", NAN);
 
 	return interpolate2d(rpm, engineConfiguration->sparkDwellBins, engineConfiguration->sparkDwell, DWELL_CURVE_SIZE);
 }
 
-void registerActuatorEventExt(engine_configuration_s const *engineConfiguration, trigger_shape_s * s,
-		ActuatorEventList *list, OutputSignal *actuator, float angleOffset) {
-	chDbgCheck(s->getSize() > 0, "uninitialized trigger_shape_s");
+/**
+ * Trigger event count equals engine cycle event count if we have a cam sensor.
+ * Two trigger cycles make one engine cycle in case of a four stroke engine If we only have a cranksensor.
+ */
+int getEngineCycleEventCount(engine_configuration_s const *engineConfiguration, trigger_shape_s * s) {
+	return getOperationMode(engineConfiguration) == FOUR_STROKE_CAM_SENSOR ? s->getSize() : 2 * s->getSize();
+}
+
+void findTriggerPosition(engine_configuration_s const *engineConfiguration, trigger_shape_s * s,
+		event_trigger_position_s *position, float angleOffset) {
 
 	angleOffset = fixAngle(angleOffset + engineConfiguration->globalTriggerAngleOffset);
 
-	int triggerIndexOfZeroEvent = s->triggerShapeSynchPointIndex;
-
 	// todo: migrate to crankAngleRange?
-	float firstAngle = s->wave.getSwitchTime(triggerIndexOfZeroEvent) * 720;
+	float firstAngle = s->wave.getAngle(s->triggerShapeSynchPointIndex, engineConfiguration, s);
+
+	int engineCycleEventCount = getEngineCycleEventCount(engineConfiguration, s);
 
 	// let's find the last trigger angle which is less or equal to the desired angle
 	int i;
-	for (i = 0; i < s->getSize() - 1; i++) {
+	for (i = 0; i < engineCycleEventCount - 1; i++) {
 		// todo: we need binary search here
 		float angle = fixAngle(
-				s->wave.getSwitchTime((triggerIndexOfZeroEvent + i + 1) % s->getSize()) * 720 - firstAngle);
+				s->wave.getAngle((s->triggerShapeSynchPointIndex + i + 1) % engineCycleEventCount, engineConfiguration, s)
+						- firstAngle);
 		if (angle > angleOffset)
 			break;
 	}
 	// explicit check for zero to avoid issues where logical zero is not exactly zero due to float nature
-	float angle =
-			i == 0 ?
-					0 :
-					fixAngle(s->wave.getSwitchTime((triggerIndexOfZeroEvent + i) % s->getSize()) * 720 - firstAngle);
+	float eventAngle;
+	if (i == 0) {
+		eventAngle = 0;
+	} else {
+		eventAngle = fixAngle(
+				s->wave.getAngle((s->triggerShapeSynchPointIndex + i) % engineCycleEventCount, engineConfiguration, s)
+						- firstAngle);
+	}
 
-	if (angleOffset < angle) {
-		firmwareError("angle constraint violation in registerActuatorEventExt(): %f/%f", angleOffset, angle);
+	if (angleOffset < eventAngle) {
+		firmwareError("angle constraint violation in registerActuatorEventExt(): %f/%f", angleOffset, eventAngle);
 		return;
 	}
 
-	registerActuatorEvent(list, i, actuator, angleOffset - angle);
+	position->eventIndex = i;
+	position->eventAngle = eventAngle;
+	position->angleOffset = angleOffset - eventAngle;
 }
 
-//float getTriggerEventAngle(int triggerEventIndex) {
-//	return 0;
-//}
+void registerActuatorEventExt(engine_configuration_s const *engineConfiguration, trigger_shape_s * s, ActuatorEvent *e,
+		OutputSignal *actuator, float angleOffset) {
+	efiAssertVoid(s->getSize() > 0, "uninitialized trigger_shape_s");
+
+	if (e == NULL)
+		return; // error already reported
+	e->actuator = actuator;
+
+	findTriggerPosition(engineConfiguration, s, &e->position, angleOffset);
+}
 
 static int order_1_THEN_3_THEN_4_THEN2[] = { 1, 3, 4, 2 };
 
 static int order_1_THEN_5_THEN_3_THEN_6_THEN_2_THEN_4[] = { 1, 5, 3, 6, 2, 4 };
+
+static int order_1_8_4_3_6_5_7_2[] = {1, 8, 4, 3, 6, 5, 7, 2};
 
 /**
  * @param index from zero to cylindersCount - 1
@@ -298,6 +306,8 @@ int getCylinderId(firing_order_e firingOrder, int index) {
 		return order_1_THEN_3_THEN_4_THEN2[index];
 	case FO_1_THEN_5_THEN_3_THEN_6_THEN_2_THEN_4:
 		return order_1_THEN_5_THEN_3_THEN_6_THEN_2_THEN_4[index];
+	case FO_1_8_4_3_6_5_7_2:
+		return order_1_8_4_3_6_5_7_2[index];
 
 	default:
 		firmwareError("getCylinderId not supported for %d", firingOrder);
@@ -320,8 +330,13 @@ void prepareOutputSignals(engine_configuration_s *engineConfiguration, engine_co
 }
 
 void setTableBin(float array[], int size, float l, float r) {
-	for (int i = 0; i < size; i++)
-		array[i] = interpolate(0, l, size - 1, r, i);
+	for (int i = 0; i < size; i++) {
+		float value = interpolate(0, l, size - 1, r, i);
+		/**
+		 * rounded values look nicer, also we want to avoid precision mismatch with Tuner Studio
+		 */
+		array[i] = efiRound(value, 0.01);
+	}
 }
 
 void setFuelRpmBin(engine_configuration_s *engineConfiguration, float l, float r) {
@@ -338,4 +353,8 @@ void setTimingRpmBin(engine_configuration_s *engineConfiguration, float l, float
 
 void setTimingLoadBin(engine_configuration_s *engineConfiguration, float l, float r) {
 	setTableBin(engineConfiguration->ignitionLoadBins, IGN_LOAD_COUNT, l, r);
+}
+
+int isInjectionEnabled(engine_configuration2_s const *engineConfiguration2) {
+	return engineConfiguration2->isInjectionEnabledFlag;
 }

@@ -18,7 +18,7 @@ endif
 
 # C++ specific options here (added to USE_OPT).
 ifeq ($(USE_CPPOPT),)
-  USE_CPPOPT = -std=c++11 -fno-rtti -fno-exceptions -fno-use-cxa-atexit
+  USE_CPPOPT = -std=c++11 -fno-rtti -fno-exceptions -fno-use-cxa-atexit -Werror=write-strings
 endif
 
 # Enable this if you want the linker to remove unused code and data
@@ -196,8 +196,9 @@ INCDIR = $(PORTINC) $(KERNINC) $(TESTINC) \
 	hw_layer/serial_over_usb \
 	hw_layer/algo \
 	hw_layer/lcd \
-	emulation/hw_layer \
 	emulation \
+	emulation/hw_layer \
+	emulation/test \
 	controllers \
 	controllers/sensors \
 	controllers/system \
@@ -292,7 +293,7 @@ ULIBS = -lm
 ##############################################################################
 
 ifeq ($(USE_FPU),yes)
-  USE_OPT += -mfloat-abi=softfp -mfpu=fpv4-sp-d16 -fsingle-precision-constant
+  USE_OPT += -mfloat-abi=hard -mfpu=fpv4-sp-d16 -fsingle-precision-constant
   DDEFS += -DCORTEX_USE_FPU=TRUE
 else
   DDEFS += -DCORTEX_USE_FPU=FALSE

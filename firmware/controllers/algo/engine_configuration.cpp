@@ -1,5 +1,5 @@
 /**
- * @file	engine_controller.c
+ * @file	engine_configuration.cpp
  * @brief	Utility method related to the engine configuration data structure.
  *
  * @date Nov 22, 2013
@@ -46,6 +46,7 @@
 #include "MiniCooperR50.h"
 #include "ford_escort_gt.h"
 #include "citroenBerlingoTU3JP.h"
+#include "rover_v8.h"
 
 static volatile int globalConfigurationVersion = 0;
 
@@ -77,12 +78,27 @@ void initBpsxD1Sensor(afr_sensor_s *sensor) {
 	sensor->value2 = 19;
 }
 
+void setWholeVEMap(engine_configuration_s *engineConfiguration, float value) {
+//	for (int l = 0; l < VE_LOAD_COUNT; l++) {
+//		for (int r = 0; r < VE_RPM_COUNT; r++) {
+//			engineConfiguration->veTable[l][r] = value;
+//		}
+//	}
+}
+
 void setWholeFuelMap(engine_configuration_s *engineConfiguration, float value) {
 	for (int l = 0; l < FUEL_LOAD_COUNT; l++) {
 		for (int r = 0; r < FUEL_RPM_COUNT; r++) {
 			engineConfiguration->fuelTable[l][r] = value;
 		}
 	}
+}
+
+void setTriggerSynchronizationGap(engine_configuration_s *engineConfiguration, float synchGap) {
+	engineConfiguration->triggerConfig.isSynchronizationNeeded = TRUE;
+
+	engineConfiguration->triggerConfig.syncRatioFrom = synchGap * 0.75;
+	engineConfiguration->triggerConfig.syncRatioTo = synchGap * 1.25;
 }
 
 /**
@@ -192,20 +208,20 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	engineConfiguration->canReadEnabled = TRUE;
 	engineConfiguration->canWriteEnabled = FALSE;
 
-	/**
-	 * 0.5 means primary position sensor is on a camshaft
-	 */
-	engineConfiguration->rpmMultiplier = 0.5;
+	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
 	engineConfiguration->cylindersCount = 4;
+	engineConfiguration->displacement = 2;
+	/**
+	 * By the way http://users.erols.com/srweiss/tableifc.htm has a LOT of data
+	 */
+	engineConfiguration->injectorFlow = 200;
 
 	engineConfiguration->displayMode = DM_HD44780;
 
 	engineConfiguration->logFormat = LF_NATIVE;
 
 	engineConfiguration->triggerConfig.triggerType = TT_TOOTHED_WHEEL;
-	engineConfiguration->triggerConfig.syncRatioFrom = 1.5;
-	engineConfiguration->triggerConfig.syncRatioTo = 3;
-	engineConfiguration->triggerConfig.isSynchronizationNeeded = TRUE;
+	setTriggerSynchronizationGap(engineConfiguration, 2);
 	engineConfiguration->triggerConfig.useRiseEdge = TRUE;
 
 	engineConfiguration->HD44780width = 16;
@@ -291,6 +307,13 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	boardConfiguration->primaryLogicAnalyzerPin = GPIOA_8;
 	boardConfiguration->secondaryLogicAnalyzerPin = GPIOE_7;
 
+	boardConfiguration->idleThreadPeriod = 100;
+	boardConfiguration->consoleLoopPeriod = 200;
+	boardConfiguration->lcdThreadPeriod = 300;
+	boardConfiguration->tunerStudioThreadPeriod = 300;
+	boardConfiguration->generalPeriodicThreadPeriod = 200;
+
+	boardConfiguration->tunerStudioSerialSpeed = 38400;
 }
 
 void setDefaultNonPersistentConfiguration(engine_configuration2_s *engineConfiguration2) {
@@ -363,6 +386,10 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType, engine_co
 	case CITROEN_TU3JP:
 		setCitroenBerlingoTU3JPConfiguration(engineConfiguration, boardConfiguration);
 		break;
+	case ROVER_V8:
+		setRoverv8(engineConfiguration, boardConfiguration);
+		break;
+
 	default:
 		firmwareError("Unexpected engine type: %d", engineType);
 
@@ -398,6 +425,22 @@ void applyNonPersistentConfiguration(Logging * logger, engine_configuration_s *e
 
 	prepareOutputSignals(engineConfiguration, engineConfiguration2);
 	// todo: looks like this is here only for unit tests. todo: remove
-	initializeIgnitionActions(0, engineConfiguration, engineConfiguration2, 0, &engineConfiguration2->engineEventConfiguration.ignitionEvents[0]);
+	initializeIgnitionActions(0, 0, engineConfiguration, engineConfiguration2,
+			&engineConfiguration2->engineEventConfiguration.ignitionEvents[0]);
+
+}
+
+void setOperationMode(engine_configuration_s *engineConfiguration, operation_mode_e mode) {
+	if (mode == FOUR_STROKE_CAM_SENSOR) {
+		engineConfiguration->rpmMultiplier = 0.5;
+	} else if (mode == FOUR_STROKE_CRANK_SENSOR) {
+		engineConfiguration->rpmMultiplier = 1;
+	}
+}
+
+operation_mode_e getOperationMode( engine_configuration_s const *engineConfiguration) {
+	if(engineConfiguration->rpmMultiplier == 1)
+		return FOUR_STROKE_CRANK_SENSOR;
+	return FOUR_STROKE_CAM_SENSOR;
 
 }

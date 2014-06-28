@@ -1,5 +1,5 @@
 /**
- * @file	board_test.c
+ * @file	board_test.cpp
  * @brief	This is a simple board testing utility
  *
  * @date Mar 12, 2014
@@ -41,7 +41,7 @@ static void waitForKey(void) {
 	print("Please hit N<ENTER> to continue\r\n");
 	int copy = stepCoutner;
 	while (!isTimeForNextStep(copy))
-		chThdSleepMilliseconds(10);
+		chThdSleepMilliseconds(200);
 }
 
 static void nextStep(void) {
@@ -74,7 +74,7 @@ static brain_pin_e BLINK_PINS[] = { GPIOE_8, // HIGH DRIVER 1
 		GPIOB_9, // OUT12
 		};
 
-static WORKING_AREA(btThreadStack, UTILITY_THREAD_STACK_SIZE);
+static THD_WORKING_AREA(btThreadStack, UTILITY_THREAD_STACK_SIZE);
 
 static msg_t ivThread(int param) {
 	chRegSetThreadName("board test blinking");
@@ -108,7 +108,7 @@ void initBoardTest(void) {
 	int pinsCount = sizeof(BLINK_PINS) / sizeof(brain_pin_e);
 
 	while (currentIndex < slowAdc.size()) {
-		int hwIndex = getAdcHardwareIndexByInternalIndex(currentIndex);
+		int hwIndex = slowAdc.getAdcHardwareIndexByInternalIndex(currentIndex);
 		GPIO_TypeDef* port = getAdcChannelPort(hwIndex);
 		int pin = getAdcChannelPin(hwIndex);
 
@@ -143,7 +143,7 @@ void initBoardTest(void) {
 		uint32_t hwPin = getHwPin(currentPin);
 
 		print("currentIndex=%d\r\n", currentIndex);
-		print("Let's test %s%d\r\n", portname(hwPort), hwPin);
+		print("Let's blink %s%d\r\n", portname(hwPort), hwPin);
 		mySetPadMode("test", hwPort, hwPin, PAL_STM32_MODE_OUTPUT);
 
 		currentIndex++;

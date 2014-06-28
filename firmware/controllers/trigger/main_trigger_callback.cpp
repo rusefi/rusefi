@@ -23,17 +23,22 @@
 
 #include "main.h"
 
+#if !EFI_PROD_CODE && !EFI_SIMULATOR
+
+#define chThdSelf() 0
+#define getRemainingStack(x) (999999)
+
+#endif
+
 #if EFI_ENGINE_CONTROL
 
 #include "main_trigger_callback.h"
 #include "ec2.h"
 
-extern "C" {
+#include "engine_math.h"
 #include "trigger_central.h"
 #include "rpm_calculator.h"
 #include "signal_executor.h"
-#include "eficonsole.h"
-#include "engine_math.h"
 #include "engine_configuration.h"
 #include "interpolation.h"
 #include "advance_map.h"
@@ -42,36 +47,46 @@ extern "C" {
 #include "histogram.h"
 #include "fuel_math.h"
 #include "histogram.h"
+#if EFI_PROD_CODE
 #include "rfiutil.h"
+#endif /* EFI_HISTOGRAMS */
 #include "LocalVersionHolder.h"
+#include "event_queue.h"
+#include "engine.h"
 
 static LocalVersionHolder localVersion;
 
-int isInjectionEnabled(void);
+extern Engine engine;
 
-}
+static MainTriggerCallback mainTriggerCallbackInstance;
 
-extern engine_configuration_s *engineConfiguration;
-extern engine_configuration2_s *engineConfiguration2;
+/**
+ * That's the list of pending spark firing events
+ */
+static IgnitionEvent *iHead = NULL;
+
+/**
+ * In order to archive higher event precision, we are using a hybrid approach
+ * where we are scheduling events based on the closest trigger event with a time offset.
+ *
+ * This queue is using global trigger event index as 'time'
+ */
+static EventQueue triggerEventsQueue;
 
 static cyclic_buffer ignitionErrorDetection;
 
 static Logging logger;
 
-/**
- * this field is accessed only from shaft sensor event handler.
- * This is not a method variable just to save us from stack overflow.
- */
-static ActuatorEventList events;
-
-static void handleFuelInjectionEvent(ActuatorEvent *event, int rpm) {
-	float fuelMs = getFuelMs(rpm) * engineConfiguration->globalFuelCorrection;
+static void handleFuelInjectionEvent(MainTriggerCallback *mainTriggerCallback, ActuatorEvent *event, int rpm) {
+	float fuelMs = getFuelMs(rpm) * mainTriggerCallback->engineConfiguration->globalFuelCorrection;
 	if (fuelMs < 0) {
+#if EFI_PROD_CODE
 		scheduleMsg(&logger, "ERROR: negative injectionPeriod %f", fuelMs);
+#endif
 		return;
 	}
 
-	float delay = getOneDegreeTimeMs(rpm) * event->angleOffset;
+	float delay = getOneDegreeTimeMs(rpm) * event->position.angleOffset;
 
 //	if (isCranking())
 //		scheduleMsg(&logger, "crankingFuel=%f for CLT=%fC", fuelMs, getCoolantTemperature());
@@ -79,10 +94,12 @@ static void handleFuelInjectionEvent(ActuatorEvent *event, int rpm) {
 	scheduleOutput(event->actuator, delay, fuelMs);
 }
 
-static void handleFuel(int eventIndex, int rpm) {
-	if (!isInjectionEnabled())
+static void handleFuel(MainTriggerCallback *mainTriggerCallback, int eventIndex, int rpm) {
+	if (!isInjectionEnabled(mainTriggerCallback->engineConfiguration2))
 		return;
-	chDbgCheck(eventIndex < engineConfiguration2->triggerShape.shaftPositionEventCount, "event index");
+	efiAssertVoid(getRemainingStack(chThdSelf()) > 16, "stack#3");
+	efiAssertVoid(eventIndex < 2 * mainTriggerCallback->engineConfiguration2->triggerShape.shaftPositionEventCount,
+			"event index");
 
 	/**
 	 * Ignition events are defined by addFuelEvents() according to selected
@@ -90,39 +107,88 @@ static void handleFuel(int eventIndex, int rpm) {
 	 */
 	ActuatorEventList *source =
 			isCranking() ?
-					&engineConfiguration2->engineEventConfiguration.crankingInjectionEvents :
-					&engineConfiguration2->engineEventConfiguration.injectionEvents;
-	findEvents(eventIndex, source, &events);
+					&mainTriggerCallback->engineConfiguration2->engineEventConfiguration.crankingInjectionEvents :
+					&mainTriggerCallback->engineConfiguration2->engineEventConfiguration.injectionEvents;
 
-	if (events.size == 0)
-		return;
-
-	for (int i = 0; i < events.size; i++) {
-		ActuatorEvent *event = &events.events[i];
-		handleFuelInjectionEvent(event, rpm);
+	for (int i = 0; i < source->size; i++) {
+		ActuatorEvent *event = &source->events[i];
+		if (event->position.eventIndex != eventIndex)
+			continue;
+		handleFuelInjectionEvent(mainTriggerCallback, event, rpm);
 	}
 }
 
-static void handleSparkEvent(ActuatorEvent *event, int rpm) {
-	float dwellMs = getSparkDwellMs(rpm);
+static void handleSparkEvent(MainTriggerCallback *mainTriggerCallback, int eventIndex, IgnitionEvent *iEvent, int rpm) {
+	engine_configuration_s *engineConfiguration = mainTriggerCallback->engineConfiguration;
+	engine_configuration2_s *engineConfiguration2 = mainTriggerCallback->engineConfiguration2;
+
+	float dwellMs = getSparkDwellMsT(engineConfiguration, rpm);
 	if (cisnan(dwellMs) || dwellMs < 0) {
 		firmwareError("invalid dwell: %f at %d", dwellMs, rpm);
 		return;
 	}
 
-	float sparkDelay = getOneDegreeTimeMs(rpm) * event->angleOffset;
+	ActuatorEvent *event = &iEvent->actuator;
+	float sparkDelay = getOneDegreeTimeMs(rpm) * event->position.angleOffset;
 	int isIgnitionError = sparkDelay < 0;
 	ignitionErrorDetection.add(isIgnitionError);
 	if (isIgnitionError) {
+#if EFI_PROD_CODE
 		scheduleMsg(&logger, "Negative spark delay=%f", sparkDelay);
+#endif
 		sparkDelay = 0;
-		//return;
+		return;
 	}
 
-	scheduleOutput(event->actuator, sparkDelay, dwellMs);
+	OutputSignal *signal = event->actuator;
+	//scheduleOutput(event->actuator, sparkDelay, dwellMs);
+
+	if (cisnan(dwellMs)) {
+		firmwareError("NaN in scheduleOutput", dwellMs);
+		return;
+	}
+
+	/**
+	 * We are alternating two event lists in order to avoid a potential issue around revolution boundary
+	 * when an event is scheduled within the next revolution.
+	 */
+	scheduling_s * sUp = &signal->signalTimerUp[0];
+	scheduling_s * sDown = &signal->signalTimerDown[0];
+
+	/**
+	 * The start of charge is always within the current trigger event range, so just plain time-based scheduling
+	 */
+	scheduleTask(sUp, (int) MS2US(sparkDelay), (schfunc_t) &turnPinHigh, (void *) signal);
+	/**
+	 * Spark event is often happening during a later trigger event timeframe
+	 * TODO: improve precision
+	 */
+
+	findTriggerPosition(engineConfiguration, &engineConfiguration2->triggerShape, &iEvent->sparkPosition,
+			iEvent->advance);
+
+	if (iEvent->sparkPosition.eventIndex == eventIndex) {
+		/**
+		 * Spark should be fired before the next trigger event - time-based delay is best precision possible
+		 */
+		float timeTillIgnitionUs = getOneDegreeTimeUs(rpm) * iEvent->sparkPosition.angleOffset;
+
+		scheduleTask(sDown, (int) timeTillIgnitionUs, (schfunc_t) &turnPinLow, (void*) signal);
+	} else {
+		/**
+		 * Spark should be scheduled in relation to some future trigger event, this way we get better firing precision
+		 */
+		bool isPending = assertNotInList<IgnitionEvent>(iHead, iEvent);
+		if (isPending)
+			return;
+
+		LL_APPEND(iHead, iEvent);
+
+		//scheduleTask(sDown, (int) MS2US(sparkDelay + dwellMs), (schfunc_t) &turnPinLow, (void*) signal);
+	}
 }
 
-static void handleSpark(int eventIndex, int rpm, ActuatorEventList *list) {
+static void handleSpark(MainTriggerCallback *mainTriggerCallback, int eventIndex, int rpm, IgnitionEventList *list) {
 	if (!isValidRpm(rpm))
 		return; // this might happen for instance in case of a single trigger event after a pause
 
@@ -130,30 +196,49 @@ static void handleSpark(int eventIndex, int rpm, ActuatorEventList *list) {
 	 * Ignition schedule is defined once per revolution
 	 * See initializeIgnitionActions()
 	 */
-	findEvents(eventIndex, list, &events);
-	if (events.size == 0)
-		return;
+
+	IgnitionEvent *current, *tmp;
+
+	LL_FOREACH_SAFE(iHead, current, tmp)
+	{
+		if (current->sparkPosition.eventIndex == eventIndex) {
+			// time to fire a spark which was scheduled previously
+			LL_DELETE(iHead, current);
+
+			ActuatorEvent *event = &current->actuator;
+			OutputSignal *signal = event->actuator;
+			scheduling_s * sDown = &signal->signalTimerDown[0];
+
+			float timeTillIgnitionUs = getOneDegreeTimeUs(rpm) * current->sparkPosition.angleOffset;
+			scheduleTask(sDown, (int) timeTillIgnitionUs, (schfunc_t) &turnPinLow, (void*) signal);
+		}
+	}
 
 //	scheduleSimpleMsg(&logger, "eventId spark ", eventIndex);
-
-	for (int i = 0; i < events.size; i++) {
-		ActuatorEvent *event = &events.events[i];
-		handleSparkEvent(event, rpm);
+	for (int i = 0; i < list->size; i++) {
+		IgnitionEvent *event = &list->events[i];
+		if (event->actuator.position.eventIndex != eventIndex)
+			continue;
+		handleSparkEvent(mainTriggerCallback, eventIndex, event, rpm);
 	}
 }
 
 static histogram_s mainLoopHisto;
 
 void showMainHistogram(void) {
+#if EFI_PROD_CODE
 	printHistogram(&logger, &mainLoopHisto);
+#endif
 }
 
 /**
  * This is the main trigger event handler.
  * Both injection and ignition are controlled from this method.
  */
-static void onTriggerEvent(ShaftEvents ckpSignalType, int eventIndex) {
-	chDbgCheck(eventIndex < engineConfiguration2->triggerShape.shaftPositionEventCount, "event index");
+void onTriggerEvent(trigger_event_e ckpSignalType, int eventIndex, MainTriggerCallback *mainTriggerCallback) {
+	efiAssertVoid(eventIndex < 2 * mainTriggerCallback->engineConfiguration2->triggerShape.shaftPositionEventCount,
+			"event index");
+	efiAssertVoid(getRemainingStack(chThdSelf()) > 16, "stack#3");
 
 	int rpm = getRpm();
 	if (rpm == 0) {
@@ -165,18 +250,20 @@ static void onTriggerEvent(ShaftEvents ckpSignalType, int eventIndex) {
 		warning(OBD_Camshaft_Position_Sensor_Circuit_Range_Performance, "noisy trigger");
 		return;
 	}
-	if (rpm > engineConfiguration->rpmHardLimit) {
+	if (rpm > mainTriggerCallback->engineConfiguration->rpmHardLimit) {
 		warning(OBD_PCM_Processor_Fault, "skipping stroke due to rpm=%d", rpm);
 		return;
 	}
 
+#if EFI_HISTOGRAMS && EFI_PROD_CODE
 	int beforeCallback = hal_lld_get_counter_value();
+#endif
 
 	int revolutionIndex = getRevolutionCounter() % 2;
 
 	if (eventIndex == 0) {
 		if (localVersion.isOld())
-			prepareOutputSignals(engineConfiguration, engineConfiguration2);
+			prepareOutputSignals(mainTriggerCallback->engineConfiguration, mainTriggerCallback->engineConfiguration2);
 
 		/**
 		 * TODO: warning. there is a bit of a hack here, todo: improve.
@@ -190,24 +277,29 @@ static void onTriggerEvent(ShaftEvents ckpSignalType, int eventIndex) {
 		 * Within one engine cycle all cylinders are fired with same timing advance.
 		 * todo: one day we can control cylinders individually
 		 */
-		float dwellMs = getSparkDwellMs(rpm);
+		float dwellMs = getSparkDwellMsT(mainTriggerCallback->engineConfiguration, rpm);
 		if (cisnan(dwellMs) || dwellMs < 0) {
 			firmwareError("invalid dwell: %f at %d", dwellMs, rpm);
 			return;
 		}
-		float advance = getAdvance(rpm, getEngineLoad());
+		float advance = getAdvance(rpm, getEngineLoadT(mainTriggerCallback->engineConfiguration));
 
 		float dwellAngle = dwellMs / getOneDegreeTimeMs(rpm);
 
-		initializeIgnitionActions(advance - dwellAngle, engineConfiguration, engineConfiguration2, dwellMs, &engineConfiguration2->engineEventConfiguration.ignitionEvents[revolutionIndex]);
+		initializeIgnitionActions(advance, dwellAngle, mainTriggerCallback->engineConfiguration,
+				mainTriggerCallback->engineConfiguration2,
+				&mainTriggerCallback->engineConfiguration2->engineEventConfiguration.ignitionEvents[revolutionIndex]);
 	}
 
-	handleFuel(eventIndex, rpm);
-	handleSpark(eventIndex, rpm, &engineConfiguration2->engineEventConfiguration.ignitionEvents[revolutionIndex]);
-#if EFI_HISTOGRAMS
+	triggerEventsQueue.executeAll(getCrankEventCounter());
+
+	handleFuel(mainTriggerCallback, eventIndex, rpm);
+	handleSpark(mainTriggerCallback, eventIndex, rpm,
+			&mainTriggerCallback->engineConfiguration2->engineEventConfiguration.ignitionEvents[revolutionIndex]);
+#if EFI_HISTOGRAMS && EFI_PROD_CODE
 	int diff = hal_lld_get_counter_value() - beforeCallback;
 	if (diff > 0)
-		hsAdd(&mainLoopHisto, diff);
+	hsAdd(&mainLoopHisto, diff);
 #endif /* EFI_HISTOGRAMS */
 }
 
@@ -218,25 +310,37 @@ static void showTriggerHistogram(void) {
 
 static void showMainInfo(void) {
 	int rpm = getRpm();
-	float el = getEngineLoad();
+	float el = getEngineLoadT(mainTriggerCallbackInstance.engineConfiguration);
+#if EFI_PROD_CODE
 	scheduleMsg(&logger, "rpm %d engine_load %f", rpm, el);
 	scheduleMsg(&logger, "fuel %fms timing %f", getFuelMs(rpm), getAdvance(rpm, el));
+#endif
 }
 
-void initMainEventListener() {
+void MainTriggerCallback::init(engine_configuration_s *engineConfiguration,
+		engine_configuration2_s *engineConfiguration2) {
+	this->engineConfiguration = engineConfiguration;
+	this->engineConfiguration2 = engineConfiguration2;
+}
+
+void initMainEventListener(engine_configuration_s *engineConfiguration, engine_configuration2_s *engineConfiguration2) {
+	mainTriggerCallbackInstance.init(engineConfiguration, engineConfiguration2);
+
+#if EFI_PROD_CODE
 	addConsoleAction("performanceinfo", showTriggerHistogram);
 	addConsoleAction("maininfo", showMainInfo);
 
 	initLogging(&logger, "main event handler");
 	printMsg(&logger, "initMainLoop: %d", currentTimeMillis());
+	if (!isInjectionEnabled(mainTriggerCallbackInstance.engineConfiguration2))
+	printMsg(&logger, "!!!!!!!!!!!!!!!!!!! injection disabled");
+#endif
+
 #if EFI_HISTOGRAMS
 	initHistogram(&mainLoopHisto, "main callback");
 #endif /* EFI_HISTOGRAMS */
 
-	if (!isInjectionEnabled())
-		printMsg(&logger, "!!!!!!!!!!!!!!!!!!! injection disabled");
-
-	addTriggerEventListener(&onTriggerEvent, "main loop");
+	addTriggerEventListener((ShaftPositionListener) &onTriggerEvent, "main loop", &mainTriggerCallbackInstance);
 }
 
 int isIgnitionTimingError(void) {

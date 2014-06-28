@@ -42,7 +42,7 @@ static void shaft_icu_width_callback(ICUDriver *icup) {
 	if (!isPrimary && !engineConfiguration->needSecondTriggerInput)
 		return;
 	//	icucnt_t last_width = icuGetWidth(icup); so far we are fine with system time
-	ShaftEvents signal = isPrimary ? SHAFT_PRIMARY_UP : SHAFT_SECONDARY_UP;
+	trigger_event_e signal = isPrimary ? SHAFT_PRIMARY_UP : SHAFT_SECONDARY_UP;
 
 	hwHandleShaftSignal(signal);
 }
@@ -53,7 +53,7 @@ static void shaft_icu_period_callback(ICUDriver *icup) {
 		return;
 
 	//	icucnt_t last_period = icuGetPeriod(icup); so far we are fine with system time
-	ShaftEvents	signal = isPrimary ? SHAFT_PRIMARY_DOWN : SHAFT_SECONDARY_DOWN;
+	trigger_event_e	signal = isPrimary ? SHAFT_PRIMARY_DOWN : SHAFT_SECONDARY_DOWN;
 	hwHandleShaftSignal(signal);
 }
 

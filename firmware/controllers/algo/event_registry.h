@@ -13,24 +13,60 @@
 
 #define MAX_EVENT_COUNT 40
 
+/**
+ * This structure defines an angle position within the trigger
+ */
 typedef struct {
+	/**
+	 * That's trigger event index
+	 */
 	int eventIndex;
-	OutputSignal *actuator;
+	float eventAngle;
+	/**
+	 * Angle offset from the trigger event
+	 */
 	float angleOffset;
+} event_trigger_position_s;
+
+typedef struct {
+	event_trigger_position_s position;
+	OutputSignal *actuator;
+	scheduling_s signalTimer;
 } ActuatorEvent;
 
-typedef struct {
+typedef struct IgnitionEvent_struct IgnitionEvent;
+
+struct IgnitionEvent_struct {
+	ActuatorEvent actuator;
+	float advance;
+	event_trigger_position_s sparkPosition;
+	IgnitionEvent *next;
+	char *name;
+};
+
+template <class Type, int Dimention>
+class ArrayList {
+public:
 	int size;
-	ActuatorEvent events[MAX_EVENT_COUNT];
-} ActuatorEventList;
+	Type events[Dimention];
+	void resetEventList(void);
+	Type *getNextActuatorEvent(void);
+};
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
+template <class Type, int Dimention>
+void ArrayList< Type, Dimention>::resetEventList(void) {
+	size = 0;
+}
 
+template <class Type, int Dimention>
+Type * ArrayList< Type, Dimention>::getNextActuatorEvent(void) {
+	efiAssert(size < Dimention, "registerActuatorEvent() too many events", NULL);
+	return &events[size++];
+}
 
-void resetEventList(ActuatorEventList *list);
+typedef ArrayList<ActuatorEvent, MAX_EVENT_COUNT> ActuatorEventList;
+
+typedef ArrayList<IgnitionEvent, MAX_EVENT_COUNT> IgnitionEventList;
 
 /**
  * this is an intermediate implementation of flexible event handling.
@@ -41,12 +77,5 @@ void resetEventList(ActuatorEventList *list);
  * @param	actuator injector or coil OutputSignal
  */
 void registerActuatorEvent(ActuatorEventList *list, int eventIndex, OutputSignal *actuator, float angleOffset);
-
-void findEvents(int eventIndex, ActuatorEventList *source, ActuatorEventList *target);
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-
 
 #endif /* EVENT_REGISTRY_H_ */

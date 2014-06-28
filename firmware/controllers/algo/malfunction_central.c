@@ -55,6 +55,6 @@ void getErrorCodes(error_codes_set_s * copy) {
 		copy->error_codes[i] = error_codes_set.error_codes[i];
 }
 
-bool_t hasErrorCodes(void) {
+bool hasErrorCodes(void) {
 	return error_codes_set.count > 0;
 }

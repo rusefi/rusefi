@@ -12,25 +12,29 @@
 
 #include "main.h"
 
-#if EFI_SHAFT_POSITION_INPUT
-
 #include "rpm_calculator.h"
-#include "trigger_central.h"
-#include "engine_configuration.h"
-#include "ec2.h"
-#include "engine_math.h"
-#include "rfiutil.h"
-
-#if EFI_ANALOG_CHART
-#include "analog_chart.h"
-#endif /* EFI_PROD_CODE */
 
 #if EFI_WAVE_CHART
 #include "wave_chart.h"
 extern WaveChart waveChart;
 #endif /* EFI_WAVE_CHART */
 
-static rpm_s rpmState;
+#if EFI_SHAFT_POSITION_INPUT
+
+#include "trigger_central.h"
+#include "engine_configuration.h"
+#include "ec2.h"
+#include "engine_math.h"
+#if EFI_PROD_CODE
+#include "rfiutil.h"
+#include "engine.h"
+#endif
+
+#if EFI_ANALOG_CHART
+#include "analog_chart.h"
+#endif /* EFI_PROD_CODE */
+
+static RpmCalculator rpmState;
 
 #define UNREALISTIC_RPM 30000
 
@@ -39,17 +43,33 @@ static rpm_s rpmState;
 extern engine_configuration_s *engineConfiguration;
 extern engine_configuration2_s *engineConfiguration2;
 
+#if EFI_PROD_CODE || EFI_SIMULATOR
 static Logging logger;
+extern Engine engine;
+#endif
+
+RpmCalculator::RpmCalculator() {
+	rpmValue = 0;
+
+	// we need this initial to have not_running at first invocation
+	lastRpmEventTimeUs = (uint64_t) -10 * US_PER_SECOND;
+}
 
 /**
  * @return true if there was a full shaft revolution within the last second
  */
-bool_t isRunning(void) {
+bool RpmCalculator::isRunning(void) {
 	uint64_t nowUs = getTimeNowUs();
-	return nowUs - rpmState.lastRpmEventTimeUs < US_PER_SECOND;
+	return nowUs - lastRpmEventTimeUs < US_PER_SECOND;
 }
 
-bool_t isValidRpm(int rpm) {
+int RpmCalculator::rpm(void) {
+	if (!this->isRunning())
+		return 0;
+	return rpmValue;
+}
+
+bool isValidRpm(int rpm) {
 	return rpm > 0 && rpm < UNREALISTIC_RPM;
 }
 
@@ -57,18 +77,19 @@ uint64_t getLastRpmEventTime(void) {
 	return rpmState.lastRpmEventTimeUs;
 }
 
-bool_t isCranking(void) {
+#if EFI_PROD_CODE || EFI_SIMULATOR
+bool isCranking(void) {
 	int rpm = getRpm();
 	return isCrankingR(rpm);
 }
+#endif
 
 /**
  * @return -1 in case of isNoisySignal(), current RPM otherwise
  */
-int getRpm() {
-	if (!isRunning())
-		return 0;
-	return rpmState.rpm;
+int getRpmE(Engine *engine) {
+	efiAssert(engine->rpmCalculator!=NULL, "rpmCalculator not assigned", -1);
+	return engine->rpmCalculator->rpm();
 }
 
 /**
@@ -77,7 +98,7 @@ int getRpm() {
 float getCrankshaftAngle(uint64_t timeUs) {
 	uint64_t timeSinceZeroAngle = timeUs - rpmState.lastRpmEventTimeUs;
 
-	float cRevolutionTimeMs = getCrankshaftRevolutionTimeMs(rpmState.rpm);
+	float cRevolutionTimeMs = getCrankshaftRevolutionTimeMs(rpmState.rpm());
 
 	return 360.0 * timeSinceZeroAngle / cRevolutionTimeMs / 1000;
 }
@@ -92,18 +113,16 @@ int getRevolutionCounter(void) {
  *
  * @return TRUE if noise is detected
  */
-static int isNoisySignal(rpm_s * rpmState, uint64_t nowUs) {
+static int isNoisySignal(RpmCalculator * rpmState, uint64_t nowUs) {
 	uint64_t diff = nowUs - rpmState->lastRpmEventTimeUs;
-	return diff < 1000; // that's 1ms
+	/**
+	 * 60/2 wheel at 8000 rpm
+	 * 60000000us / 8000 / 120 = 62us
+	 */
+	return diff < 40; // that's 40us
 }
 
-static uint8_t shaft_signal_msg_index[15];
-
-void addWaveChartEvent(const char *name, const char * msg, const char *msg2) {
-#if EFI_WAVE_CHART
-	addWaveChartEvent3(&waveChart, name, msg, msg2);
-#endif /* EFI_WAVE_CHART */
-}
+static char shaft_signal_msg_index[15];
 
 /**
  * @brief Shaft position callback used by RPM calculation logic.
@@ -112,7 +131,7 @@ void addWaveChartEvent(const char *name, const char * msg, const char *msg2) {
  * updated here.
  * This callback is invoked on interrupt thread.
  */
-static void shaftPositionCallback(ShaftEvents ckpSignalType, int index) {
+void shaftPositionCallback(trigger_event_e ckpSignalType, int index, RpmCalculator *rpmState) {
 	itoa10(&shaft_signal_msg_index[1], index);
 	if (ckpSignalType == SHAFT_PRIMARY_UP) {
 		addWaveChartEvent("crank", "up", (char*) shaft_signal_msg_index);
@@ -131,28 +150,30 @@ static void shaftPositionCallback(ShaftEvents ckpSignalType, int index) {
 #endif
 		return;
 	}
-	rpmState.revolutionCounter++;
+	rpmState->revolutionCounter++;
 
 	uint64_t nowUs = getTimeNowUs();
 
-	int hadRpmRecently = isRunning();
+	bool_t hadRpmRecently = rpmState->isRunning();
 
 	if (hadRpmRecently) {
-		if (isNoisySignal(&rpmState, nowUs)) {
+		if (isNoisySignal(rpmState, nowUs)) {
 			// unexpected state. Noise?
-			rpmState.rpm = NOISY_RPM;
+			rpmState->rpmValue = NOISY_RPM;
 		} else {
-			uint64_t diff = nowUs - rpmState.lastRpmEventTimeUs;
+			uint64_t diff = nowUs - rpmState->lastRpmEventTimeUs;
 			// 60000 because per minute
 			// * 2 because each revolution of crankshaft consists of two camshaft revolutions
-			// / 4 because each cylinder sends a signal
 			// need to measure time from the previous non-skipped event
+			/**
+			 * Four stroke cycle is two crankshaft revolutions
+			 */
 
-			int rpm = (int) (60 * US_PER_SECOND / engineConfiguration->rpmMultiplier / diff);
-			rpmState.rpm = rpm > UNREALISTIC_RPM ? NOISY_RPM : rpm;
+			int rpm = (int) (60 * US_PER_SECOND * 2 / diff);
+			rpmState->rpmValue = rpm > UNREALISTIC_RPM ? NOISY_RPM : rpm;
 		}
 	}
-	rpmState.lastRpmEventTimeUs = nowUs;
+	rpmState->lastRpmEventTimeUs = nowUs;
 #if EFI_ANALOG_CHART
 	if (engineConfiguration->analogChartMode == AC_TRIGGER)
 		acAddData(getCrankshaftAngle(nowUs), index);
@@ -161,37 +182,38 @@ static void shaftPositionCallback(ShaftEvents ckpSignalType, int index) {
 
 static scheduling_s tdcScheduler[2];
 
-static uint8_t rpmBuffer[10];
+static char rpmBuffer[10];
 
+#if EFI_PROD_CODE || EFI_SIMULATOR
 static void onTdcCallback(void) {
 	itoa10(rpmBuffer, getRpm());
 	addWaveChartEvent(TOP_DEAD_CENTER_MESSAGE, (char*) rpmBuffer, "");
 }
 
-static void tdcMarkCallback(ShaftEvents ckpSignalType, int index) {
+static void tdcMarkCallback(trigger_event_e ckpSignalType, int index, void *arg) {
 	if (index == 0) {
 		int index = getRevolutionCounter() % 2;
 		scheduleByAngle(&tdcScheduler[index], engineConfiguration->globalTriggerAngleOffset, (schfunc_t) onTdcCallback, NULL);
 	}
 }
+#endif
 
 void initRpmCalculator(void) {
+#if EFI_PROD_CODE || EFI_SIMULATOR
 	initLogging(&logger, "rpm calc");
+	engine.rpmCalculator = &rpmState;
 
 	tdcScheduler[0].name = "tdc0";
 	tdcScheduler[1].name = "tdc1";
+	addTriggerEventListener(&tdcMarkCallback, "chart TDC mark", NULL);
+#endif
 
 	strcpy((char*) shaft_signal_msg_index, "_");
 
-	rpmState.rpm = 0;
-
-	// we need this initial to have not_running at first invocation
-	rpmState.lastRpmEventTimeUs = (uint64_t) -10 * US_PER_SECOND;
-
-	addTriggerEventListener(&shaftPositionCallback, "rpm reporter");
-	addTriggerEventListener(&tdcMarkCallback, "chart TDC mark");
+	addTriggerEventListener((ShaftPositionListener)&shaftPositionCallback, "rpm reporter", &rpmState);
 }
 
+#if EFI_PROD_CODE || EFI_SIMULATOR
 /**
  * Schedules a callback 'angle' degree of crankshaft from now.
  * The callback would be executed once after the duration of time which
@@ -211,5 +233,12 @@ void scheduleByAngle(scheduling_s *timer, float angle, schfunc_t callback, void 
 	}
 	scheduleTask(timer, (int)MS2US(delayMs), callback, param);
 }
+#endif
 
 #endif /* EFI_SHAFT_POSITION_INPUT */
+
+void addWaveChartEvent(const char *name, const char * msg, const char *msg2) {
+#if EFI_WAVE_CHART
+	addWaveChartEvent3(&waveChart, name, msg, msg2);
+#endif /* EFI_WAVE_CHART */
+}

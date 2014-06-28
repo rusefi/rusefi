@@ -13,23 +13,15 @@
 #include "histogram.h"
 #include "datalogging.h"
 
-#ifndef TRUE
-#define TRUE 1
-#define FALSE 0
-#endif
-
-#define _MAX_FILLER 11
-
 #ifdef __cplusplus
 extern "C"
 {
 #endif /* __cplusplus */
 
-char* itoa10(uint8_t *p, int num);
 char hexC(int v);
 int isIsrContext(void);
 int isLocked(void);
-void chVTSetAny(VirtualTimer *vtp, systime_t time, vtfunc_t vtfunc, void *par);
+void chVTSetAny(virtual_timer_t *vtp, systime_t time, vtfunc_t vtfunc, void *par);
 void printHistogram(Logging *logging, histogram_s *histogram);
 
 #ifdef __cplusplus

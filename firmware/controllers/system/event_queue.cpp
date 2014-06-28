@@ -13,32 +13,13 @@
 
 #include "event_queue.h"
 #include "efitime.h"
-#include "utlist.h"
-
-#if EFI_SIGNAL_EXECUTOR_ONE_TIMER
-
-#define QUEUE_LENGTH_LIMIT 1000
 
 EventQueue::EventQueue() {
 	head = NULL;
 }
 
 bool_t EventQueue::checkIfPending(scheduling_s *scheduling) {
-	// this code is just to validate state, no functional load
-	scheduling_s * current;
-	int counter = 0;
-	LL_FOREACH(head, current)
-	{
-		if (++counter > QUEUE_LENGTH_LIMIT) {
-			firmwareError("Looped queue?");
-			return FALSE;
-		}
-		if (current == scheduling) {
-			warning(OBD_PCM_Processor_Fault, "re-adding element into event_queue: [%s]", scheduling->name);
-			return TRUE;
-		}
-	}
-	return FALSE;
+	return assertNotInList<scheduling_s>(head, scheduling);
 }
 
 void EventQueue::insertTask(scheduling_s *scheduling, uint64_t nowUs, int delayUs, schfunc_t callback, void *param) {
@@ -53,7 +34,6 @@ void EventQueue::insertTask(scheduling_s *scheduling, uint64_t nowUs, int delayU
 	scheduling->momentUs = time;
 	scheduling->callback = callback;
 	scheduling->param = param;
-
 
 	LL_PREPEND(head, scheduling);
 }
@@ -77,7 +57,7 @@ uint64_t EventQueue::getNextEventTime(uint64_t nowUs) {
 			firmwareError("Is this list looped #2?");
 			return EMPTY_QUEUE;
 		}
-		efiAssert(current->momentUs > nowUs, "executeAll should have been called");
+		efiAssert(current->momentUs > nowUs, "executeAll should have been called", EMPTY_QUEUE);
 		if (current->momentUs < result)
 			result = current->momentUs;
 	}
@@ -122,9 +102,18 @@ int EventQueue::size(void) {
 	return result;
 }
 
+scheduling_s *EventQueue::getForUnitText(int index) {
+	scheduling_s * current;
+
+	LL_FOREACH(head, current)
+	{
+		if (index == 0)
+			return current;
+		index--;
+	}
+	return NULL;
+}
+
 void EventQueue::clear(void) {
 	head = NULL;
 }
-
-#endif /* EFI_SIGNAL_EXECUTOR_ONE_TIMER */
-

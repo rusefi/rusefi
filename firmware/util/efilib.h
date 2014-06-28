@@ -33,14 +33,15 @@ int atoi(const char *string);
 int cisnan(float f);
 
 int absI(int32_t value);
+float absF(float value);
+float efiRound(float value, float precision);
 int maxI(int i1, int i2);
 int minI(int i1, int i2);
 float maxF(float i1, float i2);
+char* itoa10(char *p, int num);
 
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-
-
 
 #endif /* EFILIB_H_ */

@@ -22,7 +22,7 @@
 
 #define PUSHPULLDELAY 500
 
-static WORKING_AREA(tp_MMC_Monitor,UTILITY_THREAD_STACK_SIZE);		// MMC monitor thread
+static THD_WORKING_AREA(tp_MMC_Monitor,UTILITY_THREAD_STACK_SIZE);		// MMC monitor thread
 
 /**
  * MMC driver instance.

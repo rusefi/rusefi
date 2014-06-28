@@ -1,5 +1,5 @@
 /**
- * @file    flash_main.c
+ * @file    flash_main.cpp
  * @brief	Higher-level logic of saving data into internal flash memory
  *
  *
@@ -52,6 +52,7 @@ crc_t flashStateCrc(persistent_config_container_s *state) {
 }
 
 void writeToFlash(void) {
+#if EFI_INTERNAL_FLASH
 	persistentState.size = PERSISTENT_SIZE;
 	persistentState.version = FLASH_DATA_VERSION;
 	scheduleMsg(&logger, "FLASH_DATA_VERSION=%d", persistentState.version);
@@ -64,6 +65,7 @@ void writeToFlash(void) {
 	result = flashWrite(FLASH_ADDR, (const char *) &persistentState, PERSISTENT_SIZE);
 	scheduleMsg(&logger, "Flash programmed in (ms): %d", currentTimeMillis() - nowMs);
 	scheduleMsg(&logger, "Flashed: %d", result);
+#endif /* EFI_INTERNAL_FLASH */
 }
 
 static int isValidCrc(persistent_config_container_s *state) {

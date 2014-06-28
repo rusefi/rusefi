@@ -23,10 +23,6 @@
 #include "signal_executor_sleep.h"
 #endif /* EFI_SIGNAL_EXECUTOR_SLEEP */
 
-typedef enum {
-	IDLE = 0, ACTIVE
-} executor_status_t;
-
 /**
  * @brief   Asynchronous output signal data structure
  */
@@ -40,19 +36,14 @@ struct OutputSignal_struct {
 	int initialized;
 
 	/**
-	 * We are alternating instances so that events which extend into next revolution are not overriden while
+	 * We are alternating instances so that events which extend into next revolution are not reused while
 	 * scheduling next revolution events
 	 */
 	scheduling_s signalTimerUp[2];
 	scheduling_s signalTimerDown[2];
 
-	executor_status_t status;
-
-#if EFI_SIGNAL_EXECUTOR_HW_TIMER
-	// todo
-#endif
-
-//	OutputSignal *next;
+	scheduling_s triggerEvent;
+	float angleOffsetParam;
 };
 
 #ifdef __cplusplus
@@ -64,6 +55,9 @@ void initOutputSignal(OutputSignal *signal, io_pin_e ioPin);
 void scheduleOutput(OutputSignal *signal, float delayMs, float durationMs);
 void initOutputSignalBase(OutputSignal *signal);
 void scheduleOutputBase(OutputSignal *signal, float delayMs, float durationMs);
+
+void turnPinHigh(OutputSignal *signal);
+void turnPinLow(OutputSignal *signal);
 
 void initSignalExecutor(void);
 void initSignalExecutorImpl(void);

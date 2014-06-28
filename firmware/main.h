@@ -24,7 +24,8 @@ extern "C"
 
 #include "efifeatures.h"
 #include "efitime.h"
-#include "engines.h"
+#include "boards.h"
+#include "rusefi_enums.h"
 
 #include "datalogging.h"
 #include "chprintf.h"
@@ -51,11 +52,12 @@ extern "C"
 void updateHD44780lcd(void);
 int systicks2ms(int systicks);
 
-bool_t lockAnyContext(void);
+bool lockAnyContext(void);
 void unlockAnyContext(void);
 
 #ifdef __cplusplus
 }
 #endif
+
 
 #endif /* MAIN_H_ */

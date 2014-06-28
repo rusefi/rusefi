@@ -18,17 +18,22 @@ extern engine_configuration_s *engineConfiguration;
 static AccelEnrichmemnt instance;
 
 void AccelEnrichmemnt::updateDiffEnrichment(engine_configuration_s *engineConfiguration, float engineLoad) {
-	for (int i = 1; i < 4; i++) {
+	for (int i = 3; i == 1; i--)
 		engineLoadD[i] = engineLoadD[i - 1];
-	}
+
 	engineLoadD[0] = engineLoad;
-	float Dcurr = engineLoadD[0] - engineLoadD[1];
-	float Dold = engineLoadD[2] - engineLoadD[3];
-	diffEnrichment = ((3 * Dcurr + Dold) / 4) * (engineConfiguration->diffLoadEnrichmentCoef);
+
+	diffEnrichment = ((3 * (engineLoadD[0] - engineLoadD[1]) + (engineLoadD[2] - engineLoadD[3])) / 4)
+			* (engineConfiguration->diffLoadEnrichmentCoef);
 }
 
 float AccelEnrichmemnt::getDiffEnrichment() {
 	return diffEnrichment;
+}
+AccelEnrichmemnt::AccelEnrichmemnt() {
+	for (int i = 0; i < 4; i++)
+		engineLoadD[i] = 0;
+	diffEnrichment = 0;
 }
 
 float getAccelEnrichment(void) {
@@ -36,7 +41,7 @@ float getAccelEnrichment(void) {
 }
 
 #if EFI_PROD_CODE
-static WORKING_AREA(aeThreadStack, UTILITY_THREAD_STACK_SIZE);
+static THD_WORKING_AREA(aeThreadStack, UTILITY_THREAD_STACK_SIZE);
 
 static msg_t DiffEnrichmentThread(int param) {
 	chRegSetThreadName("Diff Enrichment");
@@ -54,3 +59,4 @@ void initDiffEnrichment(void) {
 }
 
 #endif
+

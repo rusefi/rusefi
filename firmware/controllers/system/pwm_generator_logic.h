@@ -35,13 +35,14 @@ class PwmConfig;
 typedef void (pwm_cycle_callback)(PwmConfig *state);
 typedef void (pwm_gen_callback)(PwmConfig *state, int stateIndex);
 
-
 /**
  * @brief   Multi-channel software PWM output configuration
  */
 class PwmConfig {
 public:
+	PwmConfig();
 	PwmConfig(float *switchTimes, single_wave_s *waves);
+	void init(float *switchTimes, single_wave_s *waves);
 	io_pin_e outputPins[PWM_PHASE_MAX_WAVE_PER_PWM];
 	multi_wave_s multiWave;
 	const char *name;
@@ -54,6 +55,10 @@ public:
 	scheduling_s scheduling;
 
 	pwm_config_safe_state_s safe;
+	/**
+	 * Number of events in the cycle
+	 */
+	int phaseCount;
 
 	/**
 	 * this callback is invoked before each wave generation cycle
@@ -64,6 +69,17 @@ public:
 	 * this main callback is invoked when it's time to switch level on amy of the output channels
 	 */
 	pwm_gen_callback *stateChangeCallback;
+};
+
+
+class SimplePwm : public PwmConfig {
+public:
+	SimplePwm();
+	void setSimplePwmDutyCycle(float dutyCycle);
+	int pinStates[2];
+	single_wave_s wave;
+	single_wave_s sr[1];
+	float _switchTimes[2];
 };
 
 #ifdef __cplusplus
