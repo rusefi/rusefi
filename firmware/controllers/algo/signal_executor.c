@@ -56,12 +56,10 @@ void initOutputSignal(OutputSignal *signal, io_pin_e ioPin) {
 }
 
 void initOutputSignalBase(OutputSignal *signal) {
-	signal->status = IDLE;
-//	signal->last_scheduling_time = 0;
 	signal->initialized = TRUE;
 }
 
-static void turnHigh(OutputSignal *signal) {
+void turnPinHigh(OutputSignal *signal) {
 #if EFI_DEFAILED_LOGGING
 //	signal->hi_time = hTimeNow();
 #endif /* EFI_DEFAILED_LOGGING */
@@ -85,7 +83,7 @@ static void turnHigh(OutputSignal *signal) {
 #endif /* EFI_WAVE_ANALYZER */
 }
 
-static void turnLow(OutputSignal *signal) {
+void turnPinLow(OutputSignal *signal) {
 	// turn off the output
 	// todo: this XOR should go inside the setOutputPinValue method
 	setOutputPinValue(signal->io_pin, FALSE);
@@ -126,8 +124,8 @@ void scheduleOutput(OutputSignal *signal, float delayMs, float durationMs) {
 	scheduling_s * sUp = &signal->signalTimerUp[index];
 	scheduling_s * sDown = &signal->signalTimerDown[index];
 
-	scheduleTask(sUp, (int)MS2US(delayMs), (schfunc_t) &turnHigh, (void *) signal);
-	scheduleTask(sDown, (int)MS2US(delayMs + durationMs), (schfunc_t) &turnLow, (void*) signal);
+	scheduleTask(sUp, (int)MS2US(delayMs), (schfunc_t) &turnPinHigh, (void *) signal);
+	scheduleTask(sDown, (int)MS2US(delayMs + durationMs), (schfunc_t) &turnPinLow, (void*) signal);
 
 //	signal->last_scheduling_time = now;
 }
@@ -137,7 +135,7 @@ void scheduleOutputBase(OutputSignal *signal, float delayMs, float durationMs) {
 	 * it's better to check for the exact 'TRUE' value since otherwise
 	 * we would accept any memory garbage
 	 */
-	chDbgCheck(signal->initialized == TRUE, "Signal not initialized");
+	efiAssertVoid(signal->initialized == TRUE, "Signal not initialized");
 //	signal->offset = offset;
 //	signal->duration = duration;
 }

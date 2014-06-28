@@ -17,13 +17,11 @@ struct scheduling_struct {
 	VirtualTimer timer;
 #endif /* EFI_SIGNAL_EXECUTOR_SLEEP */
 
-#if EFI_SIGNAL_EXECUTOR_ONE_TIMER
 	volatile uint64_t momentUs;
 	schfunc_t callback;
 	void *param;
 	scheduling_s *next;
-#endif
-	char *name;
+	const char *name;
 };
 
 #ifdef __cplusplus

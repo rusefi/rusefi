@@ -42,14 +42,13 @@ void dbPrint(data_buffer_s *db, char *message, int withDiff) {
 	int s = db->size;
 	print("buffer [%s] size=%d\r\n", message, s);
 	int range = db->elements[s - 1] - db->elements[0];
-	print("range %d ms\r\n", systicks2ms(range));
+	print("range %d\r\n", range);
 
 	for (int i = 0; i < s; i++) {
 		print("%d: %d", i, db->elements[i]);
 		if (withDiff && i > 0) {
 			int diff = modp(db->elements[i]) - modp(db->elements[i - 1]);
-			print(" d=%d", diff);
-			print(" t=%d", systicks2ms(diff));
+			print(" t=%d", diff);
 		}
 		print("\r\n");
 	}

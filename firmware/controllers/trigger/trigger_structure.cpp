@@ -1,5 +1,5 @@
 /**
- * @file	trigger_structure.c
+ * @file	trigger_structure.cpp
  *
  * @date Jan 20, 2014
  * @author Andrey Belomutskiy, (c) 2012-2014
@@ -20,6 +20,7 @@
 
 #include "main.h"
 #include "trigger_structure.h"
+#include "error_handling.h"
 
 trigger_shape_helper::trigger_shape_helper() {
 	waves[0].init(pinStates0);
@@ -43,6 +44,7 @@ void trigger_shape_s::reset() {
 	memset(initialState, 0, sizeof(initialState));
 	memset(switchTimes, 0, sizeof(switchTimes));
 	wave.reset();
+	previousAngle = 0;
 }
 
 int multi_wave_s::getChannelState(int channelIndex, int phaseIndex) const {
@@ -53,15 +55,49 @@ void multi_wave_s::setSwitchTime(int index, float value) {
 	switchTimes[index] = value;
 }
 
-void clearTriggerState(trigger_state_s *state) {
-	state->shaft_is_synchronized = FALSE;
-	state->toothed_previous_time = 0;
-	state->toothed_previous_duration = 0;
-	state->current_index = 0;
+TriggerState::TriggerState() {
+	clear();
+	totalEventCountBase = 0;
+}
+
+int TriggerState::getCurrentIndex() {
+	return current_index;
+}
+
+uint64_t TriggerState::getStartOfRevolutionIndex() {
+	return totalEventCountBase;
+}
+
+uint64_t TriggerState::getTotalEventCounter() {
+	return totalEventCountBase + current_index;
+}
+
+void TriggerState::nextRevolution(int triggerEventCount) {
+	current_index = 0;
+	totalRevolutionCounter ++;
+	totalEventCountBase += triggerEventCount;
+}
+
+int TriggerState::getTotalRevolutionCounter() {
+	return totalRevolutionCounter;
+}
+
+void TriggerState::nextTriggerEvent() {
+	current_index++;
+}
+
+void TriggerState::clear() {
+	shaft_is_synchronized = FALSE;
+	toothed_previous_time = 0;
+	toothed_previous_duration = 0;
+	current_index = 0;
+	totalRevolutionCounter = 0;
 }
 
 void trigger_shape_s::addEvent(float angle, trigger_wheel_e waveIndex, trigger_value_e state) {
 	angle /= 720;
+	efiAssertVoid(angle > previousAngle, "invalid angle order");
+	previousAngle = angle;
 	if (size == 0) {
 		size = 1;
 		for (int i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {

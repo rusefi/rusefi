@@ -1,5 +1,5 @@
 /**
- * @file	honda_accord.c
+ * @file	honda_accord.cpp
  *
  * @date Jan 12, 2014
  * @author Andrey Belomutskiy, (c) 2012-2014

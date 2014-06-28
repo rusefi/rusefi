@@ -1,5 +1,5 @@
 /**
- * @file	dodge_neon.c
+ * @file	dodge_neon.cpp
  *
  * DODGE_NEON_1995 = 2
  *
@@ -18,6 +18,7 @@
 
 void setDodgeNeonEngineConfiguration(engine_configuration_s *engineConfiguration,
 		board_configuration_s *boardConfiguration) {
+
 	engineConfiguration->triggerConfig.triggerType = TT_DODGE_NEON;
 
 	engineConfiguration->engineLoadMode = LM_TPS;
@@ -39,10 +40,8 @@ void setDodgeNeonEngineConfiguration(engine_configuration_s *engineConfiguration
 	// set_whole_fuel_map 3
 	setWholeFuelMap(engineConfiguration, 3);
 
-	engineConfiguration->triggerConfig.syncRatioFrom = 0.72 * 0.8;
-	engineConfiguration->triggerConfig.syncRatioTo = 0.72 * 1.3;
+	setTriggerSynchronizationGap(engineConfiguration, 0.72);
 
-	engineConfiguration->triggerConfig.isSynchronizationNeeded = TRUE;
 	engineConfiguration->triggerConfig.useRiseEdge = FALSE;
 	engineConfiguration->needSecondTriggerInput = TRUE;
 

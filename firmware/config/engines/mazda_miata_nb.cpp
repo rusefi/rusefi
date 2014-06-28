@@ -1,5 +1,5 @@
 /**
- * @file	mazda_miata_nb.c
+ * @file	mazda_miata_nb.cpp
  *
  * MAZDA_MIATA_NB = 9
  *
@@ -16,10 +16,8 @@ void setMazdaMiataNbEngineConfiguration(engine_configuration_s *engineConfigurat
 	engineConfiguration->rpmHardLimit = 3000; // yes, 3k. let's play it safe for now
 
 	engineConfiguration->triggerConfig.triggerType = TT_MAZDA_MIATA_NB;
-	engineConfiguration->triggerConfig.isSynchronizationNeeded = TRUE;
 
-	engineConfiguration->triggerConfig.syncRatioFrom = 0.11 * 0.7;
-	engineConfiguration->triggerConfig.syncRatioTo = 0.11 * 1.3;
+	setTriggerSynchronizationGap(engineConfiguration, 0.11);
 	engineConfiguration->triggerConfig.useRiseEdge = FALSE;
 	engineConfiguration->globalTriggerAngleOffset = 276;
 

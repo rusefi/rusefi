@@ -1,5 +1,5 @@
 /*
- * global.h
+ * @file global.h
  *
  * @date May 27, 2013
  * @author Andrey Belomutskiy, (c) 2012-2014
@@ -13,6 +13,7 @@
 #include <time.h>
 #include <string.h>
 
+#include "efifeatures.h"
 #include "rusefi_enums.h"
 #include "obd_error_codes.h"
 #include "error_handling.h"
@@ -23,9 +24,20 @@
 #define VAR_NAME_VALUE(var) #var "="  VALUE(var)
 
 // project-wide default thread stack size
-// todo: adjust
-// #define PORT_INT_REQUIRED_STACK        128
-// todo: and decrease this size accordingly
-#define UTILITY_THREAD_STACK_SIZE 384
+// see also PORT_INT_REQUIRED_STACK
+#define UTILITY_THREAD_STACK_SIZE 128
+
+#if EFI_USE_CCM && defined __GNUC__
+#define CCM_OPTIONAL __attribute__((section(".ccm")));
+#else
+#define CCM_OPTIONAL
+#endif
+
+// this stuff is about ChibiOS 2.6 > Migration
+typedef VirtualTimer virtual_timer_t;
+typedef EventListener event_listener_t;
+typedef Thread thread_t;
+
+#define THD_WORKING_AREA WORKING_AREA
 
 #endif /* GLOBAL_H_ */

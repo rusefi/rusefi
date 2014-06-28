@@ -50,15 +50,11 @@
 #include "efilib2.h"
 #include "ec2.h"
 #include "PwmTester.h"
+#include "engine.h"
 
+extern board_configuration_s *boardConfiguration;
 
-#define _10_MILLISECONDS (10 * TICKS_IN_MS)
-
-#if defined __GNUC__
-persistent_config_container_s persistentState __attribute__((section(".ccm")));
-#else
-persistent_config_container_s persistentState;
-#endif
+persistent_config_container_s persistentState CCM_OPTIONAL;
 
 engine_configuration_s *engineConfiguration = &persistentState.persistentConfiguration.engineConfiguration;
 board_configuration_s *boardConfiguration = &persistentState.persistentConfiguration.boardConfiguration;
@@ -73,11 +69,18 @@ static VirtualTimer fuelPumpTimer;
 
 static Logging logger;
 
-static engine_configuration2_s ec2;
+static engine_configuration2_s ec2 CCM_OPTIONAL;
 engine_configuration2_s * engineConfiguration2 = &ec2;
+
+static configuration_s cfg = {&persistentState.persistentConfiguration.engineConfiguration, &ec2};
+
+configuration_s * configuration = &cfg;
+
+Engine engine;
 
 static msg_t csThread(void) {
 	chRegSetThreadName("status");
+#if EFI_SHAFT_POSITION_INPUT
 	while (TRUE) {
 		int is_cranking = isCranking();
 		int is_running = getRpm() > 0 && !is_cranking;
@@ -93,6 +96,8 @@ static msg_t csThread(void) {
 			chThdSleepMilliseconds(100);
 		}
 	}
+#endif /* EFI_SHAFT_POSITION_INPUT */
+	return -1;
 }
 
 static void updateErrorCodes(void) {
@@ -129,14 +134,12 @@ static void fanRelayControl(void) {
 Overflow64Counter halTime;
 
 uint64_t getTimeNowUs(void) {
-	// todo: synchronization? multi-threading?
-	halTime.offer(hal_lld_get_counter_value());
-	return halTime.get() / (CORE_CLOCK / 1000000);
+	return halTime.get(hal_lld_get_counter_value(), false) / (CORE_CLOCK / 1000000);
 }
 
-uint64_t getHalTimer(void) {
-	return halTime.get();
-}
+//uint64_t getHalTimer(void) {
+//	return halTime.get();
+//}
 
 efitimems_t currentTimeMillis(void) {
 	// todo: migrate to getTimeNowUs? or not?
@@ -147,23 +150,23 @@ int getTimeNowSeconds(void) {
 	return chTimeNow() / CH_FREQUENCY;
 }
 
-static void onEveny10Milliseconds(void *arg) {
+static void onEvenyGeneralMilliseconds(void *arg) {
 	/**
 	 * We need to push current value into the 64 bit counter often enough so that we do not miss an overflow
 	 */
-	halTime.offer(hal_lld_get_counter_value());
+	halTime.get(hal_lld_get_counter_value(), true);
 
 	updateErrorCodes();
 
 	fanRelayControl();
 
 	// schedule next invocation
-	chVTSetAny(&everyMsTimer, _10_MILLISECONDS, &onEveny10Milliseconds, 0);
+	chVTSetAny(&everyMsTimer, boardConfiguration->generalPeriodicThreadPeriod * TICKS_IN_MS, &onEvenyGeneralMilliseconds, 0);
 }
 
 static void initPeriodicEvents(void) {
 	// schedule first invocation
-	chVTSetAny(&everyMsTimer, _10_MILLISECONDS, &onEveny10Milliseconds, 0);
+	chVTSetAny(&everyMsTimer, boardConfiguration->generalPeriodicThreadPeriod * TICKS_IN_MS, &onEvenyGeneralMilliseconds, 0);
 }
 
 static void fuelPumpOff(void *arg) {
@@ -173,7 +176,7 @@ static void fuelPumpOff(void *arg) {
 	turnOutputPinOff(FUEL_PUMP_RELAY);
 }
 
-static void fuelPumpOn(ShaftEvents signal, int index) {
+static void fuelPumpOn(trigger_event_e signal, int index, void *arg) {
 	if (index != 0)
 		return; // let's not abuse the timer - one time per revolution would be enough
 	// todo: the check about GPIO_NONE should be somewhere else!
@@ -191,26 +194,27 @@ static void fuelPumpOn(ShaftEvents signal, int index) {
 }
 
 static void initFuelPump(void) {
-	addTriggerEventListener(&fuelPumpOn, "fuel pump");
-	fuelPumpOn(SHAFT_PRIMARY_UP, 0);
+	addTriggerEventListener(&fuelPumpOn, "fuel pump", NULL);
+	fuelPumpOn(SHAFT_PRIMARY_UP, 0, NULL);
 }
 
-char * getPinNameByAdcChannel(int hwChannel, uint8_t *buffer) {
+char * getPinNameByAdcChannel(int hwChannel, char *buffer) {
 	strcpy((char*) buffer, portname(getAdcChannelPort(hwChannel)));
 	itoa10(&buffer[2], getAdcChannelPin(hwChannel));
 	return (char*) buffer;
 }
 
-static uint8_t pinNameBuffer[16];
+static char pinNameBuffer[16];
 
 static void printAnalogChannelInfoExt(const char *name, int hwChannel,
-		float voltage) {
-	scheduleMsg(&logger, "%s ADC%d %s value=%fv", name, hwChannel,
-			getPinNameByAdcChannel(hwChannel, pinNameBuffer), voltage);
+		float adcVoltage) {
+	float voltage = adcVoltage * engineConfiguration->analogInputDividerCoefficient;
+	scheduleMsg(&logger, "%s ADC%d %s rawValue=%f/divided=%fv", name, hwChannel,
+			getPinNameByAdcChannel(hwChannel, pinNameBuffer), adcVoltage, voltage);
 }
 
 static void printAnalogChannelInfo(const char *name, int hwChannel) {
-	printAnalogChannelInfoExt(name, hwChannel, getVoltageDivided(hwChannel));
+	printAnalogChannelInfoExt(name, hwChannel, getVoltage(hwChannel));
 }
 
 static void printAnalogInfo(void) {
@@ -225,7 +229,7 @@ static void printAnalogInfo(void) {
 			getVBatt());
 }
 
-static WORKING_AREA(csThreadStack, UTILITY_THREAD_STACK_SIZE);// declare thread stack
+static THD_WORKING_AREA(csThreadStack, UTILITY_THREAD_STACK_SIZE);// declare thread stack
 
 void initEngineContoller(void) {
 	if (hasFirmwareError())
@@ -246,11 +250,13 @@ void initEngineContoller(void) {
 	initWaveAnalyzer();
 #endif /* EFI_WAVE_ANALYZER */
 
+#if EFI_SHAFT_POSITION_INPUT
 	/**
 	 * there is an implicit dependency on the fact that 'tachometer' listener is the 1st listener - this case
 	 * other listeners can access current RPM value
 	 */
 	initRpmCalculator();
+#endif /* EFI_SHAFT_POSITION_INPUT */
 
 #if EFI_TUNER_STUDIO
 	startTunerStudioConnectivity();
@@ -283,7 +289,7 @@ void initEngineContoller(void) {
 	/**
 	 * This method initialized the main listener which actually runs injectors & ignition
 	 */
-	initMainEventListener();
+	initMainEventListener(engineConfiguration, engineConfiguration2);
 #endif /* EFI_ENGINE_CONTROL */
 
 #if EFI_IDLE_CONTROL

@@ -128,7 +128,7 @@ int flashErase(flashaddr_t address, size_t size);
  * @return TRUE Memory is already erased.
  * @return FALSE Memory is not erased.
  */
-bool_t flashIsErased(flashaddr_t address, size_t size);
+bool flashIsErased(flashaddr_t address, size_t size);
 
 /**
  * @brief Check if the data in @p buffer are identical to the one in flash memory.
@@ -138,7 +138,7 @@ bool_t flashIsErased(flashaddr_t address, size_t size);
  * @return TRUE if the flash memory and the buffer contain identical data.
  * @return FALSE if the flash memory and the buffer don't contain identical data.
  */
-bool_t flashCompare(flashaddr_t address, const char* buffer, size_t size);
+bool flashCompare(flashaddr_t address, const char* buffer, size_t size);
 
 /**
  * @brief Copy data from the flash memory to a @p buffer.

@@ -27,7 +27,7 @@ static WaveReaderHw * findWaveReaderHw(ICUDriver *driver) {
 	for (int i = 0; i < registeredIcuCount; i++)
 		if (registeredIcus[i]->driver == driver)
 			return registeredIcus[i];
-	fatal("reader not found\r\n");
+	firmwareError("reader not found");
 	return NULL;
 }
 
@@ -76,7 +76,7 @@ static int getAlternateFunctions(ICUDriver *driver) {
 	if (driver == &ICUD9)
 		return GPIO_AF_TIM9;
 #endif
-	fatal("No such driver");
+	firmwareError("No such driver");
 	return -1;
 }
 

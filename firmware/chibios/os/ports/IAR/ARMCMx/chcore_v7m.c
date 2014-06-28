@@ -39,6 +39,21 @@
 /* Port interrupt handlers.                                                  */
 /*===========================================================================*/
 
+int getRemainingStack(Thread *otp) {
+#if CH_DBG_ENABLE_STACK_CHECK || defined(__DOXYGEN__)
+  int remainingStack;
+  if (dbg_isr_cnt > 0) {
+    remainingStack = 999; // todo
+  } else {
+    remainingStack = (stkalign_t *)(__get_SP() - sizeof(struct intctx)) - otp->p_stklimit;
+  }
+  otp->remainingStack = remainingStack;
+  return remainingStack;
+#else
+  return 999999;
+#endif  
+}
+
 /**
  * @brief   System Timer vector.
  * @details This interrupt is used as system tick.

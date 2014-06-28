@@ -21,23 +21,18 @@
 #include "efifeatures.h"
 #include "boards.h"
 
-#if EFI_SERIAL_OVER_USB
- #include "usbcfg.h"
- extern SerialUSBDriver SDU1;
- #define CONSOLE_CHANNEL (&SDU1)
-#else
- #define CONSOLE_CHANNEL EFI_CONSOLE_UART_DEVICE
-#endif
-
 #ifdef __cplusplus
 extern "C"
 {
 #endif /* __cplusplus */
 
+SerialDriver * getConsoleChannel(void);
+
 void consolePutChar(int x);
 void consoleOutputBuffer(const int8_t *buf, int size);
 void startConsole(void (*console_line_callback_p)(char *));
 int isConsoleReady(void);
+bool isSerialOverUart(void);
 
 #ifdef __cplusplus
 }

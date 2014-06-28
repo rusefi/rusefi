@@ -26,7 +26,7 @@
 static Logging logging;
 
 static SerialConfig GPSserialConfig = { GPS_SERIAL_SPEED, 0, USART_CR2_STOP1_BITS | USART_CR2_LINEN, 0 };
-static WORKING_AREA(GPS_WORKING_AREA, UTILITY_THREAD_STACK_SIZE);
+static THD_WORKING_AREA(GPS_WORKING_AREA, UTILITY_THREAD_STACK_SIZE);
 
 // this field holds our current state
 static loc_t GPSdata;

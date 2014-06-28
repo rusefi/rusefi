@@ -1,5 +1,5 @@
 /**
- * @file	audi_aan.c
+ * @file	audi_aan.cpp
  * @brief	Audo AAN default engine configuration
  *
  * @date Nov 24, 2013

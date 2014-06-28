@@ -22,6 +22,8 @@
 #include <string.h>
 #include "rfiutil.h"
 
+/*
+not used, not sure if we still need it. I guess we will remove it in 2015
 int mylog10(int param) {
 	if (param < 10)
 		return 0;
@@ -39,49 +41,10 @@ int mylog10(int param) {
 		return 6;
 	if (param < 100000000)
 		return 7;
+	#warning This would be better without recursion
 	return mylog10(param / 10) + 1;
 }
-
-static char *ltoa_internal(char *p, long num, unsigned radix) {
-	int i;
-	char *q;
-
-	q = p + _MAX_FILLER;
-	do {
-		i = (int) (num % radix);
-		i += '0';
-		if (i > '9')
-			i += 'A' - '0' - 10;
-		*--q = i;
-	} while ((num /= radix) != 0);
-
-	i = (int) (p + _MAX_FILLER - q);
-	do
-		*p++ = *q++;
-	while (--i);
-
-	return p;
-}
-
-static char* itoa_signed(uint8_t *p, int num, unsigned radix) {
-	if (num < 0) {
-		*p++ = '-';
-		char *end = ltoa_internal(p, -num, radix);
-		*end = 0;
-		return end;
-	}
-	char *end = ltoa_internal(p, num, radix);
-	*end = 0;
-	return end;
-}
-
-/**
- * Integer to string
- */
-char* itoa10(uint8_t *p, int num) {
-// todo: unit test
-	return itoa_signed(p, num, 10);
-}
+*/
 
 char hexChar(int v) {
 	v = v & 0xF;
@@ -103,11 +66,15 @@ int isLocked(void) {
 	return dbg_lock_cnt > 0;
 }
 
-void chVTSetAny(VirtualTimer *vtp, systime_t time, vtfunc_t vtfunc, void *par) {
+void chVTSetAny(virtual_timer_t *vtp, systime_t time, vtfunc_t vtfunc, void *par) {
 	if (isIsrContext()) {
 		chSysLockFromIsr()
 		;
 
+		/**
+		 * todo: this could be simplified once we migrate to ChibiOS 3.0
+		 * See http://www.chibios.org/dokuwiki/doku.php?id=chibios:howtos:porting_from_2_to_3
+		 */
 		if (chVTIsArmedI(vtp))
 			chVTResetI(vtp);
 

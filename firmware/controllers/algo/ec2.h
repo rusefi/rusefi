@@ -13,7 +13,18 @@
 #define EC2_H_
 
 #include "engine_configuration.h"
+#include "event_registry.h"
 #include "trigger_structure.h"
+
+/**
+ * @brief Here we store information about which injector or spark should be fired when.
+ */
+typedef struct {
+	ActuatorEventList crankingInjectionEvents;
+	ActuatorEventList injectionEvents;
+	IgnitionEventList ignitionEvents[2];
+} EventHandlerConfiguration;
+
 
 #ifdef __cplusplus
 extern "C"
@@ -42,15 +53,26 @@ public:
 	EventHandlerConfiguration engineEventConfiguration;
 
 	int isInjectionEnabledFlag;
+
+	/**
+	 * This coefficient translates ADC value directly into voltage adjusted according to
+	 * voltage divider configuration.
+	 */
+	float adcToVoltageInputDividerCoefficient;
 };
+
+typedef struct {
+	engine_configuration_s *engineConfiguration;
+	engine_configuration2_s *engineConfiguration2;
+} configuration_s;
 
 void prepareOutputSignals(engine_configuration_s *engineConfiguration,
 		engine_configuration2_s *engineConfiguration2);
 
-void initializeIgnitionActions(float baseAngle, engine_configuration_s *engineConfiguration, engine_configuration2_s *engineConfiguration2, float dwellMs, ActuatorEventList *list);
+void initializeIgnitionActions(float advance, float dwellAngle, engine_configuration_s *engineConfiguration, engine_configuration2_s *engineConfiguration2, IgnitionEventList *list);
 void addFuelEvents(engine_configuration_s const *e,  engine_configuration2_s *engineConfiguration2, ActuatorEventList *list, injection_mode_e mode);
 
-void registerActuatorEventExt(engine_configuration_s const *engineConfiguration, trigger_shape_s * s, ActuatorEventList *list, OutputSignal *actuator, float angleOffset);
+void registerActuatorEventExt(engine_configuration_s const *engineConfiguration, trigger_shape_s * s, ActuatorEvent *e, OutputSignal *actuator, float angleOffset);
 
 void resetConfigurationExt(Logging * logger, engine_type_e engineType,
 		engine_configuration_s *engineConfiguration,

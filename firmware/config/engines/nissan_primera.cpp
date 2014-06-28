@@ -1,5 +1,7 @@
 /**
- * @file	nissan_primera.c
+ * @file	nissan_primera.cpp
+ *
+ * engine_type 5
  *
  * @date Oct 14, 2013
  * @author Andrey Belomutskiy, (c) 2012-2014

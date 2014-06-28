@@ -46,6 +46,10 @@ static void myfatal(void) {
 	chDbgCheck(0, "my fatal");
 }
 
+static void myerror(void) {
+	firmwareError("firmwareError: %d", getRusEfiVersion());
+}
+
 static void sayHello(void) {
 	printMsg(&logger, "*** rusEFI (c) Andrey Belomutskiy, 2012-2014. All rights reserved.");
 	printMsg(&logger, "rusEFI v%d@%d", getRusEfiVersion(), SVN_VERSION);
@@ -69,6 +73,9 @@ static void sayHello(void) {
 	printMsg(&logger, "STM32_PCLK2=%d", STM32_PCLK2);
 #endif
 
+
+	printMsg(&logger, "PORT_IDLE_THREAD_STACK_SIZE=%d", PORT_IDLE_THREAD_STACK_SIZE);
+
 	printMsg(&logger, "CH_DBG_ENABLE_ASSERTS=%d", CH_DBG_ENABLE_ASSERTS);
 	printMsg(&logger, "CH_DBG_ENABLED=%d", CH_DBG_ENABLED);
 	printMsg(&logger, "CH_DBG_SYSTEM_STATE_CHECK=%d", CH_DBG_SYSTEM_STATE_CHECK);
@@ -91,19 +98,8 @@ static void sayHello(void) {
 	printMsg(&logger, "EFI_SIGNAL_EXECUTOR_HW_TIMER=%d", EFI_SIGNAL_EXECUTOR_HW_TIMER);
 #endif
 
-
-
-#ifdef EFI_TUNER_STUDIO_OVER_USB
-	printMsg(&logger, "EFI_TUNER_STUDIO_OVER_USB=%d", EFI_TUNER_STUDIO_OVER_USB);
-#else
-	printMsg(&logger, "EFI_TUNER_STUDIO_OVER_USB=%d", 0);
-#endif
-#ifdef EFI_SHAFT_POSITION_INPUT
 	printMsg(&logger, "EFI_SHAFT_POSITION_INPUT=%d", EFI_SHAFT_POSITION_INPUT);
-#endif
-#ifdef EFI_INTERNAL_ADC
 	printMsg(&logger, "EFI_INTERNAL_ADC=%d", EFI_INTERNAL_ADC);
-#endif
 
 //	printSimpleMsg(&logger, "", );
 //	printSimpleMsg(&logger, "", );
@@ -119,6 +115,7 @@ static void sayHello(void) {
  * This methods prints all threads and their total times
  */
 static void cmd_threads(void) {
+#if CH_DBG_THREADS_PROFILING || defined(__DOXYGEN__)
 	static const char *states[] = { THD_STATE_NAMES };
 	Thread *tp;
 
@@ -130,6 +127,7 @@ static void cmd_threads(void) {
 				states[tp->p_state], (uint32_t) tp->p_time, tp->p_name);
 		tp = chRegNextThread(tp);
 	} while (tp != NULL );
+#endif
 }
 
 void sendOutConfirmation(char *value, int i) {
@@ -140,12 +138,14 @@ void sendOutConfirmation(char *value, int i) {
  * This methods prints the message to whatever is configured as our primary console
  */
 void print(const char *format, ...) {
+#if !EFI_UART_ECHO_TEST_MODE
 	if (!isConsoleReady())
 		return;
 	va_list ap;
 	va_start(ap, format);
-	chvprintf((BaseSequentialStream *)CONSOLE_CHANNEL, format, ap);
+	chvprintf((BaseSequentialStream*)getConsoleChannel(), format, ap);
 	va_end(ap);
+#endif /* EFI_UART_ECHO_TEST_MODE */
 }
 
 void initializeConsole() {
@@ -163,5 +163,6 @@ void initializeConsole() {
 #endif
 
 	addConsoleAction("fatal", myfatal);
+	addConsoleAction("error", myerror);
 	addConsoleAction("threadsinfo", cmd_threads);
 }

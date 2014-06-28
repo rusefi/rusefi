@@ -1,5 +1,5 @@
 /**
- * @file	ford_fiesta.c
+ * @file	ford_fiesta.cpp
  * @brief	European 1990 Ford Fiesta
  *
  * FORD_FIESTA = 4
@@ -18,8 +18,7 @@
 
 void setFordFiestaDefaultEngineConfiguration(engine_configuration_s *engineConfiguration) {
 	engineConfiguration->rpmHardLimit = 7000;
-	// only crankshaft sensor so far
-	engineConfiguration->rpmMultiplier = 1;
+	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 
 	engineConfiguration->triggerConfig.totalToothCount = 36;
 	engineConfiguration->triggerConfig.skippedToothCount = 1;

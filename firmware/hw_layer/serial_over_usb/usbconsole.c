@@ -8,7 +8,7 @@
 
 #include "main.h"
 
-#if EFI_SERIAL_OVER_USB || EFI_TUNER_STUDIO_OVER_USB
+#if EFI_PROD_CODE
 
 #include "usbconsole.h"
 #include "usbcfg.h"
@@ -48,10 +48,4 @@ int is_usb_serial_ready(void) {
 	return SDU1.config->usbp->state == USB_ACTIVE;
 }
 
-#endif
-
-#if EFI_SERIAL_OVER_USB
-int isConsoleReady(void) {
-	return is_usb_serial_ready();
-}
 #endif

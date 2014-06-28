@@ -59,7 +59,7 @@ void initHistogramsModule(void) {
  * @brief This internal method is only public so that we can test it.
  */
 int histogramGetIndex(int64_t value) {
-	chDbgCheck(initialized, "histo initialized");
+	efiAssert(initialized, "histo initialized", 0);
 	if (value < 0)
 		return 0;
 	if (value < SBI_SIZE)
@@ -98,7 +98,7 @@ void hsAdd(histogram_s *h, int64_t value) {
 	int count = 1;
 	h->total_value += value;
 	h->total_count += count;
-	chDbgCheck(index < BOUND_LENGTH, "histogram issue" );
+	efiAssertVoid(index < BOUND_LENGTH, "histogram issue" );
 
 	h->values[index] += count;
 }

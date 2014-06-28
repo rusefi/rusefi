@@ -13,7 +13,6 @@
 #include "crc.h"
 #include "sensor_types.h"
 #include "can_header.h"
-#include "event_registry.h"
 #include "rusefi_enums.h"
 
 typedef struct {
@@ -29,17 +28,12 @@ typedef struct {
 	short int crankingRpm;
 } cranking_parameters_s;
 
-/**
- * @brief Here we store information about which injector or spark should be fired when.
- */
-typedef struct {
-	ActuatorEventList crankingInjectionEvents;
-	ActuatorEventList injectionEvents;
-	ActuatorEventList ignitionEvents[2];
-} EventHandlerConfiguration;
-
 #define FUEL_RPM_COUNT 16
 #define FUEL_LOAD_COUNT 16
+#define VE_RPM_COUNT 16
+#define VE_LOAD_COUNT 16
+#define AFR_RPM_COUNT 16
+#define AFR_LOAD_COUNT 16
 
 #define CLT_CURVE_SIZE 16
 #define IAT_CURVE_SIZE 16
@@ -115,6 +109,14 @@ typedef struct {
  */
 typedef struct {
 	float injectorLag;	// size 4, offset 0
+	/**
+	 * cc/min, cubic centimeter per minute
+	 *
+	 * By the way, g/s = 0.125997881 * (lb/hr)
+	 * g/s = 0.125997881 * (cc/min)/10.5
+	 * g/s = 0.0119997981 * cc/min
+	 *
+	 */
 	float injectorFlow; // size 4, offset 4
 	float battInjectorLagCorrBins[VBAT_INJECTOR_CURVE_SIZE]; // size 32, offset 8
 	float battInjectorLagCorr[VBAT_INJECTOR_CURVE_SIZE]; // size 32, offset 40
@@ -145,9 +147,8 @@ typedef struct {
 	float sparkDwellBins[DWELL_COUNT]; // offset 580
 	float sparkDwell[DWELL_COUNT];
 
-	float ignitionTable[IGN_LOAD_COUNT][IGN_RPM_COUNT];
-	float ignitionLoadBins[IGN_LOAD_COUNT]; // offset 3450
-	float ignitionRpmBins[IGN_RPM_COUNT]; // offset 3542
+	float ignitionLoadBins[IGN_LOAD_COUNT];
+	float ignitionRpmBins[IGN_RPM_COUNT];
 
 	/**
 	 * this value could be used to offset the whole ignition timing table by a constant
@@ -170,12 +171,16 @@ typedef struct {
 	// WARNING: by default, our small enums are ONE BYTE. but if the are surrounded by non-enums - alignments do the trick
 	engine_type_e engineType;
 
-	float fuelTable[FUEL_LOAD_COUNT][FUEL_RPM_COUNT]; // size 1024, offset 1816
-	float fuelLoadBins[FUEL_LOAD_COUNT]; // offset 2840
+	float fuelLoadBins[FUEL_LOAD_COUNT]; //
 	// RPM is float and not integer in order to use unified methods for interpolation
-	float fuelRpmBins[FUEL_RPM_COUNT]; // offset 3542
+	float fuelRpmBins[FUEL_RPM_COUNT]; //
 
-	int unused[3];
+	/**
+	 * Engine displacement, in liters
+	 * see also cylindersCount
+	 */
+	float displacement;
+	int unused[2];
 
 	injection_mode_e crankingInjectionMode;
 	injection_mode_e injectionMode;
@@ -270,7 +275,23 @@ typedef struct {
 	float diffLoadEnrichmentCoef;
 
 	air_pressure_sensor_config_s baroSensor;
+
+	float veLoadBins[VE_LOAD_COUNT];
+	float veRpmBins[VE_RPM_COUNT];
+	float afrLoadBins[AFR_LOAD_COUNT];
+	float afrRpmBins[AFR_RPM_COUNT];
+
+	// the large tables are always in the end - that's related to TunerStudio paging implementation
+	float fuelTable[FUEL_LOAD_COUNT][FUEL_RPM_COUNT]; // size 1024
+	float ignitionTable[IGN_LOAD_COUNT][IGN_RPM_COUNT]; // size 1024
+
+	float veTable[VE_LOAD_COUNT][VE_RPM_COUNT]; // size 1024
+	float afrTable[AFR_LOAD_COUNT][AFR_RPM_COUNT]; // size 1024
+
 } engine_configuration_s;
+
+void setOperationMode(engine_configuration_s *engineConfiguration, operation_mode_e mode);
+operation_mode_e getOperationMode(engine_configuration_s const *engineConfiguration);
 
 #define HW_MAX_ADC_INDEX 16
 
@@ -326,6 +347,14 @@ typedef struct {
 	brain_pin_e primaryLogicAnalyzerPin;
 	brain_pin_e secondaryLogicAnalyzerPin;
 
+	int idleThreadPeriod;
+	int consoleLoopPeriod;
+	int lcdThreadPeriod;
+	int tunerStudioThreadPeriod;
+	int generalPeriodicThreadPeriod;
+
+	int tunerStudioSerialSpeed;
+
 } board_configuration_s;
 
 typedef struct {
@@ -350,6 +379,7 @@ void setWholeFuelMap(engine_configuration_s *engineConfiguration, float value);
 void setConstantDwell(engine_configuration_s *engineConfiguration, float dwellMs);
 void printFloatArray(const char *prefix, float array[], int size);
 
+void setTriggerSynchronizationGap(engine_configuration_s *engineConfiguration, float synchGap);
 
 void incrementGlobalConfigurationVersion(void);
 int getGlobalConfigurationVersion(void);

@@ -16,13 +16,30 @@
 #define MAX_IGNITER_COUNT 4
 
 #ifdef __cplusplus
+#include "engine_configuration.h"
+#include "ec2.h"
+#include "event_registry.h"
+class MainTriggerCallback {
+public:
+//	MainTriggerCallback();
+	void init(engine_configuration_s *engineConfiguration, engine_configuration2_s *engineConfiguration2);
+
+	engine_configuration_s *engineConfiguration;
+	engine_configuration2_s *engineConfiguration2;
+
+};
+void initMainEventListener(engine_configuration_s *engineConfiguration, engine_configuration2_s *engineConfiguration2);
+void onTriggerEvent(trigger_event_e ckpSignalType, int eventIndex, MainTriggerCallback *mainTriggerCallback);
+#endif
+
+
+#ifdef __cplusplus
 extern "C"
 {
 #endif /* __cplusplus */
 
-#include "event_registry.h"
 
-void initMainEventListener(void);
+
 void showMainHistogram(void);
 void onEveryMillisecondTimerSignal(void);
 int isIgnitionTimingError(void);

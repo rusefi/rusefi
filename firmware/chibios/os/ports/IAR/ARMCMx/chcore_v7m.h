@@ -470,6 +470,8 @@ struct context {
 #define port_wait_for_interrupt()
 #endif
 
+int getRemainingStack(Thread *otp);
+
 /**
  * @brief   Performs a context switch between two threads.
  * @details This is the most critical code in any port, this function
@@ -484,7 +486,7 @@ struct context {
 #define port_switch(ntp, otp) _port_switch(ntp, otp)
 #else
 #define port_switch(ntp, otp) {                                             \
-  if ((stkalign_t *)(__get_SP() - sizeof(struct intctx)) < otp->p_stklimit) \
+  if (getRemainingStack(otp) < 0)                                           \
     chDbgPanic("stack overflow");                                           \
   _port_switch(ntp, otp);                                                   \
 }

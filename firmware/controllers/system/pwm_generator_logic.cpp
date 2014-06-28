@@ -1,5 +1,5 @@
 /**
- * @file    pwm_generator_logic.c
+ * @file    pwm_generator_logic.cpp
  *
  * This PWM implementation keep track of when it would be the next time to toggle the signal.
  * It constantly sets timer to that next toggle time, then sets the timer again from the callback, and so on.
@@ -8,15 +8,43 @@
  * @author Andrey Belomutskiy, (c) 2012-2014
  */
 
+#include "main.h"
 #include "pwm_generator_logic.h"
 
-PwmConfig::PwmConfig(float *st, single_wave_s *waves) :
-		multiWave(st, waves) {
+/**
+ * We need to limit the number of iterations in order to avoid precision loss while calculating
+ * next toggle time
+ */
+#define ITERATION_LIMIT 10000
+
+SimplePwm::SimplePwm() {
+	wave.init(pinStates);
+	sr[0] = wave;
+	init(_switchTimes, sr);
+}
+
+PwmConfig::PwmConfig() {
 	scheduling.name = "PwmConfig";
 }
 
+PwmConfig::PwmConfig(float *st, single_wave_s *waves) {
+	multiWave.init(st, waves);
+	scheduling.name = "PwmConfig";
+}
+
+void PwmConfig::init(float *st, single_wave_s *waves) {
+	multiWave.init(st, waves);
+}
+
+/**
+ * @param dutyCycle value between 0 and 1
+ */
+void SimplePwm::setSimplePwmDutyCycle(float dutyCycle) {
+	multiWave.setSwitchTime(0, dutyCycle);
+}
+
 static uint64_t getNextSwitchTimeUs(PwmConfig *state) {
-	chDbgAssert(state->safe.phaseIndex < PWM_PHASE_MAX_COUNT, "phaseIndex range", NULL);
+	efiAssert(state->safe.phaseIndex < PWM_PHASE_MAX_COUNT, "phaseIndex range", 0);
 	int iteration = state->safe.iteration;
 	float switchTime = state->multiWave.switchTimes[state->safe.phaseIndex];
 	float periodMs = state->safe.periodMs;
@@ -24,6 +52,10 @@ static uint64_t getNextSwitchTimeUs(PwmConfig *state) {
 	scheduleMsg(&logger, "iteration=%d switchTime=%f period=%f", iteration, switchTime, period);
 #endif
 
+	/**
+	 * todo: once 'iteration' gets relatively high, we might lose calculation precision here
+	 * todo: double-check this spot
+	 */
 	uint64_t timeToSwitchUs = (iteration + switchTime) * periodMs * 1000;
 
 #if DEBUG_PWM
@@ -50,8 +82,8 @@ static uint64_t togglePwmState(PwmConfig *state) {
 		}
 		if (state->cycleCallback != NULL)
 			state->cycleCallback(state);
-		chDbgAssert(state->periodMs != 0, "period not initialized", NULL);
-		if (state->safe.periodMs != state->periodMs) {
+		efiAssert(state->periodMs != 0, "period not initialized", 0);
+		if (state->safe.periodMs != state->periodMs || state->safe.iteration == ITERATION_LIMIT) {
 			/**
 			 * period length has changed - we need to reset internal state
 			 */
@@ -65,7 +97,7 @@ static uint64_t togglePwmState(PwmConfig *state) {
 	}
 
 	state->stateChangeCallback(state,
-			state->safe.phaseIndex == 0 ? state->multiWave.phaseCount - 1 : state->safe.phaseIndex - 1);
+			state->safe.phaseIndex == 0 ? state->phaseCount - 1 : state->safe.phaseIndex - 1);
 
 	uint64_t nextSwitchTimeUs = getNextSwitchTimeUs(state);
 #if DEBUG_PWM
@@ -79,7 +111,7 @@ static uint64_t togglePwmState(PwmConfig *state) {
 	}
 
 	state->safe.phaseIndex++;
-	if (state->safe.phaseIndex == state->multiWave.phaseCount) {
+	if (state->safe.phaseIndex == state->phaseCount) {
 		state->safe.phaseIndex = 0; // restart
 		state->safe.iteration++;
 	}
@@ -96,7 +128,7 @@ static void timerCallback(PwmConfig *state) {
  * into our own permanent storage, right?
  */
 void copyPwmParameters(PwmConfig *state, int phaseCount, float *switchTimes, int waveCount, int **pinStates) {
-	state->multiWave.phaseCount = phaseCount;
+	state->phaseCount = phaseCount;
 
 	for (int phaseIndex = 0; phaseIndex < phaseCount; phaseIndex++) {
 		state->multiWave.switchTimes[phaseIndex] = switchTimes[phaseIndex];
@@ -112,7 +144,7 @@ void copyPwmParameters(PwmConfig *state, int phaseCount, float *switchTimes, int
 void weComplexInit(const char *msg, PwmConfig *state, int phaseCount, float *switchTimes, int waveCount,
 		int **pinStates, pwm_cycle_callback *cycleCallback, pwm_gen_callback *stateChangeCallback) {
 
-	chDbgCheck(state->periodMs != 0, "period is not initialized");
+	efiAssertVoid(state->periodMs != 0, "period is not initialized");
 	if (phaseCount == 0) {
 		firmwareError("signal length cannot be zero");
 		return;
@@ -125,7 +157,7 @@ void weComplexInit(const char *msg, PwmConfig *state, int phaseCount, float *swi
 		firmwareError("last switch time has to be 1");
 		return;
 	}
-	chDbgCheck(waveCount > 0, "waveCount should be positive");
+	efiAssertVoid(waveCount > 0, "waveCount should be positive");
 	checkSwitchTimes2(phaseCount, switchTimes);
 
 	state->multiWave.waveCount = waveCount;

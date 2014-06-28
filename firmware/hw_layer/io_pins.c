@@ -24,7 +24,7 @@ extern board_configuration_s *boardConfiguration;
 
 static pin_output_mode_e *pinDefaultState[IO_PIN_COUNT];
 static OutputPin outputs[IO_PIN_COUNT];
-static io_pin_e leds[] = { LED_CRANKING, LED_RUNNING, LED_ERROR, LED_COMMUNICATION_1, LED_DEBUG, LED_EXT_1,
+static io_pin_e leds[] = { LED_WARNING, LED_RUNNING, LED_ERROR, LED_COMMUNICATION_1, LED_DEBUG, LED_EXT_1,
 		LED_CHECK_ENGINE };
 
 static GPIO_TypeDef *PORTS[] = { GPIOA, GPIOB, GPIOC, GPIOD, GPIOE, GPIOF, GPIOG, GPIOH };
@@ -34,12 +34,12 @@ static pin_output_mode_e DEFAULT_OUTPUT = OM_DEFAULT;
 /**
  * blinking thread to show that we are alive
  */
-static WORKING_AREA(comBlinkingStack, UTILITY_THREAD_STACK_SIZE);
+static THD_WORKING_AREA(comBlinkingStack, UTILITY_THREAD_STACK_SIZE);
 
 /**
  * error thread to show error condition (blinking LED means non-fatal error)
  */
-static WORKING_AREA(errBlinkingStack, UTILITY_THREAD_STACK_SIZE);
+static THD_WORKING_AREA(errBlinkingStack, UTILITY_THREAD_STACK_SIZE);
 
 void turnOutputPinOn(io_pin_e pin) {
 	setOutputPinValue(pin, TRUE);
@@ -51,7 +51,7 @@ void turnOutputPinOff(io_pin_e pin) {
 
 inline static void assertOMode(pin_output_mode_e mode) {
 	// mode >= 0  is always true since that's an unsigned
-	chDbgCheck(mode <= OM_OPENDRAIN_INVERTED, "invalid pin_output_mode_e");
+	efiAssertVoid(mode <= OM_OPENDRAIN_INVERTED, "invalid pin_output_mode_e");
 }
 
 /**
@@ -60,7 +60,7 @@ inline static void assertOMode(pin_output_mode_e mode) {
 void setOutputPinValue(io_pin_e pin, int logicValue) {
 	if (outputs[pin].port == GPIO_NULL)
 		return;
-	chDbgCheck(pinDefaultState[pin]!=NULL, "pin mode not initialized");
+	efiAssertVoid(pinDefaultState[pin]!=NULL, "pin mode not initialized");
 	pin_output_mode_e mode = *pinDefaultState[pin];
 	setPinValue(&outputs[pin], getElectricalValue(logicValue, mode), logicValue);
 }
@@ -104,10 +104,9 @@ static void errBlinkingThread(void *arg) {
 	while (TRUE) {
 		int delay = 33;
 		if (isTriggerDecoderError() || isIgnitionTimingError())
-			setOutputPinValue(LED_ERROR, 1);
+			setOutputPinValue(LED_WARNING, 1);
 		chThdSleepMilliseconds(delay);
-		if (!hasFatalError())
-			setOutputPinValue(LED_ERROR, 0);
+		setOutputPinValue(LED_WARNING, 0);
 		chThdSleepMilliseconds(delay);
 	}
 #endif /* EFI_ENGINE_CONTROL */
@@ -181,7 +180,7 @@ void initPrimaryPins(void) {
 }
 
 void initOutputPins(void) {
-	outputPinRegister("is cranking status", LED_CRANKING, LED_CRANKING_STATUS_PORT, LED_CRANKING_STATUS_PIN);
+	outputPinRegister("is cranking status", LED_WARNING, LED_WARNING_PORT, LED_WARNING_PIN);
 	outputPinRegister("is running status", LED_RUNNING, LED_RUNNING_STATUS_PORT, LED_RUNNING_STATUS_PIN);
 	outputPinRegister("communication status 1", LED_COMMUNICATION_1, LED_COMMUNICATION_PORT, LED_COMMUNICATION_PIN);
 

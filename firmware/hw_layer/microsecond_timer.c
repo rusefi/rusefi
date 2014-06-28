@@ -35,8 +35,8 @@ schfunc_t globalTimerCallback;
 void setHardwareUsTimer(int32_t timeUs) {
 	if (timeUs == 1)
 		timeUs = 2; // for some reason '1' does not really work
-	efiAssert(timeUs > 0, "neg timeUs");
-	efiAssert(timeUs < 10 * US_PER_SECOND, "invld time prmtr");
+	efiAssertVoid(timeUs > 0, "neg timeUs");
+	efiAssertVoid(timeUs < 10 * US_PER_SECOND, "setHardwareUsTimer() too large");
 
 	if (GPTDEVICE.state == GPT_ONESHOT)
 		gptStopTimerI(&GPTDEVICE);
@@ -68,11 +68,11 @@ static void callback(GPTDriver *gptp) {
 	globalTimerCallback(NULL);
 }
 
-static WORKING_AREA(mwThreadStack, UTILITY_THREAD_STACK_SIZE);
+static THD_WORKING_AREA(mwThreadStack, UTILITY_THREAD_STACK_SIZE);
 
 static const char * msg;
 
-static char buff[12];
+static char buff[32];
 
 static msg_t mwThread(int param) {
 	chRegSetThreadName("timer watchdog");
@@ -81,16 +81,15 @@ static msg_t mwThread(int param) {
 		chThdSleepMilliseconds(1000); // once a second is enough
 
 		if (getTimeNowUs() >= lastSetTimerTime + 2 * US_PER_SECOND) {
-			buff[0] = 'c';
-			buff[1] = 'l';
-			itoa10(&buff[2], lastSetTimerValue);
-			fatal(buff);
+			strcpy(buff, "no_event");
+			itoa10(&buff[8], lastSetTimerValue);
+			firmwareError(buff);
 			return -1;
 		}
 
 		msg = isTimerPending ? "No_cb too long" : "Timer not awhile";
 		// 2 seconds of inactivity would not look right
-		efiAssert(getTimeNowUs() < lastSetTimerTime + 2 * US_PER_SECOND, msg);
+		efiAssert(getTimeNowUs() < lastSetTimerTime + 2 * US_PER_SECOND, msg, -1);
 	}
 #if defined __GNUC__
 	return -1;
@@ -108,7 +107,9 @@ void initMicrosecondTimer(void) {
 	gptStart(&GPTDEVICE, &gpt5cfg);
 
 	lastSetTimerTime = getTimeNowUs();
+#if EFI_EMULATE_POSITION_SENSORS
 	chThdCreateStatic(mwThreadStack, sizeof(mwThreadStack), NORMALPRIO, (tfunc_t) mwThread, NULL);
+#endif /* EFI_ENGINE_EMULATOR */
 
 //	// test code
 //	chSysLock()

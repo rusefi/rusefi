@@ -38,10 +38,8 @@
 #include "io_pins.h"
 #include "mmc_card.h"
 #include "console_io.h"
-
-#define PRINT_FIRMWARE_ONCE TRUE
-
-static bool_t firmwareErrorReported = FALSE;
+#include "malfunction_central.h"
+#include "speed_density.h"
 
 #include "advance_map.h"
 #if EFI_TUNER_STUDIO
@@ -57,6 +55,7 @@ static bool_t firmwareErrorReported = FALSE;
 #include "engine_configuration.h"
 #include "rfiutil.h"
 #include "svnversion.h"
+#include "engine.h"
 
 #if EFI_PROD_CODE
 // todo: move this logic to algo folder!
@@ -65,6 +64,8 @@ static bool_t firmwareErrorReported = FALSE;
 #include "rusefi.h"
 #endif
 
+extern Engine engine;
+
 // this 'true' value is needed for simulator
 static volatile int fullLog = TRUE;
 int warningEnabled = TRUE;
@@ -72,6 +73,7 @@ int warningEnabled = TRUE;
 
 extern engine_configuration_s * engineConfiguration;
 extern engine_configuration2_s * engineConfiguration2;
+extern board_configuration_s *boardConfiguration;
 #define FULL_LOGGING_KEY "fl"
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
@@ -97,7 +99,7 @@ static void reportSensorF(const char *caption, float value, int precision) {
 #endif /* EFI_FILE_LOGGING */
 }
 
-static void reportSensorI(char *caption, int value) {
+static void reportSensorI(const char *caption, int value) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	debugInt(&logger, caption, value);
 #endif /* EFI_PROD_CODE || EFI_SIMULATOR */
@@ -154,6 +156,7 @@ void printSensors(void) {
 }
 
 void printState(int currentCkpEventCounter) {
+#if EFI_SHAFT_POSITION_INPUT
 	printSensors();
 
 	int rpm = getRpm();
@@ -177,6 +180,7 @@ void printState(int currentCkpEventCounter) {
 //		float fuel = getDefaultFuel(rpm, map);
 //		debugFloat(&logger, "d_fuel", fuel, 2);
 
+#endif /* EFI_SHAFT_POSITION_INPUT */
 }
 
 #define INITIAL_FULL_LOG TRUE
@@ -201,32 +205,31 @@ static void printStatus(void) {
 //	return getTCharge(getCurrentRpm(), tps, cltK, iatK);
 //}
 
-#if EFI_CUSTOM_PANIC_METHOD
-extern char *dbg_panic_file;
-extern int dbg_panic_line;
-#endif
+//#if EFI_CUSTOM_PANIC_METHOD
+//extern char *dbg_panic_file;
+//extern int dbg_panic_line;
+//#endif
 
-bool_t hasFatalError(void) {
-	return dbg_panic_msg != NULL;
-}
-
-static void checkIfShouldHalt(void) {
-#if CH_DBG_ENABLED
-	if (hasFatalError()) {
-		setOutputPinValue(LED_ERROR, 1);
-#if EFI_CUSTOM_PANIC_METHOD
-		print("my FATAL [%s] at %s:%d\r\n", dbg_panic_msg, dbg_panic_file, dbg_panic_line);
-#else
-		print("my FATAL [%s] at %s:%d\r\n", dbg_panic_msg);
-#endif
-		chThdSleepSeconds(1);
-		// todo: figure out how we halt exactly
-		while (TRUE) {
-		}
-		chSysHalt();
-	}
-#endif
-}
+//static void checkIfShouldHalt(void) {
+//#if CH_DBG_ENABLED
+//	if (hasFatalError()) {
+//		/**
+//		 * low-level function is used here to reduce stack usage
+//		 */
+//		palWritePad(LED_ERROR_PORT, LED_ERROR_PIN, 1);
+//#if EFI_CUSTOM_PANIC_METHOD
+//		print("my FATAL [%s] at %s:%d\r\n", dbg_panic_msg, dbg_panic_file, dbg_panic_line);
+//#else
+//		print("my FATAL [%s] at %s:%d\r\n", dbg_panic_msg);
+//#endif
+//		chThdSleepSeconds(1);
+//		// todo: figure out how we halt exactly
+//		while (TRUE) {
+//		}
+//		chSysHalt();
+//	}
+//#endif
+//}
 
 /**
  * Time when the firmware version was reported last time, in seconds
@@ -253,14 +256,14 @@ extern char errorMessageBuffer[200];
 void updateDevConsoleState(void) {
 	if (!isConsoleReady())
 		return;
-	checkIfShouldHalt();
+// looks like this is not needed anymore
+//	checkIfShouldHalt();
 	printPending();
 
 	if (hasFirmwareError()) {
-		if (!firmwareErrorReported || !PRINT_FIRMWARE_ONCE)
-			printMsg(&logger, "firmware error: %s", errorMessageBuffer);
-		firmwareErrorReported = TRUE;
+		printMsg(&logger, "firmware error: %s", errorMessageBuffer);
 		warningEnabled = FALSE;
+		chThdSleepMilliseconds(200);
 		return;
 	}
 
@@ -324,7 +327,7 @@ void updateHD44780lcd(void) {
 	lcd_HD44780_print_char('R');
 	lcd_HD44780_set_position(0, 10);
 
-	char * ptr = itoa10((uint8_t*) buffer, getRpm());
+	char * ptr = itoa10(buffer, getRpm());
 	ptr[0] = 0;
 	int len = ptr - buffer;
 	for (int i = 0; i < 6 - len; i++)
@@ -346,7 +349,7 @@ void updateHD44780lcd(void) {
 }
 #endif /* EFI_PROD_CODE */
 
-static WORKING_AREA(lcdThreadStack, UTILITY_THREAD_STACK_SIZE);
+static THD_WORKING_AREA(lcdThreadStack, UTILITY_THREAD_STACK_SIZE);
 
 static void lcdThread(void *arg) {
 	chRegSetThreadName("lcd");
@@ -354,20 +357,49 @@ static void lcdThread(void *arg) {
 #if EFI_HD44780_LCD
 		updateHD44780lcd();
 #endif
-		chThdSleepMilliseconds(50);
+		chThdSleepMilliseconds(boardConfiguration->lcdThreadPeriod);
 	}
 }
 
-static WORKING_AREA(tsThreadStack, UTILITY_THREAD_STACK_SIZE);
+static THD_WORKING_AREA(tsThreadStack, UTILITY_THREAD_STACK_SIZE);
+
+#if EFI_TUNER_STUDIO
+extern TunerStudioOutputChannels tsOutputChannels;
+
+void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels) {
+#if EFI_SHAFT_POSITION_INPUT
+	int rpm = getRpm();
+#else
+	int rpm = 0;
+#endif
+
+	float tps = getTPS();
+	float coolant = getCoolantTemperature();
+	float intake = getIntakeAirTemperature();
+
+	tsOutputChannels->rpm = rpm;
+	tsOutputChannels->coolant_temperature = coolant;
+	tsOutputChannels->intake_air_temperature = intake;
+	tsOutputChannels->throttle_positon = tps;
+	tsOutputChannels->mass_air_flow = getMaf();
+	tsOutputChannels->air_fuel_ratio = getAfr();
+	tsOutputChannels->v_batt = getVBatt();
+	tsOutputChannels->tpsADC = getTPS10bitAdc();
+	tsOutputChannels->atmospherePressure = getBaroPressure();
+	tsOutputChannels->manifold_air_pressure = getMap();
+	tsOutputChannels->checkEngine = hasErrorCodes();
+	tsOutputChannels->tCharge = getTCharge(rpm, tps, coolant, intake);
+}
+#endif /* EFI_TUNER_STUDIO */
 
 static void tsStatusThread(void *arg) {
 	chRegSetThreadName("tuner s");
 	while (true) {
 #if EFI_TUNER_STUDIO
 		// sensor state for EFI Analytics Tuner Studio
-		updateTunerStudioState();
+		updateTunerStudioState(&tsOutputChannels);
 #endif /* EFI_TUNER_STUDIO */
-		chThdSleepMilliseconds(50);
+		chThdSleepMilliseconds(boardConfiguration->tunerStudioThreadPeriod);
 	}
 }
 

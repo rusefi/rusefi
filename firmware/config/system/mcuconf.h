@@ -30,7 +30,9 @@
 
 #define STM32F4xx_MCUCONF
 
-#include "engines.h"
+#include "boards.h"
+#include "efifeatures.h"
+#include "rusefi_enums.h"
 
 /*
  * HAL driver system settings.

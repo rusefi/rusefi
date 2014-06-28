@@ -56,7 +56,7 @@ static int getPortIndex(GPIO_TypeDef* port) {
 		return 5;
 	if (port == GPIOH)
 		return 6;
-	fatal("portindex");
+	firmwareError("portindex");
 	return -1;
 }
 
@@ -133,8 +133,7 @@ void mySetPadMode(const char *msg, ioportid_t port, ioportmask_t pin, iomode_t m
  * This method would crash the program if pin is already in use
  */
 void registedFundamentralIoPin(char *msg, ioportid_t port, ioportmask_t pin, iomode_t mode) {
-	if (!initialized)
-		fatal("repo not initialized");
+	efiAssertVoid(initialized, "repo not initialized");
 
 	int portIndex = getPortIndex(port);
 	int index = portIndex * 16 + pin;
@@ -142,7 +141,8 @@ void registedFundamentralIoPin(char *msg, ioportid_t port, ioportmask_t pin, iom
 	if (PIN_USED[index] != NULL) {
 		print("!!!!!!!!!!!!! Already used [%s] %d\r\n", msg, pin);
 		print("!!!!!!!!!!!!! Already used by [%s]\r\n", PIN_USED[index]);
-		fatal("pin already used");
+		firmwareError("pin already used");
+		return;
 	}
 	markUsed(index, msg);
 	palSetPadMode(port, pin, mode);

@@ -80,17 +80,19 @@
  *
  */
 
+#include "main.h"
+#include "trigger_structure.h"
+#include "ec2.h"
+
 extern "C" {
 
 #include "global.h"
+#include "rfi_perftest.h"
 
-#include "main.h"
 #include "rusefi.h"
 #include "eficonsole.h"
 #include "hardware.h"
 #include "engine_controller.h"
-#include "ec2.h"
-#include "trigger_structure.h"
 #include "status_loop.h"
 #include "pin_repository.h"
 
@@ -113,6 +115,7 @@ int main_loop_started = FALSE;
 static MemoryStream errorMessageStream;
 uint8_t errorMessageBuffer[200];
 static bool hasFirmwareErrorFlag = FALSE;
+extern board_configuration_s *boardConfiguration;
 
 void runRusEfi(void) {
 	msObjectInit(&errorMessageStream, errorMessageBuffer, sizeof(errorMessageBuffer), 0);
@@ -144,6 +147,10 @@ void runRusEfi(void) {
 	 */
 	initEngineContoller();
 
+#if EFI_PERF_METRICS
+	initTimePerfActions();
+#endif
+
 #if EFI_ENGINE_EMULATOR
 	initEngineEmulator();
 #endif
@@ -156,20 +163,18 @@ void runRusEfi(void) {
 	 * control is around main_trigger_callback
 	 */
 	while (TRUE) {
-#if EFI_CLI_SUPPORT
+		efiAssertVoid(getRemainingStack(chThdSelf()) > 100, "stack#1");
+
+#if EFI_CLI_SUPPORT && !EFI_UART_ECHO_TEST_MODE
 		// sensor state + all pending messages for our own dev console
 		updateDevConsoleState();
 #endif /* EFI_CLI_SUPPORT */
 
-		chThdSleepMilliseconds(5);
+		chThdSleepMilliseconds(boardConfiguration->consoleLoopPeriod);
 	}
 }
 
-int systicks2ms(int systicks) {
-	return systicks / TICKS_IN_MS;
-}
-
-static VirtualTimer resetTimer;
+static virtual_timer_t resetTimer;
 
 static void rebootNow(void) {
 	NVIC_SystemReset();
@@ -231,13 +236,14 @@ void chDbgStackOverflowPanic(Thread *otp) {
 	chDbgPanic3(panicMessage, __FILE__, __LINE__);
 }
 
-bool_t hasFirmwareError(void) {
+bool hasFirmwareError(void) {
 	return hasFirmwareErrorFlag;
 }
 
 void firmwareError(const char *fmt, ...) {
 	if (hasFirmwareErrorFlag)
 		return;
+	setOutputPinValue(LED_ERROR, 1);
 	hasFirmwareErrorFlag = TRUE;
 	errorMessageStream.eos = 0; // reset
 	va_list ap;
@@ -249,5 +255,5 @@ void firmwareError(const char *fmt, ...) {
 }
 
 int getRusEfiVersion(void) {
-	return 20140515;
+	return 20140627;
 }

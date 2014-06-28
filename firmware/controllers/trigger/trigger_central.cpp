@@ -1,5 +1,5 @@
 /*
- * @file	trigger_central.c
+ * @file	trigger_central.cpp
  *
  * @date Feb 23, 2014
  * @author Andrey Belomutskiy, (c) 2012-2014
@@ -10,34 +10,34 @@
 #include "trigger_decoder.h"
 #include "main_trigger_callback.h"
 #include "engine_configuration.h"
-#include "histogram.h"
-#include "rfiutil.h"
 #include "listener_array.h"
 #include "wave_math.h"
 #include "data_buffer.h"
-
-#if defined __GNUC__
-static histogram_s triggerCallback __attribute__((section(".ccm")));
-#else
-static histogram_s triggerCallback;
+#include "histogram.h"
+#if EFI_PROD_CODE
+#include "rfiutil.h"
 #endif
 
-extern engine_configuration_s *engineConfiguration;
-extern engine_configuration2_s *engineConfiguration2;
+static histogram_s triggerCallback;
 
 // we need this initial to have not_running at first invocation
 static volatile uint64_t previousShaftEventTime = (efitimems_t) -10 * US_PER_SECOND;
 
-static IntListenerArray triggerListeneres;
+TriggerCentral triggerCentral;
 
 static Logging logging;
 
-static trigger_state_s triggerState;
+uint64_t getCrankEventCounter() {
+	return triggerCentral.triggerState.getTotalEventCounter();
+}
 
-static volatile int shaftEventCounter;
+uint64_t getStartOfRevolutionIndex() {
+	return triggerCentral.triggerState.getStartOfRevolutionIndex();
+}
 
-int getCrankEventCounter() {
-	return shaftEventCounter;
+void TriggerCentral::addEventListener(ShaftPositionListener listener, const char *name, void *arg) {
+	print("registerCkpListener: %s\r\n", name);
+	registerCallback(&triggerListeneres, (IntListener) listener, arg);
 }
 
 /**
@@ -46,25 +46,35 @@ int getCrankEventCounter() {
  * Trigger event listener would be invoked on each trigger event. For example, for a 60/2 wheel
  * that would be 116 events: 58 SHAFT_PRIMARY_UP and 58 SHAFT_PRIMARY_DOWN events.
  */
-void addTriggerEventListener(ShaftPositionListener handler, const char *name) {
-	print("registerCkpListener: %s\r\n", name);
-	registerCallback(&triggerListeneres, (IntListener) handler, NULL);
+void addTriggerEventListener(ShaftPositionListener listener, const char *name, void *arg) {
+	triggerCentral.addEventListener(listener, name, arg);
 }
 
-#define HW_EVENT_TYPES 4
+#if EFI_PROD_CODE || EFI_SIMULATOR
+extern configuration_s *configuration;
 
-static int hwEventCounters[HW_EVENT_TYPES];
+void hwHandleShaftSignal(trigger_event_e signal) {
+	triggerCentral.handleShaftSignal(configuration, signal, getTimeNowUs());
+}
+#endif /* EFI_PROD_CODE */
 
-void hwHandleShaftSignal(ShaftEvents signal) {
-	chDbgCheck(engineConfiguration!=NULL, "engineConfiguration");
-	chDbgCheck(engineConfiguration2!=NULL, "engineConfiguration2");
+TriggerCentral::TriggerCentral() {
+	memset(hwEventCounters, 0, sizeof(hwEventCounters));
+	clearCallbacks(&triggerListeneres);
+}
 
+void TriggerCentral::handleShaftSignal(configuration_s *configuration, trigger_event_e signal, uint64_t nowUs) {
+	efiAssertVoid(configuration!=NULL, "configuration");
+
+	efiAssertVoid(configuration->engineConfiguration!=NULL, "engineConfiguration");
+	efiAssertVoid(configuration->engineConfiguration2!=NULL, "engineConfiguration2");
+
+#if EFI_HISTOGRAMS && EFI_PROD_CODE
 	int beforeCallback = hal_lld_get_counter_value();
+#endif
 	int eventIndex = (int) signal;
-	chDbgCheck(eventIndex >= 0 && eventIndex < HW_EVENT_TYPES, "signal type");
+	efiAssertVoid(eventIndex >= 0 && eventIndex < HW_EVENT_TYPES, "signal type");
 	hwEventCounters[eventIndex]++;
-
-	uint64_t nowUs = getTimeNowUs();
 
 	if (nowUs - previousShaftEventTime > US_PER_SECOND) {
 		/**
@@ -74,52 +84,69 @@ void hwHandleShaftSignal(ShaftEvents signal) {
 		triggerState.shaft_is_synchronized = FALSE;
 	}
 	previousShaftEventTime = nowUs;
-	// this is not atomic, but it's fine here
-	shaftEventCounter++;
+
+	trigger_shape_s * triggerShape = &configuration->engineConfiguration2->triggerShape;
 
 	/**
 	 * This invocation changes the state of
 	 */
-	processTriggerEvent(&triggerState, &engineConfiguration2->triggerShape, &engineConfiguration->triggerConfig, signal,
-			nowUs);
+	triggerState.processTriggerEvent(triggerShape, &configuration->engineConfiguration->triggerConfig, signal, nowUs);
 
 	if (!triggerState.shaft_is_synchronized)
 		return; // we should not propagate event if we do not know where we are
 
-	if (triggerState.current_index >= engineConfiguration2->triggerShape.shaftPositionEventCount) {
-		int f = warning(OBD_PCM_Processor_Fault, "unexpected eventIndex=%d", triggerState.current_index);
-		if(!f) {
+	if (triggerState.getCurrentIndex() >= configuration->engineConfiguration2->triggerShape.shaftPositionEventCount) {
+		int f = warning(OBD_PCM_Processor_Fault, "unexpected eventIndex=%d", triggerState.getCurrentIndex());
+		if (!f) {
+#if EFI_PROD_CODE
+			// this temporary code is about trigger noise debugging
 			for (int i = 0; i < HW_EVENT_TYPES; i++)
 				scheduleMsg(&logging, "event type: %d count=%d", i, hwEventCounters[i]);
+#endif
 		}
 	} else {
+		/**
+		 * If we only have a crank position sensor, here we are extending crank revolutions with a 360 degree
+		 * cycle into a four stroke, 720 degrees cycle. TODO
+		 */
+		int triggerIndexForListeners;
+		if( getOperationMode(configuration->engineConfiguration) == FOUR_STROKE_CAM_SENSOR) {
+			// That's easy - trigger cycle matches engine cycle
+			triggerIndexForListeners = triggerState.getCurrentIndex();
+		} else {
+			bool isEven = (triggerState.getTotalRevolutionCounter() & 1) == 0;
+
+			triggerIndexForListeners = triggerState.getCurrentIndex() + (isEven ? 0 : triggerShape->getSize());
+		}
+
 
 		/**
 		 * Here we invoke all the listeners - the main engine control logic is inside these listeners
 		 */
-		invokeIntIntCallbacks(&triggerListeneres, signal, triggerState.current_index);
+		invokeIntIntVoidCallbacks(&triggerListeneres, signal, triggerIndexForListeners);
 	}
+#if EFI_HISTOGRAMS && EFI_PROD_CODE
 	int afterCallback = hal_lld_get_counter_value();
-#if EFI_HISTOGRAMS
 	int diff = afterCallback - beforeCallback;
 	// this counter is only 32 bits so it overflows every minute, let's ignore the value in case of the overflow for simplicity
 	if (diff > 0)
-		hsAdd(&triggerCallback, diff);
+	hsAdd(&triggerCallback, diff);
 #endif /* EFI_HISTOGRAMS */
 }
 
 void printAllCallbacksHistogram(void) {
+#if EFI_PROD_CODE
 	printHistogram(&logging, &triggerCallback);
+#endif
 }
 
 void initTriggerCentral(void) {
+#if EFI_PROD_CODE
 	initLogging(&logging, "ShaftPosition");
-
-	memset(hwEventCounters, 0, sizeof(hwEventCounters));
+#endif
 
 #if EFI_HISTOGRAMS
 	initHistogram(&triggerCallback, "all callbacks");
 #endif /* EFI_HISTOGRAMS */
 	initTriggerDecoder();
-	clearTriggerState(&triggerState);
 }

@@ -332,6 +332,7 @@
           <state>$PROJ_DIR$\..\console\tunerstudio</state>
           <state>$PROJ_DIR$\..\console_util</state>
           <state>$PROJ_DIR$\..\emulation</state>
+          <state>$PROJ_DIR$\..\emulation\test</state>
           <state>$PROJ_DIR$\..\emulation\hw_layer</state>
           <state>$PROJ_DIR$\..\hw_layer\algo</state>
           <state>$PROJ_DIR$\..\hw_layer\lcd</state>
@@ -610,15 +611,15 @@
         <option>
           <name>OOCOutputFormat</name>
           <version>2</version>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>OCOutputOverride</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>OOCOutputFile</name>
-          <state>ch.srec</state>
+          <state>iar.hex</state>
         </option>
         <option>
           <name>OOCCommandLineProducer</name>
@@ -626,7 +627,7 @@
         </option>
         <option>
           <name>OOCObjCopyEnable</name>
-          <state>0</state>
+          <state>1</state>
         </option>
       </data>
     </settings>
@@ -708,7 +709,7 @@
         </option>
         <option>
           <name>IlinkMapFile</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>IlinkLogFile</name>
@@ -915,7 +916,7 @@
         </option>
         <option>
           <name>IlinkStackAnalysisEnable</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>IlinkStackControlFile</name>
@@ -1994,6 +1995,12 @@
         <name>$PROJ_DIR$\..\config\engines\nissan_primera.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\config\engines\rover_v8.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\config\engines\rover_v8.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\config\engines\saturn_ion.cpp</name>
       </file>
       <file>
@@ -2087,7 +2094,7 @@
         <name>$PROJ_DIR$\..\controllers\algo\accel_enrichment.h</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\controllers\algo\advance_map.c</name>
+        <name>$PROJ_DIR$\..\controllers\algo\advance_map.cpp</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\controllers\algo\advance_map.h</name>
@@ -2117,7 +2124,7 @@
         <name>$PROJ_DIR$\..\controllers\algo\error_handling.h</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\controllers\algo\event_registry.c</name>
+        <name>$PROJ_DIR$\..\controllers\algo\event_registry.cpp</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\controllers\algo\event_registry.h</name>
@@ -2180,16 +2187,28 @@
     <group>
       <name>core</name>
       <file>
+        <name>$PROJ_DIR$\..\controllers\core\avg_values.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\controllers\core\avg_values.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\controllers\core\EfiWave.cpp</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\controllers\core\EfiWave.h</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\controllers\core\interpolation.c</name>
+        <name>$PROJ_DIR$\..\controllers\core\interpolation.cpp</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\controllers\core\interpolation.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\controllers\core\signal_filtering.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\controllers\core\signal_filtering.h</name>
       </file>
     </group>
     <group>
@@ -2203,6 +2222,12 @@
       <file>
         <name>$PROJ_DIR$\..\controllers\math\engine_math.h</name>
       </file>
+      <file>
+        <name>$PROJ_DIR$\..\controllers\math\speed_density.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\controllers\math\speed_density.h</name>
+      </file>
     </group>
     <group>
       <name>sensors</name>
@@ -2213,7 +2238,7 @@
         <name>$PROJ_DIR$\..\controllers\sensors\allsensors.h</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\controllers\sensors\ego.c</name>
+        <name>$PROJ_DIR$\..\controllers\sensors\ego.cpp</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\controllers\sensors\ego.h</name>
@@ -2225,7 +2250,7 @@
         <name>$PROJ_DIR$\..\controllers\sensors\maf.h</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\controllers\sensors\map.c</name>
+        <name>$PROJ_DIR$\..\controllers\sensors\map.cpp</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\controllers\sensors\map.h</name>
@@ -2240,7 +2265,7 @@
         <name>$PROJ_DIR$\..\controllers\sensors\thermistors.h</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\controllers\sensors\tps.c</name>
+        <name>$PROJ_DIR$\..\controllers\sensors\tps.cpp</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\controllers\sensors\tps.h</name>
@@ -2394,13 +2419,13 @@
       <name>$PROJ_DIR$\..\controllers\malfunction_indicator.h</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\controllers\map_averaging.c</name>
+      <name>$PROJ_DIR$\..\controllers\map_averaging.cpp</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\controllers\map_averaging.h</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\controllers\map_multiplier_thread.c</name>
+      <name>$PROJ_DIR$\..\controllers\map_multiplier_thread.cpp</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\controllers\map_multiplier_thread.h</name>
@@ -2425,6 +2450,21 @@
     <name>emulation</name>
     <group>
       <name>hw_layer</name>
+    </group>
+    <group>
+      <name>test</name>
+      <file>
+        <name>$PROJ_DIR$\..\emulation\test\test.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\emulation\test\test.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\emulation\test\testbmk.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\emulation\test\testbmk.h</name>
+      </file>
     </group>
     <file>
       <name>$PROJ_DIR$\..\emulation\analog_chart.c</name>
@@ -2529,7 +2569,7 @@
       <name>$PROJ_DIR$\..\hw_layer\board_test.h</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\hw_layer\can_hw.c</name>
+      <name>$PROJ_DIR$\..\hw_layer\can_hw.cpp</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\hw_layer\can_hw.h</name>

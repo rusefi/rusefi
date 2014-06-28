@@ -490,6 +490,8 @@ struct context {
 
 void chDbgStackOverflowPanic(Thread *otp);
 
+int getRemainingStack(Thread *otp);
+
 /**
  * @brief   Performs a context switch between two threads.
  * @details This is the most critical code in any port, this function
@@ -504,8 +506,7 @@ void chDbgStackOverflowPanic(Thread *otp);
 #define port_switch(ntp, otp) _port_switch(ntp, otp)
 #else
 #define port_switch(ntp, otp) {                                             \
-  register struct intctx *r13 asm ("r13");                                  \
-  if ((stkalign_t *)(r13 - 1) < otp->p_stklimit)                            \
+  if (getRemainingStack(otp) < 0)                                           \
     chDbgStackOverflowPanic(otp);                                           \
   _port_switch(ntp, otp);                                                   \
 }

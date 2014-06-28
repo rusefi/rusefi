@@ -48,11 +48,10 @@ void setError(int flag, obd_code_e errorCode);
  */
 void getErrorCodes(error_codes_set_s * buffer);
 
-bool_t hasErrorCodes(void);
+bool hasErrorCodes(void);
 
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-
 
 #endif /* MALFUNCTION_CENTRAL_H_ */

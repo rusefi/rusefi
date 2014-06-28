@@ -38,7 +38,6 @@
 #include "memstreams.h"
 #include "console_io.h"
 
-#define OUTPUT_BUFFER 9000
 /**
  * This is the size of the MemoryStream used by chvprintf
  */
@@ -50,18 +49,15 @@
 /**
  * This is the buffer into which all the data providers write
  */
-#if defined __GNUC__
-static char pendingBuffer[OUTPUT_BUFFER] __attribute__((section(".ccm")));
-#else
-static char pendingBuffer[OUTPUT_BUFFER];
-#endif
+static char pendingBuffer[DL_OUTPUT_BUFFER] CCM_OPTIONAL;
+
 /**
  * We copy all the pending data into this buffer once we are ready to push it out
  */
-static char outputBuffer[OUTPUT_BUFFER];
+static char outputBuffer[DL_OUTPUT_BUFFER];
 
 static MemoryStream intermediateLoggingBuffer;
-static uint8_t intermediateLoggingBufferData[INTERMEDIATE_LOGGING_BUFFER_SIZE]; //todo define max-printf-buffer
+static uint8_t intermediateLoggingBufferData[INTERMEDIATE_LOGGING_BUFFER_SIZE] CCM_OPTIONAL; //todo define max-printf-buffer
 static bool intermediateLoggingBufferInited = FALSE;
 
 static int validateBuffer(Logging *logging, int extraLen, const char *text) {
@@ -76,7 +72,7 @@ static int validateBuffer(Logging *logging, int extraLen, const char *text) {
 		strcat(logging->SMALL_BUFFER, logging->name);
 		strcat(logging->SMALL_BUFFER, "/");
 		strcat(logging->SMALL_BUFFER, text);
-		fatal(logging->SMALL_BUFFER);
+		firmwareError(logging->SMALL_BUFFER);
 //		unlockOutputBuffer();
 //		resetLogging(logging);
 		return TRUE;
@@ -85,7 +81,7 @@ static int validateBuffer(Logging *logging, int extraLen, const char *text) {
 }
 
 void append(Logging *logging, const char *text) {
-	chDbgCheck(text!=NULL, "append NULL");
+	efiAssertVoid(text != NULL, "append NULL");
 	int extraLen = strlen(text);
 	int errcode = validateBuffer(logging, extraLen, text);
 	if (errcode)
@@ -102,8 +98,9 @@ static void vappendPrintfI(Logging *logging, const char *fmt, va_list arg) {
 }
 
 void vappendPrintf(Logging *logging, const char *fmt, va_list arg) {
+	efiAssertVoid(getRemainingStack(chThdSelf()) > 16, "stack#5b");
 	if (!intermediateLoggingBufferInited) {
-		fatal("intermediateLoggingBufferInited not inited!");
+		firmwareError("intermediateLoggingBufferInited not inited!");
 		return;
 	}
 	int is_locked = isLocked();
@@ -128,6 +125,7 @@ void vappendPrintf(Logging *logging, const char *fmt, va_list arg) {
 }
 
 void appendPrintf(Logging *logging, const char *fmt, ...) {
+	efiAssertVoid(getRemainingStack(chThdSelf()) > 16, "stack#4");
 	va_list ap;
 	va_start(ap, fmt);
 	vappendPrintf(logging, fmt, ap);
@@ -154,7 +152,7 @@ char* getCaption(LoggingPoints loggingPoint) {
 	case LP_MAP_RAW:
 		return "MAP_R";
 	}
-	fatal("No such loggingPoint");
+	firmwareError("No such loggingPoint");
 	return NULL;
 }
 
@@ -176,7 +174,7 @@ static char* get2ndCaption(int loggingPoint) {
 	case LP_MAF:
 		return "MAF";
 	}
-	fatal("No such loggingPoint");
+	firmwareError("No such loggingPoint");
 	return NULL;
 }
 
@@ -204,7 +202,11 @@ void debugInt(Logging *logging, const char *caption, int value) {
 }
 
 void appendFloat(Logging *logging, float value, int precision) {
-	// todo: this implementation is less than perfect
+	/**
+	 * todo: #1 this implementation is less than perfect
+	 * todo: #2 The only way to avoid double promotion would probably be using *float instead of float
+	 * See also http://stackoverflow.com/questions/5522051/printing-a-float-in-c-while-avoiding-variadic-parameter-promotion-to-double
+	 */
 	switch (precision) {
 	case 1:
 		appendPrintf(logging, "%..10f", value);
@@ -324,7 +326,7 @@ void scheduleMsg(Logging *logging, const char *fmt, ...) {
 }
 
 // todo: remove this method, replace with 'scheduleMsg'
-void scheduleIntValue(Logging *logging, char *msg, int value) {
+void scheduleIntValue(Logging *logging, const char *msg, int value) {
 	resetLogging(logging);
 
 	append(logging, msg);
@@ -339,10 +341,10 @@ void scheduleLogging(Logging *logging) {
 	// this could be done without locking
 	int newLength = strlen(logging->buffer);
 
-	bool_t alreadyLocked = lockOutputBuffer();
+	bool alreadyLocked = lockOutputBuffer();
 	// I hope this is fast enough to operate under sys lock
 	int curLength = strlen(pendingBuffer);
-	if (curLength + newLength >= OUTPUT_BUFFER) {
+	if (curLength + newLength >= DL_OUTPUT_BUFFER) {
 		/**
 		 * if no one is consuming the data we have to drop it
 		 * this happens in case of serial-over-USB, todo: find a better solution

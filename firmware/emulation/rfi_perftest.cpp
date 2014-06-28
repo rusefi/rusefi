@@ -1,5 +1,5 @@
 /**
- * @file rdi_perftest.c
+ * @file rfi_perftest.cpp
  *
  * @date Nov 30, 2012
  * @author Andrey Belomutskiy, (c) 2012-2014
@@ -9,19 +9,17 @@
 #include "rfi_perftest.h"
 #include "fuel_math.h"
 
-//#include "rfirtc.h"
+#include "test.h"
 #include "eficonsole.h"
 #include "time.h"
 #include "engine_math.h"
 #include "gpio_helper.h"
 #include "efilib2.h"
+#include "console_io.h"
 
-//#define TEST_PORT GPIOB
-//#define TEST_PIN 6
+#if EFI_PERF_METRICS
 
-//static OutputPin testOutput;
-
-Logging logger;
+static Logging logger;
 
 static void testSystemCalls(const int count) {
 	time_t start, time;
@@ -201,12 +199,32 @@ static int rtcStartTime;
 
 static void timeInfo(void) {
 	scheduleMsg(&logger, "chTimeNow as seconds = %d", getTimeNowSeconds());
-	scheduleMsg(&logger, "hal seconds = %d", halTime.get() / 168000000LL);
+	scheduleMsg(&logger, "hal seconds = %d", halTime.get(hal_lld_get_counter_value(), false) / 168000000LL);
 
 #if EFI_RTC
 	int unix = rtcGetTimeUnixSec(&RTCD1) - rtcStartTime;
 	scheduleMsg(&logger, "unix seconds = %d", unix);
 #endif
+}
+
+static void runChibioTest(void) {
+	print("EFI_SHAFT_POSITION_INPUT=%d\r\n", EFI_SHAFT_POSITION_INPUT);
+	print("EFI_EMULATE_POSITION_SENSORS=%d\r\n", EFI_EMULATE_POSITION_SENSORS);
+	print("EFI_ANALOG_INPUTS=%d\r\n", EFI_ANALOG_INPUTS);
+	print("EFI_INTERNAL_ADC=%d\r\n", EFI_INTERNAL_ADC);
+	print("EFI_HD44780_LCD=%d\r\n", EFI_HD44780_LCD);
+	print("EFI_MAP_AVERAGING=%d\r\n", EFI_MAP_AVERAGING);
+	print("EFI_WAVE_ANALYZER=%d\r\n", EFI_WAVE_ANALYZER);
+	print("EFI_WAVE_CHART=%d\r\n", EFI_WAVE_CHART);
+	print("EFI_ANALOG_CHART=%d\r\n", EFI_ANALOG_CHART);
+	print("EFI_SHAFT_POSITION_INPUT=%d\r\n", EFI_SHAFT_POSITION_INPUT);
+	print("EFI_ENGINE_CONTROL=%d\r\n", EFI_ENGINE_CONTROL);
+	print("CH_DBG_SYSTEM_STATE_CHECK=%d\r\n", CH_DBG_SYSTEM_STATE_CHECK);
+	print("CH_DBG_ENABLE_CHECKS=%d\r\n", CH_DBG_ENABLE_CHECKS);
+	print("CH_DBG_ENABLE_ASSERTS=%d\r\n", CH_DBG_ENABLE_ASSERTS);
+	print("CH_DBG_ENABLE_STACK_CHECK=%d\r\n", CH_DBG_ENABLE_STACK_CHECK);
+	print("CH_DBG_THREADS_PROFILING=%d\r\n", CH_DBG_THREADS_PROFILING);
+	TestThread(getConsoleChannel());
 }
 
 void initTimePerfActions() {
@@ -220,4 +238,7 @@ void initTimePerfActions() {
 	addConsoleActionI("perftest", runTests);
 
 	addConsoleAction("timeinfo", timeInfo);
+	addConsoleAction("chtest", runChibioTest);
 }
+
+#endif /* EFI_PERF_METRICS */

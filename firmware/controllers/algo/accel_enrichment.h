@@ -14,14 +14,18 @@
 
 class AccelEnrichmemnt {
 public:
-	void updateDiffEnrichment(engine_configuration_s *engineConfiguration, float engineLoad);
+	AccelEnrichmemnt();
+	void updateDiffEnrichment(engine_configuration_s *engineConfiguration,
+			float engineLoad);
 	float getDiffEnrichment(void);
 private:
-	float engineLoadD[5];
+	float engineLoadD[4];
 	float diffEnrichment;
 };
 
 void initDiffEnrichment(void);
 float getAccelEnrichment(void);
 
+
 #endif /* ACC_ENRICHMENT_H_ */
+

@@ -1,5 +1,5 @@
 /**
- * @file    injector_central.c
+ * @file    injector_central.cpp
  * @brief	Utility methods related to fuel injection.
  *
  *
@@ -22,7 +22,6 @@
 
 #include "injector_central.h"
 #include "main.h"
-#include "engines.h"
 #include "io_pins.h"
 #include "signal_executor.h"
 #include "main_trigger_callback.h"
@@ -38,17 +37,13 @@ extern board_configuration_s *boardConfiguration;
 
 static int is_injector_enabled[MAX_INJECTOR_COUNT];
 
-int isInjectionEnabled(void) {
-	return engineConfiguration2->isInjectionEnabledFlag;
-}
-
-void assertCylinderId(int cylinderId, char *msg) {
+void assertCylinderId(int cylinderId, const char *msg) {
 	int isValid = cylinderId >= 1 && cylinderId <= engineConfiguration->cylindersCount;
 	if (!isValid) {
 		// we are here only in case of a fatal issue - at this point it is fine to make some blocking i-o
 		//scheduleSimpleMsg(&logger, "cid=", cylinderId);
 		print("ERROR [%s] cid=%d\r\n", msg, cylinderId);
-		chDbgAssert(TRUE, "Cylinder ID", null);
+		efiAssertVoid(FALSE, "Cylinder ID");
 	}
 }
 
@@ -76,7 +71,7 @@ static void printStatus(void) {
 }
 
 static void setInjectorEnabled(int id, int value) {
-	chDbgCheck(id >= 0 && id < engineConfiguration->cylindersCount, "injector id");
+	efiAssertVoid(id >= 0 && id < engineConfiguration->cylindersCount, "injector id");
 	is_injector_enabled[id] = value;
 	printStatus();
 }
@@ -121,14 +116,14 @@ static void sparkbench(char * onStr, char *offStr, char *countStr) {
 	needToRunBench = TRUE;
 }
 
-static WORKING_AREA(benchThreadStack, UTILITY_THREAD_STACK_SIZE);
+static THD_WORKING_AREA(benchThreadStack, UTILITY_THREAD_STACK_SIZE);
 
 static msg_t benchThread(int param) {
 	chRegSetThreadName("BenchThread");
 
 	while (TRUE) {
 		while (!needToRunBench) {
-			chThdSleepMilliseconds(50);
+			chThdSleepMilliseconds(200);
 		}
 		needToRunBench = FALSE;
 		runBench(brainPin, pin, onTime, offTime, count);

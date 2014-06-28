@@ -28,11 +28,17 @@ int warning(obd_code_e code, const char *fmt, ...);
  * todo: better method name?
  */
 void firmwareError(const char *fmt, ...);
-bool_t hasFirmwareError(void);
+bool hasFirmwareError(void);
 
-bool_t hasFatalError(void);
-void fatal3(char *msg, char *file, int line);
-#define fatal(x) (fatal3(x, __FILE__, __LINE__));
+/**
+ * declared as a macro so that this code does not use stack
+ * so that it would not crash the error handler in case of stack issues
+ */
+#if CH_DBG_SYSTEM_STATE_CHECK
+#define hasFatalError() (dbg_panic_msg != NULL)
+#else
+#define hasFatalError() (FALSE)
+#endif
 
 void chDbgPanic3(const char *msg, const char * file, int line);
 
@@ -45,7 +51,10 @@ int getRusEfiVersion(void);
  * @deprecated Global panic is inconvenient because it's hard to deliver the error message while whole instance
  * is stopped. Please use firmwareWarning() instead
  */
-#define efiAssert(x, y) chDbgAssert(x, y, NULL)
+#define efiAssert(condition, message, result) { if (!(condition)) { firmwareError(message); return result; } }
+
+#define efiAssertVoid(condition, message) { if (!(condition)) { firmwareError(message); return; } }
+
 
 #ifdef __cplusplus
 }

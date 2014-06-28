@@ -17,9 +17,6 @@ extern "C"
 void initSettings(void);
 void pokeControl(void);
 void setEngineType(int value);
-int getInjectionPeriod(void);
-int getInjectionOffset(void);
-int getInjectionDivider(void);
 
 #ifdef __cplusplus
 }

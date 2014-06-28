@@ -30,10 +30,7 @@ void resetConsoleActions(void) {
 }
 
 static void doAddAction(const char *token, int type, Void callback) {
-	if (consoleActionCount == CONSOLE_MAX_ACTIONS) {
-		fatal("Too many console actions\r\n");
-		return;
-	}
+	efiAssertVoid(consoleActionCount < CONSOLE_MAX_ACTIONS, "Too many console actions");
 	TokenCallback *current = &consoleActions[consoleActionCount++];
 	current->token = token;
 	current->parameterType = type;

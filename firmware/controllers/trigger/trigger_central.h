@@ -9,17 +9,35 @@
 #define TRIGGER_CENTRAL_H_
 
 #include "rusefi_enums.h"
+#include "listener_array.h"
 
-typedef void (*ShaftPositionListener)(ShaftEvents signal, int index);
+typedef void (*ShaftPositionListener)(trigger_event_e signal, int index, void *arg);
 
 #ifdef __cplusplus
-extern "C"
-{
+#include "ec2.h"
+
+#define HW_EVENT_TYPES 4
+
+class TriggerCentral {
+public:
+	TriggerCentral();
+	void addEventListener(ShaftPositionListener handler, const char *name, void *arg);
+	void handleShaftSignal(configuration_s *configuration, trigger_event_e signal, uint64_t nowUs);
+	TriggerState triggerState;
+private:
+	IntListenerArray triggerListeneres;
+	int hwEventCounters[HW_EVENT_TYPES];
+};
+#endif
+
+#ifdef __cplusplus
+extern "C" {
 #endif /* __cplusplus */
-void addTriggerEventListener(ShaftPositionListener handler, const char *name);
-int getCrankEventCounter(void);
+void addTriggerEventListener(ShaftPositionListener handler, const char *name, void *arg);
+uint64_t getCrankEventCounter(void);
+uint64_t getStartOfRevolutionIndex(void);
 int isSignalDecoderError(void);
-void hwHandleShaftSignal(ShaftEvents signal);
+void hwHandleShaftSignal(trigger_event_e signal);
 void initTriggerCentral(void);
 void printAllCallbacksHistogram(void);
 

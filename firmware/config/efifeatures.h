@@ -10,14 +10,16 @@
 #ifndef EFIFEATURES_H_
 #define EFIFEATURES_H_
 
+#define EFI_USE_CCM TRUE
+
+//#define EFI_UART_ECHO_TEST_MODE TRUE
+
+#define EFI_USE_UART_FOR_CONSOLE FALSE
+
 /**
  * Build-in logic analyzer support. Logic analyzer viewer is one of the java console panes.
  */
 #define EFI_WAVE_ANALYZER TRUE
-
-
-#define EFI_WAVE_CHART TRUE
-#define EFI_ANALOG_CHART TRUE
 
 //#define SERIAL_SPEED (8 * 115200)
 //#define SERIAL_SPEED (2 * 115200)
@@ -27,10 +29,6 @@
  * TunerStudio support.
  */
 #define EFI_TUNER_STUDIO TRUE
-
-#define EFI_SERIAL_OVER_USB TRUE
-#define EFI_SERIAL_OVER_UART FALSE
-//#define EFI_TUNER_STUDIO_OVER_USB TRUE
 
 /**
  * TunerStudio debug output
@@ -82,19 +80,6 @@
 #define EFI_ENGINE_EMULATOR TRUE
 #define EFI_EMULATE_POSITION_SENSORS TRUE
 
-#if EFI_TUNER_STUDIO
-#if EFI_SERIAL_OVER_USB
-#if EFI_TUNER_STUDIO_OVER_USB
-  #pragma "Cannot be EFI_SERIAL_OVER_USB and EFI_TUNER_STUDIO_OVER_USB at the same time"
-#endif
-#else
-#if EFI_TUNER_STUDIO_OVER_USB
-#else
-  #pragma "Cannot be serial over USART and TUNER_STUDIO over USART at the same time"
-#endif
-#endif /* EFI_TUNER_STUDIO */
-#endif /* EFI_SERIAL_OVER_USB */
-
 /**
  * This macros is used to hide pieces of the code from unit tests, so it only makes sense in folders exposed to the tests project.
  * This macros is NOT about taking out logging in general.
@@ -120,7 +105,18 @@
 #define EFI_SUPPORT_NISSAN_PRIMERA TRUE
 #define EFI_SUPPORT_1995_FORD_INLINE_6 TRUE
 
+#if defined __GNUC__
 #define EFI_PERF_METRICS TRUE
+#define EFI_ANALOG_CHART TRUE
+#define EFI_WAVE_CHART TRUE
+#define DL_OUTPUT_BUFFER 9000
+#else
+// todo: CCM usage for IAR?
+#define EFI_PERF_METRICS FALSE
+#define EFI_ANALOG_CHART FALSE
+#define EFI_WAVE_CHART FALSE
+#define DL_OUTPUT_BUFFER 6000
+#endif
 
 /**
  * Do we need GPS logic?

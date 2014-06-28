@@ -1,5 +1,5 @@
 /**
- * @file    interpolation.c
+ * @file    interpolation.cpp
  * @brief	Linear interpolation algorithms
  *
  * @date Oct 17, 2013
@@ -14,11 +14,29 @@
 
 #include "main.h"
 #include "interpolation.h"
-//#include "engine_math.h"
 
 #define INTERPOLATION_A(x1, y1, x2, y2) ((y1 - y2) / (x1 - x2))
 
 int needInterpolationLogging = TRUE;
+
+
+FastInterpolation::FastInterpolation(float x1, float y1, float x2, float y2) {
+	init(x1, y1, x2, y2);
+}
+
+void FastInterpolation::init(float x1, float y1, float x2, float y2) {
+	if (x1 == x2) {
+		firmwareError("Same x1 and x2 in interpolate: %f/%f", x1, x2);
+		return;
+	}
+	a = INTERPOLATION_A(x1, y1, x2, y2);
+	b = y1 - a * x1;
+}
+
+float FastInterpolation::getValue(float x) {
+	return a * x + b;
+}
+
 
 /** @brief	Linear interpolation by two points
  *
@@ -39,7 +57,7 @@ float interpolate(float x1, float y1, float x2, float y2, float x) {
 
 	// a*x1 + b = y1
 	// a*x2 + b = y2
-//	chDbgCheck(x1 != x2, "no way we can interpolate");
+//	efiAssertVoid(x1 != x2, "no way we can interpolate");
 	float a = INTERPOLATION_A(x1, y1, x2, y2);
 	float b = y1 - a * x1;
 	float result = a * x + b;
@@ -55,8 +73,7 @@ float interpolate(float x1, float y1, float x2, float y2, float x) {
  * @note If the parameter is smaller than the first element of the array, -1 is returned.
  */
 int findIndex(float array[], int size, float value) {
-	if (cisnan(value))
-		fatal("NaN in findIndex\r\n");
+	efiAssert(!cisnan(value), "NaN in findIndex", 0);
 
 	if (value < array[0])
 		return -1;
@@ -67,7 +84,7 @@ int findIndex(float array[], int size, float value) {
 
 	while (1) {
 		if (size-- == 0)
-			fatal("Unexpected state in binary search.");
+			efiAssert(FALSE, "Unexpected state in binary search", 0);
 
 		middle = (left + right) / 2;
 

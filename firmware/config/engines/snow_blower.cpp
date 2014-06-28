@@ -1,5 +1,5 @@
 /**
- * @file    snow_blower.c
+ * @file    snow_blower.cpp
  * @brief	Default configuration of a single-cylinder engine
  *
  * @date Sep 9, 2013
@@ -7,8 +7,3 @@
  */
 
 #include "main.h"
-
-#if EFI_ENGINE_SNOW_BLOWER
-
-
-#endif

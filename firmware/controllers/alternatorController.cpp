@@ -24,7 +24,7 @@ extern board_configuration_s *boardConfiguration;
 
 static PwmConfig alternatorControl;
 
-static WORKING_AREA(ivThreadStack, UTILITY_THREAD_STACK_SIZE);
+static THD_WORKING_AREA(ivThreadStack, UTILITY_THREAD_STACK_SIZE);
 
 static msg_t AltCtrlThread(int param) {
 	chRegSetThreadName("AlternatorController");

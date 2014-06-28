@@ -64,7 +64,7 @@ static void lcdSleep(int period) {
 		for (int i = 0; i < ticks; i++)
 			a += i;
 		// the purpose of this code is to fool the compiler so that the loop is not optimized away
-		chDbgCheck(a != 0, "true");
+		efiAssertVoid(a != 0, "true");
 
 	} else {
 		chThdSleepMicroseconds(period);
@@ -135,7 +135,7 @@ void lcd_HD44780_write_data(uint8_t data) {
 
 //-----------------------------------------------------------------------------
 void lcd_HD44780_set_position(uint8_t row, uint8_t column) {
-	chDbgCheck(row <= engineConfiguration->HD44780height, "invalid row");
+	efiAssertVoid(row <= engineConfiguration->HD44780height, "invalid row");
 	currentRow = row;
 	lcd_HD44780_write_command(LCD_HD44780_DDRAM_ADDR + lineStart[row] + column);
 }
