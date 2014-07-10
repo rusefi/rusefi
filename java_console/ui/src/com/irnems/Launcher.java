@@ -2,10 +2,10 @@ package com.irnems;
 
 import com.irnems.core.EngineState;
 import com.irnems.core.MessagesCentral;
-import com.irnems.ui.*;
 import com.rusefi.AnalogChartPanel;
 import com.rusefi.PortLookupFrame;
 import com.rusefi.io.LinkManager;
+import com.rusefi.ui.*;
 import jssc.SerialPortList;
 
 import javax.swing.*;
@@ -20,23 +20,27 @@ import javax.swing.*;
  * @see WavePanel
  */
 public class Launcher extends FrameHelper {
-    private static final Object CONSOLE_VERSION = "20140407";
+    private static final Object CONSOLE_VERSION = "20140709";
+    public static final boolean SHOW_STIMULATOR = false;
 
     public Launcher(String port) {
         FileLog.MAIN.start();
 
         LinkManager.start(port);
 
+        FileLog.MAIN.logLine("Console " + CONSOLE_VERSION);
+
         JTabbedPane tabbedPane = new JTabbedPane();
 
         RpmPanel rpmPanel = new RpmPanel();
         tabbedPane.addTab("Main", rpmPanel.createRpmPanel());
-        tabbedPane.addTab("Gauges", new GaugePanel());
+        tabbedPane.addTab("Gauges", new GaugesPanel());
         tabbedPane.addTab("Digital Sniffer", WavePanel.getInstance());
         tabbedPane.addTab("Analog Sniffer", new AnalogChartPanel());
 
 //        tabbedPane.addTab("ADC", new AdcPanel(new BooleanInputsModel()).createAdcPanel());
-//        tabbedPane.add("Emulation Map", EcuStimulator.panel);
+        if (SHOW_STIMULATOR)
+            tabbedPane.add("Emulation Map", EcuStimulator.panel);
 //        tabbedPane.addTab("live map adjustment", new Live3DReport().getControl());
         tabbedPane.add("MessagesCentral", new MsgPanel(true));
 

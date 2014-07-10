@@ -28,6 +28,8 @@ extern "C"
 #endif /* __cplusplus */
 
 void initBoardTest(void);
+bool isBoardTestMode(void);
+void printBoardTestState(void);
 
 #ifdef __cplusplus
 }

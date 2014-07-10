@@ -18,7 +18,7 @@ public:
 	void execute(uint64_t nowUs);
 private:
 	EventQueue queue;
-	bool_t reentrantLock;
+	bool reentrantLock;
 	void doExecute(uint64_t nowUs);
 	void lock(void);
 	void unlock(void);

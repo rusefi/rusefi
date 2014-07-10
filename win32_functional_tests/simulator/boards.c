@@ -13,11 +13,6 @@
 static Logging logger;
 extern engine_configuration_s *engineConfiguration;
 
-
-//float getVoltageDivided(int channel) {
-//	return 0;
-//}
-//
 static float fakeAdcValues[16];
 
 int getAdcValue(int hwChannel) {
@@ -45,13 +40,18 @@ static void setAfrVoltage(float voltage) {
 	setVoltage(engineConfiguration->afrSensor.afrAdcChannel, voltage);
 }
 
+static void setTpsVoltage(float voltage) {
+	setVoltage(engineConfiguration->tpsAdcChannel, voltage);
+}
+
 void initFakeBoard(void) {
 	initLogging(&logger, "simulator board");
 
-	addConsoleActionF("set_fake_clt_voltage", setCltVoltage);
-	addConsoleActionF("set_fake_iat_voltage", setIatVoltage);
-	addConsoleActionF("set_fake_maf_voltage", setMafVoltage);
-	addConsoleActionF("set_fake_afr_voltage", setAfrVoltage);
+	addConsoleActionF("set_mock_clt_voltage", setCltVoltage);
+	addConsoleActionF("set_mock_iat_voltage", setIatVoltage);
+	addConsoleActionF("set_mock_maf_voltage", setMafVoltage);
+	addConsoleActionF("set_mock_afr_voltage", setAfrVoltage);
+	addConsoleActionF("set_mock_tps_voltage", setTpsVoltage);
 }
 
 

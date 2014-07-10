@@ -161,7 +161,6 @@ void printState(int currentCkpEventCounter) {
 
 	int rpm = getRpm();
 	debugInt(&logger, "ckp_c", currentCkpEventCounter);
-	debugInt(&logger, "fuel_lag", getRevolutionCounter());
 
 //	debugInt(&logger, "idl", getIdleSwitch());
 
@@ -171,7 +170,7 @@ void printState(int currentCkpEventCounter) {
 	debugFloat(&logger, "fuel_base", getBaseFuel(rpm, engineLoad), 2);
 //	debugFloat(&logger, "fuel_iat", getIatCorrection(getIntakeAirTemperature()), 2);
 //	debugFloat(&logger, "fuel_clt", getCltCorrection(getCoolantTemperature()), 2);
-//	debugFloat(&logger, "fuel_lag", getInjectorLag(getVBatt()), 2);
+	debugFloat(&logger, "fuel_lag", getInjectorLag(getVBatt()), 2);
 	debugFloat(&logger, "fuel", getRunningFuel(rpm, engineLoad), 2);
 
 	debugFloat(&logger, "timing", getAdvance(rpm, engineLoad), 2);
@@ -298,25 +297,26 @@ void updateDevConsoleState(void) {
  * that would be 'show fuel for rpm 3500 maf 4.0'
  */
 
-static void showFuelMap(int rpm, int key100) {
-	float engineLoad = key100 / 100.0;
-
+static void showFuelMap2(float rpm, float engineLoad) {
 	float baseFuel = getBaseFuel(rpm, engineLoad);
 
 	float iatCorrection = getIatCorrection(getIntakeAirTemperature());
 	float cltCorrection = getCltCorrection(getCoolantTemperature());
 	float injectorLag = getInjectorLag(getVBatt());
-	print("baseFuel=%f\r\n", baseFuel);
+	scheduleMsg(&logger2, "rpm=%f engineLoad=%f", rpm, engineLoad);
+	scheduleMsg(&logger2, "baseFuel=%f", baseFuel);
 
-	print("iatCorrection=%f cltCorrection=%f injectorLag=%d\r\n", iatCorrection, cltCorrection,
-			(int) (100 * injectorLag));
+	scheduleMsg(&logger2, "iatCorrection=%f cltCorrection=%f injectorLag=%f", iatCorrection, cltCorrection,
+			injectorLag);
 
 	float value = getRunningFuel(rpm, engineLoad);
-
-	print("fuel map rpm=%d, key=%f: %d\r\n", rpm, engineLoad, (int) (100 * value));
-
-	scheduleMsg(&logger2, "fuel map value = %f", value);
+	scheduleMsg(&logger2, "injection pulse width: %f", value);
 }
+
+static void showFuelMap(void) {
+	showFuelMap2(getRpm(), getEngineLoad());
+}
+
 
 static char buffer[10];
 static char dateBuffer[30];
@@ -415,7 +415,8 @@ void initStatusLoop(void) {
 #if EFI_PROD_CODE
 	initLogging(&logger2, "main event handler");
 
-	addConsoleActionII("sfm", showFuelMap);
+	addConsoleActionFF("fuelinfo2", showFuelMap2);
+	addConsoleAction("fuelinfo", showFuelMap);
 
 	addConsoleAction("status", printStatus);
 #endif /* EFI_PROD_CODE */

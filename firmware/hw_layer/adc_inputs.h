@@ -19,7 +19,7 @@ extern "C"
 
 GPIO_TypeDef* getAdcChannelPort(int hwChannel);
 int getAdcChannelPin(int hwChannel);
-void initAdcInputs(void);
+void initAdcInputs(bool isBoardTestMode);
 int getAdcHardwareIndexByInternalIndex(int index);
 int getAdcValueByIndex(int internalIndex);
 void pokeAdcInputs(void);

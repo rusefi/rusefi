@@ -34,8 +34,8 @@ extern board_configuration_s *boardConfiguration;
 void initIgnitionCentral(void) {
 	initLogging(&logger, "IgnitionCentral");
 
-	outputPinRegisterExt2("sparkout1", SPARKOUT_1_OUTPUT, boardConfiguration->ignitionPins[0], &boardConfiguration->ignitionPinMode);
-	outputPinRegisterExt2("sparkout2", SPARKOUT_2_OUTPUT, boardConfiguration->ignitionPins[1], &boardConfiguration->ignitionPinMode);
-	outputPinRegisterExt2("sparkout3", SPARKOUT_3_OUTPUT, boardConfiguration->ignitionPins[2], &boardConfiguration->ignitionPinMode);
-	outputPinRegisterExt2("sparkout4", SPARKOUT_4_OUTPUT, boardConfiguration->ignitionPins[3], &boardConfiguration->ignitionPinMode);
+	for (int i = 0; i < engineConfiguration->cylindersCount; i++) {
+		io_pin_e pin = (io_pin_e)((int)INJECTOR_1_OUTPUT + i);
+		outputPinRegisterExt2(getPinName(pin), pin, boardConfiguration->ignitionPins[i], &boardConfiguration->ignitionPinMode);
+	}
 }

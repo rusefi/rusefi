@@ -55,10 +55,8 @@ int getRusEfiVersion(void);
 
 #define efiAssertVoid(condition, message) { if (!(condition)) { firmwareError(message); return; } }
 
-
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-
 
 #endif /* ERROR_HANDLING_H_ */

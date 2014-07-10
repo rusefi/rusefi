@@ -37,6 +37,8 @@ CONTROL_USE_PSP SET 2
 
         SECTION .intvec:CODE:NOROOT(3)
 
+	SECTION .ccm:CODE:NOROOT(2)
+
         SECTION CSTACK:DATA:NOROOT(3)
         PUBLIC  __main_thread_stack_base__
 __main_thread_stack_base__:

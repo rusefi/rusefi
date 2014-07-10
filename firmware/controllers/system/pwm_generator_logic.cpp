@@ -46,7 +46,7 @@ void SimplePwm::setSimplePwmDutyCycle(float dutyCycle) {
 static uint64_t getNextSwitchTimeUs(PwmConfig *state) {
 	efiAssert(state->safe.phaseIndex < PWM_PHASE_MAX_COUNT, "phaseIndex range", 0);
 	int iteration = state->safe.iteration;
-	float switchTime = state->multiWave.switchTimes[state->safe.phaseIndex];
+	float switchTime = state->multiWave.getSwitchTime(state->safe.phaseIndex);
 	float periodMs = state->safe.periodMs;
 #if DEBUG_PWM
 	scheduleMsg(&logger, "iteration=%d switchTime=%f period=%f", iteration, switchTime, period);
@@ -131,7 +131,7 @@ void copyPwmParameters(PwmConfig *state, int phaseCount, float *switchTimes, int
 	state->phaseCount = phaseCount;
 
 	for (int phaseIndex = 0; phaseIndex < phaseCount; phaseIndex++) {
-		state->multiWave.switchTimes[phaseIndex] = switchTimes[phaseIndex];
+		state->multiWave.setSwitchTime(phaseIndex, switchTimes[phaseIndex]);
 
 		for (int waveIndex = 0; waveIndex < waveCount; waveIndex++) {
 //			print("output switch time index (%d/%d) at %f to %d\r\n", phaseIndex,waveIndex,

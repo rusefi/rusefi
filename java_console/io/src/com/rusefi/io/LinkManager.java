@@ -50,14 +50,18 @@ public class LinkManager {
     });
     public static boolean onlyUI = false;
     private static LinkConnector connector;
-    private static String port;
+
+    /**
+     * This flag controls if mock controls are needed
+     */
+    public static boolean isStimulationMode;
 
     public static void start(String port) {
-        LinkManager.port = port;
         if (port.equals(LOG_VIEWER)) {
             connector = LinkManager.VOID;
         } else if (TcpConnector.isTcpPort(port)) {
             connector = new TcpConnector(port);
+            isStimulationMode = true;
         } else {
             connector = new SerialConnector(port);
         }

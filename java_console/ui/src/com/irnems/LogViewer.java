@@ -2,7 +2,7 @@ package com.irnems;
 
 import com.irnems.core.EngineState;
 import com.irnems.file.FileUtils;
-import com.irnems.ui.WavePanel;
+import com.rusefi.ui.WavePanel;
 import com.irnems.ui.widgets.UpDownImage;
 import com.rusefi.FIleItem;
 import com.rusefi.io.LinkManager;

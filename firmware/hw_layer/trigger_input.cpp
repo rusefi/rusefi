@@ -75,8 +75,7 @@ void initShaftPositionInputCapture(void) {
 	 * @see shaft_icucfg for callback entry points
 	 */
 	shaft_icucfg.channel = ICU_CHANNEL_1;
-	print("initShaftPositionInputCapture 1 %s:%d\r\n", portname(getHwPort(boardConfiguration->primaryTriggerInputPin)),
-			getHwPin(boardConfiguration->primaryTriggerInputPin));
+	print("initShaftPositionInputCapture 1 %s\r\n", hwPortname(boardConfiguration->primaryTriggerInputPin));
 	icuStart(getPrimaryInputCaptureDriver(), &shaft_icucfg);
 	icuEnable(getPrimaryInputCaptureDriver());
 
@@ -85,8 +84,7 @@ void initShaftPositionInputCapture(void) {
 			getHwPort(boardConfiguration->secondaryTriggerInputPin),
 			getHwPin(boardConfiguration->secondaryTriggerInputPin));
 	shaft_icucfg.channel = ICU_CHANNEL_1;
-	print("initShaftPositionInputCapture 2 %s:%d\r\n", portname(getHwPort(boardConfiguration->secondaryTriggerInputPin)),
-			getHwPin(boardConfiguration->secondaryTriggerInputPin));
+	print("initShaftPositionInputCapture 2 %s\r\n", hwPortname(boardConfiguration->secondaryTriggerInputPin));
 	icuStart(getSecondaryInputCaptureDriver(), &shaft_icucfg);
 	icuEnable(getSecondaryInputCaptureDriver());
 

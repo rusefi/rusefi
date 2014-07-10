@@ -32,7 +32,7 @@ static void executorCallback(void *arg) {
 }
 
 Executor::Executor() {
-	reentrantLock = FALSE;
+	reentrantLock = false;
 }
 
 void Executor::lock(void) {
@@ -76,7 +76,7 @@ void Executor::doExecute(uint64_t nowUs) {
 		firmwareError("Someone has stolen my lock");
 		return;
 	}
-	reentrantLock = FALSE;
+	reentrantLock = false;
 	/**
 	 * Let's set up the timer for the next execution
 	 */

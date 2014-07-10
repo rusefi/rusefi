@@ -48,7 +48,7 @@ SPI_BaudRatePrescaler_256 };
 // don't forget check if STM32_SPI_USE_SPI2 defined and spi has init with correct GPIO in hardware.c
 static MMCConfig mmccfg = { &MMC_CARD_SPI, &ls_spicfg, &hs_spicfg };
 
-static bool_t fs_ready = FALSE;
+static bool fs_ready = FALSE;
 
 #define PUSHPULLDELAY 500
 
@@ -57,14 +57,15 @@ static bool_t fs_ready = FALSE;
  */
 static FATFS MMC_FS;
 
+static Logging logger;
+
 // print FAT error function
 static void printError(char *str, FRESULT f_error) {
-	print("FATfs Error \"%s\" %d\r\n", str, f_error);
+	scheduleMsg(&logger, "FATfs Error \"%s\" %d", str, f_error);
 }
 
 static FIL FDLogFile;
 
-static Logging logger;
 static int totalLoggedBytes = 0;
 
 static void printMmcPinout(void) {
@@ -109,14 +110,14 @@ static void ff_cmd_dir(char *path) {
 	char *fn;
 
 	if (!fs_ready) {
-		print("Error: No File system is mounted.\r\n");
+		scheduleMsg(&logger, "Error: No File system is mounted");
 		return;
 	}
 
 	FRESULT res = f_opendir(&dir, path);
 
 	if (res != FR_OK) {
-		print("Error opening directory %s\r\n", path);
+		scheduleMsg(&logger, "Error opening directory %s", path);
 		return;
 	}
 
@@ -137,7 +138,7 @@ static void ff_cmd_dir(char *path) {
 				break;
 			path[i] = 0;
 		} else {
-			print("%c%c%c%c%c %u/%02u/%02u %02u:%02u %9lu  %-12s\r\n", (fno.fattrib & AM_DIR) ? 'D' : '-',
+			scheduleMsg(&logger, "%c%c%c%c%c %u/%02u/%02u %02u:%02u %9lu  %-12s", (fno.fattrib & AM_DIR) ? 'D' : '-',
 					(fno.fattrib & AM_RDO) ? 'R' : '-', (fno.fattrib & AM_HID) ? 'H' : '-',
 					(fno.fattrib & AM_SYS) ? 'S' : '-', (fno.fattrib & AM_ARC) ? 'A' : '-', (fno.fdate >> 9) + 1980,
 					(fno.fdate >> 5) & 15, fno.fdate & 31, (fno.ftime >> 11), (fno.ftime >> 5) & 63, fno.fsize,
@@ -156,7 +157,7 @@ void appendToLog(char *line) {
 
 	if (!fs_ready) {
 		if (!errorReported)
-			print("appendToLog Error: No File system is mounted.\r\n");
+			scheduleMsg(&logger, "appendToLog Error: No File system is mounted");
 		errorReported = TRUE;
 		return;
 	}
@@ -174,7 +175,7 @@ void appendToLog(char *line) {
  */
 static void MMCumount(void) {
 	if (!fs_ready) {
-		print("Error: No File system is mounted. \"mountsd\" first.\r\n");
+		scheduleMsg(&logger, "Error: No File system is mounted. \"mountsd\" first");
 		return;
 	}
 	f_close(&FDLogFile);						// close file
@@ -183,8 +184,8 @@ static void MMCumount(void) {
 	mmcStop(&MMCD1);							// Disables the MMC peripheral.
 	f_mount(0, NULL);							// FATFS: Unregister work area prior to discard it
 	memset(&FDLogFile, 0, sizeof(FIL));			// clear FDLogFile
-	fs_ready = FALSE;							// status = false
-	print("MMC/SD card removed.\r\n");
+	fs_ready = false;							// status = false
+	scheduleMsg(&logger, "MMC/SD card removed");
 }
 
 /*
@@ -194,7 +195,7 @@ static void MMCmount(void) {
 //	printMmcPinout();
 
 	if (fs_ready) {
-		print("Error: Already mounted. \"umountsd\" first\r\n");
+		scheduleMsg(&logger, "Error: Already mounted. \"umountsd\" first");
 		return;
 	}
 	// start to initialize MMC/SD
@@ -203,7 +204,7 @@ static void MMCmount(void) {
 
 	// Performs the initialization procedure on the inserted card.
 	if (mmcConnect(&MMCD1) != CH_SUCCESS) {
-		print("Can't connect or mount MMC/SD\r\n");
+		scheduleMsg(&logger, "Can't connect or mount MMC/SD");
 		return;
 
 	}
@@ -211,7 +212,7 @@ static void MMCmount(void) {
 	memset(&MMC_FS, 0, sizeof(FATFS));			// reserve the memory
 	if (f_mount(0, &MMC_FS) == FR_OK) {
 		createLogFile();
-		print("MMC/SD mounted!\r\nDon't forget umountsd before remove to prevent lost your data.\r\n");
+		scheduleMsg(&logger, "MMC/SD mounted!\r\nDon't forget umountsd before remove to prevent lost your data");
 	}
 }
 

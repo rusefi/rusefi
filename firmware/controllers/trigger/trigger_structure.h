@@ -25,7 +25,7 @@ public:
 	uint64_t getStartOfRevolutionIndex();
 	void nextRevolution(int triggerEventCount);
 	void nextTriggerEvent();
-	void processTriggerEvent(trigger_shape_s const*triggerShape, trigger_config_s const*triggerConfig, trigger_event_e signal, uint64_t nowUs);
+	void decodeTriggerEvent(trigger_shape_s const*triggerShape, trigger_config_s const*triggerConfig, trigger_event_e signal, uint64_t nowUs);
 
 
 	/**
@@ -43,6 +43,7 @@ private:
 	int current_index;
 	uint64_t totalEventCountBase;
 	int totalRevolutionCounter;
+	bool isFirstEvent;
 };
 
 typedef enum {
@@ -66,12 +67,14 @@ public:
 
 class trigger_shape_s {
 private:
+	void setSwitchTime(int index, float angle);
 	trigger_shape_helper h;
 	int size;
 public:
 	trigger_shape_s();
 	void addEvent(float angle, trigger_wheel_e waveIndex, trigger_value_e state);
-	void reset();
+	float getAngle(int phaseIndex) const;
+	void reset(operation_mode_e operationMode);
 	int getSize();
 	multi_wave_s wave;
 
@@ -86,25 +89,38 @@ public:
 	// tood: maybe even automate this flag calculation?
 	int initialState[PWM_PHASE_MAX_WAVE_PER_PWM];
 
+
+	int getTriggerShapeSynchPointIndex();
+
+	void setTriggerShapeSynchPointIndex(int triggerShapeSynchPointIndex);
+	/**
+	 * These angles are in event coordinates - with synchronization point located at angle zero.
+	 */
+	float eventAngles[PWM_PHASE_MAX_COUNT];
+
+private:
 	/**
 	 * index of synchronization event within trigger_shape_s
 	 * See findTriggerZeroEventIndex()
 	 */
 	int triggerShapeSynchPointIndex;
-private:
+	/**
+	 * Values are in the 0..1 range
+	 */
 	float switchTimes[PWM_PHASE_MAX_COUNT];
+	/**
+	 * These are the same values as in switchTimes, but these are angles in the 0..360 or 0..720 range.
+	 * That's a performance optimization - this should save as one multiplication in a critical spot.
+	 *
+	 * These angles are in trigger DESCRIPTION coordinates - i.e. the way you add events while declaring trigger shape
+	 */
+	float switchAngles[PWM_PHASE_MAX_COUNT];
+
 	float previousAngle;
+	/**
+	 * this is part of performance optimization
+	 */
+	operation_mode_e operationMode;
 };
-
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
-
-void triggerAddEvent(trigger_shape_s *trigger, float angle, trigger_wheel_e waveIndex, trigger_value_e state);
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
 
 #endif /* TRIGGER_STRUCTURE_H_ */

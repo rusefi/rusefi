@@ -1,6 +1,6 @@
 package com.irnems.ui.test;
 
-import com.irnems.ui.RpmModel;
+import com.rusefi.ui.RpmModel;
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -1,29 +1,10 @@
 EESchema Schematic File Version 2
-LIBS:project_specific_libs
 LIBS:power
 LIBS:device
 LIBS:conn
-LIBS:linear
-LIBS:regul
-LIBS:74xx
-LIBS:cmos4000
-LIBS:adc-dac
-LIBS:memory
-LIBS:xilinx
-LIBS:special
-LIBS:microcontrollers
-LIBS:microchip
-LIBS:analog_switches
-LIBS:motorola
-LIBS:intel
-LIBS:audio
-LIBS:interface
-LIBS:digital-audio
-LIBS:philips
-LIBS:display
-LIBS:cypress
-LIBS:siliconi
-LIBS:contrib
+LIBS:logo_flipped
+LIBS:art-electro-conn
+LIBS:art-electro-ic
 LIBS:inj_12ch-cache
 EELAYER 27 0
 EELAYER END
@@ -31,12 +12,12 @@ $Descr B 17000 11000
 encoding utf-8
 Sheet 1 1
 Title "12 Channel Injector"
-Date "8 feb 2014"
+Date "16 jun 2014"
 Rev "A-1"
 Comp "http://code.google.com/p/daecu/"
 Comment1 ""
 Comment2 ""
-Comment3 ""
+Comment3 "Art_Electro"
 Comment4 ""
 $EndDescr
 Text Notes 10850 4725 1    30   ~ 0
@@ -325,19 +306,6 @@ F 4 "Weidmuller,1760500000" V 2850 4475 60  0001 C CNN "mfg,mfg#"
 F 5 "digi,281-2882-ND" V 2850 4475 60  0001 C CNN "vend1,vend1#"
 	1    2850 4475
 	-1   0    0    -1  
-$EndComp
-$Comp
-L LED D414
-U 1 1 527FB778
-P 7375 725
-F 0 "D414" H 7375 825 50  0000 C CNN
-F 1 "LED" H 7375 625 50  0000 C CNN
-F 2 "LED-0805" H 7375 725 60  0001 C CNN
-F 3 "~" H 7375 725 60  0000 C CNN
-F 4 "lite on,LTST-C170TBKT" H 7375 725 60  0001 C CNN "mfg,mfg#"
-F 5 "digi,160-1579-1-ND" H 7375 725 60  0001 C CNN "vend1,vend1#"
-	1    7375 725 
-	-1   0    0    1   
 $EndComp
 $Comp
 L DIODE D413
@@ -1456,4 +1424,26 @@ SCREW VIA
 NoConn ~ 15700 2300
 Text Notes 9400 6650 0    160  ~ 0
 12 channel injector driver\nalso suitable for fuel pump relay, IAC solenoid etc
+$Comp
+L LOGO #G1
+U 1 1 539EA0C7
+P 9300 6000
+F 0 "#G1" H 9300 5897 60  0001 C CNN
+F 1 "LOGO" H 9300 6103 60  0001 C CNN
+F 2 "" H 9300 6000 60  0000 C CNN
+F 3 "" H 9300 6000 60  0000 C CNN
+	1    9300 6000
+	1    0    0    -1  
+$EndComp
+$Comp
+L LED_0805 D414
+U 1 1 539EA6FA
+P 7375 725
+F 0 "D414" H 7375 825 50  0000 C CNN
+F 1 "LED_0805" H 7375 625 50  0000 C CNN
+F 2 "~" H 7375 725 60  0000 C CNN
+F 3 "~" H 7375 725 60  0000 C CNN
+	1    7375 725 
+	-1   0    0    1   
+$EndComp
 $EndSCHEMATC

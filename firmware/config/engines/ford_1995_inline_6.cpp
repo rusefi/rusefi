@@ -4,6 +4,8 @@
  *
  * http://rusefi.com/forum/viewtopic.php?f=3&t=469
  *
+ * This config overrides some values of the default configuration which is set by setDefaultConfiguration() method
+ *
  * FORD_INLINE_6_1995 = 7
  *
  * @date Feb 12, 2014
@@ -38,12 +40,9 @@ void setFordInline6(engine_configuration_s *engineConfiguration, board_configura
 	/**
 	 * We treat the trigger as 6/0 toothed wheel
 	 */
-	engineConfiguration->triggerConfig.triggerType = TT_TOOTHED_WHEEL;
-	engineConfiguration->triggerConfig.totalToothCount = 6;
-	engineConfiguration->triggerConfig.skippedToothCount = 0;
-	engineConfiguration->triggerConfig.isSynchronizationNeeded = FALSE;
+	setToothedWheelConfiguration(engineConfiguration, 6, 0);
 	engineConfiguration->triggerConfig.useRiseEdge = TRUE;
-	engineConfiguration->needSecondTriggerInput = FALSE;
+	engineConfiguration->needSecondTriggerInput = false;
 
 	engineConfiguration->globalTriggerAngleOffset = 0;
 	engineConfiguration->ignitionOffset = 13;

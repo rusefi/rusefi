@@ -10,14 +10,8 @@
 
 #include "main.h"
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
+#define GET_BOARD_TEST_MODE_VALUE() (!palReadPad(getHwPort(boardConfiguration->boardTestModeJumperPin), getHwPin(boardConfiguration->boardTestModeJumperPin)))
 
 void initHardware(Logging *logging);
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
 
 #endif /* HARDWARE_H_ */

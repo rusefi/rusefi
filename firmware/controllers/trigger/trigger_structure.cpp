@@ -29,7 +29,7 @@ trigger_shape_helper::trigger_shape_helper() {
 
 trigger_shape_s::trigger_shape_s() :
 		wave(switchTimes, NULL) {
-	reset();
+	reset(OM_NONE);
 	wave.waves = h.waves;
 }
 
@@ -37,7 +37,33 @@ int trigger_shape_s::getSize() {
 	return size;
 }
 
-void trigger_shape_s::reset() {
+int trigger_shape_s::getTriggerShapeSynchPointIndex() {
+	return triggerShapeSynchPointIndex;
+}
+
+// todo: clean-up!
+int getEngineCycleEventCount2(operation_mode_e mode, trigger_shape_s * s);
+float fixAngle(float angle);
+
+void trigger_shape_s::setTriggerShapeSynchPointIndex(int triggerShapeSynchPointIndex) {
+	this->triggerShapeSynchPointIndex = triggerShapeSynchPointIndex;
+
+	int engineCycleEventCount = getEngineCycleEventCount2(operationMode, this);
+
+	float firstAngle = getAngle(triggerShapeSynchPointIndex);
+
+	for (int i = 0; i < engineCycleEventCount; i++) {
+		if (i == 0) {
+			// explicit check for zero to avoid issues where logical zero is not exactly zero due to float nature
+			eventAngles[i] = 0;
+		} else {
+			eventAngles[i] = fixAngle(getAngle((triggerShapeSynchPointIndex + i) % engineCycleEventCount) - firstAngle);
+		}
+	}
+}
+
+void trigger_shape_s::reset(operation_mode_e operationMode) {
+	this->operationMode = operationMode;
 	size = 0;
 	shaftPositionEventCount = 0;
 	triggerShapeSynchPointIndex = 0;
@@ -58,6 +84,7 @@ void multi_wave_s::setSwitchTime(int index, float value) {
 TriggerState::TriggerState() {
 	clear();
 	totalEventCountBase = 0;
+	isFirstEvent = true;
 }
 
 int TriggerState::getCurrentIndex() {
@@ -74,7 +101,7 @@ uint64_t TriggerState::getTotalEventCounter() {
 
 void TriggerState::nextRevolution(int triggerEventCount) {
 	current_index = 0;
-	totalRevolutionCounter ++;
+	totalRevolutionCounter++;
 	totalEventCountBase += triggerEventCount;
 }
 
@@ -94,7 +121,30 @@ void TriggerState::clear() {
 	totalRevolutionCounter = 0;
 }
 
+float trigger_shape_s::getAngle(int index) const {
+	if (operationMode == FOUR_STROKE_CAM_SENSOR)
+		return switchAngles[index];
+	/**
+	 * FOUR_STROKE_CRANK_SENSOR magic:
+	 * We have two crank shaft revolutions for each engine cycle
+	 * See also trigger_central.cpp
+	 * See also getEngineCycleEventCount()
+	 */
+	int triggerEventCounter = size;
+
+	if (index < triggerEventCounter) {
+		return switchAngles[index];
+	} else {
+		return 360 + switchAngles[index - triggerEventCounter];
+	}
+}
+
 void trigger_shape_s::addEvent(float angle, trigger_wheel_e waveIndex, trigger_value_e state) {
+	efiAssertVoid(operationMode != OM_NONE, "operationMode not set");
+	/**
+	 * While '720' value works perfectly it has not much sense for crank sensor-only scenario.
+	 * todo: accept angle as a value in the 0..1 range?
+	 */
 	angle /= 720;
 	efiAssertVoid(angle > previousAngle, "invalid angle order");
 	previousAngle = angle;
@@ -114,7 +164,7 @@ void trigger_shape_s::addEvent(float angle, trigger_wheel_e waveIndex, trigger_v
 			wave->pinStates[0] = initialState[i];
 		}
 
-		wave.setSwitchTime(0, angle);
+		setSwitchTime(0, angle);
 		wave.waves[waveIndex].pinStates[0] = state;
 		return;
 	}
@@ -125,13 +175,14 @@ void trigger_shape_s::addEvent(float angle, trigger_wheel_e waveIndex, trigger_v
 
 	for (int i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++)
 		wave.waves[i].pinStates[index] = wave.getChannelState(i, index - 1);
-	wave.setSwitchTime(index, angle);
+	setSwitchTime(index, angle);
 	wave.waves[waveIndex].pinStates[index] = state;
 }
 
-void triggerAddEvent(trigger_shape_s *trigger, float angle, trigger_wheel_e waveIndex, trigger_value_e state) {
-	// todo: inline this method
-	trigger->addEvent(angle, waveIndex, state);
+void trigger_shape_s::setSwitchTime(int index, float angle) {
+	int cycleDuration = (operationMode == FOUR_STROKE_CAM_SENSOR) ? 720 : 360;
+	switchAngles[index] = cycleDuration * angle;
+	wave.setSwitchTime(index, angle);
 }
 
 void multi_wave_s::checkSwitchTimes(int size) {

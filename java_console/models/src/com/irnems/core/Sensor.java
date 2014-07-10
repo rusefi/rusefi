@@ -10,19 +10,25 @@ public enum Sensor {
     RPM("RPM"),
     MAP("MAP"),
     MAP_RAW("MAP_RAW"),
+    BARO("Baro"),
     TIMING("Timing"),
-    THROTTLE("throttle", "%", 100),
-    COOLANT("coolant", "F", 300),
-    COOLANT_WIDTH("c w", "", 30),
 
-    INTAKE_AIR("air temp", "F", 150),
-    INTAKE_AIR_WIDTH("air w", "", 30),
+    /**
+     * Please note that these enum names are used to make 'set_mock_XXX_voltage' commands
+     */
+    CLT("Coolant", "temperature, C", 300),
+    IAT("Intake Air", "temperature, C", 150),
+    AFR("A/F ratio", "", 0, 20),
+    MAF("MAF", "Volts", 4),
+    TPS("throttle", "%", 100),
+
+//    COOLANT_WIDTH("c w", "", 30),
+//    INTAKE_AIR_WIDTH("air w", "", 30),
 
     TABLE_SPARK("table spark", "ms", -40, 40),
     VREF("VRef", "Volts", 6),
     VBATT("VBatt", "Volts", 18),
     VREF_WIDTH("VRef w", "", 1),
-    MAF("MAF", "Volts", 4),
     DWELL0("Dwell0", "ms", 0, 30, BackgroundColor.BEIGE),
     DWELL1("Dwell1", "ms", 0, 30, BackgroundColor.BEIGE),
     ADVANCE0("Advance0", "dg", -40, 40, BackgroundColor.BROWN),
@@ -40,7 +46,6 @@ public enum Sensor {
 
     DEFAULT_FUEL("map fuel", "ms", 0, 40),
     T_CHARGE("T Charge", "f", 0, 200),
-    AFR("A/F ratio", "", 0, 20),
 
     CHARTSIZE("CHARTSIZE"),
     CHART_STATUS("CHART_STATUS"),

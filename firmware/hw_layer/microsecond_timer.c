@@ -21,7 +21,7 @@
 
 static volatile int64_t lastSetTimerTime;
 static int lastSetTimerValue;
-static volatile bool_t isTimerPending = FALSE;
+static volatile bool isTimerPending = FALSE;
 
 static volatile int timerCallbackCounter = 0;
 static volatile int timerRestartCounter = 0;
@@ -54,7 +54,7 @@ static void callback(GPTDriver *gptp) {
 		firmwareError("NULL globalTimerCallback");
 		return;
 	}
-	isTimerPending = FALSE;
+	isTimerPending = false;
 
 //	// test code
 //	setOutputPinValue(LED_CRANKING, timerCallbackCounter % 2);

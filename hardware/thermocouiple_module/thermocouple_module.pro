@@ -1,4 +1,4 @@
-update=4/25/2014 4:16:35 AM
+update=5/28/2014 5:24:56 AM
 version=1
 last_client=pcbnew
 [general]
@@ -56,8 +56,8 @@ LastNetListRead=thermocouple_module.net
 UseCmpFile=0
 PadDrill=0.000000000000
 PadDrillOvalY=0.000000000000
-PadSizeH=0.762000000000
-PadSizeV=1.270000000000
+PadSizeH=0.635000000000
+PadSizeV=1.143000000000
 PcbTextSizeV=2.032000000000
 PcbTextSizeH=1.524000000000
 PcbTextThickness=0.304800000000
@@ -82,3 +82,4 @@ LibName8=valves
 LibName9=led
 LibName10=dip_sockets
 LibName11=TCPL_PCC-SMP
+LibName12=SM0805-SM0603

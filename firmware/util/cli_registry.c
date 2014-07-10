@@ -6,6 +6,7 @@
  * command line interface action names & callback. This logic is invoked in
  * user context by the console thread - see consoleThreadThreadEntryPoint
  *
+ * TODO: there is too much copy-paste here, this class needs some refactoring :)
  *
  * @date Nov 15, 2012
  * @author Andrey Belomutskiy, (c) 2012-2014
@@ -17,6 +18,11 @@
 #include "main.h"
 #include "cli_registry.h"
 #include "efilib.h"
+
+#if EFI_PROD_CODE
+#include "board_test.h"
+#endif
+
 #if EFI_PROD_CODE || EFI_SIMULATOR
 #include "eficonsole.h"
 static Logging logging;
@@ -24,6 +30,8 @@ static Logging logging;
 
 static int consoleActionCount = 0;
 static TokenCallback consoleActions[CONSOLE_MAX_ACTIONS];
+
+#define SECURE_LINE_PREFIX "sec!"
 
 void resetConsoleActions(void) {
 	consoleActionCount = 0;
@@ -70,10 +78,21 @@ void addConsoleActionF(const char *token, VoidFloat callback) {
 	doAddAction(token, FLOAT_PARAMETER, (Void) callback);
 }
 
+void addConsoleActionFF(const char *token, VoidFloatFloat callback) {
+	doAddAction(token, FLOAT_FLOAT_PARAMETER, (Void) callback);
+}
+
 /**
  * @brief This function prints out a list of all available commands
  */
 void helpCommand(void) {
+#if EFI_PROD_CODE
+	if (isBoardTestMode()) {
+		printBoardTestState();
+		return;
+	}
+#endif /* EFI_PROD_CODE */
+
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	scheduleMsg(&logging, "%d actions available", consoleActionCount);
 	for (int i = 0; i < consoleActionCount; i++) {
@@ -141,6 +160,19 @@ void handleActionWithParameter(TokenCallback *current, char *parameter) {
 		return;
 	}
 
+	if (current->parameterType == FLOAT_FLOAT_PARAMETER) {
+		int spaceIndex = indexOf(parameter, ' ');
+		if (spaceIndex == -1)
+			return;
+		parameter[spaceIndex] = 0;
+		float value1 = atoff(parameter);
+		parameter += spaceIndex + 1;
+		float value2 = atoff(parameter);
+		VoidFloatFloat callbackS = (VoidFloatFloat) current->callback;
+		(*callbackS)(value1, value2);
+		return;
+	}
+
 	int value = atoi(parameter);
 	if (value == ERROR_CODE) {
 		print("invalid integer [%s]\r\n", parameter);
@@ -173,10 +205,10 @@ int strEqual(const char *str1, const char *str2) {
 	int len1 = strlen(str1);
 	int len2 = strlen(str2);
 	if (len1 != len2)
-		return FALSE;
+		return false;
 	for (int i = 0; i < len1; i++)
 		if (str1[i] != str2[i])
-			return FALSE;
+			return false;
 	return TRUE;
 }
 
@@ -189,10 +221,14 @@ void initConsoleLogic() {
 	addConsoleActionI("echo", echo);
 }
 
+/**
+ * @return NULL if input line validation failed, reference to line payload if validation succeeded.
+ * @see sendOutConfirmation() for command confirmation processing.
+ */
 char *validateSecureLine(char *line) {
 	if (line == NULL)
 		return NULL;
-	if (strncmp("sec!", line, 4) == 0) {
+	if (strncmp(SECURE_LINE_PREFIX, line, 4) == 0) {
 		// COM protocol looses bytes, this is a super-naive error detection
 
 //		print("Got secure mode request header [%s]\r\n", line);
@@ -223,7 +259,7 @@ static char confirmation[200];
 
 void sendOutConfirmation(char *value, int i);
 
-static bool_t handleConsoleLineInternal(char *line, int lineLength) {
+static bool handleConsoleLineInternal(char *line, int lineLength) {
 	int firstTokenLength = tokenLength(line);
 
 //	print("processing [%s] with %d actions\r\n", line, consoleActionCount);
@@ -251,7 +287,7 @@ static bool_t handleConsoleLineInternal(char *line, int lineLength) {
 			}
 		}
 	}
-	return FALSE;
+	return false;
 }
 
 /**
@@ -274,7 +310,7 @@ void handleConsoleLine(char *line) {
 	strcat(confirmation, line);
 	strcat(confirmation, ":");
 
-	bool_t isKnownComman = handleConsoleLineInternal(line, lineLength);
+	bool isKnownComman = handleConsoleLineInternal(line, lineLength);
 
 	// confirmation happens after the command to avoid conflict with command own output
 	sendOutConfirmation(confirmation, lineLength);

@@ -1,5 +1,5 @@
 /**
- * @file	rusEfiFunctionalTest.c
+ * @file	rusEfiFunctionalTest.cpp
  *
  * @date Mar 1, 2014
  * @author Andrey Belomutskiy, (c) 2012-2013
@@ -26,15 +26,23 @@
 #include "allsensors.h"
 #include "analog_chart.h"
 #include "injector_central.h"
+#include "engine.h"
+#include "tunerstudio.h"
+
+Engine engine;
 
 extern WaveChart waveChart;
 
-static persistent_config_s config;
+persistent_config_container_s persistentState;
 static engine_configuration2_s ec2;
 
-engine_configuration_s * engineConfiguration = &config.engineConfiguration;
-board_configuration_s *boardConfiguration = &config.boardConfiguration;
+engine_configuration_s * engineConfiguration = &persistentState.persistentConfiguration.engineConfiguration;
+board_configuration_s *boardConfiguration = &persistentState.persistentConfiguration.engineConfiguration.bc;
 engine_configuration2_s *engineConfiguration2 = &ec2;
+
+static configuration_s cfg = {engineConfiguration, engineConfiguration2};
+
+configuration_s * configuration = &cfg;
 
 void setOutputPinValue(io_pin_e pin, int logicValue) {
 }
@@ -43,19 +51,17 @@ int isInjectionEnabled(void) {
 	return TRUE;
 }
 
-
-//void initOutputSignal(OutputSignal *signal, io_pin_e ioPin) {
-//
-//}
-
 // todo: move this to "idle_controller.h"
 
 extern "C" {
 void idleDebug(char *msg, int value);
 }
 
-void idleDebug(char *msg, int value) {
+int getRemainingStack(Thread *otp) {
+	return 99999;
+}
 
+void idleDebug(char *msg, int value) {
 }
 
 float getMap(void) {
@@ -88,20 +94,24 @@ void rusEfiFunctionalTest(void) {
 	initFakeBoard();
 
 	initStatusLoop();
+	initDataStructures(engineConfiguration);
 
-	resetConfigurationExt(FORD_ASPIRE_1996, engineConfiguration, engineConfiguration2, boardConfiguration);
+	resetConfigurationExt(NULL, FORD_ASPIRE_1996, engineConfiguration, engineConfiguration2, boardConfiguration);
 
 	initThermistors();
-	initAlgo();
+	initAlgo(engineConfiguration);
 	initRpmCalculator();
 
 	initAnalogChart();
 
 	initTriggerEmulatorLogic(triggerEmulatorCallback);
 
-	initMainEventListener();
+	initMainEventListener(engineConfiguration, engineConfiguration2);
 
 	initTriggerCentral();
+
+	startStatusThreads();
+	startTunerStudioConnectivity();
 
 }
 
@@ -116,11 +126,28 @@ void printPendingMessages(void) {
 
 static size_t wt_writes(void *ip, const uint8_t *bp, size_t n) {
 	printToWin32Console((char*)bp);
-	return DELEGATE->vmt->write(DELEGATE, bp, n);
+	return CONSOLE_PORT->vmt->write(CONSOLE_PORT, bp, n);
 }
 
 static size_t wt_reads(void *ip, uint8_t *bp, size_t n) {
-	return DELEGATE->vmt->read(DELEGATE, bp, n);
+	return CONSOLE_PORT->vmt->read(CONSOLE_PORT, bp, n);
+}
+
+static msg_t wt_putt(void *instance, uint8_t b, systime_t time) {
+	return CONSOLE_PORT->vmt->putt(CONSOLE_PORT, b, time);
+}
+
+static msg_t wt_gett(void *instance, systime_t time) {
+	return CONSOLE_PORT->vmt->gett(CONSOLE_PORT, time);
+}
+
+static size_t wt_writet(void *instance, const uint8_t *bp,
+                size_t n, systime_t time) {
+	return CONSOLE_PORT->vmt->writet(CONSOLE_PORT, bp, n, time);
+}
+
+static size_t wt_readt(void *instance, uint8_t *bp, size_t n, systime_t time) {
+	return CONSOLE_PORT->vmt->readt(CONSOLE_PORT, bp, n, time);
 }
 
 static char putMessageBuffer[2];
@@ -130,16 +157,16 @@ static msg_t wt_put(void *ip, uint8_t b) {
 	putMessageBuffer[1] = 0;
 	printToWin32Console((char*)putMessageBuffer);
 //	cputs("wt_put");
-	return DELEGATE->vmt->put(DELEGATE, b);
+	return CONSOLE_PORT->vmt->put(CONSOLE_PORT, b);
 }
 
 static msg_t wt_get(void *ip) {
 //	cputs("wt_get");
 	//return 0;
-	return DELEGATE->vmt->get(DELEGATE);
+	return CONSOLE_PORT->vmt->get(CONSOLE_PORT);
 }
 
-static const struct Win32TestStreamVMT vmt = { wt_writes, wt_reads, wt_put, wt_get };
+static const struct Win32TestStreamVMT vmt = { wt_writes, wt_reads, wt_put, wt_get, wt_putt, wt_gett, wt_writet, wt_readt };
 
 void initTestStream(TestStream *ts) {
 	ts->vmt = &vmt;
@@ -147,8 +174,12 @@ void initTestStream(TestStream *ts) {
 
 int isSerialOverTcpReady;
 
-int is_serial_ready(void) {
+int isConsoleReady(void) {
 	return isSerialOverTcpReady;
+}
+
+bool_t hasFirmwareError(void) {
+	return FALSE;
 }
 
 void onFatalError(const char *msg, const char * file, int line) {
@@ -156,17 +187,25 @@ void onFatalError(const char *msg, const char * file, int line) {
 	exit(-1);
 }
 
+static time_t timeOfPreviousWarning = -10;
+
+// todo: re-use primary firmware implementation?
 int warning(obd_code_e code, const char *fmt, ...) {
+	int now = currentTimeMillis() / 1000;
+	if (absI(now - timeOfPreviousWarning) < 10)
+		return TRUE; // we just had another warning, let's not spam
+	timeOfPreviousWarning = now;
 	printf("Warning: %s\r\n", fmt);
-	return 0;
+	return FALSE;
 }
 
 void firmwareError(const char *fmt, ...) {
-	fatal3((char*)fmt, __FILE__, __LINE__);
+	printf("firmwareError [%s]", fmt);
+	exit(-1);
 }
 
-int hasFatalError(void) {
-	return false;
+SerialDriver * getConsoleChannel(void) {
+	return (SerialDriver *)EFI_CONSOLE_UART_DEVICE;
 }
 
 void chDbgPanic3(const char *msg, const char * file, int line) {
@@ -174,12 +213,11 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 }
 
 uint64_t getTimeNowUs(void) {
-
 	return chTimeNow() * (1000000 / CH_FREQUENCY);
 }
 
 efitimems_t currentTimeMillis(void) {
-	return getTimeNowUs() * 1000;
+	return getTimeNowUs() / 1000;
 }
 
 int getRusEfiVersion(void) {

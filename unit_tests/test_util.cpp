@@ -13,27 +13,40 @@
 #include "histogram.h"
 
 #include "malfunction_central.h"
-#include "eficonsole_logic.h"
+#include "cli_registry.h"
 
 #include "nmea.h"
 #include "efilib2.h"
+#include "crc.h"
+#include "fl_stack.h"
+
+void testCrc(void) {
+	assertEquals(4, efiRound(4.4, 1));
+	assertEquals(1.2, efiRound(1.2345, 0.1));
+
+	print("*************************************** testCrc\r\n");
+
+	const char * A = "A";
+
+	assertEqualsM("crc8", 168, calc_crc((const crc_t *)A, 1));
+	int c = crc32(A, 1);
+	printf("crc32(A)=%x\r\n", c);
+	assertEqualsM("crc32", 0xd3d99e8b, crc32(A, 1));
+}
 
 static cyclic_buffer sb;
-
 
 void testOverflow64Counter(void) {
 	print("*************************************** testOverflow64Counter\r\n");
 
 	Overflow64Counter o;
-	assertEquals(0, o.get());
-	o.offer(10);
-	assertEquals(10, o.get());
+	assertEquals(0, o.get(0, true));
+	assertEquals(10, o.get(10, true));
 
-	o.offer(20);
-	assertEquals(20, o.get());
+	assertEquals(20, o.get(20, true));
 
-	o.offer(0); // overflow
-	assertEquals(4294967296, o.get());
+	// overflow
+	assertEquals(4294967296, o.get(0, true));
 }
 
 void testCyclicBuffer(void) {
@@ -292,3 +305,11 @@ void testConsoleLogic(void) {
 	//addConsoleActionSSS("GPS", testGpsParser);
 }
 
+void testFLStack(void) {
+	print("******************************************* testFLStack\r\n");
+
+	FLStack<int, 4> stack;
+	assertEquals(0, stack.size());
+
+
+}

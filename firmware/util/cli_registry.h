@@ -23,6 +23,7 @@ typedef enum {
 	STRING_PARAMETER,
 	STRING3_PARAMETER,
 	TWO_INTS_PARAMETER,
+	FLOAT_FLOAT_PARAMETER
 } ACTION_PARAMETER_TYPE;
 
 typedef struct {
@@ -38,6 +39,7 @@ int tokenLength(char *msgp);
 typedef void (*Void)(void);
 typedef void (*VoidInt)(int);
 typedef void (*VoidFloat)(float);
+typedef void (*VoidFloatFloat)(float, float);
 typedef void (*VoidIntInt)(int, int);
 typedef void (*VoidCharPtr)(char *);
 typedef void (*VoidCharPtrCharPtrCharPtr)(char *, char *, char *);
@@ -52,6 +54,7 @@ void addConsoleAction(const char *token, Void callback);
 void addConsoleActionI(const char *token, VoidInt callback);
 void addConsoleActionII(const char *token, VoidIntInt callback);
 void addConsoleActionF(const char *token, VoidFloat callback);
+void addConsoleActionFF(const char *token, VoidFloatFloat callback);
 void addConsoleActionS(const char *token, VoidCharPtr callback);
 void addConsoleActionSSS(const char *token, VoidCharPtrCharPtrCharPtr callback);
 

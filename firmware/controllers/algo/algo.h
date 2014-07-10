@@ -8,12 +8,15 @@
 #ifndef ALGO_H_
 #define ALGO_H_
 
+#include "engine_configuration.h"
+
 #ifdef __cplusplus
 extern "C"
 {
 #endif /* __cplusplus */
 
-void initAlgo(void);
+void initDataStructures(engine_configuration_s *engineConfiguration);
+void initAlgo(engine_configuration_s *engineConfiguration);
 
 #ifdef __cplusplus
 }

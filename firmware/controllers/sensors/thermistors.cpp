@@ -17,10 +17,14 @@
 #include "engine_math.h"
 #include "ec2.h"
 
+// Celsius
+#define LIMPING_MODE_IAT_TEMPERATURE 30
+#define LIMPING_MODE_CLT_TEMPERATURE 70
+
 extern engine_configuration_s *engineConfiguration;
 extern engine_configuration2_s *engineConfiguration2;
 
-static bool_t initialized = FALSE;
+static bool initialized = false;
 
 /**
  * http://en.wikipedia.org/wiki/Voltage_divider
@@ -44,29 +48,21 @@ float convertResistanceToKelvinTemperature(float resistance, ThermistorConf *the
 		//warning("Invalid resistance in convertResistanceToKelvinTemperature=", resistance);
 		return 0;
 	}
-	float logR = log(resistance);
+	float logR = logf(resistance);
 	return 1 / (thermistor->s_h_a + thermistor->s_h_b * logR + thermistor->s_h_c * logR * logR * logR);
 }
 
-float convertKelvinToC(float tempK) {
-	return tempK - KELV;
-}
-
-float convertCelciusToKelvin(float tempC) {
-	return tempC + KELV;
-}
-
-float convertCelciustoF(float tempC) {
+float convertCelsiustoF(float tempC) {
 	return tempC * 9 / 5 + 32;
 }
 
-float convertFtoCelcius(float tempF) {
+float convertFtoCelsius(float tempF) {
 	return (tempF - 32) / 9 * 5;
 }
 
 float convertKelvinToFahrenheit(float kelvin) {
-	float tempC = convertKelvinToC(kelvin);
-	return convertCelciustoF(tempC);
+	float tempC = convertKelvinToCelcius(kelvin);
+	return convertCelsiustoF(tempC);
 }
 
 float getKelvinTemperature(float resistance, ThermistorConf *thermistor) {
@@ -94,7 +90,7 @@ float getTemperatureC(Thermistor *thermistor) {
 	float resistance = getResistance(thermistor);
 
 	float kelvinTemperature = getKelvinTemperature(resistance, thermistor->config);
-	return convertKelvinToC(kelvinTemperature);
+	return convertKelvinToCelcius(kelvinTemperature);
 }
 
 int isValidCoolantTemperature(float temperature) {
@@ -108,12 +104,14 @@ int isValidIntakeAirTemperature(float temperature) {
 }
 
 /**
- * @return coolant temperature, in Celcius
+ * @return coolant temperature, in Celsius
  */
 float getCoolantTemperature(void) {
 	float temperature = getTemperatureC(&engineConfiguration2->clt);
-	if (!isValidCoolantTemperature(temperature))
-		return NAN;
+	if (!isValidCoolantTemperature(temperature)) {
+		warning(OBD_PCM_Processor_Fault, "unrealistic coolant temperature %f", temperature);
+		return LIMPING_MODE_CLT_TEMPERATURE;
+	}
 	return temperature;
 }
 
@@ -134,9 +132,9 @@ void prepareThermistorCurve(ThermistorConf * config) {
 	float T2 = config->tempC_2 + KELV;
 	float T3 = config->tempC_3 + KELV;
 
-	float L1 = log(config->resistance_1);
-	float L2 = log(config->resistance_2);
-	float L3 = log(config->resistance_3);
+	float L1 = logf(config->resistance_1);
+	float L2 = logf(config->resistance_2);
+	float L3 = logf(config->resistance_3);
 
 	float Y1 = 1 / T1;
 	float Y2 = 1 / T2;
@@ -150,11 +148,14 @@ void prepareThermistorCurve(ThermistorConf * config) {
 	config->s_h_a = Y1 - (config->s_h_b + L1 * L1 * config->s_h_c) * L1;
 }
 
+/**
+ * @return Celsius value
+ */
 float getIntakeAirTemperature(void) {
 	float temperature = getTemperatureC(&engineConfiguration2->iat);
 	if (!isValidIntakeAirTemperature(temperature)) {
 		warning(OBD_PCM_Processor_Fault, "unrealistic intake temperature %f", temperature);
-		return NAN;
+		return LIMPING_MODE_IAT_TEMPERATURE;
 	}
 	return temperature;
 }

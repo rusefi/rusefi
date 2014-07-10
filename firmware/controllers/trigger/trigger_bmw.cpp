@@ -15,11 +15,10 @@ static inline float addPair(trigger_shape_s *s, float a, float w) {
 	return a;
 }
 
-void configureMiniCooperTriggerShape(engine_configuration_s *engineConfiguration,
-		engine_configuration2_s *engineConfiguration2) {
-	trigger_shape_s *s = &engineConfiguration2->triggerShape;
+void configureMiniCooperTriggerShape(trigger_config_s *triggerConfig,
+		trigger_shape_s *s) {
 
-	s->reset();
+	s->reset(FOUR_STROKE_CAM_SENSOR);
 
 //	s->initialState[0] = 1;
 
@@ -68,5 +67,5 @@ void configureMiniCooperTriggerShape(engine_configuration_s *engineConfiguration
 	/**
 	 * With just one tooth on camshaft synchronization is not needed
 	 */
-	engineConfiguration->triggerConfig.isSynchronizationNeeded = FALSE;
+	triggerConfig->isSynchronizationNeeded = FALSE;
 }

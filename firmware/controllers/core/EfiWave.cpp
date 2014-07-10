@@ -37,24 +37,6 @@ void multi_wave_s::reset(void) {
 	waveCount = 0;
 }
 
-float multi_wave_s::getAngle(int index, engine_configuration_s const *engineConfiguration, trigger_shape_s * s) const {
-	if (getOperationMode(engineConfiguration) == FOUR_STROKE_CAM_SENSOR)
-		return getSwitchTime(index) * 720.0;
-	/**
-	 * FOUR_STROKE_CRANK_SENSOR magic:
-	 * We have two crank shaft revolutions for each engine cycle
-	 * See also trigger_central.cpp
-	 * See also getEngineCycleEventCount()
-	 */
-	int triggerEventCounter = s->getSize();
-
-	if (index < triggerEventCounter) {
-		return getSwitchTime(index) * 360.0;
-	} else {
-		return 360 + getSwitchTime(index - triggerEventCounter) * 360.0;
-	}
-}
-
 float multi_wave_s::getSwitchTime(int index) const {
 	return switchTimes[index];
 }

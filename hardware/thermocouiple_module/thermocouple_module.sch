@@ -37,7 +37,7 @@ $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 1
 Title "Electronic Industrial Temperature Interface (EITI)"
-Date "25 apr 2014"
+Date "28 may 2014"
 Rev ".001"
 Comp "Mrk Industries"
 Comment1 ""
@@ -97,7 +97,7 @@ U 1 1 4E4C6B54
 P 4800 4350
 F 0 "C21" H 4850 4450 50  0000 L CNN
 F 1 "10nF" H 4850 4250 50  0000 L CNN
-F 2 "SM0603" H 4850 4350 50  0001 C CNN
+F 2 "SM0805-SM0603" H 4850 4350 50  0001 C CNN
 F 3 "" H 4800 4350 60  0001 C CNN
 	1    4800 4350
 	1    0    0    -1  
@@ -128,7 +128,7 @@ U 1 1 4E13FFE2
 P 7000 3800
 F 0 "C8" H 7050 3900 50  0000 L CNN
 F 1 "100nF" H 7050 3700 50  0000 L CNN
-F 2 "SM0603" H 7050 3800 50  0001 C CNN
+F 2 "SM0805-SM0603" H 7050 3800 50  0001 C CNN
 F 3 "" H 7000 3800 60  0001 C CNN
 	1    7000 3800
 	1    0    0    -1  

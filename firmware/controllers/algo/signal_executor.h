@@ -28,12 +28,7 @@
  */
 typedef struct OutputSignal_struct OutputSignal;
 struct OutputSignal_struct {
-	/**
-	 * name of this signal
-	 */
-	char *name;
 	io_pin_e io_pin;
-	int initialized;
 
 	/**
 	 * We are alternating instances so that events which extend into next revolution are not reused while
@@ -41,9 +36,6 @@ struct OutputSignal_struct {
 	 */
 	scheduling_s signalTimerUp[2];
 	scheduling_s signalTimerDown[2];
-
-	scheduling_s triggerEvent;
-	float angleOffsetParam;
 };
 
 #ifdef __cplusplus
@@ -56,8 +48,8 @@ void scheduleOutput(OutputSignal *signal, float delayMs, float durationMs);
 void initOutputSignalBase(OutputSignal *signal);
 void scheduleOutputBase(OutputSignal *signal, float delayMs, float durationMs);
 
-void turnPinHigh(OutputSignal *signal);
-void turnPinLow(OutputSignal *signal);
+void turnPinHigh(io_pin_e pin);
+void turnPinLow(io_pin_e pin);
 
 void initSignalExecutor(void);
 void initSignalExecutorImpl(void);

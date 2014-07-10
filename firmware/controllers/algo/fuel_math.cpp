@@ -1,5 +1,5 @@
 /**
- * @file	fuel_math.c
+ * @file	fuel_math.cpp
  * @brief	Fuel amount calculation logic
  *
  * While engine running, fuel amount is an interpolated value from the fuel map by getRpm() and getEngineLoad()

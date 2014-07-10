@@ -16,8 +16,5 @@ void setMazda323EngineConfiguration(engine_configuration_s *engineConfiguration)
 	/**
 	 * We treat the trigger as 4/0 toothed wheel
 	 */
-	engineConfiguration->triggerConfig.totalToothCount = 4;
-	engineConfiguration->triggerConfig.skippedToothCount = 0;
-	engineConfiguration->triggerConfig.isSynchronizationNeeded = FALSE;
-
+	setToothedWheelConfiguration(engineConfiguration, 4, 0);
 }

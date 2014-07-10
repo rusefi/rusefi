@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPcb (2013-07-07 BZR 4022)-stable date = 2/4/2014 4:18:26 AM
+Cmp-Mod V01 Created by CvPcb (2013-jul-07)-stable date = Пт 13 июн 2014 14:37:41
 
 BeginCmp
 TimeStamp = /524A0957;
@@ -190,22 +190,8 @@ IdModule  = sot23;
 EndCmp
 
 BeginCmp
-TimeStamp = /529C04C3;
-Reference = G200;
-ValeurCmp = LOGO;
-IdModule  = LOGO;
-EndCmp
-
-BeginCmp
 TimeStamp = /529C091E;
 Reference = G201;
-ValeurCmp = LOGO;
-IdModule  = LOGO_F;
-EndCmp
-
-BeginCmp
-TimeStamp = /529C09B9;
-Reference = G202;
 ValeurCmp = LOGO;
 IdModule  = LOGO_F;
 EndCmp
@@ -277,14 +263,14 @@ BeginCmp
 TimeStamp = /52967E40;
 Reference = P208;
 ValeurCmp = CONN_6;
-IdModule  = PIN_ARRAY-6X1;
+IdModule  = 6_screw_term_1;
 EndCmp
 
 BeginCmp
 TimeStamp = /524F7A58;
 Reference = P209;
 ValeurCmp = CONN_6;
-IdModule  = PIN_ARRAY-6X1;
+IdModule  = 6_screw_term_1;
 EndCmp
 
 BeginCmp
@@ -802,21 +788,21 @@ BeginCmp
 TimeStamp = /52895DF7;
 Reference = U201;
 ValeurCmp = LMV324IDR;
-IdModule  = so-14;
+IdModule  = SO14N;
 EndCmp
 
 BeginCmp
 TimeStamp = /52896407;
 Reference = U202;
 ValeurCmp = LMV324IDR;
-IdModule  = so-14;
+IdModule  = SO14N;
 EndCmp
 
 BeginCmp
 TimeStamp = /528965D2;
 Reference = U203;
 ValeurCmp = LMV324IDR;
-IdModule  = so-14;
+IdModule  = SO14N;
 EndCmp
 
 BeginCmp

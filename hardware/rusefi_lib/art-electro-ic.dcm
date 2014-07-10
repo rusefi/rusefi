@@ -1,13 +1,16 @@
-EESchema-DOCLIB  Version 2.0  Date: Чтв 13 Фев 2014 20:22:09
+EESchema-DOCLIB  Version 2.0  Date: Пн 16 июн 2014 11:47:13
 #
-$CMP LM2937
-D Voltage Regulators 3.3v SOT 223/263
-K LM 2937
+$CMP FDS2734
+D 250V N-Channel MOSFET
 $ENDCMP
 #
-$CMP LM3940
-D Voltage Regulators 3.3v SOT 223/263
-K LM 3940
+$CMP HIP9011
+D HIP9011
+K HIP9011
+$ENDCMP
+#
+$CMP LMV324IDR
+D Quad comparator.
 $ENDCMP
 #
 $CMP MCP2551

@@ -28,7 +28,7 @@
 
 extern engine_configuration2_s engineConfiguration2;
 
-void configureShaftPositionEmulatorShape(PwmConfig *state) {
+static void configureShaftPositionEmulatorShapeWhat(PwmConfig *state) {
 	/**
 	 * One signal per cam shaft revolution
 	 */
@@ -38,11 +38,6 @@ void configureShaftPositionEmulatorShape(PwmConfig *state) {
 	int *pinStates[2] = { pinStates0 };
 
 	weComplexInit("distributor", state, 0, 2, switchTimes, 1, pinStates);
-}
-
-void configureEngineEventHandler(EventHandlerConfiguration *config) {
-	registerActuatorEvent(&config->ignitionEvents, 0, 1, 0);
-	registerActuatorEvent(&config->ignitionEvents, 0, 2, 90);
 }
 
 void setDefaultEngineConfiguration(EngineConfiguration *engineConfiguration) {

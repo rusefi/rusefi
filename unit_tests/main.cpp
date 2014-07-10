@@ -1,10 +1,8 @@
-/*
- ============================================================================
- Name        : main.c
- Author      : Andrey Belomutskiy 
- Copyright   : (c) 2012-2013
- Description : First step towards unit-testing rusEfi algorithms on win32
- ============================================================================
+/**
+ * @file main.cpp
+ * @file First step towards unit-testing rusEfi algorithms
+ *
+ * @author Andrey Belomutskiy (c) 2012-2014
  */
 
 #include <stdio.h>
@@ -15,36 +13,35 @@
 #include "main.h"
 #include "error_handling.h"
 #include "ec2.h"
+#include "test_accel_enrichment.h"
+#include "test_interpolation_3d.h"
+#include "test_find_index.h"
+#include "test_sensors.h"
+#include "test_speed_density.h"
 
+#include "test_fuel_map.h"
 
 extern "C"
 {
-
 #include "map_resize.h"
 #include "test_idle_controller.h"
-#include "test_interpolation_3d.h"
-#include "test_find_index.h"
-#include "test_fuel_map.h"
 #include "test_event_registry.h"
-#include "test_sensors.h"
 #include "test_signal_executor.h"
 #include "test_util.h"
 #include "engine_configuration.h"
-#include "engine_math.h"
 }
 
+#include "engine_math.h"
 #include "test_engine_math.h"
 #include "test_trigger_decoder.h"
 
 static engine_configuration_s ec;
 engine_configuration_s *engineConfiguration = &ec;
 
-static float absF(float value) {
-	return value > 0 ? value : -value;
-}
+int timeNow = 0;
 
 uint64_t getTimeNowUs(void) {
-	return 0;
+	return timeNow;
 }
 
 void assertEqualsM(const char *msg, float expected, float actual) {
@@ -103,6 +100,7 @@ int main(void) {
 	testEventRegistry();
 	testSensors();
 	testCyclicBuffer();
+	testCrc();
 
 	testSignalExecutor();
 
@@ -119,16 +117,23 @@ int main(void) {
 	testPinHelper();
 	testSetTableValue();
 
-	printf("Success 20130429\r\n");
+	testAccelEnrichment();
 
-//	resizeMap();
+	testSpeedDensity();
 
+	testFLStack();
+
+	//	resizeMap();
+	printf("Success 20130706\r\n");
 	return EXIT_SUCCESS;
 }
 
-
 int warning(obd_code_e code, const char *fmt, ...) {
 	printf("Warning: %s\r\n", fmt);
+}
+
+bool hasFirmwareError(void) {
+	return FALSE;
 }
 
 void firmwareError(const char *fmt, ...) {
@@ -151,4 +156,8 @@ void fatal3(char *msg, char *file, int line) {
 int warning(const char *fmt, ...) {
 	 printf(fmt);
 	 exit(-1);
+}
+
+bool_t isCranking(void) {
+	return 0;
 }

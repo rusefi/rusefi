@@ -71,8 +71,11 @@ PROJECT = rusefi_test
 include $(PROJECT_DIR)/util/util.mk
 include $(PROJECT_DIR)/config/engines/engines.mk
 include $(PROJECT_DIR)/controllers/algo/algo.mk
+include $(PROJECT_DIR)/controllers/core/core.mk
 include $(PROJECT_DIR)/controllers/math/math.mk
+include $(PROJECT_DIR)/controllers/system/system.mk
 include $(PROJECT_DIR)/controllers/sensors/sensors.mk
+include $(PROJECT_DIR)/controllers/trigger/trigger.mk
 include test.mk
 
 # Define linker script file here
@@ -83,6 +86,7 @@ include test.mk
 # setting.
 CSRC =	$(UTILSRC) \
 	$(CONTROLLERS_ALGO_SRC) \
+	$(CONTROLLERS_CORE_SRC) \
 	$(CONTROLLERS_MATH_SRC) \
 	$(CONTROLLERS_SENSORS_SRC) \
 	$(ENGINES_SRC) \
@@ -92,15 +96,16 @@ CSRC =	$(UTILSRC) \
 # setting.
 CPPSRC = $(UTILSRC_CPP) \
 	$(CONTROLLERS_ALGO_SRC_CPP) \
-	$(PROJECT_DIR)/controllers/trigger/trigger_mazda.cpp \
-	$(PROJECT_DIR)/controllers/trigger/trigger_chrysler.cpp \
-	$(PROJECT_DIR)/controllers/trigger/trigger_gm.cpp \
-	$(PROJECT_DIR)/controllers/trigger/trigger_decoder.cpp \
-	$(PROJECT_DIR)/controllers/trigger/trigger_structure.cpp \
+	$(TRIGGER_DECODERS_SRC_CPP) \
 	$(ENGINES_SRC_CPP) \
+	$(CONTROLLERS_CORE_SRC_CPP) \
 	$(CONTROLLERS_MATH_SRC_CPP) \
 	$(CONTROLLERS_SENSORS_SRC_CPP) \
 	$(TEST_SRC_CPP) \
+	$(PROJECT_DIR)/controllers/trigger/trigger_central.cpp \
+	$(PROJECT_DIR)/controllers/trigger/rpm_calculator.cpp \
+	$(PROJECT_DIR)/controllers/trigger/main_trigger_callback.cpp \
+	$(PROJECT_DIR)/controllers/system/event_queue.cpp \
 	main.cpp
 
 # C sources to be compiled in ARM mode regardless of the global setting.
@@ -131,7 +136,9 @@ INCDIR = . \
 	$(PROJECT_DIR)/config/engines \
 	$(PROJECT_DIR)/controllers/sensors \
 	$(PROJECT_DIR)/controllers/algo \
+	$(PROJECT_DIR)/controllers/core \
 	$(PROJECT_DIR)/controllers/math \
+	$(PROJECT_DIR)/controllers/system \
 	$(PROJECT_DIR)/controllers/trigger \
 	$(PROJECT_DIR)/ext_algo \
 	test_data_structures \

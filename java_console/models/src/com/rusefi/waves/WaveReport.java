@@ -10,6 +10,7 @@ import java.util.List;
 /**
  * Date: 6/23/13
  * (c) Andrey Belomutskiy
+ * @see com.rusefi.AnalogChartPanel.AnalogChart
  */
 public class WaveReport implements TimeAxisTranslator {
     public static final String WAVE_CHART = "wave_chart";
@@ -19,6 +20,8 @@ public class WaveReport implements TimeAxisTranslator {
      */
     public static final double SYS_TICKS_PER_MS = 100;
     public static final int mult = (int) (100 * SYS_TICKS_PER_MS); // 100ms
+    private static final String WC_DOWN = "d";
+    private static final String WC_UP = "u";
 
     List<UpDown> list;
     private int maxTime;
@@ -68,15 +71,15 @@ public class WaveReport implements TimeAxisTranslator {
         List<UpDown> times = new ArrayList<UpDown>();
 
         int index = 0;
-        if (array[0].equals("down"))
+        if (array[0].equals(WC_DOWN))
             index += 2;
 
         while (index + 3 < array.length) {
-            if (!array[index].equals("up")) {
+            if (!array[index].equals(WC_UP)) {
                 index += 2;
                 continue;
             }
-            if (!array[index + 2].equals("down")) {
+            if (!array[index + 2].equals(WC_DOWN)) {
                 index += 2;
                 continue;
             }

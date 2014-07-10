@@ -30,16 +30,18 @@ private:
 };
 #endif
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
-void addTriggerEventListener(ShaftPositionListener handler, const char *name, void *arg);
 uint64_t getCrankEventCounter(void);
 uint64_t getStartOfRevolutionIndex(void);
-int isSignalDecoderError(void);
 void hwHandleShaftSignal(trigger_event_e signal);
 void initTriggerCentral(void);
 void printAllCallbacksHistogram(void);
+
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
+void addTriggerEventListener(ShaftPositionListener handler, const char *name, void *arg);
+int isSignalDecoderError(void);
 
 #ifdef __cplusplus
 }

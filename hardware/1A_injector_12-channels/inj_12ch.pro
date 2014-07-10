@@ -1,73 +1,53 @@
-update=1/26/2014 6:08:09 AM
-last_client=eeschema
+update=Пн 16 июн 2014 12:19:36
+last_client=pcbnew
 [common]
 NetDir=
 [general]
 version=1
-[pcbnew]
-version=1
-LastNetListRead=inj_10ch.net
-UseCmpFile=1
-PadDrill=0.000000000000
-PadDrillOvalY=0.000000000000
-PadSizeH=0.350520000000
-PadSizeV=0.701040000000
-PcbTextSizeV=2.032000000000
-PcbTextSizeH=1.524000000000
-PcbTextThickness=0.431800000000
-ModuleTextSizeV=1.524000000000
-ModuleTextSizeH=1.524000000000
-ModuleTextSizeThickness=0.254000000000
-SolderMaskClearance=0.254000000000
-SolderMaskMinWidth=0.000000000000
-DrawSegmentWidth=0.254000000000
-BoardOutlineThickness=0.254000000000
-ModuleOutlineThickness=0.099060000000
-[pcbnew/libraries]
-LibName1=connect
-LibName2=discret
-LibName3=pin_array
-LibName4=divers
-LibName5=libcms
-LibName6=display
-LibName7=lib/project_specific_modules
-LibDir=
-[cvpcb]
-version=1
-NetIExt=net
-[cvpcb/libraries]
-EquName1=devcms
 [eeschema]
 version=1
-LibDir=
+LibDir=../rusefi_lib
 NetFmtName=PcbnewAdvanced
 RptD_X=0
 RptD_Y=100
 RptLab=1
 LabSize=60
 [eeschema/libraries]
-LibName1=lib/project_specific_libs
-LibName2=power
-LibName3=device
-LibName4=conn
-LibName5=linear
-LibName6=regul
-LibName7=74xx
-LibName8=cmos4000
-LibName9=adc-dac
-LibName10=memory
-LibName11=xilinx
-LibName12=special
-LibName13=microcontrollers
-LibName14=microchip
-LibName15=analog_switches
-LibName16=motorola
-LibName17=intel
-LibName18=audio
-LibName19=interface
-LibName20=digital-audio
-LibName21=philips
-LibName22=display
-LibName23=cypress
-LibName24=siliconi
-LibName25=contrib
+LibName1=power
+LibName2=device
+LibName3=conn
+LibName4=logo_flipped
+LibName5=art-electro-conn
+LibName6=art-electro-ic
+[cvpcb]
+version=1
+NetIExt=net
+[cvpcb/libraries]
+EquName1=devcms
+[pcbnew]
+version=1
+LastNetListRead=inj_10ch.net
+UseCmpFile=1
+PadDrill="    1,016000"
+PadDrillOvalY="    1,016000"
+PadSizeH="    1,524000"
+PadSizeV="    1,524000"
+PcbTextSizeV="    1,500000"
+PcbTextSizeH="    1,500000"
+PcbTextThickness="    0,300000"
+ModuleTextSizeV="    1,000000"
+ModuleTextSizeH="    1,000000"
+ModuleTextSizeThickness="    0,150000"
+SolderMaskClearance="    0,000000"
+SolderMaskMinWidth="    0,000000"
+DrawSegmentWidth="    0,100000"
+BoardOutlineThickness="    0,100000"
+ModuleOutlineThickness="    0,150000"
+[pcbnew/libraries]
+LibDir=../rusefi_lib
+LibName1=connect
+LibName2=discret
+LibName3=pin_array
+LibName4=divers
+LibName5=libcms
+LibName6=art-electro-conn

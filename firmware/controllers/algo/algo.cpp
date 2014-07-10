@@ -21,16 +21,22 @@
 
 #include "global.h"
 #include "algo.h"
-//#include "rpm_calculator.h"
 #include "advance_map.h"
 #include "fuel_math.h"
 #include "wave_chart.h"
 #include "settings.h"
 #include "signal_executor.h"
+#include "speed_density.h"
 
 WaveChart waveChart;
 
-void initAlgo(void) {
+void initDataStructures(engine_configuration_s *engineConfiguration) {
+	prepareFuelMap();
+	prepareTimingMap();
+	initSpeedDensity(engineConfiguration);
+}
+
+void initAlgo(engine_configuration_s *engineConfiguration) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	initSettings();
 	initSignalExecutor();
@@ -39,10 +45,4 @@ void initAlgo(void) {
 #if EFI_WAVE_CHART
 	initWaveChart(&waveChart);
 #endif
-
-
-	prepareFuelMap();
-	prepareTimingMap();
-
-
 }

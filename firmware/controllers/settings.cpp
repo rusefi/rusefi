@@ -19,10 +19,12 @@
 #include "ec2.h"
 #include "map.h"
 #include "trigger_decoder.h"
+#include "console_io.h"
 
 #if EFI_PROD_CODE
 #include "rusefi.h"
 #include "pin_repository.h"
+#include "hardware.h"
 #endif /* EFI_PROD_CODE */
 
 #if EFI_INTERNAL_FLASH
@@ -114,7 +116,7 @@ static const char * pinModeToString(pin_output_mode_e mode) {
 	}
 }
 
-static const char * boolToString(bool_t value) {
+static const char * boolToString(bool value) {
 	return value ? "Yes" : "No";
 }
 
@@ -201,6 +203,7 @@ void printConfiguration(engine_configuration_s *engineConfiguration, engine_conf
 
 	scheduleMsg(&logger, "primary trigger input: %s", hwPortname(boardConfiguration->primaryTriggerInputPin));
 
+	scheduleMsg(&logger, "boardTestModeJumperPin: %s", hwPortname(boardConfiguration->boardTestModeJumperPin));
 #endif /* EFI_PROD_CODE */
 
 	scheduleMsg(&logger, "isInjectionEnabledFlag %s", boolToString(engineConfiguration2->isInjectionEnabledFlag));
@@ -412,8 +415,8 @@ static void setIgnitionMode(int value) {
 	doPrintConfiguration();
 }
 
-static void setTotalToothCount(int value) {
-	engineConfiguration->triggerConfig.totalToothCount = value;
+static void setToothedWheel(int total, int skipped) {
+	setToothedWheelConfiguration(engineConfiguration, total, skipped);
 	initializeTriggerShape(&logger, engineConfiguration, engineConfiguration2);
 	incrementGlobalConfigurationVersion();
 	doPrintConfiguration();
@@ -484,6 +487,23 @@ static void disableInjection(void) {
 	scheduleMsg(&logger, "injection disabled");
 }
 
+#if EFI_WAVE_CHART
+extern int waveChartUsedSize;
+#endif
+
+static void printAllInfo(void) {
+	printTemperatureInfo();
+	printTPSInfo();
+	printMAPInfo();
+#if EFI_WAVE_CHART
+	scheduleMsg(&logger, "waveChartUsedSize=%d", waveChartUsedSize);
+#endif
+#if EFI_PROD_CODE
+	scheduleMsg(&logger, "console mode jumper: %s", boolToString(!GET_CONSOLE_MODE_VALUE()));
+	scheduleMsg(&logger, "board test mode jumper: %s", boolToString(GET_BOARD_TEST_MODE_VALUE()));
+#endif
+}
+
 void initSettings(void) {
 	initLoggingExt(&logger, "settings control", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
 
@@ -491,6 +511,7 @@ void initSettings(void) {
 	addConsoleAction("tempinfo", printTemperatureInfo);
 	addConsoleAction("tpsinfo", printTPSInfo);
 	addConsoleAction("mapinfo", printMAPInfo);
+	addConsoleAction("info", printAllInfo);
 
 	addConsoleActionI("set_ignition_offset", setIgnitionOffset);
 	addConsoleActionI("set_injection_offset", setInjectionOffset);
@@ -531,6 +552,6 @@ void initSettings(void) {
 
 	addConsoleAction("enable_injection", enableInjection);
 	addConsoleAction("disable_injection", disableInjection);
-	addConsoleActionI("set_total_tooth_count", setTotalToothCount);
+	addConsoleActionII("set_toothed_wheel", setToothedWheel);
 }
 

@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPcb (2013-mar-13)-testing date = Втр 25 Фев 2014 19:59:42
+Cmp-Mod V01 Created by CvPcb (2013-jul-07)-stable date = Пт 30 май 2014 17:34:49
 
 BeginCmp
 TimeStamp = /52CFBA3E;
@@ -193,14 +193,14 @@ BeginCmp
 TimeStamp = /52D3B74A;
 Reference = D5;
 ValeurCmp = DIODESCH;
-IdModule  = SM0805;
+IdModule  = SM0805-diode;
 EndCmp
 
 BeginCmp
 TimeStamp = /52D3B48A;
 Reference = D6;
 ValeurCmp = DIODESCH;
-IdModule  = SM0805;
+IdModule  = SM0805-diode;
 EndCmp
 
 BeginCmp
@@ -221,14 +221,14 @@ BeginCmp
 TimeStamp = /52DFC5B8;
 Reference = D9;
 ValeurCmp = DIODESCH;
-IdModule  = SM0805;
+IdModule  = SM0805-diode;
 EndCmp
 
 BeginCmp
 TimeStamp = /52DFD2DE;
 Reference = D10;
 ValeurCmp = DIODESCH;
-IdModule  = SM0805;
+IdModule  = SM0805-diode;
 EndCmp
 
 BeginCmp
@@ -320,6 +320,13 @@ TimeStamp = /52DFD487;
 Reference = P4;
 ValeurCmp = CONN_6;
 IdModule  = PIN_ARRAY-6X1;
+EndCmp
+
+BeginCmp
+TimeStamp = /53887FDF;
+Reference = P5;
+ValeurCmp = CONN_1;
+IdModule  = 1PIN_SMD;
 EndCmp
 
 BeginCmp

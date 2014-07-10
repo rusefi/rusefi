@@ -13,8 +13,7 @@
 #include "nissan_primera.h"
 
 void setNissanPrimeraEngineConfiguration(engine_configuration_s *engineConfiguration) {
-	engineConfiguration->triggerConfig.totalToothCount = 60;
-	engineConfiguration->triggerConfig.skippedToothCount = 2;
+	setToothedWheelConfiguration(engineConfiguration, 60, 2);
 }
 
 #endif /* EFI_SUPPORT_NISSAN_PRIMERA */

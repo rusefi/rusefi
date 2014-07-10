@@ -1,0 +1,1 @@
+This is a copy of https://code.google.com/p/daecu/source/browse/#svn%2FHardware%2Ftrunk%2FKICAD_Project_PWR_buck_12V_switcher with lib split up per standard rusEFI file practices. 

@@ -55,9 +55,9 @@ public class PortLookupFrame {
             comboPorts.addItem(port);
         panel.add(comboPorts);
 
-        final JButton buttonUsePort = new JButton("Use this port");
-        panel.add(buttonUsePort);
-        buttonUsePort.addActionListener(new ActionListener() {
+        final JButton connect = new JButton("Connect");
+        panel.add(connect);
+        connect.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 frame.dispose();

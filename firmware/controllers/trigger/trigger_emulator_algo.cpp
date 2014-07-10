@@ -1,5 +1,5 @@
 /**
- * @file trigger_emulator_algo.c
+ * @file trigger_emulator_algo.cpp
  *
  * @date Mar 3, 2014
  * @author Andrey Belomutskiy, (c) 2012-2014
@@ -61,7 +61,7 @@ void initTriggerEmulatorLogic(pwm_gen_callback *stateChangeCallback) {
 
 	trigger_shape_s *s = &engineConfiguration2->triggerShape;
 	setTriggerEmulatorRPM(DEFAULT_EMULATION_RPM);
-	int *pinStates[2] = {s->wave.waves[0].pinStates, s->wave.waves[1].pinStates};
+	int *pinStates[2] = { s->wave.waves[0].pinStates, s->wave.waves[1].pinStates};
 	weComplexInit("position sensor", &triggerSignal, s->getSize(), s->wave.switchTimes, 2, pinStates,
 			updateTriggerShapeIfNeeded,
 			stateChangeCallback);

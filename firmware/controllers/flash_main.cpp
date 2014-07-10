@@ -15,7 +15,6 @@
 #include "flash.h"
 #include "rusefi.h"
 
-//#include "tunerstudio.h"
 #include "engine_controller.h"
 
 #include "datalogging.h"
@@ -55,7 +54,7 @@ void writeToFlash(void) {
 #if EFI_INTERNAL_FLASH
 	persistentState.size = PERSISTENT_SIZE;
 	persistentState.version = FLASH_DATA_VERSION;
-	scheduleMsg(&logger, "FLASH_DATA_VERSION=%d", persistentState.version);
+	scheduleMsg(&logger, "flash compatible with %d", persistentState.version);
 	crc_t result = flashStateCrc(&persistentState);
 	persistentState.value = result;
 	scheduleMsg(&logger, "Reseting flash, size=%d", PERSISTENT_SIZE);
@@ -85,7 +84,7 @@ static void doResetConfiguration(void) {
 			boardConfiguration);
 }
 
-static void readFromFlash(void) {
+void readFromFlash(void) {
 	printMsg(&logger, "readFromFlash()");
 
 	flashRead(FLASH_ADDR, (char *) &persistentState, PERSISTENT_SIZE);
@@ -112,6 +111,4 @@ void initFlash(void) {
 	addConsoleAction("readconfig", readFromFlash);
 	addConsoleAction("writeconfig", writeToFlash);
 	addConsoleAction("resetconfig", doResetConfiguration);
-
-	readFromFlash();
 }
