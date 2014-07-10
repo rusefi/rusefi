@@ -68,6 +68,14 @@ typedef enum {
 	Internal_ForceMyEnumIntSize_timing_mode = ENUM_SIZE_HACK,
 } timing_mode_e;
 
+typedef enum {
+	CD_OFF = 0,
+	CD_USE_CAN1 = 1,
+	CD_USE_CAN2 = 2,
+
+	Internal_ForceMyEnumIntSize_can_device_mode = ENUM_SIZE_HACK,
+} can_device_mode_e;
+
 typedef struct {
 	int afrAdcChannel;
 	float v1;
@@ -96,202 +104,6 @@ typedef struct {
 
 } trigger_config_s;
 
-
-/**
- * @brief	Engine configuration.
- * 		Values in this data structure are adjustable and persisted in on-board flash RAM.
- *
- *  The offsets are tracked using
- *  https://docs.google.com/spreadsheet/ccc?key=0AiAmAn6tn3L_dGJXZDZOcVVhaG9SaHZKU1dyMjhEV0E
- *
- *  todo: currently the fields here are simply in the order in which they were implemented
- *  todo: re-arrange this structure one we have a stable code version
- */
-typedef struct {
-	float injectorLag;	// size 4, offset 0
-	/**
-	 * cc/min, cubic centimeter per minute
-	 *
-	 * By the way, g/s = 0.125997881 * (lb/hr)
-	 * g/s = 0.125997881 * (cc/min)/10.5
-	 * g/s = 0.0119997981 * cc/min
-	 *
-	 */
-	float injectorFlow; // size 4, offset 4
-	float battInjectorLagCorrBins[VBAT_INJECTOR_CURVE_SIZE]; // size 32, offset 8
-	float battInjectorLagCorr[VBAT_INJECTOR_CURVE_SIZE]; // size 32, offset 40
-
-	float cltFuelCorrBins[CLT_CURVE_SIZE]; // size 64, offset 72
-	float cltFuelCorr[CLT_CURVE_SIZE]; // size 64, offset 136
-
-	float iatFuelCorrBins[IAT_CURVE_SIZE]; // size 64, offset 200
-	float iatFuelCorr[IAT_CURVE_SIZE]; // size 64, offset 264
-
-	short int rpmHardLimit; // size 2, offset 328
-
-	// todo: extract these two fields into a structure
-	// todo: we need two sets of TPS parameters - modern ETBs have to sensors
-	short int tpsMin; // size 2, offset 330
-	// tpsMax value as 10 bit ADC value. Not Voltage!
-	short int tpsMax; // size 2, offset 332
-	short int analogChartMode;
-
-	cranking_parameters_s crankingSettings;
-
-	MAP_sensor_config_s map;
-
-	// todo: merge with channel settings, use full-scale Thermistor here!
-	ThermistorConf cltThermistorConf; // size 40 (10*4), offset 336
-	ThermistorConf iatThermistorConf; // size 40, offset 376
-
-	float sparkDwellBins[DWELL_COUNT]; // offset 580
-	float sparkDwell[DWELL_COUNT];
-
-	float ignitionLoadBins[IGN_LOAD_COUNT];
-	float ignitionRpmBins[IGN_RPM_COUNT];
-
-	/**
-	 * this value could be used to offset the whole ignition timing table by a constant
-	 */
-	float ignitionOffset;
-
-	/**
-	 * While cranking (which causes battery voltage to drop) we can calculate dwell time in shaft
-	 * degrees, not in absolute time as in running mode.
-	 */
-	float crankingChargeAngle;
-
-	timing_mode_e timingMode;
-	/**
-	 * This value is used in 'fixed timing' mode, i.e. constant timing
-	 * This mode is useful for instance while adjusting distributor location
-	 */
-	float fixedModeTiming;
-
-	// WARNING: by default, our small enums are ONE BYTE. but if the are surrounded by non-enums - alignments do the trick
-	engine_type_e engineType;
-
-	float fuelLoadBins[FUEL_LOAD_COUNT]; //
-	// RPM is float and not integer in order to use unified methods for interpolation
-	float fuelRpmBins[FUEL_RPM_COUNT]; //
-
-	/**
-	 * Engine displacement, in liters
-	 * see also cylindersCount
-	 */
-	float displacement;
-	int unused[2];
-
-	injection_mode_e crankingInjectionMode;
-	injection_mode_e injectionMode;
-
-
-	/**
-	 * Inside rusEfi all the angles are handled in relation to the trigger synchronization event
-	 * which depends on the trigger shape and has nothing to do wit Top Dead Center (TDC)
-	 *
-	 * For engine configuration humans need angles from TDC.
-	 *
-	 * This field is the angle between Top Dead Center (TDC) and the first trigger event.
-	 * Knowing this angle allows us to control timing and other angles in reference to TDC.
-	 */
-	float globalTriggerAngleOffset;
-	/**
-	 * We have 3.3V ADC and most of the analog input signals are 5V, this forces us to use
-	 * voltage dividers on the input circuits. This parameter holds the coefficient of these dividers.
-	 * see also vbattDividerCoeff
-	 */
-	float analogInputDividerCoefficient;
-
-	/**
-	 * This setting controls which algorithm is used for ENGINE LOAD
-	 */
-	engine_load_mode_e engineLoadMode;
-
-	/**
-	 * see
-	 */
-	float vbattDividerCoeff;
-	/**
-	 * Cooling fan turn-on temperature threshold, in Celsuis
-	 */
-	float fanOnTemperature;
-	/**
-	 * Cooling fan turn-off temperature threshold, in Celsuis
-	 */
-	float fanOffTemperature;
-
-	int canReadEnabled;
-	int canWriteEnabled;
-	can_nbc_e can_nbc_type;
-	int can_sleep_period;
-
-	int cylindersCount;
-
-	ignition_mode_e ignitionMode;
-	firing_order_e firingOrder;
-
-	/**
-	 * This magic constant is about four-stroke engines with camshaft position sensors.
-	 * On any four stroke engine, each revolution of the camshaft is two revolutions
-	 * of the crankshaft. If camshaft position is our primary sensor, we use this multiplier
-	 * to convert from camshaft angles to crankshaft angles. All angels across the system
-	 * should be crankshaft angles.
-	 */
-
-	float rpmMultiplier;
-
-	display_mode_e displayMode;
-
-	log_format_e logFormat;
-
-	int firmwareVersion;
-	int HD44780width;
-	int HD44780height;
-
-	int tpsAdcChannel;
-	int overrideCrankingIgnition;
-	int analogChartFrequency;
-	int unused5[10];
-
-	trigger_config_s triggerConfig;
-
-	int needSecondTriggerInput;
-	int vBattAdcChannel;
-
-	float globalFuelCorrection;
-
-	// todo: merge with channel settings, use full-scale Thermistor!
-	int cltAdcChannel;
-	int iatAdcChannel;
-	int mafAdcChannel;
-
-	afr_sensor_s afrSensor;
-
-	float injectionOffset;
-
-	float crankingTimingAngle;
-
-	float diffLoadEnrichmentCoef;
-
-	air_pressure_sensor_config_s baroSensor;
-
-	float veLoadBins[VE_LOAD_COUNT];
-	float veRpmBins[VE_RPM_COUNT];
-	float afrLoadBins[AFR_LOAD_COUNT];
-	float afrRpmBins[AFR_RPM_COUNT];
-
-	// the large tables are always in the end - that's related to TunerStudio paging implementation
-	float fuelTable[FUEL_LOAD_COUNT][FUEL_RPM_COUNT]; // size 1024
-	float ignitionTable[IGN_LOAD_COUNT][IGN_RPM_COUNT]; // size 1024
-
-	float veTable[VE_LOAD_COUNT][VE_RPM_COUNT]; // size 1024
-	float afrTable[AFR_LOAD_COUNT][AFR_RPM_COUNT]; // size 1024
-
-} engine_configuration_s;
-
-void setOperationMode(engine_configuration_s *engineConfiguration, operation_mode_e mode);
-operation_mode_e getOperationMode(engine_configuration_s const *engineConfiguration);
 
 #define HW_MAX_ADC_INDEX 16
 
@@ -355,11 +167,216 @@ typedef struct {
 
 	int tunerStudioSerialSpeed;
 
+	brain_pin_e boardTestModeJumperPin;
+
+	can_device_mode_e canDeviceMode;
+	brain_pin_e canTxPin;
+	brain_pin_e canRxPin;
+
 } board_configuration_s;
+
+
+
+/**
+ * @brief	Engine configuration.
+ * 		Values in this data structure are adjustable and persisted in on-board flash RAM.
+ *
+ *  The offsets are tracked using
+ *  https://docs.google.com/spreadsheet/ccc?key=0AiAmAn6tn3L_dGJXZDZOcVVhaG9SaHZKU1dyMjhEV0E
+ *
+ *  todo: currently the fields here are simply in the order in which they were implemented
+ *  todo: re-arrange this structure one we have a stable code version
+ */
+typedef struct {
+	float injectorLag;	// size 4, offset 0
+	/**
+	 * cc/min, cubic centimeter per minute
+	 *
+	 * By the way, g/s = 0.125997881 * (lb/hr)
+	 * g/s = 0.125997881 * (cc/min)/10.5
+	 * g/s = 0.0119997981 * cc/min
+	 *
+	 */
+	float injectorFlow; // size 4, offset 4
+	float battInjectorLagCorrBins[VBAT_INJECTOR_CURVE_SIZE]; // size 32, offset 8
+	float battInjectorLagCorr[VBAT_INJECTOR_CURVE_SIZE]; // size 32, offset 40
+
+	float cltFuelCorrBins[CLT_CURVE_SIZE]; // size 64, offset 72
+	float cltFuelCorr[CLT_CURVE_SIZE]; // size 64, offset 136
+
+	float iatFuelCorrBins[IAT_CURVE_SIZE]; // size 64, offset 200
+	float iatFuelCorr[IAT_CURVE_SIZE]; // size 64, offset 264
+
+	short int unused2; // size 2, offset 328
+
+	// todo: extract these two fields into a structure
+	// todo: we need two sets of TPS parameters - modern ETBs have to sensors
+	short int tpsMin; // size 2, offset 330
+	// tpsMax value as 10 bit ADC value. Not Voltage!
+	short int tpsMax; // size 2, offset 332
+	short int analogChartMode;
+
+	cranking_parameters_s crankingSettings;
+
+	MAP_sensor_config_s map;
+
+	// todo: merge with channel settings, use full-scale Thermistor here!
+	ThermistorConf cltThermistorConf; // size 40 (10*4), offset 336
+	ThermistorConf iatThermistorConf; // size 40, offset 376
+
+	float sparkDwellBins[DWELL_COUNT]; // offset 580
+	float sparkDwell[DWELL_COUNT];
+
+	float ignitionLoadBins[IGN_LOAD_COUNT];
+	float ignitionRpmBins[IGN_RPM_COUNT];
+
+	/**
+	 * this value could be used to offset the whole ignition timing table by a constant
+	 */
+	float ignitionOffset;
+
+	/**
+	 * While cranking (which causes battery voltage to drop) we can calculate dwell time in shaft
+	 * degrees, not in absolute time as in running mode.
+	 */
+	float crankingChargeAngle;
+
+	timing_mode_e timingMode;
+	/**
+	 * This value is used in 'fixed timing' mode, i.e. constant timing
+	 * This mode is useful for instance while adjusting distributor location
+	 */
+	float fixedModeTiming;
+
+	// WARNING: by default, our small enums are ONE BYTE. but if the are surrounded by non-enums - alignments do the trick
+	engine_type_e engineType;
+
+	float fuelLoadBins[FUEL_LOAD_COUNT]; //
+	// RPM is float and not integer in order to use unified methods for interpolation
+	float fuelRpmBins[FUEL_RPM_COUNT]; //
+
+	/**
+	 * Engine displacement, in liters
+	 * see also cylindersCount
+	 */
+	float displacement;
+	int rpmHardLimit;
+
+	injection_mode_e crankingInjectionMode;
+	injection_mode_e injectionMode;
+
+
+	/**
+	 * Inside rusEfi all the angles are handled in relation to the trigger synchronization event
+	 * which depends on the trigger shape and has nothing to do wit Top Dead Center (TDC)
+	 *
+	 * For engine configuration humans need angles from TDC.
+	 *
+	 * This field is the angle between Top Dead Center (TDC) and the first trigger event.
+	 * Knowing this angle allows us to control timing and other angles in reference to TDC.
+	 */
+	float globalTriggerAngleOffset;
+	/**
+	 * We have 3.3V ADC and most of the analog input signals are 5V, this forces us to use
+	 * voltage dividers on the input circuits. This parameter holds the coefficient of these dividers.
+	 * see also vbattDividerCoeff
+	 */
+	float analogInputDividerCoefficient;
+
+	/**
+	 * This setting controls which algorithm is used for ENGINE LOAD
+	 */
+	engine_load_mode_e algorithm;
+
+	/**
+	 * see
+	 */
+	float vbattDividerCoeff;
+	/**
+	 * Cooling fan turn-on temperature threshold, in Celsuis
+	 */
+	float fanOnTemperature;
+	/**
+	 * Cooling fan turn-off temperature threshold, in Celsuis
+	 */
+	float fanOffTemperature;
+
+	int canReadEnabled;
+	int canWriteEnabled;
+	can_nbc_e can_nbc_type;
+	int can_sleep_period;
+
+	int cylindersCount;
+
+	ignition_mode_e ignitionMode;
+	firing_order_e firingOrder;
+
+	/**
+	 * This magic constant is about four-stroke engines with camshaft position sensors.
+	 * On any four stroke engine, each revolution of the camshaft is two revolutions
+	 * of the crankshaft. If camshaft position is our primary sensor, we use this multiplier
+	 * to convert from camshaft angles to crankshaft angles. All angels across the system
+	 * should be crankshaft angles.
+	 */
+
+	float rpmMultiplier;
+
+	display_mode_e displayMode;
+
+	log_format_e logFormat;
+
+	int firmwareVersion;
+	int HD44780width;
+	int HD44780height;
+
+	int tpsAdcChannel;
+	int overrideCrankingIgnition;
+	int analogChartFrequency;
+
+	trigger_config_s triggerConfig;
+
+	int needSecondTriggerInput;
+	int vBattAdcChannel;
+
+	float globalFuelCorrection;
+
+	// todo: merge with channel settings, use full-scale Thermistor!
+	int cltAdcChannel;
+	int iatAdcChannel;
+	int mafAdcChannel;
+
+	afr_sensor_s afrSensor;
+
+	float injectionOffset;
+
+	float crankingTimingAngle;
+
+	float diffLoadEnrichmentCoef;
+
+	air_pressure_sensor_config_s baroSensor;
+
+	float veLoadBins[VE_LOAD_COUNT];
+	float veRpmBins[VE_RPM_COUNT];
+	float afrLoadBins[AFR_LOAD_COUNT];
+	float afrRpmBins[AFR_RPM_COUNT];
+
+	// the large tables are always in the end - that's related to TunerStudio paging implementation
+	float fuelTable[FUEL_LOAD_COUNT][FUEL_RPM_COUNT]; // size 1024
+	float ignitionTable[IGN_LOAD_COUNT][IGN_RPM_COUNT]; // size 1024
+
+	float veTable[VE_LOAD_COUNT][VE_RPM_COUNT]; // size 1024
+	float afrTable[AFR_LOAD_COUNT][AFR_RPM_COUNT]; // size 1024
+
+
+	board_configuration_s bc;
+
+} engine_configuration_s;
+
+void setOperationMode(engine_configuration_s *engineConfiguration, operation_mode_e mode);
+operation_mode_e getOperationMode(engine_configuration_s const *engineConfiguration);
 
 typedef struct {
 	engine_configuration_s engineConfiguration;
-	board_configuration_s boardConfiguration;
 } persistent_config_s;
 
 typedef struct {
@@ -379,7 +396,8 @@ void setWholeFuelMap(engine_configuration_s *engineConfiguration, float value);
 void setConstantDwell(engine_configuration_s *engineConfiguration, float dwellMs);
 void printFloatArray(const char *prefix, float array[], int size);
 
-void setTriggerSynchronizationGap(engine_configuration_s *engineConfiguration, float synchGap);
+void setTriggerSynchronizationGap(trigger_config_s *triggerConfig, float synchGap);
+void setToothedWheelConfiguration(engine_configuration_s *engineConfiguration, int total, int skipped);
 
 void incrementGlobalConfigurationVersion(void);
 int getGlobalConfigurationVersion(void);

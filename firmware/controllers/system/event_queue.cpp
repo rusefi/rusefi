@@ -18,7 +18,7 @@ EventQueue::EventQueue() {
 	head = NULL;
 }
 
-bool_t EventQueue::checkIfPending(scheduling_s *scheduling) {
+bool EventQueue::checkIfPending(scheduling_s *scheduling) {
 	return assertNotInList<scheduling_s>(head, scheduling);
 }
 

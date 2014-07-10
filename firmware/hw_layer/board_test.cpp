@@ -28,7 +28,7 @@
 #include "AdcConfiguration.h"
 
 static volatile int stepCoutner = 0;
-static volatile brain_pin_e currentPin;
+static volatile brain_pin_e currentPin = GPIO_NONE;
 static volatile int currentIndex = 0;
 
 extern AdcConfiguration slowAdc;
@@ -93,11 +93,25 @@ static msg_t ivThread(int param) {
 #endif        
 }
 
-void initBoardTest(void) {
-	// todo: add a command to go into board test mode after reboot
-	if (1 == 1)
-		return;
+static bool is_board_test_mode = false;
 
+bool isBoardTestMode(void) {
+	return is_board_test_mode;
+}
+
+void printBoardTestState(void) {
+	print("Current index=%d\r\n", currentIndex);
+	print("'n' for next step and 'set X' to return to step X\r\n");
+	print("ADC count: %d\r\n", slowAdc.size());
+
+	if (currentPin != GPIO_NONE) {
+		print("Blinking %s\r\n", hwPortname(currentPin));
+	}
+
+}
+
+void initBoardTest(void) {
+	is_board_test_mode = true;
 	addConsoleAction("n", nextStep);
 	addConsoleActionI("set", setIndex);
 
@@ -142,8 +156,7 @@ void initBoardTest(void) {
 		GPIO_TypeDef *hwPort = getHwPort(currentPin);
 		uint32_t hwPin = getHwPin(currentPin);
 
-		print("currentIndex=%d\r\n", currentIndex);
-		print("Let's blink %s%d\r\n", portname(hwPort), hwPin);
+		printBoardTestState();
 		mySetPadMode("test", hwPort, hwPin, PAL_STM32_MODE_OUTPUT);
 
 		currentIndex++;

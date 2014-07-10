@@ -26,10 +26,10 @@ float getR1InVoltageDividor(float Vout, float Vin, float r2);
 float getR2InVoltageDividor(float Vout, float Vin, float r1);
 float getTempK(float resistance);
 /**
- * converts Kelvin temperature into Celcius temperature
+ * converts Kelvin temperature into Celsius temperature
  */
-float convertKelvinToCelcius(float tempK);
-float convertCelciusToKelvin(float tempC);
+#define convertKelvinToCelcius(tempK) ((tempK) - KELV)
+#define convertCelsiusToKelvin(tempC) ((tempC) + KELV)
 
 float convertCelciustoF(float tempC);
 float convertFtoCelcius(float tempF);

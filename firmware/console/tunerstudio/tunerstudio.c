@@ -26,12 +26,9 @@
 
 #include "engine_state.h"
 #include "tunerstudio.h"
-#include "pin_repository.h"
 
 #include "main_trigger_callback.h"
 #include "flash_main.h"
-#include "usbconsole.h"
-#include "map_averaging.h"
 
 #include "tunerstudio_algo.h"
 #include "tunerstudio_configuration.h"
@@ -42,27 +39,40 @@
 
 #if EFI_TUNER_STUDIO
 
-#define MAX_PAGE_ID 5
-#define PAGE_0_SIZE 1356
-
-// in MS, that's 10 seconds
-#define TS_READ_TIMEOUT 10000
+#if EFI_PROD_CODE
+#include "pin_repository.h"
+#include "usbconsole.h"
+#include "map_averaging.h"
+extern SerialUSBDriver SDU1;
+#define CONSOLE_DEVICE &SDU1
 
 #define TS_SERIAL_UART_DEVICE &SD3
 //#define TS_SERIAL_SPEED 115200
 #define TS_SERIAL_SPEED 38400
 
+static SerialConfig tsSerialConfig = { TS_SERIAL_SPEED, 0, USART_CR2_STOP1_BITS | USART_CR2_LINEN, 0 };
+#endif /* EFI_PROD_CODE */
+
+#define MAX_PAGE_ID 0
+#define PAGE_0_SIZE 5804
+
+// in MS, that's 10 seconds
+#define TS_READ_TIMEOUT 10000
+
 #define PROTOCOL  "001"
 
-extern SerialUSBDriver SDU1;
 
 BaseChannel * getTsSerialDevice(void) {
+#if EFI_PROD_CODE
 	if (isSerialOverUart()) {
 		// if console uses UART then TS uses USB
 		return (BaseChannel *) &SDU1;
 	} else {
 		return (BaseChannel *) TS_SERIAL_UART_DEVICE;
 	}
+#else
+	return (BaseChannel *) TS_SIMULATOR_PORT;
+#endif
 }
 
 static Logging logger;
@@ -71,12 +81,10 @@ extern engine_configuration_s *engineConfiguration;
 extern persistent_config_s configWorkingCopy;
 extern persistent_config_container_s persistentState;
 
-extern SerialUSBDriver SDU1;
-#define CONSOLE_DEVICE &SDU1
-
 static efitimems_t previousWriteReportMs = 0;
 
 static int ts_serail_ready(void) {
+#if EFI_PROD_CODE
 	if (isSerialOverUart()) {
 		// TS uses USB when console uses serial
 		return is_usb_serial_ready();
@@ -84,9 +92,10 @@ static int ts_serail_ready(void) {
 		// TS uses serial when console uses USB
 		return TRUE;
 	}
+#else
+	return TRUE;
+#endif
 }
-
-static SerialConfig tsSerialConfig = { TS_SERIAL_SPEED, 0, USART_CR2_STOP1_BITS | USART_CR2_LINEN, 0 };
 
 static THD_WORKING_AREA(TS_WORKING_AREA, UTILITY_THREAD_STACK_SIZE);
 
@@ -100,10 +109,12 @@ extern TunerStudioOutputChannels tsOutputChannels;
 extern TunerStudioState tsState;
 
 static void printStats(void) {
+#if EFI_PROD_CODE
 	if (!isSerialOverUart()) {
 		scheduleMsg(&logger, "TS RX on %s%d", portname(TS_SERIAL_RX_PORT), TS_SERIAL_RX_PIN);
 		scheduleMsg(&logger, "TS TX on %s%d", portname(TS_SERIAL_TX_PORT), TS_SERIAL_TX_PIN);
 	}
+#endif /* EFI_PROD_CODE */
 	scheduleMsg(&logger, "TunerStudio total/error counter=%d/%d", tsCounter, tsState.errorCounter);
 	scheduleMsg(&logger, "TunerStudio H counter=%d", tsState.queryCommandCounter);
 	scheduleMsg(&logger, "TunerStudio O counter=%d size=%d", tsState.outputChannelsCommandCounter,
@@ -113,15 +124,34 @@ static void printStats(void) {
 	scheduleMsg(&logger, "TunerStudio W counter=%d", tsState.writeValueCommandCounter);
 	scheduleMsg(&logger, "TunerStudio C counter=%d", tsState.writeChunkCommandCounter);
 	scheduleMsg(&logger, "TunerStudio P counter=%d current page %d", tsState.pageCommandCounter, tsState.currentPageId);
+	scheduleMsg(&logger, "pages total size=%d", sizeof(engine_configuration_s));
 	scheduleMsg(&logger, "page 0 size=%d", getTunerStudioPageSize(0));
 	scheduleMsg(&logger, "page 1 size=%d", getTunerStudioPageSize(1));
+
+//	scheduleMsg(&logger, "timingMode %d", (int)(&engineConfiguration->timingMode) - (int)engineConfiguration);
+//	scheduleMsg(&logger, "cylindersCount %d", (int)(&engineConfiguration->cylindersCount) - (int)engineConfiguration);
+	scheduleMsg(&logger, "analogChartFrequency %d",
+			(int) (&engineConfiguration->analogChartFrequency) - (int) engineConfiguration);
+
+	int fuelMapOffset = (int) (&engineConfiguration->fuelTable) - (int) engineConfiguration;
+	scheduleMsg(&logger, "fuelTable %d", fuelMapOffset);
+
+	int offset = (int) (&engineConfiguration->bc.injectionPinMode) - (int) engineConfiguration;
+	scheduleMsg(&logger, "injectionPinMode %d", offset);
+
+	offset = (int) (&engineConfiguration->bc.idleThreadPeriod) - (int) engineConfiguration;
+	scheduleMsg(&logger, "idleThreadPeriod %d", offset);
+
+
+	if (sizeof(engine_configuration_s) != getTunerStudioPageSize(0))
+		firmwareError("TS page size mismatch");
 }
 
 void tunerStudioWriteData(const uint8_t * buffer, int size) {
 	chSequentialStreamWrite(getTsSerialDevice(), buffer, size);
 }
 
-void tunerStudioDebug(char *msg) {
+void tunerStudioDebug(const char *msg) {
 #if EFI_TUNER_STUDIO_VERBOSE
 	scheduleMsg(&logger, "%s", msg);
 	printStats();
@@ -132,13 +162,13 @@ char *getWorkingPageAddr(int pageIndex) {
 	switch (pageIndex) {
 	case 0:
 		return (char*) &configWorkingCopy.engineConfiguration;
-	case 1:
-		return (char*) &configWorkingCopy.boardConfiguration;
-	case 2: // fuelTable
-	case 3: // ignitionTable
-	case 4: // veTable
-	case 5: // afrTable
-		return (char*) &configWorkingCopy.engineConfiguration + PAGE_0_SIZE + (pageIndex - 2) * 1024;
+//	case 1:
+//		return (char*) &configWorkingCopy.boardConfiguration;
+//	case 2: // fuelTable
+//	case 3: // ignitionTable
+//	case 4: // veTable
+//	case 5: // afrTable
+//		return (char*) &configWorkingCopy.engineConfiguration + PAGE_0_SIZE + (pageIndex - 2) * 1024;
 	}
 	return NULL;
 }
@@ -147,58 +177,56 @@ int getTunerStudioPageSize(int pageIndex) {
 	switch (pageIndex) {
 	case 0:
 		return PAGE_0_SIZE;
-	case 1:
-		return sizeof(configWorkingCopy.boardConfiguration);
-	case 2:
-	case 3:
-	case 4:
-		return 1024;
+//	case 1:
+//		return sizeof(configWorkingCopy.boardConfiguration);
+//	case 2:
+//	case 3:
+//	case 4:
+//		return 1024;
 	}
 	return 0;
 }
 
-void handlePageSelectCommand(uint16_t pageId) {
+void handlePageSelectCommand(ts_response_format_e mode, uint16_t pageId) {
 	tsState.pageCommandCounter++;
 
 	tsState.currentPageId = pageId;
 	scheduleMsg(&logger, "page %d selected", tsState.currentPageId);
-	tunerStudioWriteCrcPacket(TS_RESPONSE_OK, NULL, 0);
+	tsSendResponse(mode, NULL, 0);
 }
 
 /**
  * This command is needed to make the whole transfer a bit faster
  * @note See also handleWriteValueCommand
  */
-void handleWriteChunkCommand(short offset, short count, void *content) {
+void handleWriteChunkCommand(ts_response_format_e mode, short offset, short count, void *content) {
 	tsState.writeChunkCommandCounter++;
 
 	scheduleMsg(&logger, "receiving page %d chunk offset %d size %d", tsState.currentPageId, offset, count);
 
 	if (offset > getTunerStudioPageSize(tsState.currentPageId)) {
 		scheduleMsg(&logger, "ERROR offset %d", offset);
-		// out of range
-		tsState.errorCounter++;
+		tunerStudioError("ERROR: out of range");
 		offset = 0;
 	}
 
 	if (count > getTunerStudioPageSize(tsState.currentPageId)) {
+		tunerStudioError("ERROR: unexpected count");
 		scheduleMsg(&logger, "ERROR count %d", count);
-		// out of range
-		tsState.errorCounter++;
 		count = 0;
 	}
 
 	uint8_t * addr = (uint8_t *) (getWorkingPageAddr(tsState.currentPageId) + offset);
-//	memcpy(addr, content, count);
+	memcpy(addr, content, count);
 
-	tunerStudioWriteCrcPacket(TS_RESPONSE_OK, NULL, 0);
+	tsSendResponse(mode, NULL, 0);
 }
 
 /**
  * 'Write' command receives a single value at a given offset
  * @note Writing values one by one is pretty slow
  */
-void handleWriteValueCommand(uint16_t page, uint16_t offset, uint8_t value) {
+void handleWriteValueCommand(ts_response_format_e mode, uint16_t page, uint16_t offset, uint8_t value) {
 	tsState.writeValueCommandCounter++;
 
 	tsState.currentPageId = page;
@@ -213,9 +241,8 @@ void handleWriteValueCommand(uint16_t page, uint16_t offset, uint8_t value) {
 //	scheduleMsg(&logger, "Reading %d\r\n", size);
 
 	if (offset > getTunerStudioPageSize(tsState.currentPageId)) {
+		tunerStudioError("ERROR: out of range2");
 		scheduleMsg(&logger, "ERROR offset %d", offset);
-		// out of range
-		tsState.errorCounter++;
 		offset = 0;
 		return;
 	}
@@ -235,7 +262,7 @@ static void sendErrorCode(void) {
 	tunerStudioWriteCrcPacket(TS_RESPONSE_CRC_FAILURE, NULL, 0);
 }
 
-void handlePageReadCommand(uint16_t pageId, uint16_t offset, uint16_t count) {
+void handlePageReadCommand(ts_response_format_e mode, uint16_t pageId, uint16_t offset, uint16_t count) {
 	tsState.readPageCommandsCounter++;
 	tunerStudioDebug("got R (Read page)");
 	tsState.currentPageId = pageId;
@@ -249,7 +276,7 @@ void handlePageReadCommand(uint16_t pageId, uint16_t offset, uint16_t count) {
 
 		// something is not right here
 		tsState.currentPageId = 0;
-		tsState.errorCounter++;
+		tunerStudioError("ERROR: invalid page");
 		return;
 	}
 
@@ -262,16 +289,16 @@ void handlePageReadCommand(uint16_t pageId, uint16_t offset, uint16_t count) {
 	}
 
 	const uint8_t *addr = (const uint8_t *) (getWorkingPageAddr(tsState.currentPageId) + offset);
-	tunerStudioWriteCrcPacket(TS_RESPONSE_OK, addr, count);
+	tsSendResponse(mode, addr, count);
 #if EFI_TUNER_STUDIO_VERBOSE
-	scheduleMsg(&logger, "Sending %d done", size);
+	scheduleMsg(&logger, "Sending %d done", count);
 #endif
 }
 
 /**
  * 'Burn' command is a command to commit the changes
  */
-void handleBurnCommand(uint16_t page) {
+void handleBurnCommand(ts_response_format_e mode, uint16_t page) {
 	tsState.burnCommandCounter++;
 
 	tunerStudioDebug("got B (Burn)");
@@ -285,12 +312,57 @@ void handleBurnCommand(uint16_t page) {
 // todo: how about some multi-threading?
 	memcpy(&persistentState.persistentConfiguration, &configWorkingCopy, sizeof(persistent_config_s));
 
-	scheduleMsg(&logger, "va1=%d", configWorkingCopy.boardConfiguration.idleValvePin);
-	scheduleMsg(&logger, "va2=%d", persistentState.persistentConfiguration.boardConfiguration.idleValvePin);
+	scheduleMsg(&logger, "va1=%d", configWorkingCopy.engineConfiguration.bc.idleValvePin);
+	scheduleMsg(&logger, "va2=%d", persistentState.persistentConfiguration.engineConfiguration.bc.idleValvePin);
 
+#if EFI_INTERNAL_FLASH
 	writeToFlash();
+#endif
 	incrementGlobalConfigurationVersion();
 	tunerStudioWriteCrcPacket(TS_RESPONSE_BURN_OK, NULL, 0);
+}
+
+static TunerStudioReadRequest readRequest;
+static short int pageIn;
+
+static bool handlePlainCommand(uint8_t command) {
+	if (command == TS_HELLO_COMMAND) {
+		scheduleMsg(&logger, "Got naked Query command");
+		handleQueryCommand(TS_PLAIN);
+		return true;
+	} else if (command == 't' || command == 'T') {
+		handleTestCommand();
+		return true;
+	} else if (command == TS_PAGE_COMMAND) {
+		int recieved = chSequentialStreamRead(getTsSerialDevice(), (uint8_t *)&pageIn, sizeof(pageIn));
+		handlePageSelectCommand(TS_PLAIN, pageIn);
+		return true;
+	} else if (command == TS_READ_COMMAND) {
+		//scheduleMsg(&logger, "Got naked READ PAGE???");
+		int recieved = chSequentialStreamRead(getTsSerialDevice(), (uint8_t *)&readRequest, sizeof(readRequest));
+		if (recieved != sizeof(readRequest)) {
+			// todo: handler error
+			return true;
+		}
+		handlePageReadCommand(TS_PLAIN, readRequest.page, readRequest.offset, readRequest.count);
+		return true;
+	} else if (command == TS_OUTPUT_COMMAND) {
+		//scheduleMsg(&logger, "Got naked Channels???");
+		handleOutputChannelsCommand(TS_PLAIN);
+		return true;
+	} else if (command == 'F') {
+		tunerStudioDebug("not ignoring F");
+		tunerStudioWriteData((const uint8_t *) PROTOCOL, strlen(PROTOCOL));
+		return true;
+	} else {
+		return false;
+	}
+}
+
+static bool isKnownCommand(char command) {
+	return command == TS_HELLO_COMMAND || command == TS_READ_COMMAND || command == TS_OUTPUT_COMMAND
+			|| command == TS_PAGE_COMMAND || command == TS_BURN_COMMAND || command == TS_SINGLE_WRITE_COMMAND
+			|| command == TS_CHUNK_WRITE_COMMAND;
 }
 
 static uint8_t firstByte;
@@ -303,12 +375,12 @@ static msg_t tsThreadEntryPoint(void *arg) {
 	(void) arg;
 	chRegSetThreadName("tunerstudio thread");
 
-	int wasReady = FALSE;
+	int wasReady = false;
 	while (true) {
 		int isReady = ts_serail_ready();
 		if (!isReady) {
 			chThdSleepMilliseconds(10);
-			wasReady = FALSE;
+			wasReady = false;
 			continue;
 		}
 
@@ -321,32 +393,16 @@ static msg_t tsThreadEntryPoint(void *arg) {
 
 		int recieved = chSequentialStreamRead(getTsSerialDevice(), &firstByte, 1);
 		if (recieved != 1) {
-			tsState.errorCounter++;
+			tunerStudioError("ERROR: no command");
 			continue;
 		}
 //		scheduleMsg(&logger, "Got first=%x=[%c]", firstByte, firstByte);
-		if (firstByte == TS_HELLO_COMMAND) {
-			scheduleMsg(&logger, "Got naked Query command");
-			handleQueryCommand(FALSE);
+		if (handlePlainCommand(firstByte))
 			continue;
-		} else if (firstByte == 't' || firstByte == 'T') {
-			handleTestCommand();
-			continue;
-		} else if (firstByte == TS_READ_COMMAND) {
-			scheduleMsg(&logger, "Got naked READ PAGE???");
-			continue;
-		} else if (firstByte == TS_OUTPUT_COMMAND) {
-			scheduleMsg(&logger, "Got naked Channels???");
-			continue;
-		} else if (firstByte == 'F') {
-			tunerStudioDebug("not ignoring F");
-			tunerStudioWriteData((const uint8_t *) PROTOCOL, strlen(PROTOCOL));
-			continue;
-		}
 
 		recieved = chSequentialStreamRead(getTsSerialDevice(), &secondByte, 1);
 		if (recieved != 1) {
-			tsState.errorCounter++;
+			tunerStudioError("ERROR: no second");
 			continue;
 		}
 //		scheduleMsg(&logger, "Got secondByte=%x=[%c]", secondByte, secondByte);
@@ -355,22 +411,19 @@ static msg_t tsThreadEntryPoint(void *arg) {
 
 		if (incomingPacketSize == 0 || incomingPacketSize > sizeof(crcIoBuffer)) {
 			scheduleMsg(&logger, "TunerStudio: invalid size: %d", incomingPacketSize);
-			tsState.errorCounter++;
+			tunerStudioError("ERROR: size");
 			sendErrorCode();
 			continue;
 		}
 
 		recieved = chnReadTimeout(getTsSerialDevice(), crcIoBuffer, 1, MS2ST(TS_READ_TIMEOUT));
 		if (recieved != 1) {
-			scheduleMsg(&logger, "did not receive command");
-			tsState.errorCounter++;
+			tunerStudioError("ERROR: did not receive command");
 			continue;
 		}
 
 		char command = crcIoBuffer[0];
-		if (command != TS_HELLO_COMMAND && command != TS_READ_COMMAND && command != TS_OUTPUT_COMMAND
-				&& command != TS_PAGE_COMMAND && command != TS_BURN_COMMAND && command != TS_SINGLE_WRITE_COMMAND
-				&& command != TS_CHUNK_WRITE_COMMAND) {
+		if (!isKnownCommand(command)) {
 			scheduleMsg(&logger, "unexpected command %x", command);
 			sendErrorCode();
 			continue;
@@ -380,9 +433,11 @@ static msg_t tsThreadEntryPoint(void *arg) {
 
 		recieved = chnReadTimeout(getTsSerialDevice(), (void * ) (crcIoBuffer + 1), incomingPacketSize + 4 - 1,
 				MS2ST(TS_READ_TIMEOUT));
-		if (recieved != incomingPacketSize + 4 - 1) {
-			scheduleMsg(&logger, "got ONLY %d", recieved);
-			tsState.errorCounter++;
+		int expectedSize = incomingPacketSize + 4 - 1;
+		if (recieved != expectedSize) {
+			scheduleMsg(&logger, "got ONLY %d for packet size %d/%d for command %c", recieved, incomingPacketSize,
+					expectedSize, command);
+			tunerStudioError("ERROR: not enough");
 			continue;
 		}
 
@@ -398,14 +453,14 @@ static msg_t tsThreadEntryPoint(void *arg) {
 
 			scheduleMsg(&logger, "TunerStudio: command %c actual CRC %x/expected %x", crcIoBuffer[0], actualCrc,
 					expectedCrc);
-			tsState.errorCounter++;
+			tunerStudioError("ERROR: CRC issue");
 			continue;
 		}
 
 //		scheduleMsg(&logger, "TunerStudio: P00-07 %x %x %x %x %x %x %x %x", crcIoBuffer[0], crcIoBuffer[1],
 //				crcIoBuffer[2], crcIoBuffer[3], crcIoBuffer[4], crcIoBuffer[5], crcIoBuffer[6], crcIoBuffer[7]);
 
-		int success = tunerStudioHandleCommand(crcIoBuffer, incomingPacketSize);
+		int success = tunerStudioHandleCrcCommand(crcIoBuffer, incomingPacketSize);
 		if (!success)
 			print("got unexpected TunerStudio command %x:%c\r\n", command, command);
 
@@ -422,6 +477,7 @@ void syncTunerStudioCopy(void) {
 void startTunerStudioConnectivity(void) {
 	initLogging(&logger, "tuner studio");
 	memset(&tsState, 0, sizeof(tsState));
+#if EFI_PROD_CODE
 	if (isSerialOverUart()) {
 		print("TunerStudio over USB serial");
 		usb_serial_start();
@@ -433,7 +489,7 @@ void startTunerStudioConnectivity(void) {
 
 		sdStart(TS_SERIAL_UART_DEVICE, &tsSerialConfig);
 	}
-
+#endif /* EFI_PROD_CODE */
 	syncTunerStudioCopy();
 
 	addConsoleAction("tsinfo", printStats);

@@ -2,7 +2,7 @@ package com.irnems.ui.test;
 
 import com.rusefi.waves.WaveReport;
 import com.irnems.core.test.WaveReportTest;
-import com.irnems.ui.FrameHelper;
+import com.rusefi.ui.FrameHelper;
 import com.irnems.ui.widgets.UpDownImage;
 
 import javax.swing.*;

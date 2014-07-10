@@ -180,7 +180,7 @@ void initPrimaryPins(void) {
 }
 
 void initOutputPins(void) {
-	outputPinRegister("is cranking status", LED_WARNING, LED_WARNING_PORT, LED_WARNING_PIN);
+	outputPinRegister("warning", LED_WARNING, LED_WARNING_PORT, LED_WARNING_PIN);
 	outputPinRegister("is running status", LED_RUNNING, LED_RUNNING_STATUS_PORT, LED_RUNNING_STATUS_PIN);
 	outputPinRegister("communication status 1", LED_COMMUNICATION_1, LED_COMMUNICATION_PORT, LED_COMMUNICATION_PIN);
 

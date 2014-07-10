@@ -31,7 +31,7 @@ extern SerialUSBDriver SDU1;
 int lastWriteSize;
 int lastWriteActual;
 
-static bool_t isSerialConsoleStarted = FALSE;
+static bool isSerialConsoleStarted = false;
 
 static EventListener consoleEventListener;
 
@@ -99,7 +99,7 @@ static bool getConsoleLine(BaseSequentialStream *chp, char *line, unsigned size)
 			consolePutChar('\r');
 			consolePutChar('\n');
 			*p = 0;
-			return FALSE;
+			return false;
 		}
 		if (c < 0x20)
 			continue;
@@ -136,7 +136,7 @@ static msg_t consoleThreadThreadEntryPoint(void *arg) {
 		(console_line_callback)(consoleInput);
 	}
 #if defined __GNUC__
-	return FALSE;
+	return false;
 #endif        
 }
 
@@ -182,7 +182,10 @@ void startConsole(void (*console_line_callback_p)(char *)) {
 	console_line_callback = console_line_callback_p;
 
 #if EFI_PROD_CODE
-	is_serial_over_uart = palReadPad(GPIOA, GPIOA_BUTTON) != EFI_USE_UART_FOR_CONSOLE;
+
+	palSetPadMode(CONSOLE_MODE_SWITCH_PORT, CONSOLE_MODE_SWITCH_PIN, PAL_MODE_INPUT_PULLUP);
+
+	is_serial_over_uart = GET_CONSOLE_MODE_VALUE() == EFI_USE_UART_FOR_CONSOLE;
 
 	if (isSerialOverUart()) {
 		/*
@@ -221,10 +224,10 @@ bool lockAnyContext(void) {
 		chSysLock()
 		;
 	}
-	return FALSE;
+	return false;
 }
 
-bool_t lockOutputBuffer(void) {
+bool lockOutputBuffer(void) {
 	return lockAnyContext();
 }
 

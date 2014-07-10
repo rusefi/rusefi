@@ -48,7 +48,7 @@ void acAddData(float angle, float value) {
 		appendPrintf(&logging, "analog_chart%s", DELIMETER);
 	}
 
-	if (loggingSize(&logging) < sizeof(LOGGING_BUFFER) - 100)
+	if (remainingSize(&logging) > 100)
 		appendPrintf(&logging, "%f|%f|", angle, value);
 }
 

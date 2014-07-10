@@ -1,5 +1,5 @@
 /**
- * @file	trigger_decoder.c
+ * @file	trigger_decoder.cpp
  *
  * @date Dec 24, 2013
  * @author Andrey Belomutskiy, (c) 2012-2014
@@ -48,7 +48,7 @@ int isTriggerDecoderError(void) {
 static inline int isSynchronizationGap(TriggerState const *shaftPositionState, trigger_shape_s const *triggerShape,
 		trigger_config_s const *triggerConfig, const int currentDuration) {
 	if (!triggerConfig->isSynchronizationNeeded)
-		return FALSE;
+		return false;
 
 	return currentDuration > shaftPositionState->toothed_previous_duration * triggerConfig->syncRatioFrom
 			&& currentDuration < shaftPositionState->toothed_previous_duration * triggerConfig->syncRatioTo;
@@ -57,7 +57,7 @@ static inline int isSynchronizationGap(TriggerState const *shaftPositionState, t
 static inline int noSynchronizationResetNeeded(TriggerState *shaftPositionState, trigger_shape_s const *triggerShape,
 		trigger_config_s const*triggerConfig) {
 	if (triggerConfig->isSynchronizationNeeded)
-		return FALSE;
+		return false;
 	if (!shaftPositionState->shaft_is_synchronized)
 		return TRUE;
 	/**
@@ -67,9 +67,10 @@ static inline int noSynchronizationResetNeeded(TriggerState *shaftPositionState,
 }
 
 /**
- * @brief This method changes the state of trigger_state_s data structure according to the trigger event
+ * @brief Trigger decoding happends here
+ * This method changes the state of trigger_state_s data structure according to the trigger event
  */
-void TriggerState::processTriggerEvent(trigger_shape_s const*triggerShape, trigger_config_s const*triggerConfig,
+void TriggerState::decodeTriggerEvent(trigger_shape_s const*triggerShape, trigger_config_s const*triggerConfig,
 		trigger_event_e signal, uint64_t nowUs) {
 
 	int isLessImportant = (triggerConfig->useRiseEdge && signal != SHAFT_PRIMARY_UP)
@@ -83,7 +84,8 @@ void TriggerState::processTriggerEvent(trigger_shape_s const*triggerShape, trigg
 		return;
 	}
 
-	int64_t currentDuration = nowUs - toothed_previous_time;
+	int64_t currentDuration = isFirstEvent ? 0 : nowUs - toothed_previous_time;
+	isFirstEvent = false;
 	efiAssertVoid(currentDuration >= 0, "negative duration?");
 
 // todo: skip a number of signal from the beginning
@@ -119,51 +121,51 @@ void TriggerState::processTriggerEvent(trigger_shape_s const*triggerShape, trigg
 	toothed_previous_time = nowUs;
 }
 
-static void initializeSkippedToothTriggerShape(trigger_shape_s *s, int totalTeethCount, int skippedCount) {
+static void initializeSkippedToothTriggerShape(trigger_shape_s *s, int totalTeethCount, int skippedCount, operation_mode_e operationMode) {
 	efiAssertVoid(s != NULL, "trigger_shape_s is NULL");
-	s->reset();
+	s->reset(operationMode);
 
 	float toothWidth = 0.5;
 
 	for (int i = 0; i < totalTeethCount - skippedCount - 1; i++) {
 		float angleDown = 720.0 / totalTeethCount * (i + toothWidth);
 		float angleUp = 720.0 / totalTeethCount * (i + 1);
-		triggerAddEvent(s, angleDown, T_PRIMARY, TV_HIGH);
-		triggerAddEvent(s, angleUp, T_PRIMARY, TV_LOW);
+		s->addEvent(angleDown, T_PRIMARY, TV_HIGH);
+		s->addEvent(angleUp, T_PRIMARY, TV_LOW);
 	}
 
 	float angleDown = 720.0 / totalTeethCount * (totalTeethCount - skippedCount - 1 + toothWidth);
-	triggerAddEvent(s, angleDown, T_PRIMARY, TV_HIGH);
-	triggerAddEvent(s, 720, T_PRIMARY, TV_LOW);
+	s->addEvent(angleDown, T_PRIMARY, TV_HIGH);
+	s->addEvent(720, T_PRIMARY, TV_LOW);
 }
 
 void initializeSkippedToothTriggerShapeExt(engine_configuration2_s *engineConfiguration2, int totalTeethCount,
-		int skippedCount) {
+		int skippedCount, operation_mode_e operationMode) {
 	efiAssertVoid(totalTeethCount > 0, "totalTeethCount is zero");
 
 	trigger_shape_s *s = &engineConfiguration2->triggerShape;
-	initializeSkippedToothTriggerShape(s, totalTeethCount, skippedCount);
+	initializeSkippedToothTriggerShape(s, totalTeethCount, skippedCount, operationMode);
 
 	s->shaftPositionEventCount = ((totalTeethCount - skippedCount) * 2);
 	s->wave.checkSwitchTimes(s->getSize());
 }
 
-static void configureFordAspireTriggerShape(trigger_shape_s * s) {
-	s->reset();
+static void configureFordAspireTriggerShape(trigger_config_s *triggerConfig, trigger_shape_s * s) {
+	s->reset(FOUR_STROKE_CAM_SENSOR);
 
 	s->shaftPositionEventCount = 10;
 
-	triggerAddEvent(s, 53.747, T_SECONDARY, TV_HIGH);
-	triggerAddEvent(s, 121.90, T_SECONDARY, TV_LOW); // delta = 68.153
-	triggerAddEvent(s, 232.76, T_SECONDARY, TV_HIGH); // delta = 110.86
-	triggerAddEvent(s, 300.54, T_SECONDARY, TV_LOW); // delta = 67.78
-	triggerAddEvent(s, 360, T_PRIMARY, TV_HIGH);
+	s->addEvent(53.747, T_SECONDARY, TV_HIGH);
+	s->addEvent(121.90, T_SECONDARY, TV_LOW); // delta = 68.153
+	s->addEvent(232.76, T_SECONDARY, TV_HIGH); // delta = 110.86
+	s->addEvent(300.54, T_SECONDARY, TV_LOW); // delta = 67.78
+	s->addEvent(360, T_PRIMARY, TV_HIGH);
 
-	triggerAddEvent(s, 409.8412, T_SECONDARY, TV_HIGH); // delta = 49.8412
-	triggerAddEvent(s, 478.6505, T_SECONDARY, TV_LOW); // delta = 68.8093
-	triggerAddEvent(s, 588.045, T_SECONDARY, TV_HIGH); // delta = 109.3945
-	triggerAddEvent(s, 657.03, T_SECONDARY, TV_LOW);
-	triggerAddEvent(s, 720, T_PRIMARY, TV_LOW);
+	s->addEvent(409.8412, T_SECONDARY, TV_HIGH); // delta = 49.8412
+	s->addEvent(478.6505, T_SECONDARY, TV_LOW); // delta = 68.8093
+	s->addEvent(588.045, T_SECONDARY, TV_HIGH); // delta = 109.3945
+	s->addEvent(657.03, T_SECONDARY, TV_LOW);
+	s->addEvent(720, T_PRIMARY, TV_LOW);
 }
 
 /**
@@ -174,43 +176,73 @@ void initializeTriggerShape(Logging *logger, engine_configuration_s *engineConfi
 #if EFI_PROD_CODE
 	printMsg(logger, "initializeTriggerShape()");
 #endif
-	trigger_config_s *tt = &engineConfiguration->triggerConfig;
-	switch (tt->triggerType) {
+	trigger_config_s *triggerConfig = &engineConfiguration->triggerConfig;
+	trigger_shape_s *triggerShape = &engineConfiguration2->triggerShape;
+	switch (triggerConfig->triggerType) {
 
 	case TT_TOOTHED_WHEEL:
-		initializeSkippedToothTriggerShapeExt(engineConfiguration2, tt->totalToothCount, tt->skippedToothCount);
+		initializeSkippedToothTriggerShapeExt(engineConfiguration2, triggerConfig->totalToothCount, triggerConfig->skippedToothCount,
+				getOperationMode(engineConfiguration));
 		return;
 
 	case TT_MAZDA_MIATA_NB:
-		initializeMazdaMiataNbShape(&engineConfiguration2->triggerShape);
+		initializeMazdaMiataNbShape(triggerConfig, triggerShape);
 		return;
 
 	case TT_DODGE_NEON:
-		configureNeonTriggerShape(&engineConfiguration2->triggerShape);
+		configureNeonTriggerShape(triggerConfig, triggerShape);
 		return;
 
 	case TT_FORD_ASPIRE:
-		configureFordAspireTriggerShape(&engineConfiguration2->triggerShape);
+		configureFordAspireTriggerShape(triggerConfig, triggerShape);
 		return;
 
 	case TT_GM_7X:
-		configureGmTriggerShape(&engineConfiguration2->triggerShape);
+		configureGmTriggerShape(triggerConfig, triggerShape);
 		return;
 
 	case TT_FORD_ESCORT_GT:
-		configureMazdaProtegeLx(engineConfiguration, engineConfiguration2);
+		configureMazdaProtegeLx(triggerConfig, triggerShape);
 		return;
 
 	case TT_MINI_COOPER_R50:
-		configureMiniCooperTriggerShape(engineConfiguration, engineConfiguration2);
+		configureMiniCooperTriggerShape(triggerConfig, triggerShape);
 		return;
 
 	default:
-		firmwareError("initializeTriggerShape() not implemented: %d", tt->triggerType);
+		firmwareError("initializeTriggerShape() not implemented: %d", triggerConfig->triggerType);
 		;
 	}
 	if (engineConfiguration2->triggerShape.shaftPositionEventCount != engineConfiguration2->triggerShape.getSize())
 		firmwareError("trigger size or shaftPositionEventCount?");
+}
+
+TriggerStimulatorHelper::TriggerStimulatorHelper() {
+	primaryWheelState = false;
+	secondaryWheelState = false;
+}
+
+void TriggerStimulatorHelper::nextStep(TriggerState *state, trigger_shape_s * shape, int i, trigger_config_s const*triggerConfig) {
+	int stateIndex = i % shape->getSize();
+
+	int loopIndex = i / shape->getSize();
+
+	int time = (int) (10000 * (loopIndex + shape->wave.getSwitchTime(stateIndex)));
+
+	bool newPrimaryWheelState = shape->wave.getChannelState(0, stateIndex);
+	bool newSecondaryWheelState = shape->wave.getChannelState(1, stateIndex);
+
+	if (primaryWheelState != newPrimaryWheelState) {
+		primaryWheelState = newPrimaryWheelState;
+		trigger_event_e s = primaryWheelState ? SHAFT_PRIMARY_UP : SHAFT_PRIMARY_DOWN;
+		state->decodeTriggerEvent(shape, triggerConfig, s, time);
+	}
+
+	if (secondaryWheelState != newSecondaryWheelState) {
+		secondaryWheelState = newSecondaryWheelState;
+		trigger_event_e s = secondaryWheelState ? SHAFT_SECONDARY_UP : SHAFT_SECONDARY_DOWN;
+		state->decodeTriggerEvent(shape, triggerConfig, s, time);
+	}
 }
 
 /**
@@ -224,34 +256,13 @@ int findTriggerZeroEventIndex(trigger_shape_s * shape, trigger_config_s const*tr
 	TriggerState state;
 	errorDetection.clear();
 
-	int primaryWheelState = FALSE;
-	int secondaryWheelState = FALSE;
+	TriggerStimulatorHelper helper;
 
 	for (int i = 0; i < 4 * PWM_PHASE_MAX_COUNT; i++) {
-
-		int stateIndex = i % shape->getSize();
-
-		int loopIndex = i / shape->getSize();
-
-		int time = (int) (10000 * (loopIndex + shape->wave.getSwitchTime(stateIndex)));
-
-		int newPrimaryWheelState = shape->wave.getChannelState(0, stateIndex);
-		int newSecondaryWheelState = shape->wave.getChannelState(1, stateIndex);
-
-		if (primaryWheelState != newPrimaryWheelState) {
-			primaryWheelState = newPrimaryWheelState;
-			trigger_event_e s = primaryWheelState ? SHAFT_PRIMARY_UP : SHAFT_PRIMARY_DOWN;
-			state.processTriggerEvent(shape, triggerConfig, s, time);
-		}
-
-		if (secondaryWheelState != newSecondaryWheelState) {
-			secondaryWheelState = newSecondaryWheelState;
-			trigger_event_e s = secondaryWheelState ? SHAFT_SECONDARY_UP : SHAFT_SECONDARY_DOWN;
-			state.processTriggerEvent(shape, triggerConfig, s, time);
-		}
+		helper.nextStep(&state, shape, i, triggerConfig);
 
 		if (state.shaft_is_synchronized)
-			return stateIndex;
+			return i % shape->getSize();;
 	}
 	firmwareError("findTriggerZeroEventIndex() failed");
 	return -1;

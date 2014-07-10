@@ -24,6 +24,11 @@
 #define TS_RESPONSE_BURN_OK 0x04
 #define TS_RESPONSE_CRC_FAILURE 0x82
 
+typedef enum {
+	TS_PLAIN = 0,
+	TS_CRC = 1
+} ts_response_format_e;
+
 typedef struct {
 	int queryCommandCounter;
 	int outputChannelsCommandCounter;
@@ -37,22 +42,25 @@ typedef struct {
 	short currentPageId;
 } TunerStudioState;
 
-int tunerStudioHandleCommand(char *data, int incomingPacketSize);
+int tunerStudioHandleCrcCommand(char *data, int incomingPacketSize);
 
 void handleTestCommand(void);
-void handleQueryCommand(int needCrc);
-void handleOutputChannelsCommand(void);
+void handleQueryCommand(ts_response_format_e mode);
+void tsSendResponse(ts_response_format_e mode, const uint8_t * buffer, int size);
+void handleOutputChannelsCommand(ts_response_format_e mode);
 
 char *getWorkingPageAddr(int pageIndex);
 int getTunerStudioPageSize(int pageIndex);
-void handleWriteValueCommand(uint16_t page, uint16_t offset, uint8_t value);
-void handleWriteChunkCommand(short offset, short count, void *content);
-void handlePageSelectCommand(uint16_t pageId);
-void handlePageReadCommand(uint16_t pageId, uint16_t offset, uint16_t count);
-void handleBurnCommand(uint16_t page);
+void handleWriteValueCommand(ts_response_format_e mode, uint16_t page, uint16_t offset, uint8_t value);
+void handleWriteChunkCommand(ts_response_format_e mode, short offset, short count, void *content);
+void handlePageSelectCommand(ts_response_format_e mode, uint16_t pageId);
+void handlePageReadCommand(ts_response_format_e mode, uint16_t pageId, uint16_t offset, uint16_t count);
+void handleBurnCommand(ts_response_format_e mode, uint16_t page);
 
 void tunerStudioWriteData(const uint8_t * buffer, int size);
-void tunerStudioDebug(char *msg);
+void tunerStudioDebug(const char *msg);
+
+void tunerStudioError(const char *msg);
 
 #define TS_HELLO_COMMAND 'H'
 #define TS_OUTPUT_COMMAND 'O'

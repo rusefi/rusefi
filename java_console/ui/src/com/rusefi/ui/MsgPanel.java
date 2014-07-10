@@ -1,4 +1,4 @@
-package com.irnems.ui;
+package com.rusefi.ui;
 
 import com.irnems.core.MessagesCentral;
 import com.irnems.ui.widgets.AnyCommand;

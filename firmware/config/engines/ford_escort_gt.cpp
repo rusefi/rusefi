@@ -23,8 +23,6 @@ void setFordEscortGt(engine_configuration_s *engineConfiguration, board_configur
 	// set_injection_offset 510
 	engineConfiguration->injectionOffset = 59;
 
-
-
 	setSingleCoilDwell(engineConfiguration);
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
 

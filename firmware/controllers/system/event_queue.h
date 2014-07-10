@@ -16,7 +16,7 @@
 #define QUEUE_LENGTH_LIMIT 1000
 
 template<typename T>
-bool_t assertNotInList(T *head, T*element) {
+bool assertNotInList(T *head, T*element) {
 	// this code is just to validate state, no functional load
 	T * current;
 	int counter = 0;
@@ -48,7 +48,7 @@ public:
 	int size(void);
 	scheduling_s *getForUnitText(int index);
 private:
-	bool_t checkIfPending(scheduling_s *scheduling);
+	bool checkIfPending(scheduling_s *scheduling);
 	scheduling_s *head;
 };
 

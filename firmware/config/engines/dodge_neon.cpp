@@ -3,6 +3,8 @@
  *
  * DODGE_NEON_1995 = 2
  *
+ * This config overrides some values of the default configuration which is set by setDefaultConfiguration() method
+ *
  * @date Dec 16, 2013
  * @author Andrey Belomutskiy, (c) 2012-2014
  */
@@ -21,7 +23,7 @@ void setDodgeNeonEngineConfiguration(engine_configuration_s *engineConfiguration
 
 	engineConfiguration->triggerConfig.triggerType = TT_DODGE_NEON;
 
-	engineConfiguration->engineLoadMode = LM_TPS;
+	engineConfiguration->algorithm = LM_TPS;
 
 	// set_rpm_hard_limit 4000
 	engineConfiguration->rpmHardLimit = 4000; // yes, 4k. let's play it safe for now
@@ -40,10 +42,10 @@ void setDodgeNeonEngineConfiguration(engine_configuration_s *engineConfiguration
 	// set_whole_fuel_map 3
 	setWholeFuelMap(engineConfiguration, 3);
 
-	setTriggerSynchronizationGap(engineConfiguration, 0.72);
+	setTriggerSynchronizationGap(&engineConfiguration->triggerConfig, 0.72);
 
-	engineConfiguration->triggerConfig.useRiseEdge = FALSE;
-	engineConfiguration->needSecondTriggerInput = TRUE;
+	engineConfiguration->triggerConfig.useRiseEdge = false;
+	engineConfiguration->needSecondTriggerInput = true;
 
 	// set_cranking_injection_mode 0
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;

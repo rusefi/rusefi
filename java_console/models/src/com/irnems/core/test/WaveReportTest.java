@@ -11,7 +11,7 @@ import static junit.framework.Assert.assertEquals;
  * (c) Andrey Belomutskiy
  */
 public class WaveReportTest {
-    public static final String report = "up!14679!down!15991!up!16823!down!18134!up!18965!down!20278!up!21108!down!22420!up!23251!down!24563!up!25394!down!26706!up!27536!down!28850!up!29678!down!30991!up!31822!down!33134!up!33965!down!35277!up!36108!down!37420!up!38251!down!39563!up!40394!down!41706!up!42537!down!43849!";
+    public static final String report = "u!14679!d!15991!u!16823!d!18134!u!18965!d!20278!u!21108!d!22420!u!23251!d!24563!u!25394!d!26706!u!27536!d!28850!u!29678!d!30991!u!31822!d!33134!u!33965!d!35277!u!36108!d!37420!u!38251!d!39563!u!40394!d!41706!u!42537!d!43849!";
 
     @Test
     public void testParse() {

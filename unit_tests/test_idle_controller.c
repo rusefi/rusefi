@@ -7,11 +7,6 @@
 
 #include <stdio.h>
 
-
 void idleDebug(char *msg, int value) {
 	printf("%s\r\n", msg);
-}
-
-void isCranking(void) {
-	return;
 }

@@ -24,9 +24,8 @@ public class AutoTest {
         sendCommand("set_engine_type 2");
         testDodgeNeon();
 
-// todo: uncomment once we resolve the RAM issue & OUTPUT_SIGNAL_MAX_SIZE gets back to 60
-//        sendCommand("set_engine_type 7");
-//        testFord6();
+        sendCommand("set_engine_type 7");
+        testFord6();
 
         sendCommand("set_engine_type 4");
         testFordFiesta();
@@ -53,9 +52,14 @@ public class AutoTest {
     }
 
     private static void testFordFiesta() {
-//        WaveChart chart;
-//        changeRpm(2000);
-//        chart = nextChart();
+        WaveChart chart;
+        IoUtil.changeRpm(2000);
+        chart = nextChart();
+
+        String msg = "Fiesta";
+        double x = 312;
+        assertWave(msg, chart, WaveChart.SPARK_1, 0.1333333, x, x + 360);
+        assertWave(msg, chart, WaveChart.SPARK_3, 0.1333333, x + 180, x + 540);
     }
 
     private static void testFord6() {
@@ -83,7 +87,7 @@ public class AutoTest {
         IoUtil.changeRpm(600);
         chart = nextChart();
         x = 76;
-        assertWave("aspire default runnint ", chart, WaveChart.SPARK_1, 0.04, x, x + 180, x + 360, x + 540);
+        assertWave("aspire default running ", chart, WaveChart.SPARK_1, 0.04, x, x + 180, x + 360, x + 540);
 
         IoUtil.changeRpm(200);
 

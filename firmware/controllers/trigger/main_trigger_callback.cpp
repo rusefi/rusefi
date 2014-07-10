@@ -79,10 +79,12 @@ static Logging logger;
 
 static void handleFuelInjectionEvent(MainTriggerCallback *mainTriggerCallback, ActuatorEvent *event, int rpm) {
 	float fuelMs = getFuelMs(rpm) * mainTriggerCallback->engineConfiguration->globalFuelCorrection;
+	if (cisnan(fuelMs)) {
+		warning(OBD_PCM_Processor_Fault, "NaN injection pulse");
+		return;
+	}
 	if (fuelMs < 0) {
-#if EFI_PROD_CODE
-		scheduleMsg(&logger, "ERROR: negative injectionPeriod %f", fuelMs);
-#endif
+		warning(OBD_PCM_Processor_Fault, "Negative injection pulse %f", fuelMs);
 		return;
 	}
 
@@ -128,8 +130,7 @@ static void handleSparkEvent(MainTriggerCallback *mainTriggerCallback, int event
 		return;
 	}
 
-	ActuatorEvent *event = &iEvent->actuator;
-	float sparkDelay = getOneDegreeTimeMs(rpm) * event->position.angleOffset;
+	float sparkDelay = getOneDegreeTimeMs(rpm) * iEvent->dwellPosition.angleOffset;
 	int isIgnitionError = sparkDelay < 0;
 	ignitionErrorDetection.add(isIgnitionError);
 	if (isIgnitionError) {
@@ -140,9 +141,6 @@ static void handleSparkEvent(MainTriggerCallback *mainTriggerCallback, int event
 		return;
 	}
 
-	OutputSignal *signal = event->actuator;
-	//scheduleOutput(event->actuator, sparkDelay, dwellMs);
-
 	if (cisnan(dwellMs)) {
 		firmwareError("NaN in scheduleOutput", dwellMs);
 		return;
@@ -152,13 +150,13 @@ static void handleSparkEvent(MainTriggerCallback *mainTriggerCallback, int event
 	 * We are alternating two event lists in order to avoid a potential issue around revolution boundary
 	 * when an event is scheduled within the next revolution.
 	 */
-	scheduling_s * sUp = &signal->signalTimerUp[0];
-	scheduling_s * sDown = &signal->signalTimerDown[0];
+	scheduling_s * sUp = &iEvent->signalTimerUp;
+	scheduling_s * sDown = &iEvent->signalTimerDown;
 
 	/**
 	 * The start of charge is always within the current trigger event range, so just plain time-based scheduling
 	 */
-	scheduleTask(sUp, (int) MS2US(sparkDelay), (schfunc_t) &turnPinHigh, (void *) signal);
+	scheduleTask(sUp, (int) MS2US(sparkDelay), (schfunc_t) &turnPinHigh, (void *) iEvent->io_pin);
 	/**
 	 * Spark event is often happening during a later trigger event timeframe
 	 * TODO: improve precision
@@ -173,7 +171,7 @@ static void handleSparkEvent(MainTriggerCallback *mainTriggerCallback, int event
 		 */
 		float timeTillIgnitionUs = getOneDegreeTimeUs(rpm) * iEvent->sparkPosition.angleOffset;
 
-		scheduleTask(sDown, (int) timeTillIgnitionUs, (schfunc_t) &turnPinLow, (void*) signal);
+		scheduleTask(sDown, (int) timeTillIgnitionUs, (schfunc_t) &turnPinLow, (void*) iEvent->io_pin);
 	} else {
 		/**
 		 * Spark should be scheduled in relation to some future trigger event, this way we get better firing precision
@@ -183,8 +181,6 @@ static void handleSparkEvent(MainTriggerCallback *mainTriggerCallback, int event
 			return;
 
 		LL_APPEND(iHead, iEvent);
-
-		//scheduleTask(sDown, (int) MS2US(sparkDelay + dwellMs), (schfunc_t) &turnPinLow, (void*) signal);
 	}
 }
 
@@ -205,19 +201,17 @@ static void handleSpark(MainTriggerCallback *mainTriggerCallback, int eventIndex
 			// time to fire a spark which was scheduled previously
 			LL_DELETE(iHead, current);
 
-			ActuatorEvent *event = &current->actuator;
-			OutputSignal *signal = event->actuator;
-			scheduling_s * sDown = &signal->signalTimerDown[0];
+			scheduling_s * sDown = &current->signalTimerDown;
 
 			float timeTillIgnitionUs = getOneDegreeTimeUs(rpm) * current->sparkPosition.angleOffset;
-			scheduleTask(sDown, (int) timeTillIgnitionUs, (schfunc_t) &turnPinLow, (void*) signal);
+			scheduleTask(sDown, (int) timeTillIgnitionUs, (schfunc_t) &turnPinLow, (void*) current->io_pin);
 		}
 	}
 
 //	scheduleSimpleMsg(&logger, "eventId spark ", eventIndex);
 	for (int i = 0; i < list->size; i++) {
 		IgnitionEvent *event = &list->events[i];
-		if (event->actuator.position.eventIndex != eventIndex)
+		if (event->dwellPosition.eventIndex != eventIndex)
 			continue;
 		handleSparkEvent(mainTriggerCallback, eventIndex, event, rpm);
 	}
@@ -303,9 +297,14 @@ void onTriggerEvent(trigger_event_e ckpSignalType, int eventIndex, MainTriggerCa
 #endif /* EFI_HISTOGRAMS */
 }
 
+#include "wave_chart.h"
+
 static void showTriggerHistogram(void) {
 	printAllCallbacksHistogram();
 	showMainHistogram();
+#if EFI_PROD_CODE
+	showWaveChartHistogram();
+#endif
 }
 
 static void showMainInfo(void) {

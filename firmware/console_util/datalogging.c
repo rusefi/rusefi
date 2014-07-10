@@ -66,8 +66,7 @@ static int validateBuffer(Logging *logging, int extraLen, const char *text) {
 		return TRUE;
 	}
 
-	int currentLen = loggingSize(logging);
-	if (currentLen + extraLen > logging->bufferSize - 1) {
+	if (remainingSize(logging) < extraLen + 1) {
 		strcpy(logging->SMALL_BUFFER, "Logging buffer overflow: ");
 		strcat(logging->SMALL_BUFFER, logging->name);
 		strcat(logging->SMALL_BUFFER, "/");
@@ -86,6 +85,22 @@ void append(Logging *logging, const char *text) {
 	int errcode = validateBuffer(logging, extraLen, text);
 	if (errcode)
 		return;
+	strcpy(logging->linePointer, text);
+	logging->linePointer += extraLen;
+}
+
+/**
+ * @note This method if fast because it does not validate much, be sure what you are doing
+ */
+void appendFast(Logging *logging, const char *text) {
+//  todo: fix this implementation? this would be a one-pass implementation instead of a two-pass
+//	char c;
+//	char *s = (char *) text;
+//	do {
+//		c = *s++;
+//		*logging->linePointer++ = c;
+//	} while (c != '\0');
+	int extraLen = strlen(text);
 	strcpy(logging->linePointer, text);
 	logging->linePointer += extraLen;
 }
@@ -365,8 +380,8 @@ void scheduleLogging(Logging *logging) {
 	resetLogging(logging);
 }
 
-uint32_t loggingSize(Logging *logging) {
-	return (int) logging->linePointer - (int) (logging->buffer);
+uint32_t remainingSize(Logging *logging) {
+	return logging->bufferSize - loggingSize(logging);
 }
 
 /**

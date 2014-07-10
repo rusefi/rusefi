@@ -20,8 +20,7 @@ void setFordFiestaDefaultEngineConfiguration(engine_configuration_s *engineConfi
 	engineConfiguration->rpmHardLimit = 7000;
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 
-	engineConfiguration->triggerConfig.totalToothCount = 36;
-	engineConfiguration->triggerConfig.skippedToothCount = 1;
+	setToothedWheelConfiguration(engineConfiguration, 36, 1);
 
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 	engineConfiguration->firingOrder = FO_1_THEN_3_THEN_4_THEN2;

@@ -57,7 +57,7 @@ extern board_configuration_s *boardConfiguration;
 persistent_config_container_s persistentState CCM_OPTIONAL;
 
 engine_configuration_s *engineConfiguration = &persistentState.persistentConfiguration.engineConfiguration;
-board_configuration_s *boardConfiguration = &persistentState.persistentConfiguration.boardConfiguration;
+board_configuration_s *boardConfiguration = &persistentState.persistentConfiguration.engineConfiguration.bc;
 
 /**
  * CH_FREQUENCY is the number of system ticks in a second
@@ -244,7 +244,7 @@ void initEngineContoller(void) {
 	initAnalogChart();
 #endif /* EFI_ANALOG_CHART */
 
-	initAlgo();
+	initAlgo(engineConfiguration);
 
 #if EFI_WAVE_ANALYZER
 	initWaveAnalyzer();

@@ -65,34 +65,39 @@ TunerStudioOutputChannels tsOutputChannels;
  */
 persistent_config_s configWorkingCopy;
 
-int tunerStudioHandleCommand(char *data, int incomingPacketSize) {
+void tunerStudioError(const char *msg) {
+	tunerStudioDebug(msg);
+	tsState.errorCounter++;
+}
+
+int tunerStudioHandleCrcCommand(char *data, int incomingPacketSize) {
 	char command = data[0];
 	data++;
 	if (command == TS_HELLO_COMMAND) {
 		tunerStudioDebug("got CRC Query");
-		handleQueryCommand(TRUE);
+		handleQueryCommand(TS_CRC);
 	} else if (command == TS_OUTPUT_COMMAND) {
-		handleOutputChannelsCommand();
+		handleOutputChannelsCommand(TS_CRC);
 	} else if (command == TS_PAGE_COMMAND) {
 		uint16_t page = *(uint16_t *) data;
-		handlePageSelectCommand(page);
+		handlePageSelectCommand(TS_CRC, page);
 	} else if (command == TS_CHUNK_WRITE_COMMAND) {
 		uint16_t offset = *(uint16_t *) data;
 		uint16_t count = *(uint16_t *) (data + 2);
-		handleWriteChunkCommand(offset, count, data + 4);
+		handleWriteChunkCommand(TS_CRC, offset, count, data + 4);
 	} else if (command == TS_SINGLE_WRITE_COMMAND) {
 		uint16_t page = *(uint16_t *) data;
 		uint16_t offset = *(uint16_t *) (data + 2);
 		uint8_t value = data[4];
-		handleWriteValueCommand(page, offset, value);
+		handleWriteValueCommand(TS_CRC, page, offset, value);
 	} else if (command == TS_BURN_COMMAND) {
 		uint16_t page = *(uint16_t *) data;
-		handleBurnCommand(page);
+		handleBurnCommand(TS_CRC, page);
 	} else if (command == TS_READ_COMMAND) {
 		uint16_t page = *(uint16_t *) data;
 		uint16_t offset = *(uint16_t *) (data + 2);
 		uint16_t count = *(uint16_t *) (data + 4);
-		handlePageReadCommand(page, offset, count);
+		handlePageReadCommand(TS_CRC, page, offset, count);
 	} else if (command == 't' || command == 'T') {
 		handleTestCommand();
 	} else if (command == 'F') {
@@ -105,32 +110,38 @@ int tunerStudioHandleCommand(char *data, int incomingPacketSize) {
 		 * Currently on some firmware versions the F command is not used and is just ignored by the firmware as a unknown command."
 		 */
 	} else {
-		tunerStudioDebug("ignoring unexpected");
-		tsState.errorCounter++;
+		tunerStudioError("ERROR: ignoring unexpected command");
 		return FALSE;
 	}
 	return TRUE;
 }
 
-void handleQueryCommand(int needCrc) {
+void tsSendResponse(ts_response_format_e mode, const uint8_t * buffer, int size) {
+	if (mode == TS_CRC) {
+		tunerStudioWriteCrcPacket(TS_RESPONSE_OK, buffer, size);
+	} else {
+		if (size > 0)
+			tunerStudioWriteData(buffer, size);
+	}
+}
+
+/**
+ * Query with CRC takes place while re-establishing connection
+ * Query without CRC takes place on TunerStudio startup
+ */
+void handleQueryCommand(ts_response_format_e mode) {
 	tsState.queryCommandCounter++;
 	tunerStudioDebug("got H (queryCommand)");
-	if (needCrc) {
-		// Query with CRC takes place while re-establishing connection
-		tunerStudioWriteCrcPacket(TS_RESPONSE_OK, (const uint8_t *) TS_SIGNATURE, strlen(TS_SIGNATURE) + 1);
-	} else {
-		// Query without CRC takes place on TunerStudio startup
-		tunerStudioWriteData((const uint8_t *) TS_SIGNATURE, strlen(TS_SIGNATURE) + 1);
-	}
+	tsSendResponse(mode, (const uint8_t *) TS_SIGNATURE, strlen(TS_SIGNATURE) + 1);
 }
 
 /**
  * @brief 'Output' command sends out a snapshot of current values
  */
-void handleOutputChannelsCommand(void) {
+void handleOutputChannelsCommand(ts_response_format_e mode) {
 	tsState.outputChannelsCommandCounter++;
 	// this method is invoked too often to print any debug information
-	tunerStudioWriteCrcPacket(TS_RESPONSE_OK, (const uint8_t *) &tsOutputChannels, sizeof(TunerStudioOutputChannels));
+	tsSendResponse(mode, (const uint8_t *) &tsOutputChannels, sizeof(TunerStudioOutputChannels));
 }
 
 void handleTestCommand(void) {

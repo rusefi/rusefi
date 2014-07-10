@@ -30,7 +30,7 @@
 #if EFI_USE_CCM && defined __GNUC__
 #define CCM_OPTIONAL __attribute__((section(".ccm")));
 #else
-#define CCM_OPTIONAL
+#define CCM_OPTIONAL @ ".ccm"
 #endif
 
 // this stuff is about ChibiOS 2.6 > Migration

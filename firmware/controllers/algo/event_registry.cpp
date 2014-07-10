@@ -24,11 +24,11 @@
 #include "main.h"
 #include "engine_math.h"
 
-void registerActuatorEvent(ActuatorEventList *list, int eventIndex, OutputSignal *actuator, float angleOffset) {
-	ActuatorEvent *e = list->getNextActuatorEvent();
-	if (e == NULL)
-		return; // error already reported
-	e->position.eventIndex = eventIndex;
-	e->actuator = actuator;
-	e->position.angleOffset = angleOffset;
-}
+//void registerActuatorEventWhat(ActuatorEventList *list, int eventIndex, OutputSignal *actuator, float angleOffset) {
+//	ActuatorEvent *e = list->getNextActuatorEvent();
+//	if (e == NULL)
+//		return; // error already reported
+//	e->position.eventIndex = eventIndex;
+//	e->actuator = actuator;
+//	e->position.angleOffset = angleOffset;
+//}

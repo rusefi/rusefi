@@ -1,5 +1,5 @@
 /**
- * @file    hardware.c
+ * @file    hardware.cpp
  * @brief   Hardware package entry point
  *
  * @date May 27, 2013
@@ -12,6 +12,7 @@
 #include "io_pins.h"
 #include "rtc_helper.h"
 #include "rfiutil.h"
+#include "console_io.h"
 
 #include "adc_inputs.h"
 
@@ -27,6 +28,7 @@
 #include "neo6m.h"
 #include "lcd_HD44780.h"
 #include "settings.h"
+#include "algo.h"
 
 #if EFI_INTERNAL_FLASH
 #include "flash_main.h"
@@ -55,10 +57,10 @@ void initSpiModules(void) {
 #if STM32_SPI_USE_SPI2
 //	scheduleMsg(&logging, "Turning on SPI2 pins");
 	initSpiModule(&SPID2,
-	EFI_SPI2_SCK_PORT, EFI_SPI2_SCK_PIN,
-	EFI_SPI2_MISO_PORT, EFI_SPI2_MISO_PIN,
-	EFI_SPI2_MOSI_PORT, EFI_SPI2_MOSI_PIN,
-	EFI_SPI2_AF);
+			EFI_SPI2_SCK_PORT, EFI_SPI2_SCK_PIN,
+			EFI_SPI2_MISO_PORT, EFI_SPI2_MISO_PIN,
+			EFI_SPI2_MOSI_PORT, EFI_SPI2_MOSI_PIN,
+			EFI_SPI2_AF);
 #endif
 #if STM32_SPI_USE_SPI3
 //	scheduleMsg(&logging, "Turning on SPI3 pins");
@@ -78,9 +80,9 @@ void initI2Cmodule(void) {
 	i2cStart(&I2CD1, &i2cfg);
 
 	mySetPadMode("I2C clock", EFI_I2C_SCL_PORT, EFI_I2C_SCL_PIN,
-			PAL_MODE_ALTERNATE(EFI_I2C_AF) | PAL_STM32_OTYPE_OPENDRAIN);
+	PAL_MODE_ALTERNATE(EFI_I2C_AF) | PAL_STM32_OTYPE_OPENDRAIN);
 	mySetPadMode("I2C data", EFI_I2C_SDA_PORT, EFI_I2C_SDA_PIN,
-			PAL_MODE_ALTERNATE(EFI_I2C_AF) | PAL_STM32_OTYPE_OPENDRAIN);
+	PAL_MODE_ALTERNATE(EFI_I2C_AF) | PAL_STM32_OTYPE_OPENDRAIN);
 }
 
 //static char txbuf[1];
@@ -105,7 +107,6 @@ void initHardware(Logging *logger) {
 	initHistogramsModule();
 #endif /* EFI_HISTOGRAMS */
 
-
 	/**
 	 * We need the LED_ERROR pin even before we read configuration
 	 */
@@ -114,12 +115,25 @@ void initHardware(Logging *logger) {
 	if (hasFirmwareError())
 		return;
 
+	initDataStructures(engineConfiguration);
+
 #if EFI_INTERNAL_FLASH
+
+	palSetPadMode(CONFIG_RESET_SWITCH_PORT, CONFIG_RESET_SWITCH_PIN, PAL_MODE_INPUT_PULLUP);
+
+	initFlash();
 	/**
 	 * this call reads configuration from flash memory or sets default configuration
 	 * if flash state does not look right.
 	 */
-	initFlash();
+	if (SHOULD_INGORE_FLASH()) {
+		engineConfiguration->engineType = FORD_ASPIRE_1996;
+		resetConfigurationExt(logger, engineConfiguration->engineType, engineConfiguration, engineConfiguration2,
+				boardConfiguration);
+		writeToFlash();
+	} else {
+		readFromFlash();
+	}
 #else
 	engineConfiguration->engineType = FORD_ASPIRE_1996;
 	resetConfigurationExt(logger, engineConfiguration->engineType, engineConfiguration, engineConfiguration2, boardConfiguration);
@@ -128,10 +142,20 @@ void initHardware(Logging *logger) {
 	if (hasFirmwareError())
 		return;
 
+	mySetPadMode("board test", getHwPort(boardConfiguration->boardTestModeJumperPin),
+			getHwPin(boardConfiguration->boardTestModeJumperPin), PAL_MODE_INPUT_PULLUP);
+	bool isBoardTestMode = GET_BOARD_TEST_MODE_VALUE();
+
+	initAdcInputs(isBoardTestMode);
+
+	if (isBoardTestMode) {
+		initBoardTest();
+		efiAssertVoid(FALSE, "board test done");
+	}
+
 	initRtc();
 
 	initOutputPins();
-	initAdcInputs();
 
 #if EFI_HIP_9011
 	initHip9011();
@@ -143,7 +167,6 @@ void initHardware(Logging *logger) {
 
 //	init_adc_mcp3208(&adcState, &SPID2);
 //	requestAdcValue(&adcState, 0);
-
 
 	// todo: figure out better startup logic
 	initTriggerCentral();
@@ -195,6 +218,5 @@ void initHardware(Logging *logger) {
 //		}
 //	}
 
-	initBoardTest();
 	printMsg(logger, "initHardware() OK!");
 }

@@ -51,19 +51,12 @@ void initSignalExecutor(void) {
 
 void initOutputSignal(OutputSignal *signal, io_pin_e ioPin) {
 	signal->io_pin = ioPin;
-	signal->name = getPinName(ioPin);
-	initOutputSignalBase(signal);
 }
 
-void initOutputSignalBase(OutputSignal *signal) {
-	signal->initialized = TRUE;
-}
-
-void turnPinHigh(OutputSignal *signal) {
+void turnPinHigh(io_pin_e pin) {
 #if EFI_DEFAILED_LOGGING
 //	signal->hi_time = hTimeNow();
 #endif /* EFI_DEFAILED_LOGGING */
-	io_pin_e pin = signal->io_pin;
 	// turn the output level ACTIVE
 	// todo: this XOR should go inside the setOutputPinValue method
 	setOutputPinValue(pin, TRUE);
@@ -79,14 +72,14 @@ void turnPinHigh(OutputSignal *signal) {
 #endif
 
 #if EFI_WAVE_CHART
-	addWaveChartEvent(signal->name, "up", "");
+	addWaveChartEvent(getPinName(pin), WC_UP, "");
 #endif /* EFI_WAVE_ANALYZER */
 }
 
-void turnPinLow(OutputSignal *signal) {
+void turnPinLow(io_pin_e pin) {
 	// turn off the output
 	// todo: this XOR should go inside the setOutputPinValue method
-	setOutputPinValue(signal->io_pin, FALSE);
+	setOutputPinValue(pin, false);
 
 #if EFI_DEFAILED_LOGGING
 	systime_t after = hTimeNow();
@@ -95,7 +88,7 @@ void turnPinLow(OutputSignal *signal) {
 #endif /* EFI_DEFAILED_LOGGING */
 
 #if EFI_WAVE_CHART
-	addWaveChartEvent(signal->name, "down", "");
+	addWaveChartEvent(getPinName(pin), WC_DOWN, "");
 #endif /* EFI_WAVE_ANALYZER */
 }
 
@@ -118,50 +111,67 @@ void scheduleOutput(OutputSignal *signal, float delayMs, float durationMs) {
 		return;
 	}
 
-	scheduleOutputBase(signal, delayMs, durationMs);
-
 	int index = getRevolutionCounter() % 2;
 	scheduling_s * sUp = &signal->signalTimerUp[index];
 	scheduling_s * sDown = &signal->signalTimerDown[index];
 
-	scheduleTask(sUp, (int)MS2US(delayMs), (schfunc_t) &turnPinHigh, (void *) signal);
-	scheduleTask(sDown, (int)MS2US(delayMs + durationMs), (schfunc_t) &turnPinLow, (void*) signal);
-
-//	signal->last_scheduling_time = now;
+	scheduleTask(sUp, (int)MS2US(delayMs), (schfunc_t) &turnPinHigh, (void *) signal->io_pin);
+	scheduleTask(sDown, (int)MS2US(delayMs + durationMs), (schfunc_t) &turnPinLow, (void*) signal->io_pin);
 }
 
-void scheduleOutputBase(OutputSignal *signal, float delayMs, float durationMs) {
-	/**
-	 * it's better to check for the exact 'TRUE' value since otherwise
-	 * we would accept any memory garbage
-	 */
-	efiAssertVoid(signal->initialized == TRUE, "Signal not initialized");
-//	signal->offset = offset;
-//	signal->duration = duration;
-}
-
-char *getPinName(io_pin_e io_pin) {
+const char *getPinName(io_pin_e io_pin) {
 	switch (io_pin) {
+	// todo: refactor this hell - introduce arrays & checks?
 	case SPARKOUT_1_OUTPUT:
-		return "Spark 1";
+		return "spa1";
 	case SPARKOUT_2_OUTPUT:
-		return "Spark 2";
+		return "spa2";
 	case SPARKOUT_3_OUTPUT:
-		return "Spark 3";
+		return "spa3";
 	case SPARKOUT_4_OUTPUT:
-		return "Spark 4";
+		return "spa4";
+	case SPARKOUT_5_OUTPUT:
+		return "spa5";
+	case SPARKOUT_6_OUTPUT:
+		return "spa6";
+	case SPARKOUT_7_OUTPUT:
+		return "spa7";
+	case SPARKOUT_8_OUTPUT:
+		return "spa8";
+	case SPARKOUT_9_OUTPUT:
+		return "spa9";
+	case SPARKOUT_10_OUTPUT:
+		return "spa10";
+	case SPARKOUT_11_OUTPUT:
+		return "spa11";
+	case SPARKOUT_12_OUTPUT:
+		return "spa12";
 
 	case INJECTOR_1_OUTPUT:
-		return "Injector 1";
+		return "inj1";
 	case INJECTOR_2_OUTPUT:
-		return "Injector 2";
+		return "inj2";
 	case INJECTOR_3_OUTPUT:
-		return "Injector 3";
+		return "inj3";
 	case INJECTOR_4_OUTPUT:
-		return "Injector 4";
+		return "inj4";
 	case INJECTOR_5_OUTPUT:
-		return "Injector 5";
+		return "inj5";
+	case INJECTOR_6_OUTPUT:
+		return "inj6";
+	case INJECTOR_7_OUTPUT:
+		return "inj7";
+	case INJECTOR_8_OUTPUT:
+		return "inj8";
+	case INJECTOR_9_OUTPUT:
+		return "inj9";
+	case INJECTOR_10_OUTPUT:
+		return "inj10";
+	case INJECTOR_11_OUTPUT:
+		return "inj11";
+	case INJECTOR_12_OUTPUT:
+		return "inj12";
 	default:
-		return "No name";
+		return "Pin needs name";
 	}
 }

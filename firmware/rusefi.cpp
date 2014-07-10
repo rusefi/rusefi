@@ -83,22 +83,20 @@
 #include "main.h"
 #include "trigger_structure.h"
 #include "ec2.h"
-
-extern "C" {
-
-#include "global.h"
-#include "rfi_perftest.h"
-
-#include "rusefi.h"
-#include "eficonsole.h"
 #include "hardware.h"
 #include "engine_controller.h"
-#include "status_loop.h"
-#include "pin_repository.h"
 
-#include "status_loop.h"
+#include "global.h"
+extern "C" {
+
+#include "rfi_perftest.h"
+#include "rusefi.h"
 #include "memstreams.h"
 }
+
+#include "eficonsole.h"
+#include "status_loop.h"
+#include "pin_repository.h"
 
 #if EFI_HD44780_LCD
 #include "lcd_HD44780.h"
@@ -255,5 +253,5 @@ void firmwareError(const char *fmt, ...) {
 }
 
 int getRusEfiVersion(void) {
-	return 20140627;
+	return 20140709;
 }

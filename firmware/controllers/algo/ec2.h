@@ -22,6 +22,10 @@
 typedef struct {
 	ActuatorEventList crankingInjectionEvents;
 	ActuatorEventList injectionEvents;
+	/**
+	 * We are alternating two event lists in order to avoid a potential issue around revolution boundary
+	 * when an event is scheduled within the next revolution.
+	 */
 	IgnitionEventList ignitionEvents[2];
 } EventHandlerConfiguration;
 

@@ -32,7 +32,6 @@ public:
 	void init(float *st, single_wave_s *waves);
 	void reset(void);
 	float getSwitchTime(int phaseIndex) const;
-	float getAngle(int phaseIndex, engine_configuration_s const *engineConfiguration, trigger_shape_s * s) const;
 	void setSwitchTime(int phaseIndex, float value);
 	void checkSwitchTimes(int size);
 	int getChannelState(int channelIndex, int phaseIndex) const;

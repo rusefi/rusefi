@@ -9,5 +9,15 @@
  * @author Andrey Belomutskiy, (c) 2012-2014
  */
 
+#include "main.h"
+#include "engine.h"
+#include "engine_state.h"
 
+/**
+ * We are executing these heavy (logarithm) methods from outside the trigger callbacks for performance reasons.
+ */
+void Engine::updateSlowSensors() {
+	engineState.iat = getIntakeAirTemperature();
+	engineState.clt = getCoolantTemperature();
+}
 

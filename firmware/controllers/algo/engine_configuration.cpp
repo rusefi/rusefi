@@ -26,8 +26,9 @@
 #include "interpolation.h"
 #include "trigger_decoder.h"
 #include "engine_math.h"
+#include "speed_density.h"
 
-#if EFI_PROD_CODE
+#if EFI_TUNER_STUDIO
 #include "tunerstudio.h"
 #endif
 
@@ -94,11 +95,18 @@ void setWholeFuelMap(engine_configuration_s *engineConfiguration, float value) {
 	}
 }
 
-void setTriggerSynchronizationGap(engine_configuration_s *engineConfiguration, float synchGap) {
-	engineConfiguration->triggerConfig.isSynchronizationNeeded = TRUE;
+void setToothedWheelConfiguration(engine_configuration_s *engineConfiguration, int total, int skipped) {
+	engineConfiguration->triggerConfig.triggerType = TT_TOOTHED_WHEEL;
+	engineConfiguration->triggerConfig.isSynchronizationNeeded = (skipped != 0);
 
-	engineConfiguration->triggerConfig.syncRatioFrom = synchGap * 0.75;
-	engineConfiguration->triggerConfig.syncRatioTo = synchGap * 1.25;
+	engineConfiguration->triggerConfig.totalToothCount = total;
+	engineConfiguration->triggerConfig.skippedToothCount = skipped;
+}
+
+void setTriggerSynchronizationGap(trigger_config_s *triggerConfig, float synchGap) {
+	triggerConfig->isSynchronizationNeeded = TRUE;
+	triggerConfig->syncRatioFrom = synchGap * 0.75;
+	triggerConfig->syncRatioTo = synchGap * 1.25;
 }
 
 /**
@@ -109,6 +117,8 @@ void setTriggerSynchronizationGap(engine_configuration_s *engineConfiguration, f
 void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
 	memset(engineConfiguration, 0, sizeof(engine_configuration_s));
 	memset(boardConfiguration, 0, sizeof(board_configuration_s));
+
+	setDetaultVETable(engineConfiguration);
 
 	engineConfiguration->injectorLag = 0.0;
 
@@ -147,8 +157,8 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	setTimingLoadBin(engineConfiguration, 1.2, 4.4);
 	setTimingRpmBin(engineConfiguration, 800, 7000);
 
-	setTableBin(engineConfiguration->map.samplingAngleBins, MAP_ANGLE_SIZE, 800, 7000);
-	setTableBin(engineConfiguration->map.samplingWindowBins, MAP_ANGLE_SIZE, 800, 7000);
+	setTableBin2(engineConfiguration->map.samplingAngleBins, MAP_ANGLE_SIZE, 800, 7000, 1);
+	setTableBin2(engineConfiguration->map.samplingWindowBins, MAP_ANGLE_SIZE, 800, 7000, 1);
 
 	// set_whole_timing_map 3
 	setWholeFuelMap(engineConfiguration, 3);
@@ -193,7 +203,7 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	engineConfiguration->overrideCrankingIgnition = TRUE;
 	engineConfiguration->analogChartFrequency = 20;
 
-	engineConfiguration->engineLoadMode = LM_MAF;
+	engineConfiguration->algorithm = LM_MAF;
 
 	engineConfiguration->vbattDividerCoeff = ((float) (15 + 65)) / 15;
 
@@ -206,7 +216,7 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	engineConfiguration->can_nbc_type = CAN_BUS_NBC_BMW;
 	engineConfiguration->can_sleep_period = 50;
 	engineConfiguration->canReadEnabled = TRUE;
-	engineConfiguration->canWriteEnabled = FALSE;
+	engineConfiguration->canWriteEnabled = false;
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
 	engineConfiguration->cylindersCount = 4;
@@ -221,7 +231,7 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	engineConfiguration->logFormat = LF_NATIVE;
 
 	engineConfiguration->triggerConfig.triggerType = TT_TOOTHED_WHEEL;
-	setTriggerSynchronizationGap(engineConfiguration, 2);
+	setTriggerSynchronizationGap(&engineConfiguration->triggerConfig, 2);
 	engineConfiguration->triggerConfig.useRiseEdge = TRUE;
 
 	engineConfiguration->HD44780width = 16;
@@ -260,12 +270,26 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	boardConfiguration->injectionPins[3] = GPIOE_5;
 	boardConfiguration->injectionPins[4] = GPIOE_6;
 	boardConfiguration->injectionPins[5] = GPIOC_12;
+	boardConfiguration->injectionPins[6] = GPIO_NONE;
+	boardConfiguration->injectionPins[7] = GPIO_NONE;
+	boardConfiguration->injectionPins[8] = GPIO_NONE;
+	boardConfiguration->injectionPins[9] = GPIO_NONE;
+	boardConfiguration->injectionPins[10] = GPIO_NONE;
+	boardConfiguration->injectionPins[11] = GPIO_NONE;
 	boardConfiguration->injectionPinMode = OM_DEFAULT;
 
 	boardConfiguration->ignitionPins[0] = GPIOC_7;
 	boardConfiguration->ignitionPins[1] = GPIOE_4; // todo: update this value
 	boardConfiguration->ignitionPins[2] = GPIOE_0; // todo: update this value
 	boardConfiguration->ignitionPins[3] = GPIOE_1; // todo: update this value
+	boardConfiguration->ignitionPins[4] = GPIO_NONE;
+	boardConfiguration->ignitionPins[5] = GPIO_NONE;
+	boardConfiguration->ignitionPins[6] = GPIO_NONE;
+	boardConfiguration->ignitionPins[7] = GPIO_NONE;
+	boardConfiguration->ignitionPins[8] = GPIO_NONE;
+	boardConfiguration->ignitionPins[9] = GPIO_NONE;
+	boardConfiguration->ignitionPins[10] = GPIO_NONE;
+	boardConfiguration->ignitionPins[11] = GPIO_NONE;
 	boardConfiguration->ignitionPinMode = OM_DEFAULT;
 
 	boardConfiguration->malfunctionIndicatorPin = GPIOC_9;
@@ -314,6 +338,12 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	boardConfiguration->generalPeriodicThreadPeriod = 200;
 
 	boardConfiguration->tunerStudioSerialSpeed = 38400;
+
+	boardConfiguration->boardTestModeJumperPin = GPIOB_0;
+
+	boardConfiguration->canDeviceMode = CD_USE_CAN2;
+	boardConfiguration->canTxPin = GPIOB_0;
+	boardConfiguration->canRxPin = GPIOB_12;
 }
 
 void setDefaultNonPersistentConfiguration(engine_configuration2_s *engineConfiguration2) {
@@ -438,8 +468,8 @@ void setOperationMode(engine_configuration_s *engineConfiguration, operation_mod
 	}
 }
 
-operation_mode_e getOperationMode( engine_configuration_s const *engineConfiguration) {
-	if(engineConfiguration->rpmMultiplier == 1)
+operation_mode_e getOperationMode(engine_configuration_s const *engineConfiguration) {
+	if (engineConfiguration->rpmMultiplier == 1)
 		return FOUR_STROKE_CRANK_SENSOR;
 	return FOUR_STROKE_CAM_SENSOR;
 

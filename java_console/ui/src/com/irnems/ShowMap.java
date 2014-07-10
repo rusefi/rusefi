@@ -2,8 +2,8 @@ package com.irnems;
 
 import com.irnems.file.BaseMap;
 import com.irnems.models.XYData;
-import com.irnems.ui.FrameHelper;
-import com.irnems.ui.ChartHelper;
+import com.rusefi.ui.FrameHelper;
+import com.rusefi.ui.ChartHelper;
 
 import javax.swing.*;
 

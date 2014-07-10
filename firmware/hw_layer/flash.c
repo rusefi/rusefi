@@ -50,7 +50,7 @@ flashsector_t flashSectorAt(flashaddr_t address) {
  * @return CH_SUCCESS  Unlock was successful.
  * @return CH_FAILED    Unlock failed.
  */
-static bool_t flashUnlock(void) {
+static bool flashUnlock(void) {
 	/* Check if unlock is really needed */
 	if (!(FLASH->CR & FLASH_CR_LOCK))
 		return CH_SUCCESS;
@@ -141,13 +141,13 @@ bool flashIsErased(flashaddr_t address, size_t size) {
 	 * then, fallback to byte per byte comparison. */
 	while (size >= sizeof(flashdata_t)) {
 		if (*(volatile flashdata_t*) address != (flashdata_t) (-1)) // flashdata_t being unsigned, -1 is 0xFF..FF
-			return FALSE;
+			return false;
 		address += sizeof(flashdata_t);
 		size -= sizeof(flashdata_t);
 	}
 	while (size > 0) {
 		if (*(char*) address != 0xff)
-			return FALSE;
+			return false;
 		++address;
 		--size;
 	}

@@ -34,18 +34,27 @@
 
 #define CHART_DELIMETER	"!"
 
+#if EFI_HISTOGRAMS
+#include "rfiutil.h"
+#include "histogram.h"
+static histogram_s waveChartHisto;
+#endif
+
 /**
  * This is the number of events in the digital chart which would be displayed
  * on the 'digital sniffer' pane
  */
 #if EFI_PROD_CODE
-static volatile int chartSize = 100;
+// todo: does it really need to be a variable? maybe a constant should be enough?
+static volatile int chartSize = 300;
 #define WAVE_LOGGING_SIZE 5000
 #else
 // need more events for automated test
 static volatile int chartSize = 400;
 #define WAVE_LOGGING_SIZE 35000
 #endif
+
+int waveChartUsedSize;
 
 static int isChartActive = TRUE;
 //static int isChartActive = FALSE;
@@ -67,7 +76,12 @@ void resetWaveChart(WaveChart *chart) {
 	appendPrintf(&chart->logging, "wave_chart%s", DELIMETER);
 }
 
-static char WAVE_LOGGING_BUFFER[WAVE_LOGGING_SIZE] CCM_OPTIONAL;
+static char WAVE_LOGGING_BUFFER[WAVE_LOGGING_SIZE] CCM_OPTIONAL
+;
+
+int isWaveChartFull(WaveChart *chart) {
+	return chart->counter >= chartSize;
+}
 
 static void printStatus(void) {
 	scheduleIntValue(&logger, "chart", isChartActive);
@@ -93,12 +107,9 @@ void publishChartIfFull(WaveChart *chart) {
 	}
 }
 
-int isWaveChartFull(WaveChart *chart) {
-	return chart->counter >= chartSize;
-}
-
 void publishChart(WaveChart *chart) {
 	appendPrintf(&chart->logging, DELIMETER);
+	waveChartUsedSize = loggingSize(&chart->logging);
 #if DEBUG_WAVE
 	Logging *l = &chart->logging;
 	scheduleSimpleMsg(&debugLogging, "IT'S TIME", strlen(l->buffer));
@@ -107,8 +118,10 @@ void publishChart(WaveChart *chart) {
 		scheduleLogging(&chart->logging);
 }
 
+static char timeBuffer[10];
+
 /**
- * @brief	Register a change in sniffed signal
+ * @brief	Register an event for digital sniffer
  */
 void addWaveChartEvent3(WaveChart *chart, const char *name, const char * msg, const char * msg2) {
 	efiAssertVoid(chart->isInitialized, "chart not initialized");
@@ -117,13 +130,52 @@ void addWaveChartEvent3(WaveChart *chart, const char *name, const char * msg, co
 #endif
 	if (isWaveChartFull(chart))
 		return;
-	bool alreadyLocked = lockOutputBuffer(); // we have multiple threads writing to the same output buffer
-	appendPrintf(&chart->logging, "%s%s%s%s", name, CHART_DELIMETER, msg, CHART_DELIMETER);
+
+#if EFI_HISTOGRAMS && EFI_PROD_CODE
+	int beforeCallback = hal_lld_get_counter_value();
+#endif
+
+
 	int time100 = getTimeNowUs() / 10;
-	appendPrintf(&chart->logging, "%d%s%s", time100, msg2, CHART_DELIMETER);
+
+	bool alreadyLocked = lockOutputBuffer(); // we have multiple threads writing to the same output buffer
+
+	if (chart->counter == 0)
+		chart->startTime = time100;
 	chart->counter++;
+	if (remainingSize(&chart->logging) > 30) {
+		/**
+		 * printf is a heavy method, append is used here as a performance optimization
+		 */
+		appendFast(&chart->logging, name);
+		appendFast(&chart->logging, CHART_DELIMETER);
+		appendFast(&chart->logging, msg);
+		appendFast(&chart->logging, CHART_DELIMETER);
+		/**
+		 * We want smaller times within a chart in order to reduce packet size.
+		 */
+		time100 -= chart->startTime;
+
+		itoa10(timeBuffer, time100);
+		appendFast(&chart->logging, timeBuffer);
+		appendFast(&chart->logging, msg2);
+		appendFast(&chart->logging, CHART_DELIMETER);
+	}
 	if (!alreadyLocked)
 		unlockOutputBuffer();
+
+#if EFI_HISTOGRAMS && EFI_PROD_CODE
+	int diff = hal_lld_get_counter_value() - beforeCallback;
+	if (diff > 0)
+	hsAdd(&waveChartHisto, diff);
+#endif /* EFI_HISTOGRAMS */
+
+}
+
+void showWaveChartHistogram(void) {
+#if EFI_PROD_CODE
+	printHistogram(&logger, &waveChartHisto);
+#endif
 }
 
 void initWaveChart(WaveChart *chart) {
@@ -139,6 +191,10 @@ void initWaveChart(WaveChart *chart) {
 #if DEBUG_WAVE
 	initLoggingExt(&debugLogging, "wave chart debug", &debugLogging.DEFAULT_BUFFER, sizeof(debugLogging.DEFAULT_BUFFER));
 #endif
+
+#if EFI_HISTOGRAMS
+	initHistogram(&waveChartHisto, "wave chart");
+#endif /* EFI_HISTOGRAMS */
 
 	resetWaveChart(chart);
 	addConsoleActionI("chartsize", setChartSize);

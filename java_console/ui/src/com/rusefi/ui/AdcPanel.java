@@ -1,4 +1,4 @@
-package com.irnems.ui;
+package com.rusefi.ui;
 
 import com.irnems.core.SensorCentral;
 import com.irnems.core.Pair;

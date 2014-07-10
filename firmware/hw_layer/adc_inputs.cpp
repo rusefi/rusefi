@@ -261,8 +261,7 @@ GPIO_TypeDef* getAdcChannelPort(int hwChannel) {
 	case ADC_CHANNEL_IN15:
 		return GPIOC;
 	default:
-		firmwareError("Unknown hw channel")
-		;
+		firmwareError("Unknown hw channel");
 		return NULL;
 	}
 }
@@ -303,8 +302,7 @@ int getAdcChannelPin(int hwChannel) {
 	case ADC_CHANNEL_IN15:
 		return 5;
 	default:
-		firmwareError("Unknown hw channel")
-		;
+		firmwareError("Unknown hw channel");
 		return -1;
 	}
 }
@@ -411,7 +409,7 @@ static void adc_callback_fast(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 	}
 }
 
-void initAdcInputs() {
+void initAdcInputs(bool isBoardTestMode) {
 
 	initLoggingExt(&logger, "ADC", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
 	printMsg(&logger, "initAdcInputs()");
@@ -430,7 +428,7 @@ void initAdcInputs() {
 	for (int adc = 0; adc < HW_MAX_ADC_INDEX; adc++) {
 		adc_channel_mode_e mode = boardConfiguration->adcHwChannelEnabled[adc];
 
-		if (mode == ADC_SLOW) {
+		if (mode == ADC_SLOW || (isBoardTestMode && mode == ADC_FAST)) {
 			slowAdc.addChannel(ADC_CHANNEL_IN0 + adc);
 		} else if (mode == ADC_FAST) {
 			fastAdc.addChannel(ADC_CHANNEL_IN0 + adc);
@@ -438,7 +436,14 @@ void initAdcInputs() {
 	}
 
 	slowAdc.init();
-	fastAdc.init();
+	pwmStart(EFI_INTERNAL_SLOW_ADC_PWM, &pwmcfg_slow);
+	if (!isBoardTestMode) {
+		fastAdc.init();
+	/*
+	 * Initializes the PWM driver.
+	 */
+	pwmStart(EFI_INTERNAL_FAST_ADC_PWM, &pwmcfg_fast);
+        }
 
 	// ADC_CHANNEL_IN0 // PA0
 	// ADC_CHANNEL_IN1 // PA1
@@ -459,11 +464,6 @@ void initAdcInputs() {
 
 	//if(slowAdcChannelCount > ADC_MAX_SLOW_CHANNELS_COUNT) // todo: do we need this logic? do we need this check
 
-	/*
-	 * Initializes the PWM driver.
-	 */
-	pwmStart(EFI_INTERNAL_SLOW_ADC_PWM, &pwmcfg_slow);
-	pwmStart(EFI_INTERNAL_FAST_ADC_PWM, &pwmcfg_fast);
 	addConsoleActionI("adc", printAdcValue);
 	addConsoleAction("fadc", printFullAdcReport);
 #else

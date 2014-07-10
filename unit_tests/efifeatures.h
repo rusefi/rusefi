@@ -1,5 +1,5 @@
-/*
- * efifeatures.h
+/**
+ * @file efifeatures.h
  *
  *  Created on: Mar 7, 2014
  *      Author: Andrey
@@ -7,6 +7,8 @@
 
 #ifndef EFIFEATURES_H_
 #define EFIFEATURES_H_
+
+#define EFI_HISTOGRAMS TRUE
 
 #define EFI_CLI_SUPPORT FALSE
 
@@ -18,5 +20,7 @@
 
 #define EFI_SIGNAL_EXECUTOR_ONE_TIMER TRUE
 
+#define EFI_SHAFT_POSITION_INPUT TRUE
+#define EFI_ENGINE_CONTROL TRUE
 
 #endif /* EFIFEATURES_H_ */

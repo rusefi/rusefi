@@ -16,6 +16,7 @@
 #include "gpio_helper.h"
 #include "efilib2.h"
 #include "console_io.h"
+#include "engine.h"
 
 #if EFI_PERF_METRICS
 
@@ -66,6 +67,8 @@ static void testSystemCalls(const int count) {
 		scheduleMsg(&logger, "Finished %d iterations of 'currentTimeMillis' in %dms", count, time);
 }
 
+static Engine testEngine;
+
 static void testRusefiMethods(const int count) {
 	time_t start, time;
 	int tempi = 1;
@@ -79,12 +82,20 @@ static void testRusefiMethods(const int count) {
 		scheduleMsg(&logger, "Finished %d iterations of getBaseFuel in %dms", count, time);
 
 	start = currentTimeMillis();
+	for (int i = 0; i < count; i++)
+		tempi += getFuelMs(1200);
+	time = currentTimeMillis() - start;
+	if (tempi != 0)
+		scheduleMsg(&logger, "Finished %d iterations of getFuelMs in %dms", count, time);
 
-//	for (int i = 0; i < count; i++)
-//		tempi += getDefaultFuel(4020, 2.21111);
-//	time = currentTimeMillis() - start;
-//	if (tempi == 0)
-//		rint("Finished %d iterations of getDefaultFuel in %dms\r\n", count, time);
+	start = currentTimeMillis();
+	for (int i = 0; i < count; i++) {
+		testEngine.updateSlowSensors();
+		tempi += testEngine.engineState.clt;
+	}
+	time = currentTimeMillis() - start;
+	if (tempi != 0)
+		scheduleMsg(&logger, "Finished %d iterations of updateSlowSensors in %dms", count, time);
 }
 
 static void testMath(const int count) {
@@ -166,6 +177,14 @@ static void testMath(const int count) {
 	}
 
 	start = currentTimeMillis();
+	tempf = 1;
+	for (int i = 0; i < count; i++)
+		tempf += logf(tempf);
+	time = currentTimeMillis() - start;
+	if (tempf != 0)
+		scheduleMsg(&logger, "Finished %d iterations of float log in %dms", count, time);
+
+	start = currentTimeMillis();
 	double tempd = 1;
 	for (int i = 0; i < count; i++)
 		tempd += tempd / 2;
@@ -181,9 +200,17 @@ static void testMath(const int count) {
 	if (tempd != 0)
 		scheduleMsg(&logger, "Finished %d iterations of double division in %dms", count, time);
 
+	start = currentTimeMillis();
+	tempd = 1;
+	for (int i = 0; i < count; i++)
+		tempd += log(tempd);
+	time = currentTimeMillis() - start;
+	if (tempd != 0)
+		scheduleMsg(&logger, "Finished %d iterations of double log in %dms", count, time);
 }
 
 static void runTests(const int count) {
+	scheduleMsg(&logger, "Running tests: %d", count);
 	testRusefiMethods(count / 10);
 	testSystemCalls(count);
 	testMath(count);

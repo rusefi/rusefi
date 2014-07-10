@@ -1,4 +1,4 @@
-package com.irnems.ui;
+package com.rusefi.ui;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;

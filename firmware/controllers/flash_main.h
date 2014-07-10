@@ -11,13 +11,14 @@
 
 #include "engine_configuration.h"
 
-#define FLASH_DATA_VERSION 3601
+#define FLASH_DATA_VERSION 3880
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif /* __cplusplus */
 
+void readFromFlash(void);
 void initFlash(void);
 void writeToFlash(void);
 

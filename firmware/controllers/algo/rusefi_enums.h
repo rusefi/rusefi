@@ -80,6 +80,7 @@ typedef enum {
 	TT_GM_7X = 5,
 	TT_MINI_COOPER_R50 = 6,
 	TT_FORD_ESCORT_GT = 7,
+	TT_TT_TOOTHED_WHEEL_60_2 = 8,
 
 	Internal_ForceMyEnumIntSize_trigger_type = ENUM_SIZE_HACK,
 } trigger_type_e;
@@ -170,19 +171,20 @@ typedef enum {
 } pin_input_mode_e;
 
 typedef enum {
-	FO_ONE_CYLINDER = 1,
-	FO_1_THEN_3_THEN_4_THEN2 = 2,
-	FO_1_THEN_2_THEN_4_THEN3 = 3,
-	FO_1_THEN_3_THEN_2_THEN4 = 4,
-	FO_1_THEN_5_THEN_3_THEN_6_THEN_2_THEN_4 = 5,
-	FO_1_8_4_3_6_5_7_2 = 6,
+	FO_ONE_CYLINDER = 0,
+	FO_1_THEN_3_THEN_4_THEN2 = 1,
+	FO_1_THEN_2_THEN_4_THEN3 = 2,
+	FO_1_THEN_3_THEN_2_THEN4 = 3,
+	FO_1_THEN_5_THEN_3_THEN_6_THEN_2_THEN_4 = 4,
+	FO_1_8_4_3_6_5_7_2 = 5,
 	Internal_ForceMyEnumIntSize_firing_order = ENUM_SIZE_HACK,
 } firing_order_e;
 
 // todo: better enum name
 typedef enum {
-	FOUR_STROKE_CRANK_SENSOR = 0,
-	FOUR_STROKE_CAM_SENSOR = 1,
+	OM_NONE = 0,
+	FOUR_STROKE_CRANK_SENSOR = 1,
+	FOUR_STROKE_CAM_SENSOR = 2,
 
 	Internal_ForceMyEnumIntSize_operation_mode_e = ENUM_SIZE_HACK,
 } operation_mode_e;
@@ -191,7 +193,13 @@ typedef enum {
  * @brief Ignition Mode
  */
 typedef enum {
+	/**
+	 * in this mode only SPARKOUT_1_OUTPUT is used
+	 */
 	IM_ONE_COIL = 0,
+	/**
+	 * in this mode we use as many coils as we have cylinders
+	 */
 	IM_INDIVIDUAL_COILS = 1,
 	IM_WASTED_SPARK = 2,
 

@@ -82,9 +82,13 @@ int findIndex(float array[], int size, float value) {
 	int left = 0;
 	int right = size;
 
-	while (1) {
-		if (size-- == 0)
-			efiAssert(FALSE, "Unexpected state in binary search", 0);
+	// todo: extract binary search as template method?
+	while (true) {
+#if 0
+		// that's an assertion to make sure we do not loop here
+		size--;
+		efiAssert(size > 0, "Unexpected state in binary search", 0);
+#endif
 
 		middle = (left + right) / 2;
 

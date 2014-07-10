@@ -14,7 +14,7 @@
 #include "engine_math.h"
 #include "OutputSignalList.h"
 #include "ec2.h"
-
+#include "trigger_decoder.h"
 
 extern engine_configuration_s *engineConfiguration;
 extern engine_configuration2_s *engineConfiguration2;
@@ -54,7 +54,7 @@ void testFuelMap(void) {
 
 	// because all the correction tables are zero
 	printf("*************************************************** getRunningFuel\r\n");
-	assertEquals(1005.5, getRunningFuel(5, 5));
+	assertEqualsM("value", 0.5, getRunningFuel(5, 5));
 
 	printf("*************************************************** setting IAT table\r\n");
 	for (int i = 0; i < IAT_CURVE_SIZE; i++) {
@@ -81,7 +81,7 @@ void testFuelMap(void) {
 
 	// 1005 * 2 for IAT correction
 	printf("*************************************************** getRunningFuel\r\n");
-	assertEquals(1005, getRunningFuel(5, 5));
+	assertEqualsM("v1", 30150, getRunningFuel(5, 5));
 
 	engineConfiguration->crankingSettings.coolantTempMaxC = 65; // 8ms at 65C
 	engineConfiguration->crankingSettings.fuelAtMaxTempMs = 8;
@@ -98,19 +98,19 @@ void testFuelMap(void) {
 }
 
 static void confgiureFordAspireTriggerShape(trigger_shape_s * s) {
-	triggerShapeInit(s);
+	s->reset(FOUR_STROKE_CAM_SENSOR);
 
-	triggerAddEvent(s, 53.747, T_SECONDARY, TV_HIGH);
-	triggerAddEvent(s, 121.90, T_SECONDARY, TV_LOW);
-	triggerAddEvent(s, 232.76, T_SECONDARY, TV_HIGH);
-	triggerAddEvent(s, 300.54, T_SECONDARY, TV_LOW);
-	triggerAddEvent(s, 360, T_PRIMARY, TV_HIGH);
+	s->addEvent(53.747, T_SECONDARY, TV_HIGH);
+	s->addEvent(121.90, T_SECONDARY, TV_LOW);
+	s->addEvent(232.76, T_SECONDARY, TV_HIGH);
+	s->addEvent(300.54, T_SECONDARY, TV_LOW);
+	s->addEvent(360, T_PRIMARY, TV_HIGH);
 
-	triggerAddEvent(s, 409.8412, T_SECONDARY, TV_HIGH);
-	triggerAddEvent(s, 478.6505, T_SECONDARY, TV_LOW);
-	triggerAddEvent(s, 588.045, T_SECONDARY, TV_HIGH);
-	triggerAddEvent(s, 657.03, T_SECONDARY, TV_LOW);
-	triggerAddEvent(s, 720, T_PRIMARY, TV_LOW);
+	s->addEvent(409.8412, T_SECONDARY, TV_HIGH);
+	s->addEvent(478.6505, T_SECONDARY, TV_LOW);
+	s->addEvent(588.045, T_SECONDARY, TV_HIGH);
+	s->addEvent(657.03, T_SECONDARY, TV_LOW);
+	s->addEvent(720, T_PRIMARY, TV_LOW);
 }
 
 
@@ -123,23 +123,26 @@ void testAngleResolver(void) {
 	trigger_shape_s * ts = &engineConfiguration2->triggerShape;
 
 	confgiureFordAspireTriggerShape(ts);
-	assertEqualsM("shape size", 10, ts->size);
+
+	ts->setTriggerShapeSynchPointIndex(0);
+
+	assertEqualsM("shape size", 10, ts->getSize());
 
 	OutputSignalList list;
 
-	resetEventList(&ae);
+	ae.resetEventList();
 	printf("*************************************************** testAngleResolver 0\r\n");
-	registerActuatorEventExt(engineConfiguration, &engineConfiguration2->triggerShape, &ae, list.add(INJECTOR_1_OUTPUT), 53 - 175);
+	registerActuatorEventExt(engineConfiguration, &engineConfiguration2->triggerShape, ae.getNextActuatorEvent(), list.add(INJECTOR_1_OUTPUT), 53 - 175);
 	assertEqualsM("size", 1, ae.size);
 	assertEquals(1, list.getSize());
-	assertEquals(0, ae.events[0].eventIndex);
-	assertEquals(53, ae.events[0].angleOffset);
+	assertEquals(0, ae.events[0].position.eventIndex);
+	assertEquals(53, ae.events[0].position.angleOffset);
 
 	printf("*************************************************** testAngleResolver 2\r\n");
-	resetEventList(&ae);
-	registerActuatorEventExt(engineConfiguration, &engineConfiguration2->triggerShape, &ae, list.add(INJECTOR_1_OUTPUT), 51 + 180 - 175);
-	assertEquals(2, ae.events[0].eventIndex);
-	assertEquals(51.9870, ae.events[0].angleOffset);
+	ae.resetEventList();
+	registerActuatorEventExt(engineConfiguration, &engineConfiguration2->triggerShape, ae.getNextActuatorEvent(), list.add(INJECTOR_1_OUTPUT), 51 + 180 - 175);
+	assertEquals(2, ae.events[0].position.eventIndex);
+	assertEquals(51.9870, ae.events[0].position.angleOffset);
 }
 
 void testPinHelper(void) {
