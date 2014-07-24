@@ -19,6 +19,11 @@
 #include "ego.h"
 #include "voltage.h"
 #include "thermistors.h"
+#include "adc_inputs.h"
+
+#if EFI_PROD_CODE || EFI_SIMULATOR
+#include "adc_math.h"
+#endif
 
 
 #ifdef __cplusplus

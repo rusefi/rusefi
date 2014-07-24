@@ -28,7 +28,7 @@
 
 #if EFI_SIGNAL_EXECUTOR_SLEEP || defined(__DOXYGEN__)
 
-void scheduleTask(scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) {
+void scheduleTask(const char *prefix, scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) {
 	int delaySt = delayUs * CH_FREQUENCY / 1000000;
 	if (delaySt == 0) {
 		/**

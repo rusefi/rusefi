@@ -1,15 +1,15 @@
 /**
- * @file	engine_emulator.c
+ * @file	engine_emulator.cpp
  * @brief	Entry point for all the emulation and analysis code
  *
  * @date Mar 15, 2013
  * @author Andrey Belomutskiy, (c) 2012-2014
  */
 
-extern "C" {
-
 #include "main.h"
 #include "engine_emulator.h"
+
+extern "C" {
 
 #include "status_loop.h"
 #include "advance_map.h"
@@ -92,12 +92,12 @@ static void initECUstimulator(void) {
 	chThdCreateStatic(eeThreadStack, sizeof(eeThreadStack), NORMALPRIO, (tfunc_t) eeThread, NULL);
 }
 
-void initEngineEmulator(void) {
+void initEngineEmulator(board_configuration_s *boardConfiguration) {
 	if (hasFirmwareError())
 		return;
 
 #if EFI_POTENTIOMETER
-	initPotentiometers();
+	initPotentiometers(boardConfiguration);
 #endif /* EFI_POTENTIOMETER */
 
 	//initECUstimulator();

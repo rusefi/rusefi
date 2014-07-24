@@ -129,7 +129,7 @@ void printSensors(void) {
 	reportSensorI("rpm", getRpm());
 	reportSensorF("maf", getMaf(), 2);
 
-	if (engineConfiguration2->hasMapSensor) {
+	if (engineConfiguration->hasMapSensor) {
 		reportSensorF(getCaption(LP_MAP), getMap(), 2);
 		reportSensorF("map_r", getRawMap(), 2);
 	}
@@ -141,7 +141,7 @@ void printSensors(void) {
 
 	reportSensorF(getCaption(LP_THROTTLE), getTPS(), 2);
 
-	if (engineConfiguration2->hasCltSensor) {
+	if (engineConfiguration->hasCltSensor) {
 		reportSensorF(getCaption(LP_ECT), getCoolantTemperature(), 2);
 	}
 
@@ -167,11 +167,12 @@ void printState(int currentCkpEventCounter) {
 //	debugFloat(&logger, "table_spark", getAdvance(rpm, getMaf()), 2);
 
 	float engineLoad = getEngineLoad();
-	debugFloat(&logger, "fuel_base", getBaseFuel(rpm, engineLoad), 2);
+	float baseFuel = getBaseFuel(&engine, rpm);
+	debugFloat(&logger, "fuel_base", baseFuel, 2);
 //	debugFloat(&logger, "fuel_iat", getIatCorrection(getIntakeAirTemperature()), 2);
 //	debugFloat(&logger, "fuel_clt", getCltCorrection(getCoolantTemperature()), 2);
 	debugFloat(&logger, "fuel_lag", getInjectorLag(getVBatt()), 2);
-	debugFloat(&logger, "fuel", getRunningFuel(rpm, engineLoad), 2);
+	debugFloat(&logger, "fuel", getRunningFuel(baseFuel, &engine, rpm), 2);
 
 	debugFloat(&logger, "timing", getAdvance(rpm, engineLoad), 2);
 
@@ -187,8 +188,6 @@ void printState(int currentCkpEventCounter) {
 
 static char LOGGING_BUFFER[500];
 
-#if EFI_PROD_CODE
-
 volatile int needToReportStatus = FALSE;
 static int prevCkpEventCounter = -1;
 
@@ -197,38 +196,6 @@ static Logging logger2;
 static void printStatus(void) {
 	needToReportStatus = TRUE;
 }
-
-//float getTCharge1(float tps) {
-//	float cltK = tempCtoKelvin(getCoolantTemperature());
-//	float iatK = tempCtoKelvin(getIntakeAirTemperature());
-//	return getTCharge(getCurrentRpm(), tps, cltK, iatK);
-//}
-
-//#if EFI_CUSTOM_PANIC_METHOD
-//extern char *dbg_panic_file;
-//extern int dbg_panic_line;
-//#endif
-
-//static void checkIfShouldHalt(void) {
-//#if CH_DBG_ENABLED
-//	if (hasFatalError()) {
-//		/**
-//		 * low-level function is used here to reduce stack usage
-//		 */
-//		palWritePad(LED_ERROR_PORT, LED_ERROR_PIN, 1);
-//#if EFI_CUSTOM_PANIC_METHOD
-//		print("my FATAL [%s] at %s:%d\r\n", dbg_panic_msg, dbg_panic_file, dbg_panic_line);
-//#else
-//		print("my FATAL [%s] at %s:%d\r\n", dbg_panic_msg);
-//#endif
-//		chThdSleepSeconds(1);
-//		// todo: figure out how we halt exactly
-//		while (TRUE) {
-//		}
-//		chSysHalt();
-//	}
-//#endif
-//}
 
 /**
  * Time when the firmware version was reported last time, in seconds
@@ -240,7 +207,7 @@ static void printVersion(systime_t nowSeconds) {
 	if (overflowDiff(nowSeconds, timeOfPreviousPrintVersion) < 4)
 		return;
 	timeOfPreviousPrintVersion = nowSeconds;
-	appendPrintf(&logger, "rusEfiVersion%s%d@%d %s%s", DELIMETER, getRusEfiVersion(), SVN_VERSION,
+	appendPrintf(&logger, "rusEfiVersion%s%d@%s %s%s", DELIMETER, getRusEfiVersion(), VCS_VERSION,
 			getConfigurationName(engineConfiguration),
 			DELIMETER);
 }
@@ -259,14 +226,19 @@ void updateDevConsoleState(void) {
 //	checkIfShouldHalt();
 	printPending();
 
+#if EFI_PROD_CODE
+	// todo: unify with simulator!
 	if (hasFirmwareError()) {
 		printMsg(&logger, "firmware error: %s", errorMessageBuffer);
 		warningEnabled = FALSE;
 		chThdSleepMilliseconds(200);
 		return;
 	}
+#endif
 
+#if EFI_PROD_CODE
 	pokeAdcInputs();
+#endif
 
 	if (!fullLog)
 		return;
@@ -291,6 +263,8 @@ void updateDevConsoleState(void) {
 	finishStatusLine();
 }
 
+#if EFI_PROD_CODE
+
 /*
  * command example:
  * sfm 3500 400
@@ -298,7 +272,7 @@ void updateDevConsoleState(void) {
  */
 
 static void showFuelMap2(float rpm, float engineLoad) {
-	float baseFuel = getBaseFuel(rpm, engineLoad);
+	float baseFuel = getBaseTableFuel(rpm, engineLoad);
 
 	float iatCorrection = getIatCorrection(getIntakeAirTemperature());
 	float cltCorrection = getCltCorrection(getCoolantTemperature());
@@ -309,7 +283,7 @@ static void showFuelMap2(float rpm, float engineLoad) {
 	scheduleMsg(&logger2, "iatCorrection=%f cltCorrection=%f injectorLag=%f", iatCorrection, cltCorrection,
 			injectorLag);
 
-	float value = getRunningFuel(rpm, engineLoad);
+	float value = getRunningFuel(baseFuel, &engine, rpm);
 	scheduleMsg(&logger2, "injection pulse width: %f", value);
 }
 

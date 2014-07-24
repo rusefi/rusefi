@@ -150,7 +150,7 @@ void runRusEfi(void) {
 #endif
 
 #if EFI_ENGINE_EMULATOR
-	initEngineEmulator();
+	initEngineEmulator(boardConfiguration);
 #endif
 	startStatusThreads();
 
@@ -253,5 +253,5 @@ void firmwareError(const char *fmt, ...) {
 }
 
 int getRusEfiVersion(void) {
-	return 20140709;
+	return 20140724;
 }

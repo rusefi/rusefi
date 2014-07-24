@@ -31,6 +31,11 @@
  * @brief Initialize the hardware output pin while also assigning it a logical name
  */
 void initOutputPinExt(const char *msg, OutputPin *outputPin, GPIO_TypeDef *port, uint32_t pinNumber, iomode_t mode) {
+//	if (outputPin->port != NULL) {
+// todo: need to clear '&outputs' in io_pins.c
+//		firmwareError("outputPin already assigned to %x%d", outputPin->port, outputPin->pin);
+//		return;
+//	}
 	outputPin->currentLogicValue = -1;
 	outputPin->port = port;
 	outputPin->pin = pinNumber;

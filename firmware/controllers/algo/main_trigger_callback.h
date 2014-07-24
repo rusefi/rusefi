@@ -19,16 +19,19 @@
 #include "engine_configuration.h"
 #include "ec2.h"
 #include "event_registry.h"
+#include "engine.h"
+
 class MainTriggerCallback {
 public:
 //	MainTriggerCallback();
-	void init(engine_configuration_s *engineConfiguration, engine_configuration2_s *engineConfiguration2);
+	void init(Engine *engine, engine_configuration2_s *engineConfiguration2);
 
+	Engine *engine;
 	engine_configuration_s *engineConfiguration;
 	engine_configuration2_s *engineConfiguration2;
 
 };
-void initMainEventListener(engine_configuration_s *engineConfiguration, engine_configuration2_s *engineConfiguration2);
+void initMainEventListener(Engine *engine, engine_configuration2_s *engineConfiguration2);
 void onTriggerEvent(trigger_event_e ckpSignalType, int eventIndex, MainTriggerCallback *mainTriggerCallback);
 #endif
 

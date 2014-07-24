@@ -10,6 +10,7 @@
 #define POTEN_H_
 
 #include "main.h"
+#include "engine_configuration.h"
 
 typedef struct {
 	SPIDriver *spi;
@@ -17,7 +18,7 @@ typedef struct {
 } Mcp42010Driver;
 
 void initPotentiometer(Mcp42010Driver *driver, SPIDriver *spi, ioportid_t port, ioportmask_t pin);
-void initPotentiometers(void);
+void initPotentiometers(board_configuration_s *boardConfiguration);
 void setPotResistance(Mcp42010Driver *driver, int channel, int resistance);
 
 #endif /* POTEN_H_ */

@@ -16,6 +16,7 @@ public:
 	int size();
 	void init(void);
 	int conversionCount;
+	int errorsCount;
 private:
 	ADCConversionGroup* hwConfig;
 	/**

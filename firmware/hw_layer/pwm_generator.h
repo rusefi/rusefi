@@ -15,15 +15,15 @@
 
 #include "gpio_helper.h"
 
+void startSimplePwm(PwmConfig *state, const char *msg, io_pin_e ioPin,
+		float dutyCycle, float frequency);
+void applyPinState(PwmConfig *state, int stateIndex);
+
+
 #ifdef __cplusplus
 extern "C"
 {
 #endif /* __cplusplus */
-
-void applyPinState(PwmConfig *state, int stateIndex);
-
-void startSimplePwm(PwmConfig *state, const char *msg, io_pin_e ioPin,
-		float dutyCycle, float frequency);
 
 void startSimplePwmExt(PwmConfig *state, const char *msg, brain_pin_e brainPin, io_pin_e ioPin,
 		float frequency, float dutyCycle);

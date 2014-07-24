@@ -10,6 +10,19 @@
 
 #include "main.h"
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif /* __cplusplus */
+
+void turnOnSpi(spi_device_e device);
+void lockSpi(spi_device_e device);
+void unlockSpi(void);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
+
 #define GET_BOARD_TEST_MODE_VALUE() (!palReadPad(getHwPort(boardConfiguration->boardTestModeJumperPin), getHwPin(boardConfiguration->boardTestModeJumperPin)))
 
 void initHardware(Logging *logging);

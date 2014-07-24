@@ -11,6 +11,7 @@
 #include "eficonsole.h"
 #include "pin_repository.h"
 #include "engine_configuration.h"
+#include "hardware.h"
 
 /**
  * MCP42010 digital potentiometer driver
@@ -35,40 +36,30 @@
  *
  */
 
-SPIDriver * getDigiralPotDevice(void) {
-#if STM32_SPI_USE_SPI2 || defined(__DOXYGEN__)
-//	return &SPID2;
+SPIDriver * getDigiralPotDevice(spi_device_e spiDevice) {
+#if STM32_SPI_USE_SPI1 || defined(__DOXYGEN__)
+	if (spiDevice == SPI_DEVICE_1)
+		return &SPID1;
 #endif
-	return &SPID3;
+#if STM32_SPI_USE_SPI2 || defined(__DOXYGEN__)
+	if (spiDevic e== SPI_DEVICE_2)
+	return &SPID2;
+#endif
+#if STM32_SPI_USE_SPI3 || defined(__DOXYGEN__)
+	if (spiDevice == SPI_DEVICE_3)
+		return &SPID3;
+#endif
+	firmwareError("Unexpected SPI device: %d", spiDevice);
+	return NULL;
 }
-
-
-//#define POTEN_CS_PORT GPIOB
-//#define POTEN_CS_PIN 12
-
-
-//#define POT_SPI &SPID1
-
-// PA13 & PA14 are system pins
-
-//// chip select
-//#define POTEN_CS_PORT GPIOE
-//#define POTEN_CS_PIN 15
-
-// chip select
-#define POTEN_CS_PORT GPIOA
-#define POTEN_CS_PIN 10
-//#define POT_SPI &SPID3
-
 
 /* Low speed SPI configuration (281.250kHz, CPHA=0, CPOL=0, MSb first).*/
 #define SPI_POT_CONFIG SPI_CR1_BR_2 | SPI_CR1_BR_1 | SPI_CR1_DFF
 
 static Logging logger;
 
-
 #if EFI_POTENTIOMETER
-Mcp42010Driver config0;
+Mcp42010Driver config[DIGIPOT_COUNT];
 
 void initPotentiometer(Mcp42010Driver *driver, SPIDriver *spi, ioportid_t port, ioportmask_t pin) {
 	driver->spiConfig.end_cb = NULL;
@@ -83,14 +74,15 @@ static int getPotStep(int resistanceWA) {
 	return 256 - (int) ((resistanceWA - 52) * 256 / 10000);
 }
 
-
 static void sendToPot(Mcp42010Driver *driver, int channel, int value) {
+	lockSpi(SPI_NONE);
 	spiStart(driver->spi, &driver->spiConfig);
 	spiSelect(driver->spi);
 	int word = (17 + channel) * 256 + value;
 	spiSend(driver->spi, 1, &word);
 	spiUnselect(driver->spi);
 	spiStop(driver->spi);
+	unlockSpi();
 }
 
 void setPotResistance(Mcp42010Driver *driver, int channel, int resistance) {
@@ -105,32 +97,42 @@ void setPotResistance(Mcp42010Driver *driver, int channel, int resistance) {
 	appendPrintf(&logger, "%d for R=%d", value, resistance);
 	appendMsgPostfix(logging);
 
-
 	scheduleLogging(logging);
 
 	sendToPot(driver, channel, value);
 }
 
-
 static void setPotResistance0(int value) {
-	setPotResistance(&config0, 0, value);
+	setPotResistance(&config[0], 0, value);
 }
 
 static void setPotResistance1(int value) {
-	setPotResistance(&config0, 1, value);
+	setPotResistance(&config[0], 1, value);
 }
 
 static void setPotValue1(int value) {
-	sendToPot(&config0, 1, value);
+	sendToPot(&config[0], 1, value);
 }
 
 #endif /* EFI_POTENTIOMETER */
 
-void initPotentiometers() {
+void initPotentiometers(board_configuration_s *boardConfiguration) {
 #if EFI_POTENTIOMETER
 	initLogging(&logger, "potentiometer");
+	if (boardConfiguration->digitalPotentiometerSpiDevice == SPI_NONE) {
+		scheduleMsg(&logger, "digiPot spi disabled");
+		return;
+	}
+	turnOnSpi(boardConfiguration->digitalPotentiometerSpiDevice);
 
-	initPotentiometer(&config0, getDigiralPotDevice(), POTEN_CS_PORT, POTEN_CS_PIN);
+	for (int i = 0; i < DIGIPOT_COUNT; i++) {
+		brain_pin_e csPin = boardConfiguration->digitalPotentiometerChipSelect[i];
+		if (csPin == GPIO_NONE)
+			continue;
+
+		initPotentiometer(&config[i], getDigiralPotDevice(boardConfiguration->digitalPotentiometerSpiDevice),
+				getHwPort(csPin), getHwPin(csPin));
+	}
 
 	addConsoleActionI("pot0", setPotResistance0);
 	addConsoleActionI("pot1", setPotResistance1);
@@ -140,6 +142,6 @@ void initPotentiometers() {
 	setPotResistance0(3000);
 	setPotResistance1(7000);
 #else
-	print("potentiometer disabled\r\n");
+	print("digiPot logic disabled\r\n");
 #endif
 }

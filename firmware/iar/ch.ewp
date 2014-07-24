@@ -2034,13 +2034,13 @@
     <group>
       <name>tunerstudio</name>
       <file>
-        <name>$PROJ_DIR$\..\console\tunerstudio\tunerstudio.c</name>
+        <name>$PROJ_DIR$\..\console\tunerstudio\tunerstudio.cpp</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\console\tunerstudio\tunerstudio.h</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\console\tunerstudio\tunerstudio_algo.c</name>
+        <name>$PROJ_DIR$\..\console\tunerstudio\tunerstudio_algo.cpp</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\console\tunerstudio\tunerstudio_algo.h</name>
@@ -2112,6 +2112,12 @@
         <name>$PROJ_DIR$\..\controllers\algo\ec2.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\controllers\algo\engine.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\controllers\algo\engine.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\controllers\algo\engine_configuration.cpp</name>
       </file>
       <file>
@@ -2152,6 +2158,12 @@
       </file>
       <file>
         <name>$PROJ_DIR$\..\controllers\algo\malfunction_central.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\controllers\algo\map_adjuster.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\controllers\algo\map_adjuster.h</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\controllers\algo\nmea.c</name>
@@ -2209,6 +2221,12 @@
       </file>
       <file>
         <name>$PROJ_DIR$\..\controllers\core\signal_filtering.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\controllers\core\table_helper.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\controllers\core\table_helper.h</name>
       </file>
     </group>
     <group>
@@ -2450,6 +2468,12 @@
     <name>emulation</name>
     <group>
       <name>hw_layer</name>
+      <file>
+        <name>$PROJ_DIR$\..\emulation\hw_layer\poten.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\emulation\hw_layer\poten.h</name>
+      </file>
     </group>
     <group>
       <name>test</name>

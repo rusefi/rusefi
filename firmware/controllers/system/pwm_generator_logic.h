@@ -18,7 +18,7 @@ typedef struct {
 	 * a copy so that all phases are executed on the same period, even if another thread
 	 * would be adjusting PWM parameters
 	 */
-	float periodMs;
+	float periodUs;
 	/**
 	 * Iteration counter
 	 */
@@ -43,6 +43,10 @@ public:
 	PwmConfig();
 	PwmConfig(float *switchTimes, single_wave_s *waves);
 	void init(float *switchTimes, single_wave_s *waves);
+
+	void handleCycleStart();
+
+
 	io_pin_e outputPins[PWM_PHASE_MAX_WAVE_PER_PWM];
 	multi_wave_s multiWave;
 	const char *name;
@@ -50,7 +54,7 @@ public:
 	 * float value of PWM period
 	 * PWM generation is not happening while this value is zero
 	 */
-	float periodMs;
+	float periodUs;
 
 	scheduling_s scheduling;
 

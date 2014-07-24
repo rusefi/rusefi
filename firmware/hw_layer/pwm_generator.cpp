@@ -44,7 +44,7 @@ void startSimplePwm(PwmConfig *state, const char *msg, io_pin_e ioPin,
 
 	state->outputPins[0] = ioPin;
 
-	state->periodMs = frequency2period(frequency);
+	state->periodUs = frequency2periodUs(frequency);
 	weComplexInit(msg, state, 2, switchTimes, 1, pinStates, NULL, applyPinState);
 }
 

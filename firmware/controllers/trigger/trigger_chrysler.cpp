@@ -7,8 +7,14 @@
 
 #include "trigger_chrysler.h"
 
-void configureNeonTriggerShape(trigger_config_s *triggerConfig, trigger_shape_s *s) {
+void configureNeonTriggerShape(trigger_shape_s *s) {
 	s->reset(FOUR_STROKE_CAM_SENSOR);
+
+	setTriggerSynchronizationGap(s, 0.72);
+
+	s->useRiseEdge = false;
+	s->needSecondTriggerInput = true;
+
 
 	// voodoo magic - we always need 720 at the end
 	int base = 720 - 560;

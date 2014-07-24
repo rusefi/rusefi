@@ -14,6 +14,7 @@
 #include "ec2.h"
 #include "trigger_structure.h"
 #include "table_helper.h"
+#include "engine.h"
 
 void findTriggerPosition(engine_configuration_s const *engineConfiguration, trigger_shape_s * s,
 		event_trigger_position_s *position, float angleOffset);
@@ -38,8 +39,8 @@ float getCrankshaftRevolutionTimeMs(int rpm);
 int isCrankingRT(engine_configuration_s *engineConfiguration, int rpm);
 #define isCrankingR(rpm) isCrankingRT(engineConfiguration, rpm)
 
-float getEngineLoadT(engine_configuration_s *engineConfiguration);
-#define getEngineLoad() getEngineLoadT(engineConfiguration)
+float getEngineLoadT(Engine *engine);
+#define getEngineLoad() getEngineLoadT(&engine)
 
 float getSparkDwellMsT(engine_configuration_s *engineConfiguration, int rpm);
 #define getSparkDwellMs(rpm) getSparkDwellMsT(engineConfiguration, rpm)

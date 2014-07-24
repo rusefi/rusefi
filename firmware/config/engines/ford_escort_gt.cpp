@@ -12,7 +12,6 @@
 
 void setFordEscortGt(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
 	engineConfiguration->triggerConfig.triggerType = TT_FORD_ESCORT_GT;
-	engineConfiguration->needSecondTriggerInput = FALSE;
 
 	engineConfiguration->cylindersCount = 4;
 	engineConfiguration->firingOrder = FO_1_THEN_3_THEN_4_THEN2;

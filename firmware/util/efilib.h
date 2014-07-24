@@ -11,7 +11,11 @@
 #include "stdint.h"
 
 // number of milliseconds in one period of given frequency (per second)
-#define frequency2period(freq) (((float)1000) / (freq))
+#define frequency2periodMs(freq) ((1000.0f) / (freq))
+
+// number of microseconds in one period of given frequency (per second)
+#define frequency2periodUs(freq) ((1000000.0f) / (freq))
+
 
 #ifndef FALSE
 #define FALSE       0

@@ -19,7 +19,6 @@ void initStatusLoop(void);
 void updateDevConsoleState(void);
 int getFullLog(void);
 void printSensors(void);
-void finishStatusLine(void);
 void setFullLog(int value);
 void startStatusThreads(void);
 void sayOsHello(void);

@@ -76,17 +76,19 @@ float fixAngle(float angle) {
  * @brief Returns engine load according to selected engine_load_mode
  *
  */
-float getEngineLoadT(engine_configuration_s *engineConfiguration) {
+float getEngineLoadT(Engine *engine) {
+	efiAssert(engine!=NULL, "engine 2NULL", NAN);
+	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
+	efiAssert(engineConfiguration!=NULL, "engineConfiguration 2NULL", NAN);
 	switch (engineConfiguration->algorithm) {
 	case LM_MAF:
-		return getMaf();
+		return getMafT(engineConfiguration);
+	case LM_SPEED_DENSITY:
+		// SD engine load is used for timing lookup but not for fuel calculation
 	case LM_MAP:
 		return getMap();
 	case LM_TPS:
 		return getTPS();
-	case LM_SPEED_DENSITY:
-		// TODO: real implementation
-		return getMap();
 	default:
 		firmwareError("Unexpected engine load parameter: %d", engineConfiguration->algorithm);
 		return -1;

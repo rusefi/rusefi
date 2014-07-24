@@ -13,7 +13,7 @@
 #include "nissan_primera.h"
 
 void setNissanPrimeraEngineConfiguration(engine_configuration_s *engineConfiguration) {
-	setToothedWheelConfiguration(engineConfiguration, 60, 2);
+	engineConfiguration->triggerConfig.triggerType = TT_TOOTHED_WHEEL_60_2;
 }
 
 #endif /* EFI_SUPPORT_NISSAN_PRIMERA */

@@ -71,6 +71,19 @@ private:
 	trigger_shape_helper h;
 	int size;
 public:
+	int isSynchronizationNeeded;
+
+	int totalToothCount;
+	int skippedToothCount;
+
+	float syncRatioFrom;
+	float syncRatioTo;
+
+	int useRiseEdge;
+
+	bool needSecondTriggerInput;
+
+
 	trigger_shape_s();
 	void addEvent(float angle, trigger_wheel_e waveIndex, trigger_value_e state);
 	float getAngle(int phaseIndex) const;
@@ -122,5 +135,8 @@ private:
 	 */
 	operation_mode_e operationMode;
 };
+
+void setTriggerSynchronizationGap(trigger_shape_s *s, float synchGap);
+void setToothedWheelConfiguration(trigger_shape_s *s, int total, int skipped, engine_configuration_s const *engineConfiguration);
 
 #endif /* TRIGGER_STRUCTURE_H_ */

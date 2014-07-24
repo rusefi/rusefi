@@ -80,6 +80,7 @@ void initBpsxD1Sensor(afr_sensor_s *sensor) {
 }
 
 void setWholeVEMap(engine_configuration_s *engineConfiguration, float value) {
+	// todo: table helper?
 //	for (int l = 0; l < VE_LOAD_COUNT; l++) {
 //		for (int r = 0; r < VE_RPM_COUNT; r++) {
 //			engineConfiguration->veTable[l][r] = value;
@@ -88,25 +89,12 @@ void setWholeVEMap(engine_configuration_s *engineConfiguration, float value) {
 }
 
 void setWholeFuelMap(engine_configuration_s *engineConfiguration, float value) {
+	// todo: table helper?
 	for (int l = 0; l < FUEL_LOAD_COUNT; l++) {
 		for (int r = 0; r < FUEL_RPM_COUNT; r++) {
 			engineConfiguration->fuelTable[l][r] = value;
 		}
 	}
-}
-
-void setToothedWheelConfiguration(engine_configuration_s *engineConfiguration, int total, int skipped) {
-	engineConfiguration->triggerConfig.triggerType = TT_TOOTHED_WHEEL;
-	engineConfiguration->triggerConfig.isSynchronizationNeeded = (skipped != 0);
-
-	engineConfiguration->triggerConfig.totalToothCount = total;
-	engineConfiguration->triggerConfig.skippedToothCount = skipped;
-}
-
-void setTriggerSynchronizationGap(trigger_config_s *triggerConfig, float synchGap) {
-	triggerConfig->isSynchronizationNeeded = TRUE;
-	triggerConfig->syncRatioFrom = synchGap * 0.75;
-	triggerConfig->syncRatioTo = synchGap * 1.25;
 }
 
 /**
@@ -158,7 +146,9 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	setTimingRpmBin(engineConfiguration, 800, 7000);
 
 	setTableBin2(engineConfiguration->map.samplingAngleBins, MAP_ANGLE_SIZE, 800, 7000, 1);
+	setTableBin2(engineConfiguration->map.samplingAngle, MAP_ANGLE_SIZE, 100, 130, 1);
 	setTableBin2(engineConfiguration->map.samplingWindowBins, MAP_ANGLE_SIZE, 800, 7000, 1);
+	setTableBin2(engineConfiguration->map.samplingWindow, MAP_ANGLE_SIZE, 50, 50, 1);
 
 	// set_whole_timing_map 3
 	setWholeFuelMap(engineConfiguration, 3);
@@ -230,9 +220,7 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 
 	engineConfiguration->logFormat = LF_NATIVE;
 
-	engineConfiguration->triggerConfig.triggerType = TT_TOOTHED_WHEEL;
-	setTriggerSynchronizationGap(&engineConfiguration->triggerConfig, 2);
-	engineConfiguration->triggerConfig.useRiseEdge = TRUE;
+	engineConfiguration->triggerConfig.triggerType = TT_TOOTHED_WHEEL_60_2;
 
 	engineConfiguration->HD44780width = 16;
 	engineConfiguration->HD44780height = 2;
@@ -248,8 +236,6 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 
 	engineConfiguration->globalFuelCorrection = 1;
 
-	engineConfiguration->needSecondTriggerInput = TRUE;
-
 	engineConfiguration->map.sensor.sensorType = MT_MPX4250;
 
 	engineConfiguration->baroSensor.sensorType = MT_CUSTOM;
@@ -257,6 +243,10 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	engineConfiguration->baroSensor.Max = 500;
 
 	engineConfiguration->diffLoadEnrichmentCoef = 1;
+
+	engineConfiguration->hasMapSensor = TRUE;
+	engineConfiguration->hasCltSensor = TRUE;
+
 
 	boardConfiguration->idleValvePin = GPIOE_2;
 	boardConfiguration->idleValvePinMode = OM_DEFAULT;
@@ -335,7 +325,7 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	boardConfiguration->consoleLoopPeriod = 200;
 	boardConfiguration->lcdThreadPeriod = 300;
 	boardConfiguration->tunerStudioThreadPeriod = 300;
-	boardConfiguration->generalPeriodicThreadPeriod = 200;
+	boardConfiguration->generalPeriodicThreadPeriod = 50;
 
 	boardConfiguration->tunerStudioSerialSpeed = 38400;
 
@@ -344,16 +334,20 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	boardConfiguration->canDeviceMode = CD_USE_CAN2;
 	boardConfiguration->canTxPin = GPIOB_0;
 	boardConfiguration->canRxPin = GPIOB_12;
+
+	boardConfiguration->digitalPotentiometerSpiDevice = SPI_NONE;
+	boardConfiguration->digitalPotentiometerChipSelect[0] = GPIOD_7;
+	boardConfiguration->digitalPotentiometerChipSelect[1] = GPIO_NONE;
+	boardConfiguration->digitalPotentiometerChipSelect[2] = GPIOD_5;
+	boardConfiguration->digitalPotentiometerChipSelect[3] = GPIO_NONE;
 }
 
 void setDefaultNonPersistentConfiguration(engine_configuration2_s *engineConfiguration2) {
 	/**
 	 * 720 is the range for four stroke
 	 */
-	engineConfiguration2->crankAngleRange = 720;
+//	engineConfiguration2->crankAngleRange = 720;
 
-	engineConfiguration2->hasMapSensor = TRUE;
-	engineConfiguration2->hasCltSensor = TRUE;
 }
 
 void resetConfigurationExt(Logging * logger, engine_type_e engineType, engine_configuration_s *engineConfiguration,
@@ -388,7 +382,7 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType, engine_co
 		break;
 #endif
 	case HONDA_ACCORD:
-		setHondaAccordConfiguration(engineConfiguration);
+		setHondaAccordConfiguration(engineConfiguration, boardConfiguration);
 		break;
 #if EFI_SUPPORT_1995_FORD_INLINE_6 || defined(__DOXYGEN__)
 	case FORD_INLINE_6_1995:
@@ -424,7 +418,7 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType, engine_co
 		firmwareError("Unexpected engine type: %d", engineType);
 
 	}
-	applyNonPersistentConfiguration(logger, engineConfiguration, engineConfiguration2, engineType);
+	applyNonPersistentConfiguration(logger, engineConfiguration, engineConfiguration2);
 
 #if EFI_TUNER_STUDIO
 	syncTunerStudioCopy();
@@ -435,17 +429,17 @@ engine_configuration2_s::engine_configuration2_s() {
 }
 
 void applyNonPersistentConfiguration(Logging * logger, engine_configuration_s *engineConfiguration,
-		engine_configuration2_s *engineConfiguration2, engine_type_e engineType) {
+		engine_configuration2_s *engineConfiguration2) {
 // todo: this would require 'initThermistors() to re-establish a reference, todo: fix
 //	memset(engineConfiguration2, 0, sizeof(engine_configuration2_s));
 #if EFI_PROD_CODE
-	printMsg(logger, "applyNonPersistentConfiguration()");
+	scheduleMsg(logger, "applyNonPersistentConfiguration()");
 #endif
 	engineConfiguration2->isInjectionEnabledFlag = TRUE;
 
 	initializeTriggerShape(logger, engineConfiguration, engineConfiguration2);
 	if (engineConfiguration2->triggerShape.getSize() == 0) {
-		firmwareError("size is zero");
+		firmwareError("triggerShape size is zero");
 		return;
 	}
 	if (engineConfiguration2->triggerShape.shaftPositionEventCount == 0) {

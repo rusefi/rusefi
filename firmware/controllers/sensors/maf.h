@@ -17,6 +17,8 @@ extern "C"
 {
 #endif /* __cplusplus */
 
+#define getMafT(ec) (getVoltageDivided(ec->mafAdcChannel))
+
 float getMaf(void);
 
 #ifdef __cplusplus

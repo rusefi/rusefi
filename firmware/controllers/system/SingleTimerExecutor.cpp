@@ -96,8 +96,11 @@ void Executor::doExecute(uint64_t nowUs) {
  * @param [in] delayUs the number of microseconds before the output signal immediate output if delay is zero.
  * @param [in] dwell the number of ticks of output duration.
  */
-void scheduleTask(scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) {
-	efiAssertVoid(delayUs >= 0, "Negative delayUs");
+void scheduleTask(const char *prefix, scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) {
+	if (delayUs < 0) {
+		firmwareError("Negative delayUs %s: %d", prefix, delayUs);
+		return;
+	}
 	if (delayUs == 0) {
 		callback(param);
 		return;

@@ -57,13 +57,13 @@ void writeToFlash(void) {
 	scheduleMsg(&logger, "flash compatible with %d", persistentState.version);
 	crc_t result = flashStateCrc(&persistentState);
 	persistentState.value = result;
-	scheduleMsg(&logger, "Reseting flash, size=%d", PERSISTENT_SIZE);
+	scheduleMsg(&logger, "Reseting flash: size=%d", PERSISTENT_SIZE);
 	flashErase(FLASH_ADDR, PERSISTENT_SIZE);
 	scheduleMsg(&logger, "Flashing with CRC=%d", result);
 	efitimems_t nowMs = currentTimeMillis();
 	result = flashWrite(FLASH_ADDR, (const char *) &persistentState, PERSISTENT_SIZE);
 	scheduleMsg(&logger, "Flash programmed in (ms): %d", currentTimeMillis() - nowMs);
-	scheduleMsg(&logger, "Flashed: %d", result);
+	scheduleMsg(&logger, "Flashing result: %d", result);
 #endif /* EFI_INTERNAL_FLASH */
 }
 
@@ -97,8 +97,7 @@ void readFromFlash(void) {
 				boardConfiguration);
 	} else {
 		printMsg(&logger, "Got valid configuration from flash!");
-		applyNonPersistentConfiguration(&logger, engineConfiguration, engineConfiguration2,
-				engineConfiguration->engineType);
+		applyNonPersistentConfiguration(&logger, engineConfiguration, engineConfiguration2);
 	}
 	// we can only change the state after the CRC check
 	engineConfiguration->firmwareVersion = getRusEfiVersion();

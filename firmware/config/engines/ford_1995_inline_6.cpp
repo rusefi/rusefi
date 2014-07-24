@@ -40,13 +40,13 @@ void setFordInline6(engine_configuration_s *engineConfiguration, board_configura
 	/**
 	 * We treat the trigger as 6/0 toothed wheel
 	 */
-	setToothedWheelConfiguration(engineConfiguration, 6, 0);
-	engineConfiguration->triggerConfig.useRiseEdge = TRUE;
-	engineConfiguration->needSecondTriggerInput = false;
+	engineConfiguration->triggerConfig.triggerType = TT_TOOTHED_WHEEL;
+	engineConfiguration->triggerConfig.customTotalToothCount = 6;
+	engineConfiguration->triggerConfig.customSkippedToothCount = 0;
+	engineConfiguration->triggerConfig.customIsSynchronizationNeeded = false;
 
 	engineConfiguration->globalTriggerAngleOffset = 0;
 	engineConfiguration->ignitionOffset = 13;
-
 
 	setThermistorConfiguration(&engineConfiguration->cltThermistorConf, -10, 160310, 60, 7700, 120.00, 1180);
 	engineConfiguration->cltThermistorConf.bias_resistor = 2700;

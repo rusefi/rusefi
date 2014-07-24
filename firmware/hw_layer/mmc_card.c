@@ -19,6 +19,7 @@
 #include "mmc_card.h"
 #include "pin_repository.h"
 #include "ff.h"
+#include "hardware.h"
 
 #define PUSHPULLDELAY 500
 
@@ -88,20 +89,24 @@ static void sdStatistics(void) {
  * so that we can later append to that file
  */
 static void createLogFile(void) {
+	lockSpi(SPI_NONE);
 	memset(&FDLogFile, 0, sizeof(FIL));						// clear the memory
 	FRESULT err = f_open(&FDLogFile, "rusefi.log", FA_OPEN_ALWAYS | FA_WRITE);				// Create new file
 	if (err != FR_OK && err != FR_EXIST) {
+		unlockSpi();
 		printError("Card mounted...\r\nCan't create Log file, check your SD.\r\nFS mount failed", err);	// else - show error
 		return;
 	}
 
 	err = f_lseek(&FDLogFile, f_size(&FDLogFile)); // Move to end of the file to append data
 	if (err) {
+		unlockSpi();
 		printError("Seek error", err);
 		return;
 	}
 	f_sync(&FDLogFile);
 	fs_ready = TRUE;						// everything Ok
+	unlockSpi();
 }
 
 static void ff_cmd_dir(char *path) {
@@ -163,11 +168,13 @@ void appendToLog(char *line) {
 	}
 	int lineLength = strlen(line);
 	totalLoggedBytes += lineLength;
+	lockSpi(SPI_NONE);
 	FRESULT err = f_write(&FDLogFile, line, lineLength, &bytesWrited);
 	if (bytesWrited < lineLength) {
 		printError("write error or disk full", err); // error or disk full
 	}
 	f_sync(&FDLogFile);
+	unlockSpi();
 }
 
 /*
@@ -203,11 +210,14 @@ static void MMCmount(void) {
 	mmcStart(&MMCD1, &mmccfg);					// Configures and activates the MMC peripheral.
 
 	// Performs the initialization procedure on the inserted card.
+	lockSpi(SPI_NONE);
 	if (mmcConnect(&MMCD1) != CH_SUCCESS) {
-		scheduleMsg(&logger, "Can't connect or mount MMC/SD");
+		warning(OBD_PCM_Processor_Fault, "Can't connect or mount MMC/SD");
+		unlockSpi();
 		return;
 
 	}
+	unlockSpi();
 	// if Ok - mount FS now
 	memset(&MMC_FS, 0, sizeof(FATFS));			// reserve the memory
 	if (f_mount(0, &MMC_FS) == FR_OK) {
