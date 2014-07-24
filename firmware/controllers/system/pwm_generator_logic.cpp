@@ -47,21 +47,40 @@ static uint64_t getNextSwitchTimeUs(PwmConfig *state) {
 	efiAssert(state->safe.phaseIndex < PWM_PHASE_MAX_COUNT, "phaseIndex range", 0);
 	int iteration = state->safe.iteration;
 	float switchTime = state->multiWave.getSwitchTime(state->safe.phaseIndex);
-	float periodMs = state->safe.periodMs;
+	float periodUs = state->safe.periodUs;
 #if DEBUG_PWM
 	scheduleMsg(&logger, "iteration=%d switchTime=%f period=%f", iteration, switchTime, period);
 #endif
 
 	/**
-	 * todo: once 'iteration' gets relatively high, we might lose calculation precision here
-	 * todo: double-check this spot
+	 * Once 'iteration' gets relatively high, we might lose calculation precision here.
+	 * This is addressed by ITERATION_LIMIT
 	 */
-	uint64_t timeToSwitchUs = (iteration + switchTime) * periodMs * 1000;
+	uint64_t timeToSwitchUs = (iteration + switchTime) * periodUs;
 
 #if DEBUG_PWM
 	scheduleMsg(&logger, "start=%d timeToSwitch=%d", state->safe.start, timeToSwitch);
 #endif
 	return state->safe.startUs + timeToSwitchUs;
+}
+
+void PwmConfig::handleCycleStart() {
+	if (safe.phaseIndex == 0) {
+		if (cycleCallback != NULL)
+			cycleCallback(this);
+		efiAssertVoid(periodUs != 0, "period not initialized");
+		if (safe.periodUs != periodUs || safe.iteration == ITERATION_LIMIT) {
+			/**
+			 * period length has changed - we need to reset internal state
+			 */
+			safe.startUs = getTimeNowUs();
+			safe.iteration = 0;
+			safe.periodUs = periodUs;
+#if DEBUG_PWM
+			scheduleMsg(&logger, "state reset start=%d iteration=%d", state->safe.start, state->safe.iteration);
+#endif
+		}
+	}
 }
 
 /**
@@ -73,31 +92,21 @@ static uint64_t togglePwmState(PwmConfig *state) {
 	scheduleMsg(&logger, "state->period=%f state->safe.period=%f", state->period, state->safe.period);
 #endif
 
-	if (state->safe.phaseIndex == 0) {
-		if (cisnan(state->periodMs)) {
-			/**
-			 * zero period means PWM is paused
-			 */
-			return 1;
-		}
-		if (state->cycleCallback != NULL)
-			state->cycleCallback(state);
-		efiAssert(state->periodMs != 0, "period not initialized", 0);
-		if (state->safe.periodMs != state->periodMs || state->safe.iteration == ITERATION_LIMIT) {
-			/**
-			 * period length has changed - we need to reset internal state
-			 */
-			state->safe.startUs = getTimeNowUs();
-			state->safe.iteration = 0;
-			state->safe.periodMs = state->periodMs;
-#if DEBUG_PWM
-			scheduleMsg(&logger, "state reset start=%d iteration=%d", state->safe.start, state->safe.iteration);
-#endif
-		}
+	if (cisnan(state->periodUs)) {
+		/**
+		 * zero period means PWM is paused
+		 */
+		return 1;
 	}
 
-	state->stateChangeCallback(state,
-			state->safe.phaseIndex == 0 ? state->phaseCount - 1 : state->safe.phaseIndex - 1);
+	state->handleCycleStart();
+
+	/**
+	 * Here is where the 'business logic' - the actual pin state change is happening
+	 */
+	// callback state index is offset by one. todo: why? can we simplify this?
+	int cbStateIndex = state->safe.phaseIndex == 0 ? state->phaseCount - 1 : state->safe.phaseIndex - 1;
+	state->stateChangeCallback(state, cbStateIndex);
 
 	uint64_t nextSwitchTimeUs = getNextSwitchTimeUs(state);
 #if DEBUG_PWM
@@ -106,8 +115,13 @@ static uint64_t togglePwmState(PwmConfig *state) {
 	// signed value is needed here
 	int64_t timeToSwitch = nextSwitchTimeUs - getTimeNowUs();
 	if (timeToSwitch < 1) {
-//todo: introduce error and test this error handling		warning(OBD_PCM_Processor_Fault, "PWM: negative switch time");
-		timeToSwitch = 1000;
+		/**
+		 * We are here if we are late for a state transition.
+		 * At 12000RPM=200Hz with a 60 toothed wheel we need to change state every
+		 * 1000000 / 200 / 120 = ~41 uS. We are kind of OK.
+		 */
+		//todo: introduce error and test this error handling		warning(OBD_PCM_Processor_Fault, "PWM: negative switch time");
+		timeToSwitch = 10;
 	}
 
 	state->safe.phaseIndex++;
@@ -118,9 +132,12 @@ static uint64_t togglePwmState(PwmConfig *state) {
 	return timeToSwitch;
 }
 
+/**
+ * Main PWM loop: toggle pin & schedule next invocation
+ */
 static void timerCallback(PwmConfig *state) {
 	time_t timeToSleepUs = togglePwmState(state);
-	scheduleTask(&state->scheduling, timeToSleepUs, (schfunc_t) timerCallback, state);
+	scheduleTask("pwm", &state->scheduling, timeToSleepUs, (schfunc_t) timerCallback, state);
 }
 
 /**
@@ -144,7 +161,7 @@ void copyPwmParameters(PwmConfig *state, int phaseCount, float *switchTimes, int
 void weComplexInit(const char *msg, PwmConfig *state, int phaseCount, float *switchTimes, int waveCount,
 		int **pinStates, pwm_cycle_callback *cycleCallback, pwm_gen_callback *stateChangeCallback) {
 
-	efiAssertVoid(state->periodMs != 0, "period is not initialized");
+	efiAssertVoid(state->periodUs != 0, "period is not initialized");
 	if (phaseCount == 0) {
 		firmwareError("signal length cannot be zero");
 		return;
@@ -168,9 +185,10 @@ void weComplexInit(const char *msg, PwmConfig *state, int phaseCount, float *swi
 	state->stateChangeCallback = stateChangeCallback;
 
 	state->safe.phaseIndex = 0;
-	state->safe.periodMs = -1;
+	state->safe.periodUs = -1;
 	state->safe.iteration = -1;
 	state->name = msg;
 
+	// let's start the indefinite callback loop of PWM generation
 	timerCallback(state);
 }

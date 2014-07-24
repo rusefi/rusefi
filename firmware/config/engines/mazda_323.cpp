@@ -16,5 +16,5 @@ void setMazda323EngineConfiguration(engine_configuration_s *engineConfiguration)
 	/**
 	 * We treat the trigger as 4/0 toothed wheel
 	 */
-	setToothedWheelConfiguration(engineConfiguration, 4, 0);
+//	setToothedWheelConfiguration(engineConfiguration, 4, 0);
 }

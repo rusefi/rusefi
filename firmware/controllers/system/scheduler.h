@@ -29,7 +29,7 @@ extern "C"
 {
 #endif /* __cplusplus */
 
-void scheduleTask(scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param);
+void scheduleTask(const char *prefix, scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param);
 
 #ifdef __cplusplus
 }

@@ -35,7 +35,7 @@ void initIgnitionCentral(void) {
 	initLogging(&logger, "IgnitionCentral");
 
 	for (int i = 0; i < engineConfiguration->cylindersCount; i++) {
-		io_pin_e pin = (io_pin_e)((int)INJECTOR_1_OUTPUT + i);
+		io_pin_e pin = (io_pin_e)((int)SPARKOUT_1_OUTPUT + i);
 		outputPinRegisterExt2(getPinName(pin), pin, boardConfiguration->ignitionPins[i], &boardConfiguration->ignitionPinMode);
 	}
 }

@@ -37,7 +37,6 @@
 #include "analog_chart.h"
 #endif /* EFI_ANALOG_CHART */
 
-
 #define FAST_MAP_CHART_SKIP_FACTOR 16
 
 static Logging logger;
@@ -73,12 +72,13 @@ static scheduling_s startTimer[2];
 static scheduling_s endTimer[2];
 
 static void startAveraging(void*arg) {
-	chSysLockFromIsr()
+	bool wasLocked = lockAnyContext();
 	;
 	// with locking we would have a consistent state
 	v_mapAccumulator = 0;
 	mapMeasurementsCounter = 0;
-	chSysUnlockFromIsr()
+	if (!wasLocked)
+		chSysUnlockFromIsr()
 	;
 }
 
@@ -111,11 +111,11 @@ void mapAveragingCallback(adcsample_t value) {
 }
 
 static void endAveraging(void *arg) {
-	chSysLockFromIsr()
-	;
+	bool wasLocked = lockAnyContext();
 	// with locking we would have a consistent state
 	v_averagedMapValue = v_mapAccumulator / mapMeasurementsCounter;
-	chSysUnlockFromIsr()
+	if (!wasLocked)
+		chSysUnlockFromIsr()
 	;
 }
 
@@ -129,7 +129,7 @@ static void shaftPositionCallback(trigger_event_e ckpEventType, int index, void 
 		return;
 
 	int rpm = getRpm();
-	if(!isValidRpm(rpm))
+	if (!isValidRpm(rpm))
 		return;
 
 	perRevolution = perRevolutionCounter;
@@ -139,6 +139,10 @@ static void shaftPositionCallback(trigger_event_e ckpEventType, int index, void 
 
 	float startAngle = interpolate2d(rpm, config->samplingAngleBins, config->samplingAngle, MAP_ANGLE_SIZE);
 	float windowAngle = interpolate2d(rpm, config->samplingWindowBins, config->samplingWindow, MAP_WINDOW_SIZE);
+	if (windowAngle <= 0) {
+		firmwareError("map sampling angle should be positive");
+		return;
+	}
 
 	int structIndex = getRevolutionCounter() % 2;
 	// todo: schedule this based on closest trigger event, same as ignition works
@@ -171,7 +175,6 @@ void initMapAveraging(void) {
 	startTimer[1].name = "map start1";
 	endTimer[0].name = "map end0";
 	endTimer[1].name = "map end1";
-
 
 	addTriggerEventListener(&shaftPositionCallback, "rpm reporter", NULL);
 	addConsoleAction("faststat", showMapStats);

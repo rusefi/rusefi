@@ -15,12 +15,7 @@
 void setCitroenBerlingoTU3JPConfiguration(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
 	engineConfiguration->engineType = CITROEN_TU3JP;
 
-	//engineConfiguration->triggerConfig.triggerType = todo 60_2
-
-	setToothedWheelConfiguration(engineConfiguration, 60, 2);
-
-	setTriggerSynchronizationGap(&engineConfiguration->triggerConfig, 2.5);
-
+	engineConfiguration->triggerConfig.triggerType = TT_TOOTHED_WHEEL_60_2;
 
 	// set_cranking_injection_mode 0
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;

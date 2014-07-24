@@ -42,11 +42,6 @@ void setDodgeNeonEngineConfiguration(engine_configuration_s *engineConfiguration
 	// set_whole_fuel_map 3
 	setWholeFuelMap(engineConfiguration, 3);
 
-	setTriggerSynchronizationGap(&engineConfiguration->triggerConfig, 0.72);
-
-	engineConfiguration->triggerConfig.useRiseEdge = false;
-	engineConfiguration->needSecondTriggerInput = true;
-
 	// set_cranking_injection_mode 0
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	// set_injection_mode 1

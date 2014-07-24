@@ -16,7 +16,7 @@ extern "C"
 void lcd_HD44780_init(void);
 void lcd_HD44780_set_position(uint8_t row, uint8_t column);
 void lcd_HD44780_print_char(char data);
-void lcd_HD44780_print_string(char *string);
+void lcd_HD44780_print_string(const char *string);
 
 void lcdShowFatalMessage(char *message);
 

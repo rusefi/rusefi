@@ -92,15 +92,15 @@ typedef struct {
 typedef struct {
 	trigger_type_e triggerType;
 
-	int isSynchronizationNeeded;
+	int customIsSynchronizationNeeded;
 
-	int totalToothCount;
-	int skippedToothCount;
+	int customTotalToothCount;
+	int customSkippedToothCount;
 
-	float syncRatioFrom;
-	float syncRatioTo;
+	float customSyncRatioFrom;
+	float customSyncRatioTo;
 
-	int useRiseEdge;
+	int customUseRiseEdge;
 
 } trigger_config_s;
 
@@ -150,7 +150,7 @@ typedef struct {
 	 * Digital Potentiometer is used by stock ECU stimulation code
 	 */
 	spi_device_e digitalPotentiometerSpiDevice;
-	brain_pin_e digitalPotentiometerChipSelect[4];
+	brain_pin_e digitalPotentiometerChipSelect[DIGIPOT_COUNT];
 
 	adc_channel_mode_e adcHwChannelEnabled[HW_MAX_ADC_INDEX];
 
@@ -335,7 +335,7 @@ typedef struct {
 
 	trigger_config_s triggerConfig;
 
-	int needSecondTriggerInput;
+	int space;
 	int vBattAdcChannel;
 
 	float globalFuelCorrection;
@@ -370,6 +370,10 @@ typedef struct {
 
 	board_configuration_s bc;
 
+	int hasMapSensor;
+	int hasCltSensor;
+
+
 } engine_configuration_s;
 
 void setOperationMode(engine_configuration_s *engineConfiguration, operation_mode_e mode);
@@ -395,9 +399,6 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 void setWholeFuelMap(engine_configuration_s *engineConfiguration, float value);
 void setConstantDwell(engine_configuration_s *engineConfiguration, float dwellMs);
 void printFloatArray(const char *prefix, float array[], int size);
-
-void setTriggerSynchronizationGap(trigger_config_s *triggerConfig, float synchGap);
-void setToothedWheelConfiguration(engine_configuration_s *engineConfiguration, int total, int skipped);
 
 void incrementGlobalConfigurationVersion(void);
 int getGlobalConfigurationVersion(void);

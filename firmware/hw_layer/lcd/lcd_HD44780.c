@@ -150,7 +150,7 @@ void lcd_HD44780_print_char(char data) {
 	}
 }
 
-void lcd_HD44780_print_string(char* string) {
+void lcd_HD44780_print_string(const char* string) {
 	while (*string != 0x00)
 		lcd_HD44780_print_char(*string++);
 }

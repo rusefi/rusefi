@@ -25,8 +25,9 @@ void setGy6139qmbDefaultEngineConfiguration(engine_configuration_s *engineConfig
 	/**
 	 * We treat the trigger as 1/0 toothed wheel
 	 */
-	engineConfiguration->triggerConfig.totalToothCount = 1;
-	engineConfiguration->triggerConfig.skippedToothCount = 0;
-	engineConfiguration->triggerConfig.isSynchronizationNeeded = false;
-	engineConfiguration->needSecondTriggerInput = false;
+	engineConfiguration->triggerConfig.triggerType = TT_TOOTHED_WHEEL;
+	engineConfiguration->triggerConfig.customTotalToothCount = 1;
+	engineConfiguration->triggerConfig.customSkippedToothCount = 0;
+	engineConfiguration->triggerConfig.customIsSynchronizationNeeded = false;
+//todo	engineConfiguration2->triggerShape.needSecondTriggerInput = false;
 }

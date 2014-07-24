@@ -14,6 +14,7 @@
 #include "engine_math.h"
 #include "signal_executor.h"
 
+extern Engine engine;
 extern engine_configuration_s *engineConfiguration;
 static AccelEnrichmemnt instance;
 

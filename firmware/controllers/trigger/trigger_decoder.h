@@ -23,7 +23,7 @@ private:
 	bool secondaryWheelState;
 };
 
-void initializeSkippedToothTriggerShapeExt(engine_configuration2_s *engineConfiguration2, int totalTeethCount, int skippedCount, operation_mode_e operationMode);
+void initializeSkippedToothTriggerShapeExt(trigger_shape_s *s, int totalTeethCount, int skippedCount, operation_mode_e operationMode);
 int findTriggerZeroEventIndex(trigger_shape_s * shape, trigger_config_s const*triggerConfig);
 void initializeTriggerShape(Logging *logger, engine_configuration_s *engineConfiguration, engine_configuration2_s *engineConfiguration2);
 void initTriggerDecoder(void);

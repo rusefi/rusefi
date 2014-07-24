@@ -1,5 +1,5 @@
 /**
- * @file	adc_inputs.c
+ * @file	adc_inputs.cpp
  * @brief	Low level ADC code
  *
  * @date Jan 14, 2013
@@ -33,6 +33,8 @@ AdcConfiguration::AdcConfiguration(ADCConversionGroup* hwConfig) {
 #define ADC_NUMBER_CHANNELS_FAST		1
 
 // todo: migrate from hardware timer to software ADC conversion triggering
+// todo: I guess we would have to use ChibiOS timer and not our own timer because
+// todo: adcStartConversionI requires OS lock. currently slow ADC is 10Hz (?)
 #define PWM_FREQ_SLOW 5000   /* PWM clock frequency. I wonder what does this setting mean?  */
 #define PWM_PERIOD_SLOW 500  /* PWM period (in PWM ticks).    */
 
@@ -40,7 +42,8 @@ AdcConfiguration::AdcConfiguration(ADCConversionGroup* hwConfig) {
  * 8000 RPM is 133Hz
  * If we want to sample MAP once per 5 degrees we need 133Hz * (360 / 5) = 9576Hz of fast ADC
  */
-// todo: migrate to continues ADC mode?
+// todo: migrate to continues ADC mode? probably not - we cannot afford the callback in
+// todo: continues mode. todo: look into our options
 #define PWM_FREQ_FAST 100000   /* PWM clock frequency. I wonder what does this setting mean?  */
 #define PWM_PERIOD_FAST 10  /* PWM period (in PWM ticks).    */
 
@@ -158,11 +161,13 @@ static void pwmpcb_slow(PWMDriver *pwmp) {
 	if (ADC_FAST_DEVICE.state != ADC_READY &&
 	ADC_FAST_DEVICE.state != ADC_COMPLETE &&
 	ADC_FAST_DEVICE.state != ADC_ERROR) {
-		firmwareError("ADC slow not ready?");
+		// todo: why and when does this happen? firmwareError("ADC slow not ready?");
+		slowAdc.errorsCount++;
 		chSysUnlockFromIsr()
 		;
 		return;
 	}
+	slowAdc.errorsCount++;
 	adcStartConversionI(&ADC_SLOW_DEVICE, &adcgrpcfgSlow, slowAdcState.samples, ADC_GRP1_BUF_DEPTH_SLOW);
 	chSysUnlockFromIsr()
 	;
@@ -184,7 +189,8 @@ static void pwmpcb_fast(PWMDriver *pwmp) {
 	if (ADC_FAST_DEVICE.state != ADC_READY &&
 	ADC_FAST_DEVICE.state != ADC_COMPLETE &&
 	ADC_FAST_DEVICE.state != ADC_ERROR) {
-		firmwareError("ADC fast not ready?");
+		fastAdc.errorsCount++;
+		// todo: when? why? firmwareError("ADC fast not ready?");
 		chSysUnlockFromIsr()
 		;
 		return;

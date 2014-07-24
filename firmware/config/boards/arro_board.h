@@ -49,7 +49,7 @@
 #define STM32_PWM_USE_TIM8                  TRUE // slow adc
 #define STM32_PWM_USE_TIM9                  FALSE
 
-#define STM32_SPI_USE_SPI1                  FALSE
+#define STM32_SPI_USE_SPI1                  TRUE
 #define STM32_SPI_USE_SPI2                  FALSE // external ADC
 #define STM32_SPI_USE_SPI3                  TRUE // potentiometer
 
@@ -80,6 +80,16 @@
 //#define SPI_CS4_PIN 10
 //#define SPI_SD_MODULE_PORT GPIOD
 //#define SPI_SD_MODULE_PIN 11
+
+#define EFI_SPI1_SCK_PORT GPIOB
+#define EFI_SPI1_SCK_PIN 3
+#define EFI_SPI1_MISO_PORT GPIOB
+#define EFI_SPI1_MISO_PIN 4
+#define EFI_SPI1_MOSI_PORT GPIOB
+#define EFI_SPI1_MOSI_PIN 5
+#define EFI_SPI1_AF 5
+
+
 #define EFI_SPI2_SCK_PORT GPIOB
 #define EFI_SPI2_SCK_PIN 13
 #define EFI_SPI2_MISO_PORT GPIOB
@@ -88,17 +98,14 @@
 #define EFI_SPI2_MOSI_PIN 15
 #define EFI_SPI2_AF 5
 
+
 /**
  * This section is for right-side center SPI
  */
-#define SPI_CS1_PORT GPIOD
-#define SPI_CS1_PIN 7
 // this is pointing into the sky for now - conflict with I2C
 #define SPI_CS2_PORT GPIOH
 // this is pointing into the sky for now - conflict with I2C
 #define SPI_CS2_PIN 0
-#define SPI_CS3_PORT GPIOD
-#define SPI_CS3_PIN 5
 #define SPI_CS4_PORT GPIOD
 #define SPI_CS4_PIN 3
 #define SPI_SD_MODULE_PORT GPIOD

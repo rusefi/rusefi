@@ -125,7 +125,7 @@ static const char * boolToString(bool value) {
  */
 void printConfiguration(engine_configuration_s *engineConfiguration, engine_configuration2_s *engineConfiguration2) {
 
-	scheduleMsg(&logger, getConfigurationName(engineConfiguration));
+	scheduleMsg(&logger, "Template %s trigger %d", getConfigurationName(engineConfiguration), engineConfiguration->triggerConfig.triggerType);
 
 	scheduleMsg(&logger, "configurationVersion=%d", getGlobalConfigurationVersion());
 
@@ -172,10 +172,11 @@ void printConfiguration(engine_configuration_s *engineConfiguration, engine_conf
 //	scheduleMsg(&logger, "crankingRpm: %d", engineConfiguration->crankingSettings.crankingRpm);
 
 	scheduleMsg(&logger, "idlePinMode: %s", pinModeToString(boardConfiguration->idleValvePinMode));
-	scheduleMsg(&logger, "malfunctionIndicatorPinMode: %s", pinModeToString(boardConfiguration->malfunctionIndicatorPinMode));
+	scheduleMsg(&logger, "malfunctionIndicatorPinMode: %s",
+			pinModeToString(boardConfiguration->malfunctionIndicatorPinMode));
 	scheduleMsg(&logger, "analogInputDividerCoefficient: %f", engineConfiguration->analogInputDividerCoefficient);
 
-	scheduleMsg(&logger, "needSecondTriggerInput: %s", boolToString(engineConfiguration->needSecondTriggerInput));
+	scheduleMsg(&logger, "needSecondTriggerInput: %s", boolToString(engineConfiguration2->triggerShape.needSecondTriggerInput));
 
 #if EFI_PROD_CODE
 	scheduleMsg(&logger, "idleValvePin: %s", hwPortname(boardConfiguration->idleValvePin));
@@ -204,12 +205,15 @@ void printConfiguration(engine_configuration_s *engineConfiguration, engine_conf
 	scheduleMsg(&logger, "primary trigger input: %s", hwPortname(boardConfiguration->primaryTriggerInputPin));
 
 	scheduleMsg(&logger, "boardTestModeJumperPin: %s", hwPortname(boardConfiguration->boardTestModeJumperPin));
+
+	scheduleMsg(&logger, "digitalPotentiometerSpiDevice %d", boardConfiguration->digitalPotentiometerSpiDevice);
+
+	for (int i = 0; i < DIGIPOT_COUNT; i++) {
+		scheduleMsg(&logger, "digitalPotentiometer CS%d %s", i, hwPortname(boardConfiguration->digitalPotentiometerChipSelect[i]));
+	}
 #endif /* EFI_PROD_CODE */
 
 	scheduleMsg(&logger, "isInjectionEnabledFlag %s", boolToString(engineConfiguration2->isInjectionEnabledFlag));
-
-	//	appendPrintf(&logger, DELIMETER);
-//	scheduleLogging(&logger);
 }
 
 static void setFixedModeTiming(int value) {
@@ -369,6 +373,11 @@ static void setCrankingRpm(int value) {
 	doPrintConfiguration();
 }
 
+static void setAlgorithm(int value) {
+	engineConfiguration->algorithm = (engine_load_mode_e) value;
+	doPrintConfiguration();
+}
+
 static void setFiringOrder(int value) {
 	engineConfiguration->firingOrder = (firing_order_e) value;
 	doPrintConfiguration();
@@ -415,9 +424,15 @@ static void setIgnitionMode(int value) {
 	doPrintConfiguration();
 }
 
+static void setTriggerType(int value) {
+	engineConfiguration->triggerConfig.triggerType = (trigger_type_e)value;
+	incrementGlobalConfigurationVersion();
+	doPrintConfiguration();
+}
+
 static void setToothedWheel(int total, int skipped) {
-	setToothedWheelConfiguration(engineConfiguration, total, skipped);
-	initializeTriggerShape(&logger, engineConfiguration, engineConfiguration2);
+	setToothedWheelConfiguration(&engineConfiguration2->triggerShape, total, skipped, engineConfiguration);
+//	initializeTriggerShape(&logger, engineConfiguration, engineConfiguration2);
 	incrementGlobalConfigurationVersion();
 	doPrintConfiguration();
 }
@@ -436,6 +451,7 @@ static void setGlobalFuelCorrection(float value) {
 }
 
 static void setWholeTimingMap(float value) {
+	// todo: table helper?
 	scheduleMsg(&logger, "Setting whole timing map to %f", value);
 	for (int l = 0; l < IGN_LOAD_COUNT; l++) {
 		for (int r = 0; r < IGN_RPM_COUNT; r++) {
@@ -549,9 +565,11 @@ void initSettings(void) {
 
 	addConsoleActionI("set_rpm_hard_limit", setRpmHardLimit);
 	addConsoleActionI("set_firing_order", setFiringOrder);
+	addConsoleActionI("set_algorithm", setAlgorithm);
 
 	addConsoleAction("enable_injection", enableInjection);
 	addConsoleAction("disable_injection", disableInjection);
 	addConsoleActionII("set_toothed_wheel", setToothedWheel);
+	addConsoleActionI("set_trigger_type", setTriggerType);
 }
 

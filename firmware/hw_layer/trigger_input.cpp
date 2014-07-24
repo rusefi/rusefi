@@ -22,6 +22,7 @@ static WaveReaderHw primaryCrankInput;
 static WaveReaderHw secondaryCrankInput;
 
 extern engine_configuration_s *engineConfiguration;
+extern engine_configuration2_s *engineConfiguration2;
 extern board_configuration_s *boardConfiguration;
 
 
@@ -39,7 +40,7 @@ static inline ICUDriver *getSecondaryInputCaptureDriver(void) {
  */
 static void shaft_icu_width_callback(ICUDriver *icup) {
 	int isPrimary = icup == getPrimaryInputCaptureDriver();
-	if (!isPrimary && !engineConfiguration->needSecondTriggerInput)
+	if (!isPrimary && !engineConfiguration2->triggerShape.needSecondTriggerInput)
 		return;
 	//	icucnt_t last_width = icuGetWidth(icup); so far we are fine with system time
 	trigger_event_e signal = isPrimary ? SHAFT_PRIMARY_UP : SHAFT_SECONDARY_UP;
@@ -49,7 +50,7 @@ static void shaft_icu_width_callback(ICUDriver *icup) {
 
 static void shaft_icu_period_callback(ICUDriver *icup) {
 	int isPrimary = icup == getPrimaryInputCaptureDriver();
-	if (!isPrimary && !engineConfiguration->needSecondTriggerInput)
+	if (!isPrimary && !engineConfiguration2->triggerShape.needSecondTriggerInput)
 		return;
 
 	//	icucnt_t last_period = icuGetPeriod(icup); so far we are fine with system time

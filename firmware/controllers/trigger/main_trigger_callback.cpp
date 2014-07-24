@@ -78,7 +78,7 @@ static cyclic_buffer ignitionErrorDetection;
 static Logging logger;
 
 static void handleFuelInjectionEvent(MainTriggerCallback *mainTriggerCallback, ActuatorEvent *event, int rpm) {
-	float fuelMs = getFuelMs(rpm) * mainTriggerCallback->engineConfiguration->globalFuelCorrection;
+	float fuelMs = getFuelMs(rpm, mainTriggerCallback->engine) * mainTriggerCallback->engineConfiguration->globalFuelCorrection;
 	if (cisnan(fuelMs)) {
 		warning(OBD_PCM_Processor_Fault, "NaN injection pulse");
 		return;
@@ -156,7 +156,7 @@ static void handleSparkEvent(MainTriggerCallback *mainTriggerCallback, int event
 	/**
 	 * The start of charge is always within the current trigger event range, so just plain time-based scheduling
 	 */
-	scheduleTask(sUp, (int) MS2US(sparkDelay), (schfunc_t) &turnPinHigh, (void *) iEvent->io_pin);
+	scheduleTask("spark up", sUp, (int) MS2US(sparkDelay), (schfunc_t) &turnPinHigh, (void *) iEvent->io_pin);
 	/**
 	 * Spark event is often happening during a later trigger event timeframe
 	 * TODO: improve precision
@@ -171,7 +171,7 @@ static void handleSparkEvent(MainTriggerCallback *mainTriggerCallback, int event
 		 */
 		float timeTillIgnitionUs = getOneDegreeTimeUs(rpm) * iEvent->sparkPosition.angleOffset;
 
-		scheduleTask(sDown, (int) timeTillIgnitionUs, (schfunc_t) &turnPinLow, (void*) iEvent->io_pin);
+		scheduleTask("spark 1down", sDown, (int) timeTillIgnitionUs, (schfunc_t) &turnPinLow, (void*) iEvent->io_pin);
 	} else {
 		/**
 		 * Spark should be scheduled in relation to some future trigger event, this way we get better firing precision
@@ -204,7 +204,7 @@ static void handleSpark(MainTriggerCallback *mainTriggerCallback, int eventIndex
 			scheduling_s * sDown = &current->signalTimerDown;
 
 			float timeTillIgnitionUs = getOneDegreeTimeUs(rpm) * current->sparkPosition.angleOffset;
-			scheduleTask(sDown, (int) timeTillIgnitionUs, (schfunc_t) &turnPinLow, (void*) current->io_pin);
+			scheduleTask("spark 2down", sDown, (int) timeTillIgnitionUs, (schfunc_t) &turnPinLow, (void*) current->io_pin);
 		}
 	}
 
@@ -276,7 +276,7 @@ void onTriggerEvent(trigger_event_e ckpSignalType, int eventIndex, MainTriggerCa
 			firmwareError("invalid dwell: %f at %d", dwellMs, rpm);
 			return;
 		}
-		float advance = getAdvance(rpm, getEngineLoadT(mainTriggerCallback->engineConfiguration));
+		float advance = getAdvance(rpm, getEngineLoadT(mainTriggerCallback->engine));
 
 		float dwellAngle = dwellMs / getOneDegreeTimeMs(rpm);
 
@@ -293,7 +293,7 @@ void onTriggerEvent(trigger_event_e ckpSignalType, int eventIndex, MainTriggerCa
 #if EFI_HISTOGRAMS && EFI_PROD_CODE
 	int diff = hal_lld_get_counter_value() - beforeCallback;
 	if (diff > 0)
-	hsAdd(&mainLoopHisto, diff);
+		hsAdd(&mainLoopHisto, diff);
 #endif /* EFI_HISTOGRAMS */
 }
 
@@ -309,21 +309,26 @@ static void showTriggerHistogram(void) {
 
 static void showMainInfo(void) {
 	int rpm = getRpm();
-	float el = getEngineLoadT(mainTriggerCallbackInstance.engineConfiguration);
+	float el = getEngineLoadT(mainTriggerCallbackInstance.engine);
 #if EFI_PROD_CODE
 	scheduleMsg(&logger, "rpm %d engine_load %f", rpm, el);
-	scheduleMsg(&logger, "fuel %fms timing %f", getFuelMs(rpm), getAdvance(rpm, el));
+	scheduleMsg(&logger, "fuel %fms timing %f", getFuelMs(rpm, mainTriggerCallbackInstance.engine), getAdvance(rpm, el));
 #endif
 }
 
-void MainTriggerCallback::init(engine_configuration_s *engineConfiguration,
-		engine_configuration2_s *engineConfiguration2) {
-	this->engineConfiguration = engineConfiguration;
+void MainTriggerCallback::init(Engine *engine, engine_configuration2_s *engineConfiguration2) {
+	efiAssertVoid(engine!=NULL, "engine NULL");
+        this->engine = engine;
+	this->engineConfiguration = engine->engineConfiguration;
+	efiAssertVoid(engineConfiguration!=NULL, "engineConfiguration NULL");
 	this->engineConfiguration2 = engineConfiguration2;
 }
 
-void initMainEventListener(engine_configuration_s *engineConfiguration, engine_configuration2_s *engineConfiguration2) {
-	mainTriggerCallbackInstance.init(engineConfiguration, engineConfiguration2);
+void initMainEventListener(Engine *engine, engine_configuration2_s *engineConfiguration2) {
+	efiAssertVoid(engine!=NULL, "null engine");
+	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
+
+	mainTriggerCallbackInstance.init(engine, engineConfiguration2);
 
 #if EFI_PROD_CODE
 	addConsoleAction("performanceinfo", showTriggerHistogram);
@@ -332,7 +337,7 @@ void initMainEventListener(engine_configuration_s *engineConfiguration, engine_c
 	initLogging(&logger, "main event handler");
 	printMsg(&logger, "initMainLoop: %d", currentTimeMillis());
 	if (!isInjectionEnabled(mainTriggerCallbackInstance.engineConfiguration2))
-	printMsg(&logger, "!!!!!!!!!!!!!!!!!!! injection disabled");
+		printMsg(&logger, "!!!!!!!!!!!!!!!!!!! injection disabled");
 #endif
 
 #if EFI_HISTOGRAMS

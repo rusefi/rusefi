@@ -21,6 +21,7 @@
 #include "main.h"
 #include "trigger_structure.h"
 #include "error_handling.h"
+#include "trigger_decoder.h"
 
 trigger_shape_helper::trigger_shape_helper() {
 	waves[0].init(pinStates0);
@@ -187,4 +188,23 @@ void trigger_shape_s::setSwitchTime(int index, float angle) {
 
 void multi_wave_s::checkSwitchTimes(int size) {
 	checkSwitchTimes2(size, switchTimes);
+}
+
+void setToothedWheelConfiguration(trigger_shape_s *s, int total, int skipped, engine_configuration_s const *engineConfiguration) {
+	s->isSynchronizationNeeded = (skipped != 0);
+
+	s->totalToothCount = total;
+	s->skippedToothCount = skipped;
+	s->needSecondTriggerInput = false;
+	s->useRiseEdge = TRUE;
+
+	initializeSkippedToothTriggerShapeExt(s, s->totalToothCount,
+			s->skippedToothCount,
+			getOperationMode(engineConfiguration));
+}
+
+void setTriggerSynchronizationGap(trigger_shape_s *s, float synchGap) {
+	s->isSynchronizationNeeded = TRUE;
+	s->syncRatioFrom = synchGap * 0.75;
+	s->syncRatioTo = synchGap * 1.25;
 }

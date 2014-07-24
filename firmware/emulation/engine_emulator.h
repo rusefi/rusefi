@@ -8,18 +8,7 @@
 #ifndef ENGINE_EMULATOR_H_
 #define ENGINE_EMULATOR_H_
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
-
-
-void initEngineEmulator(void);
-
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-
+#include "engine_configuration.h"
+void initEngineEmulator(board_configuration_s *boardConfiguration);
 
 #endif /* ENGINE_EMULATOR_H_ */

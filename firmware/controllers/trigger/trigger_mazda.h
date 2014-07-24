@@ -12,7 +12,7 @@
 #include "engine_configuration.h"
 #include "ec2.h"
 
-void initializeMazdaMiataNbShape(trigger_config_s *triggerConfig, trigger_shape_s *s);
-void configureMazdaProtegeLx(trigger_config_s *triggerConfig, trigger_shape_s *s);
+void initializeMazdaMiataNbShape(trigger_shape_s *s);
+void configureMazdaProtegeLx(trigger_shape_s *s);
 
 #endif /* TRIGGER_MAZDA_H_ */

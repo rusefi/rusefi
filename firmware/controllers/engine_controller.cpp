@@ -156,6 +156,8 @@ static void onEvenyGeneralMilliseconds(void *arg) {
 	 */
 	halTime.get(hal_lld_get_counter_value(), true);
 
+	engine.updateSlowSensors();
+
 	updateErrorCodes();
 
 	fanRelayControl();
@@ -236,6 +238,8 @@ void initEngineContoller(void) {
 		return;
 	initLogging(&logger, "Engine Controller");
 
+	engine.engineConfiguration = engineConfiguration;
+
 	initSensors();
 
 	initPwmGenerator();
@@ -289,7 +293,7 @@ void initEngineContoller(void) {
 	/**
 	 * This method initialized the main listener which actually runs injectors & ignition
 	 */
-	initMainEventListener(engineConfiguration, engineConfiguration2);
+	initMainEventListener(&engine, engineConfiguration2);
 #endif /* EFI_ENGINE_CONTROL */
 
 #if EFI_IDLE_CONTROL

@@ -114,6 +114,7 @@ static void errBlinkingThread(void *arg) {
 
 static void outputPinRegisterExt(const char *msg, io_pin_e ioPin, GPIO_TypeDef *port, uint32_t pin,
 		pin_output_mode_e *outputMode) {
+	efiAssertVoid((int)ioPin < IO_PIN_COUNT, "io pin out of range");
 	if (port == GPIO_NULL) {
 		// that's for GRIO_NONE
 		outputs[ioPin].port = port;
@@ -184,6 +185,13 @@ void initOutputPins(void) {
 	outputPinRegister("is running status", LED_RUNNING, LED_RUNNING_STATUS_PORT, LED_RUNNING_STATUS_PIN);
 	outputPinRegister("communication status 1", LED_COMMUNICATION_1, LED_COMMUNICATION_PORT, LED_COMMUNICATION_PIN);
 
+	/**
+	 * want to make sure it's all zeros so that we can compare in initOutputPinExt() method
+	 */
+// todo: it's too late to clear now? this breaks default status LEDs
+// todo: fix this?
+//	memset(&outputs, 0, sizeof(outputs));
+
 //	outputPinRegister("ext led 1", LED_EXT_1, EXTRA_LED_1_PORT, EXTRA_LED_1_PIN);
 //	outputPinRegister("ext led 2", LED_EXT_2, EXTRA_LED_2_PORT, EXTRA_LED_2_PIN);
 //	outputPinRegister("ext led 3", LED_EXT_3, EXTRA_LED_2_PORT, EXTRA_LED_3_PIN);
@@ -192,10 +200,11 @@ void initOutputPins(void) {
 	outputPinRegister("MalfunctionIndicator", LED_CHECK_ENGINE, getHwPort(boardConfiguration->malfunctionIndicatorPin),
 			getHwPin(boardConfiguration->malfunctionIndicatorPin));
 
-	outputPinRegister("spi CS1", SPI_CS_1, SPI_CS1_PORT, SPI_CS1_PIN);
-	outputPinRegister("spi CS2", SPI_CS_2, SPI_CS2_PORT, SPI_CS2_PIN);
-	outputPinRegister("spi CS3", SPI_CS_3, SPI_CS3_PORT, SPI_CS3_PIN);
-	outputPinRegister("spi CS4", SPI_CS_4, SPI_CS4_PORT, SPI_CS4_PIN);
+// todo: are these needed here? todo: make configurable
+//	outputPinRegister("spi CS1", SPI_CS_1, SPI_CS1_PORT, SPI_CS1_PIN);
+//	outputPinRegister("spi CS2", SPI_CS_2, SPI_CS2_PORT, SPI_CS2_PIN);
+//	outputPinRegister("spi CS3", SPI_CS_3, SPI_CS3_PORT, SPI_CS3_PIN);
+//	outputPinRegister("spi CS4", SPI_CS_4, SPI_CS4_PORT, SPI_CS4_PIN);
 	outputPinRegister("spi CS5", SPI_CS_SD_MODULE, SPI_SD_MODULE_PORT, SPI_SD_MODULE_PIN);
 
 	// todo: should we move this code closer to the fuel pump logic?

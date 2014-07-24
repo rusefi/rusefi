@@ -17,6 +17,8 @@
 // this is about offsets and sizes in TunerStudio
 #define ENUM_SIZE_HACK 2000000000
 
+#define DIGIPOT_COUNT 4
+
 typedef enum {
 	AUDI_AAN = 1,
 #if EFI_SUPPORT_DODGE_NEON
@@ -80,7 +82,8 @@ typedef enum {
 	TT_GM_7X = 5,
 	TT_MINI_COOPER_R50 = 6,
 	TT_FORD_ESCORT_GT = 7,
-	TT_TT_TOOTHED_WHEEL_60_2 = 8,
+	TT_TOOTHED_WHEEL_60_2 = 8,
+	TT_TOOTHED_WHEEL_36_1 = 9,
 
 	Internal_ForceMyEnumIntSize_trigger_type = ENUM_SIZE_HACK,
 } trigger_type_e;
@@ -228,6 +231,8 @@ typedef enum {
 	SPI_NONE = 0,
 	SPI_DEVICE_1 = 1,
 	SPI_DEVICE_2 = 2,
+	SPI_DEVICE_3 = 3,
+	SPI_DEVICE_4 = 4,
 
 	Internal_ForceMyEnumIntSize_spi_device = ENUM_SIZE_HACK,
 } spi_device_e;
@@ -337,6 +342,7 @@ typedef enum {
 	MT_CUSTOM = 0,
 	MT_DENSO183 = 1,
 	MT_MPX4250 = 2,
+	MT_HONDA3BAR = 3,
 
 	Internal_ForceMyEnumIntSize_cranking_map_type = ENUM_SIZE_HACK,
 } air_pressure_sensor_type_e;

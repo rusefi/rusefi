@@ -33,13 +33,13 @@ void Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE>::init(float table[RPM_BIN_SIZE][LOAD_BIN
 
 template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE>
 float Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE>::getValue(float x, float xBin[], float y, float yBin[]) {
-	efiAssert(initialized == MAGIC_TRUE_VALUE, "map initialized", NAN);
+	efiAssert(initialized == MAGIC_TRUE_VALUE, "map not initialized", NAN);
 	return interpolate3d(x, xBin, LOAD_BIN_SIZE, y, yBin, RPM_BIN_SIZE, pointers);
 }
 
 template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE>
 void Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE>::setAll(float value) {
-	efiAssertVoid(initialized == MAGIC_TRUE_VALUE, "map initialized");
+	efiAssertVoid(initialized == MAGIC_TRUE_VALUE, "map not initialized");
 	for (int l = 0; l < LOAD_BIN_SIZE; l++) {
 		for (int r = 0; r < RPM_BIN_SIZE; r++) {
 			pointers[l][r] = value;

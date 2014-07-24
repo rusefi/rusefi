@@ -47,16 +47,16 @@ int isTriggerDecoderError(void) {
 
 static inline int isSynchronizationGap(TriggerState const *shaftPositionState, trigger_shape_s const *triggerShape,
 		trigger_config_s const *triggerConfig, const int currentDuration) {
-	if (!triggerConfig->isSynchronizationNeeded)
+	if (!triggerShape->isSynchronizationNeeded)
 		return false;
 
-	return currentDuration > shaftPositionState->toothed_previous_duration * triggerConfig->syncRatioFrom
-			&& currentDuration < shaftPositionState->toothed_previous_duration * triggerConfig->syncRatioTo;
+	return currentDuration > shaftPositionState->toothed_previous_duration * triggerShape->syncRatioFrom
+			&& currentDuration < shaftPositionState->toothed_previous_duration * triggerShape->syncRatioTo;
 }
 
 static inline int noSynchronizationResetNeeded(TriggerState *shaftPositionState, trigger_shape_s const *triggerShape,
 		trigger_config_s const*triggerConfig) {
-	if (triggerConfig->isSynchronizationNeeded)
+	if (triggerShape->isSynchronizationNeeded)
 		return false;
 	if (!shaftPositionState->shaft_is_synchronized)
 		return TRUE;
@@ -73,8 +73,8 @@ static inline int noSynchronizationResetNeeded(TriggerState *shaftPositionState,
 void TriggerState::decodeTriggerEvent(trigger_shape_s const*triggerShape, trigger_config_s const*triggerConfig,
 		trigger_event_e signal, uint64_t nowUs) {
 
-	int isLessImportant = (triggerConfig->useRiseEdge && signal != SHAFT_PRIMARY_UP)
-			|| (!triggerConfig->useRiseEdge && signal != SHAFT_PRIMARY_DOWN);
+	int isLessImportant = (triggerShape->useRiseEdge && signal != SHAFT_PRIMARY_UP)
+			|| (!triggerShape->useRiseEdge && signal != SHAFT_PRIMARY_DOWN);
 
 	if (isLessImportant) {
 		/**
@@ -139,11 +139,12 @@ static void initializeSkippedToothTriggerShape(trigger_shape_s *s, int totalTeet
 	s->addEvent(720, T_PRIMARY, TV_LOW);
 }
 
-void initializeSkippedToothTriggerShapeExt(engine_configuration2_s *engineConfiguration2, int totalTeethCount,
+void initializeSkippedToothTriggerShapeExt(trigger_shape_s *s, int totalTeethCount,
 		int skippedCount, operation_mode_e operationMode) {
 	efiAssertVoid(totalTeethCount > 0, "totalTeethCount is zero");
 
-	trigger_shape_s *s = &engineConfiguration2->triggerShape;
+	s->totalToothCount = totalTeethCount;
+	s->skippedToothCount = skippedCount;
 	initializeSkippedToothTriggerShape(s, totalTeethCount, skippedCount, operationMode);
 
 	s->shaftPositionEventCount = ((totalTeethCount - skippedCount) * 2);
@@ -151,6 +152,7 @@ void initializeSkippedToothTriggerShapeExt(engine_configuration2_s *engineConfig
 }
 
 static void configureFordAspireTriggerShape(trigger_config_s *triggerConfig, trigger_shape_s * s) {
+	s->isSynchronizationNeeded = false;
 	s->reset(FOUR_STROKE_CAM_SENSOR);
 
 	s->shaftPositionEventCount = 10;
@@ -174,23 +176,34 @@ static void configureFordAspireTriggerShape(trigger_config_s *triggerConfig, tri
 void initializeTriggerShape(Logging *logger, engine_configuration_s *engineConfiguration,
 		engine_configuration2_s *engineConfiguration2) {
 #if EFI_PROD_CODE
-	printMsg(logger, "initializeTriggerShape()");
+	scheduleMsg(logger, "initializeTriggerShape()");
 #endif
 	trigger_config_s *triggerConfig = &engineConfiguration->triggerConfig;
 	trigger_shape_s *triggerShape = &engineConfiguration2->triggerShape;
+
+	setTriggerSynchronizationGap(triggerShape, 2);
+	triggerShape->useRiseEdge = TRUE;
+	triggerShape->needSecondTriggerInput = TRUE;
+
+
 	switch (triggerConfig->triggerType) {
 
 	case TT_TOOTHED_WHEEL:
-		initializeSkippedToothTriggerShapeExt(engineConfiguration2, triggerConfig->totalToothCount, triggerConfig->skippedToothCount,
+		engineConfiguration2->triggerShape.needSecondTriggerInput = false;
+
+		engineConfiguration2->triggerShape.isSynchronizationNeeded = engineConfiguration->triggerConfig.customIsSynchronizationNeeded;
+
+		initializeSkippedToothTriggerShapeExt(triggerShape, triggerConfig->customTotalToothCount,
+				triggerConfig->customSkippedToothCount,
 				getOperationMode(engineConfiguration));
 		return;
 
 	case TT_MAZDA_MIATA_NB:
-		initializeMazdaMiataNbShape(triggerConfig, triggerShape);
+		initializeMazdaMiataNbShape(triggerShape);
 		return;
 
 	case TT_DODGE_NEON:
-		configureNeonTriggerShape(triggerConfig, triggerShape);
+		configureNeonTriggerShape(triggerShape);
 		return;
 
 	case TT_FORD_ASPIRE:
@@ -202,11 +215,20 @@ void initializeTriggerShape(Logging *logger, engine_configuration_s *engineConfi
 		return;
 
 	case TT_FORD_ESCORT_GT:
-		configureMazdaProtegeLx(triggerConfig, triggerShape);
+		configureMazdaProtegeLx(triggerShape);
 		return;
 
 	case TT_MINI_COOPER_R50:
-		configureMiniCooperTriggerShape(triggerConfig, triggerShape);
+		configureMiniCooperTriggerShape(triggerShape);
+		return;
+
+	case TT_TOOTHED_WHEEL_60_2:
+		setToothedWheelConfiguration(triggerShape, 60, 2, engineConfiguration);
+		setTriggerSynchronizationGap(triggerShape, 2.5);
+		return;
+
+	case TT_TOOTHED_WHEEL_36_1:
+		setToothedWheelConfiguration(triggerShape, 36, 1, engineConfiguration);
 		return;
 
 	default:

@@ -18,6 +18,9 @@ extern engine_configuration_s * engineConfiguration;
  */
 static FastInterpolation denso183(0, -6.64, 5, 182.78);
 
+// todo: figure out real values
+static FastInterpolation honda3bar(0.32, -95.8371264, 4.84, 300);
+
 static FastInterpolation mpx4250(0, 8, 5, 260);
 
 float decodePressure(float voltage, air_pressure_sensor_config_s * config) {
@@ -29,6 +32,8 @@ float decodePressure(float voltage, air_pressure_sensor_config_s * config) {
 		return denso183.getValue(voltage);
 	case MT_MPX4250:
 		return mpx4250.getValue(voltage);
+	case MT_HONDA3BAR:
+		return honda3bar.getValue(voltage);
 	default:
 		firmwareError("Unknown MAP type: %d", config->sensorType);
 		return NAN;

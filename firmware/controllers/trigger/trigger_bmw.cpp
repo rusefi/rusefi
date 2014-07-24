@@ -15,8 +15,7 @@ static inline float addPair(trigger_shape_s *s, float a, float w) {
 	return a;
 }
 
-void configureMiniCooperTriggerShape(trigger_config_s *triggerConfig,
-		trigger_shape_s *s) {
+void configureMiniCooperTriggerShape(trigger_shape_s *s) {
 
 	s->reset(FOUR_STROKE_CAM_SENSOR);
 
@@ -67,5 +66,5 @@ void configureMiniCooperTriggerShape(trigger_config_s *triggerConfig,
 	/**
 	 * With just one tooth on camshaft synchronization is not needed
 	 */
-	triggerConfig->isSynchronizationNeeded = FALSE;
+	s->isSynchronizationNeeded = FALSE;
 }

@@ -140,7 +140,7 @@ void initBoardTest(void) {
 
 //		print("ADC%d val= %d%s", hwIndex, value, DELIMETER);
 			float volts = adcToVolts(adcValue) * 2;
-			print("v=%f     adc=%d             c=%d\r\n", volts, adcValue, c++);
+			print("v=%f  adc=%d  c=%d (hit 'n'<ENTER> for next step\r\n", volts, adcValue, c++);
 
 			chThdSleepMilliseconds(300);
 

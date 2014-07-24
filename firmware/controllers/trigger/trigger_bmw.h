@@ -10,7 +10,6 @@
 #include "engine_configuration.h"
 #include "ec2.h"
 
-void configureMiniCooperTriggerShape(trigger_config_s *triggerConfig,
-		trigger_shape_s *s);
+void configureMiniCooperTriggerShape(trigger_shape_s *s);
 
 #endif /* TRIGGER_BMW_H_ */

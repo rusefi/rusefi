@@ -36,10 +36,12 @@
 #include "allsensors.h"
 #include "engine_math.h"
 #include "rpm_calculator.h"
+#include "speed_density.h"
 #if EFI_ACCEL_ENRICHMENT
 #include "accel_enrichment.h"
 #endif /* EFI_ACCEL_ENRICHMENT */
 
+extern Engine engine;
 extern engine_configuration_s *engineConfiguration;
 
 static Map3D1616 fuelMap;
@@ -83,7 +85,16 @@ float getInjectorLag(float vBatt) {
 	return engineConfiguration->injectorLag + vBattCorrection;
 }
 
-float getBaseFuel(int rpm, float engineLoad) {
+float getBaseFuel(Engine *engine, int rpm) {
+	if (engine->engineConfiguration->algorithm == LM_SPEED_DENSITY) {
+		return getSpeedDensityFuel(engine, rpm);
+	} else {
+		float engineLoad = getEngineLoadT(engine);
+		return getBaseTableFuel(rpm, engineLoad);
+	}
+}
+
+float getBaseTableFuel(int rpm, float engineLoad) {
 	efiAssert(!cisnan(engineLoad), "invalid el", NAN);
 	return fuelMap.getValue(engineLoad, engineConfiguration->fuelLoadBins, rpm,
 			engineConfiguration->fuelRpmBins);
@@ -96,22 +107,17 @@ float getCrankingFuel(void) {
 /**
  * @returns	Length of fuel injection, in milliseconds
  */
-float getFuelMs(int rpm) {
+float getFuelMs(int rpm, Engine *engine) {
 	if (isCranking()) {
 		return getCrankingFuel();
 	} else {
-		float fuel = getRunningFuel(rpm, getEngineLoad());
+		float baseFuel = getBaseFuel(engine, rpm);
+		float fuel = getRunningFuel(baseFuel, engine, rpm);
 		return fuel;
 	}
 }
 
-float getRunningFuel(int rpm, float engineLoad) {
-	if (cisnan(engineLoad)) {
-		// the warning message should be already produced by the sensor decoder
-		return NAN;
-	}
-	float baseFuel = getBaseFuel(rpm, engineLoad);
-
+float getRunningFuel(float baseFuel, Engine *engine, int rpm) {
 	float iatCorrection = getIatCorrection(getIntakeAirTemperature());
 	float cltCorrection = getCltCorrection(getCoolantTemperature());
 	float injectorLag = getInjectorLag(getVBatt());
