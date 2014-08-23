@@ -21,6 +21,7 @@ public:
 	persistent_config_s persistentConfig;
 	engine_configuration2_s ec2;
 	configuration_s configuration;
+	Engine engine;
 
 	engine_configuration_s *ec;
 

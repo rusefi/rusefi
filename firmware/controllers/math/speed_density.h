@@ -11,7 +11,7 @@
 #include "ec2.h"
 #include "engine.h"
 
-float getTCharge(int rpm, int tps, float coolantTemp, float airTemp);
+float getTCharge(int rpm, float tps, float coolantTemp, float airTemp);
 void setDetaultVETable(engine_configuration_s *engineConfiguration);
 float sdMath(engine_configuration_s *engineConfiguration, float VE, float MAP, float AFR, float temp);
 

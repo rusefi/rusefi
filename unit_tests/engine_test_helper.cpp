@@ -8,16 +8,23 @@
 #include "engine_test_helper.h"
 #include "stddef.h"
 #include "trigger_decoder.h"
+#include "speed_density.h"
 
 extern int timeNow;
 
 EngineTestHelper::EngineTestHelper(engine_type_e engineType) {
 	ec = &persistentConfig.engineConfiguration;
 
+	engine.engineConfiguration = ec;
+
 	configuration.engineConfiguration = ec;
 	configuration.engineConfiguration2 = &ec2;
 
+
+	initSpeedDensity(ec);
+
 	resetConfigurationExt(NULL, FORD_INLINE_6_1995, ec, &ec2, &persistentConfig.engineConfiguration.bc);
+	ec->mafAdcChannel = (adc_channel_e)TEST_MAF_CHANNEL;
 }
 
 void EngineTestHelper::fireTriggerEvents() {

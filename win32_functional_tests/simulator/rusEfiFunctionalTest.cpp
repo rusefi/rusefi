@@ -14,7 +14,6 @@
 #include "ec2.h"
 #include "rusefi_enums.h"
 #include "pwm_generator_logic.h"
-#include "wave_math.h"
 #include "trigger_central.h"
 #include "datalogging.h"
 #include "algo.h"
@@ -28,6 +27,7 @@
 #include "injector_central.h"
 #include "engine.h"
 #include "tunerstudio.h"
+#include "trigger_emulator.h"
 
 Engine engine;
 
@@ -65,27 +65,13 @@ void idleDebug(char *msg, int value) {
 }
 
 float getMap(void) {
-	return 0;
+	return getRawMap();
 }
 
-static int primaryWheelState = FALSE;
-static int secondaryWheelState = FALSE;
+static TriggerEmulatorHelper helper;
 
 static void triggerEmulatorCallback(PwmConfig *state, int stateIndex) {
-	int newPrimaryWheelState = state->multiWave.waves[0].pinStates[stateIndex];
-	int newSecondaryWheelState = state->multiWave.waves[1].pinStates[stateIndex];
-
-	if (primaryWheelState != newPrimaryWheelState) {
-		primaryWheelState = newPrimaryWheelState;
-		hwHandleShaftSignal(primaryWheelState ? SHAFT_PRIMARY_UP : SHAFT_PRIMARY_DOWN);
-	}
-
-	if (secondaryWheelState != newSecondaryWheelState) {
-		secondaryWheelState = newSecondaryWheelState;
-		hwHandleShaftSignal(secondaryWheelState ? SHAFT_SECONDARY_UP : SHAFT_SECONDARY_DOWN);
-	}
-
-//	print("hello %d\r\n", chTimeNow());
+	helper.handleEmulatorCallback(state, stateIndex);
 }
 
 void rusEfiFunctionalTest(void) {
@@ -95,6 +81,9 @@ void rusEfiFunctionalTest(void) {
 
 	initStatusLoop();
 	initDataStructures(engineConfiguration);
+
+	engine.engineConfiguration = engineConfiguration;
+
 
 	resetConfigurationExt(NULL, FORD_ASPIRE_1996, engineConfiguration, engineConfiguration2, boardConfiguration);
 
@@ -106,7 +95,7 @@ void rusEfiFunctionalTest(void) {
 
 	initTriggerEmulatorLogic(triggerEmulatorCallback);
 
-	initMainEventListener(engineConfiguration, engineConfiguration2);
+	initMainEventListener(&engine, engineConfiguration2);
 
 	initTriggerCentral();
 
@@ -116,12 +105,8 @@ void rusEfiFunctionalTest(void) {
 }
 
 void printPendingMessages(void) {
-	printPending();
-	if (getFullLog()) {
-		printState(getCrankEventCounter());
-		finishStatusLine();
-		publishChartIfFull(&waveChart);
-	}
+	updateDevConsoleState();
+	publishChartIfFull(&waveChart);
 }
 
 static size_t wt_writes(void *ip, const uint8_t *bp, size_t n) {
@@ -174,7 +159,7 @@ void initTestStream(TestStream *ts) {
 
 int isSerialOverTcpReady;
 
-int isConsoleReady(void) {
+bool isConsoleReady(void) {
 	return isSerialOverTcpReady;
 }
 
@@ -218,6 +203,10 @@ uint64_t getTimeNowUs(void) {
 
 efitimems_t currentTimeMillis(void) {
 	return getTimeNowUs() / 1000;
+}
+
+int getTimeNowSeconds(void) {
+	return chTimeNow() / CH_FREQUENCY;
 }
 
 int getRusEfiVersion(void) {

@@ -7,7 +7,6 @@
 #include "main.h"
 #include "trigger_emulator_algo.h"
 #include "engine_configuration.h"
-#include "wave_math.h"
 #include "LocalVersionHolder.h"
 #include "ec2.h"
 
@@ -20,8 +19,9 @@ extern engine_configuration2_s *engineConfiguration2;
  */
 static int pinStates1[PWM_PHASE_MAX_COUNT];
 static int pinStates2[PWM_PHASE_MAX_COUNT];
-static single_wave_s waves[2] = {single_wave_s(pinStates1), single_wave_s(pinStates2)};
-static single_wave_s sr[2] = {waves[0], waves[1]};
+static int pinStates3[PWM_PHASE_MAX_COUNT];
+static single_wave_s waves[PWM_PHASE_MAX_WAVE_PER_PWM] = {single_wave_s(pinStates1), single_wave_s(pinStates2), single_wave_s(pinStates3)};
+static single_wave_s sr[PWM_PHASE_MAX_WAVE_PER_PWM] = {waves[0], waves[1], waves[2]};
 
 static float swtchTms[PWM_PHASE_MAX_COUNT];
 
@@ -52,8 +52,8 @@ static void updateTriggerShapeIfNeeded(PwmConfig *state) {
 		applyNonPersistentConfiguration(&logger, engineConfiguration, engineConfiguration2);
 
 		trigger_shape_s *s = &engineConfiguration2->triggerShape;
-		int *pinStates[2] = {s->wave.waves[0].pinStates, s->wave.waves[1].pinStates};
-		copyPwmParameters(state, s->getSize(), s->wave.switchTimes, 2, pinStates);
+		int *pinStates[PWM_PHASE_MAX_WAVE_PER_PWM] = {s->wave.waves[0].pinStates, s->wave.waves[1].pinStates, s->wave.waves[2].pinStates};
+		copyPwmParameters(state, s->getSize(), s->wave.switchTimes, PWM_PHASE_MAX_WAVE_PER_PWM, pinStates);
 		state->safe.periodUs = -1; // this would cause loop re-initialization
 	}
 }
@@ -64,10 +64,9 @@ void initTriggerEmulatorLogic(pwm_gen_callback *stateChangeCallback) {
 
 	trigger_shape_s *s = &engineConfiguration2->triggerShape;
 	setTriggerEmulatorRPM(DEFAULT_EMULATION_RPM);
-	int *pinStates[2] = { s->wave.waves[0].pinStates, s->wave.waves[1].pinStates};
-	weComplexInit("position sensor", &triggerSignal, s->getSize(), s->wave.switchTimes, 2, pinStates,
-			updateTriggerShapeIfNeeded,
-			stateChangeCallback);
+	int *pinStates[PWM_PHASE_MAX_WAVE_PER_PWM] = { s->wave.waves[0].pinStates, s->wave.waves[1].pinStates, s->wave.waves[2].pinStates};
+	weComplexInit("position sensor", &triggerSignal, s->getSize(), s->wave.switchTimes, PWM_PHASE_MAX_WAVE_PER_PWM, pinStates,
+			updateTriggerShapeIfNeeded, stateChangeCallback);
 
 	addConsoleActionI("rpm", &setTriggerEmulatorRPM);
 

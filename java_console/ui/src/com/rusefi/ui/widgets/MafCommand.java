@@ -1,6 +1,6 @@
-package com.irnems.ui.widgets;
+package com.rusefi.ui.widgets;
 
-import com.irnems.EcuStimulator;
+import com.rusefi.EcuStimulator;
 import com.irnems.core.Sensor;
 
 import javax.swing.*;

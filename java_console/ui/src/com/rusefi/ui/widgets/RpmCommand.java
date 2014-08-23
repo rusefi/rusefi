@@ -1,4 +1,4 @@
-package com.irnems.ui.widgets;
+package com.rusefi.ui.widgets;
 
 import com.rusefi.io.CommandQueue;
 
@@ -38,6 +38,9 @@ public class RpmCommand extends JPanel {
     }
 
     public static void requestRpmChange(int rpm) {
+        /**
+         * @see
+         */
         CommandQueue.getInstance().write("rpm " + rpm);
     }
 }

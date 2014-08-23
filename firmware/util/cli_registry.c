@@ -70,8 +70,16 @@ void addConsoleActionS(const char *token, VoidCharPtr callback) {
 	doAddAction(token, STRING_PARAMETER, (Void) callback);
 }
 
+void addConsoleActionSS(const char *token, VoidCharPtrCharPtr callback) {
+	doAddAction(token, STRING2_PARAMETER, (Void) callback);
+}
+
 void addConsoleActionSSS(const char *token, VoidCharPtrCharPtrCharPtr callback) {
 	doAddAction(token, STRING3_PARAMETER, (Void) callback);
+}
+
+void addConsoleActionSSSSS(const char *token, VoidCharPtrCharPtrCharPtrCharPtrCharPtr callback) {
+	doAddAction(token, STRING5_PARAMETER, (Void) callback);
 }
 
 void addConsoleActionF(const char *token, VoidFloat callback) {
@@ -93,7 +101,7 @@ void helpCommand(void) {
 	}
 #endif /* EFI_PROD_CODE */
 
-#if EFI_PROD_CODE || EFI_SIMULATOR
+#if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
 	scheduleMsg(&logging, "%d actions available", consoleActionCount);
 	for (int i = 0; i < consoleActionCount; i++) {
 		TokenCallback *current = &consoleActions[i];
@@ -116,24 +124,82 @@ void handleActionWithParameter(TokenCallback *current, char *parameter) {
 		return;
 	}
 
+	// todo: refactor this hell!
+	if (current->parameterType == STRING2_PARAMETER) {
+		int spaceIndex = indexOf(parameter, ' ');
+		if (spaceIndex == -1) {
+			return;
+		}
+		parameter[spaceIndex] = 0;
+		char * param0 = parameter;
+
+		parameter += spaceIndex + 1;
+		char * param1 = parameter;
+
+		VoidCharPtrCharPtr callbackS = (VoidCharPtrCharPtr) current->callback;
+		(*callbackS)(param0, param1);
+		return;
+
+	}
+
 	if (current->parameterType == STRING3_PARAMETER) {
 		int spaceIndex = indexOf(parameter, ' ');
-		if (spaceIndex == -1)
+		if (spaceIndex == -1) {
 			return;
+		}
 		parameter[spaceIndex] = 0;
-		char * firstParam = parameter;
+		char * param0 = parameter;
 
 		parameter += spaceIndex + 1;
 		spaceIndex = indexOf(parameter, ' ');
 		if (spaceIndex == -1)
 			return;
 		parameter[spaceIndex] = 0;
-		char * secondParam = parameter;
+		char * param1 = parameter;
 		parameter += spaceIndex + 1;
-		char * thirdParam = parameter;
+		char * param2 = parameter;
 
 		VoidCharPtrCharPtrCharPtr callbackS = (VoidCharPtrCharPtrCharPtr) current->callback;
-		(*callbackS)(firstParam, secondParam, thirdParam);
+		(*callbackS)(param0, param1, param2);
+		return;
+
+	}
+
+	// todo: refactor this hell!
+	if (current->parameterType == STRING5_PARAMETER) {
+		int spaceIndex = indexOf(parameter, ' ');
+		if (spaceIndex == -1) {
+			return;
+		}
+		parameter[spaceIndex] = 0;
+		char * param0 = parameter;
+
+		parameter += spaceIndex + 1;
+		spaceIndex = indexOf(parameter, ' ');
+		if (spaceIndex == -1)
+			return;
+		parameter[spaceIndex] = 0;
+		char * param1 = parameter;
+
+		parameter += spaceIndex + 1;
+		spaceIndex = indexOf(parameter, ' ');
+		if (spaceIndex == -1)
+			return;
+		parameter[spaceIndex] = 0;
+		char * param2 = parameter;
+
+		parameter += spaceIndex + 1;
+		spaceIndex = indexOf(parameter, ' ');
+		if (spaceIndex == -1)
+			return;
+		parameter[spaceIndex] = 0;
+		char * param3 = parameter;
+
+		parameter += spaceIndex + 1;
+		char * param4 = parameter;
+
+		VoidCharPtrCharPtrCharPtrCharPtrCharPtr callbackS = (VoidCharPtrCharPtrCharPtrCharPtrCharPtr) current->callback;
+		(*callbackS)(param0, param1, param2, param3, param4);
 		return;
 
 	}
@@ -144,8 +210,20 @@ void handleActionWithParameter(TokenCallback *current, char *parameter) {
 			return;
 		parameter[spaceIndex] = 0;
 		int value1 = atoi(parameter);
+		if (absI(value1) == absI(ERROR_CODE)) {
+#if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
+			scheduleMsg(&logging, "not an integer [%s]", parameter);
+#endif
+			return;
+		}
 		parameter += spaceIndex + 1;
 		int value2 = atoi(parameter);
+		if (absI(value2) == absI(ERROR_CODE)) {
+#if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
+			scheduleMsg(&logging, "not an integer [%s]", parameter);
+#endif
+			return;
+		}
 		VoidIntInt callbackS = (VoidIntInt) current->callback;
 		(*callbackS)(value1, value2);
 		return;
@@ -189,12 +267,13 @@ void handleActionWithParameter(TokenCallback *current, char *parameter) {
 /**
  * @return Number of space-separated tokens in the string
  */
-int tokenLength(char *msgp) {
+int tokenLength(const char *msgp) {
 	int result = 0;
 	while (*msgp) {
 		char ch = *msgp++;
-		if (ch == ' ')
+		if (ch == ' ') {
 			break;
+		}
 		result++;
 	}
 	return result;
@@ -204,8 +283,9 @@ int strEqual(const char *str1, const char *str2) {
 	// todo: there must be a standard function?!
 	int len1 = strlen(str1);
 	int len2 = strlen(str2);
-	if (len1 != len2)
+	if (len1 != len2) {
 		return false;
+	}
 	for (int i = 0; i < len1; i++)
 		if (str1[i] != str2[i])
 			return false;
@@ -257,8 +337,6 @@ char *validateSecureLine(char *line) {
 
 static char confirmation[200];
 
-void sendOutConfirmation(char *value, int i);
-
 static bool handleConsoleLineInternal(char *line, int lineLength) {
 	int firstTokenLength = tokenLength(line);
 
@@ -271,7 +349,7 @@ static bool handleConsoleLineInternal(char *line, int lineLength) {
 			if (strEqual(line, current->token)) {
 				// invoke callback function by reference
 				(*current->callback)();
-				return TRUE;
+				return true;
 			}
 		}
 	} else {
@@ -289,6 +367,12 @@ static bool handleConsoleLineInternal(char *line, int lineLength) {
 	}
 	return false;
 }
+
+#if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
+static void sendOutConfirmation(const char *command, int length) {
+	scheduleMsg(&logging, "%s%d", command, length);
+}
+#endif
 
 /**
  * @brief This function takes care of one command line once we have it
@@ -310,10 +394,11 @@ void handleConsoleLine(char *line) {
 	strcat(confirmation, line);
 	strcat(confirmation, ":");
 
-	bool isKnownComman = handleConsoleLineInternal(line, lineLength);
-
-	// confirmation happens after the command to avoid conflict with command own output
+#if EFI_PROD_CODE || EFI_SIMULATOR
 	sendOutConfirmation(confirmation, lineLength);
+#endif
+
+	bool isKnownComman = handleConsoleLineInternal(line, lineLength);
 
 	if (!isKnownComman)
 		helpCommand();

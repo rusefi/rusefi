@@ -11,7 +11,7 @@
 #include "status_loop.h"
 #include "engine_configuration.h"
 
-#if EFI_ANALOG_CHART
+#if EFI_ANALOG_CHART || defined(__DOXYGEN__)
 
 static char LOGGING_BUFFER[5000];
 static Logging logging;
@@ -22,8 +22,9 @@ static int initialized = FALSE;
 extern engine_configuration_s *engineConfiguration;
 
 void acAddData(float angle, float value) {
-	if (!initialized)
+  if (!initialized) {
 		return; // this is possible because of initialization sequence
+  }
 
 	if( engineConfiguration->analogChartFrequency < 1) {
 		//todofirmwareError()
@@ -35,8 +36,9 @@ void acAddData(float angle, float value) {
 			// message terminator
 			appendPrintf(&logging, DELIMETER);
 			// output pending data
-			if (getFullLog())
+			if (getFullLog()) {
 				scheduleLogging(&logging);
+                        }
 			pendingData = FALSE;
 		}
 		return;
@@ -48,8 +50,9 @@ void acAddData(float angle, float value) {
 		appendPrintf(&logging, "analog_chart%s", DELIMETER);
 	}
 
-	if (remainingSize(&logging) > 100)
+  if (remainingSize(&logging) > 100) {
 		appendPrintf(&logging, "%f|%f|", angle, value);
+  }
 }
 
 void initAnalogChart(void) {

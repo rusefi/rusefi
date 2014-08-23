@@ -30,6 +30,7 @@
 #include "main_trigger_callback.h"
 #include "map_multiplier_thread.h"
 #include "io_pins.h"
+#include "flash_main.h"
 #include "tunerstudio.h"
 #include "injector_central.h"
 #include "ignition_central.h"
@@ -54,7 +55,8 @@
 
 extern board_configuration_s *boardConfiguration;
 
-persistent_config_container_s persistentState CCM_OPTIONAL;
+persistent_config_container_s persistentState CCM_OPTIONAL
+;
 
 engine_configuration_s *engineConfiguration = &persistentState.persistentConfiguration.engineConfiguration;
 board_configuration_s *boardConfiguration = &persistentState.persistentConfiguration.engineConfiguration.bc;
@@ -69,10 +71,11 @@ static VirtualTimer fuelPumpTimer;
 
 static Logging logger;
 
-static engine_configuration2_s ec2 CCM_OPTIONAL;
+static engine_configuration2_s ec2 CCM_OPTIONAL
+;
 engine_configuration2_s * engineConfiguration2 = &ec2;
 
-static configuration_s cfg = {&persistentState.persistentConfiguration.engineConfiguration, &ec2};
+static configuration_s cfg = { &persistentState.persistentConfiguration.engineConfiguration, &ec2 };
 
 configuration_s * configuration = &cfg;
 
@@ -104,10 +107,8 @@ static void updateErrorCodes(void) {
 	/**
 	 * technically we can set error codes right inside the getMethods, but I a bit on a fence about it
 	 */
-	setError(isValidIntakeAirTemperature(getIntakeAirTemperature()),
-			OBD_Intake_Air_Temperature_Circuit_Malfunction);
-	setError(isValidCoolantTemperature(getCoolantTemperature()),
-			OBD_Engine_Coolant_Temperature_Circuit_Malfunction);
+	setError(isValidIntakeAirTemperature(getIntakeAirTemperature()), OBD_Intake_Air_Temperature_Circuit_Malfunction);
+	setError(isValidCoolantTemperature(getCoolantTemperature()), OBD_Engine_Coolant_Temperature_Circuit_Malfunction);
 }
 
 static void fanRelayControl(void) {
@@ -118,11 +119,9 @@ static void fanRelayControl(void) {
 	int newValue;
 	if (isCurrentlyOn) {
 		// if the fan is already on, we keep it on till the 'fanOff' temperature
-		newValue = getCoolantTemperature()
-				> engineConfiguration->fanOffTemperature;
+		newValue = getCoolantTemperature() > engineConfiguration->fanOffTemperature;
 	} else {
-		newValue = getCoolantTemperature()
-				> engineConfiguration->fanOnTemperature;
+		newValue = getCoolantTemperature() > engineConfiguration->fanOnTemperature;
 	}
 
 	if (isCurrentlyOn != newValue) {
@@ -156,25 +155,31 @@ static void onEvenyGeneralMilliseconds(void *arg) {
 	 */
 	halTime.get(hal_lld_get_counter_value(), true);
 
+	if (!engine.rpmCalculator->isRunning())
+		writeToFlashIfPending();
+
 	engine.updateSlowSensors();
 
 	updateErrorCodes();
 
 	fanRelayControl();
 
+	setOutputPinValue(O2_HEATER, engine.rpmCalculator->isRunning());
+
 	// schedule next invocation
-	chVTSetAny(&everyMsTimer, boardConfiguration->generalPeriodicThreadPeriod * TICKS_IN_MS, &onEvenyGeneralMilliseconds, 0);
+	chVTSetAny(&everyMsTimer, boardConfiguration->generalPeriodicThreadPeriod * TICKS_IN_MS,
+			&onEvenyGeneralMilliseconds, 0);
 }
 
 static void initPeriodicEvents(void) {
 	// schedule first invocation
-	chVTSetAny(&everyMsTimer, boardConfiguration->generalPeriodicThreadPeriod * TICKS_IN_MS, &onEvenyGeneralMilliseconds, 0);
+	chVTSetAny(&everyMsTimer, boardConfiguration->generalPeriodicThreadPeriod * TICKS_IN_MS,
+			&onEvenyGeneralMilliseconds, 0);
 }
 
 static void fuelPumpOff(void *arg) {
 	if (getOutputPinValue(FUEL_PUMP_RELAY))
-		scheduleMsg(&logger, "fuelPump OFF at %s%d",
-				hwPortname(boardConfiguration->fuelPumpPin));
+		scheduleMsg(&logger, "fuelPump OFF at %s%d", hwPortname(boardConfiguration->fuelPumpPin));
 	turnOutputPinOff(FUEL_PUMP_RELAY);
 }
 
@@ -182,10 +187,8 @@ static void fuelPumpOn(trigger_event_e signal, int index, void *arg) {
 	if (index != 0)
 		return; // let's not abuse the timer - one time per revolution would be enough
 	// todo: the check about GPIO_NONE should be somewhere else!
-	if (!getOutputPinValue(FUEL_PUMP_RELAY)
-			&& boardConfiguration->fuelPumpPin != GPIO_NONE)
-		scheduleMsg(&logger, "fuelPump ON at %s",
-				hwPortname(boardConfiguration->fuelPumpPin));
+	if (!getOutputPinValue(FUEL_PUMP_RELAY) && boardConfiguration->fuelPumpPin != GPIO_NONE)
+		scheduleMsg(&logger, "fuelPump ON at %s", hwPortname(boardConfiguration->fuelPumpPin));
 	turnOutputPinOn(FUEL_PUMP_RELAY);
 	/**
 	 * the idea of this implementation is that we turn the pump when the ECU turns on or
@@ -200,7 +203,7 @@ static void initFuelPump(void) {
 	fuelPumpOn(SHAFT_PRIMARY_UP, 0, NULL);
 }
 
-char * getPinNameByAdcChannel(int hwChannel, char *buffer) {
+char * getPinNameByAdcChannel(adc_channel_e hwChannel, char *buffer) {
 	strcpy((char*) buffer, portname(getAdcChannelPort(hwChannel)));
 	itoa10(&buffer[2], getAdcChannelPin(hwChannel));
 	return (char*) buffer;
@@ -208,14 +211,14 @@ char * getPinNameByAdcChannel(int hwChannel, char *buffer) {
 
 static char pinNameBuffer[16];
 
-static void printAnalogChannelInfoExt(const char *name, int hwChannel,
-		float adcVoltage) {
+static void printAnalogChannelInfoExt(const char *name, adc_channel_e hwChannel, float adcVoltage) {
 	float voltage = adcVoltage * engineConfiguration->analogInputDividerCoefficient;
-	scheduleMsg(&logger, "%s ADC%d %s rawValue=%f/divided=%fv", name, hwChannel,
+	scheduleMsg(&logger, "%s ADC%d %s %s rawValue=%f/divided=%fv", name, hwChannel,
+			getAdcMode(hwChannel),
 			getPinNameByAdcChannel(hwChannel, pinNameBuffer), adcVoltage, voltage);
 }
 
-static void printAnalogChannelInfo(const char *name, int hwChannel) {
+static void printAnalogChannelInfo(const char *name, adc_channel_e hwChannel) {
 	printAnalogChannelInfoExt(name, hwChannel, getVoltage(hwChannel));
 }
 
@@ -227,11 +230,10 @@ static void printAnalogInfo(void) {
 	printAnalogChannelInfo("AFR", engineConfiguration->afrSensor.afrAdcChannel);
 	printAnalogChannelInfo("MAP", engineConfiguration->map.sensor.hwChannel);
 	printAnalogChannelInfo("BARO", engineConfiguration->baroSensor.hwChannel);
-	printAnalogChannelInfoExt("Vbatt", engineConfiguration->vBattAdcChannel,
-			getVBatt());
+	printAnalogChannelInfoExt("Vbatt", engineConfiguration->vBattAdcChannel, getVBatt());
 }
 
-static THD_WORKING_AREA(csThreadStack, UTILITY_THREAD_STACK_SIZE);// declare thread stack
+static THD_WORKING_AREA(csThreadStack, UTILITY_THREAD_STACK_SIZE);	// declare thread stack
 
 void initEngineContoller(void) {
 	if (hasFirmwareError())
@@ -269,8 +271,7 @@ void initEngineContoller(void) {
 // multiple issues with this	initMapAdjusterThread();
 	initPeriodicEvents();
 
-	chThdCreateStatic(csThreadStack, sizeof(csThreadStack), LOWPRIO,
-			(tfunc_t) csThread, NULL);
+	chThdCreateStatic(csThreadStack, sizeof(csThreadStack), LOWPRIO, (tfunc_t) csThread, NULL);
 
 	initInjectorCentral();
 	initPwmTester();
@@ -305,7 +306,6 @@ void initEngineContoller(void) {
 #if EFI_FUEL_PUMP
 	initFuelPump();
 #endif
-
 
 	addConsoleAction("analoginfo", printAnalogInfo);
 }

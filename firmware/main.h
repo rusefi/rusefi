@@ -49,7 +49,6 @@ extern "C"
 extern "C"
 {
 #endif
-void updateHD44780lcd(void);
 int systicks2ms(int systicks);
 
 bool lockAnyContext(void);

@@ -78,7 +78,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/chibios/os/ports/common/ARMCMx}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/chibios/os/ports/common/ARMCMx/CMSIS/include}&quot;"/>
 								</option>
-								<option id="org.eclipse.cdt.cross.arm.gnu.c.compiler.option.other.otherflags.720321025" name="Other flags" superClass="org.eclipse.cdt.cross.arm.gnu.c.compiler.option.other.otherflags" value="-fgnu89-inline -c -fmessage-length=0 -Werror=type-limits -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable" valueType="string"/>
+								<option id="org.eclipse.cdt.cross.arm.gnu.c.compiler.option.other.otherflags.720321025" name="Other flags" superClass="org.eclipse.cdt.cross.arm.gnu.c.compiler.option.other.otherflags" value="-fgnu89-inline -c -fmessage-length=0 -Werror=switch -Werror=type-limits -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable" valueType="string"/>
 								<option id="org.eclipse.cdt.cross.arm.gnu.c.compiler.option.misc.std.32943169" name="Language Standard" superClass="org.eclipse.cdt.cross.arm.gnu.c.compiler.option.misc.std" value="org.eclipse.cdt.cross.arm.gnu.c.compiler.option.misc.std.gnu99" valueType="enumerated"/>
 								<option id="org.eclipse.cdt.cross.arm.gnu.c.compiler.option.preprocessor.def.1323722868" name="Defined symbols (-D)" superClass="org.eclipse.cdt.cross.arm.gnu.c.compiler.option.preprocessor.def" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="CORTEX_USE_FPU=TRUE"/>
@@ -115,6 +115,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/emulation/hw_layer}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/hw_layer}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/hw_layer/flash}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/hw_layer/stm32f4}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/russianefi}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/russianefi/algo}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/russianefi/ckp}&quot;"/>
@@ -139,7 +140,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/chibios/os/ports/common/ARMCMx}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/chibios/os/ports/common/ARMCMx/CMSIS/include}&quot;"/>
 								</option>
-								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.other.otherflags.1439013659" name="Other flags" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.other.otherflags" value="-c -fmessage-length=0 -std=c++11 -Werror=write-strings" valueType="string"/>
+								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.other.otherflags.1439013659" name="Other flags" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.other.otherflags" value="-c -fmessage-length=0 -std=c++11 -Werror=write-strings -Werror=switch" valueType="string"/>
 								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.preprocessor.def.1500938905" name="Defined symbols (-D)" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.preprocessor.def" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="CORTEX_USE_FPU=TRUE"/>
 								</option>
@@ -303,10 +304,10 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/chibios/os/ports/common/ARMCMx}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/chibios/os/ports/common/ARMCMx/CMSIS/include}&quot;"/>
 								</option>
-								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.preprocessor.def.104404165" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.preprocessor.def" valueType="definedSymbols">
+								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.preprocessor.def.104404165" name="Defined symbols (-D)" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.preprocessor.def" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="CORTEX_USE_FPU=TRUE"/>
 								</option>
-								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.optimization.flags.514837677" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.optimization.flags" value="-mfloat-abi=softfp  -mfpu=fpv4-sp-d16 -fsingle-precision-constant" valueType="string"/>
+								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.optimization.flags.514837677" name="Other optimization flags" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.optimization.flags" value="-mfloat-abi=softfp  -mfpu=fpv4-sp-d16 -fsingle-precision-constant" valueType="string"/>
 								<inputType id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.cpp.compiler.base.input.815685204" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.cpp.compiler.base.input"/>
 							</tool>
 							<tool id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.c.linker.release.1692652942" name="ARM Sourcery Windows GCC C Linker" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.c.linker.release"/>

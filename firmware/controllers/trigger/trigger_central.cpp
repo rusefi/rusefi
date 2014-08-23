@@ -11,7 +11,6 @@
 #include "main_trigger_callback.h"
 #include "engine_configuration.h"
 #include "listener_array.h"
-#include "wave_math.h"
 #include "data_buffer.h"
 #include "histogram.h"
 #if EFI_PROD_CODE
@@ -63,6 +62,10 @@ TriggerCentral::TriggerCentral() {
 	clearCallbacks(&triggerListeneres);
 }
 
+int TriggerCentral::getHwEventCounter(int index) {
+	return hwEventCounters[index];
+}
+
 void TriggerCentral::handleShaftSignal(configuration_s *configuration, trigger_event_e signal, uint64_t nowUs) {
 	efiAssertVoid(configuration!=NULL, "configuration");
 
@@ -81,7 +84,7 @@ void TriggerCentral::handleShaftSignal(configuration_s *configuration, trigger_e
 		 * We are here if there is a time gap between now and previous shaft event - that means the engine is not runnig.
 		 * That means we have lost synchronization since the engine is not running :)
 		 */
-		triggerState.shaft_is_synchronized = FALSE;
+		triggerState.shaft_is_synchronized = false;
 	}
 	previousShaftEventTime = nowUs;
 
@@ -92,16 +95,19 @@ void TriggerCentral::handleShaftSignal(configuration_s *configuration, trigger_e
 	 */
 	triggerState.decodeTriggerEvent(triggerShape, &configuration->engineConfiguration->triggerConfig, signal, nowUs);
 
-	if (!triggerState.shaft_is_synchronized)
-		return; // we should not propagate event if we do not know where we are
+	if (!triggerState.shaft_is_synchronized) {
+		// we should not propagate event if we do not know where we are
+		return;
+	}
 
 	if (triggerState.getCurrentIndex() >= configuration->engineConfiguration2->triggerShape.shaftPositionEventCount) {
 		int f = warning(OBD_PCM_Processor_Fault, "unexpected eventIndex=%d", triggerState.getCurrentIndex());
 		if (!f) {
 #if EFI_PROD_CODE
 			// this temporary code is about trigger noise debugging
-			for (int i = 0; i < HW_EVENT_TYPES; i++)
+			for (int i = 0; i < HW_EVENT_TYPES; i++) {
 				scheduleMsg(&logging, "event type: %d count=%d", i, hwEventCounters[i]);
+			}
 #endif
 		}
 	} else {
@@ -110,7 +116,7 @@ void TriggerCentral::handleShaftSignal(configuration_s *configuration, trigger_e
 		 * cycle into a four stroke, 720 degrees cycle. TODO
 		 */
 		int triggerIndexForListeners;
-		if( getOperationMode(configuration->engineConfiguration) == FOUR_STROKE_CAM_SENSOR) {
+		if (getOperationMode(configuration->engineConfiguration) == FOUR_STROKE_CAM_SENSOR) {
 			// That's easy - trigger cycle matches engine cycle
 			triggerIndexForListeners = triggerState.getCurrentIndex();
 		} else {
@@ -118,7 +124,6 @@ void TriggerCentral::handleShaftSignal(configuration_s *configuration, trigger_e
 
 			triggerIndexForListeners = triggerState.getCurrentIndex() + (isEven ? 0 : triggerShape->getSize());
 		}
-
 
 		/**
 		 * Here we invoke all the listeners - the main engine control logic is inside these listeners
@@ -130,7 +135,7 @@ void TriggerCentral::handleShaftSignal(configuration_s *configuration, trigger_e
 	int diff = afterCallback - beforeCallback;
 	// this counter is only 32 bits so it overflows every minute, let's ignore the value in case of the overflow for simplicity
 	if (diff > 0)
-	hsAdd(&triggerCallback, diff);
+		hsAdd(&triggerCallback, diff);
 #endif /* EFI_HISTOGRAMS */
 }
 
@@ -140,9 +145,18 @@ void printAllCallbacksHistogram(void) {
 #endif
 }
 
+static void triggerInfo() {
+#if EFI_PROD_CODE
+	scheduleMsg(&logging, "trigger %d/%d/%d/%d", triggerCentral.getHwEventCounter(0),
+			triggerCentral.getHwEventCounter(1), triggerCentral.getHwEventCounter(2),
+			triggerCentral.getHwEventCounter(3));
+#endif
+}
+
 void initTriggerCentral(void) {
 #if EFI_PROD_CODE
 	initLogging(&logging, "ShaftPosition");
+	addConsoleAction("triggerinfo", triggerInfo);
 #endif
 
 #if EFI_HISTOGRAMS

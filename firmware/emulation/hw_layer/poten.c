@@ -38,16 +38,19 @@
 
 SPIDriver * getDigiralPotDevice(spi_device_e spiDevice) {
 #if STM32_SPI_USE_SPI1 || defined(__DOXYGEN__)
-	if (spiDevice == SPI_DEVICE_1)
+  if (spiDevice == SPI_DEVICE_1) {
 		return &SPID1;
+  }
 #endif
 #if STM32_SPI_USE_SPI2 || defined(__DOXYGEN__)
-	if (spiDevic e== SPI_DEVICE_2)
+  if (spiDevic e== SPI_DEVICE_2) {
 	return &SPID2;
+  }
 #endif
 #if STM32_SPI_USE_SPI3 || defined(__DOXYGEN__)
-	if (spiDevice == SPI_DEVICE_3)
+  if (spiDevice == SPI_DEVICE_3) {
 		return &SPID3;
+  }
 #endif
 	firmwareError("Unexpected SPI device: %d", spiDevice);
 	return NULL;
@@ -58,7 +61,7 @@ SPIDriver * getDigiralPotDevice(spi_device_e spiDevice) {
 
 static Logging logger;
 
-#if EFI_POTENTIOMETER
+#if EFI_POTENTIOMETER || defined(__DOXYGEN__)
 Mcp42010Driver config[DIGIPOT_COUNT];
 
 void initPotentiometer(Mcp42010Driver *driver, SPIDriver *spi, ioportid_t port, ioportmask_t pin) {
@@ -102,12 +105,8 @@ void setPotResistance(Mcp42010Driver *driver, int channel, int resistance) {
 	sendToPot(driver, channel, value);
 }
 
-static void setPotResistance0(int value) {
-	setPotResistance(&config[0], 0, value);
-}
-
-static void setPotResistance1(int value) {
-	setPotResistance(&config[0], 1, value);
+static void setPotResistanceCommand(int index, int value) {
+	setPotResistance(&config[index / 2], index % 2, value);
 }
 
 static void setPotValue1(int value) {
@@ -127,20 +126,20 @@ void initPotentiometers(board_configuration_s *boardConfiguration) {
 
 	for (int i = 0; i < DIGIPOT_COUNT; i++) {
 		brain_pin_e csPin = boardConfiguration->digitalPotentiometerChipSelect[i];
-		if (csPin == GPIO_NONE)
+		if (csPin == GPIO_NONE) {
 			continue;
+                }
 
 		initPotentiometer(&config[i], getDigiralPotDevice(boardConfiguration->digitalPotentiometerSpiDevice),
 				getHwPort(csPin), getHwPin(csPin));
 	}
 
-	addConsoleActionI("pot0", setPotResistance0);
-	addConsoleActionI("pot1", setPotResistance1);
+	addConsoleActionII("pot", setPotResistanceCommand);
 
 	addConsoleActionI("potd1", setPotValue1);
 
-	setPotResistance0(3000);
-	setPotResistance1(7000);
+	setPotResistance(&config[0], 0, 3000);
+	setPotResistance(&config[0], 1, 7000);
 #else
 	print("digiPot logic disabled\r\n");
 #endif

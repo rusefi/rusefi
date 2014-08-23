@@ -15,6 +15,9 @@ public class ExecHelper {
     private static final String SIMULATOR_COMMAND = "../win32_functional_tests/build/rusefi_simulator.exe";
     static Process simulatorProcess;
 
+    /**
+     * This is currently used by auto-tests only. Todo: reuse same code for UI-launched simulator?
+     */
     private static void runSimulator() {
         Thread.currentThread().setName("Main simulation");
 

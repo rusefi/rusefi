@@ -12,9 +12,11 @@
  */
 
 #include <string.h>
+// todo: MISRA does not like time.h
+#include <time.h>
 #include "main.h"
 
-#if EFI_UART_GPS
+#if EFI_UART_GPS || defined(__DOXYGEN__)
 
 #include "console_io.h"
 #include "eficonsole.h"
@@ -22,6 +24,9 @@
 #include "nmea.h"
 #include "neo6m.h"
 #include "rtc_helper.h"
+#include "engine_configuration.h"
+
+extern board_configuration_s *boardConfiguration;
 
 static Logging logging;
 
@@ -43,8 +48,8 @@ float getCurrentSpeed(void) {
 static void printGpsInfo(void) {
 	// todo: scheduleMsg()
 
-	scheduleMsg(&logging, "GPS RX %s%d", portname(GPS_PORT), GPS_SERIAL_RX_PIN);
-	scheduleMsg(&logging, "GPS TX %s%d", portname(GPS_PORT), GPS_SERIAL_TX_PIN);
+	scheduleMsg(&logging, "GPS RX %s", hwPortname(boardConfiguration->gps_rx_pin));
+	scheduleMsg(&logging, "GPS TX %s", hwPortname(boardConfiguration->gps_tx_pin));
 
 	scheduleMsg(&logging, "m=%d,e=%d: vehicle speed = %f\r\n", gpsMesagesCount, uartErrors, getCurrentSpeed());
 
@@ -58,13 +63,13 @@ static void printGpsInfo(void) {
 static struct tm curTm;
 
 static void onGpsMessage(char *buffer) {
-	
+
 	gps_location(&GPSdata, buffer);
 	date_get_tm(&curTm);
 
-	if(GPSdata.quality == 4 && GPSdata.GPStm.tm_year > 0 && GPSdata.GPStm.tm_sec != curTm.tm_sec) {
+	if (GPSdata.quality == 4 && GPSdata.GPStm.tm_year > 0 && GPSdata.GPStm.tm_sec != curTm.tm_sec) {
 		// quality =4 (valis GxRMC), year > 0, and difference more then second
-			date_set_tm(&GPSdata.GPStm);					// set GPS time
+		date_set_tm(&GPSdata.GPStm);					// set GPS time
 		//}
 	}
 	gpsMesagesCount++;
@@ -101,12 +106,16 @@ static msg_t GpsThreadEntryPoint(void *arg) {
 }
 
 void initGps(void) {
+	if (boardConfiguration->gps_rx_pin == GPIO_NONE || boardConfiguration->gps_tx_pin == GPIO_NONE) {
+		return;
+	}
+
 	initLogging(&logging, "uart gps");
 
 	sdStart(GPS_SERIAL_DEVICE, &GPSserialConfig);
 //  GPS we have USART1: PB7 -> USART1_RX and PB6 -> USART1_TX
-	mySetPadMode("GPS tx", GPS_PORT, GPS_SERIAL_TX_PIN, PAL_MODE_ALTERNATE(7));
-	mySetPadMode("GPS rx", GPS_PORT, GPS_SERIAL_RX_PIN, PAL_MODE_ALTERNATE(7));
+	mySetPadMode("GPS tx", getHwPort(boardConfiguration->gps_tx_pin), getHwPin(boardConfiguration->gps_tx_pin), PAL_MODE_ALTERNATE(7));
+	mySetPadMode("GPS rx", getHwPort(boardConfiguration->gps_rx_pin), getHwPin(boardConfiguration->gps_rx_pin), PAL_MODE_ALTERNATE(7));
 
 // todo: add a thread which would save location. If the GPS 5Hz - we should save the location each 200 ms
 	chThdCreateStatic(GPS_WORKING_AREA, sizeof(GPS_WORKING_AREA), LOWPRIO, GpsThreadEntryPoint, NULL);

@@ -9,6 +9,12 @@
 /**
  * @mainpage
  *
+ * @section sec_into
+ *
+ * rusEfi is implemented based on the idea that with modern 100+ MHz microprocessors the relatively
+ * undemanding task of internal combustion engine control could be implemented in a high-level, processor-independent
+ * (to some extent) manner. Thus the key concepts of rusEfi: dependency on high-level hardware abstraction layer, software-based PWM etc.
+ *
  * @section sec_main Brief overview
  *
  * rusEfi runs on crankshaft or camshaft ('trigger') position sensor events.
@@ -76,7 +82,7 @@
  *
  * <BR>See main_trigger_callback.cpp for main trigger event handler
  * <BR>See fuel_math.cpp for details on fuel amount logic
- * <BR>See rpm_calculator.c for details on how getRpm() is calculated
+ * <BR>See rpm_calculator.cpp for details on how getRpm() is calculated
  *
  */
 
@@ -110,13 +116,17 @@ static Logging logging;
 
 int main_loop_started = FALSE;
 
-static MemoryStream errorMessageStream;
+static MemoryStream firmwareErrorMessageStream;
 uint8_t errorMessageBuffer[200];
 static bool hasFirmwareErrorFlag = FALSE;
 extern board_configuration_s *boardConfiguration;
 
+char *getFirmwareError(void) {
+	return (char*)errorMessageBuffer;
+}
+
 void runRusEfi(void) {
-	msObjectInit(&errorMessageStream, errorMessageBuffer, sizeof(errorMessageBuffer), 0);
+	msObjectInit(&firmwareErrorMessageStream, errorMessageBuffer, sizeof(errorMessageBuffer), 0);
 
 	initErrorHandling();
 
@@ -188,41 +198,7 @@ void scheduleReset(void) {
 	unlockAnyContext();
 }
 
-void DebugMonitorVector(void) {
-
-	chDbgPanic3("DebugMonitorVector", __FILE__, __LINE__);
-
-	while (TRUE)
-		;
-}
-
-void UsageFaultVector(void) {
-
-	chDbgPanic3("UsageFaultVector", __FILE__, __LINE__);
-
-	while (TRUE)
-		;
-}
-
-void BusFaultVector(void) {
-
-	chDbgPanic3("BusFaultVector", __FILE__, __LINE__);
-
-	while (TRUE)
-		;
-}
-
-void HardFaultVector(void) {
-
-	chDbgPanic3("HardFaultVector", __FILE__, __LINE__);
-
-	while (TRUE)
-		;
-}
-
 extern int main_loop_started;
-
-void onFatalError(const char *msg, char * file, int line);
 
 static char panicMessage[200];
 
@@ -243,15 +219,15 @@ void firmwareError(const char *fmt, ...) {
 		return;
 	setOutputPinValue(LED_ERROR, 1);
 	hasFirmwareErrorFlag = TRUE;
-	errorMessageStream.eos = 0; // reset
+	firmwareErrorMessageStream.eos = 0; // reset
 	va_list ap;
 	va_start(ap, fmt);
-	chvprintf((BaseSequentialStream *) &errorMessageStream, fmt, ap);
+	chvprintf((BaseSequentialStream *) &firmwareErrorMessageStream, fmt, ap);
 	va_end(ap);
 
-	errorMessageStream.buffer[errorMessageStream.eos] = 0; // need to terminate explicitly
+	firmwareErrorMessageStream.buffer[firmwareErrorMessageStream.eos] = 0; // need to terminate explicitly
 }
 
 int getRusEfiVersion(void) {
-	return 20140724;
+	return 20140822;
 }

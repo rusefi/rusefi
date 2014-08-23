@@ -76,10 +76,35 @@ static void reportPins(void) {
 static MemoryStream portNameStream;
 static char portNameBuffer[20];
 
+brain_pin_e parseBrainPin(const char *str) {
+	if (strEqual(str, "none"))
+		return GPIO_NONE;
+	// todo: create method toLowerCase?
+	if (str[0] != 'p' && str[0] != 'p') {
+		return GPIO_INVALID;
+	}
+	char port = str[1];
+	brain_pin_e basePin;
+	if (port >= 'a' && port <= 'z') {
+		basePin = (brain_pin_e) ((int) GPIOA_0 + 16 * (port - 'a'));
+	} else if (port >= 'A' && port <= 'Z') {
+		basePin = (brain_pin_e) ((int) GPIOA_0 + 16 * (port - 'A'));
+	} else {
+		return GPIO_INVALID;
+	}
+	const char *pinStr = str + 2;
+	int pin = atoi(pinStr);
+	return basePin + pin;
+}
+
 char *hwPortname(brain_pin_e brainPin) {
+	if (brainPin == GPIO_INVALID) {
+		return "INVALID";
+	}
 	GPIO_TypeDef *hwPort = getHwPort(brainPin);
-	if (hwPort == GPIO_NULL)
+	if (hwPort == GPIO_NULL) {
 		return "NONE";
+	}
 	int hwPin = getHwPin(brainPin);
 	portNameStream.eos = 0; // reset
 	chprintf((BaseSequentialStream *) &portNameStream, "%s%d", portname(hwPort), hwPin);
@@ -93,7 +118,7 @@ void initPinRepository(void) {
 	 */
 	initLogging(&logger, "pin repos");
 
-	msObjectInit(&portNameStream, portNameBuffer, sizeof(portNameBuffer), 0);
+	msObjectInit(&portNameStream, (uint8_t*)portNameBuffer, sizeof(portNameBuffer), 0);
 
 	for (int i = 0; i < PIN_REPO_SIZE; i++)
 		PIN_USED[i] = 0;
@@ -124,7 +149,7 @@ void mySetPadMode(const char *msg, ioportid_t port, ioportmask_t pin, iomode_t m
 	int index = portIndex * 16 + pin;
 
 	if (PIN_USED[index] != NULL) {
-		firmwareError("Pin %s%d requested by %s but already used by %s", portname(port), pin, msg, PIN_USED[index]);
+		firmwareError("%s%d req by %s used by %s", portname(port), pin, msg, PIN_USED[index]);
 		return;
 	}
 	markUsed(index, msg);

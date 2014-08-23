@@ -7,7 +7,13 @@
 
 #include "boards.h"
 
+float testMafValue = 0;
+
 float getVoltageDivided(int channel) {
+	switch(channel) {
+	case TEST_MAF_CHANNEL:
+		return testMafValue;
+	}
 	return 0;
 }
 

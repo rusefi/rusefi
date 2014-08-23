@@ -120,11 +120,11 @@
         <option>
           <name>GeneralMisraRules98</name>
           <version>0</version>
-          <state>1000111110110101101110011100111111101110011011000101110111101101100111111111111100110011111001110111001111111111111111111111111</state>
+          <state>0000111110010001101110011100111100101110011001000101000111101101100001111111011100110001111001100111001101110101011111111111111</state>
         </option>
         <option>
           <name>GeneralMisraVer</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>GeneralMisraRules04</name>
@@ -336,6 +336,7 @@
           <state>$PROJ_DIR$\..\emulation\hw_layer</state>
           <state>$PROJ_DIR$\..\hw_layer\algo</state>
           <state>$PROJ_DIR$\..\hw_layer\lcd</state>
+          <state>$PROJ_DIR$\..\hw_layer\stm32f4</state>
           <state>$PROJ_DIR$\..\hw_layer\serial_over_usb</state>
           <state>$PROJ_DIR$\..\hw_layer</state>
           <state>$PROJ_DIR$\..\ext</state>
@@ -1989,6 +1990,12 @@
         <name>$PROJ_DIR$\..\config\engines\MiniCooperR50.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\config\engines\mitsubishi.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\config\engines\mitsubishi.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\config\engines\nissan_primera.cpp</name>
       </file>
       <file>
@@ -2379,6 +2386,12 @@
         <name>$PROJ_DIR$\..\controllers\trigger\trigger_mazda.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\controllers\trigger\trigger_mitsubishi.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\controllers\trigger\trigger_mitsubishi.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\controllers\trigger\trigger_structure.cpp</name>
       </file>
       <file>
@@ -2429,6 +2442,12 @@
     </file>
     <file>
       <name>$PROJ_DIR$\..\controllers\injector_central.h</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\controllers\lcd_controller.cpp</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\controllers\lcd_controller.h</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\controllers\malfunction_indicator.c</name>
@@ -2515,7 +2534,7 @@
       <name>$PROJ_DIR$\..\emulation\trigger_emulator.h</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\emulation\wave_analyzer.c</name>
+      <name>$PROJ_DIR$\..\emulation\wave_analyzer.cpp</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\emulation\wave_analyzer.h</name>
@@ -2572,6 +2591,15 @@
       </file>
       <file>
         <name>$PROJ_DIR$\..\hw_layer\serial_over_usb\usbconsole.h</name>
+      </file>
+    </group>
+    <group>
+      <name>stm32f4</name>
+      <file>
+        <name>$PROJ_DIR$\..\hw_layer\stm32f4\mpu_util.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\hw_layer\stm32f4\mpu_util.h</name>
       </file>
     </group>
     <file>
@@ -3158,12 +3186,6 @@
     </file>
     <file>
       <name>$PROJ_DIR$\..\util\LocalVersionHolder.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\util\wave_math.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\util\wave_math.h</name>
     </file>
   </group>
   <file>

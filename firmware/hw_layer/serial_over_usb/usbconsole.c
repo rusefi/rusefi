@@ -44,7 +44,7 @@ void usb_serial_start(void) {
 	palSetPadMode(GPIOA, 3, PAL_MODE_ALTERNATE(7));
 }
 
-int is_usb_serial_ready(void) {
+bool is_usb_serial_ready(void) {
 	return SDU1.config->usbp->state == USB_ACTIVE;
 }
 

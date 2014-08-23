@@ -1,4 +1,4 @@
-package com.irnems.ui.widgets;
+package com.rusefi.ui.widgets;
 
 import com.rusefi.io.CommandQueue;
 
@@ -14,6 +14,8 @@ import java.awt.event.ActionListener;
  * (c) Andrey Belomutskiy
  */
 public class AnyCommand extends JPanel {
+    private static final int COMMAND_CONFIRMATION_TIMEOUT = 1000;
+
     public AnyCommand() {
 //        setBorder(BorderFactory.createLineBorder(Color.PINK));
         setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -36,8 +38,7 @@ public class AnyCommand extends JPanel {
                 String cmd = text.getText();
                 if (!isValidInput(text))
                     return;
-                int timeout = isSlowCommand(cmd) ? 5000 : 300;
-                CommandQueue.getInstance().write(cmd.toLowerCase(), timeout);
+                CommandQueue.getInstance().write(cmd.toLowerCase(), COMMAND_CONFIRMATION_TIMEOUT);
             }
         });
         text.getDocument().addDocumentListener(new DocumentListener() {
@@ -83,11 +84,5 @@ public class AnyCommand extends JPanel {
             }
         }
         return isOk;
-    }
-
-    private static boolean isSlowCommand(String cmd) {
-        String lc = cmd.toLowerCase();
-        return lc.startsWith("set_engine_type") || lc.startsWith("writeconfig") || lc.startsWith("showconfig")
-                || lc.startsWith("perftest");
     }
 }

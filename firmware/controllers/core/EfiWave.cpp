@@ -44,7 +44,7 @@ float multi_wave_s::getSwitchTime(int index) const {
 void checkSwitchTimes2(int size, float *switchTimes) {
 	for (int i = 0; i < size - 1; i++) {
 		if (switchTimes[i] >= switchTimes[i + 1]) {
-			firmwareError("invalid switchTimes");
+			firmwareError("invalid switchTimes @%d: %f/%f", i, switchTimes[i], switchTimes[i + 1]);
 		}
 	}
 }

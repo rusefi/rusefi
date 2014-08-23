@@ -48,6 +48,7 @@
 #include "tunerstudio_configuration.h"
 #include "engine_configuration.h"
 #include "tunerstudio.h"
+#include "svnversion.h"
 
 #ifndef FALSE
 #define FALSE 0
@@ -150,5 +151,6 @@ void handleTestCommand(void) {
 	 * extension of the protocol to simplify troubleshooting
 	 */
 	tunerStudioDebug("got T (Test)");
-	tunerStudioWriteData((const uint8_t *) "alive\r\n", 7);
+	tunerStudioWriteData((const uint8_t *)VCS_VERSION, sizeof(VCS_VERSION));
+	tunerStudioWriteData((const uint8_t *) " alive\r\n", 8);
 }

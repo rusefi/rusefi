@@ -77,7 +77,7 @@ typedef enum {
 } can_device_mode_e;
 
 typedef struct {
-	int afrAdcChannel;
+	adc_channel_e afrAdcChannel;
 	float v1;
 	float value1;
 	float v2;
@@ -143,8 +143,13 @@ typedef struct {
 	brain_pin_e HD44780_db6;
 	brain_pin_e HD44780_db7;
 
-	brain_pin_e triggerSimulatorPins[2];
-	pin_output_mode_e triggerSimulatorPinModes[2];
+	brain_pin_e gps_rx_pin;
+	brain_pin_e gps_tx_pin;
+
+	int idleSolenoidFrequency;
+
+	int unused;
+
 
 	/**
 	 * Digital Potentiometer is used by stock ECU stimulation code
@@ -154,10 +159,8 @@ typedef struct {
 
 	adc_channel_mode_e adcHwChannelEnabled[HW_MAX_ADC_INDEX];
 
-	brain_pin_e primaryTriggerInputPin;
-	brain_pin_e secondaryTriggerInputPin;
-	brain_pin_e primaryLogicAnalyzerPin;
-	brain_pin_e secondaryLogicAnalyzerPin;
+	brain_pin_e triggerInputPins[2];
+	brain_pin_e logicAnalyzerPins[2];
 
 	int idleThreadPeriod;
 	int consoleLoopPeriod;
@@ -172,6 +175,15 @@ typedef struct {
 	can_device_mode_e canDeviceMode;
 	brain_pin_e canTxPin;
 	brain_pin_e canRxPin;
+
+	brain_pin_e triggerSimulatorPins[3];
+	pin_output_mode_e triggerSimulatorPinModes[3];
+
+	brain_pin_e o2heaterPin;
+	pin_output_mode_e o2heaterPinModeTodO;
+
+	int unused2[8];
+
 
 } board_configuration_s;
 
@@ -207,7 +219,11 @@ typedef struct {
 	float iatFuelCorrBins[IAT_CURVE_SIZE]; // size 64, offset 200
 	float iatFuelCorr[IAT_CURVE_SIZE]; // size 64, offset 264
 
-	short int unused2; // size 2, offset 328
+	/**
+	 * Should the trigger emulator push data right into trigger input, eliminating the need for physical jumper wires?
+	 * PS: Funny name, right? :)
+	 */
+	short int directSelfStimulation; // size 2, offset 328
 
 	// todo: extract these two fields into a structure
 	// todo: we need two sets of TPS parameters - modern ETBs have to sensors
@@ -264,7 +280,6 @@ typedef struct {
 
 	injection_mode_e crankingInjectionMode;
 	injection_mode_e injectionMode;
-
 
 	/**
 	 * Inside rusEfi all the angles are handled in relation to the trigger synchronization event
@@ -329,21 +344,21 @@ typedef struct {
 	int HD44780width;
 	int HD44780height;
 
-	int tpsAdcChannel;
+	adc_channel_e tpsAdcChannel;
 	int overrideCrankingIgnition;
 	int analogChartFrequency;
 
 	trigger_config_s triggerConfig;
 
 	int space;
-	int vBattAdcChannel;
+	adc_channel_e vBattAdcChannel;
 
 	float globalFuelCorrection;
 
 	// todo: merge with channel settings, use full-scale Thermistor!
-	int cltAdcChannel;
-	int iatAdcChannel;
-	int mafAdcChannel;
+	adc_channel_e cltAdcChannel;
+	adc_channel_e iatAdcChannel;
+	adc_channel_e mafAdcChannel;
 
 	afr_sensor_s afrSensor;
 
@@ -367,12 +382,20 @@ typedef struct {
 	float veTable[VE_LOAD_COUNT][VE_RPM_COUNT]; // size 1024
 	float afrTable[AFR_LOAD_COUNT][AFR_RPM_COUNT]; // size 1024
 
-
 	board_configuration_s bc;
 
 	int hasMapSensor;
 	int hasCltSensor;
 
+	idle_mode_e idleMode;
+
+	bool isInjectionEnabled : 1; // bit 0
+	bool isIgnitionEnabled : 1; // bit 1
+	bool isCylinderCleanupEnabled : 1; // bit 2
+	bool secondTriggerChannelEnabled : 1; // bit 3
+
+
+	int unused3[8];
 
 } engine_configuration_s;
 

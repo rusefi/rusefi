@@ -56,7 +56,7 @@ static uint64_t getNextSwitchTimeUs(PwmConfig *state) {
 	 * Once 'iteration' gets relatively high, we might lose calculation precision here.
 	 * This is addressed by ITERATION_LIMIT
 	 */
-	uint64_t timeToSwitchUs = (iteration + switchTime) * periodUs;
+	uint64_t timeToSwitchUs = (uint64_t)((iteration + switchTime) * periodUs);
 
 #if DEBUG_PWM
 	scheduleMsg(&logger, "start=%d timeToSwitch=%d", state->safe.start, timeToSwitch);
@@ -66,8 +66,9 @@ static uint64_t getNextSwitchTimeUs(PwmConfig *state) {
 
 void PwmConfig::handleCycleStart() {
 	if (safe.phaseIndex == 0) {
-		if (cycleCallback != NULL)
+          if (cycleCallback != NULL) {
 			cycleCallback(this);
+        }
 		efiAssertVoid(periodUs != 0, "period not initialized");
 		if (safe.periodUs != periodUs || safe.iteration == ITERATION_LIMIT) {
 			/**
@@ -119,6 +120,9 @@ static uint64_t togglePwmState(PwmConfig *state) {
 		 * We are here if we are late for a state transition.
 		 * At 12000RPM=200Hz with a 60 toothed wheel we need to change state every
 		 * 1000000 / 200 / 120 = ~41 uS. We are kind of OK.
+		 *
+		 * We are also here after a flash write. Flash write freezes the whole chip for a couple of seconds,
+		 * so PWM generation and trigger simulation generation would have to recover from this time lag.
 		 */
 		//todo: introduce error and test this error handling		warning(OBD_PCM_Processor_Fault, "PWM: negative switch time");
 		timeToSwitch = 10;

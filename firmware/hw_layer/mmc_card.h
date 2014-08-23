@@ -16,6 +16,7 @@ extern "C"
 #endif /* __cplusplus */
 
 void initMmcCard(void);
+bool isSdCardAlive(void);
 void appendToLog(char *line);
 
 #ifdef __cplusplus

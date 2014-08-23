@@ -1,8 +1,9 @@
-package com.irnems.ui.widgets;
+package com.rusefi.ui.widgets;
 
 import com.irnems.core.MessagesCentral;
 import com.irnems.core.Sensor;
 import com.irnems.core.SensorCentral;
+import com.rusefi.EcuStimulator;
 import com.rusefi.io.CommandQueue;
 
 import javax.swing.*;
@@ -16,7 +17,6 @@ import java.awt.*;
  */
 public class PotCommand {
     public static final double VOLTAGE_CORRECTION = 2.9 / 3;
-    private static final int MAF_CHANNEL_ECU_INTERNAL_RESISTANCE = 1000; // 1KOhm internal resistor?
     public final JPanel panel;
     final JSpinner potSpinner;
 
@@ -87,7 +87,7 @@ public class PotCommand {
     }
 
     public static int getPotResistance(Double vout, double vRef) {
-        double r = getR1InVoltageDividor3(vout, vRef, MAF_CHANNEL_ECU_INTERNAL_RESISTANCE);
+        double r = getR1InVoltageDividor3(vout, vRef, EcuStimulator.getInstance().getInputs().getEngineLoadR2Resistance());
         MessagesCentral.getInstance().postMessage(PotCommand.class, "VRef=" + vRef + ", needed resistance: " + r);
         // pot command accept resistance and does the conversion itself
         return (int) r;

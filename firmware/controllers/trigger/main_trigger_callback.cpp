@@ -30,7 +30,7 @@
 
 #endif
 
-#if EFI_ENGINE_CONTROL
+#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 
 #include "main_trigger_callback.h"
 #include "ec2.h"
@@ -97,7 +97,7 @@ static void handleFuelInjectionEvent(MainTriggerCallback *mainTriggerCallback, A
 }
 
 static void handleFuel(MainTriggerCallback *mainTriggerCallback, int eventIndex, int rpm) {
-	if (!isInjectionEnabled(mainTriggerCallback->engineConfiguration2))
+	if (!isInjectionEnabled(mainTriggerCallback->engineConfiguration))
 		return;
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 16, "stack#3");
 	efiAssertVoid(eventIndex < 2 * mainTriggerCallback->engineConfiguration2->triggerShape.shaftPositionEventCount,
@@ -185,7 +185,7 @@ static void handleSparkEvent(MainTriggerCallback *mainTriggerCallback, int event
 }
 
 static void handleSpark(MainTriggerCallback *mainTriggerCallback, int eventIndex, int rpm, IgnitionEventList *list) {
-	if (!isValidRpm(rpm))
+	if (!isValidRpm(rpm) || !mainTriggerCallback->engineConfiguration->isIgnitionEnabled)
 		return; // this might happen for instance in case of a single trigger event after a pause
 
 	/**
@@ -326,17 +326,16 @@ void MainTriggerCallback::init(Engine *engine, engine_configuration2_s *engineCo
 
 void initMainEventListener(Engine *engine, engine_configuration2_s *engineConfiguration2) {
 	efiAssertVoid(engine!=NULL, "null engine");
-	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
 
 	mainTriggerCallbackInstance.init(engine, engineConfiguration2);
 
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 	addConsoleAction("performanceinfo", showTriggerHistogram);
 	addConsoleAction("maininfo", showMainInfo);
 
 	initLogging(&logger, "main event handler");
 	printMsg(&logger, "initMainLoop: %d", currentTimeMillis());
-	if (!isInjectionEnabled(mainTriggerCallbackInstance.engineConfiguration2))
+	if (!isInjectionEnabled(mainTriggerCallbackInstance.engineConfiguration))
 		printMsg(&logger, "!!!!!!!!!!!!!!!!!!! injection disabled");
 #endif
 

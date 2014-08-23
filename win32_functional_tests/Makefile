@@ -102,7 +102,6 @@ CSRC =	${PORTSRC} \
 	$(TRIGGER_SRC) \
 	$(SYSTEMSRC) \
 	$(CONSOLESRC) \
-	$(TUNERSTUDIOSRC) \
 	$(CONSOLEUTILSRC) \
 	$(CONTROLLERS_ALGO_SRC) \
 	$(CONTROLLERS_CORE_SRC) \
@@ -125,12 +124,14 @@ CPPSRC = $(UTILSRC_CPP) \
 	$(TRIGGER_SRC_CPP) \
 	$(TRIGGER_DECODERS_SRC_CPP) \
 	$(SYSTEMSRC_CPP) \
+	$(TUNERSTUDIO_SRC_CPP) \
 	$(CONSOLE_SRC_CPP) \
 	$(CONTROLLERS_SENSORS_SRC_CPP) \
 	$(CONTROLLERS_CORE_SRC_CPP) \
 	$(CONTROLLERS_MATH_SRC_CPP) \
 	$(ENGINES_SRC_CPP) \
 	$(PROJECT_DIR)/simulator/rusEfiFunctionalTest.cpp \
+	$(PROJECT_DIR)/emulation/trigger_emulator.cpp \
 	$(TEST_SRC_CPP)
 # C sources to be compiled in ARM mode regardless of the global setting.
 # NOTE: Mixing ARM and THUMB mode enables the -mthumb-interwork compiler

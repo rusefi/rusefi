@@ -25,7 +25,7 @@ void setOutputPinValue(io_pin_e pin, int value) {
 
 EventQueue schedulingQueue;
 
-void scheduleTask(scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) {
+void scheduleTask(const char *msg, scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) {
 	schedulingQueue.insertTask(scheduling, getTimeNowUs(), delayUs, callback, param);
 }
 

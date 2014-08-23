@@ -17,7 +17,7 @@ void printState(int currentCkpEventCounter);
 
 void initStatusLoop(void);
 void updateDevConsoleState(void);
-int getFullLog(void);
+bool getFullLog(void);
 void printSensors(void);
 void setFullLog(int value);
 void startStatusThreads(void);

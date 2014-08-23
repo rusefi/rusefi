@@ -3,7 +3,7 @@ package com.irnems.ui.test;
 import com.rusefi.waves.WaveReport;
 import com.irnems.core.test.WaveReportTest;
 import com.rusefi.ui.FrameHelper;
-import com.irnems.ui.widgets.UpDownImage;
+import com.rusefi.ui.widgets.UpDownImage;
 
 import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;

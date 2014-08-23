@@ -188,6 +188,21 @@ static void registerInjectionEvent(engine_configuration_s const *e,
 
 }
 
+float getFuelMultiplier(engine_configuration_s const *e, injection_mode_e mode) {
+	switch(mode) {
+	case IM_SEQUENTIAL:
+		return 1;
+	case IM_SIMULTANEOUS:
+		// todo: pre-calculate and save into ec2?
+		return 1.0 / e->cylindersCount;
+	case IM_BATCH:
+		return 2.0 / e->cylindersCount;
+	default:
+		firmwareError("Unexpected getFuelMultiplier %d", mode);
+		return NAN;
+	}
+}
+
 void addFuelEvents(engine_configuration_s const *e, engine_configuration2_s *engineConfiguration2,
 		ActuatorEventList *list, injection_mode_e mode) {
 	list->resetEventList();
@@ -216,8 +231,15 @@ void addFuelEvents(engine_configuration_s const *e, engine_configuration2_s *eng
 		break;
 	case IM_BATCH:
 		for (int i = 0; i < e->cylindersCount; i++) {
-			io_pin_e pin = (io_pin_e) ((int) INJECTOR_1_OUTPUT + (i % 2));
+			int index = i % (e->cylindersCount / 2);
+			io_pin_e pin = (io_pin_e) ((int) INJECTOR_1_OUTPUT + index);
 			float angle = baseAngle + i * 720.0 / e->cylindersCount;
+			registerInjectionEvent(e, s, list, pin, angle);
+
+			/**
+			 * also fire the 2nd half of the injectors so that we can implement a batch mode on individual wires
+			 */
+			pin = (io_pin_e) ((int) INJECTOR_1_OUTPUT + index + (e->cylindersCount / 2));
 			registerInjectionEvent(e, s, list, pin, angle);
 		}
 		break;
@@ -270,8 +292,9 @@ void findTriggerPosition(engine_configuration_s const *engineConfiguration, trig
 	while (true) {
 		middle = (left + right) / 2;
 
-		if (middle == left)
+		if (middle == left) {
 			break;
+                }
 
 		if (angleOffset < s->eventAngles[middle]) {
 			right = middle;
@@ -299,8 +322,10 @@ void registerActuatorEventExt(engine_configuration_s const *engineConfiguration,
 		OutputSignal *actuator, float angleOffset) {
 	efiAssertVoid(s->getSize() > 0, "uninitialized trigger_shape_s");
 
-	if (e == NULL)
-		return; // error already reported
+	if (e == NULL) {
+           // error already reported
+		return;
+        }
 	e->actuator = actuator;
 
 	findTriggerPosition(engineConfiguration, s, &e->position, angleOffset);
@@ -337,8 +362,7 @@ int getCylinderId(firing_order_e firingOrder, int index) {
 void prepareOutputSignals(engine_configuration_s *engineConfiguration, engine_configuration2_s *engineConfiguration2) {
 
 	// todo: move this reset into decoder
-	engineConfiguration2->triggerShape.setTriggerShapeSynchPointIndex(findTriggerZeroEventIndex(
-			&engineConfiguration2->triggerShape, &engineConfiguration->triggerConfig));
+	engineConfiguration2->triggerShape.calculateTriggerSynchPoint(&engineConfiguration->triggerConfig);
 
 	injectonSignals.clear();
 	EventHandlerConfiguration *config = &engineConfiguration2->engineEventConfiguration;
@@ -364,6 +388,7 @@ void setTimingLoadBin(engine_configuration_s *engineConfiguration, float l, floa
 	setTableBin(engineConfiguration->ignitionLoadBins, IGN_LOAD_COUNT, l, r);
 }
 
-int isInjectionEnabled(engine_configuration2_s const *engineConfiguration2) {
-	return engineConfiguration2->isInjectionEnabledFlag;
+int isInjectionEnabled(engine_configuration_s *engineConfiguration) {
+	// todo: is this worth a method? should this be inlined?
+	return engineConfiguration->isInjectionEnabled;
 }

@@ -15,7 +15,6 @@
 #include "pwm_generator.h"
 
 #include "pin_repository.h"
-#include "wave_math.h"
 #include "datalogging.h"
 
 static Logging logger;

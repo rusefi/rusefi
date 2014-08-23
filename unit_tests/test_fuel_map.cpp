@@ -1,5 +1,5 @@
 /**
- * @file	test_fuel_map.c
+ * @file	test_fuel_map.cpp
  *
  *  Created on: Nov 6, 2013
  *      Author: Andrey Belomutskiy, (c) 2012-2013
@@ -15,6 +15,10 @@
 #include "OutputSignalList.h"
 #include "ec2.h"
 #include "trigger_decoder.h"
+#include "engine_test_helper.h"
+
+extern float testMafValue;
+
 
 extern engine_configuration_s *engineConfiguration;
 extern engine_configuration2_s *engineConfiguration2;
@@ -43,7 +47,7 @@ void testFuelMap(void) {
 
 	printf("*************************************************** prepareFuelMap\r\n");
 	prepareFuelMap();
-	assertEquals(1005, getBaseFuel(5, 5));
+	assertEquals(1005, getBaseTableFuel(5, 5));
 
 	engineConfiguration->injectorLag = 0.5;
 
@@ -52,9 +56,12 @@ void testFuelMap(void) {
 		engineConfiguration->battInjectorLagCorr[i] = 2 * i;
 	}
 
+	EngineTestHelper eth(FORD_ASPIRE_1996);
+
 	// because all the correction tables are zero
 	printf("*************************************************** getRunningFuel\r\n");
-	assertEqualsM("value", 0.5, getRunningFuel(5, 5));
+	float baseFuel = getBaseTableFuel(5, getEngineLoadT(&eth.engine));
+	assertEqualsM("value", 0.5, getRunningFuel(baseFuel, &eth.engine, 5));
 
 	printf("*************************************************** setting IAT table\r\n");
 	for (int i = 0; i < IAT_CURVE_SIZE; i++) {
@@ -78,10 +85,14 @@ void testFuelMap(void) {
 	float injectorLag = getInjectorLag(getVBatt());
 	assertEquals(0, injectorLag);
 
+	testMafValue = 5;
 
 	// 1005 * 2 for IAT correction
 	printf("*************************************************** getRunningFuel\r\n");
-	assertEqualsM("v1", 30150, getRunningFuel(5, 5));
+	 baseFuel = getBaseTableFuel(5, getEngineLoadT(&eth.engine));
+	assertEqualsM("v1", 30150, getRunningFuel(baseFuel, &eth.engine, 5));
+
+	testMafValue = 0;
 
 	engineConfiguration->crankingSettings.coolantTempMaxC = 65; // 8ms at 65C
 	engineConfiguration->crankingSettings.fuelAtMaxTempMs = 8;
@@ -111,8 +122,33 @@ static void confgiureFordAspireTriggerShape(trigger_shape_s * s) {
 	s->addEvent(588.045, T_SECONDARY, TV_HIGH);
 	s->addEvent(657.03, T_SECONDARY, TV_LOW);
 	s->addEvent(720, T_PRIMARY, TV_LOW);
-}
 
+	assertEquals(53.747 / 720, s->wave.getSwitchTime(0));
+	assertEqualsM("@0", 1, s->wave.getChannelState(1, 0));
+	assertEqualsM("@0", 1, s->wave.getChannelState(1, 0));
+
+	assertEqualsM("@1", 0, s->wave.getChannelState(0, 1));
+	assertEqualsM("@1", 0, s->wave.getChannelState(1, 1));
+
+	assertEqualsM("@2", 0, s->wave.getChannelState(0, 2));
+	assertEqualsM("@2", 1, s->wave.getChannelState(1, 2));
+
+	assertEqualsM("@3", 0, s->wave.getChannelState(0, 3));
+	assertEqualsM("@3", 0, s->wave.getChannelState(1, 3));
+
+	assertEqualsM("@4", 1, s->wave.getChannelState(0, 4));
+	assertEqualsM("@5", 1, s->wave.getChannelState(1, 5));
+	assertEqualsM("@8", 0, s->wave.getChannelState(1, 8));
+	assertEquals(121.90 / 720, s->wave.getSwitchTime(1));
+	assertEquals(657.03 / 720, s->wave.getSwitchTime(8));
+
+	assertEqualsM("expecting 0", 0, s->wave.findAngleMatch(53.747 / 720.0, s->getSize()));
+	assertEqualsM("expecting not found", -1, s->wave.findAngleMatch(53 / 720.0, s->getSize()));
+	assertEquals(7, s->wave.findAngleMatch(588.045 / 720.0, s->getSize()));
+
+	assertEqualsM("expecting 0", 0, s->wave.waveIndertionAngle(23.747 / 720.0, s->getSize()));
+	assertEqualsM("expecting 1", 1, s->wave.waveIndertionAngle(63.747 / 720.0, s->getSize()));
+}
 
 static ActuatorEventList ae;
 
@@ -124,7 +160,14 @@ void testAngleResolver(void) {
 
 	confgiureFordAspireTriggerShape(ts);
 
-	ts->setTriggerShapeSynchPointIndex(0);
+	ts->calculateTriggerSynchPoint(&engineConfiguration->triggerConfig);
+
+	assertEqualsM("index 2", 232.76, ts->eventAngles[3]); // this angle is relation to synch point
+	assertEqualsM("time 2", 0.3233, ts->wave.getSwitchTime(2));
+	assertEqualsM("index 5", 409.8412, ts->eventAngles[6]);
+	assertEqualsM("time 5", 0.5692, ts->wave.getSwitchTime(5));
+
+	assertEquals(9, ts->getTriggerShapeSynchPointIndex());
 
 	assertEqualsM("shape size", 10, ts->getSize());
 
@@ -142,7 +185,7 @@ void testAngleResolver(void) {
 	ae.resetEventList();
 	registerActuatorEventExt(engineConfiguration, &engineConfiguration2->triggerShape, ae.getNextActuatorEvent(), list.add(INJECTOR_1_OUTPUT), 51 + 180 - 175);
 	assertEquals(2, ae.events[0].position.eventIndex);
-	assertEquals(51.9870, ae.events[0].position.angleOffset);
+	assertEquals(109.1, ae.events[0].position.angleOffset);
 }
 
 void testPinHelper(void) {

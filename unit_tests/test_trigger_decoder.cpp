@@ -291,47 +291,28 @@ void testMazdaMianaNbDecoder(void) {
 	assertTriggerPosition(&position, 0, 0);
 }
 
-static void testCitroen(void) {
-	printf("*************************************************** testCitroen\r\n");
+static void testTriggerDecoder(const char *msg, engine_type_e type, int synchPointIndex) {
+	printf("*************************************************** %s\r\n", msg);
 
 	persistent_config_s persistentConfig;
 	engine_configuration_s *ec = &persistentConfig.engineConfiguration;
 	engine_configuration2_s ec2;
 	assertEquals(0, ec2.triggerShape.getTriggerShapeSynchPointIndex());
 
-	resetConfigurationExt(NULL, CITROEN_TU3JP, ec, &ec2, &persistentConfig.engineConfiguration.bc);
+	resetConfigurationExt(NULL, type, ec, &ec2, &persistentConfig.engineConfiguration.bc);
 
-	assertEquals(0, ec2.triggerShape.getTriggerShapeSynchPointIndex());
+	assertEquals(synchPointIndex, ec2.triggerShape.getTriggerShapeSynchPointIndex());
 }
 
 static void testRoverV8(void) {
-	printf("*************************************************** testRoverV8\r\n");
-
-	persistent_config_s persistentConfig;
-	engine_configuration_s *ec = &persistentConfig.engineConfiguration;
-	engine_configuration2_s ec2;
-	resetConfigurationExt(NULL, ROVER_V8, ec, &ec2, &persistentConfig.engineConfiguration.bc);
-
-	assertEquals(0, ec2.triggerShape.getTriggerShapeSynchPointIndex());
+	testTriggerDecoder("testRoverV8", ROVER_V8, 0);
 }
 
 static void testMiniCooper(void) {
-	printf("*************************************************** testMiniCooper\r\n");
-
-	persistent_config_s persistentConfig;
-	engine_configuration_s *ec = &persistentConfig.engineConfiguration;
-	engine_configuration2_s ec2;
-	resetConfigurationExt(NULL, MINI_COOPER_R50, ec, &ec2, &persistentConfig.engineConfiguration.bc);
-
+	testTriggerDecoder("testMiniCooper", MINI_COOPER_R50, 121);
 }
 
 static void testFordEscortGt(void) {
-	printf("*************************************************** testFordEscortGt\r\n");
-
-	persistent_config_s persistentConfig;
-	engine_configuration_s *ec = &persistentConfig.engineConfiguration;
-	engine_configuration2_s ec2;
-	resetConfigurationExt(NULL, FORD_ESCORT_GT, ec, &ec2, &persistentConfig.engineConfiguration.bc);
 }
 
 void testGY6_139QMB(void) {
@@ -371,7 +352,7 @@ static void testRpmCalculator(void) {
 
 	engine_configuration2_s *ec2 = &eth.ec2;
 
-	ec->triggerConfig.totalToothCount = 8;
+	ec->triggerConfig.customTotalToothCount = 8;
 	eth.initTriggerShapeAndRpmCalculator();
 
 	configuration_s configuration = { ec, ec2 };
@@ -385,7 +366,7 @@ static void testRpmCalculator(void) {
 
 
 	static MainTriggerCallback triggerCallbackInstance;
-	triggerCallbackInstance.init(ec, ec2);
+	triggerCallbackInstance.init(&eth.engine, ec2);
 	eth.triggerCentral.addEventListener((ShaftPositionListener)&onTriggerEvent, "main loop", &triggerCallbackInstance);
 
 	engine.rpmCalculator = &eth.rpmState;
@@ -394,7 +375,7 @@ static void testRpmCalculator(void) {
 	timeNow += 5000; // 5ms
 	eth.triggerCentral.handleShaftSignal(&configuration, SHAFT_PRIMARY_UP, timeNow);
 	assertEqualsM("index #2", 0, eth.triggerCentral.triggerState.getCurrentIndex());
-	assertEqualsM("queue size", 2, schedulingQueue.size());
+	assertEqualsM("queue size", 4, schedulingQueue.size());
 	assertEqualsM("ev 1", 695000, schedulingQueue.getForUnitText(0)->momentUs);
 	assertEqualsM("ev 2", 245000, schedulingQueue.getForUnitText(1)->momentUs);
 	schedulingQueue.clear();
@@ -406,7 +387,7 @@ static void testRpmCalculator(void) {
 	timeNow += 5000;
 	eth.triggerCentral.handleShaftSignal(&configuration, SHAFT_PRIMARY_DOWN, timeNow);
 	assertEqualsM("index #3", 3, eth.triggerCentral.triggerState.getCurrentIndex());
-	assertEqualsM("queue size 3", 4, schedulingQueue.size());
+	assertEqualsM("queue size 3", 6, schedulingQueue.size());
 	assertEquals(258333, schedulingQueue.getForUnitText(0)->momentUs);
 	assertEquals(257833, schedulingQueue.getForUnitText(1)->momentUs);
 	assertEqualsM("ev 5", 708333, schedulingQueue.getForUnitText(2)->momentUs);
@@ -420,7 +401,7 @@ static void testRpmCalculator(void) {
 	timeNow += 5000; // 5ms
 	eth.triggerCentral.handleShaftSignal(&configuration, SHAFT_PRIMARY_UP, timeNow);
 	assertEqualsM("index #4", 6, eth.triggerCentral.triggerState.getCurrentIndex());
-	assertEqualsM("queue size 4", 4, schedulingQueue.size());
+	assertEqualsM("queue size 4", 6, schedulingQueue.size());
 	assertEqualsM("4/0", 271666, schedulingQueue.getForUnitText(0)->momentUs);
 	schedulingQueue.clear();
 
@@ -432,7 +413,7 @@ static void testRpmCalculator(void) {
 
 	timeNow += 5000; // 5ms
 	eth.triggerCentral.handleShaftSignal(&configuration, SHAFT_PRIMARY_UP, timeNow);
-	assertEqualsM("queue size 6", 3, schedulingQueue.size());
+	assertEqualsM("queue size 6", 5, schedulingQueue.size());
 	assertEqualsM("6/0", 285000, schedulingQueue.getForUnitText(0)->momentUs);
 	assertEqualsM("6/1", 735000, schedulingQueue.getForUnitText(1)->momentUs);
 	assertEqualsM("6/0", 285000, schedulingQueue.getForUnitText(2)->momentUs);
@@ -445,7 +426,7 @@ static void testRpmCalculator(void) {
 
 	timeNow += 5000; // 5ms
 	eth.triggerCentral.handleShaftSignal(&configuration, SHAFT_PRIMARY_UP, timeNow);
-	assertEqualsM("queue size 8", 4, schedulingQueue.size());
+	assertEqualsM("queue size 8", 6, schedulingQueue.size());
 	assertEqualsM("8/0", 298333, schedulingQueue.getForUnitText(0)->momentUs);
 	assertEqualsM("8/1", 297833, schedulingQueue.getForUnitText(1)->momentUs);
 	assertEqualsM("8/2", 748333, schedulingQueue.getForUnitText(2)->momentUs);
@@ -468,7 +449,7 @@ void testTriggerDecoder(void) {
 
 	engine_configuration2_s ec2;
 
-	initializeSkippedToothTriggerShapeExt(&ec2, 2, 0, FOUR_STROKE_CAM_SENSOR);
+	initializeSkippedToothTriggerShapeExt(&ec2.triggerShape, 2, 0, FOUR_STROKE_CAM_SENSOR);
 	assertEqualsM("shape size", ec2.triggerShape.getSize(), 4);
 	assertEquals(ec2.triggerShape.wave.switchTimes[0], 0.25);
 	assertEquals(ec2.triggerShape.wave.switchTimes[1], 0.5);
@@ -480,10 +461,16 @@ void testTriggerDecoder(void) {
 	test1995FordInline6TriggerDecoder();
 	testMazdaMianaNbDecoder();
 	testGY6_139QMB();
-	testFordEscortGt();
+	testTriggerDecoder("testFordEscortGt", FORD_ESCORT_GT, 0);
 	testMiniCooper();
 	testRoverV8();
-	testCitroen();
+	testTriggerDecoder("testCitroen", CITROEN_TU3JP, 0);
+	testTriggerDecoder("testFordEscortGt", FORD_ESCORT_GT, 0);
+	testTriggerDecoder("testAccordCd 3w", HONDA_ACCORD_CD, 12);
+	testTriggerDecoder("testAccordCd 2w", HONDA_ACCORD_CD_TWO_WIRES, 10);
+	testTriggerDecoder("testAccordCdDip", HONDA_ACCORD_CD_DIP, 27);
+
+	testTriggerDecoder("testMitsu", MITSU_4G93, 3);
 
 	testMazda323();
 

@@ -19,7 +19,7 @@ void configureNeonTriggerShape(trigger_shape_s *s) {
 	// voodoo magic - we always need 720 at the end
 	int base = 720 - 560;
 
-	s->initialState[0] = 1;
+	s->initialState[T_PRIMARY] = 1;
 
 	s->addEvent(base - 720 + 600, T_SECONDARY, TV_HIGH);
 	s->addEvent(base - 720 + 604, T_SECONDARY, TV_LOW);

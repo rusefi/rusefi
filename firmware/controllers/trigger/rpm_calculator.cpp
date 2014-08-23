@@ -19,7 +19,7 @@
 extern WaveChart waveChart;
 #endif /* EFI_WAVE_CHART */
 
-#if EFI_SHAFT_POSITION_INPUT
+#if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
 
 #include "trigger_central.h"
 #include "engine_configuration.h"
@@ -77,7 +77,7 @@ uint64_t getLastRpmEventTime(void) {
 	return rpmState.lastRpmEventTimeUs;
 }
 
-#if EFI_PROD_CODE || EFI_SIMULATOR
+#if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
 bool isCranking(void) {
 	int rpm = getRpm();
 	return isCrankingR(rpm);
@@ -141,10 +141,14 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType, int index, RpmCalcu
 		addWaveChartEvent(WC_CRANK2, WC_UP, (char*) shaft_signal_msg_index);
 	} else if (ckpSignalType == SHAFT_SECONDARY_DOWN) {
 		addWaveChartEvent(WC_CRANK2, WC_DOWN, (char*) shaft_signal_msg_index);
+	} else if (ckpSignalType == SHAFT_3RD_UP) {
+		addWaveChartEvent(WC_CRANK3, WC_UP, (char*) shaft_signal_msg_index);
+	} else if (ckpSignalType == SHAFT_3RD_DOWN) {
+		addWaveChartEvent(WC_CRANK3, WC_DOWN, (char*) shaft_signal_msg_index);
 	}
 
 	if (index != 0) {
-#if EFI_ANALOG_CHART
+#if EFI_ANALOG_CHART || defined(__DOXYGEN__)
 		if (engineConfiguration->analogChartMode == AC_TRIGGER)
 			acAddData(getCrankshaftAngle(getTimeNowUs()), 1000 * ckpSignalType + index);
 #endif
@@ -174,7 +178,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType, int index, RpmCalcu
 		}
 	}
 	rpmState->lastRpmEventTimeUs = nowUs;
-#if EFI_ANALOG_CHART
+#if EFI_ANALOG_CHART || defined(__DOXYGEN__)
 	if (engineConfiguration->analogChartMode == AC_TRIGGER)
 		acAddData(getCrankshaftAngle(nowUs), index);
 #endif
@@ -184,22 +188,31 @@ static scheduling_s tdcScheduler[2];
 
 static char rpmBuffer[10];
 
-#if EFI_PROD_CODE || EFI_SIMULATOR
+#if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
+/**
+ * This callback has nothing to do with actual engine control, it just sends a Top Dead Center mark to the dev console
+ * digital sniffer.
+ */
 static void onTdcCallback(void) {
 	itoa10(rpmBuffer, getRpm());
 	addWaveChartEvent(TOP_DEAD_CENTER_MESSAGE, (char*) rpmBuffer, "");
 }
 
+/**
+ * This trigger callback schedules the actual physical TDC callback in relation to trigger synchronization point.
+ */
 static void tdcMarkCallback(trigger_event_e ckpSignalType, int index, void *arg) {
-	if (index == 0) {
+	bool isTriggerSynchronizationPoint = index == 0;
+	if (isTriggerSynchronizationPoint) {
 		int index = getRevolutionCounter() % 2;
+		// todo: use event-based scheduling, not just time-based scheduling
 		scheduleByAngle(&tdcScheduler[index], engineConfiguration->globalTriggerAngleOffset, (schfunc_t) onTdcCallback, NULL);
 	}
 }
 #endif
 
 void initRpmCalculator(void) {
-#if EFI_PROD_CODE || EFI_SIMULATOR
+#if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
 	initLogging(&logger, "rpm calc");
 	engine.rpmCalculator = &rpmState;
 
@@ -213,7 +226,7 @@ void initRpmCalculator(void) {
 	addTriggerEventListener((ShaftPositionListener)&rpmShaftPositionCallback, "rpm reporter", &rpmState);
 }
 
-#if EFI_PROD_CODE || EFI_SIMULATOR
+#if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
 /**
  * Schedules a callback 'angle' degree of crankshaft from now.
  * The callback would be executed once after the duration of time which

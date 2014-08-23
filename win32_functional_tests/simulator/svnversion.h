@@ -1,6 +1,6 @@
 
 // this is less important for simulator
 
-#ifndef SVN_VERSION
-#define SVN_VERSION 0
+#ifndef VCS_VERSION
+#define VCS_VERSION "simulator"
 #endif

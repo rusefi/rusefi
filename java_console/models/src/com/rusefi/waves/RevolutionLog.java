@@ -1,6 +1,10 @@
 package com.rusefi.waves;
 
+import com.rusefi.io.tcp.TcpConnector;
+
 import java.util.*;
+
+import static com.rusefi.io.tcp.TcpConnector.*;
 
 /**
  * 1/11/14.
@@ -21,8 +25,8 @@ public class RevolutionLog {
 
         String[] r = revolutions.toString().split("!");
         for (int i = 0; i < r.length - 1; i += 2) {
-            int rpm = Integer.parseInt(r[i]);
-            int time = Integer.parseInt(r[i + 1]);
+            int rpm = parseIntWithReason(r[i], "RL rpm");
+            int time = parseIntWithReason(r[i + 1], "RL time");
             time2rpm.put(time, rpm);
         }
         return new RevolutionLog(time2rpm);

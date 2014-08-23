@@ -62,7 +62,7 @@ void ArrayList< Type, Dimention>::resetEventList(void) {
 
 template <class Type, int Dimention>
 Type * ArrayList< Type, Dimention>::getNextActuatorEvent(void) {
-	efiAssert(size < Dimention, "registerActuatorEvent() too many events", NULL);
+	efiAssert(size < Dimention, "registerActuatorEvent() too many events", (Type *)NULL);
 	return &events[size++];
 }
 

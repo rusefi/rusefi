@@ -22,10 +22,9 @@ void avgReset(AvgTable *table) {
 }
 
 void avgAddValue(AvgTable *table, int rpm, float key, float value) {
-	if (rpm >= MAX_RPM)
+  if (rpm >= MAX_RPM || key >= MAX_KEY) {
 		return;
-	if (key >= MAX_KEY)
-		return;
+        }
 	int i = (int)(AVG_TAB_SIZE * rpm / MAX_RPM);
 	int j = (int)(AVG_TAB_SIZE * key / MAX_KEY);
 
@@ -35,26 +34,25 @@ void avgAddValue(AvgTable *table, int rpm, float key, float value) {
 
 float avgGetValueByIndexes(AvgTable *table, int i, int j) {
 	int count = table->counts[i][j];
-	if (count == 0)
+	if (count == 0) {
 		return NAN;
+        }
 	return table->values[i][j] / count;
 }
 
 float avgGetValue(AvgTable *table, int rpm, float key) {
-	if (rpm >= MAX_RPM)
+  if (rpm >= MAX_RPM || key >= MAX_KEY) {
 		return NAN;
-	if (key >= MAX_KEY)
-		return NAN;
+  }
 	int i = (int)(AVG_TAB_SIZE * rpm / MAX_RPM);
 	int j = (int)(AVG_TAB_SIZE * key / MAX_KEY);
 	return avgGetValueByIndexes(table, i, j);
 }
 
 int avgGetValuesCount(AvgTable *table, int rpm, float key) {
-	if (rpm >= MAX_RPM)
+  if (rpm >= MAX_RPM || key >= MAX_KEY) {
 		return 0;
-	if (key >= MAX_KEY)
-		return 0;
+  }
 	int i = (int)(AVG_TAB_SIZE * rpm / MAX_RPM);
 	int j = (int)(AVG_TAB_SIZE * key / MAX_KEY);
 

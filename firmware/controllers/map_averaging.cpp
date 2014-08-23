@@ -22,7 +22,7 @@
 
 #include "map.h"
 
-#if EFI_MAP_AVERAGING
+#if EFI_MAP_AVERAGING || defined(__DOXYGEN__)
 
 #include "map_averaging.h"
 #include "trigger_central.h"

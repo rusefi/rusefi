@@ -90,6 +90,11 @@ void setFordAspireEngineConfiguration(engine_configuration_s *engineConfiguratio
 
 	engineConfiguration->rpmHardLimit = 7000;
 
+	/**
+	 * 18K Ohm @ -20C
+	 * 2.1K Ohm @ 24C
+	 * 1K Ohm @ 49C
+	 */
 	setThermistorConfiguration(&engineConfiguration->cltThermistorConf, -20, 18000, 23.8889, 2100, 48.8889, 1000);
 	engineConfiguration->cltThermistorConf.bias_resistor = 3300; // that's my custom resistor value!
 
@@ -112,9 +117,12 @@ void setFordAspireEngineConfiguration(engine_configuration_s *engineConfiguratio
 	engineConfiguration->injectionOffset = 59;
 
 	setDefaultMaps(engineConfiguration);
+	// set_cranking_rpm 550
 	engineConfiguration->crankingSettings.crankingRpm = 550;
+	// set_cranking_charge_angle 70
 	engineConfiguration->crankingChargeAngle = 70;
-	engineConfiguration->crankingTimingAngle = 26 + 11;
+	// set_cranking_timing_angle 37
+	engineConfiguration->crankingTimingAngle = 37;
 
 	setSingleCoilDwell(engineConfiguration);
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
@@ -140,11 +148,11 @@ void setFordAspireEngineConfiguration(engine_configuration_s *engineConfiguratio
 	// Frankenstein analog input #12: adc
 
 
-	engineConfiguration->tpsAdcChannel = 3;
-	engineConfiguration->vBattAdcChannel = 0;
-	engineConfiguration->map.sensor.hwChannel = 4;
-	engineConfiguration->mafAdcChannel = 1;
-	engineConfiguration->cltAdcChannel = 11;
+	engineConfiguration->tpsAdcChannel = EFI_ADC_3;
+	engineConfiguration->vBattAdcChannel = EFI_ADC_0;
+	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
+	engineConfiguration->mafAdcChannel = EFI_ADC_1;
+	engineConfiguration->cltAdcChannel = EFI_ADC_11;
 //	engineConfiguration->iatAdcChannel =
 
 	engineConfiguration->map.sensor.sensorType = MT_DENSO183;

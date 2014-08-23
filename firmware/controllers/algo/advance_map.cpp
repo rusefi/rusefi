@@ -35,7 +35,7 @@ static Map3D1616 advanceMap;
 float getBaseAdvance(int rpm, float engineLoad) {
 	efiAssert(!cisnan(engineLoad), "invalid el", NAN);
 	efiAssert(!cisnan(engineLoad), "invalid rpm", NAN);
-	return advanceMap.getValue(engineLoad, engineConfiguration->ignitionLoadBins, rpm,
+	return advanceMap.getValue(engineLoad, engineConfiguration->ignitionLoadBins, (float)rpm,
 			engineConfiguration->ignitionRpmBins);
 }
 

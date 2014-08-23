@@ -48,6 +48,7 @@
 #include "ford_escort_gt.h"
 #include "citroenBerlingoTU3JP.h"
 #include "rover_v8.h"
+#include "mitsubishi.h"
 
 static volatile int globalConfigurationVersion = 0;
 
@@ -179,8 +180,8 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 
 	engineConfiguration->analogChartMode = AC_TRIGGER;
 
-	engineConfiguration->map.sensor.hwChannel = 4;
-	engineConfiguration->baroSensor.hwChannel = 4;
+	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
+	engineConfiguration->baroSensor.hwChannel = EFI_ADC_4;
 
 	engineConfiguration->firingOrder = FO_1_THEN_3_THEN_4_THEN2;
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
@@ -219,18 +220,19 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	engineConfiguration->displayMode = DM_HD44780;
 
 	engineConfiguration->logFormat = LF_NATIVE;
+	engineConfiguration->directSelfStimulation = false;
 
 	engineConfiguration->triggerConfig.triggerType = TT_TOOTHED_WHEEL_60_2;
 
-	engineConfiguration->HD44780width = 16;
-	engineConfiguration->HD44780height = 2;
+	engineConfiguration->HD44780width = 20;
+	engineConfiguration->HD44780height = 4;
 
-	engineConfiguration->tpsAdcChannel = 3;
-	engineConfiguration->vBattAdcChannel = 5;
-	engineConfiguration->cltAdcChannel = 6;
-	engineConfiguration->iatAdcChannel = 7;
-	engineConfiguration->mafAdcChannel = 0;
-	engineConfiguration->afrSensor.afrAdcChannel = 14;
+	engineConfiguration->tpsAdcChannel = EFI_ADC_3;
+	engineConfiguration->vBattAdcChannel = EFI_ADC_5;
+	engineConfiguration->cltAdcChannel = EFI_ADC_6;
+	engineConfiguration->iatAdcChannel = EFI_ADC_7;
+	engineConfiguration->mafAdcChannel = EFI_ADC_0;
+	engineConfiguration->afrSensor.afrAdcChannel = EFI_ADC_14;
 
 	initBpsxD1Sensor(&engineConfiguration->afrSensor);
 
@@ -247,12 +249,21 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	engineConfiguration->hasMapSensor = TRUE;
 	engineConfiguration->hasCltSensor = TRUE;
 
+	boardConfiguration->idleSolenoidFrequency = 200;
+//	engineConfiguration->idleMode = IM_AUTO;
+	engineConfiguration->idleMode = IM_MANUAL;
+
+	engineConfiguration->isInjectionEnabled = true;
+	engineConfiguration->isIgnitionEnabled = true;
+	engineConfiguration->isCylinderCleanupEnabled = true;
+	engineConfiguration->secondTriggerChannelEnabled = true;
 
 	boardConfiguration->idleValvePin = GPIOE_2;
 	boardConfiguration->idleValvePinMode = OM_DEFAULT;
 	boardConfiguration->fuelPumpPin = GPIOC_13;
 	boardConfiguration->fuelPumpPinMode = OM_DEFAULT;
 	boardConfiguration->electronicThrottlePin1 = GPIOC_9;
+	boardConfiguration->o2heaterPin = GPIO_NONE;
 
 	boardConfiguration->injectionPins[0] = GPIOB_9;
 	boardConfiguration->injectionPins[1] = GPIOB_8;
@@ -292,9 +303,11 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 
 	boardConfiguration->triggerSimulatorPins[0] = GPIOD_1;
 	boardConfiguration->triggerSimulatorPins[1] = GPIOD_2;
+	boardConfiguration->triggerSimulatorPins[2] = GPIOD_3;
 
 	boardConfiguration->triggerSimulatorPinModes[0] = OM_DEFAULT;
 	boardConfiguration->triggerSimulatorPinModes[1] = OM_DEFAULT;
+	boardConfiguration->triggerSimulatorPinModes[2] = OM_DEFAULT;
 
 	boardConfiguration->HD44780_rs = GPIOE_9;
 	boardConfiguration->HD44780_e = GPIOE_11;
@@ -302,6 +315,9 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	boardConfiguration->HD44780_db5 = GPIOE_15;
 	boardConfiguration->HD44780_db6 = GPIOB_11;
 	boardConfiguration->HD44780_db7 = GPIOB_13;
+
+	boardConfiguration->gps_rx_pin = GPIOB_7;
+	boardConfiguration->gps_tx_pin = GPIOB_6;
 
 	memset(boardConfiguration->adcHwChannelEnabled, 0, sizeof(boardConfiguration->adcHwChannelEnabled));
 	boardConfiguration->adcHwChannelEnabled[0] = ADC_SLOW;
@@ -316,10 +332,10 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	boardConfiguration->adcHwChannelEnabled[12] = ADC_SLOW;
 	boardConfiguration->adcHwChannelEnabled[13] = ADC_SLOW;
 
-	boardConfiguration->primaryTriggerInputPin = GPIOC_6;
-	boardConfiguration->secondaryTriggerInputPin = GPIOA_5;
-	boardConfiguration->primaryLogicAnalyzerPin = GPIOA_8;
-	boardConfiguration->secondaryLogicAnalyzerPin = GPIOE_7;
+	boardConfiguration->triggerInputPins[0] = GPIOC_6;
+	boardConfiguration->triggerInputPins[1] = GPIOA_5;
+	boardConfiguration->logicAnalyzerPins[0] = GPIOA_8;
+	boardConfiguration->logicAnalyzerPins[1] = GPIOE_7;
 
 	boardConfiguration->idleThreadPeriod = 100;
 	boardConfiguration->consoleLoopPeriod = 200;
@@ -342,13 +358,8 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	boardConfiguration->digitalPotentiometerChipSelect[3] = GPIO_NONE;
 }
 
-void setDefaultNonPersistentConfiguration(engine_configuration2_s *engineConfiguration2) {
-	/**
-	 * 720 is the range for four stroke
-	 */
-//	engineConfiguration2->crankAngleRange = 720;
-
-}
+//void setDefaultNonPersistentConfiguration(engine_configuration2_s *engineConfiguration2) {
+//}
 
 void resetConfigurationExt(Logging * logger, engine_type_e engineType, engine_configuration_s *engineConfiguration,
 		engine_configuration2_s *engineConfiguration2, board_configuration_s *boardConfiguration) {
@@ -381,8 +392,17 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType, engine_co
 		setNissanPrimeraEngineConfiguration(engineConfiguration);
 		break;
 #endif
-	case HONDA_ACCORD:
-		setHondaAccordConfiguration(engineConfiguration, boardConfiguration);
+	case HONDA_ACCORD_CD:
+		setHondaAccordConfigurationThreeWires(engineConfiguration, boardConfiguration);
+		break;
+	case HONDA_ACCORD_CD_TWO_WIRES:
+		setHondaAccordConfigurationTwoWires(engineConfiguration, boardConfiguration);
+		break;
+	case HONDA_ACCORD_CD_DIP:
+		setHondaAccordConfigurationDip(engineConfiguration, boardConfiguration);
+		break;
+	case MITSU_4G93:
+		setMitsubishiConfiguration(engineConfiguration, boardConfiguration);
 		break;
 #if EFI_SUPPORT_1995_FORD_INLINE_6 || defined(__DOXYGEN__)
 	case FORD_INLINE_6_1995:
@@ -435,8 +455,6 @@ void applyNonPersistentConfiguration(Logging * logger, engine_configuration_s *e
 #if EFI_PROD_CODE
 	scheduleMsg(logger, "applyNonPersistentConfiguration()");
 #endif
-	engineConfiguration2->isInjectionEnabledFlag = TRUE;
-
 	initializeTriggerShape(logger, engineConfiguration, engineConfiguration2);
 	if (engineConfiguration2->triggerShape.getSize() == 0) {
 		firmwareError("triggerShape size is zero");

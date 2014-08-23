@@ -17,6 +17,8 @@
 #ifndef GLOBAL_FT_H_
 #define GLOBAL_FT_H_
 
+#define EFI_ERROR_CODE 0xffffffff
+
 #define DL_OUTPUT_BUFFER 9000
 
 #define CCM_OPTIONAL

@@ -20,7 +20,7 @@ typedef struct {
 	float Min;
 	float Max;
 	air_pressure_sensor_type_e sensorType;
-	int hwChannel;
+	adc_channel_e hwChannel;
 } air_pressure_sensor_config_s;
 
 /**
@@ -65,7 +65,7 @@ typedef struct {
 
 typedef struct {
 	ThermistorConf *config;
-	int channel;
+	adc_channel_e channel;
 } Thermistor;
 
 #endif /* THERMISTOR_TYPES_H_ */

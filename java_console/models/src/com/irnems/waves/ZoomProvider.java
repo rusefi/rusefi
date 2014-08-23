@@ -10,6 +10,10 @@ public interface ZoomProvider {
         public double getZoomValue() {
             return 1;
         }
+
+        public String toString() {
+            return "default";
+        }
     };
 
     double getZoomValue();

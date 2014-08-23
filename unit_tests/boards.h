@@ -10,6 +10,8 @@
 
 #define ADC_CHANNEL_VREF 0
 
+#define TEST_MAF_CHANNEL 10000013
+
 float getVoltageDivided(int);
 float getVoltage(int channel);
 int getAdcValue(int channel);

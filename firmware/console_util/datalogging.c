@@ -49,7 +49,8 @@
 /**
  * This is the buffer into which all the data providers write
  */
-static char pendingBuffer[DL_OUTPUT_BUFFER] CCM_OPTIONAL;
+static char pendingBuffer[DL_OUTPUT_BUFFER] CCM_OPTIONAL
+;
 
 /**
  * We copy all the pending data into this buffer once we are ready to push it out
@@ -57,10 +58,12 @@ static char pendingBuffer[DL_OUTPUT_BUFFER] CCM_OPTIONAL;
 static char outputBuffer[DL_OUTPUT_BUFFER];
 
 static MemoryStream intermediateLoggingBuffer;
-static uint8_t intermediateLoggingBufferData[INTERMEDIATE_LOGGING_BUFFER_SIZE] CCM_OPTIONAL; //todo define max-printf-buffer
+static uint8_t intermediateLoggingBufferData[INTERMEDIATE_LOGGING_BUFFER_SIZE] CCM_OPTIONAL
+;
+//todo define max-printf-buffer
 static bool intermediateLoggingBufferInited = FALSE;
 
-static int validateBuffer(Logging *logging, int extraLen, const char *text) {
+static int validateBuffer(Logging *logging, uint32_t extraLen, const char *text) {
 	if (logging->buffer == NULL) {
 		firmwareError("Logging not initialized: %s", logging->name);
 		return TRUE;
@@ -81,10 +84,11 @@ static int validateBuffer(Logging *logging, int extraLen, const char *text) {
 
 void append(Logging *logging, const char *text) {
 	efiAssertVoid(text != NULL, "append NULL");
-	int extraLen = strlen(text);
+	uint32_t extraLen = strlen(text);
 	int errcode = validateBuffer(logging, extraLen, text);
-	if (errcode)
+	if (errcode) {
 		return;
+	}
 	strcpy(logging->linePointer, text);
 	logging->linePointer += extraLen;
 }
@@ -171,6 +175,7 @@ char* getCaption(LoggingPoints loggingPoint) {
 	return NULL;
 }
 
+/*
 // todo: this method does not really belong to this file
 static char* get2ndCaption(int loggingPoint) {
 	switch (loggingPoint) {
@@ -192,6 +197,7 @@ static char* get2ndCaption(int loggingPoint) {
 	firmwareError("No such loggingPoint");
 	return NULL;
 }
+*/
 
 void initLoggingExt(Logging *logging, const char *name, char *buffer, int bufferSize) {
 	print("Init logging %s\r\n", name);
@@ -284,8 +290,8 @@ static void printWithLength(char *line) {
 
 	if (!isConsoleReady())
 		return;
-	consoleOutputBuffer((const int8_t *) header, strlen(header));
-	consoleOutputBuffer((const int8_t *) line, p - line);
+	consoleOutputBuffer((const uint8_t *) header, strlen(header));
+	consoleOutputBuffer((const uint8_t *) line, p - line);
 }
 
 void printLine(Logging *logging) {
@@ -368,15 +374,17 @@ void scheduleLogging(Logging *logging) {
 //		strcpy(fatalMessage, "datalogging.c: output buffer overflow: ");
 //		strcat(fatalMessage, logging->name);
 //		fatal(fatalMessage);
-		if (!alreadyLocked)
+		if (!alreadyLocked) {
 			unlockOutputBuffer();
+		}
 		resetLogging(logging);
 		return;
 	}
 
 	strcat(pendingBuffer, logging->buffer);
-	if (!alreadyLocked)
+	if (!alreadyLocked) {
 		unlockOutputBuffer();
+	}
 	resetLogging(logging);
 }
 
@@ -387,15 +395,16 @@ uint32_t remainingSize(Logging *logging) {
 /**
  * This method actually sends all the pending data to the communication layer
  */
-void printPending() {
+void printPending(void) {
 	lockOutputBuffer();
 	// we cannot output under syslock, so another buffer
 	strcpy(outputBuffer, pendingBuffer);
 	pendingBuffer[0] = 0; // reset pending buffer
 	unlockOutputBuffer();
 
-	if (strlen(outputBuffer) > 0)
+	if (strlen(outputBuffer) > 0) {
 		printWithLength(outputBuffer);
+	}
 }
 
 void initIntermediateLoggingBuffer(void) {

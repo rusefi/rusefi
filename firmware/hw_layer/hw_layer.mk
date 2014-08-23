@@ -19,4 +19,6 @@ HW_LAYER_SRC_CPP = $(PROJECT_DIR)/hw_layer/hardware.cpp \
  	$(PROJECT_DIR)/hw_layer/adc_inputs.cpp \
 	$(PROJECT_DIR)/hw_layer/board_test.cpp \
 	$(PROJECT_DIR)/hw_layer/pwm_generator.cpp \
-	$(PROJECT_DIR)/hw_layer/trigger_input.cpp
+	$(PROJECT_DIR)/hw_layer/trigger_input.cpp \
+	$(PROJECT_DIR)/hw_layer/stm32f4/mpu_util.cpp
+	

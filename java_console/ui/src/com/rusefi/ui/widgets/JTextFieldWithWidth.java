@@ -1,4 +1,4 @@
-package com.irnems.ui.widgets;
+package com.rusefi.ui.widgets;
 
 import javax.swing.*;
 import java.awt.*;

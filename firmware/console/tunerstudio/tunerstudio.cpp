@@ -33,7 +33,6 @@
 #include "tunerstudio_algo.h"
 #include "tunerstudio_configuration.h"
 #include "malfunction_central.h"
-#include "wave_math.h"
 #include "console_io.h"
 #include "crc.h"
 
@@ -54,13 +53,13 @@ static SerialConfig tsSerialConfig = { TS_SERIAL_SPEED, 0, USART_CR2_STOP1_BITS 
 #endif /* EFI_PROD_CODE */
 
 #define MAX_PAGE_ID 0
-#define PAGE_0_SIZE 5824
+#define PAGE_0_SIZE 5928
+#define TS_OUTPUT_SIZE 116
 
 // in MS, that's 10 seconds
 #define TS_READ_TIMEOUT 10000
 
 #define PROTOCOL  "001"
-
 
 BaseChannel * getTsSerialDevice(void) {
 #if EFI_PROD_CODE
@@ -77,7 +76,6 @@ BaseChannel * getTsSerialDevice(void) {
 
 static Logging logger;
 
-extern engine_configuration_s *engineConfiguration;
 extern persistent_config_s configWorkingCopy;
 extern persistent_config_container_s persistentState;
 
@@ -108,6 +106,10 @@ extern TunerStudioOutputChannels tsOutputChannels;
 
 extern TunerStudioState tsState;
 
+extern engine_configuration_s *engineConfiguration;
+extern board_configuration_s *boardConfiguration;
+
+
 static void printStats(void) {
 #if EFI_PROD_CODE
 	if (!isSerialOverUart()) {
@@ -127,14 +129,11 @@ static void printStats(void) {
 //	int fuelMapOffset = (int) (&engineConfiguration->fuelTable) - (int) engineConfiguration;
 //	scheduleMsg(&logger, "fuelTable %d", fuelMapOffset);
 //
-//	int offset = (int) (&engineConfiguration->bc.injectionPinMode) - (int) engineConfiguration;
-//	scheduleMsg(&logger, "injectionPinMode %d", offset);
+//	int offset = (int) (&boardConfiguration->o2heaterPin) - (int) engineConfiguration;
+//	scheduleMsg(&logger, "o2heaterPin %d", offset);
 //
-//	offset = (int) (&engineConfiguration->bc.idleThreadPeriod) - (int) engineConfiguration;
-//	scheduleMsg(&logger, "idleThreadPeriod %d", offset);
-
-	if (sizeof(engine_configuration_s) != getTunerStudioPageSize(0))
-		firmwareError("TS page size mismatch");
+//	offset = (int) (&boardConfiguration->idleSolenoidFrequency) - (int) engineConfiguration;
+//	scheduleMsg(&logger, "idleSolenoidFrequency %d", offset);
 }
 
 void tunerStudioWriteData(const uint8_t * buffer, int size) {
@@ -227,7 +226,7 @@ void handleWriteValueCommand(ts_response_format_e mode, uint16_t page, uint16_t 
 //	scheduleMsg(&logger, "Page number %d\r\n", pageId); // we can get a lot of these
 #endif
 
-	int size = sizeof(TunerStudioWriteValueRequest);
+//	int size = sizeof(TunerStudioWriteValueRequest);
 //	scheduleMsg(&logger, "Reading %d\r\n", size);
 
 	if (offset > getTunerStudioPageSize(tsState.currentPageId)) {
@@ -258,7 +257,7 @@ void handlePageReadCommand(ts_response_format_e mode, uint16_t pageId, uint16_t 
 	tsState.currentPageId = pageId;
 
 #if EFI_TUNER_STUDIO_VERBOSE
-	scheduleMsg(&logger, "Page requested: page %d offset=%d count=%d", tsState.currentPageId, offset, count);
+	scheduleMsg(&logger, "Page requested: page %d offset=%d count=%d", (int)tsState.currentPageId, offset, count);
 #endif
 
 	if (tsState.currentPageId > MAX_PAGE_ID) {
@@ -305,7 +304,7 @@ void handleBurnCommand(ts_response_format_e mode, uint16_t page) {
 	memcpy(&persistentState.persistentConfiguration, &configWorkingCopy, sizeof(persistent_config_s));
 
 #if EFI_INTERNAL_FLASH
-	writeToFlash();
+	setNeedToWriteConfiguration();
 #endif
 	incrementGlobalConfigurationVersion();
 	tunerStudioWriteCrcPacket(TS_RESPONSE_BURN_OK, NULL, 0);
@@ -397,7 +396,7 @@ static msg_t tsThreadEntryPoint(void *arg) {
 		}
 //		scheduleMsg(&logger, "Got secondByte=%x=[%c]", secondByte, secondByte);
 
-		int incomingPacketSize = firstByte * 256 + secondByte;
+		uint32_t incomingPacketSize = firstByte * 256 + secondByte;
 
 		if (incomingPacketSize == 0 || incomingPacketSize > sizeof(crcIoBuffer)) {
 			scheduleMsg(&logger, "TunerStudio: invalid size: %d", incomingPacketSize);
@@ -435,7 +434,7 @@ static msg_t tsThreadEntryPoint(void *arg) {
 
 		expectedCrc = SWAP_UINT32(expectedCrc);
 
-		int actualCrc = crc32(crcIoBuffer, incomingPacketSize);
+		uint32_t actualCrc = crc32(crcIoBuffer, incomingPacketSize);
 		if (actualCrc != expectedCrc) {
 			scheduleMsg(&logger, "TunerStudio: CRC %x %x %x %x", crcIoBuffer[incomingPacketSize + 0],
 					crcIoBuffer[incomingPacketSize + 1], crcIoBuffer[incomingPacketSize + 2],
@@ -466,6 +465,13 @@ void syncTunerStudioCopy(void) {
 
 void startTunerStudioConnectivity(void) {
 	initLogging(&logger, "tuner studio");
+
+	if (sizeof(engine_configuration_s) != getTunerStudioPageSize(0))
+		firmwareError("TS page size mismatch: %d/%d", sizeof(engine_configuration_s), getTunerStudioPageSize(0));
+
+	if (sizeof(TunerStudioOutputChannels) != TS_OUTPUT_SIZE)
+		firmwareError("TS outputs size mismatch: %d/%d", sizeof(TunerStudioOutputChannels), TS_OUTPUT_SIZE);
+
 	memset(&tsState, 0, sizeof(tsState));
 #if EFI_PROD_CODE
 	if (isSerialOverUart()) {

@@ -8,6 +8,10 @@ public class Range {
     private final float min;
     private final float max;
 
+    public Range(double min, double max) {
+        this((float) min, (float) max);
+    }
+
     public Range(float min, float max) {
         this.min = min;
         this.max = max;

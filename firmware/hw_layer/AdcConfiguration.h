@@ -10,13 +10,17 @@
 class AdcConfiguration {
 public:
 	AdcConfiguration(ADCConversionGroup* hwConfig);
-	void addChannel(int hwChannelIndex);
-	int getAdcHardwareIndexByInternalIndex(int index);
+	void addChannel(adc_channel_e hwChannelIndex);
+	adc_channel_e getAdcHardwareIndexByInternalIndex(int index);
 	int internalAdcIndexByHardwareIndex[20];
+	bool isHwUsed(adc_channel_e hwChannel);
 	int size();
 	void init(void);
 	int conversionCount;
 	int errorsCount;
+	int getAdcValueByIndex(int internalIndex);
+
+	adc_state values;
 private:
 	ADCConversionGroup* hwConfig;
 	/**
@@ -24,7 +28,7 @@ private:
 	 */
 	int channelCount;
 
-	int hardwareIndexByIndernalAdcIndex[20];
+	adc_channel_e hardwareIndexByIndernalAdcIndex[20];
 };
 
 

@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
+ * Messages from the firmware and UI panels which want to display them
+ *
  * Date: 4/27/13
  * (c) Andrey Belomutskiy
  */

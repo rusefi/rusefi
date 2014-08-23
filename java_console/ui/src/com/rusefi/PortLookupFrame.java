@@ -3,6 +3,8 @@ package com.rusefi;
 import com.irnems.Launcher;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.tcp.TcpConnector;
+import com.rusefi.ui.UiUtils;
+import com.rusefi.ui.widgets.URLLabel;
 import jssc.SerialPortList;
 
 import javax.swing.*;
@@ -20,17 +22,18 @@ import java.util.List;
  */
 public class PortLookupFrame {
     public static void chooseSerialPort() {
-        List<String> ports = new ArrayList<String>();
+        List<String> ports = new ArrayList<>();
         ports.addAll(Arrays.asList(SerialPortList.getPortNames()));
         ports.addAll(TcpConnector.getAvailablePorts());
 
-        final JFrame frame = new JFrame("Serial port selection");
+        final JFrame frame = new JFrame(Launcher.CONSOLE_VERSION + ": Serial port selection");
 
-        final JPanel panel = new JPanel(new FlowLayout());
+        JPanel content = new JPanel(new BorderLayout());
+
+        final JPanel upperPanel = new JPanel(new FlowLayout());
 
         if (!ports.isEmpty())
-            addPortSelection(ports, frame, panel);
-
+            addPortSelection(ports, frame, upperPanel);
 
         final JButton buttonLogViewer = new JButton();
         buttonLogViewer.setText("Use " + LinkManager.LOG_VIEWER);
@@ -42,15 +45,27 @@ public class PortLookupFrame {
             }
         });
 
-        panel.add(buttonLogViewer);
+        upperPanel.add(buttonLogViewer);
 
-        frame.add(panel);
+        JPanel centerPanel = new JPanel(new FlowLayout());
+        centerPanel.add(SimulatorHelper.createSimulatorComponent(frame));
+
+
+        JPanel lowerPanel = new JPanel(new FlowLayout());
+        lowerPanel.add(new URLLabel("rusEfi (c) 2012-2014", "http://rusefi.com/?java_console"));
+        content.add(upperPanel, BorderLayout.NORTH);
+        content.add(centerPanel, BorderLayout.CENTER);
+        content.add(lowerPanel, BorderLayout.SOUTH);
+
+
+        frame.add(content);
         frame.pack();
         frame.setVisible(true);
+        UiUtils.centerWindow(frame);
     }
 
     private static void addPortSelection(List<String> ports, final JFrame frame, JPanel panel) {
-        final JComboBox<String> comboPorts = new JComboBox<String>();
+        final JComboBox<String> comboPorts = new JComboBox<>();
         for (final String port : ports)
             comboPorts.addItem(port);
         panel.add(comboPorts);

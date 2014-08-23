@@ -26,6 +26,9 @@ public class WaveChart {
     public static final String SPARK_3 = "spa3";
     public static final String SPARK_4 = "spa4";
 
+    public static final String TRIGGER_1 = "c1";
+    public static final String TRIGGER_2 = "c2";
+
     public final Map<String, StringBuilder> map;
 
     public WaveChart(Map<String, StringBuilder> map) {

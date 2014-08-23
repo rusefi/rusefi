@@ -32,7 +32,6 @@
 static Logging logger;
 
 extern engine_configuration_s *engineConfiguration;
-extern engine_configuration2_s *engineConfiguration2;
 extern board_configuration_s *boardConfiguration;
 
 static int is_injector_enabled[MAX_INJECTOR_COUNT];
@@ -76,44 +75,81 @@ static void setInjectorEnabled(int id, int value) {
 	printStatus();
 }
 
-void runBench(brain_pin_e brainPin, io_pin_e pin, float onTime, float offTime, int count) {
-	scheduleMsg(&logger, "Running bench: ON_TIME=%f ms OFF_TIME=%fms Counter=%d", onTime, offTime, count);
+static void runBench(brain_pin_e brainPin, io_pin_e pin, float delayMs, float onTimeMs, float offTimeMs, int count) {
+	scheduleMsg(&logger, "Running bench: ON_TIME=%f ms OFF_TIME=%fms Counter=%d", onTimeMs, offTimeMs, count);
 	scheduleMsg(&logger, "output on %s", hwPortname(brainPin));
+
+	int delaySt = (int) (delayMs * CH_FREQUENCY / 1000);
+	if (delaySt != 0) {
+		chThdSleep(delaySt);
+	}
 
 	for (int i = 0; i < count; i++) {
 		setOutputPinValue(pin, TRUE);
-		chThdSleep((int) (onTime * CH_FREQUENCY / 1000));
+		chThdSleep((int) (onTimeMs * CH_FREQUENCY / 1000));
 		setOutputPinValue(pin, FALSE);
-		chThdSleep((int) (offTime * CH_FREQUENCY / 1000));
+		int offTimeSt = (int) (offTimeMs * CH_FREQUENCY / 1000);
+		if (offTimeSt > 0) {
+			chThdSleep(offTimeSt);
+		}
 	}
 	scheduleMsg(&logger, "Done!");
 }
 
 static volatile int needToRunBench = FALSE;
-float onTime;
-float offTime;
-int count;
-brain_pin_e brainPin;
-io_pin_e pin;
+static float onTime;
+static float offTime;
+static float delayMs;
+static int count;
+static brain_pin_e brainPin;
+static io_pin_e pin;
 
-static void fuelbench(char * onStr, char *offStr, char *countStr) {
-	onTime = atoff(onStr);
-	offTime = atoff(offStr);
+static void pinbench(const char *delayStr, const char *onTimeStr, const char *offTimeStr, const char *countStr,
+		io_pin_e pinParam, brain_pin_e brainPinParam) {
+	delayMs = atoff(delayStr);
+	onTime = atoff(onTimeStr);
+	offTime = atoff(offTimeStr);
 	count = atoi(countStr);
 
-	brainPin = boardConfiguration->injectionPins[0];
-	pin = INJECTOR_1_OUTPUT;
+	brainPin = brainPinParam;
+	pin = pinParam;
 	needToRunBench = TRUE;
 }
 
-static void sparkbench(char * onStr, char *offStr, char *countStr) {
-	onTime = atoff(onStr);
-	offTime = atoff(offStr);
-	count = atoi(countStr);
+static void fuelbench2(const char *delayStr, const char *indexStr, const char * onTimeStr, const char *offTimeStr,
+		const char *countStr) {
+	int index = atoi(indexStr);
+	brain_pin_e b = boardConfiguration->injectionPins[index - 1];
+	io_pin_e p = (io_pin_e) ((int) INJECTOR_1_OUTPUT - 1 + index);
+	pinbench(delayStr, onTimeStr, offTimeStr, countStr, p, b);
+}
 
-	brainPin = boardConfiguration->ignitionPins[0];
-	pin = SPARKOUT_1_OUTPUT;
+static void fuelpumpbench(int delayParam, int onTimeParam) {
+	brainPin = boardConfiguration->fuelPumpPin;
+	pin = FUEL_PUMP_RELAY;
+
+	delayMs = delayParam;
+	onTime = onTimeParam;
+	offTime = 0;
+	count = 1;
+
 	needToRunBench = TRUE;
+}
+
+static void fuelbench(const char * onTimeStr, const char *offTimeStr, const char *countStr) {
+	fuelbench2("0", "1", onTimeStr, offTimeStr, countStr);
+}
+
+static void sparkbench2(const char *delayStr, const char *indexStr, const char * onTimeStr, const char *offTimeStr,
+		const char *countStr) {
+	int index = atoi(indexStr);
+	brain_pin_e b = boardConfiguration->ignitionPins[index - 1];
+	io_pin_e p = (io_pin_e) ((int) SPARKOUT_1_OUTPUT - 1 + index);
+	pinbench(delayStr, onTimeStr, offTimeStr, countStr, p, b);
+}
+
+static void sparkbench(const char * onTimeStr, const char *offTimeStr, const char *countStr) {
+	sparkbench2("0", "1", onTimeStr, offTimeStr, countStr);
 }
 
 static THD_WORKING_AREA(benchThreadStack, UTILITY_THREAD_STACK_SIZE);
@@ -126,7 +162,7 @@ static msg_t benchThread(int param) {
 			chThdSleepMilliseconds(200);
 		}
 		needToRunBench = FALSE;
-		runBench(brainPin, pin, onTime, offTime, count);
+		runBench(brainPin, pin, delayMs, onTime, offTime, count);
 	}
 #if defined __GNUC__
 	return 0;
@@ -142,15 +178,20 @@ void initInjectorCentral(void) {
 
 	// todo: should we move this code closer to the injection logic?
 	for (int i = 0; i < engineConfiguration->cylindersCount; i++) {
-		io_pin_e pin = (io_pin_e)((int)INJECTOR_1_OUTPUT + i);
+		io_pin_e pin = (io_pin_e) ((int) INJECTOR_1_OUTPUT + i);
 
-		outputPinRegisterExt2(getPinName(pin), pin,
-				boardConfiguration->injectionPins[i], &boardConfiguration->injectionPinMode);
+		outputPinRegisterExt2(getPinName(pin), pin, boardConfiguration->injectionPins[i],
+				&boardConfiguration->injectionPinMode);
 	}
 
 	printStatus();
 	addConsoleActionII("injector", setInjectorEnabled);
 
+	addConsoleActionII("fuelpumpbench", &fuelpumpbench);
+
 	addConsoleActionSSS("fuelbench", &fuelbench);
 	addConsoleActionSSS("sparkbench", &sparkbench);
+
+	addConsoleActionSSSSS("fuelbench2", &fuelbench2);
+	addConsoleActionSSSSS("sparkbench2", &sparkbench2);
 }

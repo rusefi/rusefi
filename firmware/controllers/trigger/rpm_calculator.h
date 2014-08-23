@@ -9,12 +9,13 @@
 #ifndef RPM_REPORTER_H_
 #define RPM_REPORTER_H_
 
-#include <time.h>
+#include <global.h>
 
 #define WC_DOWN "d"
 #define WC_UP "u"
 #define WC_CRANK1 "c1"
 #define WC_CRANK2 "c2"
+#define WC_CRANK3 "c3"
 
 #define NOISY_RPM -1
 
@@ -58,6 +59,9 @@ uint64_t getLastRpmEventTime(void);
 
 int getRevolutionCounter(void);
 float getCrankshaftAngle(uint64_t timeUs);
+/**
+ * @return true if engine is running
+ */
 bool isRunning(void);
 bool isValidRpm(int rpm);
 void addWaveChartEvent(const char *name, const char *msg, const char *msg2);

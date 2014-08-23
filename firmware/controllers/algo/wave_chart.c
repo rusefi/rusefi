@@ -79,7 +79,7 @@ void resetWaveChart(WaveChart *chart) {
 static char WAVE_LOGGING_BUFFER[WAVE_LOGGING_SIZE] CCM_OPTIONAL
 ;
 
-int isWaveChartFull(WaveChart *chart) {
+static int isWaveChartFull(WaveChart *chart) {
 	return chart->counter >= chartSize;
 }
 
@@ -94,8 +94,9 @@ static void setChartActive(int value) {
 }
 
 void setChartSize(int newSize) {
-	if (newSize < 5)
+  if (newSize < 5) {
 		return;
+  }
 	chartSize = newSize;
 	printStatus();
 }
@@ -114,8 +115,10 @@ void publishChart(WaveChart *chart) {
 	Logging *l = &chart->logging;
 	scheduleSimpleMsg(&debugLogging, "IT'S TIME", strlen(l->buffer));
 #endif
-	if (isChartActive && getFullLog())
+        bool isFullLog = getFullLog();
+	if (isChartActive && isFullLog) {
 		scheduleLogging(&chart->logging);
+        }
 }
 
 static char timeBuffer[10];
@@ -128,8 +131,9 @@ void addWaveChartEvent3(WaveChart *chart, const char *name, const char * msg, co
 #if DEBUG_WAVE
 	scheduleSimpleMsg(&debugLogging, "current", chart->counter);
 #endif
-	if (isWaveChartFull(chart))
+	if (isWaveChartFull(chart)) {
 		return;
+        }
 
 #if EFI_HISTOGRAMS && EFI_PROD_CODE
 	int beforeCallback = hal_lld_get_counter_value();
@@ -140,8 +144,9 @@ void addWaveChartEvent3(WaveChart *chart, const char *name, const char * msg, co
 
 	bool alreadyLocked = lockOutputBuffer(); // we have multiple threads writing to the same output buffer
 
-	if (chart->counter == 0)
+	if (chart->counter == 0) {
 		chart->startTime = time100;
+        }
 	chart->counter++;
 	if (remainingSize(&chart->logging) > 30) {
 		/**
@@ -161,13 +166,15 @@ void addWaveChartEvent3(WaveChart *chart, const char *name, const char * msg, co
 		appendFast(&chart->logging, msg2);
 		appendFast(&chart->logging, CHART_DELIMETER);
 	}
-	if (!alreadyLocked)
+	if (!alreadyLocked) {
 		unlockOutputBuffer();
+        }
 
 #if EFI_HISTOGRAMS && EFI_PROD_CODE
-	int diff = hal_lld_get_counter_value() - beforeCallback;
-	if (diff > 0)
+	int64_t diff = hal_lld_get_counter_value() - beforeCallback;
+	if (diff > 0) {
 	hsAdd(&waveChartHisto, diff);
+        }
 #endif /* EFI_HISTOGRAMS */
 
 }
@@ -181,8 +188,9 @@ void showWaveChartHistogram(void) {
 void initWaveChart(WaveChart *chart) {
 	initLogging(&logger, "wave info");
 
-	if (!isChartActive)
+	if (!isChartActive) {
 		printMsg(&logger, "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! chart disabled");
+        }
 
 	printStatus();
 

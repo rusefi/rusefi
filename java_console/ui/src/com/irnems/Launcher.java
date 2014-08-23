@@ -2,8 +2,7 @@ package com.irnems;
 
 import com.irnems.core.EngineState;
 import com.irnems.core.MessagesCentral;
-import com.rusefi.AnalogChartPanel;
-import com.rusefi.PortLookupFrame;
+import com.rusefi.*;
 import com.rusefi.io.LinkManager;
 import com.rusefi.ui.*;
 import jssc.SerialPortList;
@@ -20,8 +19,8 @@ import javax.swing.*;
  * @see WavePanel
  */
 public class Launcher extends FrameHelper {
-    private static final Object CONSOLE_VERSION = "20140709";
-    public static final boolean SHOW_STIMULATOR = false;
+    public static final int CONSOLE_VERSION = 20140820;
+    public static final boolean SHOW_STIMULATOR = true;
 
     public Launcher(String port) {
         FileLog.MAIN.start();
@@ -34,15 +33,17 @@ public class Launcher extends FrameHelper {
 
         RpmPanel rpmPanel = new RpmPanel();
         tabbedPane.addTab("Main", rpmPanel.createRpmPanel());
-        tabbedPane.addTab("Gauges", new GaugesPanel());
-        tabbedPane.addTab("Digital Sniffer", WavePanel.getInstance());
+        tabbedPane.addTab("Gauges", new GaugesPanel().getContent());
+        tabbedPane.addTab("Digital Sniffer", WavePanel.getInstance().getPanel());
         tabbedPane.addTab("Analog Sniffer", new AnalogChartPanel());
 
 //        tabbedPane.addTab("ADC", new AdcPanel(new BooleanInputsModel()).createAdcPanel());
-        if (SHOW_STIMULATOR)
-            tabbedPane.add("Emulation Map", EcuStimulator.panel);
+        if (SHOW_STIMULATOR) {
+            EcuStimulator stimulator = EcuStimulator.getInstance();
+            tabbedPane.add("Emulation Map", stimulator.getPanel());
+        }
 //        tabbedPane.addTab("live map adjustment", new Live3DReport().getControl());
-        tabbedPane.add("MessagesCentral", new MsgPanel(true));
+        tabbedPane.add("MessagesCentral", new MsgPanel(true).getContent());
 
         tabbedPane.add("Log Viewer", new LogViewer());
 
@@ -64,8 +65,9 @@ public class Launcher extends FrameHelper {
 
         LinkManager.engineState.registerStringValueAction("rusEfiVersion", new EngineState.ValueCallback<String>() {
             @Override
-            public void onUpdate(String value) {
-                setTitle(value);
+            public void onUpdate(String firmwareVersion) {
+                setTitle(firmwareVersion);
+                VersionChecker.getInstance().onFirmwareVersion(firmwareVersion);
             }
         });
     }
@@ -80,11 +82,13 @@ public class Launcher extends FrameHelper {
         /**
          * looks like reconnectTimer in {@link RpmPanel} keeps AWT alive. Simplest solution would be to 'exit'
          */
+        SimulatorHelper.onWindowClosed();
         System.exit(0);
     }
 
     public static void main(final String[] args) throws Exception {
         Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler());
+        VersionChecker.start();
         SwingUtilities.invokeAndWait(new Runnable() {
             public void run() {
                 awtCode(args);

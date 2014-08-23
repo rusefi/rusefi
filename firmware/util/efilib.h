@@ -8,14 +8,14 @@
 #ifndef EFILIB_H_
 #define EFILIB_H_
 
-#include "stdint.h"
+#include <stdint.h>
+#include "global.h"
 
 // number of milliseconds in one period of given frequency (per second)
 #define frequency2periodMs(freq) ((1000.0f) / (freq))
 
 // number of microseconds in one period of given frequency (per second)
 #define frequency2periodUs(freq) ((1000000.0f) / (freq))
-
 
 #ifndef FALSE
 #define FALSE       0
@@ -34,7 +34,7 @@ extern "C"
 int indexOf(const char *string, char ch);
 float atoff(const char *string);
 int atoi(const char *string);
-int cisnan(float f);
+bool cisnan(float f);
 
 int absI(int32_t value);
 float absF(float value);
@@ -43,6 +43,7 @@ int maxI(int i1, int i2);
 int minI(int i1, int i2);
 float maxF(float i1, float i2);
 char* itoa10(char *p, int num);
+bool isSameF(float v1, float v2);
 
 #ifdef __cplusplus
 }

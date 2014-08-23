@@ -1,5 +1,5 @@
 /**
- * @file thermistors.c
+ * @file thermistors.cpp
  *
  * @date Feb 17, 2013
  * @author Andrey Belomutskiy, (c) 2012-2014
@@ -18,8 +18,8 @@
 #include "ec2.h"
 
 // Celsius
-#define LIMPING_MODE_IAT_TEMPERATURE 30
-#define LIMPING_MODE_CLT_TEMPERATURE 70
+#define LIMPING_MODE_IAT_TEMPERATURE 30.0f
+#define LIMPING_MODE_CLT_TEMPERATURE 70.0f
 
 extern engine_configuration_s *engineConfiguration;
 extern engine_configuration2_s *engineConfiguration2;
@@ -34,8 +34,9 @@ float getR1InVoltageDividor(float Vout, float Vin, float r2) {
 }
 
 float getR2InVoltageDividor(float Vout, float Vin, float r1) {
-	if (Vout == 0)
+  if (Vout == 0) {
 		return NAN;
+  }
 	return r1 / (Vin / Vout - 1);
 }
 
@@ -46,7 +47,7 @@ float getVoutInVoltageDividor(float Vin, float r1, float r2) {
 float convertResistanceToKelvinTemperature(float resistance, ThermistorConf *thermistor) {
 	if (resistance <= 0) {
 		//warning("Invalid resistance in convertResistanceToKelvinTemperature=", resistance);
-		return 0;
+		return 0.0f;
 	}
 	float logR = logf(resistance);
 	return 1 / (thermistor->s_h_a + thermistor->s_h_b * logR + thermistor->s_h_c * logR * logR * logR);
@@ -93,12 +94,12 @@ float getTemperatureC(Thermistor *thermistor) {
 	return convertKelvinToCelcius(kelvinTemperature);
 }
 
-int isValidCoolantTemperature(float temperature) {
+bool isValidCoolantTemperature(float temperature) {
 	// I hope magic constants are appropriate here
 	return !cisnan(temperature) && temperature > -50 && temperature < 250;
 }
 
-int isValidIntakeAirTemperature(float temperature) {
+bool isValidIntakeAirTemperature(float temperature) {
 	// I hope magic constants are appropriate here
 	return !cisnan(temperature) && temperature > -50 && temperature < 100;
 }
@@ -109,7 +110,7 @@ int isValidIntakeAirTemperature(float temperature) {
 float getCoolantTemperature(void) {
 	float temperature = getTemperatureC(&engineConfiguration2->clt);
 	if (!isValidCoolantTemperature(temperature)) {
-		warning(OBD_PCM_Processor_Fault, "unrealistic coolant temperature %f", temperature);
+		warning(OBD_PCM_Processor_Fault, "unrealistic CLT %f", temperature);
 		return LIMPING_MODE_CLT_TEMPERATURE;
 	}
 	return temperature;
@@ -154,13 +155,13 @@ void prepareThermistorCurve(ThermistorConf * config) {
 float getIntakeAirTemperature(void) {
 	float temperature = getTemperatureC(&engineConfiguration2->iat);
 	if (!isValidIntakeAirTemperature(temperature)) {
-		warning(OBD_PCM_Processor_Fault, "unrealistic intake temperature %f", temperature);
+		warning(OBD_PCM_Processor_Fault, "unrealistic IAT %f", temperature);
 		return LIMPING_MODE_IAT_TEMPERATURE;
 	}
 	return temperature;
 }
 
-static void initThermistorCurve(Thermistor * t, ThermistorConf *config, int channel) {
+static void initThermistorCurve(Thermistor * t, ThermistorConf *config, adc_channel_e channel) {
 	prepareThermistorCurve(config);
 	t->config = config;
 	t->channel = channel;

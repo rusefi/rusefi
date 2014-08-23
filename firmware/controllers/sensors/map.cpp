@@ -18,8 +18,11 @@ extern engine_configuration_s * engineConfiguration;
  */
 static FastInterpolation denso183(0, -6.64, 5, 182.78);
 
-// todo: figure out real values
-static FastInterpolation honda3bar(0.32, -95.8371264, 4.84, 300);
+/**
+ * MAP sensor output voltage of 3.0v = a gauge reading of 0 in. Hg
+ * MAP sensor output voltage of 0.5v = a gauge reading of 27 in. Hg
+ */
+static FastInterpolation honda3bar(0.5, 91.422, 3.0, 0);
 
 static FastInterpolation mpx4250(0, 8, 5, 260);
 
