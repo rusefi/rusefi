@@ -1,6 +1,6 @@
 package com.rusefi.ui;
 
-import com.irnems.EcuStimulator;
+import com.rusefi.EcuStimulator;
 import com.irnems.core.MessagesCentral;
 import com.irnems.models.Point3D;
 import com.irnems.models.Range;

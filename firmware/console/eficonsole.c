@@ -130,17 +130,14 @@ static void cmd_threads(void) {
 #endif
 }
 
-void sendOutConfirmation(char *value, int i) {
-	scheduleMsg(&logger, "%s%d", value, i);
-}
-
 /**
  * This methods prints the message to whatever is configured as our primary console
  */
 void print(const char *format, ...) {
 #if !EFI_UART_ECHO_TEST_MODE
-	if (!isConsoleReady())
+  if (!isConsoleReady()) {
 		return;
+  }
 	va_list ap;
 	va_start(ap, format);
 	chvprintf((BaseSequentialStream*)getConsoleChannel(), format, ap);
@@ -148,7 +145,7 @@ void print(const char *format, ...) {
 #endif /* EFI_UART_ECHO_TEST_MODE */
 }
 
-void initializeConsole() {
+void initializeConsole(void) {
 	initIntermediateLoggingBuffer();
 	initConsoleLogic();
 

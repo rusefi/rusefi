@@ -18,7 +18,7 @@
 #include "console_io.h"
 #include "engine.h"
 
-#if EFI_PERF_METRICS
+#if EFI_PERF_METRICS || defined(__DOXYGEN__)
 
 static Logging logger;
 

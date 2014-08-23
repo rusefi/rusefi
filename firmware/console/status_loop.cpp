@@ -1,5 +1,5 @@
 /**
- * @file	status_loop.c
+ * @file	status_loop.cpp
  * @brief Human-readable protocol status messages
  *
  * http://rusefi.com/forum/viewtopic.php?t=263 Dev console overview
@@ -46,8 +46,6 @@
 #include "tunerstudio.h"
 #endif /* EFI_TUNER_STUDIO */
 
-#include "wave_math.h"
-
 #include "fuel_math.h"
 #include "main_trigger_callback.h"
 #include "engine_math.h"
@@ -56,18 +54,22 @@
 #include "rfiutil.h"
 #include "svnversion.h"
 #include "engine.h"
+#include "lcd_controller.h"
+#include "fuel_math.h"
 
 #if EFI_PROD_CODE
 // todo: move this logic to algo folder!
 #include "rtc_helper.h"
 #include "lcd_HD44780.h"
 #include "rusefi.h"
+#include "pin_repository.h"
+#include "flash_main.h"
 #endif
 
 extern Engine engine;
 
 // this 'true' value is needed for simulator
-static volatile int fullLog = TRUE;
+static volatile bool fullLog = true;
 int warningEnabled = TRUE;
 //int warningEnabled = FALSE;
 
@@ -110,10 +112,6 @@ static void reportSensorI(const char *caption, int value) {
 
 static const char* boolean2string(int value) {
 	return value ? "YES" : "NO";
-}
-
-void finishStatusLine(void) {
-	printLine(&logger);
 }
 
 void printSensors(void) {
@@ -186,7 +184,7 @@ void printState(int currentCkpEventCounter) {
 #define INITIAL_FULL_LOG TRUE
 //#define INITIAL_FULL_LOG FALSE
 
-static char LOGGING_BUFFER[500];
+static char LOGGING_BUFFER[700];
 
 volatile int needToReportStatus = FALSE;
 static int prevCkpEventCounter = -1;
@@ -203,13 +201,42 @@ static void printStatus(void) {
  */
 static systime_t timeOfPreviousPrintVersion = (systime_t) -1;
 
-static void printVersion(systime_t nowSeconds) {
-	if (overflowDiff(nowSeconds, timeOfPreviousPrintVersion) < 4)
+#if EFI_PROD_CODE
+static void printOutPin(const char *pinName, brain_pin_e hwPin) {
+	appendPrintf(&logger, "outpin%s%s@%s%s", DELIMETER, pinName,
+			hwPortname(hwPin), DELIMETER);
+}
+#endif /* EFI_PROD_CODE */
+
+static void printInfo(systime_t nowSeconds) {
+	/**
+	 * we report the version every 4 seconds - this way the console does not need to
+	 * request it and we will display it pretty soon
+	 */
+	if (overflowDiff(nowSeconds, timeOfPreviousPrintVersion) < 4) {
 		return;
+	}
 	timeOfPreviousPrintVersion = nowSeconds;
 	appendPrintf(&logger, "rusEfiVersion%s%d@%s %s%s", DELIMETER, getRusEfiVersion(), VCS_VERSION,
 			getConfigurationName(engineConfiguration),
 			DELIMETER);
+#if EFI_PROD_CODE
+	printOutPin(WC_CRANK1, boardConfiguration->triggerInputPins[0]);
+	printOutPin(WC_CRANK2, boardConfiguration->triggerInputPins[1]);
+	printOutPin(WA_CHANNEL_1, boardConfiguration->logicAnalyzerPins[0]);
+	printOutPin(WA_CHANNEL_2, boardConfiguration->logicAnalyzerPins[1]);
+
+	for (int i = 0; i < engineConfiguration->cylindersCount; i++) {
+		// todo: extract method?
+		io_pin_e pin = (io_pin_e) ((int) SPARKOUT_1_OUTPUT + i);
+
+		printOutPin(getPinName(pin), boardConfiguration->ignitionPins[i]);
+
+		pin = (io_pin_e) ((int) INJECTOR_1_OUTPUT + i);
+		printOutPin(getPinName(pin), boardConfiguration->injectionPins[i]);
+	}
+#endif
+
 }
 
 static systime_t timeOfPreviousReport = (systime_t) -1;
@@ -220,8 +247,9 @@ extern char errorMessageBuffer[200];
  * @brief Sends all pending data to dev console
  */
 void updateDevConsoleState(void) {
-	if (!isConsoleReady())
+	if (!isConsoleReady()) {
 		return;
+	}
 // looks like this is not needed anymore
 //	checkIfShouldHalt();
 	printPending();
@@ -240,15 +268,17 @@ void updateDevConsoleState(void) {
 	pokeAdcInputs();
 #endif
 
-	if (!fullLog)
+	if (!fullLog) {
 		return;
+	}
 
 	systime_t nowSeconds = getTimeNowSeconds();
-	printVersion(nowSeconds);
+	printInfo(nowSeconds);
 
 	int currentCkpEventCounter = getCrankEventCounter();
-	if (prevCkpEventCounter == currentCkpEventCounter && timeOfPreviousReport == nowSeconds)
+	if (prevCkpEventCounter == currentCkpEventCounter && timeOfPreviousReport == nowSeconds) {
 		return;
+	}
 
 	timeOfPreviousReport = nowSeconds;
 
@@ -257,10 +287,10 @@ void updateDevConsoleState(void) {
 	printState(currentCkpEventCounter);
 
 #if EFI_WAVE_ANALYZER
-//	printWave(&logger);
+	printWave(&logger);
 #endif
 
-	finishStatusLine();
+	printLine(&logger);
 }
 
 #if EFI_PROD_CODE
@@ -272,7 +302,7 @@ void updateDevConsoleState(void) {
  */
 
 static void showFuelMap2(float rpm, float engineLoad) {
-	float baseFuel = getBaseTableFuel(rpm, engineLoad);
+	float baseFuel = getBaseTableFuel((int) rpm, engineLoad);
 
 	float iatCorrection = getIatCorrection(getIntakeAirTemperature());
 	float cltCorrection = getCltCorrection(getCoolantTemperature());
@@ -283,49 +313,19 @@ static void showFuelMap2(float rpm, float engineLoad) {
 	scheduleMsg(&logger2, "iatCorrection=%f cltCorrection=%f injectorLag=%f", iatCorrection, cltCorrection,
 			injectorLag);
 
-	float value = getRunningFuel(baseFuel, &engine, rpm);
+	float value = getRunningFuel(baseFuel, &engine, (int) rpm);
 	scheduleMsg(&logger2, "injection pulse width: %f", value);
 }
 
 static void showFuelMap(void) {
-	showFuelMap2(getRpm(), getEngineLoad());
+	showFuelMap2((float) getRpm(), getEngineLoad());
 }
 
-
-static char buffer[10];
-static char dateBuffer[30];
-
-void updateHD44780lcd(void) {
-
-	lcd_HD44780_set_position(0, 9);
-	lcd_HD44780_print_char('R');
-	lcd_HD44780_set_position(0, 10);
-
-	char * ptr = itoa10(buffer, getRpm());
-	ptr[0] = 0;
-	int len = ptr - buffer;
-	for (int i = 0; i < 6 - len; i++)
-		lcd_HD44780_print_char(' ');
-
-	lcd_HD44780_print_string(buffer);
-
-	lcd_HD44780_set_position(2, 0);
-	lcd_HD44780_print_char('C');
-
-	ftoa(buffer, getCoolantTemperature(), 100);
-	lcd_HD44780_print_string(buffer);
-
-#if EFI_PROD_CODE
-	dateToString(dateBuffer);
-	lcd_HD44780_set_position(1, 0);
-	lcd_HD44780_print_string(dateBuffer);
-#endif /* EFI_PROD_CODE */
-}
 #endif /* EFI_PROD_CODE */
 
 static THD_WORKING_AREA(lcdThreadStack, UTILITY_THREAD_STACK_SIZE);
 
-static void lcdThread(void *arg) {
+static void lcdThread(void) {
 	chRegSetThreadName("lcd");
 	while (true) {
 #if EFI_HD44780_LCD
@@ -338,7 +338,6 @@ static void lcdThread(void *arg) {
 static THD_WORKING_AREA(tsThreadStack, UTILITY_THREAD_STACK_SIZE);
 
 #if EFI_TUNER_STUDIO
-extern TunerStudioOutputChannels tsOutputChannels;
 
 void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels) {
 #if EFI_SHAFT_POSITION_INPUT
@@ -351,6 +350,9 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels) {
 	float coolant = getCoolantTemperature();
 	float intake = getIntakeAirTemperature();
 
+	float engineLoad = getEngineLoad();
+	float baseFuel = getBaseTableFuel((int) rpm, engineLoad);
+
 	tsOutputChannels->rpm = rpm;
 	tsOutputChannels->coolant_temperature = coolant;
 	tsOutputChannels->intake_air_temperature = intake;
@@ -362,8 +364,24 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels) {
 	tsOutputChannels->atmospherePressure = getBaroPressure();
 	tsOutputChannels->manifold_air_pressure = getMap();
 	tsOutputChannels->checkEngine = hasErrorCodes();
+#if EFI_PROD_CODE
+	tsOutputChannels->needBurn = getNeedToWriteConfiguration();
+	tsOutputChannels->hasSdCard = isSdCardAlive();
+	tsOutputChannels->isFuelPumpOn = getOutputPinValue(FUEL_PUMP_RELAY);
+	tsOutputChannels->isFanOn = getOutputPinValue(FAN_RELAY);
+	tsOutputChannels->isO2HeaterOn = getOutputPinValue(O2_HEATER);
+	tsOutputChannels->ignition_enabled = engineConfiguration->isIgnitionEnabled;
+	tsOutputChannels->injection_enabled = engineConfiguration->isInjectionEnabled;
+	tsOutputChannels->cylinder_cleanup_enabled = engineConfiguration->isCylinderCleanupEnabled;
+	tsOutputChannels->secondTriggerChannelEnabled = engineConfiguration->secondTriggerChannelEnabled;
+#endif
 	tsOutputChannels->tCharge = getTCharge(rpm, tps, coolant, intake);
+	tsOutputChannels->sparkDwell = getSparkDwellMs(rpm);
+	tsOutputChannels->pulseWidth = getRunningFuel(baseFuel, &engine, rpm);
+	tsOutputChannels->crankingFuel = getCrankingFuel();
 }
+
+extern TunerStudioOutputChannels tsOutputChannels;
 #endif /* EFI_TUNER_STUDIO */
 
 static void tsStatusThread(void *arg) {
@@ -403,8 +421,8 @@ void initStatusLoop(void) {
 
 void startStatusThreads(void) {
 	// todo: refactoring needed, this file should probably be split into pieces
-	chThdCreateStatic(lcdThreadStack, sizeof(lcdThreadStack), NORMALPRIO, (tfunc_t) lcdThread, NULL);
-	chThdCreateStatic(tsThreadStack, sizeof(tsThreadStack), NORMALPRIO, (tfunc_t) tsStatusThread, NULL);
+	chThdCreateStatic(lcdThreadStack, sizeof(lcdThreadStack), NORMALPRIO, (tfunc_t) lcdThread, (void*) NULL);
+	chThdCreateStatic(tsThreadStack, sizeof(tsThreadStack), NORMALPRIO, (tfunc_t) tsStatusThread, (void*) NULL);
 }
 
 void setFullLog(int value) {
@@ -413,6 +431,6 @@ void setFullLog(int value) {
 	fullLog = value;
 }
 
-int getFullLog(void) {
+bool getFullLog(void) {
 	return fullLog;
 }

@@ -48,10 +48,10 @@ void setFordInline6(engine_configuration_s *engineConfiguration, board_configura
 	engineConfiguration->globalTriggerAngleOffset = 0;
 	engineConfiguration->ignitionOffset = 13;
 
-	setThermistorConfiguration(&engineConfiguration->cltThermistorConf, -10, 160310, 60, 7700, 120.00, 1180);
+	setThermistorConfiguration(&engineConfiguration->cltThermistorConf, -10.0, 160310.0, 60.0, 7700.0, 120.0, 1180.0);
 	engineConfiguration->cltThermistorConf.bias_resistor = 2700;
 
-	setThermistorConfiguration(&engineConfiguration->iatThermistorConf, -10, 160310, 60, 7700, 120.00, 1180);
+	setThermistorConfiguration(&engineConfiguration->iatThermistorConf, -10.0, 160310.0, 60.0, 7700.0, 120.0, 1180.0);
 	engineConfiguration->iatThermistorConf.bias_resistor = 2700;
 
 	// 12ch analog board pinout:
@@ -75,15 +75,15 @@ void setFordInline6(engine_configuration_s *engineConfiguration, board_configura
 	boardConfiguration->adcHwChannelEnabled[15] = ADC_FAST;
 
 
-	engineConfiguration->tpsAdcChannel = 4;
-	engineConfiguration->iatAdcChannel = 2;
-	engineConfiguration->cltAdcChannel = 1;
-	engineConfiguration->afrSensor.afrAdcChannel = 11;
+	engineConfiguration->tpsAdcChannel = EFI_ADC_4;
+	engineConfiguration->iatAdcChannel = EFI_ADC_2;
+	engineConfiguration->cltAdcChannel = EFI_ADC_1;
+	engineConfiguration->afrSensor.afrAdcChannel = EFI_ADC_11;
 
 	engineConfiguration->map.sensor.sensorType = MT_MPX4250;
-	engineConfiguration->map.sensor.hwChannel = 15;
+	engineConfiguration->map.sensor.hwChannel = EFI_ADC_15;
 	engineConfiguration->baroSensor.sensorType = MT_MPX4250;
-	engineConfiguration->baroSensor.hwChannel = 7;
+	engineConfiguration->baroSensor.hwChannel = EFI_ADC_7;
 
 	// 6 channel output board
 	// output 1 is PB9
@@ -105,10 +105,10 @@ void setFordInline6(engine_configuration_s *engineConfiguration, board_configura
 	//	engineConfiguration->vBattAdcChannel = 0; //
 //	engineConfiguration->mafAdcChannel = 1;
 
-	boardConfiguration->primaryTriggerInputPin = GPIOA_8;
-	boardConfiguration->secondaryTriggerInputPin = GPIOA_5;
-	boardConfiguration->primaryLogicAnalyzerPin = GPIOC_6;
-	boardConfiguration->secondaryLogicAnalyzerPin = GPIOE_7;
+	boardConfiguration->triggerInputPins[0] = GPIOA_8;
+	boardConfiguration->triggerInputPins[1] = GPIOA_5;
+	boardConfiguration->logicAnalyzerPins[0] = GPIOC_6;
+	boardConfiguration->logicAnalyzerPins[1] = GPIOE_7;
 
 
 }

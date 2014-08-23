@@ -10,7 +10,7 @@
 #include "engine_configuration.h"
 
 #define PWM_PHASE_MAX_COUNT 250
-#define PWM_PHASE_MAX_WAVE_PER_PWM 2
+#define PWM_PHASE_MAX_WAVE_PER_PWM 3
 
 /**
  * @brief   PWM configuration for the specific output pin
@@ -35,6 +35,10 @@ public:
 	void setSwitchTime(int phaseIndex, float value);
 	void checkSwitchTimes(int size);
 	int getChannelState(int channelIndex, int phaseIndex) const;
+
+	int findAngleMatch(float angle, int size) const;
+	int waveIndertionAngle(float angle, int size) const;
+
 	/**
 	 * Number of signal wires
 	 */
@@ -49,5 +53,7 @@ public:
 };
 
 void checkSwitchTimes2(int size, float *switchTimes);
+void configureHondaAccordCD(trigger_shape_s *s, bool with3rdSignal);
+void configureHondaAccordCDDip(trigger_shape_s *s);
 
 #endif /* EFI_WAVE_H_ */

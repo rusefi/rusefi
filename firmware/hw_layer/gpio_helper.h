@@ -9,6 +9,9 @@
 #ifndef GPIO_HELPER_H_
 #define GPIO_HELPER_H_
 
+#define INITIAL_PIN_STATE -1
+
+
 /**
  * @brief   Single output pin reference and state
  */

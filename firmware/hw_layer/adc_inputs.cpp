@@ -26,6 +26,7 @@ AdcConfiguration::AdcConfiguration(ADCConversionGroup* hwConfig) {
 	hwConfig->sqr1 = 0;
 	hwConfig->sqr2 = 0;
 	hwConfig->sqr3 = 0;
+	memset(internalAdcIndexByHardwareIndex, 0xFFFFFFFF, sizeof(internalAdcIndexByHardwareIndex));
 }
 
 #define ADC_GRP1_BUF_DEPTH_FAST      1
@@ -79,8 +80,6 @@ static adcsample_t getAvgAdcValue(int index, adcsample_t *samples, int bufDepth,
 	}
 	return result / bufDepth;
 }
-
-static adc_state newState;
 
 static void adc_callback_slow(ADCDriver *adcp, adcsample_t *buffer, size_t n);
 static void adc_callback_fast(ADCDriver *adcp, adcsample_t *buffer, size_t n);
@@ -147,7 +146,7 @@ ADC_TwoSamplingDelay_5Cycles,   // cr1
 // Conversion group sequence 1...6
 		};
 
-static AdcConfiguration fastAdc(&adcgrpcfg_fast);
+AdcConfiguration fastAdc(&adcgrpcfg_fast);
 
 static void pwmpcb_slow(PWMDriver *pwmp) {
 #if EFI_INTERNAL_ADC
@@ -202,36 +201,71 @@ static void pwmpcb_fast(PWMDriver *pwmp) {
 #endif
 }
 
-int getAdcValueByIndex(int internalIndex) {
-	return newState.adc_data[internalIndex];
-}
-
-int getInternalAdcValue(int hwChannel) {
+int getInternalAdcValue(adc_channel_e hwChannel) {
 	if (boardConfiguration->adcHwChannelEnabled[hwChannel] == ADC_FAST)
 		return fastAdcValue;
 
 	int internalIndex = slowAdc.internalAdcIndexByHardwareIndex[hwChannel];
-	return getAdcValueByIndex(internalIndex);
+	return slowAdc.getAdcValueByIndex(internalIndex);
 }
 
 static PWMConfig pwmcfg_slow = { PWM_FREQ_SLOW, PWM_PERIOD_SLOW, pwmpcb_slow, { {
 PWM_OUTPUT_DISABLED, NULL }, { PWM_OUTPUT_DISABLED, NULL }, {
 PWM_OUTPUT_DISABLED, NULL }, { PWM_OUTPUT_DISABLED, NULL } },
 /* HW dependent part.*/
-0 };
+0, 0 };
 
 static PWMConfig pwmcfg_fast = { PWM_FREQ_FAST, PWM_PERIOD_FAST, pwmpcb_fast, { {
 PWM_OUTPUT_DISABLED, NULL }, { PWM_OUTPUT_DISABLED, NULL }, {
 PWM_OUTPUT_DISABLED, NULL }, { PWM_OUTPUT_DISABLED, NULL } },
 /* HW dependent part.*/
-0 };
+0, 0 };
 
 static void initAdcPin(ioportid_t port, int pin, const char *msg) {
 	print("adc %s\r\n", msg);
 	mySetPadMode("adc input", port, pin, PAL_MODE_INPUT_ANALOG);
 }
 
-GPIO_TypeDef* getAdcChannelPort(int hwChannel) {
+adc_channel_e getAdcChannel(brain_pin_e pin) {
+	switch(pin) {
+	case GPIOA_0:
+		return EFI_ADC_0;
+	case GPIOA_1:
+		return EFI_ADC_1;
+	case GPIOA_2:
+		return EFI_ADC_2;
+	case GPIOA_3:
+		return EFI_ADC_3;
+	case GPIOA_4:
+		return EFI_ADC_4;
+	case GPIOA_5:
+		return EFI_ADC_5;
+	case GPIOA_6:
+		return EFI_ADC_6;
+	case GPIOA_7:
+		return EFI_ADC_7;
+	case GPIOB_0:
+		return EFI_ADC_8;
+	case GPIOB_1:
+		return EFI_ADC_9;
+	case GPIOC_0:
+		return EFI_ADC_10;
+	case GPIOC_1:
+		return EFI_ADC_11;
+	case GPIOC_2:
+		return EFI_ADC_12;
+	case GPIOC_3:
+		return EFI_ADC_13;
+	case GPIOC_4:
+		return EFI_ADC_14;
+	case GPIOC_5:
+		return EFI_ADC_15;
+	default:
+		return EFI_ADC_ERROR;
+	}
+}
+
+GPIO_TypeDef* getAdcChannelPort(adc_channel_e hwChannel) {
 	// todo: replace this with an array :)
 	switch (hwChannel) {
 	case ADC_CHANNEL_IN0:
@@ -272,7 +306,17 @@ GPIO_TypeDef* getAdcChannelPort(int hwChannel) {
 	}
 }
 
-int getAdcChannelPin(int hwChannel) {
+const char * getAdcMode(adc_channel_e hwChannel) {
+	if (slowAdc.isHwUsed(hwChannel)) {
+		return "slow";
+	}
+	if (fastAdc.isHwUsed(hwChannel)) {
+		return "fast";
+	}
+	return "INACTIVE";
+}
+
+int getAdcChannelPin(adc_channel_e hwChannel) {
 	// todo: replace this with an array :)
 	switch (hwChannel) {
 	case ADC_CHANNEL_IN0:
@@ -313,7 +357,7 @@ int getAdcChannelPin(int hwChannel) {
 	}
 }
 
-static void initAdcHwChannel(int hwChannel) {
+static void initAdcHwChannel(adc_channel_e hwChannel) {
 	GPIO_TypeDef* port = getAdcChannelPort(hwChannel);
 	int pin = getAdcChannelPin(hwChannel);
 
@@ -324,12 +368,25 @@ int AdcConfiguration::size() {
 	return channelCount;
 }
 
+int AdcConfiguration::getAdcValueByIndex(int internalIndex) {
+	return values.adc_data[internalIndex];
+}
+
 void AdcConfiguration::init(void) {
 	hwConfig->num_channels = size();
 	hwConfig->sqr1 += ADC_SQR1_NUM_CH(size());
 }
 
-void AdcConfiguration::addChannel(int hwChannel) {
+bool AdcConfiguration::isHwUsed(adc_channel_e hwChannelIndex) {
+	for (int i = 0; i < channelCount; i++) {
+		if (hardwareIndexByIndernalAdcIndex[i] == hwChannelIndex) {
+			return true;
+		}
+	}
+	return false;
+}
+
+void AdcConfiguration::addChannel(adc_channel_e hwChannel) {
 	int logicChannel = channelCount++;
 
 	internalAdcIndexByHardwareIndex[hwChannel] = logicChannel;
@@ -344,13 +401,13 @@ void AdcConfiguration::addChannel(int hwChannel) {
 	initAdcHwChannel(hwChannel);
 }
 
-static void printAdcValue(int channel) {
+static void printAdcValue(adc_channel_e channel) {
 	int value = getAdcValue(channel);
 	float volts = adcToVoltsDivided(value);
 	scheduleMsg(&logger, "adc voltage : %f", volts);
 }
 
-int AdcConfiguration::getAdcHardwareIndexByInternalIndex(int index) {
+adc_channel_e AdcConfiguration::getAdcHardwareIndexByInternalIndex(int index) {
 	return hardwareIndexByIndernalAdcIndex[index];
 }
 
@@ -360,11 +417,11 @@ static void printFullAdcReport(void) {
 	for (int index = 0; index < slowAdc.size(); index++) {
 		appendMsgPrefix(&logger);
 
-		int hwIndex = slowAdc.getAdcHardwareIndexByInternalIndex(index);
+		adc_channel_e hwIndex = slowAdc.getAdcHardwareIndexByInternalIndex(index);
 		GPIO_TypeDef* port = getAdcChannelPort(hwIndex);
 		int pin = getAdcChannelPin(hwIndex);
 
-		int adcValue = getAdcValueByIndex(index);
+		int adcValue = slowAdc.getAdcValueByIndex(index);
 		appendPrintf(&logger, " ch%d %s%d", index, portname(port), pin);
 		appendPrintf(&logger, " ADC%d 12bit=%d", hwIndex, adcValue);
 		float volts = adcToVolts(adcValue);
@@ -397,7 +454,7 @@ static void adc_callback_slow(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 //		newState.time = chimeNow();
 		for (int i = 0; i < slowAdc.size(); i++) {
 			int value = getAvgAdcValue(i, slowAdcState.samples, ADC_GRP1_BUF_DEPTH_SLOW, slowAdc.size());
-			newState.adc_data[i] = value;
+			slowAdc.values.adc_data[i] = value;
 		}
 	}
 }
@@ -409,13 +466,16 @@ static void adc_callback_fast(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 //	 intermediate callback when the buffer is half full.*/
 	if (adcp->state == ADC_COMPLETE) {
 		fastAdcValue = getAvgAdcValue(0, samples_fast, ADC_GRP1_BUF_DEPTH_FAST, fastAdc.size());
+
+		fastAdc.values.adc_data[0] = fastAdcValue;
+
 #if EFI_MAP_AVERAGING
 		mapAveragingCallback(fastAdcValue);
 #endif /* EFI_MAP_AVERAGING */
 	}
 }
 
-void initAdcInputs(bool isBoardTestMode) {
+void initAdcInputs(void) {
 
 	initLoggingExt(&logger, "ADC", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
 	printMsg(&logger, "initAdcInputs()");
@@ -434,22 +494,20 @@ void initAdcInputs(bool isBoardTestMode) {
 	for (int adc = 0; adc < HW_MAX_ADC_INDEX; adc++) {
 		adc_channel_mode_e mode = boardConfiguration->adcHwChannelEnabled[adc];
 
-		if (mode == ADC_SLOW || (isBoardTestMode && mode == ADC_FAST)) {
-			slowAdc.addChannel(ADC_CHANNEL_IN0 + adc);
+		if (mode == ADC_SLOW) {
+			slowAdc.addChannel((adc_channel_e) (ADC_CHANNEL_IN0 + adc));
 		} else if (mode == ADC_FAST) {
-			fastAdc.addChannel(ADC_CHANNEL_IN0 + adc);
+			fastAdc.addChannel((adc_channel_e) (ADC_CHANNEL_IN0 + adc));
 		}
 	}
 
 	slowAdc.init();
 	pwmStart(EFI_INTERNAL_SLOW_ADC_PWM, &pwmcfg_slow);
-	if (!isBoardTestMode) {
-		fastAdc.init();
+	fastAdc.init();
 	/*
 	 * Initializes the PWM driver.
 	 */
 	pwmStart(EFI_INTERNAL_FAST_ADC_PWM, &pwmcfg_fast);
-        }
 
 	// ADC_CHANNEL_IN0 // PA0
 	// ADC_CHANNEL_IN1 // PA1
@@ -470,7 +528,7 @@ void initAdcInputs(bool isBoardTestMode) {
 
 	//if(slowAdcChannelCount > ADC_MAX_SLOW_CHANNELS_COUNT) // todo: do we need this logic? do we need this check
 
-	addConsoleActionI("adc", printAdcValue);
+	addConsoleActionI("adc", (VoidInt) printAdcValue);
 	addConsoleAction("fadc", printFullAdcReport);
 #else
 	printMsg(&logger, "ADC disabled");

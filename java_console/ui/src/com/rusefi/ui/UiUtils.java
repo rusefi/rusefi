@@ -33,4 +33,11 @@ public class UiUtils {
     public static void setPauseButtonText(JButton pauseButton, boolean isPaused) {
         pauseButton.setText(isPaused ? "resume" : "pause");
     }
+
+    public static void centerWindow(Window w) {
+        w.pack();
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        Dimension frameSize = w.getSize();
+        w.setLocation((screenSize.width - frameSize.width) / 2, (screenSize.height - frameSize.height) / 2);
+    }
 }

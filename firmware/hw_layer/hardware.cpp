@@ -185,7 +185,7 @@ void initHardware(Logging *logger) {
 			getHwPin(boardConfiguration->boardTestModeJumperPin), PAL_MODE_INPUT_PULLUP);
 	bool isBoardTestMode = GET_BOARD_TEST_MODE_VALUE();
 
-	initAdcInputs(isBoardTestMode);
+	initAdcInputs();
 
 	if (isBoardTestMode) {
 		initBoardTest();

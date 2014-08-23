@@ -13,4 +13,5 @@ CONTROLLERS_SRC_CPP = $(PROJECT_DIR)/controllers/settings.cpp \
 	controllers/idle_thread.cpp \
 	controllers/PwmTester.cpp \
 	$(PROJECT_DIR)/controllers/alternatorController.cpp \
+	$(PROJECT_DIR)/controllers/lcd_controller.cpp \
  	$(PROJECT_DIR)/controllers/engine_controller.cpp

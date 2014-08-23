@@ -17,7 +17,7 @@
 #include "can_header.h"
 #include "engine_configuration.h"
 
-#if EFI_CAN_SUPPORT
+#if EFI_CAN_SUPPORT || defined(__DOXYGEN__)
 
 static int canReadCounter = 0;
 static Logging logger;

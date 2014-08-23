@@ -38,9 +38,9 @@ float getKelvinTemperature(float resistance, ThermistorConf *thermistor);
 float getResistance(Thermistor *thermistor);
 float getTemperatureC(Thermistor *thermistor);
 float getCoolantTemperature(void);
-int isValidCoolantTemperature(float temperature);
+bool isValidCoolantTemperature(float temperature);
 float getIntakeAirTemperature(void);
-int isValidIntakeAirTemperature(float temperature);
+bool isValidIntakeAirTemperature(float temperature);
 
 float convertResistanceToKelvinTemperature(float resistance,
 		ThermistorConf *thermistor);

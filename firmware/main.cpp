@@ -7,16 +7,10 @@
  *      http://rusefi.com/
  */
 
-extern "C"
-{
-#include "global.h"
-}
 #include "main.h"
-
-extern "C"
-{
 #include "rusefi.h"
-}
+#include "mpu_util.h"
+
 int main(void) {
 	/*
 	 * ChibiOS/RT initialization
@@ -24,8 +18,7 @@ int main(void) {
 	halInit();
 	chSysInit();
 
-	// looks like this holds a random value on start? Let's set a nice clean zero
-	DWT_CYCCNT = 0;
+	baseHardwareInit();
 
 	runRusEfi();
 	return 0;

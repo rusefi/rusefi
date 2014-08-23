@@ -1,8 +1,13 @@
 package com.rusefi.ui;
 
+import com.irnems.FileLog;
+
 import javax.swing.*;
 import java.awt.*;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 
+import static com.irnems.Launcher.*;
 import static javax.swing.JOptionPane.OK_OPTION;
 
 /**
@@ -15,9 +20,29 @@ public class DefaultExceptionHandler implements Thread.UncaughtExceptionHandler 
     }
 
     public static void handleException(Throwable e) {
-        // Here you should have a more robust, permanent record of problems
-        JOptionPane.showMessageDialog(findActiveFrame(), e.toString(), "Exception Occurred", OK_OPTION);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(baos);
+        e.printStackTrace(ps);
+
+        JPanel content = new JPanel(new BorderLayout());
+        content.add(new JLabel(e.toString()), BorderLayout.NORTH);
+
+        JTextArea textArea = new JTextArea(baos.toString());
+
+        textArea.setLineWrap(true);
+        textArea.setWrapStyleWord(true);
+        JScrollPane scrollPane = new JScrollPane(textArea) {
+            @Override
+            public Dimension getPreferredSize() {
+                return new Dimension(500, 400);
+            }
+        };
+
+        content.add(scrollPane, BorderLayout.CENTER);
+
+        JOptionPane.showConfirmDialog(findActiveFrame(), content, CONSOLE_VERSION + ": Exception Occurred", JOptionPane.DEFAULT_OPTION);
         e.printStackTrace();
+        FileLog.MAIN.logLine("handleException: " + baos.toString());
     }
 
     private static Frame findActiveFrame() {

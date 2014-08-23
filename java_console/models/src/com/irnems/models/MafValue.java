@@ -1,5 +1,7 @@
 package com.irnems.models;
 
+import com.rusefi.io.tcp.TcpConnector;
+
 /**
  * @author Andrey Belomutskiy
  *         1/29/13
@@ -17,7 +19,7 @@ public class MafValue {
     }
 
     public static MafValue valueOf(String value) {
-        return new MafValue(Integer.parseInt(value));
+        return new MafValue(TcpConnector.parseIntWithReason(value, "MAF value"));
     }
 
     @Override

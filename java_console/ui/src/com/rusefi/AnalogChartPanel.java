@@ -5,8 +5,8 @@ import com.irnems.core.EngineState;
 import com.rusefi.ui.RpmModel;
 import com.rusefi.ui.UiUtils;
 import com.rusefi.ui.WavePanel;
-import com.irnems.ui.widgets.URLLabel;
-import com.irnems.ui.widgets.UpDownImage;
+import com.rusefi.ui.widgets.URLLabel;
+import com.rusefi.ui.widgets.UpDownImage;
 import com.rusefi.io.LinkManager;
 
 import javax.swing.*;

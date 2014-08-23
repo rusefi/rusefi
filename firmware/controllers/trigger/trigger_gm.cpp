@@ -16,25 +16,25 @@ void configureGmTriggerShape(trigger_config_s *triggerConfig, trigger_shape_s *s
 	s->shaftPositionEventCount = 14;
 
 	s->addEvent(120 - w, T_PRIMARY, TV_HIGH);
-	s->addEvent(120, T_PRIMARY, TV_LOW);
+	s->addEvent(120.0, T_PRIMARY, TV_LOW);
 
 	s->addEvent(240 - w, T_PRIMARY, TV_HIGH);
-	s->addEvent(240, T_PRIMARY, TV_LOW);
+	s->addEvent(240.0, T_PRIMARY, TV_LOW);
 
 	s->addEvent(360 - w, T_PRIMARY, TV_HIGH);
-	s->addEvent(360, T_PRIMARY, TV_LOW);
+	s->addEvent(360.0, T_PRIMARY, TV_LOW);
 
 	s->addEvent(480 - w, T_PRIMARY, TV_HIGH);
-	s->addEvent(480, T_PRIMARY, TV_LOW);
+	s->addEvent(480.0, T_PRIMARY, TV_LOW);
 
 	s->addEvent(600 - w, T_PRIMARY, TV_HIGH);
-	s->addEvent(600, T_PRIMARY, TV_LOW);
+	s->addEvent(600.0, T_PRIMARY, TV_LOW);
 
 	s->addEvent(700 - w, T_PRIMARY, TV_HIGH);
-	s->addEvent(700, T_PRIMARY, TV_LOW);
+	s->addEvent(700.0, T_PRIMARY, TV_LOW);
 
 	s->addEvent(720 - w, T_PRIMARY, TV_HIGH);
-	s->addEvent(720, T_PRIMARY, TV_LOW);
+	s->addEvent(720.0, T_PRIMARY, TV_LOW);
 
 }
 

@@ -1,4 +1,4 @@
-package com.irnems.ui.widgets;
+package com.rusefi.ui.widgets;
 
 import com.irnems.core.Sensor;
 import com.irnems.core.SensorCentral;

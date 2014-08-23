@@ -15,6 +15,7 @@
 #include "status_loop.h"
 #include "engine_configuration.h"
 #include "console_io.h"
+#include "flash_main.h"
 
 #if EFI_ENGINE_CONTROL
 #include "main_trigger_callback.h"
@@ -58,7 +59,7 @@ inline static void assertOMode(pin_output_mode_e mode) {
  * @brief Sets the value according to current electrical settings
  */
 void setOutputPinValue(io_pin_e pin, int logicValue) {
-	if (outputs[pin].port == GPIO_NULL)
+	if (outputs[pin].port == GPIO_NULL )
 		return;
 	efiAssertVoid(pinDefaultState[pin]!=NULL, "pin mode not initialized");
 	pin_output_mode_e mode = *pinDefaultState[pin];
@@ -77,9 +78,14 @@ void setDefaultPinState(io_pin_e pin, pin_output_mode_e *outputMode) {
 }
 
 static void comBlinkingThread(void *arg) {
-	chRegSetThreadName("comm blinking");
+	chRegSetThreadName("communication blinking");
 	while (TRUE) {
-		int delay = isConsoleReady() ? 100 : 33;
+		int delay;
+		if (getNeedToWriteConfiguration()) {
+			delay = isConsoleReady() ? 200 : 66;
+		} else {
+			delay = isConsoleReady() ? 100 : 33;
+		}
 
 		setOutputPinValue(LED_COMMUNICATION_1, 0);
 		setOutputPinValue(LED_EXT_1, 1);
@@ -115,16 +121,16 @@ static void errBlinkingThread(void *arg) {
 static void outputPinRegisterExt(const char *msg, io_pin_e ioPin, GPIO_TypeDef *port, uint32_t pin,
 		pin_output_mode_e *outputMode) {
 	efiAssertVoid((int)ioPin < IO_PIN_COUNT, "io pin out of range");
-	if (port == GPIO_NULL) {
+	if (port == GPIO_NULL ) {
 		// that's for GRIO_NONE
 		outputs[ioPin].port = port;
 		return;
 	}
 
 	assertOMode(*outputMode);
-	iomode_t mode = (*outputMode == OM_DEFAULT || *outputMode == OM_INVERTED) ?
-	PAL_MODE_OUTPUT_PUSHPULL :
-																				PAL_MODE_OUTPUT_OPENDRAIN;
+	iomode_t mode =
+			(*outputMode == OM_DEFAULT || *outputMode == OM_INVERTED) ?
+					PAL_MODE_OUTPUT_PUSHPULL : PAL_MODE_OUTPUT_OPENDRAIN;
 
 	initOutputPinExt(msg, &outputs[ioPin], port, pin, mode);
 
@@ -133,20 +139,20 @@ static void outputPinRegisterExt(const char *msg, io_pin_e ioPin, GPIO_TypeDef *
 
 GPIO_TypeDef * getHwPort(brain_pin_e brainPin) {
 	if (brainPin == GPIO_NONE)
-		return GPIO_NULL;
+		return GPIO_NULL ;
 	if (brainPin > GPIO_NONE) {
 		firmwareError("Invalid brain_pin_e: %d", brainPin);
-		return GPIO_NULL;
+		return GPIO_NULL ;
 	}
 	return PORTS[brainPin / 16];
 }
 
-int getHwPin(brain_pin_e brainPin) {
+ioportmask_t getHwPin(brain_pin_e brainPin) {
 	if (brainPin == GPIO_NONE)
-		return -1;
+		return EFI_ERROR_CODE;
 	if (brainPin > GPIO_NONE) {
 		firmwareError("Invalid brain_pin_e: %d", brainPin);
-		return -1;
+		return EFI_ERROR_CODE;
 	}
 	return brainPin % 16;
 }
@@ -191,12 +197,10 @@ void initOutputPins(void) {
 // todo: it's too late to clear now? this breaks default status LEDs
 // todo: fix this?
 //	memset(&outputs, 0, sizeof(outputs));
-
 //	outputPinRegister("ext led 1", LED_EXT_1, EXTRA_LED_1_PORT, EXTRA_LED_1_PIN);
 //	outputPinRegister("ext led 2", LED_EXT_2, EXTRA_LED_2_PORT, EXTRA_LED_2_PIN);
 //	outputPinRegister("ext led 3", LED_EXT_3, EXTRA_LED_2_PORT, EXTRA_LED_3_PIN);
 //	outputPinRegister("alive1", LED_DEBUG, GPIOD, 6);
-
 	outputPinRegister("MalfunctionIndicator", LED_CHECK_ENGINE, getHwPort(boardConfiguration->malfunctionIndicatorPin),
 			getHwPin(boardConfiguration->malfunctionIndicatorPin));
 
@@ -213,6 +217,9 @@ void initOutputPins(void) {
 
 	outputPinRegister("fan relay", FAN_RELAY, getHwPort(boardConfiguration->fanPin),
 			getHwPin(boardConfiguration->fanPin));
+
+	outputPinRegister("o2 heater", O2_HEATER, getHwPort(boardConfiguration->o2heaterPin),
+			getHwPin(boardConfiguration->o2heaterPin));
 
 	initialLedsBlink();
 
@@ -245,6 +252,6 @@ void initOutputPins(void) {
 	 ledRegister(LED_HUGE_20, GPIOE, 1);
 	 */
 
-	chThdCreateStatic(comBlinkingStack, sizeof(comBlinkingStack), NORMALPRIO, (tfunc_t) comBlinkingThread, NULL);
-	chThdCreateStatic(errBlinkingStack, sizeof(errBlinkingStack), NORMALPRIO, (tfunc_t) errBlinkingThread, NULL);
+	chThdCreateStatic(comBlinkingStack, sizeof(comBlinkingStack), NORMALPRIO, (tfunc_t) comBlinkingThread, NULL );
+	chThdCreateStatic(errBlinkingStack, sizeof(errBlinkingStack), NORMALPRIO, (tfunc_t) errBlinkingThread, NULL );
 }

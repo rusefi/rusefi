@@ -24,17 +24,18 @@
 #include "trigger_decoder.h"
 
 trigger_shape_helper::trigger_shape_helper() {
-	waves[0].init(pinStates0);
-	waves[1].init(pinStates1);
+	for (int i = 0; i < TRIGGER_CHANNEL_COUNT; i++) {
+		waves[i].init(pinStates[i]);
+	}
 }
 
 trigger_shape_s::trigger_shape_s() :
-		wave(switchTimes, NULL) {
+		wave(switchTimesBuffer, NULL) {
 	reset(OM_NONE);
 	wave.waves = h.waves;
 }
 
-int trigger_shape_s::getSize() {
+int trigger_shape_s::getSize() const {
 	return size;
 }
 
@@ -45,6 +46,10 @@ int trigger_shape_s::getTriggerShapeSynchPointIndex() {
 // todo: clean-up!
 int getEngineCycleEventCount2(operation_mode_e mode, trigger_shape_s * s);
 float fixAngle(float angle);
+
+void trigger_shape_s::calculateTriggerSynchPoint(trigger_config_s const*triggerConfig) {
+	setTriggerShapeSynchPointIndex(findTriggerZeroEventIndex(this, triggerConfig));
+}
 
 void trigger_shape_s::setTriggerShapeSynchPointIndex(int triggerShapeSynchPointIndex) {
 	this->triggerShapeSynchPointIndex = triggerShapeSynchPointIndex;
@@ -69,7 +74,8 @@ void trigger_shape_s::reset(operation_mode_e operationMode) {
 	shaftPositionEventCount = 0;
 	triggerShapeSynchPointIndex = 0;
 	memset(initialState, 0, sizeof(initialState));
-	memset(switchTimes, 0, sizeof(switchTimes));
+	memset(switchTimesBuffer, 0, sizeof(switchTimesBuffer));
+	memset(expectedEventCount, 0, sizeof(expectedEventCount));
 	wave.reset();
 	previousAngle = 0;
 }
@@ -78,11 +84,32 @@ int multi_wave_s::getChannelState(int channelIndex, int phaseIndex) const {
 	return waves[channelIndex].pinStates[phaseIndex];
 }
 
+int multi_wave_s::waveIndertionAngle(float angle, int size) const {
+	for (int i = size - 1; i >= 0; i--) {
+		if (angle > switchTimes[i])
+			return i + 1;
+	}
+	return 0;
+}
+
+int multi_wave_s::findAngleMatch(float angle, int size) const {
+	for (int i = 0; i < size; i++) {
+		if (isSameF(switchTimes[i], angle))
+			return i;
+	}
+	return EFI_ERROR_CODE;
+}
+
 void multi_wave_s::setSwitchTime(int index, float value) {
 	switchTimes[index] = value;
 }
 
 TriggerState::TriggerState() {
+	cycleCallback = NULL;
+	shaft_is_synchronized = FALSE;
+	toothed_previous_time = 0;
+	toothed_previous_duration = 0;
+	totalRevolutionCounter = 0;
 	clear();
 	totalEventCountBase = 0;
 	isFirstEvent = true;
@@ -100,8 +127,11 @@ uint64_t TriggerState::getTotalEventCounter() {
 	return totalEventCountBase + current_index;
 }
 
-void TriggerState::nextRevolution(int triggerEventCount) {
-	current_index = 0;
+void TriggerState::nextRevolution(int triggerEventCount, uint64_t nowUs) {
+	if (cycleCallback != NULL) {
+		cycleCallback(this);
+	}
+	clear();
 	totalRevolutionCounter++;
 	totalEventCountBase += triggerEventCount;
 }
@@ -110,21 +140,29 @@ int TriggerState::getTotalRevolutionCounter() {
 	return totalRevolutionCounter;
 }
 
-void TriggerState::nextTriggerEvent() {
+void TriggerState::nextTriggerEvent(trigger_wheel_e triggerWheel, uint64_t nowUs) {
+	uint64_t prevTime = timeOfPreviousEvent[triggerWheel];
+	if (prevTime != 0) {
+		totalTime[triggerWheel] += (nowUs - prevTime);
+		timeOfPreviousEvent[triggerWheel] = 0;
+	} else {
+		timeOfPreviousEvent[triggerWheel] = nowUs;
+	}
+
 	current_index++;
 }
 
 void TriggerState::clear() {
-	shaft_is_synchronized = FALSE;
-	toothed_previous_time = 0;
-	toothed_previous_duration = 0;
+	memset(eventCount, 0, sizeof(eventCount));
+	memset(timeOfPreviousEvent, 0, sizeof(timeOfPreviousEvent));
+	memset(totalTime, 0, sizeof(totalTime));
 	current_index = 0;
-	totalRevolutionCounter = 0;
 }
 
 float trigger_shape_s::getAngle(int index) const {
-	if (operationMode == FOUR_STROKE_CAM_SENSOR)
-		return switchAngles[index];
+	if (operationMode == FOUR_STROKE_CAM_SENSOR) {
+		return getSwitchAngle(index);
+	}
 	/**
 	 * FOUR_STROKE_CRANK_SENSOR magic:
 	 * We have two crank shaft revolutions for each engine cycle
@@ -134,20 +172,29 @@ float trigger_shape_s::getAngle(int index) const {
 	int triggerEventCounter = size;
 
 	if (index < triggerEventCounter) {
-		return switchAngles[index];
+		return getSwitchAngle(index);
 	} else {
-		return 360 + switchAngles[index - triggerEventCounter];
+		return 360 + getSwitchAngle(index - triggerEventCounter);
 	}
 }
 
-void trigger_shape_s::addEvent(float angle, trigger_wheel_e waveIndex, trigger_value_e state) {
+void trigger_shape_s::addEvent(float angle, trigger_wheel_e const waveIndex, trigger_value_e const state) {
 	efiAssertVoid(operationMode != OM_NONE, "operationMode not set");
 	/**
 	 * While '720' value works perfectly it has not much sense for crank sensor-only scenario.
 	 * todo: accept angle as a value in the 0..1 range?
 	 */
 	angle /= 720;
-	efiAssertVoid(angle > previousAngle, "invalid angle order");
+
+	expectedEventCount[waveIndex]++;
+
+	efiAssertVoid(angle > 0, "angle should be positive");
+	if (size > 0) {
+		if (angle <= previousAngle) {
+			firmwareError("invalid angle order: %f and %f", angle, previousAngle);
+			return;
+		}
+	}
 	previousAngle = angle;
 	if (size == 0) {
 		size = 1;
@@ -165,46 +212,203 @@ void trigger_shape_s::addEvent(float angle, trigger_wheel_e waveIndex, trigger_v
 			wave->pinStates[0] = initialState[i];
 		}
 
-		setSwitchTime(0, angle);
+		wave.setSwitchTime(0, angle);
 		wave.waves[waveIndex].pinStates[0] = state;
 		return;
 	}
 
-//	if(angle!=trigger->wave.switchTimes[trigger->currentIndex])
+	int exactMatch = wave.findAngleMatch(angle, size);
+	if (exactMatch != EFI_ERROR_CODE) {
+		firmwareError("same angle: not supported");
+		return;
+	}
 
-	int index = size++;
+	int index = wave.waveIndertionAngle(angle, size);
 
-	for (int i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++)
+	// shifting existing data
+	for (int i = size - 1; i >= index; i--) {
+		for (int j = 0; j < PWM_PHASE_MAX_WAVE_PER_PWM; j++) {
+			wave.waves[j].pinStates[i + 1] = wave.getChannelState(j, index);
+		}
+		wave.setSwitchTime(i + 1, wave.getSwitchTime(i));
+	}
+
+//	int index = size;
+	size++;
+
+	for (int i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
 		wave.waves[i].pinStates[index] = wave.getChannelState(i, index - 1);
-	setSwitchTime(index, angle);
+	}
+	wave.setSwitchTime(index, angle);
 	wave.waves[waveIndex].pinStates[index] = state;
 }
 
-void trigger_shape_s::setSwitchTime(int index, float angle) {
-	int cycleDuration = (operationMode == FOUR_STROKE_CAM_SENSOR) ? 720 : 360;
-	switchAngles[index] = cycleDuration * angle;
-	wave.setSwitchTime(index, angle);
+int trigger_shape_s::getCycleDuration() const {
+	return (operationMode == FOUR_STROKE_CAM_SENSOR) ? 720 : 360;
+}
+
+float trigger_shape_s::getSwitchAngle(int index) const {
+	return getCycleDuration() * wave.getSwitchTime(index);
 }
 
 void multi_wave_s::checkSwitchTimes(int size) {
 	checkSwitchTimes2(size, switchTimes);
 }
 
-void setToothedWheelConfiguration(trigger_shape_s *s, int total, int skipped, engine_configuration_s const *engineConfiguration) {
+void setToothedWheelConfiguration(trigger_shape_s *s, int total, int skipped,
+		engine_configuration_s const *engineConfiguration) {
 	s->isSynchronizationNeeded = (skipped != 0);
 
 	s->totalToothCount = total;
 	s->skippedToothCount = skipped;
 	s->needSecondTriggerInput = false;
-	s->useRiseEdge = TRUE;
+	s->useRiseEdge = true;
 
-	initializeSkippedToothTriggerShapeExt(s, s->totalToothCount,
-			s->skippedToothCount,
+	initializeSkippedToothTriggerShapeExt(s, s->totalToothCount, s->skippedToothCount,
 			getOperationMode(engineConfiguration));
 }
 
 void setTriggerSynchronizationGap(trigger_shape_s *s, float synchGap) {
-	s->isSynchronizationNeeded = TRUE;
+	s->isSynchronizationNeeded = true;
 	s->syncRatioFrom = synchGap * 0.75;
 	s->syncRatioTo = synchGap * 1.25;
+}
+
+#define S24 (720.0f / 24 / 2)
+
+static float addAccordPair(trigger_shape_s *s, float sb) {
+	s->addEvent(sb, T_SECONDARY, TV_HIGH);
+	sb += S24;
+	s->addEvent(sb, T_SECONDARY, TV_LOW);
+	sb += S24;
+
+	return sb;
+}
+
+#define DIP 7.5f
+static float addAccordPair3(trigger_shape_s *s, float sb) {
+	sb += DIP;
+	s->addEvent(sb, T_CHANNEL_3, TV_HIGH);
+	sb += DIP;
+	s->addEvent(sb, T_CHANNEL_3, TV_LOW);
+	sb += 2 * DIP;
+	return sb;
+}
+
+/**
+ * Thank you Dip!
+ * http://forum.pgmfi.org/viewtopic.php?f=2&t=15570start=210#p139007
+ */
+void configureHondaAccordCDDip(trigger_shape_s *s) {
+	s->reset(FOUR_STROKE_CAM_SENSOR);
+
+	s->initialState[T_SECONDARY] = TV_HIGH;
+	float sb = 0;
+	sb = addAccordPair3(s, sb);
+	sb = addAccordPair3(s, sb);
+	sb = addAccordPair3(s, sb);
+
+	s->addEvent(90, T_SECONDARY, TV_LOW);
+	sb = 90;
+	sb = addAccordPair3(s, sb);
+	sb = addAccordPair3(s, sb);
+	sb = addAccordPair3(s, sb);
+
+	s->addEvent(180, T_SECONDARY, TV_HIGH);
+	sb = 180;
+	sb = addAccordPair3(s, sb);
+	sb = addAccordPair3(s, sb);
+	sb = addAccordPair3(s, sb);
+
+	s->addEvent(270, T_SECONDARY, TV_LOW);
+	sb = 270;
+	sb = addAccordPair3(s, sb);
+	sb = addAccordPair3(s, sb);
+	sb = addAccordPair3(s, sb);
+
+
+	s->addEvent(360.0f - DIP, T_PRIMARY, TV_HIGH);
+	s->addEvent(360, T_SECONDARY, TV_HIGH);
+	sb = 360;
+	sb = addAccordPair3(s, sb);
+	sb = addAccordPair3(s, sb);
+	sb = addAccordPair3(s, sb);
+
+	s->addEvent(450, T_SECONDARY, TV_LOW);
+	sb = 450;
+	sb = addAccordPair3(s, sb);
+	sb = addAccordPair3(s, sb);
+	sb = addAccordPair3(s, sb);
+
+	s->addEvent(540, T_SECONDARY, TV_HIGH);
+	sb = 540;
+	sb = addAccordPair3(s, sb);
+	sb = addAccordPair3(s, sb);
+	sb = addAccordPair3(s, sb);
+
+	s->addEvent(630, T_SECONDARY, TV_LOW);
+	sb = 630;
+	sb = addAccordPair3(s, sb);
+	sb = addAccordPair3(s, sb);
+	sb = addAccordPair3(s, sb);
+
+	s->addEvent(720.0f - DIP, T_PRIMARY, TV_LOW);
+
+//	s->addEvent(720.0f - 12 * sb, T_SECONDARY, TV_LOW);
+//	s->addEvent(720.0f, T_SECONDARY, TV_LOW);
+
+	s->addEvent(720.0f, T_SECONDARY, TV_HIGH);
+
+	s->isSynchronizationNeeded = false;
+
+	s->shaftPositionEventCount = s->getSize();
+}
+
+void configureHondaAccordCD(trigger_shape_s *s, bool with3rdSignal) {
+	s->reset(FOUR_STROKE_CAM_SENSOR);
+
+	float sb = 5.0f;
+
+	float tdcWidth = 0.1854 * 720 / 4;
+
+	s->isSynchronizationNeeded = false;
+
+	sb = addAccordPair(s, sb);
+
+	if (with3rdSignal)
+		s->addEvent(sb - S24 / 2, T_CHANNEL_3, TV_HIGH);
+
+	sb = addAccordPair(s, sb);
+	sb = addAccordPair(s, sb);
+	if (with3rdSignal)
+		s->addEvent(sb - S24 / 2, T_CHANNEL_3, TV_LOW);
+	sb = addAccordPair(s, sb);
+	sb = addAccordPair(s, sb);
+	s->addEvent(1 * 180.0f - tdcWidth, T_PRIMARY, TV_HIGH);
+	sb = addAccordPair(s, sb);
+	s->addEvent(1 * 180.0f, T_PRIMARY, TV_LOW);
+
+	sb = addAccordPair(s, sb);
+	sb = addAccordPair(s, sb);
+	sb = addAccordPair(s, sb);
+	sb = addAccordPair(s, sb);
+	sb = addAccordPair(s, sb);
+
+	s->addEvent(2 * 180.0f - tdcWidth, T_PRIMARY, TV_HIGH);
+	sb = addAccordPair(s, sb);
+	s->addEvent(2 * 180.0f, T_PRIMARY, TV_LOW);
+
+	for (int i = 3; i <= 4; i++) {
+		sb = addAccordPair(s, sb);
+		sb = addAccordPair(s, sb);
+		sb = addAccordPair(s, sb);
+		sb = addAccordPair(s, sb);
+		sb = addAccordPair(s, sb);
+
+		s->addEvent(i * 180.0f - tdcWidth, T_PRIMARY, TV_HIGH);
+		sb = addAccordPair(s, sb);
+		s->addEvent(i * 180.0f, T_PRIMARY, TV_LOW);
+	}
+
+	s->shaftPositionEventCount = s->getSize();
 }

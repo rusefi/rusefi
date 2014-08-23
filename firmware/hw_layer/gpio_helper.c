@@ -36,7 +36,7 @@ void initOutputPinExt(const char *msg, OutputPin *outputPin, GPIO_TypeDef *port,
 //		firmwareError("outputPin already assigned to %x%d", outputPin->port, outputPin->pin);
 //		return;
 //	}
-	outputPin->currentLogicValue = -1;
+	outputPin->currentLogicValue = INITIAL_PIN_STATE;
 	outputPin->port = port;
 	outputPin->pin = pinNumber;
 

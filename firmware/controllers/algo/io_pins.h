@@ -12,6 +12,9 @@
 
 #define GPIO_NULL NULL
 
+/**
+ * Logical pins. See brain_pin_e for physical pins.
+ */
 typedef enum {
 	LED_WARNING, // Orange on-board LED
 	LED_RUNNING, // Green on-board LED
@@ -23,9 +26,13 @@ typedef enum {
 	LED_DEBUG,
 	LED_EMULATOR,
 
+	/**
+	 * see board_configuration_s->idleValvePin
+	 */
 	IDLE_VALVE,
 	TRIGGER_EMULATOR_PRIMARY,
 	TRIGGER_EMULATOR_SECONDARY,
+	TRIGGER_EMULATOR_3RD,
 
 	SPARKOUT_1_OUTPUT,
 	SPARKOUT_2_OUTPUT,
@@ -57,6 +64,12 @@ typedef enum {
 	ELECTRONIC_THROTTLE_CONTROL_2,
 	ELECTRONIC_THROTTLE_CONTROL_3,
 
+	/**
+	 * these seven segment display pins are related to unused external tachometer code
+	 * I still have the hardware so maybe one day I will fix it, but for now it's just dead code
+	 * See https://www.youtube.com/watch?v=YYiHoN6MBqE
+	 * todo: this should be re-implemented in a smarter way with some sort of multiplexing anyway
+	 */
 	/* digit 1 */
 	LED_HUGE_0, // B2
 	LED_HUGE_1,
@@ -87,6 +100,7 @@ typedef enum {
 	
 	FUEL_PUMP_RELAY,
 	FAN_RELAY,
+	O2_HEATER,
 
 	SPI_CS_1,
 	SPI_CS_2,

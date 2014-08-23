@@ -200,10 +200,10 @@ static void testEchoII(int param, int param2) {
 	lastInteger2 = param2;
 }
 
-static char *lastFirst = NULL;
-static char *lastThird = NULL;
+static const char *lastFirst = NULL;
+static const char *lastThird = NULL;
 
-static void testEchoSSS(char *first, char *second, char *third) {
+static void testEchoSSS(const char *first, const char *second, const char *third) {
 	lastFirst = first;
 	lastThird = third;
 }

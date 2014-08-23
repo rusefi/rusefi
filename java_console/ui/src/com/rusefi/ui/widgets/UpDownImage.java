@@ -1,6 +1,7 @@
-package com.irnems.ui.widgets;
+package com.rusefi.ui.widgets;
 
 import com.irnems.waves.TimeAxisTranslator;
+import com.rusefi.ui.WavePanel;
 import com.rusefi.waves.WaveReport;
 import com.irnems.waves.ZoomProvider;
 import com.rusefi.waves.RevolutionLog;
@@ -11,11 +12,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * This is a renderer of {@link WaveReport} - this makes a simple Logical Analyzer
+ * This is a renderer of an individual {@link WaveReport} - this makes a simple Logical Analyzer
  * <p/>
  * <p/>
  * Date: 6/23/13
  * (c) Andrey Belomutskiy
+ * @see WavePanel
  */
 public class UpDownImage extends JPanel {
     private static final SimpleDateFormat FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
@@ -28,9 +30,15 @@ public class UpDownImage extends JPanel {
     private final String name;
     private TimeAxisTranslator translator;
     private RevolutionLog time2rpm = RevolutionLog.parseRevolutions(null);
+    private String pin = "";
 
     public UpDownImage(final String name) {
         this(WaveReport.MOCK, name);
+        setToolTip();
+    }
+
+    public void setToolTip() {
+        setToolTipText("<html>Channel " + name + "<br>Physical pin: " + pin + "</html>");
     }
 
     public void setZoomProvider(ZoomProvider zoomProvider) {
@@ -41,9 +49,25 @@ public class UpDownImage extends JPanel {
         trueRepaint(this);
     }
 
+    /**
+     * This does not make any sense :( That's an attempt
+     * to hack http://rusefi.com/forum/viewtopic.php?f=2&t=631&p=10083#p10081
+     */
     public static void trueRepaint(JComponent control) {
         control.invalidate();
         control.repaint();
+    }
+
+    public static void trueRepaint(Container control) {
+        if (control == null)
+            return;
+        control.invalidate();
+        control.repaint();
+    }
+
+    public static void trueLayout(Component component) {
+        component.invalidate();
+        component.validate();
     }
 
     public UpDownImage(WaveReport wr, String name) {
@@ -190,5 +214,10 @@ public class UpDownImage extends JPanel {
 
     public void setRevolutions(StringBuilder revolutions) {
         time2rpm = RevolutionLog.parseRevolutions(revolutions);
+    }
+
+    public void setPhysicalPin(String pin) {
+        this.pin = pin;
+        setToolTip();
     }
 }

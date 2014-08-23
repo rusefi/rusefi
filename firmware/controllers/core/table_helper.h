@@ -26,8 +26,9 @@ private:
 
 template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE>
 void Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE>::init(float table[RPM_BIN_SIZE][LOAD_BIN_SIZE]) {
-	for (int k = 0; k < LOAD_BIN_SIZE; k++)
+  for (int k = 0; k < LOAD_BIN_SIZE; k++) {
 		pointers[k] = table[k];
+  }
 	initialized = MAGIC_TRUE_VALUE;
 }
 

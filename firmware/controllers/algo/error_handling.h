@@ -29,6 +29,7 @@ int warning(obd_code_e code, const char *fmt, ...);
  */
 void firmwareError(const char *fmt, ...);
 bool hasFirmwareError(void);
+char *getFirmwareError(void);
 
 /**
  * declared as a macro so that this code does not use stack
@@ -43,6 +44,7 @@ bool hasFirmwareError(void);
 void chDbgPanic3(const char *msg, const char * file, int line);
 
 void initErrorHandling(void);
+char *getWarninig(void);
 
 // todo: better place for this shared declaration?
 int getRusEfiVersion(void);

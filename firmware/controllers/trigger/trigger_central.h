@@ -10,19 +10,21 @@
 
 #include "rusefi_enums.h"
 #include "listener_array.h"
+#include "trigger_decoder.h"
 
 typedef void (*ShaftPositionListener)(trigger_event_e signal, int index, void *arg);
 
 #ifdef __cplusplus
 #include "ec2.h"
 
-#define HW_EVENT_TYPES 4
+#define HW_EVENT_TYPES 6
 
 class TriggerCentral {
 public:
 	TriggerCentral();
 	void addEventListener(ShaftPositionListener handler, const char *name, void *arg);
 	void handleShaftSignal(configuration_s *configuration, trigger_event_e signal, uint64_t nowUs);
+	int getHwEventCounter(int index);
 	TriggerState triggerState;
 private:
 	IntListenerArray triggerListeneres;

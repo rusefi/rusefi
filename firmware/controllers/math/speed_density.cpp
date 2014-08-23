@@ -26,7 +26,7 @@ static Map3D1616 afrMap;
 #define tpMin 0
 #define tpMax 100
 //  http://rusefi.com/math/t_charge.html
-float getTCharge(int rpm, int tps, float coolantTemp, float airTemp) {
+float getTCharge(int rpm, float tps, float coolantTemp, float airTemp) {
 	float minRpmKcurrentTPS = interpolate(tpMin, K_AT_MIN_RPM_MIN_TPS, tpMax,
 	K_AT_MIN_RPM_MAX_TPS, tps);
 	float maxRpmKcurrentTPS = interpolate(tpMin, K_AT_MAX_RPM_MIN_TPS, tpMax,

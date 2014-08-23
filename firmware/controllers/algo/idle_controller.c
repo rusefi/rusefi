@@ -78,10 +78,10 @@ int getIdle(IdleValveState *idle, int currentRpm, int now) {
 	}
 
 	if (currentRpm >= idle->targetRpmRangeRight + 100)
-		return changeValue(idle, currentRpm, now, "rpm is too high: ", -IDLE_DECREASE_STEP);
+		return changeValue(idle, currentRpm, now, "idle control: rpm is too high: ", -IDLE_DECREASE_STEP);
 
 	if (currentRpm >= idle->targetRpmRangeRight)
-		return changeValue(idle, currentRpm, now, "rpm is a bit too high: ", -1);
+		return changeValue(idle, currentRpm, now, "idle control: rpm is a bit too high: ", -1);
 
 	// we are here if RPM is low, let's see how low
 //	if (currentRpm < 0.7 * idle->targetRpmRangeLeft) {
@@ -89,7 +89,7 @@ int getIdle(IdleValveState *idle, int currentRpm, int now) {
 //		return setNewValue(idle, currentRpm, now, "RPMs are seriously low: ", 15 * IDLE_INCREASE_STEP);
 //	} else
 	if (currentRpm < idle->targetRpmRangeLeft - 100) {
-		return changeValue(idle, currentRpm, now, "RPMs are low: ", IDLE_INCREASE_STEP);
+		return changeValue(idle, currentRpm, now, "idle control: RPMs are low: ", IDLE_INCREASE_STEP);
 	}
-	return changeValue(idle, currentRpm, now, "RPMs are a bit low: ", 1);
+	return changeValue(idle, currentRpm, now, "idle control: RPMs are a bit low: ", 1);
 }

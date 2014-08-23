@@ -13,7 +13,7 @@
 #include "signal_executor.h"
 #include "engine_configuration.h"
 
-char * getPinNameByAdcChannel(int hwChannel, char *buffer);
+char * getPinNameByAdcChannel(adc_channel_e hwChannel, char *buffer);
 void initEngineContoller(void);
 
 #endif /* ENGINE_STATUS_H_ */

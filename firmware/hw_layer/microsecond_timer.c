@@ -19,7 +19,7 @@
 
 #define GPTDEVICE GPTD5
 
-static volatile int64_t lastSetTimerTime;
+static volatile uint64_t lastSetTimerTime;
 static int lastSetTimerValue;
 static volatile bool isTimerPending = FALSE;
 

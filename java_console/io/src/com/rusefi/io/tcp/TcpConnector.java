@@ -21,20 +21,41 @@ public class TcpConnector implements LinkConnector {
     private boolean withError;
 
     public TcpConnector(String port) {
-        this.port = getTcpPort(port);
+        try {
+            this.port = getTcpPort(port);
+        } catch (InvalidTcpPort e) {
+            throw new IllegalStateException("Unexpected", e);
+        }
     }
 
     public static boolean isTcpPort(String port) {
         try {
             getTcpPort(port);
             return true;
-        } catch (NumberFormatException e) {
+        } catch (InvalidTcpPort e) {
             return false;
         }
     }
 
-    public static int getTcpPort(String port) {
-        return Integer.parseInt(port);
+    static class InvalidTcpPort extends Exception {
+
+    }
+
+
+    public static int getTcpPort(String port) throws InvalidTcpPort {
+        try {
+            return Integer.parseInt(port);
+        } catch (NumberFormatException e) {
+            throw new InvalidTcpPort();
+        }
+    }
+
+    public static int parseIntWithReason(String number, String reason) {
+        try {
+            return Integer.parseInt(number);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Unexpected [" + number + "] for " + reason, e);
+        }
     }
 
     /**
@@ -96,14 +117,18 @@ public class TcpConnector implements LinkConnector {
         }
     }
 
-    public static Collection<? extends String> getAvailablePorts() {
+    public static Collection<String> getAvailablePorts() {
+        return isTcpPortOpened() ? Collections.singletonList("" + DEFAULT_PORT) : Collections.<String>emptyList();
+    }
+
+    public static boolean isTcpPortOpened() {
         try {
             Socket s = new Socket(LOCALHOST, DEFAULT_PORT);
             s.close();
-            return Collections.singletonList("" + DEFAULT_PORT);
+            return true;
         } catch (IOException e) {
             System.out.println("Connection refused in getAvailablePorts(): simulator not running");
-            return Collections.emptyList();
+            return false;
         }
     }
 }

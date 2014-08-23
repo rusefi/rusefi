@@ -11,6 +11,7 @@
 #include "boards.h"
 #include "engine_configuration.h"
 #include "adc_inputs.h"
+#include "voltage.h"
 
 extern engine_configuration_s *engineConfiguration;
 

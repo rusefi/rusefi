@@ -15,12 +15,15 @@
 
 static Logging logger;
 
+#if EFI_RTC
 static void date_help(void) {
 	scheduleMsg(&logger, "Usage: date_help");
 	scheduleMsg(&logger, "       date_get");
 	scheduleMsg(&logger, "       date_set N");
 	scheduleMsg(&logger, "where N is time in seconds sins Unix epoch - see http://www.epochconverter.com");
 }
+
+#endif /* EFI_RTC */
 
 void date_set_tm(struct tm *timp) {
 #if EFI_RTC
@@ -91,8 +94,8 @@ void dateToString(char *lcd_str) {
 #endif /* EFI_RTC */
 }
 
-static void date_get(void) {
 #if EFI_RTC
+static void date_get(void) {
 	static time_t unix_time;
 	struct tm timp;
 	
@@ -109,11 +112,9 @@ static void date_get(void) {
 		appendMsgPostfix(&logger);
 		scheduleLogging(&logger);
 	}
-#endif
 }
 
 static void date_set(char *strDate) {
-#if EFI_RTC
 	if (strlen(strDate) > 0) {
 		time_t unix_time = (double) atoff(strDate);
 		if (unix_time > 0) {
@@ -123,8 +124,8 @@ static void date_set(char *strDate) {
 		}
 	}
 	scheduleMsg(&logger, "date_set Date parameter %s is wrong\r\n", strDate);
-#endif
 }
+#endif /* EFI_RTC */
 
 void initRtc(void) {
 	initLogging(&logger, "rtc");

@@ -34,13 +34,13 @@ void setMazdaMiataNbEngineConfiguration(engine_configuration_s *engineConfigurat
 	setThermistorConfiguration(&engineConfiguration->iatThermistorConf, -10, 160310, 60, 7700, 120.00, 1180);
 	engineConfiguration->iatThermistorConf.bias_resistor = 2700;
 
-	engineConfiguration->tpsAdcChannel = 3; // 15 is the old value
-	engineConfiguration->vBattAdcChannel = 0; // 1 is the old value
+	engineConfiguration->tpsAdcChannel = EFI_ADC_3; // 15 is the old value
+	engineConfiguration->vBattAdcChannel = EFI_ADC_0; // 1 is the old value
 //  engineConfiguration->map.channel = 1;
-	engineConfiguration->mafAdcChannel = 1;
-	engineConfiguration->cltAdcChannel = 11;
-	engineConfiguration->iatAdcChannel = 13;
-	engineConfiguration->afrSensor.afrAdcChannel = 2;
+	engineConfiguration->mafAdcChannel = EFI_ADC_1;
+	engineConfiguration->cltAdcChannel = EFI_ADC_11;
+	engineConfiguration->iatAdcChannel = EFI_ADC_13;
+	engineConfiguration->afrSensor.afrAdcChannel = EFI_ADC_2;
 
 	boardConfiguration->idleValvePin = GPIOE_0;
 	boardConfiguration->idleValvePinMode = OM_DEFAULT;

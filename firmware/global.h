@@ -10,8 +10,14 @@
 
 #include <ch.h>
 #include <hal.h>
-#include <time.h>
 #include <string.h>
+
+// this is about MISRA not liking 'time.h'. todo: figure out something
+#if defined __GNUC__
+#include <sys/types.h>
+#else
+typedef unsigned int time_t;
+#endif
 
 #include "efifeatures.h"
 #include "rusefi_enums.h"
@@ -26,6 +32,8 @@
 // project-wide default thread stack size
 // see also PORT_INT_REQUIRED_STACK
 #define UTILITY_THREAD_STACK_SIZE 128
+
+#define EFI_ERROR_CODE 0xffffffff
 
 #if EFI_USE_CCM && defined __GNUC__
 #define CCM_OPTIONAL __attribute__((section(".ccm")));

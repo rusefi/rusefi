@@ -80,11 +80,9 @@ static bool getConsoleLine(BaseSequentialStream *chp, char *line, unsigned size)
 		continue;
 #endif
 
-		if (c < 0)
+		if (c < 0 || c == 4) {
 			return TRUE;
-		if (c == 4) {
-			return TRUE;
-		}
+                }
 		if (c == 8) {
 			if (p != line) {
 				// backspace
@@ -101,8 +99,9 @@ static bool getConsoleLine(BaseSequentialStream *chp, char *line, unsigned size)
 			*p = 0;
 			return false;
 		}
-		if (c < 0x20)
+		if (c < 0x20) {
 			continue;
+                }
 		if (p < line + size - 1) {
 			consolePutChar((uint8_t) c);
 			*p++ = (char) c;
@@ -152,7 +151,7 @@ SerialDriver * getConsoleChannel(void) {
 	}
 }
 
-int isConsoleReady(void) {
+bool isConsoleReady(void) {
 	if (isSerialOverUart()) {
 		return isSerialConsoleStarted;
 	} else {
@@ -169,7 +168,7 @@ void consolePutChar(int x) {
 // 10 seconds
 #define CONSOLE_WRITE_TIMEOUT 10000
 
-void consoleOutputBuffer(const int8_t *buf, int size) {
+void consoleOutputBuffer(const uint8_t *buf, int size) {
 	lastWriteSize = size;
 #if !EFI_UART_ECHO_TEST_MODE
 	lastWriteActual = chnWriteTimeout(getConsoleChannel(), buf, size, CONSOLE_WRITE_TIMEOUT);

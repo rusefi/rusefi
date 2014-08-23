@@ -40,25 +40,20 @@ extern "C"
  * these fields are not integrated with Tuner Studio. Step by step :)
  */
 class engine_configuration2_s {
+	// todo: move these fields into Engine class, eliminate this class
 public:
 	engine_configuration2_s();
 
 	Thermistor iat;
 	Thermistor clt;
 
-//	int crankAngleRange;
-
 	trigger_shape_s triggerShape;
-
-	cranking_ignition_mode_e crankingIgnitionMode;
 
 	EventHandlerConfiguration engineEventConfiguration;
 
-	int isInjectionEnabledFlag;
-
 	/**
 	 * This coefficient translates ADC value directly into voltage adjusted according to
-	 * voltage divider configuration.
+	 * voltage divider configuration. This is a future (?) performance optimization.
 	 */
 	float adcToVoltageInputDividerCoefficient;
 };
@@ -72,6 +67,7 @@ void prepareOutputSignals(engine_configuration_s *engineConfiguration,
 		engine_configuration2_s *engineConfiguration2);
 
 void initializeIgnitionActions(float advance, float dwellAngle, engine_configuration_s *engineConfiguration, engine_configuration2_s *engineConfiguration2, IgnitionEventList *list);
+float getFuelMultiplier(engine_configuration_s const *e, injection_mode_e mode);
 void addFuelEvents(engine_configuration_s const *e,  engine_configuration2_s *engineConfiguration2, ActuatorEventList *list, injection_mode_e mode);
 
 void registerActuatorEventExt(engine_configuration_s const *engineConfiguration, trigger_shape_s * s, ActuatorEvent *e, OutputSignal *actuator, float angleOffset);
@@ -82,7 +78,6 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType,
 		board_configuration_s *boardConfiguration);
 void applyNonPersistentConfiguration(Logging * logger, engine_configuration_s *engineConfiguration,
 		engine_configuration2_s *engineConfiguration2);
-
 
 void setDefaultNonPersistentConfiguration(engine_configuration2_s *engineConfiguration2);
 void printConfiguration(engine_configuration_s *engineConfiguration, engine_configuration2_s *engineConfiguration2);

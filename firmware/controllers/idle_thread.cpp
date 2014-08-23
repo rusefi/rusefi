@@ -27,18 +27,15 @@
 #include "idle_controller.h"
 #include "rpm_calculator.h"
 #include "pwm_generator.h"
-#include "wave_math.h"
 #include "idle_thread.h"
 #include "pin_repository.h"
 #include "engine_configuration.h"
 #include "engine.h"
 
-#define IDLE_AIR_CONTROL_VALVE_PWM_FREQUENCY 200
-
 static THD_WORKING_AREA(ivThreadStack, UTILITY_THREAD_STACK_SIZE);
 
-static volatile int isIdleControlActive = EFI_IDLE_CONTROL;
 extern board_configuration_s *boardConfiguration;
+extern engine_configuration_s *engineConfiguration;
 
 /**
  * here we keep the value we got from IDLE SWITCH input
@@ -48,7 +45,7 @@ static volatile int idleSwitchState;
 static Logging logger;
 extern Engine engine;
 
-static SimplePwm idleValve;
+static SimplePwm idleValvePwm;
 
 /**
  * Idle level calculation algorithm lives in idle_controller.c
@@ -65,20 +62,21 @@ void idleDebug(char *msg, int value) {
 }
 
 static void setIdleControlEnabled(int value) {
-	isIdleControlActive = value;
-	scheduleMsg(&logger, "isIdleControlActive=%d", isIdleControlActive);
+	engineConfiguration->idleMode = value ? IM_MANUAL : IM_AUTO;
+	scheduleMsg(&logger, "isIdleControlActive=%d", engineConfiguration->idleMode);
 }
 
 static void setIdleValvePwm(int value) {
 	// todo: change parameter type, maybe change parameter validation?
 	if (value < 1 || value > 999)
 		return;
-	scheduleMsg(&logger, "setting idle valve PWM %d", value);
+	scheduleMsg(&logger, "setting idle valve PWM %d @%d on %s", value, boardConfiguration->idleSolenoidFrequency,
+			hwPortname(boardConfiguration->idleValvePin));
 	/**
 	 * currently idle level is an integer per mil (0-1000 range), and PWM takes a float in the 0..1 range
 	 * todo: unify?
 	 */
-	idleValve.setSimplePwmDutyCycle(0.001 * value);
+	idleValvePwm.setSimplePwmDutyCycle(0.001 * value);
 }
 
 static msg_t ivThread(int param) {
@@ -91,7 +89,7 @@ static msg_t ivThread(int param) {
 		// this value is not used yet
 		idleSwitchState = palReadPad(getHwPort(boardConfiguration->idleSwitchPin), getHwPin(boardConfiguration->idleSwitchPin));
 
-		if (!isIdleControlActive)
+		if (engineConfiguration->idleMode != IM_AUTO)
 			continue;
 
 		int nowSec = getTimeNowSeconds();
@@ -117,10 +115,13 @@ static void setIdleRpmAction(int value) {
 void startIdleThread() {
 	initLogging(&logger, "Idle Valve Control");
 
-	startSimplePwmExt(&idleValve, "Idle Valve",
+	/**
+	 * Start PWM for IDLE_VALVE logical / idleValvePin physical
+	 */
+	startSimplePwmExt(&idleValvePwm, "Idle Valve",
 			boardConfiguration->idleValvePin,
 			IDLE_VALVE,
-			IDLE_AIR_CONTROL_VALVE_PWM_FREQUENCY,
+			boardConfiguration->idleSolenoidFrequency,
 			0.5);
 
 	idleInit(&idle);

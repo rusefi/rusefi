@@ -14,7 +14,7 @@ extern "C"
 #endif /* __cplusplus */
 
 void usb_serial_start(void);
-int is_usb_serial_ready(void);
+bool is_usb_serial_ready(void);
 
 #ifdef __cplusplus
 }

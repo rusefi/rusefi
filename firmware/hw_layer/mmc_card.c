@@ -12,7 +12,7 @@
 
 #include "main.h"
 
-#if EFI_FILE_LOGGING
+#if EFI_FILE_LOGGING || defined(__DOXYGEN__)
 
 #include <stdio.h>
 #include <string.h>
@@ -49,7 +49,7 @@ SPI_BaudRatePrescaler_256 };
 // don't forget check if STM32_SPI_USE_SPI2 defined and spi has init with correct GPIO in hardware.c
 static MMCConfig mmccfg = { &MMC_CARD_SPI, &ls_spicfg, &hs_spicfg };
 
-static bool fs_ready = FALSE;
+static bool fs_ready = false;
 
 #define PUSHPULLDELAY 500
 
@@ -105,7 +105,7 @@ static void createLogFile(void) {
 		return;
 	}
 	f_sync(&FDLogFile);
-	fs_ready = TRUE;						// everything Ok
+	fs_ready = true;						// everything Ok
 	unlockSpi();
 }
 
@@ -166,7 +166,7 @@ void appendToLog(char *line) {
 		errorReported = TRUE;
 		return;
 	}
-	int lineLength = strlen(line);
+	UINT lineLength = strlen(line);
 	totalLoggedBytes += lineLength;
 	lockSpi(SPI_NONE);
 	FRESULT err = f_write(&FDLogFile, line, lineLength, &bytesWrited);
@@ -234,11 +234,11 @@ static msg_t MMCmonThread(void)
 {
 	chRegSetThreadName("MMC_Monitor");
 
-	while (TRUE) {
+	while (true) {
 		// this returns TRUE if SD module is there, even without an SD card?
 		if (blkIsInserted(&MMCD1)) {
 
-			if (fs_ready == FALSE) {
+			if (!fs_ready) {
 				MMCmount();
 			}
 		}
@@ -246,6 +246,10 @@ static msg_t MMCmonThread(void)
 		// this thread is activated 10 times per second
 		chThdSleepMilliseconds(PUSHPULLDELAY);
 	}
+}
+
+bool isSdCardAlive(void) {
+	return fs_ready;
 }
 
 void initMmcCard(void) {

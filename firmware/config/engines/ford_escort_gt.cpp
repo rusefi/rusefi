@@ -40,9 +40,9 @@ void setFordEscortGt(engine_configuration_s *engineConfiguration, board_configur
 	// Frankenstein analog input #10: adc
 	// Frankenstein analog input #11: adc
 	// Frankenstein analog input #12: adc
-	engineConfiguration->mafAdcChannel = 1;
-	engineConfiguration->tpsAdcChannel = 3;
-	engineConfiguration->cltAdcChannel = 11;
+	engineConfiguration->mafAdcChannel = EFI_ADC_1;
+	engineConfiguration->tpsAdcChannel = EFI_ADC_3;
+	engineConfiguration->cltAdcChannel = EFI_ADC_11;
 
 
 	// Frankenstein: high side #1 is PE8

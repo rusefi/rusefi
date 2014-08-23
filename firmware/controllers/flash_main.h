@@ -11,7 +11,7 @@
 
 #include "engine_configuration.h"
 
-#define FLASH_DATA_VERSION 3975
+#define FLASH_DATA_VERSION 4320
 
 #ifdef __cplusplus
 extern "C"
@@ -20,7 +20,19 @@ extern "C"
 
 void readFromFlash(void);
 void initFlash(void);
+/**
+ * Because of hardware-related issues, stm32f4 chip is totally
+ * frozen while we are writing to internal flash. Writing the configuration takes
+ * about 1-2 seconds, we cannot afford to do that while the engine is
+ * running so we postpone the write until the engine is stopped.
+ */
 void writeToFlash(void);
+void setNeedToWriteConfiguration(void);
+/**
+ * @return true if an flash write is pending
+ */
+bool getNeedToWriteConfiguration(void);
+void writeToFlashIfPending(void);
 
 #ifdef __cplusplus
 }

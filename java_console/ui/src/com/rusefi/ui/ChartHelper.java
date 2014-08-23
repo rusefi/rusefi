@@ -3,7 +3,7 @@ package com.rusefi.ui;
 import com.irnems.FileLog;
 import com.irnems.models.Range;
 import com.irnems.models.XYData;
-import com.irnems.ui.widgets.JTextFieldWithWidth;
+import com.rusefi.ui.widgets.JTextFieldWithWidth;
 import net.ericaro.surfaceplotter.DefaultSurfaceModel;
 import net.ericaro.surfaceplotter.JSurfacePanel;
 import net.ericaro.surfaceplotter.Mapper;
@@ -13,6 +13,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import static com.rusefi.io.tcp.TcpConnector.*;
 
 /**
  * Date: 1/22/13
@@ -60,7 +62,7 @@ public class ChartHelper {
         ActionListener updateValue = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int rpm = Integer.parseInt(xField.getText());
+                int rpm = parseIntWithReason(xField.getText(), "CH xField");
 
                 double y = Double.parseDouble(yField.getText());
 
@@ -101,8 +103,7 @@ public class ChartHelper {
 
         sm.setXMin(xRange.getMin());
         sm.setXMax(xRange.getMax());
-        sm.setYMin(yRange.getMin());
-        sm.setYMax(yRange.getMax());
+        setYRange(yRange, sm);
 
         sm.setBoxed(true);
         sm.setDisplayXY(true);
@@ -130,5 +131,10 @@ public class ChartHelper {
         });
         sm.plot().execute();
         return sm;
+    }
+
+    public static void setYRange(Range yRange, DefaultSurfaceModel sm) {
+        sm.setYMin(yRange.getMin());
+        sm.setYMax(yRange.getMax());
     }
 }

@@ -10,23 +10,25 @@
 #define DIST_EMULATOR_H_
 
 #include "main.h"
-#include "wave_math.h"
 
 #include "trigger_structure.h"
 #include "engine_configuration.h"
+#include "pwm_generator_logic.h"
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
+class TriggerEmulatorHelper {
+public:
+	bool primaryWheelState;
+	bool secondaryWheelState;
+	bool thirdWheelState;
+
+        TriggerEmulatorHelper();
+        
+	void handleEmulatorCallback(PwmConfig *state, int stateIndex);
+
+};
 
 
 void initTriggerEmulator(void);
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-
 void setTriggerEmulatorRPM(int value);
-
 
 #endif /* DIST_EMULATOR_H_ */

@@ -19,7 +19,7 @@
 void findTriggerPosition(engine_configuration_s const *engineConfiguration, trigger_shape_s * s,
 		event_trigger_position_s *position, float angleOffset);
 
-int isInjectionEnabled(engine_configuration2_s const *engineConfiguration2);
+int isInjectionEnabled(engine_configuration_s *engineConfiguration);
 
 float fixAngle(float angle);
 

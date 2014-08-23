@@ -46,7 +46,7 @@ typedef enum {
 	NISSAN_PRIMERA = 5,
 #endif /* EFI_SUPPORT_NISSAN_PRIMERA */
 
-	HONDA_ACCORD = 6,
+	HONDA_ACCORD_CD = 6,
 
 	FORD_INLINE_6_1995 = 7,
 /**
@@ -70,6 +70,15 @@ typedef enum {
 
 	CITROEN_TU3JP = 15,
 
+	MITSU_4G93 = 16,
+
+	/**
+	 * a version of HONDA_ACCORD_CD which only uses two of three trigger input sensors
+	 */
+	HONDA_ACCORD_CD_TWO_WIRES = 17,
+
+	HONDA_ACCORD_CD_DIP = 18,
+
 	Internal_ForceMyEnumIntSize_engine_type = ENUM_SIZE_HACK,
 } engine_type_e;
 
@@ -85,6 +94,14 @@ typedef enum {
 	TT_TOOTHED_WHEEL_60_2 = 8,
 	TT_TOOTHED_WHEEL_36_1 = 9,
 
+	TT_HONDA_ACCORD_CD = 10,
+
+	TT_MITSU = 11,
+
+	TT_HONDA_ACCORD_CD_TWO_WIRES = 12,
+
+	TT_HONDA_ACCORD_CD_DIP = 13,
+
 	Internal_ForceMyEnumIntSize_trigger_type = ENUM_SIZE_HACK,
 } trigger_type_e;
 
@@ -96,11 +113,28 @@ typedef enum {
 	Internal_ForceMyEnumIntSize_adc_channel_mode = ENUM_SIZE_HACK,
 } adc_channel_mode_e;
 
+// todo: better names?
 typedef enum {
-	SHAFT_PRIMARY_UP = 0,
-	SHAFT_PRIMARY_DOWN = 1,
-	SHAFT_SECONDARY_UP = 2,
-	SHAFT_SECONDARY_DOWN = 3,
+	TV_LOW = 0,
+	TV_HIGH = 1
+} trigger_value_e;
+
+// todo: better names?
+typedef enum {
+	T_PRIMARY = 0,
+	T_SECONDARY = 1,
+	// todo: I really do not want to call this 'tertiary'. maybe we should rename all of these?
+	T_CHANNEL_3 = 2
+} trigger_wheel_e;
+
+// todo: better names?
+typedef enum {
+	SHAFT_PRIMARY_DOWN = 0,
+	SHAFT_PRIMARY_UP = 1,
+	SHAFT_SECONDARY_DOWN = 2,
+	SHAFT_SECONDARY_UP = 3,
+	SHAFT_3RD_DOWN = 4,
+	SHAFT_3RD_UP = 5,
 } trigger_event_e;
 
 /**
@@ -148,6 +182,13 @@ typedef enum {
 
 	Internal_ForceMyEnumIntSize_log_format = ENUM_SIZE_HACK,
 } log_format_e;
+
+
+typedef enum {
+	IM_AUTO = 0,
+	IM_MANUAL = 1,
+	Internal_ForceMyEnumIntSize_idle_mode = ENUM_SIZE_HACK,
+} idle_mode_e;
 
 typedef enum {
 	/**
@@ -244,6 +285,29 @@ typedef enum {
 	Internal_ForceMyEnumIntSize_cranking_internal_error = ENUM_SIZE_HACK,
 } internal_error_e;
 
+typedef enum {
+	EFI_ADC_0 = 0,
+	EFI_ADC_1 = 1,
+	EFI_ADC_2 = 2,
+	EFI_ADC_3 = 3,
+	EFI_ADC_4 = 4,
+	EFI_ADC_5 = 5,
+	EFI_ADC_6 = 6,
+	EFI_ADC_7 = 7,
+	EFI_ADC_8 = 8,
+	EFI_ADC_9 = 9,
+	EFI_ADC_10 = 10,
+	EFI_ADC_11 = 11,
+	EFI_ADC_12 = 12,
+	EFI_ADC_13 = 13,
+	EFI_ADC_14 = 14,
+	EFI_ADC_15 = 15,
+
+	EFI_ADC_ERROR = 999,
+
+	Internal_ForceMyEnumIntSize_cranking_adc_channel = ENUM_SIZE_HACK,
+} adc_channel_e;
+
 /**
  * Hardware pin. This enum is platform-specific.
  */
@@ -334,6 +398,7 @@ typedef enum {
 	GPIOE_15 = 79,
 
 	GPIO_NONE = 80,
+	GPIO_INVALID = 81,
 
 	Internal_ForceMyEnumIntSize_cranking_brain_pin = ENUM_SIZE_HACK,
 } brain_pin_e;
