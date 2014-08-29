@@ -1,7 +1,5 @@
 package com.rusefi.ui;
 
-import com.rusefi.EcuStimulator;
-import com.irnems.Launcher;
 import com.irnems.core.EngineTimeListener;
 import com.irnems.core.Sensor;
 import com.rusefi.ui.widgets.*;
@@ -20,7 +18,6 @@ import java.awt.event.ActionListener;
  */
 public class RpmPanel {
     private RpmControl rpmControl = new RpmControl();
-    // this label displays real RPM received from ECU
     // that's for CKP signal emulation
     public final WaveInfoPanel wave0 = new WaveInfoPanel(0);
     public final WaveInfoPanel wave1 = new WaveInfoPanel(1);
@@ -29,18 +26,6 @@ public class RpmPanel {
     public RpmPanel() {
         rpmControl.setSize(15);
     }
-
-    private WaveInfoPanel findWavePanel(int index) {
-        WaveInfoPanel wave;
-        if (index == 0)
-            wave = wave0;
-        else if (index == 1)
-            wave = wave1;
-        else
-            throw new IllegalStateException("unexpected index " + index);
-        return wave;
-    }
-
 
     public JComponent createRpmPanel() {
         JPanel controls = createControls();
@@ -60,6 +45,25 @@ public class RpmPanel {
 //        gauges.add(GaugesPanel.createGauge(Sensor.MAF));
 
 
+        startConnectionWatchDog();
+
+        JPanel msgPanel = new JPanel(new BorderLayout());
+        msgPanel.add(new AnyCommand(), BorderLayout.NORTH);
+        msgPanel.add(new MsgPanel(false).getContent(), BorderLayout.CENTER);
+
+
+        JComponent rpmPanel = new JPanel(new BorderLayout());
+        rpmPanel.setBorder(BorderFactory.createLineBorder(Color.white));
+
+        rpmPanel.add(rpmControl.getContent(), BorderLayout.NORTH);
+        rpmPanel.add(controls, BorderLayout.WEST);
+        rpmPanel.add(gauges, BorderLayout.CENTER);
+        rpmPanel.add(msgPanel, BorderLayout.EAST);
+
+        return rpmPanel;
+    }
+
+    private void startConnectionWatchDog() {
         final Timer reconnectTimer = new Timer(10000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -75,20 +79,8 @@ public class RpmPanel {
                  * this timer will reconnect
                  */
                 postponeReconnecting(reconnectTimer);
-
             }
         });
-
-        JComponent rpmPanel = new JPanel(new BorderLayout());
-        rpmPanel.setBorder(BorderFactory.createLineBorder(Color.white));
-
-        rpmPanel.add(rpmControl.getContent(), BorderLayout.NORTH);
-        rpmPanel.add(controls, BorderLayout.WEST);
-        rpmPanel.add(gauges, BorderLayout.CENTER);
-        MsgPanel msgPanel = new MsgPanel(false);
-        rpmPanel.add(msgPanel.getContent(), BorderLayout.EAST);
-
-        return rpmPanel;
     }
 
     private void postponeReconnecting(Timer timer2) {
@@ -101,7 +93,6 @@ public class RpmPanel {
         controls.add(new RpmCommand(), "grow, wrap");
 //        controls.add(new PotCommand(0).panel, "grow, wrap");
 //        controls.add(new PotCommand(1).panel, "grow, wrap");
-        controls.add(new AnyCommand(), "grow, wrap");
 
         controls.add(new MafCommand(), "grow, wrap");
 

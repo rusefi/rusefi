@@ -3,6 +3,7 @@ package com.irnems.core;
 import com.irnems.FileLog;
 import org.jetbrains.annotations.NotNull;
 
+import javax.swing.*;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -22,6 +23,10 @@ public class EngineState {
         }
     };
     public static final String PACKING_DELIMITER = ":";
+    /**
+     * If we get this tag we have probably connected to the wrong port
+     */
+    private static final CharSequence TS_PROTOCOL_TAG = "ts_p_al";
     private final Object lock = new Object();
 
     static class StringActionPair extends Pair<String, ValueCallback<String>> {
@@ -209,6 +214,10 @@ public class EngineState {
      */
     public static String unpackString(String message) {
         String prefix = "line" + PACKING_DELIMITER;
+        if (message.contains(TS_PROTOCOL_TAG)) {
+            JOptionPane.showMessageDialog(null, "Are you sure you are not connected to TS port?");
+            return null;
+        }
         if (!message.startsWith(prefix)) {
             FileLog.MAIN.logLine("EngineState: unexpected header: " + message + " while looking for " + prefix);
             return null;
