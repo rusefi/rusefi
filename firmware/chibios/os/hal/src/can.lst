@@ -1,0 +1,254 @@
+GAS LISTING /cygdrive/c/DOCUME~1/andrey/LOCALS~1/Temp/ccaaSh33.s 			page 1
+
+
+   1              		.file	"can.c"
+   2              	 # GNU C (GCC) version 4.8.2 (i686-pc-cygwin)
+   3              	 #	compiled by GNU C version 4.8.2, GMP version 5.1.3, MPFR version 3.1.2, MPC version 1.0.1
+   4              	 # GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+   5              	 # options passed:  -I . -I ../firmware/chibios/os/ports/GCC/SIMIA32
+   6              	 # -I ../firmware/chibios/os/kernel/include
+   7              	 # -I ../firmware/chibios/os/hal/include
+   8              	 # -I ../firmware/chibios/os/hal/platforms/Win32
+   9              	 # -I ../firmware/chibios/boards/simulator -I ../firmware/util
+  10              	 # -I ../firmware/console -I ../firmware/console_util
+  11              	 # -I ../firmware/config/engines -I ../firmware/ext_algo
+  12              	 # -I ../firmware/controllers/sensors -I ../firmware/controllers/system
+  13              	 # -I ../firmware/controllers/algo -I ../firmware/controllers/math
+  14              	 # -I ../firmware/controllers/trigger -I ../firmware/chibios/os/various
+  15              	 # -MD ../firmware/chibios/os/hal/src/can.d -MF .dep/can.o.d -MP
+  16              	 # -MQ ../firmware/chibios/os/hal/src/can.o -Dunix
+  17              	 # -idirafter /usr/lib/gcc/i686-pc-cygwin/4.8.2/../../../../include/w32api
+  18              	 # -idirafter ../../include/w32api -D SIMULATOR -D SHELL_USE_IPRINTF=FALSE
+  19              	 # ../firmware/chibios/os/hal/src/can.c -mtune=generic -march=i686
+  20              	 # -auxbase-strip ../firmware/chibios/os/hal/src/can.o -ggdb -O2 -Wall
+  21              	 # -Wextra -Wstrict-prototypes -std=gnu99 -fomit-frame-pointer
+  22              	 # -fgnu89-inline -fverbose-asm
+  23              	 # options enabled:  -faggressive-loop-optimizations
+  24              	 # -fasynchronous-unwind-tables -fauto-inc-dec -fbranch-count-reg
+  25              	 # -fcaller-saves -fcombine-stack-adjustments -fcommon -fcompare-elim
+  26              	 # -fcprop-registers -fcrossjumping -fcse-follow-jumps -fdefer-pop
+  27              	 # -fdelete-null-pointer-checks -fdevirtualize -fdwarf2-cfi-asm
+  28              	 # -fearly-inlining -feliminate-unused-debug-types
+  29              	 # -fexpensive-optimizations -fforward-propagate -ffunction-cse -fgcse
+  30              	 # -fgcse-lm -fgnu-runtime -fguess-branch-probability
+  31              	 # -fhoist-adjacent-loads -fident -fif-conversion -fif-conversion2
+  32              	 # -findirect-inlining -finline -finline-atomics
+  33              	 # -finline-functions-called-once -finline-small-functions -fipa-cp
+  34              	 # -fipa-profile -fipa-pure-const -fipa-reference -fipa-sra
+  35              	 # -fira-hoist-pressure -fira-share-save-slots -fira-share-spill-slots
+  36              	 # -fivopts -fkeep-inline-dllexport -fkeep-static-consts
+  37              	 # -fleading-underscore -fmath-errno -fmerge-constants
+  38              	 # -fmerge-debug-strings -fmove-loop-invariants -fomit-frame-pointer
+  39              	 # -foptimize-register-move -foptimize-sibling-calls -foptimize-strlen
+  40              	 # -fpartial-inlining -fpeephole -fpeephole2 -fprefetch-loop-arrays -free
+  41              	 # -freg-struct-return -fregmove -freorder-blocks -freorder-functions
+  42              	 # -frerun-cse-after-loop -fsched-critical-path-heuristic
+  43              	 # -fsched-dep-count-heuristic -fsched-group-heuristic -fsched-interblock
+  44              	 # -fsched-last-insn-heuristic -fsched-rank-heuristic -fsched-spec
+  45              	 # -fsched-spec-insn-heuristic -fsched-stalled-insns-dep -fschedule-insns2
+  46              	 # -fset-stack-executable -fshow-column -fshrink-wrap -fsigned-zeros
+  47              	 # -fsplit-ivs-in-unroller -fsplit-wide-types -fstrict-aliasing
+  48              	 # -fstrict-overflow -fstrict-volatile-bitfields -fsync-libcalls
+  49              	 # -fthread-jumps -ftoplevel-reorder -ftrapping-math -ftree-bit-ccp
+  50              	 # -ftree-builtin-call-dce -ftree-ccp -ftree-ch -ftree-coalesce-vars
+  51              	 # -ftree-copy-prop -ftree-copyrename -ftree-cselim -ftree-dce
+  52              	 # -ftree-dominator-opts -ftree-dse -ftree-forwprop -ftree-fre
+  53              	 # -ftree-loop-if-convert -ftree-loop-im -ftree-loop-ivcanon
+  54              	 # -ftree-loop-optimize -ftree-parallelize-loops= -ftree-phiprop -ftree-pre
+  55              	 # -ftree-pta -ftree-reassoc -ftree-scev-cprop -ftree-sink
+  56              	 # -ftree-slp-vectorize -ftree-slsr -ftree-sra -ftree-switch-conversion
+  57              	 # -ftree-tail-merge -ftree-ter -ftree-vect-loop-version -ftree-vrp
+GAS LISTING /cygdrive/c/DOCUME~1/andrey/LOCALS~1/Temp/ccaaSh33.s 			page 2
+
+
+  58              	 # -funit-at-a-time -funwind-tables -fvar-tracking
+  59              	 # -fvar-tracking-assignments -fverbose-asm -fzero-initialized-in-bss -m32
+  60              	 # -m80387 -m96bit-long-double -maccumulate-outgoing-args -malign-double
+  61              	 # -malign-stringops -mfancy-math-387 -mfp-ret-in-387 -mieee-fp
+  62              	 # -mlong-double-80 -mno-red-zone -mno-sse4 -mpush-args -msahf
+  63              	 # -mstack-arg-probe
+  64              	
+  65              		.text
+  66              	Ltext0:
+  67              	Letext0:
+  68              		.section	.debug_info,"dr"
+  69              	Ldebug_info0:
+  70 0000 C4010000 		.long	0x1c4
+  71 0004 0400     		.word	0x4
+  72 0006 00000000 		.secrel32	Ldebug_abbrev0
+  73 000a 04       		.byte	0x4
+  74 000b 01       		.uleb128 0x1
+  75 000c 474E5520 		.ascii "GNU C 4.8.2 -mtune=generic -march=i686 -ggdb -O2 -std=gnu99 -fomit-frame-pointer -fgnu89-i
+  75      4320342E 
+  75      382E3220 
+  75      2D6D7475 
+  75      6E653D67 
+  76 006c 01       		.byte	0x1
+  77 006d 2E2E2F66 		.ascii "../firmware/chibios/os/hal/src/can.c\0"
+  77      69726D77 
+  77      6172652F 
+  77      63686962 
+  77      696F732F 
+  78 0092 2F637967 		.ascii "/cygdrive/c/Program Files/Jenkins/workspace/runEfi win32 functional/win32_functional_tests
+  78      64726976 
+  78      652F632F 
+  78      50726F67 
+  78      72616D20 
+  79 00ed 00000000 		.secrel32	Ldebug_line0
+  80 00f1 02       		.uleb128 0x2
+  81 00f2 04       		.byte	0x4
+  82 00f3 05       		.byte	0x5
+  83 00f4 696E7400 		.ascii "int\0"
+  84 00f8 02       		.uleb128 0x2
+  85 00f9 04       		.byte	0x4
+  86 00fa 07       		.byte	0x7
+  87 00fb 756E7369 		.ascii "unsigned int\0"
+  87      676E6564 
+  87      20696E74 
+  87      00
+  88 0108 02       		.uleb128 0x2
+  89 0109 02       		.byte	0x2
+  90 010a 07       		.byte	0x7
+  91 010b 73686F72 		.ascii "short unsigned int\0"
+  91      7420756E 
+  91      7369676E 
+  91      65642069 
+  91      6E7400
+  92 011e 02       		.uleb128 0x2
+  93 011f 01       		.byte	0x1
+  94 0120 06       		.byte	0x6
+  95 0121 7369676E 		.ascii "signed char\0"
+GAS LISTING /cygdrive/c/DOCUME~1/andrey/LOCALS~1/Temp/ccaaSh33.s 			page 3
+
+
+  95      65642063 
+  95      68617200 
+  96 012d 02       		.uleb128 0x2
+  97 012e 02       		.byte	0x2
+  98 012f 05       		.byte	0x5
+  99 0130 73686F72 		.ascii "short int\0"
+  99      7420696E 
+  99      7400
+ 100 013a 02       		.uleb128 0x2
+ 101 013b 08       		.byte	0x8
+ 102 013c 05       		.byte	0x5
+ 103 013d 6C6F6E67 		.ascii "long long int\0"
+ 103      206C6F6E 
+ 103      6720696E 
+ 103      7400
+ 104 014b 02       		.uleb128 0x2
+ 105 014c 01       		.byte	0x1
+ 106 014d 08       		.byte	0x8
+ 107 014e 756E7369 		.ascii "unsigned char\0"
+ 107      676E6564 
+ 107      20636861 
+ 107      7200
+ 108 015c 02       		.uleb128 0x2
+ 109 015d 08       		.byte	0x8
+ 110 015e 07       		.byte	0x7
+ 111 015f 6C6F6E67 		.ascii "long long unsigned int\0"
+ 111      206C6F6E 
+ 111      6720756E 
+ 111      7369676E 
+ 111      65642069 
+ 112 0176 02       		.uleb128 0x2
+ 113 0177 01       		.byte	0x1
+ 114 0178 02       		.byte	0x2
+ 115 0179 5F426F6F 		.ascii "_Bool\0"
+ 115      6C00
+ 116 017f 02       		.uleb128 0x2
+ 117 0180 04       		.byte	0x4
+ 118 0181 07       		.byte	0x7
+ 119 0182 73697A65 		.ascii "sizetype\0"
+ 119      74797065 
+ 119      00
+ 120 018b 02       		.uleb128 0x2
+ 121 018c 01       		.byte	0x1
+ 122 018d 06       		.byte	0x6
+ 123 018e 63686172 		.ascii "char\0"
+ 123      00
+ 124 0193 02       		.uleb128 0x2
+ 125 0194 04       		.byte	0x4
+ 126 0195 05       		.byte	0x5
+ 127 0196 6C6F6E67 		.ascii "long int\0"
+ 127      20696E74 
+ 127      00
+ 128 019f 02       		.uleb128 0x2
+ 129 01a0 04       		.byte	0x4
+ 130 01a1 07       		.byte	0x7
+ 131 01a2 6C6F6E67 		.ascii "long unsigned int\0"
+ 131      20756E73 
+GAS LISTING /cygdrive/c/DOCUME~1/andrey/LOCALS~1/Temp/ccaaSh33.s 			page 4
+
+
+ 131      69676E65 
+ 131      6420696E 
+ 131      7400
+ 132 01b4 02       		.uleb128 0x2
+ 133 01b5 04       		.byte	0x4
+ 134 01b6 04       		.byte	0x4
+ 135 01b7 666C6F61 		.ascii "float\0"
+ 135      7400
+ 136 01bd 02       		.uleb128 0x2
+ 137 01be 08       		.byte	0x8
+ 138 01bf 04       		.byte	0x4
+ 139 01c0 646F7562 		.ascii "double\0"
+ 139      6C6500
+ 140 01c7 00       		.byte	0
+ 141              		.section	.debug_abbrev,"dr"
+ 142              	Ldebug_abbrev0:
+ 143 0000 01       		.uleb128 0x1
+ 144 0001 11       		.uleb128 0x11
+ 145 0002 01       		.byte	0x1
+ 146 0003 25       		.uleb128 0x25
+ 147 0004 08       		.uleb128 0x8
+ 148 0005 13       		.uleb128 0x13
+ 149 0006 0B       		.uleb128 0xb
+ 150 0007 03       		.uleb128 0x3
+ 151 0008 08       		.uleb128 0x8
+ 152 0009 1B       		.uleb128 0x1b
+ 153 000a 08       		.uleb128 0x8
+ 154 000b 10       		.uleb128 0x10
+ 155 000c 17       		.uleb128 0x17
+ 156 000d 00       		.byte	0
+ 157 000e 00       		.byte	0
+ 158 000f 02       		.uleb128 0x2
+ 159 0010 24       		.uleb128 0x24
+ 160 0011 00       		.byte	0
+ 161 0012 0B       		.uleb128 0xb
+ 162 0013 0B       		.uleb128 0xb
+ 163 0014 3E       		.uleb128 0x3e
+ 164 0015 0B       		.uleb128 0xb
+ 165 0016 03       		.uleb128 0x3
+ 166 0017 08       		.uleb128 0x8
+ 167 0018 00       		.byte	0
+ 168 0019 00       		.byte	0
+ 169 001a 00       		.byte	0
+ 170              		.section	.debug_aranges,"dr"
+ 171 0000 14000000 		.long	0x14
+ 172 0004 0200     		.word	0x2
+ 173 0006 00000000 		.secrel32	Ldebug_info0
+ 174 000a 04       		.byte	0x4
+ 175 000b 00       		.byte	0
+ 176 000c 0000     		.word	0
+ 177 000e 0000     		.word	0
+ 178 0010 00000000 		.long	0
+ 179 0014 00000000 		.long	0
+ 180              		.section	.debug_line,"dr"
+ 181              	Ldebug_line0:
+ 182 0000 19000000 		.section	.debug_str,"dr"
+ 182      02001300 
+GAS LISTING /cygdrive/c/DOCUME~1/andrey/LOCALS~1/Temp/ccaaSh33.s 			page 5
+
+
+ 182      00000101 
+ 182      FB0E0D00 
+ 182      01010101 
+ 183              		.ident	"GCC: (GNU) 4.8.2"
+GAS LISTING /cygdrive/c/DOCUME~1/andrey/LOCALS~1/Temp/ccaaSh33.s 			page 6
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 can.c
+
+NO UNDEFINED SYMBOLS

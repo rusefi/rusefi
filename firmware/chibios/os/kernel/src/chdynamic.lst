@@ -1,0 +1,2536 @@
+GAS LISTING /cygdrive/c/DOCUME~1/andrey/LOCALS~1/Temp/cctzIl9W.s 			page 1
+
+
+   1              		.file	"chdynamic.c"
+   2              	 # GNU C (GCC) version 4.8.2 (i686-pc-cygwin)
+   3              	 #	compiled by GNU C version 4.8.2, GMP version 5.1.3, MPFR version 3.1.2, MPC version 1.0.1
+   4              	 # GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+   5              	 # options passed:  -I . -I ../firmware/chibios/os/ports/GCC/SIMIA32
+   6              	 # -I ../firmware/chibios/os/kernel/include
+   7              	 # -I ../firmware/chibios/os/hal/include
+   8              	 # -I ../firmware/chibios/os/hal/platforms/Win32
+   9              	 # -I ../firmware/chibios/boards/simulator -I ../firmware/util
+  10              	 # -I ../firmware/console -I ../firmware/console_util
+  11              	 # -I ../firmware/config/engines -I ../firmware/ext_algo
+  12              	 # -I ../firmware/controllers/sensors -I ../firmware/controllers/system
+  13              	 # -I ../firmware/controllers/algo -I ../firmware/controllers/math
+  14              	 # -I ../firmware/controllers/trigger -I ../firmware/chibios/os/various
+  15              	 # -MD ../firmware/chibios/os/kernel/src/chdynamic.d -MF .dep/chdynamic.o.d
+  16              	 # -MP -MQ ../firmware/chibios/os/kernel/src/chdynamic.o -Dunix
+  17              	 # -idirafter /usr/lib/gcc/i686-pc-cygwin/4.8.2/../../../../include/w32api
+  18              	 # -idirafter ../../include/w32api -D SIMULATOR -D SHELL_USE_IPRINTF=FALSE
+  19              	 # ../firmware/chibios/os/kernel/src/chdynamic.c -mtune=generic -march=i686
+  20              	 # -auxbase-strip ../firmware/chibios/os/kernel/src/chdynamic.o -ggdb -O2
+  21              	 # -Wall -Wextra -Wstrict-prototypes -std=gnu99 -fomit-frame-pointer
+  22              	 # -fgnu89-inline -fverbose-asm
+  23              	 # options enabled:  -faggressive-loop-optimizations
+  24              	 # -fasynchronous-unwind-tables -fauto-inc-dec -fbranch-count-reg
+  25              	 # -fcaller-saves -fcombine-stack-adjustments -fcommon -fcompare-elim
+  26              	 # -fcprop-registers -fcrossjumping -fcse-follow-jumps -fdefer-pop
+  27              	 # -fdelete-null-pointer-checks -fdevirtualize -fdwarf2-cfi-asm
+  28              	 # -fearly-inlining -feliminate-unused-debug-types
+  29              	 # -fexpensive-optimizations -fforward-propagate -ffunction-cse -fgcse
+  30              	 # -fgcse-lm -fgnu-runtime -fguess-branch-probability
+  31              	 # -fhoist-adjacent-loads -fident -fif-conversion -fif-conversion2
+  32              	 # -findirect-inlining -finline -finline-atomics
+  33              	 # -finline-functions-called-once -finline-small-functions -fipa-cp
+  34              	 # -fipa-profile -fipa-pure-const -fipa-reference -fipa-sra
+  35              	 # -fira-hoist-pressure -fira-share-save-slots -fira-share-spill-slots
+  36              	 # -fivopts -fkeep-inline-dllexport -fkeep-static-consts
+  37              	 # -fleading-underscore -fmath-errno -fmerge-constants
+  38              	 # -fmerge-debug-strings -fmove-loop-invariants -fomit-frame-pointer
+  39              	 # -foptimize-register-move -foptimize-sibling-calls -foptimize-strlen
+  40              	 # -fpartial-inlining -fpeephole -fpeephole2 -fprefetch-loop-arrays -free
+  41              	 # -freg-struct-return -fregmove -freorder-blocks -freorder-functions
+  42              	 # -frerun-cse-after-loop -fsched-critical-path-heuristic
+  43              	 # -fsched-dep-count-heuristic -fsched-group-heuristic -fsched-interblock
+  44              	 # -fsched-last-insn-heuristic -fsched-rank-heuristic -fsched-spec
+  45              	 # -fsched-spec-insn-heuristic -fsched-stalled-insns-dep -fschedule-insns2
+  46              	 # -fset-stack-executable -fshow-column -fshrink-wrap -fsigned-zeros
+  47              	 # -fsplit-ivs-in-unroller -fsplit-wide-types -fstrict-aliasing
+  48              	 # -fstrict-overflow -fstrict-volatile-bitfields -fsync-libcalls
+  49              	 # -fthread-jumps -ftoplevel-reorder -ftrapping-math -ftree-bit-ccp
+  50              	 # -ftree-builtin-call-dce -ftree-ccp -ftree-ch -ftree-coalesce-vars
+  51              	 # -ftree-copy-prop -ftree-copyrename -ftree-cselim -ftree-dce
+  52              	 # -ftree-dominator-opts -ftree-dse -ftree-forwprop -ftree-fre
+  53              	 # -ftree-loop-if-convert -ftree-loop-im -ftree-loop-ivcanon
+  54              	 # -ftree-loop-optimize -ftree-parallelize-loops= -ftree-phiprop -ftree-pre
+  55              	 # -ftree-pta -ftree-reassoc -ftree-scev-cprop -ftree-sink
+  56              	 # -ftree-slp-vectorize -ftree-slsr -ftree-sra -ftree-switch-conversion
+  57              	 # -ftree-tail-merge -ftree-ter -ftree-vect-loop-version -ftree-vrp
+GAS LISTING /cygdrive/c/DOCUME~1/andrey/LOCALS~1/Temp/cctzIl9W.s 			page 2
+
+
+  58              	 # -funit-at-a-time -funwind-tables -fvar-tracking
+  59              	 # -fvar-tracking-assignments -fverbose-asm -fzero-initialized-in-bss -m32
+  60              	 # -m80387 -m96bit-long-double -maccumulate-outgoing-args -malign-double
+  61              	 # -malign-stringops -mfancy-math-387 -mfp-ret-in-387 -mieee-fp
+  62              	 # -mlong-double-80 -mno-red-zone -mno-sse4 -mpush-args -msahf
+  63              	 # -mstack-arg-probe
+  64              	
+  65              		.text
+  66              	Ltext0:
+  67              		.section .rdata,"dr"
+  68              		.align 4
+  69              	LC0:
+  70 0000 2E2E2F66 		.ascii "../firmware/chibios/os/kernel/src/chdynamic.c\0"
+  70      69726D77 
+  70      6172652F 
+  70      63686962 
+  70      696F732F 
+  71              	LC1:
+  72 002e 63685468 		.ascii "chThdAddRef(), #1\0"
+  72      64416464 
+  72      52656628 
+  72      292C2023 
+  72      3100
+  73              		.text
+  74              		.p2align 4,,15
+  75              		.globl	_chThdAddRef
+  76              		.def	_chThdAddRef;	.scl	2;	.type	32;	.endef
+  77              	_chThdAddRef:
+  78              	LFB7:
+  79              		.file 1 "../firmware/chibios/os/kernel/src/chdynamic.c"
+  80              		.loc 1 52 0
+  81              		.cfi_startproc
+  82              	LVL0:
+  83 0000 53       		pushl	%ebx	 #
+  84              		.cfi_def_cfa_offset 8
+  85              		.cfi_offset 3, -8
+  86 0001 83EC18   		subl	$24, %esp	 #,
+  87              		.cfi_def_cfa_offset 32
+  88              		.loc 1 52 0
+  89 0004 8B5C2420 		movl	32(%esp), %ebx	 # tp, tp
+  90              		.loc 1 54 0
+  91              	/APP
+  92              	 # 54 "../firmware/chibios/os/kernel/src/chdynamic.c" 1
+  93 0008 90       		nop
+  94              	 # 0 "" 2
+  95              	/NO_APP
+  96 0009 E8000000 		call	_dbg_check_lock	 #
+  96      00
+  97              	LVL1:
+  98              		.loc 1 55 0
+  99 000e 0FB6431E 		movzbl	30(%ebx), %eax	 # tp_4(D)->p_refs, D.2093
+ 100 0012 3CFF     		cmpb	$-1, %al	 #, D.2093
+ 101 0014 741A     		je	L6	 #,
+ 102              	L2:
+ 103              		.loc 1 56 0
+ 104 0016 83C001   		addl	$1, %eax	 #, tmp64
+ 105 0019 88431E   		movb	%al, 30(%ebx)	 # tmp64, tp_4(D)->p_refs
+GAS LISTING /cygdrive/c/DOCUME~1/andrey/LOCALS~1/Temp/cctzIl9W.s 			page 3
+
+
+ 106              		.loc 1 57 0
+ 107 001c E8000000 		call	_dbg_check_unlock	 #
+ 107      00
+ 108              	LVL2:
+ 109              	/APP
+ 110              	 # 57 "../firmware/chibios/os/kernel/src/chdynamic.c" 1
+ 111 0021 90       		nop
+ 112              	 # 0 "" 2
+ 113              		.loc 1 59 0
+ 114              	/NO_APP
+ 115 0022 83C418   		addl	$24, %esp	 #,
+ 116              		.cfi_remember_state
+ 117              		.cfi_def_cfa_offset 8
+ 118 0025 89D8     		movl	%ebx, %eax	 # tp,
+ 119 0027 5B       		popl	%ebx	 #
+ 120              		.cfi_restore 3
+ 121              		.cfi_def_cfa_offset 4
+ 122 0028 C3       		ret
+ 123 0029 8DB42600 		.p2align 4,,7
+ 123      000000
+ 124              	L6:
+ 125              		.cfi_restore_state
+ 126              		.loc 1 55 0 discriminator 1
+ 127 0030 C7442408 		movl	$55, 8(%esp)	 #,
+ 127      37000000 
+ 128 0038 C7442404 		movl	$LC0, 4(%esp)	 #,
+ 128      00000000 
+ 129 0040 C704242E 		movl	$LC1, (%esp)	 #,
+ 129      000000
+ 130 0047 E8000000 		call	_chDbgPanic	 #
+ 130      00
+ 131              	LVL3:
+ 132 004c 0FB6431E 		movzbl	30(%ebx), %eax	 # tp_4(D)->p_refs, D.2093
+ 133 0050 EBC4     		jmp	L2	 #
+ 134              		.cfi_endproc
+ 135              	LFE7:
+ 136              		.section .rdata,"dr"
+ 137              	LC2:
+ 138 0040 63685468 		.ascii "chThdRelease(), #1\0"
+ 138      6452656C 
+ 138      65617365 
+ 138      28292C20 
+ 138      233100
+ 139              		.text
+ 140 0052 8DB42600 		.p2align 4,,15
+ 140      0000008D 
+ 140      BC270000 
+ 140      0000
+ 141              		.globl	_chThdRelease
+ 142              		.def	_chThdRelease;	.scl	2;	.type	32;	.endef
+ 143              	_chThdRelease:
+ 144              	LFB8:
+ 145              		.loc 1 74 0
+ 146              		.cfi_startproc
+ 147              	LVL4:
+ 148 0060 56       		pushl	%esi	 #
+ 149              		.cfi_def_cfa_offset 8
+GAS LISTING /cygdrive/c/DOCUME~1/andrey/LOCALS~1/Temp/cctzIl9W.s 			page 4
+
+
+ 150              		.cfi_offset 6, -8
+ 151 0061 53       		pushl	%ebx	 #
+ 152              		.cfi_def_cfa_offset 12
+ 153              		.cfi_offset 3, -12
+ 154 0062 83EC14   		subl	$20, %esp	 #,
+ 155              		.cfi_def_cfa_offset 32
+ 156              		.loc 1 74 0
+ 157 0065 8B5C2420 		movl	32(%esp), %ebx	 # tp, tp
+ 158              		.loc 1 77 0
+ 159              	/APP
+ 160              	 # 77 "../firmware/chibios/os/kernel/src/chdynamic.c" 1
+ 161 0069 90       		nop
+ 162              	 # 0 "" 2
+ 163              	/NO_APP
+ 164 006a E8000000 		call	_dbg_check_lock	 #
+ 164      00
+ 165              	LVL5:
+ 166              		.loc 1 78 0
+ 167 006f 0FB6431E 		movzbl	30(%ebx), %eax	 # tp_5(D)->p_refs, D.2102
+ 168 0073 84C0     		testb	%al, %al	 # D.2102
+ 169 0075 744F     		je	L14	 #,
+ 170              	L8:
+ 171              		.loc 1 79 0
+ 172 0077 8D70FF   		leal	-1(%eax), %esi	 #, D.2099
+ 173 007a 89F0     		movl	%esi, %eax	 # D.2099, D.2099
+ 174 007c 88431E   		movb	%al, 30(%ebx)	 # D.2099, tp_5(D)->p_refs
+ 175              	LVL6:
+ 176              		.loc 1 80 0
+ 177 007f E8000000 		call	_dbg_check_unlock	 #
+ 177      00
+ 178              	LVL7:
+ 179              	/APP
+ 180              	 # 80 "../firmware/chibios/os/kernel/src/chdynamic.c" 1
+ 181 0084 90       		nop
+ 182              	 # 0 "" 2
+ 183              		.loc 1 85 0
+ 184              	/NO_APP
+ 185 0085 89F0     		movl	%esi, %eax	 # D.2099, D.2099
+ 186 0087 84C0     		testb	%al, %al	 # D.2099
+ 187 0089 7506     		jne	L7	 #,
+ 188              		.loc 1 85 0 is_stmt 0 discriminator 1
+ 189 008b 807B1C0E 		cmpb	$14, 28(%ebx)	 #, tp_5(D)->p_state
+ 190 008f 7406     		je	L15	 #,
+ 191              	L7:
+ 192              		.loc 1 105 0 is_stmt 1
+ 193 0091 83C414   		addl	$20, %esp	 #,
+ 194              		.cfi_remember_state
+ 195              		.cfi_def_cfa_offset 12
+ 196 0094 5B       		popl	%ebx	 #
+ 197              		.cfi_restore 3
+ 198              		.cfi_def_cfa_offset 8
+ 199 0095 5E       		popl	%esi	 #
+ 200              		.cfi_restore 6
+ 201              		.cfi_def_cfa_offset 4
+ 202              	LVL8:
+ 203 0096 C3       		ret
+ 204              	LVL9:
+GAS LISTING /cygdrive/c/DOCUME~1/andrey/LOCALS~1/Temp/cctzIl9W.s 			page 5
+
+
+ 205              		.p2align 4,,7
+ 206              	L15:
+ 207              		.cfi_restore_state
+ 208              		.loc 1 86 0
+ 209 0097 0FB6431D 		movzbl	29(%ebx), %eax	 # tp_5(D)->p_flags, D.2099
+ 210              	LVL10:
+ 211 009b 83E003   		andl	$3, %eax	 #, D.2099
+ 212 009e 3C01     		cmpb	$1, %al	 #, D.2099
+ 213 00a0 7446     		je	L10	 #,
+ 214 00a2 3C02     		cmpb	$2, %al	 #, D.2099
+ 215 00a4 75EB     		jne	L7	 #,
+ 216              		.loc 1 98 0
+ 217 00a6 8B4314   		movl	20(%ebx), %eax	 # tp_5(D)->p_older, D.2100
+ 218 00a9 8B5310   		movl	16(%ebx), %edx	 # tp_5(D)->p_newer, D.2100
+ 219 00ac 895010   		movl	%edx, 16(%eax)	 # D.2100, _20->p_newer
+ 220 00af 8B5310   		movl	16(%ebx), %edx	 # tp_5(D)->p_newer, tp_5(D)->p_newer
+ 221 00b2 894214   		movl	%eax, 20(%edx)	 # D.2100, _23->p_older
+ 222              		.loc 1 100 0
+ 223 00b5 895C2404 		movl	%ebx, 4(%esp)	 # tp,
+ 224 00b9 8B4344   		movl	68(%ebx), %eax	 # tp_5(D)->p_mpool, tp_5(D)->p_mpool
+ 225 00bc 890424   		movl	%eax, (%esp)	 # tp_5(D)->p_mpool,
+ 226 00bf E8000000 		call	_chPoolFree	 #
+ 226      00
+ 227              	LVL11:
+ 228              		.loc 1 101 0
+ 229 00c4 EBCB     		jmp	L7	 #
+ 230              	LVL12:
+ 231              		.p2align 4,,7
+ 232              	L14:
+ 233              		.loc 1 78 0 discriminator 1
+ 234 00c6 C7442408 		movl	$78, 8(%esp)	 #,
+ 234      4E000000 
+ 235 00ce C7442404 		movl	$LC0, 4(%esp)	 #,
+ 235      00000000 
+ 236 00d6 C7042440 		movl	$LC2, (%esp)	 #,
+ 236      000000
+ 237 00dd E8000000 		call	_chDbgPanic	 #
+ 237      00
+ 238              	LVL13:
+ 239 00e2 0FB6431E 		movzbl	30(%ebx), %eax	 # tp_5(D)->p_refs, D.2102
+ 240 00e6 EB8F     		jmp	L8	 #
+ 241              	LVL14:
+ 242              		.p2align 4,,7
+ 243              	L10:
+ 244              		.loc 1 90 0
+ 245 00e8 8B5310   		movl	16(%ebx), %edx	 # tp_5(D)->p_newer, D.2100
+ 246 00eb 8B4314   		movl	20(%ebx), %eax	 # tp_5(D)->p_older, D.2100
+ 247 00ee 895010   		movl	%edx, 16(%eax)	 # D.2100, _14->p_newer
+ 248 00f1 8B5310   		movl	16(%ebx), %edx	 # tp_5(D)->p_newer, tp_5(D)->p_newer
+ 249 00f4 894214   		movl	%eax, 20(%edx)	 # D.2100, _17->p_older
+ 250              		.loc 1 92 0
+ 251 00f7 895C2420 		movl	%ebx, 32(%esp)	 # tp,
+ 252              		.loc 1 105 0
+ 253 00fb 83C414   		addl	$20, %esp	 #,
+ 254              		.cfi_def_cfa_offset 12
+ 255 00fe 5B       		popl	%ebx	 #
+ 256              		.cfi_restore 3
+GAS LISTING /cygdrive/c/DOCUME~1/andrey/LOCALS~1/Temp/cctzIl9W.s 			page 6
+
+
+ 257              		.cfi_def_cfa_offset 8
+ 258 00ff 5E       		popl	%esi	 #
+ 259              		.cfi_restore 6
+ 260              		.cfi_def_cfa_offset 4
+ 261              	LVL15:
+ 262              		.loc 1 92 0
+ 263 0100 E9000000 		jmp	_chHeapFree	 #
+ 263      00
+ 264              	LVL16:
+ 265              		.cfi_endproc
+ 266              	LFE8:
+ 267 0105 8D742600 		.p2align 4,,15
+ 267      8DBC2700 
+ 267      000000
+ 268              		.globl	_chThdCreateFromHeap
+ 269              		.def	_chThdCreateFromHeap;	.scl	2;	.type	32;	.endef
+ 270              	_chThdCreateFromHeap:
+ 271              	LFB9:
+ 272              		.loc 1 131 0
+ 273              		.cfi_startproc
+ 274              	LVL17:
+ 275 0110 56       		pushl	%esi	 #
+ 276              		.cfi_def_cfa_offset 8
+ 277              		.cfi_offset 6, -8
+ 278 0111 53       		pushl	%ebx	 #
+ 279              		.cfi_def_cfa_offset 12
+ 280              		.cfi_offset 3, -12
+ 281 0112 83EC24   		subl	$36, %esp	 #,
+ 282              		.cfi_def_cfa_offset 48
+ 283              		.loc 1 131 0
+ 284 0115 8B5C2434 		movl	52(%esp), %ebx	 # size, size
+ 285              		.loc 1 135 0
+ 286 0119 8B442430 		movl	48(%esp), %eax	 # heapp, heapp
+ 287 011d 895C2404 		movl	%ebx, 4(%esp)	 # size,
+ 288 0121 890424   		movl	%eax, (%esp)	 # heapp,
+ 289 0124 E8000000 		call	_chHeapAlloc	 #
+ 289      00
+ 290              	LVL18:
+ 291              		.loc 1 136 0
+ 292 0129 85C0     		testl	%eax, %eax	 # wsp
+ 293              		.loc 1 135 0
+ 294 012b 89C6     		movl	%eax, %esi	 #, wsp
+ 295              	LVL19:
+ 296              		.loc 1 136 0
+ 297 012d 7451     		je	L18	 #,
+ 298              		.loc 1 148 0
+ 299              	/APP
+ 300              	 # 148 "../firmware/chibios/os/kernel/src/chdynamic.c" 1
+ 301 012f 90       		nop
+ 302              	 # 0 "" 2
+ 303              	/NO_APP
+ 304 0130 E8000000 		call	_dbg_check_lock	 #
+ 304      00
+ 305              	LVL20:
+ 306              		.loc 1 149 0
+ 307 0135 8B442440 		movl	64(%esp), %eax	 # arg, arg
+ 308 0139 895C2404 		movl	%ebx, 4(%esp)	 # size,
+GAS LISTING /cygdrive/c/DOCUME~1/andrey/LOCALS~1/Temp/cctzIl9W.s 			page 7
+
+
+ 309 013d 893424   		movl	%esi, (%esp)	 # wsp,
+ 310 0140 89442410 		movl	%eax, 16(%esp)	 # arg,
+ 311 0144 8B44243C 		movl	60(%esp), %eax	 # pf, pf
+ 312 0148 8944240C 		movl	%eax, 12(%esp)	 # pf,
+ 313 014c 8B442438 		movl	56(%esp), %eax	 # prio, prio
+ 314 0150 89442408 		movl	%eax, 8(%esp)	 # prio,
+ 315 0154 E8000000 		call	_chThdCreateI	 #
+ 315      00
+ 316              	LVL21:
+ 317              		.loc 1 150 0
+ 318 0159 C6401D01 		movb	$1, 29(%eax)	 #, tp_13->p_flags
+ 319              		.loc 1 149 0
+ 320 015d 89C3     		movl	%eax, %ebx	 #, tp
+ 321              	LVL22:
+ 322              		.loc 1 151 0
+ 323 015f 890424   		movl	%eax, (%esp)	 # tp,
+ 324 0162 C7442404 		movl	$0, 4(%esp)	 #,
+ 324      00000000 
+ 325 016a E8000000 		call	_chSchWakeupS	 #
+ 325      00
+ 326              	LVL23:
+ 327              		.loc 1 152 0
+ 328 016f E8000000 		call	_dbg_check_unlock	 #
+ 328      00
+ 329              	LVL24:
+ 330              	/APP
+ 331              	 # 152 "../firmware/chibios/os/kernel/src/chdynamic.c" 1
+ 332 0174 90       		nop
+ 333              	 # 0 "" 2
+ 334              		.loc 1 153 0
+ 335              	/NO_APP
+ 336 0175 89D8     		movl	%ebx, %eax	 # tp, D.2106
+ 337              	LVL25:
+ 338              	L17:
+ 339              		.loc 1 154 0
+ 340 0177 83C424   		addl	$36, %esp	 #,
+ 341              		.cfi_remember_state
+ 342              		.cfi_def_cfa_offset 12
+ 343 017a 5B       		popl	%ebx	 #
+ 344              		.cfi_restore 3
+ 345              		.cfi_def_cfa_offset 8
+ 346 017b 5E       		popl	%esi	 #
+ 347              		.cfi_restore 6
+ 348              		.cfi_def_cfa_offset 4
+ 349              	LVL26:
+ 350 017c C3       		ret
+ 351              	LVL27:
+ 352 017d 8D7600   		.p2align 4,,7
+ 353              	L18:
+ 354              		.cfi_restore_state
+ 355              		.loc 1 137 0
+ 356 0180 31C0     		xorl	%eax, %eax	 # D.2106
+ 357              	LVL28:
+ 358 0182 EBF3     		jmp	L17	 #
+ 359              		.cfi_endproc
+ 360              	LFE9:
+ 361              		.section .rdata,"dr"
+GAS LISTING /cygdrive/c/DOCUME~1/andrey/LOCALS~1/Temp/cctzIl9W.s 			page 8
+
+
+ 362              	LC3:
+ 363 0053 22636854 		.ascii "\"chThdCreateFromMemoryPool\"()\0"
+ 363      68644372 
+ 363      65617465 
+ 363      46726F6D 
+ 363      4D656D6F 
+ 364 0071 000000   		.text
+ 365 0184 8DB60000 		.p2align 4,,15
+ 365      00008DBF 
+ 365      00000000 
+ 366              		.globl	_chThdCreateFromMemoryPool
+ 367              		.def	_chThdCreateFromMemoryPool;	.scl	2;	.type	32;	.endef
+ 368              	_chThdCreateFromMemoryPool:
+ 369              	LFB10:
+ 370              		.loc 1 180 0
+ 371              		.cfi_startproc
+ 372              	LVL29:
+ 373 0190 56       		pushl	%esi	 #
+ 374              		.cfi_def_cfa_offset 8
+ 375              		.cfi_offset 6, -8
+ 376 0191 53       		pushl	%ebx	 #
+ 377              		.cfi_def_cfa_offset 12
+ 378              		.cfi_offset 3, -12
+ 379 0192 83EC24   		subl	$36, %esp	 #,
+ 380              		.cfi_def_cfa_offset 48
+ 381              		.loc 1 180 0
+ 382 0195 8B5C2430 		movl	48(%esp), %ebx	 # mp, mp
+ 383              		.loc 1 184 0
+ 384 0199 85DB     		testl	%ebx, %ebx	 # mp
+ 385 019b 7463     		je	L25	 #,
+ 386              	L21:
+ 387              		.loc 1 186 0
+ 388 019d 891C24   		movl	%ebx, (%esp)	 # mp,
+ 389 01a0 E8000000 		call	_chPoolAlloc	 #
+ 389      00
+ 390              	LVL30:
+ 391              		.loc 1 187 0
+ 392 01a5 85C0     		testl	%eax, %eax	 # wsp
+ 393              		.loc 1 186 0
+ 394 01a7 89C6     		movl	%eax, %esi	 #, wsp
+ 395              	LVL31:
+ 396              		.loc 1 187 0
+ 397 01a9 7476     		je	L23	 #,
+ 398              		.loc 1 199 0
+ 399              	/APP
+ 400              	 # 199 "../firmware/chibios/os/kernel/src/chdynamic.c" 1
+ 401 01ab 90       		nop
+ 402              	 # 0 "" 2
+ 403              	/NO_APP
+ 404 01ac E8000000 		call	_dbg_check_lock	 #
+ 404      00
+ 405              	LVL32:
+ 406              		.loc 1 200 0
+ 407 01b1 8B44243C 		movl	60(%esp), %eax	 # arg, arg
+ 408 01b5 89442410 		movl	%eax, 16(%esp)	 # arg,
+ 409 01b9 8B442438 		movl	56(%esp), %eax	 # pf, pf
+ 410 01bd 8944240C 		movl	%eax, 12(%esp)	 # pf,
+GAS LISTING /cygdrive/c/DOCUME~1/andrey/LOCALS~1/Temp/cctzIl9W.s 			page 9
+
+
+ 411 01c1 8B442434 		movl	52(%esp), %eax	 # prio, prio
+ 412 01c5 89442408 		movl	%eax, 8(%esp)	 # prio,
+ 413 01c9 8B4304   		movl	4(%ebx), %eax	 # mp_4(D)->mp_object_size, mp_4(D)->mp_object_size
+ 414 01cc 893424   		movl	%esi, (%esp)	 # wsp,
+ 415 01cf 89442404 		movl	%eax, 4(%esp)	 # mp_4(D)->mp_object_size,
+ 416 01d3 E8000000 		call	_chThdCreateI	 #
+ 416      00
+ 417              	LVL33:
+ 418              		.loc 1 201 0
+ 419 01d8 C6401D02 		movb	$2, 29(%eax)	 #, tp_15->p_flags
+ 420              		.loc 1 200 0
+ 421 01dc 89C6     		movl	%eax, %esi	 #, tp
+ 422              	LVL34:
+ 423              		.loc 1 202 0
+ 424 01de 895844   		movl	%ebx, 68(%eax)	 # mp, tp_15->p_mpool
+ 425              		.loc 1 203 0
+ 426 01e1 890424   		movl	%eax, (%esp)	 # tp,
+ 427 01e4 C7442404 		movl	$0, 4(%esp)	 #,
+ 427      00000000 
+ 428 01ec E8000000 		call	_chSchWakeupS	 #
+ 428      00
+ 429              	LVL35:
+ 430              		.loc 1 204 0
+ 431 01f1 E8000000 		call	_dbg_check_unlock	 #
+ 431      00
+ 432              	LVL36:
+ 433              	/APP
+ 434              	 # 204 "../firmware/chibios/os/kernel/src/chdynamic.c" 1
+ 435 01f6 90       		nop
+ 436              	 # 0 "" 2
+ 437              		.loc 1 205 0
+ 438              	/NO_APP
+ 439 01f7 89F0     		movl	%esi, %eax	 # tp, D.2109
+ 440              	LVL37:
+ 441              	L22:
+ 442              		.loc 1 206 0
+ 443 01f9 83C424   		addl	$36, %esp	 #,
+ 444              		.cfi_remember_state
+ 445              		.cfi_def_cfa_offset 12
+ 446 01fc 5B       		popl	%ebx	 #
+ 447              		.cfi_restore 3
+ 448              		.cfi_def_cfa_offset 8
+ 449 01fd 5E       		popl	%esi	 #
+ 450              		.cfi_restore 6
+ 451              		.cfi_def_cfa_offset 4
+ 452 01fe C3       		ret
+ 453 01ff 90       		.p2align 4,,7
+ 454              	L25:
+ 455              		.cfi_restore_state
+ 456              		.loc 1 184 0 discriminator 1
+ 457 0200 C7442408 		movl	$184, 8(%esp)	 #,
+ 457      B8000000 
+ 458 0208 C7442404 		movl	$LC0, 4(%esp)	 #,
+ 458      00000000 
+ 459 0210 C7042453 		movl	$LC3, (%esp)	 #,
+ 459      000000
+ 460 0217 E8000000 		call	_chDbgPanic	 #
+GAS LISTING /cygdrive/c/DOCUME~1/andrey/LOCALS~1/Temp/cctzIl9W.s 			page 10
+
+
+ 460      00
+ 461              	LVL38:
+ 462 021c E97CFFFF 		jmp	L21	 #
+ 462      FF
+ 463              	LVL39:
+ 464              		.p2align 4,,7
+ 465              	L23:
+ 466              		.loc 1 188 0
+ 467 0221 31C0     		xorl	%eax, %eax	 # D.2109
+ 468              	LVL40:
+ 469 0223 EBD4     		jmp	L22	 #
+ 470              		.cfi_endproc
+ 471              	LFE10:
+ 472              	Letext0:
+ 473              		.file 2 "/usr/lib/gcc/i686-pc-cygwin/4.8.2/include/stddef.h"
+ 474              		.file 3 "/usr/include/stdint.h"
+ 475              		.file 4 "../firmware/chibios/os/ports/GCC/SIMIA32/chtypes.h"
+ 476              		.file 5 "../firmware/chibios/os/kernel/include/chlists.h"
+ 477              		.file 6 "../firmware/chibios/os/kernel/include/chthreads.h"
+ 478              		.file 7 "../firmware/chibios/os/ports/GCC/SIMIA32/chcore.h"
+ 479              		.file 8 "../firmware/chibios/os/kernel/include/chmtx.h"
+ 480              		.file 9 "../firmware/chibios/os/kernel/include/chmemcore.h"
+ 481              		.file 10 "../firmware/chibios/os/kernel/include/chheap.h"
+ 482              		.file 11 "../firmware/chibios/os/kernel/include/chmempools.h"
+ 483              		.file 12 "../firmware/chibios/os/kernel/include/chdebug.h"
+ 484              		.file 13 "../firmware/chibios/os/kernel/include/chschd.h"
+ 485 0225 90909090 		.section	.debug_info,"dr"
+ 485      90909090 
+ 485      909090
+ 486              	Ldebug_info0:
+ 487 0000 550B0000 		.long	0xb55
+ 488 0004 0400     		.word	0x4
+ 489 0006 00000000 		.secrel32	Ldebug_abbrev0
+ 490 000a 04       		.byte	0x4
+ 491 000b 01       		.uleb128 0x1
+ 492 000c 474E5520 		.ascii "GNU C 4.8.2 -mtune=generic -march=i686 -ggdb -O2 -std=gnu99 -fomit-frame-pointer -fgnu89-i
+ 492      4320342E 
+ 492      382E3220 
+ 492      2D6D7475 
+ 492      6E653D67 
+ 493 006c 01       		.byte	0x1
+ 494 006d 2E2E2F66 		.ascii "../firmware/chibios/os/kernel/src/chdynamic.c\0"
+ 494      69726D77 
+ 494      6172652F 
+ 494      63686962 
+ 494      696F732F 
+ 495 009b 2F637967 		.ascii "/cygdrive/c/Program Files/Jenkins/workspace/runEfi win32 functional/win32_functional_tests
+ 495      64726976 
+ 495      652F632F 
+ 495      50726F67 
+ 495      72616D20 
+ 496 00f6 00000000 		.long	Ltext0
+ 497 00fa 25020000 		.long	Letext0-Ltext0
+ 498 00fe 00000000 		.secrel32	Ldebug_line0
+ 499 0102 02       		.uleb128 0x2
+ 500 0103 04       		.byte	0x4
+ 501 0104 05       		.byte	0x5
+GAS LISTING /cygdrive/c/DOCUME~1/andrey/LOCALS~1/Temp/cctzIl9W.s 			page 11
+
+
+ 502 0105 696E7400 		.ascii "int\0"
+ 503 0109 03       		.uleb128 0x3
+ 504 010a 73697A65 		.ascii "size_t\0"
+ 504      5F7400
+ 505 0111 02       		.byte	0x2
+ 506 0112 D4       		.byte	0xd4
+ 507 0113 17010000 		.long	0x117
+ 508 0117 02       		.uleb128 0x2
+ 509 0118 04       		.byte	0x4
+ 510 0119 07       		.byte	0x7
+ 511 011a 756E7369 		.ascii "unsigned int\0"
+ 511      676E6564 
+ 511      20696E74 
+ 511      00
+ 512 0127 02       		.uleb128 0x2
+ 513 0128 02       		.byte	0x2
+ 514 0129 07       		.byte	0x7
+ 515 012a 73686F72 		.ascii "short unsigned int\0"
+ 515      7420756E 
+ 515      7369676E 
+ 515      65642069 
+ 515      6E7400
+ 516 013d 02       		.uleb128 0x2
+ 517 013e 01       		.byte	0x1
+ 518 013f 06       		.byte	0x6
+ 519 0140 7369676E 		.ascii "signed char\0"
+ 519      65642063 
+ 519      68617200 
+ 520 014c 02       		.uleb128 0x2
+ 521 014d 02       		.byte	0x2
+ 522 014e 05       		.byte	0x5
+ 523 014f 73686F72 		.ascii "short int\0"
+ 523      7420696E 
+ 523      7400
+ 524 0159 03       		.uleb128 0x3
+ 525 015a 696E7433 		.ascii "int32_t\0"
+ 525      325F7400 
+ 526 0162 03       		.byte	0x3
+ 527 0163 16       		.byte	0x16
+ 528 0164 02010000 		.long	0x102
+ 529 0168 02       		.uleb128 0x2
+ 530 0169 08       		.byte	0x8
+ 531 016a 05       		.byte	0x5
+ 532 016b 6C6F6E67 		.ascii "long long int\0"
+ 532      206C6F6E 
+ 532      6720696E 
+ 532      7400
+ 533 0179 03       		.uleb128 0x3
+ 534 017a 75696E74 		.ascii "uint8_t\0"
+ 534      385F7400 
+ 535 0182 03       		.byte	0x3
+ 536 0183 1E       		.byte	0x1e
+ 537 0184 88010000 		.long	0x188
+ 538 0188 02       		.uleb128 0x2
+ 539 0189 01       		.byte	0x1
+ 540 018a 08       		.byte	0x8
+ 541 018b 756E7369 		.ascii "unsigned char\0"
+GAS LISTING /cygdrive/c/DOCUME~1/andrey/LOCALS~1/Temp/cctzIl9W.s 			page 12
+
+
+ 541      676E6564 
+ 541      20636861 
+ 541      7200
+ 542 0199 03       		.uleb128 0x3
+ 543 019a 75696E74 		.ascii "uint32_t\0"
+ 543      33325F74 
+ 543      00
+ 544 01a3 03       		.byte	0x3
+ 545 01a4 22       		.byte	0x22
+ 546 01a5 17010000 		.long	0x117
+ 547 01a9 02       		.uleb128 0x2
+ 548 01aa 08       		.byte	0x8
+ 549 01ab 07       		.byte	0x7
+ 550 01ac 6C6F6E67 		.ascii "long long unsigned int\0"
+ 550      206C6F6E 
+ 550      6720756E 
+ 550      7369676E 
+ 550      65642069 
+ 551 01c3 02       		.uleb128 0x2
+ 552 01c4 01       		.byte	0x1
+ 553 01c5 02       		.byte	0x2
+ 554 01c6 5F426F6F 		.ascii "_Bool\0"
+ 554      6C00
+ 555 01cc 03       		.uleb128 0x3
+ 556 01cd 746D6F64 		.ascii "tmode_t\0"
+ 556      655F7400 
+ 557 01d5 04       		.byte	0x4
+ 558 01d6 24       		.byte	0x24
+ 559 01d7 79010000 		.long	0x179
+ 560 01db 03       		.uleb128 0x3
+ 561 01dc 74737461 		.ascii "tstate_t\0"
+ 561      74655F74 
+ 561      00
+ 562 01e5 04       		.byte	0x4
+ 563 01e6 25       		.byte	0x25
+ 564 01e7 79010000 		.long	0x179
+ 565 01eb 03       		.uleb128 0x3
+ 566 01ec 74726566 		.ascii "trefs_t\0"
+ 566      735F7400 
+ 567 01f4 04       		.byte	0x4
+ 568 01f5 26       		.byte	0x26
+ 569 01f6 79010000 		.long	0x179
+ 570 01fa 03       		.uleb128 0x3
+ 571 01fb 74736C69 		.ascii "tslices_t\0"
+ 571      6365735F 
+ 571      7400
+ 572 0205 04       		.byte	0x4
+ 573 0206 27       		.byte	0x27
+ 574 0207 79010000 		.long	0x179
+ 575 020b 03       		.uleb128 0x3
+ 576 020c 74707269 		.ascii "tprio_t\0"
+ 576      6F5F7400 
+ 577 0214 04       		.byte	0x4
+ 578 0215 28       		.byte	0x28
+ 579 0216 99010000 		.long	0x199
+ 580 021a 03       		.uleb128 0x3
+ 581 021b 6D73675F 		.ascii "msg_t\0"
+GAS LISTING /cygdrive/c/DOCUME~1/andrey/LOCALS~1/Temp/cctzIl9W.s 			page 13
+
+
+ 581      7400
+ 582 0221 04       		.byte	0x4
+ 583 0222 29       		.byte	0x29
+ 584 0223 59010000 		.long	0x159
+ 585 0227 03       		.uleb128 0x3
+ 586 0228 6576656E 		.ascii "eventmask_t\0"
+ 586      746D6173 
+ 586      6B5F7400 
+ 587 0234 04       		.byte	0x4
+ 588 0235 2B       		.byte	0x2b
+ 589 0236 99010000 		.long	0x199
+ 590 023a 03       		.uleb128 0x3
+ 591 023b 73797374 		.ascii "systime_t\0"
+ 591      696D655F 
+ 591      7400
+ 592 0245 04       		.byte	0x4
+ 593 0246 2D       		.byte	0x2d
+ 594 0247 99010000 		.long	0x199
+ 595 024b 03       		.uleb128 0x3
+ 596 024c 54687265 		.ascii "Thread\0"
+ 596      616400
+ 597 0253 05       		.byte	0x5
+ 598 0254 2A       		.byte	0x2a
+ 599 0255 59020000 		.long	0x259
+ 600 0259 04       		.uleb128 0x4
+ 601 025a 54687265 		.ascii "Thread\0"
+ 601      616400
+ 602 0261 48       		.byte	0x48
+ 603 0262 06       		.byte	0x6
+ 604 0263 5E       		.byte	0x5e
+ 605 0264 A7030000 		.long	0x3a7
+ 606 0268 05       		.uleb128 0x5
+ 607 0269 00000000 		.secrel32	LASF0
+ 608 026d 06       		.byte	0x6
+ 609 026e 5F       		.byte	0x5f
+ 610 026f CB030000 		.long	0x3cb
+ 611 0273 00       		.byte	0
+ 612 0274 06       		.uleb128 0x6
+ 613 0275 705F7072 		.ascii "p_prev\0"
+ 613      657600
+ 614 027c 06       		.byte	0x6
+ 615 027d 61       		.byte	0x61
+ 616 027e CB030000 		.long	0x3cb
+ 617 0282 04       		.byte	0x4
+ 618 0283 06       		.uleb128 0x6
+ 619 0284 705F7072 		.ascii "p_prio\0"
+ 619      696F00
+ 620 028b 06       		.byte	0x6
+ 621 028c 63       		.byte	0x63
+ 622 028d 0B020000 		.long	0x20b
+ 623 0291 08       		.byte	0x8
+ 624 0292 06       		.uleb128 0x6
+ 625 0293 705F6374 		.ascii "p_ctx\0"
+ 625      7800
+ 626 0299 06       		.byte	0x6
+ 627 029a 64       		.byte	0x64
+ 628 029b AA040000 		.long	0x4aa
+GAS LISTING /cygdrive/c/DOCUME~1/andrey/LOCALS~1/Temp/cctzIl9W.s 			page 14
+
+
+ 629 029f 0C       		.byte	0xc
+ 630 02a0 06       		.uleb128 0x6
+ 631 02a1 705F6E65 		.ascii "p_newer\0"
+ 631      77657200 
+ 632 02a9 06       		.byte	0x6
+ 633 02aa 66       		.byte	0x66
+ 634 02ab CB030000 		.long	0x3cb
+ 635 02af 10       		.byte	0x10
+ 636 02b0 06       		.uleb128 0x6
+ 637 02b1 705F6F6C 		.ascii "p_older\0"
+ 637      64657200 
+ 638 02b9 06       		.byte	0x6
+ 639 02ba 67       		.byte	0x67
+ 640 02bb CB030000 		.long	0x3cb
+ 641 02bf 14       		.byte	0x14
+ 642 02c0 06       		.uleb128 0x6
+ 643 02c1 705F6E61 		.ascii "p_name\0"
+ 643      6D6500
+ 644 02c8 06       		.byte	0x6
+ 645 02c9 6E       		.byte	0x6e
+ 646 02ca E4060000 		.long	0x6e4
+ 647 02ce 18       		.byte	0x18
+ 648 02cf 06       		.uleb128 0x6
+ 649 02d0 705F7374 		.ascii "p_state\0"
+ 649      61746500 
+ 650 02d8 06       		.byte	0x6
+ 651 02d9 79       		.byte	0x79
+ 652 02da DB010000 		.long	0x1db
+ 653 02de 1C       		.byte	0x1c
+ 654 02df 06       		.uleb128 0x6
+ 655 02e0 705F666C 		.ascii "p_flags\0"
+ 655      61677300 
+ 656 02e8 06       		.byte	0x6
+ 657 02e9 7D       		.byte	0x7d
+ 658 02ea CC010000 		.long	0x1cc
+ 659 02ee 1D       		.byte	0x1d
+ 660 02ef 06       		.uleb128 0x6
+ 661 02f0 705F7265 		.ascii "p_refs\0"
+ 661      667300
+ 662 02f7 06       		.byte	0x6
+ 663 02f8 82       		.byte	0x82
+ 664 02f9 EB010000 		.long	0x1eb
+ 665 02fd 1E       		.byte	0x1e
+ 666 02fe 06       		.uleb128 0x6
+ 667 02ff 705F7072 		.ascii "p_preempt\0"
+ 667      65656D70 
+ 667      7400
+ 668 0309 06       		.byte	0x6
+ 669 030a 88       		.byte	0x88
+ 670 030b FA010000 		.long	0x1fa
+ 671 030f 1F       		.byte	0x1f
+ 672 0310 06       		.uleb128 0x6
+ 673 0311 705F7469 		.ascii "p_time\0"
+ 673      6D6500
+ 674 0318 06       		.byte	0x6
+ 675 0319 8F       		.byte	0x8f
+ 676 031a D2040000 		.long	0x4d2
+GAS LISTING /cygdrive/c/DOCUME~1/andrey/LOCALS~1/Temp/cctzIl9W.s 			page 15
+
+
+ 677 031e 20       		.byte	0x20
+ 678 031f 06       		.uleb128 0x6
+ 679 0320 705F7500 		.ascii "p_u\0"
+ 680 0324 06       		.byte	0x6
+ 681 0325 B4       		.byte	0xb4
+ 682 0326 A1060000 		.long	0x6a1
+ 683 032a 24       		.byte	0x24
+ 684 032b 06       		.uleb128 0x6
+ 685 032c 705F7761 		.ascii "p_waiting\0"
+ 685      6974696E 
+ 685      6700
+ 686 0336 06       		.byte	0x6
+ 687 0337 B9       		.byte	0xb9
+ 688 0338 FA030000 		.long	0x3fa
+ 689 033c 28       		.byte	0x28
+ 690 033d 06       		.uleb128 0x6
+ 691 033e 705F6D73 		.ascii "p_msgqueue\0"
+ 691      67717565 
+ 691      756500
+ 692 0349 06       		.byte	0x6
+ 693 034a BF       		.byte	0xbf
+ 694 034b D1030000 		.long	0x3d1
+ 695 034f 2C       		.byte	0x2c
+ 696 0350 06       		.uleb128 0x6
+ 697 0351 705F6D73 		.ascii "p_msg\0"
+ 697      6700
+ 698 0357 06       		.byte	0x6
+ 699 0358 C3       		.byte	0xc3
+ 700 0359 1A020000 		.long	0x21a
+ 701 035d 34       		.byte	0x34
+ 702 035e 06       		.uleb128 0x6
+ 703 035f 705F6570 		.ascii "p_epending\0"
+ 703      656E6469 
+ 703      6E6700
+ 704 036a 06       		.byte	0x6
+ 705 036b C9       		.byte	0xc9
+ 706 036c 27020000 		.long	0x227
+ 707 0370 38       		.byte	0x38
+ 708 0371 06       		.uleb128 0x6
+ 709 0372 705F6D74 		.ascii "p_mtxlist\0"
+ 709      786C6973 
+ 709      7400
+ 710 037c 06       		.byte	0x6
+ 711 037d D0       		.byte	0xd0
+ 712 037e F7060000 		.long	0x6f7
+ 713 0382 3C       		.byte	0x3c
+ 714 0383 06       		.uleb128 0x6
+ 715 0384 705F7265 		.ascii "p_realprio\0"
+ 715      616C7072 
+ 715      696F00
+ 716 038f 06       		.byte	0x6
+ 717 0390 D4       		.byte	0xd4
+ 718 0391 0B020000 		.long	0x20b
+ 719 0395 40       		.byte	0x40
+ 720 0396 06       		.uleb128 0x6
+ 721 0397 705F6D70 		.ascii "p_mpool\0"
+ 721      6F6F6C00 
+GAS LISTING /cygdrive/c/DOCUME~1/andrey/LOCALS~1/Temp/cctzIl9W.s 			page 16
+
+
+ 722 039f 06       		.byte	0x6
+ 723 03a0 DA       		.byte	0xda
+ 724 03a1 5C040000 		.long	0x45c
+ 725 03a5 44       		.byte	0x44
+ 726 03a6 00       		.byte	0
+ 727 03a7 07       		.uleb128 0x7
+ 728 03a8 08       		.byte	0x8
+ 729 03a9 05       		.byte	0x5
+ 730 03aa 61       		.byte	0x61
+ 731 03ab CB030000 		.long	0x3cb
+ 732 03af 05       		.uleb128 0x5
+ 733 03b0 00000000 		.secrel32	LASF0
+ 734 03b4 05       		.byte	0x5
+ 735 03b5 62       		.byte	0x62
+ 736 03b6 CB030000 		.long	0x3cb
+ 737 03ba 00       		.byte	0
+ 738 03bb 06       		.uleb128 0x6
+ 739 03bc 705F7072 		.ascii "p_prev\0"
+ 739      657600
+ 740 03c3 05       		.byte	0x5
+ 741 03c4 64       		.byte	0x64
+ 742 03c5 CB030000 		.long	0x3cb
+ 743 03c9 04       		.byte	0x4
+ 744 03ca 00       		.byte	0
+ 745 03cb 08       		.uleb128 0x8
+ 746 03cc 04       		.byte	0x4
+ 747 03cd 4B020000 		.long	0x24b
+ 748 03d1 03       		.uleb128 0x3
+ 749 03d2 54687265 		.ascii "ThreadsQueue\0"
+ 749      61647351 
+ 749      75657565 
+ 749      00
+ 750 03df 05       		.byte	0x5
+ 751 03e0 66       		.byte	0x66
+ 752 03e1 A7030000 		.long	0x3a7
+ 753 03e5 07       		.uleb128 0x7
+ 754 03e6 04       		.byte	0x4
+ 755 03e7 05       		.byte	0x5
+ 756 03e8 6B       		.byte	0x6b
+ 757 03e9 FA030000 		.long	0x3fa
+ 758 03ed 05       		.uleb128 0x5
+ 759 03ee 00000000 		.secrel32	LASF0
+ 760 03f2 05       		.byte	0x5
+ 761 03f3 6D       		.byte	0x6d
+ 762 03f4 CB030000 		.long	0x3cb
+ 763 03f8 00       		.byte	0
+ 764 03f9 00       		.byte	0
+ 765 03fa 03       		.uleb128 0x3
+ 766 03fb 54687265 		.ascii "ThreadsList\0"
+ 766      6164734C 
+ 766      69737400 
+ 767 0407 05       		.byte	0x5
+ 768 0408 70       		.byte	0x70
+ 769 0409 E5030000 		.long	0x3e5
+ 770 040d 07       		.uleb128 0x7
+ 771 040e 10       		.byte	0x10
+ 772 040f 07       		.byte	0x7
+GAS LISTING /cygdrive/c/DOCUME~1/andrey/LOCALS~1/Temp/cctzIl9W.s 			page 17
+
+
+ 773 0410 44       		.byte	0x44
+ 774 0411 20040000 		.long	0x420
+ 775 0415 06       		.uleb128 0x6
+ 776 0416 6100     		.ascii "a\0"
+ 777 0418 07       		.byte	0x7
+ 778 0419 45       		.byte	0x45
+ 779 041a 20040000 		.long	0x420
+ 780 041e 00       		.byte	0
+ 781 041f 00       		.byte	0
+ 782 0420 09       		.uleb128 0x9
+ 783 0421 79010000 		.long	0x179
+ 784 0425 30040000 		.long	0x430
+ 785 0429 0A       		.uleb128 0xa
+ 786 042a 30040000 		.long	0x430
+ 787 042e 0F       		.byte	0xf
+ 788 042f 00       		.byte	0
+ 789 0430 02       		.uleb128 0x2
+ 790 0431 04       		.byte	0x4
+ 791 0432 07       		.byte	0x7
+ 792 0433 73697A65 		.ascii "sizetype\0"
+ 792      74797065 
+ 792      00
+ 793 043c 03       		.uleb128 0x3
+ 794 043d 73746B61 		.ascii "stkalign_t\0"
+ 794      6C69676E 
+ 794      5F7400
+ 795 0448 07       		.byte	0x7
+ 796 0449 46       		.byte	0x46
+ 797 044a 0D040000 		.long	0x40d
+ 798 044e 03       		.uleb128 0x3
+ 799 044f 72656778 		.ascii "regx86\0"
+ 799      383600
+ 800 0456 07       		.byte	0x7
+ 801 0457 4B       		.byte	0x4b
+ 802 0458 5C040000 		.long	0x45c
+ 803 045c 0B       		.uleb128 0xb
+ 804 045d 04       		.byte	0x4
+ 805 045e 04       		.uleb128 0x4
+ 806 045f 696E7463 		.ascii "intctx\0"
+ 806      747800
+ 807 0466 14       		.byte	0x14
+ 808 0467 07       		.byte	0x7
+ 809 0468 59       		.byte	0x59
+ 810 0469 AA040000 		.long	0x4aa
+ 811 046d 06       		.uleb128 0x6
+ 812 046e 65627800 		.ascii "ebx\0"
+ 813 0472 07       		.byte	0x7
+ 814 0473 5A       		.byte	0x5a
+ 815 0474 4E040000 		.long	0x44e
+ 816 0478 00       		.byte	0
+ 817 0479 06       		.uleb128 0x6
+ 818 047a 65646900 		.ascii "edi\0"
+ 819 047e 07       		.byte	0x7
+ 820 047f 5B       		.byte	0x5b
+ 821 0480 4E040000 		.long	0x44e
+ 822 0484 04       		.byte	0x4
+ 823 0485 06       		.uleb128 0x6
+GAS LISTING /cygdrive/c/DOCUME~1/andrey/LOCALS~1/Temp/cctzIl9W.s 			page 18
+
+
+ 824 0486 65736900 		.ascii "esi\0"
+ 825 048a 07       		.byte	0x7
+ 826 048b 5C       		.byte	0x5c
+ 827 048c 4E040000 		.long	0x44e
+ 828 0490 08       		.byte	0x8
+ 829 0491 06       		.uleb128 0x6
+ 830 0492 65627000 		.ascii "ebp\0"
+ 831 0496 07       		.byte	0x7
+ 832 0497 5D       		.byte	0x5d
+ 833 0498 4E040000 		.long	0x44e
+ 834 049c 0C       		.byte	0xc
+ 835 049d 06       		.uleb128 0x6
+ 836 049e 65697000 		.ascii "eip\0"
+ 837 04a2 07       		.byte	0x7
+ 838 04a3 5E       		.byte	0x5e
+ 839 04a4 4E040000 		.long	0x44e
+ 840 04a8 10       		.byte	0x10
+ 841 04a9 00       		.byte	0
+ 842 04aa 04       		.uleb128 0x4
+ 843 04ab 636F6E74 		.ascii "context\0"
+ 843      65787400 
+ 844 04b3 04       		.byte	0x4
+ 845 04b4 07       		.byte	0x7
+ 846 04b5 66       		.byte	0x66
+ 847 04b6 C7040000 		.long	0x4c7
+ 848 04ba 06       		.uleb128 0x6
+ 849 04bb 65737000 		.ascii "esp\0"
+ 850 04bf 07       		.byte	0x7
+ 851 04c0 67       		.byte	0x67
+ 852 04c1 C7040000 		.long	0x4c7
+ 853 04c5 00       		.byte	0
+ 854 04c6 00       		.byte	0
+ 855 04c7 08       		.uleb128 0x8
+ 856 04c8 04       		.byte	0x4
+ 857 04c9 CD040000 		.long	0x4cd
+ 858 04cd 0C       		.uleb128 0xc
+ 859 04ce 5E040000 		.long	0x45e
+ 860 04d2 0C       		.uleb128 0xc
+ 861 04d3 3A020000 		.long	0x23a
+ 862 04d7 04       		.uleb128 0x4
+ 863 04d8 4D757465 		.ascii "Mutex\0"
+ 863      7800
+ 864 04de 10       		.byte	0x10
+ 865 04df 08       		.byte	0x8
+ 866 04e0 2C       		.byte	0x2c
+ 867 04e1 15050000 		.long	0x515
+ 868 04e5 06       		.uleb128 0x6
+ 869 04e6 6D5F7175 		.ascii "m_queue\0"
+ 869      65756500 
+ 870 04ee 08       		.byte	0x8
+ 871 04ef 2D       		.byte	0x2d
+ 872 04f0 D1030000 		.long	0x3d1
+ 873 04f4 00       		.byte	0
+ 874 04f5 06       		.uleb128 0x6
+ 875 04f6 6D5F6F77 		.ascii "m_owner\0"
+ 875      6E657200 
+ 876 04fe 08       		.byte	0x8
+GAS LISTING /cygdrive/c/DOCUME~1/andrey/LOCALS~1/Temp/cctzIl9W.s 			page 19
+
+
+ 877 04ff 2F       		.byte	0x2f
+ 878 0500 CB030000 		.long	0x3cb
+ 879 0504 08       		.byte	0x8
+ 880 0505 06       		.uleb128 0x6
+ 881 0506 6D5F6E65 		.ascii "m_next\0"
+ 881      787400
+ 882 050d 08       		.byte	0x8
+ 883 050e 31       		.byte	0x31
+ 884 050f 15050000 		.long	0x515
+ 885 0513 0C       		.byte	0xc
+ 886 0514 00       		.byte	0
+ 887 0515 08       		.uleb128 0x8
+ 888 0516 04       		.byte	0x4
+ 889 0517 D7040000 		.long	0x4d7
+ 890 051b 03       		.uleb128 0x3
+ 891 051c 4D757465 		.ascii "Mutex\0"
+ 891      7800
+ 892 0522 08       		.byte	0x8
+ 893 0523 33       		.byte	0x33
+ 894 0524 D7040000 		.long	0x4d7
+ 895 0528 03       		.uleb128 0x3
+ 896 0529 6D656D67 		.ascii "memgetfunc_t\0"
+ 896      65746675 
+ 896      6E635F74 
+ 896      00
+ 897 0536 09       		.byte	0x9
+ 898 0537 2C       		.byte	0x2c
+ 899 0538 3C050000 		.long	0x53c
+ 900 053c 08       		.uleb128 0x8
+ 901 053d 04       		.byte	0x4
+ 902 053e 42050000 		.long	0x542
+ 903 0542 0D       		.uleb128 0xd
+ 904 0543 5C040000 		.long	0x45c
+ 905 0547 51050000 		.long	0x551
+ 906 054b 0E       		.uleb128 0xe
+ 907 054c 09010000 		.long	0x109
+ 908 0550 00       		.byte	0
+ 909 0551 03       		.uleb128 0x3
+ 910 0552 4D656D6F 		.ascii "MemoryHeap\0"
+ 910      72794865 
+ 910      617000
+ 911 055d 0A       		.byte	0xa
+ 912 055e 34       		.byte	0x34
+ 913 055f 63050000 		.long	0x563
+ 914 0563 04       		.uleb128 0x4
+ 915 0564 6D656D6F 		.ascii "memory_heap\0"
+ 915      72795F68 
+ 915      65617000 
+ 916 0570 30       		.byte	0x30
+ 917 0571 0A       		.byte	0xa
+ 918 0572 47       		.byte	0x47
+ 919 0573 A8050000 		.long	0x5a8
+ 920 0577 06       		.uleb128 0x6
+ 921 0578 685F7072 		.ascii "h_provider\0"
+ 921      6F766964 
+ 921      657200
+ 922 0583 0A       		.byte	0xa
+GAS LISTING /cygdrive/c/DOCUME~1/andrey/LOCALS~1/Temp/cctzIl9W.s 			page 20
+
+
+ 923 0584 48       		.byte	0x48
+ 924 0585 28050000 		.long	0x528
+ 925 0589 00       		.byte	0
+ 926 058a 06       		.uleb128 0x6
+ 927 058b 685F6672 		.ascii "h_free\0"
+ 927      656500
+ 928 0592 0A       		.byte	0xa
+ 929 0593 4A       		.byte	0x4a
+ 930 0594 C9050000 		.long	0x5c9
+ 931 0598 10       		.byte	0x10
+ 932 0599 06       		.uleb128 0x6
+ 933 059a 685F6D74 		.ascii "h_mtx\0"
+ 933      7800
+ 934 05a0 0A       		.byte	0xa
+ 935 05a1 4C       		.byte	0x4c
+ 936 05a2 1B050000 		.long	0x51b
+ 937 05a6 20       		.byte	0x20
+ 938 05a7 00       		.byte	0
+ 939 05a8 0F       		.uleb128 0xf
+ 940 05a9 04       		.byte	0x4
+ 941 05aa 0A       		.byte	0xa
+ 942 05ab 3C       		.byte	0x3c
+ 943 05ac C9050000 		.long	0x5c9
+ 944 05b0 10       		.uleb128 0x10
+ 945 05b1 6E657874 		.ascii "next\0"
+ 945      00
+ 946 05b6 0A       		.byte	0xa
+ 947 05b7 3D       		.byte	0x3d
+ 948 05b8 F4050000 		.long	0x5f4
+ 949 05bc 10       		.uleb128 0x10
+ 950 05bd 68656170 		.ascii "heap\0"
+ 950      00
+ 951 05c2 0A       		.byte	0xa
+ 952 05c3 3E       		.byte	0x3e
+ 953 05c4 FA050000 		.long	0x5fa
+ 954 05c8 00       		.byte	0
+ 955 05c9 11       		.uleb128 0x11
+ 956 05ca 68656170 		.ascii "heap_header\0"
+ 956      5F686561 
+ 956      64657200 
+ 957 05d6 10       		.byte	0x10
+ 958 05d7 0A       		.byte	0xa
+ 959 05d8 39       		.byte	0x39
+ 960 05d9 F4050000 		.long	0x5f4
+ 961 05dd 10       		.uleb128 0x10
+ 962 05de 616C6967 		.ascii "align\0"
+ 962      6E00
+ 963 05e4 0A       		.byte	0xa
+ 964 05e5 3A       		.byte	0x3a
+ 965 05e6 3C040000 		.long	0x43c
+ 966 05ea 10       		.uleb128 0x10
+ 967 05eb 6800     		.ascii "h\0"
+ 968 05ed 0A       		.byte	0xa
+ 969 05ee 41       		.byte	0x41
+ 970 05ef 00060000 		.long	0x600
+ 971 05f3 00       		.byte	0
+ 972 05f4 08       		.uleb128 0x8
+GAS LISTING /cygdrive/c/DOCUME~1/andrey/LOCALS~1/Temp/cctzIl9W.s 			page 21
+
+
+ 973 05f5 04       		.byte	0x4
+ 974 05f6 C9050000 		.long	0x5c9
+ 975 05fa 08       		.uleb128 0x8
+ 976 05fb 04       		.byte	0x4
+ 977 05fc 51050000 		.long	0x551
+ 978 0600 07       		.uleb128 0x7
+ 979 0601 08       		.byte	0x8
+ 980 0602 0A       		.byte	0xa
+ 981 0603 3B       		.byte	0x3b
+ 982 0604 20060000 		.long	0x620
+ 983 0608 06       		.uleb128 0x6
+ 984 0609 7500     		.ascii "u\0"
+ 985 060b 0A       		.byte	0xa
+ 986 060c 3F       		.byte	0x3f
+ 987 060d A8050000 		.long	0x5a8
+ 988 0611 00       		.byte	0
+ 989 0612 06       		.uleb128 0x6
+ 990 0613 73697A65 		.ascii "size\0"
+ 990      00
+ 991 0618 0A       		.byte	0xa
+ 992 0619 40       		.byte	0x40
+ 993 061a 09010000 		.long	0x109
+ 994 061e 04       		.byte	0x4
+ 995 061f 00       		.byte	0
+ 996 0620 04       		.uleb128 0x4
+ 997 0621 706F6F6C 		.ascii "pool_header\0"
+ 997      5F686561 
+ 997      64657200 
+ 998 062d 04       		.byte	0x4
+ 999 062e 0B       		.byte	0xb
+ 1000 062f 2C       		.byte	0x2c
+ 1001 0630 45060000 		.long	0x645
+ 1002 0634 06       		.uleb128 0x6
+ 1003 0635 70685F6E 		.ascii "ph_next\0"
+ 1003      65787400 
+ 1004 063d 0B       		.byte	0xb
+ 1005 063e 2D       		.byte	0x2d
+ 1006 063f 45060000 		.long	0x645
+ 1007 0643 00       		.byte	0
+ 1008 0644 00       		.byte	0
+ 1009 0645 08       		.uleb128 0x8
+ 1010 0646 04       		.byte	0x4
+ 1011 0647 20060000 		.long	0x620
+ 1012 064b 07       		.uleb128 0x7
+ 1013 064c 0C       		.byte	0xc
+ 1014 064d 0B       		.byte	0xb
+ 1015 064e 34       		.byte	0x34
+ 1016 064f 8F060000 		.long	0x68f
+ 1017 0653 06       		.uleb128 0x6
+ 1018 0654 6D705F6E 		.ascii "mp_next\0"
+ 1018      65787400 
+ 1019 065c 0B       		.byte	0xb
+ 1020 065d 35       		.byte	0x35
+ 1021 065e 45060000 		.long	0x645
+ 1022 0662 00       		.byte	0
+ 1023 0663 06       		.uleb128 0x6
+ 1024 0664 6D705F6F 		.ascii "mp_object_size\0"
+GAS LISTING /cygdrive/c/DOCUME~1/andrey/LOCALS~1/Temp/cctzIl9W.s 			page 22
+
+
+ 1024      626A6563 
+ 1024      745F7369 
+ 1024      7A6500
+ 1025 0673 0B       		.byte	0xb
+ 1026 0674 36       		.byte	0x36
+ 1027 0675 09010000 		.long	0x109
+ 1028 0679 04       		.byte	0x4
+ 1029 067a 06       		.uleb128 0x6
+ 1030 067b 6D705F70 		.ascii "mp_provider\0"
+ 1030      726F7669 
+ 1030      64657200 
+ 1031 0687 0B       		.byte	0xb
+ 1032 0688 38       		.byte	0x38
+ 1033 0689 28050000 		.long	0x528
+ 1034 068d 08       		.byte	0x8
+ 1035 068e 00       		.byte	0
+ 1036 068f 03       		.uleb128 0x3
+ 1037 0690 4D656D6F 		.ascii "MemoryPool\0"
+ 1037      7279506F 
+ 1037      6F6C00
+ 1038 069b 0B       		.byte	0xb
+ 1039 069c 3A       		.byte	0x3a
+ 1040 069d 4B060000 		.long	0x64b
+ 1041 06a1 0F       		.uleb128 0xf
+ 1042 06a2 04       		.byte	0x4
+ 1043 06a3 06       		.byte	0x6
+ 1044 06a4 96       		.byte	0x96
+ 1045 06a5 E4060000 		.long	0x6e4
+ 1046 06a9 10       		.uleb128 0x10
+ 1047 06aa 7264796D 		.ascii "rdymsg\0"
+ 1047      736700
+ 1048 06b1 06       		.byte	0x6
+ 1049 06b2 9D       		.byte	0x9d
+ 1050 06b3 1A020000 		.long	0x21a
+ 1051 06b7 10       		.uleb128 0x10
+ 1052 06b8 65786974 		.ascii "exitcode\0"
+ 1052      636F6465 
+ 1052      00
+ 1053 06c1 06       		.byte	0x6
+ 1054 06c2 A4       		.byte	0xa4
+ 1055 06c3 1A020000 		.long	0x21a
+ 1056 06c7 10       		.uleb128 0x10
+ 1057 06c8 77746F62 		.ascii "wtobjp\0"
+ 1057      6A7000
+ 1058 06cf 06       		.byte	0x6
+ 1059 06d0 AB       		.byte	0xab
+ 1060 06d1 5C040000 		.long	0x45c
+ 1061 06d5 10       		.uleb128 0x10
+ 1062 06d6 65776D61 		.ascii "ewmask\0"
+ 1062      736B00
+ 1063 06dd 06       		.byte	0x6
+ 1064 06de B2       		.byte	0xb2
+ 1065 06df 27020000 		.long	0x227
+ 1066 06e3 00       		.byte	0
+ 1067 06e4 08       		.uleb128 0x8
+ 1068 06e5 04       		.byte	0x4
+ 1069 06e6 EA060000 		.long	0x6ea
+GAS LISTING /cygdrive/c/DOCUME~1/andrey/LOCALS~1/Temp/cctzIl9W.s 			page 23
+
+
+ 1070 06ea 12       		.uleb128 0x12
+ 1071 06eb EF060000 		.long	0x6ef
+ 1072 06ef 02       		.uleb128 0x2
+ 1073 06f0 01       		.byte	0x1
+ 1074 06f1 06       		.byte	0x6
+ 1075 06f2 63686172 		.ascii "char\0"
+ 1075      00
+ 1076 06f7 08       		.uleb128 0x8
+ 1077 06f8 04       		.byte	0x4
+ 1078 06f9 1B050000 		.long	0x51b
+ 1079 06fd 03       		.uleb128 0x3
+ 1080 06fe 7466756E 		.ascii "tfunc_t\0"
+ 1080      635F7400 
+ 1081 0706 06       		.byte	0x6
+ 1082 0707 E5       		.byte	0xe5
+ 1083 0708 0C070000 		.long	0x70c
+ 1084 070c 08       		.uleb128 0x8
+ 1085 070d 04       		.byte	0x4
+ 1086 070e 12070000 		.long	0x712
+ 1087 0712 0D       		.uleb128 0xd
+ 1088 0713 1A020000 		.long	0x21a
+ 1089 0717 21070000 		.long	0x721
+ 1090 071b 0E       		.uleb128 0xe
+ 1091 071c 5C040000 		.long	0x45c
+ 1092 0720 00       		.byte	0
+ 1093 0721 13       		.uleb128 0x13
+ 1094 0722 63685468 		.ascii "chThdAddRef\0"
+ 1094      64416464 
+ 1094      52656600 
+ 1095 072e 01       		.byte	0x1
+ 1096 072f 34       		.byte	0x34
+ 1097 0730 CB030000 		.long	0x3cb
+ 1098 0734 00000000 		.long	LFB7
+ 1099 0738 52000000 		.long	LFE7-LFB7
+ 1100 073c 01       		.uleb128 0x1
+ 1101 073d 9C       		.byte	0x9c
+ 1102 073e 87070000 		.long	0x787
+ 1103 0742 14       		.uleb128 0x14
+ 1104 0743 747000   		.ascii "tp\0"
+ 1105 0746 01       		.byte	0x1
+ 1106 0747 34       		.byte	0x34
+ 1107 0748 CB030000 		.long	0x3cb
+ 1108 074c 02       		.uleb128 0x2
+ 1109 074d 91       		.byte	0x91
+ 1110 074e 00       		.sleb128 0
+ 1111 074f 15       		.uleb128 0x15
+ 1112 0750 0E000000 		.long	LVL1
+ 1113 0754 480A0000 		.long	0xa48
+ 1114 0758 15       		.uleb128 0x15
+ 1115 0759 21000000 		.long	LVL2
+ 1116 075d 5A0A0000 		.long	0xa5a
+ 1117 0761 16       		.uleb128 0x16
+ 1118 0762 4C000000 		.long	LVL3
+ 1119 0766 6E0A0000 		.long	0xa6e
+ 1120 076a 17       		.uleb128 0x17
+ 1121 076b 02       		.uleb128 0x2
+ 1122 076c 74       		.byte	0x74
+GAS LISTING /cygdrive/c/DOCUME~1/andrey/LOCALS~1/Temp/cctzIl9W.s 			page 24
+
+
+ 1123 076d 00       		.sleb128 0
+ 1124 076e 05       		.uleb128 0x5
+ 1125 076f 03       		.byte	0x3
+ 1126 0770 2E000000 		.long	LC1
+ 1127 0774 17       		.uleb128 0x17
+ 1128 0775 02       		.uleb128 0x2
+ 1129 0776 74       		.byte	0x74
+ 1130 0777 04       		.sleb128 4
+ 1131 0778 05       		.uleb128 0x5
+ 1132 0779 03       		.byte	0x3
+ 1133 077a 00000000 		.long	LC0
+ 1134 077e 17       		.uleb128 0x17
+ 1135 077f 02       		.uleb128 0x2
+ 1136 0780 74       		.byte	0x74
+ 1137 0781 08       		.sleb128 8
+ 1138 0782 02       		.uleb128 0x2
+ 1139 0783 08       		.byte	0x8
+ 1140 0784 37       		.byte	0x37
+ 1141 0785 00       		.byte	0
+ 1142 0786 00       		.byte	0
+ 1143 0787 18       		.uleb128 0x18
+ 1144 0788 63685468 		.ascii "chThdRelease\0"
+ 1144      6452656C 
+ 1144      65617365 
+ 1144      00
+ 1145 0795 01       		.byte	0x1
+ 1146 0796 4A       		.byte	0x4a
+ 1147 0797 60000000 		.long	LFB8
+ 1148 079b A5000000 		.long	LFE8-LFB8
+ 1149 079f 01       		.uleb128 0x1
+ 1150 07a0 9C       		.byte	0x9c
+ 1151 07a1 1C080000 		.long	0x81c
+ 1152 07a5 14       		.uleb128 0x14
+ 1153 07a6 747000   		.ascii "tp\0"
+ 1154 07a9 01       		.byte	0x1
+ 1155 07aa 4A       		.byte	0x4a
+ 1156 07ab CB030000 		.long	0x3cb
+ 1157 07af 02       		.uleb128 0x2
+ 1158 07b0 91       		.byte	0x91
+ 1159 07b1 00       		.sleb128 0
+ 1160 07b2 19       		.uleb128 0x19
+ 1161 07b3 72656673 		.ascii "refs\0"
+ 1161      00
+ 1162 07b8 01       		.byte	0x1
+ 1163 07b9 4B       		.byte	0x4b
+ 1164 07ba EB010000 		.long	0x1eb
+ 1165 07be 00000000 		.secrel32	LLST0
+ 1166 07c2 15       		.uleb128 0x15
+ 1167 07c3 6F000000 		.long	LVL5
+ 1168 07c7 480A0000 		.long	0xa48
+ 1169 07cb 15       		.uleb128 0x15
+ 1170 07cc 84000000 		.long	LVL7
+ 1171 07d0 5A0A0000 		.long	0xa5a
+ 1172 07d4 1A       		.uleb128 0x1a
+ 1173 07d5 C4000000 		.long	LVL11
+ 1174 07d9 960A0000 		.long	0xa96
+ 1175 07dd E9070000 		.long	0x7e9
+GAS LISTING /cygdrive/c/DOCUME~1/andrey/LOCALS~1/Temp/cctzIl9W.s 			page 25
+
+
+ 1176 07e1 17       		.uleb128 0x17
+ 1177 07e2 02       		.uleb128 0x2
+ 1178 07e3 74       		.byte	0x74
+ 1179 07e4 04       		.sleb128 4
+ 1180 07e5 02       		.uleb128 0x2
+ 1181 07e6 73       		.byte	0x73
+ 1182 07e7 00       		.sleb128 0
+ 1183 07e8 00       		.byte	0
+ 1184 07e9 1A       		.uleb128 0x1a
+ 1185 07ea E2000000 		.long	LVL13
+ 1186 07ee 6E0A0000 		.long	0xa6e
+ 1187 07f2 12080000 		.long	0x812
+ 1188 07f6 17       		.uleb128 0x17
+ 1189 07f7 02       		.uleb128 0x2
+ 1190 07f8 74       		.byte	0x74
+ 1191 07f9 00       		.sleb128 0
+ 1192 07fa 05       		.uleb128 0x5
+ 1193 07fb 03       		.byte	0x3
+ 1194 07fc 40000000 		.long	LC2
+ 1195 0800 17       		.uleb128 0x17
+ 1196 0801 02       		.uleb128 0x2
+ 1197 0802 74       		.byte	0x74
+ 1198 0803 04       		.sleb128 4
+ 1199 0804 05       		.uleb128 0x5
+ 1200 0805 03       		.byte	0x3
+ 1201 0806 00000000 		.long	LC0
+ 1202 080a 17       		.uleb128 0x17
+ 1203 080b 02       		.uleb128 0x2
+ 1204 080c 74       		.byte	0x74
+ 1205 080d 08       		.sleb128 8
+ 1206 080e 02       		.uleb128 0x2
+ 1207 080f 08       		.byte	0x8
+ 1208 0810 4E       		.byte	0x4e
+ 1209 0811 00       		.byte	0
+ 1210 0812 1B       		.uleb128 0x1b
+ 1211 0813 05010000 		.long	LVL16
+ 1212 0817 B30A0000 		.long	0xab3
+ 1213 081b 00       		.byte	0
+ 1214 081c 13       		.uleb128 0x13
+ 1215 081d 63685468 		.ascii "chThdCreateFromHeap\0"
+ 1215      64437265 
+ 1215      61746546 
+ 1215      726F6D48 
+ 1215      65617000 
+ 1216 0831 01       		.byte	0x1
+ 1217 0832 82       		.byte	0x82
+ 1218 0833 CB030000 		.long	0x3cb
+ 1219 0837 10010000 		.long	LFB9
+ 1220 083b 74000000 		.long	LFE9-LFB9
+ 1221 083f 01       		.uleb128 0x1
+ 1222 0840 9C       		.byte	0x9c
+ 1223 0841 2A090000 		.long	0x92a
+ 1224 0845 14       		.uleb128 0x14
+ 1225 0846 68656170 		.ascii "heapp\0"
+ 1225      7000
+ 1226 084c 01       		.byte	0x1
+ 1227 084d 82       		.byte	0x82
+GAS LISTING /cygdrive/c/DOCUME~1/andrey/LOCALS~1/Temp/cctzIl9W.s 			page 26
+
+
+ 1228 084e FA050000 		.long	0x5fa
+ 1229 0852 02       		.uleb128 0x2
+ 1230 0853 91       		.byte	0x91
+ 1231 0854 00       		.sleb128 0
+ 1232 0855 14       		.uleb128 0x14
+ 1233 0856 73697A65 		.ascii "size\0"
+ 1233      00
+ 1234 085b 01       		.byte	0x1
+ 1235 085c 82       		.byte	0x82
+ 1236 085d 09010000 		.long	0x109
+ 1237 0861 02       		.uleb128 0x2
+ 1238 0862 91       		.byte	0x91
+ 1239 0863 04       		.sleb128 4
+ 1240 0864 14       		.uleb128 0x14
+ 1241 0865 7072696F 		.ascii "prio\0"
+ 1241      00
+ 1242 086a 01       		.byte	0x1
+ 1243 086b 83       		.byte	0x83
+ 1244 086c 0B020000 		.long	0x20b
+ 1245 0870 02       		.uleb128 0x2
+ 1246 0871 91       		.byte	0x91
+ 1247 0872 08       		.sleb128 8
+ 1248 0873 14       		.uleb128 0x14
+ 1249 0874 706600   		.ascii "pf\0"
+ 1250 0877 01       		.byte	0x1
+ 1251 0878 83       		.byte	0x83
+ 1252 0879 FD060000 		.long	0x6fd
+ 1253 087d 02       		.uleb128 0x2
+ 1254 087e 91       		.byte	0x91
+ 1255 087f 0C       		.sleb128 12
+ 1256 0880 14       		.uleb128 0x14
+ 1257 0881 61726700 		.ascii "arg\0"
+ 1258 0885 01       		.byte	0x1
+ 1259 0886 83       		.byte	0x83
+ 1260 0887 5C040000 		.long	0x45c
+ 1261 088b 02       		.uleb128 0x2
+ 1262 088c 91       		.byte	0x91
+ 1263 088d 10       		.sleb128 16
+ 1264 088e 19       		.uleb128 0x19
+ 1265 088f 77737000 		.ascii "wsp\0"
+ 1266 0893 01       		.byte	0x1
+ 1267 0894 84       		.byte	0x84
+ 1268 0895 5C040000 		.long	0x45c
+ 1269 0899 3F000000 		.secrel32	LLST1
+ 1270 089d 19       		.uleb128 0x19
+ 1271 089e 747000   		.ascii "tp\0"
+ 1272 08a1 01       		.byte	0x1
+ 1273 08a2 85       		.byte	0x85
+ 1274 08a3 CB030000 		.long	0x3cb
+ 1275 08a7 73000000 		.secrel32	LLST2
+ 1276 08ab 1A       		.uleb128 0x1a
+ 1277 08ac 29010000 		.long	LVL18
+ 1278 08b0 CB0A0000 		.long	0xacb
+ 1279 08b4 C8080000 		.long	0x8c8
+ 1280 08b8 17       		.uleb128 0x17
+ 1281 08b9 02       		.uleb128 0x2
+ 1282 08ba 74       		.byte	0x74
+GAS LISTING /cygdrive/c/DOCUME~1/andrey/LOCALS~1/Temp/cctzIl9W.s 			page 27
+
+
+ 1283 08bb 00       		.sleb128 0
+ 1284 08bc 03       		.uleb128 0x3
+ 1285 08bd 91       		.byte	0x91
+ 1286 08be 00       		.sleb128 0
+ 1287 08bf 06       		.byte	0x6
+ 1288 08c0 17       		.uleb128 0x17
+ 1289 08c1 02       		.uleb128 0x2
+ 1290 08c2 74       		.byte	0x74
+ 1291 08c3 04       		.sleb128 4
+ 1292 08c4 02       		.uleb128 0x2
+ 1293 08c5 73       		.byte	0x73
+ 1294 08c6 00       		.sleb128 0
+ 1295 08c7 00       		.byte	0
+ 1296 08c8 15       		.uleb128 0x15
+ 1297 08c9 35010000 		.long	LVL20
+ 1298 08cd 480A0000 		.long	0xa48
+ 1299 08d1 1A       		.uleb128 0x1a
+ 1300 08d2 59010000 		.long	LVL21
+ 1301 08d6 ED0A0000 		.long	0xaed
+ 1302 08da 05090000 		.long	0x905
+ 1303 08de 17       		.uleb128 0x17
+ 1304 08df 02       		.uleb128 0x2
+ 1305 08e0 74       		.byte	0x74
+ 1306 08e1 00       		.sleb128 0
+ 1307 08e2 02       		.uleb128 0x2
+ 1308 08e3 76       		.byte	0x76
+ 1309 08e4 00       		.sleb128 0
+ 1310 08e5 17       		.uleb128 0x17
+ 1311 08e6 02       		.uleb128 0x2
+ 1312 08e7 74       		.byte	0x74
+ 1313 08e8 04       		.sleb128 4
+ 1314 08e9 02       		.uleb128 0x2
+ 1315 08ea 73       		.byte	0x73
+ 1316 08eb 00       		.sleb128 0
+ 1317 08ec 17       		.uleb128 0x17
+ 1318 08ed 02       		.uleb128 0x2
+ 1319 08ee 74       		.byte	0x74
+ 1320 08ef 08       		.sleb128 8
+ 1321 08f0 03       		.uleb128 0x3
+ 1322 08f1 91       		.byte	0x91
+ 1323 08f2 08       		.sleb128 8
+ 1324 08f3 06       		.byte	0x6
+ 1325 08f4 17       		.uleb128 0x17
+ 1326 08f5 02       		.uleb128 0x2
+ 1327 08f6 74       		.byte	0x74
+ 1328 08f7 0C       		.sleb128 12
+ 1329 08f8 03       		.uleb128 0x3
+ 1330 08f9 91       		.byte	0x91
+ 1331 08fa 0C       		.sleb128 12
+ 1332 08fb 06       		.byte	0x6
+ 1333 08fc 17       		.uleb128 0x17
+ 1334 08fd 02       		.uleb128 0x2
+ 1335 08fe 74       		.byte	0x74
+ 1336 08ff 10       		.sleb128 16
+ 1337 0900 03       		.uleb128 0x3
+ 1338 0901 91       		.byte	0x91
+ 1339 0902 10       		.sleb128 16
+GAS LISTING /cygdrive/c/DOCUME~1/andrey/LOCALS~1/Temp/cctzIl9W.s 			page 28
+
+
+ 1340 0903 06       		.byte	0x6
+ 1341 0904 00       		.byte	0
+ 1342 0905 1A       		.uleb128 0x1a
+ 1343 0906 6F010000 		.long	LVL23
+ 1344 090a 200B0000 		.long	0xb20
+ 1345 090e 20090000 		.long	0x920
+ 1346 0912 17       		.uleb128 0x17
+ 1347 0913 02       		.uleb128 0x2
+ 1348 0914 74       		.byte	0x74
+ 1349 0915 00       		.sleb128 0
+ 1350 0916 02       		.uleb128 0x2
+ 1351 0917 73       		.byte	0x73
+ 1352 0918 00       		.sleb128 0
+ 1353 0919 17       		.uleb128 0x17
+ 1354 091a 02       		.uleb128 0x2
+ 1355 091b 74       		.byte	0x74
+ 1356 091c 04       		.sleb128 4
+ 1357 091d 01       		.uleb128 0x1
+ 1358 091e 30       		.byte	0x30
+ 1359 091f 00       		.byte	0
+ 1360 0920 15       		.uleb128 0x15
+ 1361 0921 74010000 		.long	LVL24
+ 1362 0925 5A0A0000 		.long	0xa5a
+ 1363 0929 00       		.byte	0
+ 1364 092a 13       		.uleb128 0x13
+ 1365 092b 63685468 		.ascii "chThdCreateFromMemoryPool\0"
+ 1365      64437265 
+ 1365      61746546 
+ 1365      726F6D4D 
+ 1365      656D6F72 
+ 1366 0945 01       		.byte	0x1
+ 1367 0946 B3       		.byte	0xb3
+ 1368 0947 CB030000 		.long	0x3cb
+ 1369 094b 90010000 		.long	LFB10
+ 1370 094f 95000000 		.long	LFE10-LFB10
+ 1371 0953 01       		.uleb128 0x1
+ 1372 0954 9C       		.byte	0x9c
+ 1373 0955 420A0000 		.long	0xa42
+ 1374 0959 14       		.uleb128 0x14
+ 1375 095a 6D7000   		.ascii "mp\0"
+ 1376 095d 01       		.byte	0x1
+ 1377 095e B3       		.byte	0xb3
+ 1378 095f 420A0000 		.long	0xa42
+ 1379 0963 02       		.uleb128 0x2
+ 1380 0964 91       		.byte	0x91
+ 1381 0965 00       		.sleb128 0
+ 1382 0966 14       		.uleb128 0x14
+ 1383 0967 7072696F 		.ascii "prio\0"
+ 1383      00
+ 1384 096c 01       		.byte	0x1
+ 1385 096d B3       		.byte	0xb3
+ 1386 096e 0B020000 		.long	0x20b
+ 1387 0972 02       		.uleb128 0x2
+ 1388 0973 91       		.byte	0x91
+ 1389 0974 04       		.sleb128 4
+ 1390 0975 14       		.uleb128 0x14
+ 1391 0976 706600   		.ascii "pf\0"
+GAS LISTING /cygdrive/c/DOCUME~1/andrey/LOCALS~1/Temp/cctzIl9W.s 			page 29
+
+
+ 1392 0979 01       		.byte	0x1
+ 1393 097a B4       		.byte	0xb4
+ 1394 097b FD060000 		.long	0x6fd
+ 1395 097f 02       		.uleb128 0x2
+ 1396 0980 91       		.byte	0x91
+ 1397 0981 08       		.sleb128 8
+ 1398 0982 14       		.uleb128 0x14
+ 1399 0983 61726700 		.ascii "arg\0"
+ 1400 0987 01       		.byte	0x1
+ 1401 0988 B4       		.byte	0xb4
+ 1402 0989 5C040000 		.long	0x45c
+ 1403 098d 02       		.uleb128 0x2
+ 1404 098e 91       		.byte	0x91
+ 1405 098f 0C       		.sleb128 12
+ 1406 0990 19       		.uleb128 0x19
+ 1407 0991 77737000 		.ascii "wsp\0"
+ 1408 0995 01       		.byte	0x1
+ 1409 0996 B5       		.byte	0xb5
+ 1410 0997 5C040000 		.long	0x45c
+ 1411 099b 91000000 		.secrel32	LLST3
+ 1412 099f 19       		.uleb128 0x19
+ 1413 09a0 747000   		.ascii "tp\0"
+ 1414 09a3 01       		.byte	0x1
+ 1415 09a4 B6       		.byte	0xb6
+ 1416 09a5 CB030000 		.long	0x3cb
+ 1417 09a9 C5000000 		.secrel32	LLST4
+ 1418 09ad 1A       		.uleb128 0x1a
+ 1419 09ae A5010000 		.long	LVL30
+ 1420 09b2 3F0B0000 		.long	0xb3f
+ 1421 09b6 C2090000 		.long	0x9c2
+ 1422 09ba 17       		.uleb128 0x17
+ 1423 09bb 02       		.uleb128 0x2
+ 1424 09bc 74       		.byte	0x74
+ 1425 09bd 00       		.sleb128 0
+ 1426 09be 02       		.uleb128 0x2
+ 1427 09bf 73       		.byte	0x73
+ 1428 09c0 00       		.sleb128 0
+ 1429 09c1 00       		.byte	0
+ 1430 09c2 15       		.uleb128 0x15
+ 1431 09c3 B1010000 		.long	LVL32
+ 1432 09c7 480A0000 		.long	0xa48
+ 1433 09cb 1A       		.uleb128 0x1a
+ 1434 09cc D8010000 		.long	LVL33
+ 1435 09d0 ED0A0000 		.long	0xaed
+ 1436 09d4 F8090000 		.long	0x9f8
+ 1437 09d8 17       		.uleb128 0x17
+ 1438 09d9 02       		.uleb128 0x2
+ 1439 09da 74       		.byte	0x74
+ 1440 09db 00       		.sleb128 0
+ 1441 09dc 02       		.uleb128 0x2
+ 1442 09dd 76       		.byte	0x76
+ 1443 09de 00       		.sleb128 0
+ 1444 09df 17       		.uleb128 0x17
+ 1445 09e0 02       		.uleb128 0x2
+ 1446 09e1 74       		.byte	0x74
+ 1447 09e2 08       		.sleb128 8
+ 1448 09e3 03       		.uleb128 0x3
+GAS LISTING /cygdrive/c/DOCUME~1/andrey/LOCALS~1/Temp/cctzIl9W.s 			page 30
+
+
+ 1449 09e4 91       		.byte	0x91
+ 1450 09e5 04       		.sleb128 4
+ 1451 09e6 06       		.byte	0x6
+ 1452 09e7 17       		.uleb128 0x17
+ 1453 09e8 02       		.uleb128 0x2
+ 1454 09e9 74       		.byte	0x74
+ 1455 09ea 0C       		.sleb128 12
+ 1456 09eb 03       		.uleb128 0x3
+ 1457 09ec 91       		.byte	0x91
+ 1458 09ed 08       		.sleb128 8
+ 1459 09ee 06       		.byte	0x6
+ 1460 09ef 17       		.uleb128 0x17
+ 1461 09f0 02       		.uleb128 0x2
+ 1462 09f1 74       		.byte	0x74
+ 1463 09f2 10       		.sleb128 16
+ 1464 09f3 03       		.uleb128 0x3
+ 1465 09f4 91       		.byte	0x91
+ 1466 09f5 0C       		.sleb128 12
+ 1467 09f6 06       		.byte	0x6
+ 1468 09f7 00       		.byte	0
+ 1469 09f8 1A       		.uleb128 0x1a
+ 1470 09f9 F1010000 		.long	LVL35
+ 1471 09fd 200B0000 		.long	0xb20
+ 1472 0a01 130A0000 		.long	0xa13
+ 1473 0a05 17       		.uleb128 0x17
+ 1474 0a06 02       		.uleb128 0x2
+ 1475 0a07 74       		.byte	0x74
+ 1476 0a08 00       		.sleb128 0
+ 1477 0a09 02       		.uleb128 0x2
+ 1478 0a0a 76       		.byte	0x76
+ 1479 0a0b 00       		.sleb128 0
+ 1480 0a0c 17       		.uleb128 0x17
+ 1481 0a0d 02       		.uleb128 0x2
+ 1482 0a0e 74       		.byte	0x74
+ 1483 0a0f 04       		.sleb128 4
+ 1484 0a10 01       		.uleb128 0x1
+ 1485 0a11 30       		.byte	0x30
+ 1486 0a12 00       		.byte	0
+ 1487 0a13 15       		.uleb128 0x15
+ 1488 0a14 F6010000 		.long	LVL36
+ 1489 0a18 5A0A0000 		.long	0xa5a
+ 1490 0a1c 16       		.uleb128 0x16
+ 1491 0a1d 1C020000 		.long	LVL38
+ 1492 0a21 6E0A0000 		.long	0xa6e
+ 1493 0a25 17       		.uleb128 0x17
+ 1494 0a26 02       		.uleb128 0x2
+ 1495 0a27 74       		.byte	0x74
+ 1496 0a28 00       		.sleb128 0
+ 1497 0a29 05       		.uleb128 0x5
+ 1498 0a2a 03       		.byte	0x3
+ 1499 0a2b 53000000 		.long	LC3
+ 1500 0a2f 17       		.uleb128 0x17
+ 1501 0a30 02       		.uleb128 0x2
+ 1502 0a31 74       		.byte	0x74
+ 1503 0a32 04       		.sleb128 4
+ 1504 0a33 05       		.uleb128 0x5
+ 1505 0a34 03       		.byte	0x3
+GAS LISTING /cygdrive/c/DOCUME~1/andrey/LOCALS~1/Temp/cctzIl9W.s 			page 31
+
+
+ 1506 0a35 00000000 		.long	LC0
+ 1507 0a39 17       		.uleb128 0x17
+ 1508 0a3a 02       		.uleb128 0x2
+ 1509 0a3b 74       		.byte	0x74
+ 1510 0a3c 08       		.sleb128 8
+ 1511 0a3d 02       		.uleb128 0x2
+ 1512 0a3e 08       		.byte	0x8
+ 1513 0a3f B8       		.byte	0xb8
+ 1514 0a40 00       		.byte	0
+ 1515 0a41 00       		.byte	0
+ 1516 0a42 08       		.uleb128 0x8
+ 1517 0a43 04       		.byte	0x4
+ 1518 0a44 8F060000 		.long	0x68f
+ 1519 0a48 1C       		.uleb128 0x1c
+ 1520 0a49 6462675F 		.ascii "dbg_check_lock\0"
+ 1520      63686563 
+ 1520      6B5F6C6F 
+ 1520      636B00
+ 1521 0a58 0C       		.byte	0xc
+ 1522 0a59 E7       		.byte	0xe7
+ 1523 0a5a 1C       		.uleb128 0x1c
+ 1524 0a5b 6462675F 		.ascii "dbg_check_unlock\0"
+ 1524      63686563 
+ 1524      6B5F756E 
+ 1524      6C6F636B 
+ 1524      00
+ 1525 0a6c 0C       		.byte	0xc
+ 1526 0a6d E8       		.byte	0xe8
+ 1527 0a6e 1D       		.uleb128 0x1d
+ 1528 0a6f 63684462 		.ascii "chDbgPanic\0"
+ 1528      6750616E 
+ 1528      696300
+ 1529 0a7a 0C       		.byte	0xc
+ 1530 0a7b F6       		.byte	0xf6
+ 1531 0a7c 900A0000 		.long	0xa90
+ 1532 0a80 0E       		.uleb128 0xe
+ 1533 0a81 E4060000 		.long	0x6e4
+ 1534 0a85 0E       		.uleb128 0xe
+ 1535 0a86 900A0000 		.long	0xa90
+ 1536 0a8a 0E       		.uleb128 0xe
+ 1537 0a8b 02010000 		.long	0x102
+ 1538 0a8f 00       		.byte	0
+ 1539 0a90 08       		.uleb128 0x8
+ 1540 0a91 04       		.byte	0x4
+ 1541 0a92 EF060000 		.long	0x6ef
+ 1542 0a96 1D       		.uleb128 0x1d
+ 1543 0a97 6368506F 		.ascii "chPoolFree\0"
+ 1543      6F6C4672 
+ 1543      656500
+ 1544 0aa2 0B       		.byte	0xb
+ 1545 0aa3 84       		.byte	0x84
+ 1546 0aa4 B30A0000 		.long	0xab3
+ 1547 0aa8 0E       		.uleb128 0xe
+ 1548 0aa9 420A0000 		.long	0xa42
+ 1549 0aad 0E       		.uleb128 0xe
+ 1550 0aae 5C040000 		.long	0x45c
+ 1551 0ab2 00       		.byte	0
+GAS LISTING /cygdrive/c/DOCUME~1/andrey/LOCALS~1/Temp/cctzIl9W.s 			page 32
+
+
+ 1552 0ab3 1D       		.uleb128 0x1d
+ 1553 0ab4 63684865 		.ascii "chHeapFree\0"
+ 1553      61704672 
+ 1553      656500
+ 1554 0abf 0A       		.byte	0xa
+ 1555 0ac0 5A       		.byte	0x5a
+ 1556 0ac1 CB0A0000 		.long	0xacb
+ 1557 0ac5 0E       		.uleb128 0xe
+ 1558 0ac6 5C040000 		.long	0x45c
+ 1559 0aca 00       		.byte	0
+ 1560 0acb 1E       		.uleb128 0x1e
+ 1561 0acc 63684865 		.ascii "chHeapAlloc\0"
+ 1561      6170416C 
+ 1561      6C6F6300 
+ 1562 0ad8 0A       		.byte	0xa
+ 1563 0ad9 59       		.byte	0x59
+ 1564 0ada 5C040000 		.long	0x45c
+ 1565 0ade ED0A0000 		.long	0xaed
+ 1566 0ae2 0E       		.uleb128 0xe
+ 1567 0ae3 FA050000 		.long	0x5fa
+ 1568 0ae7 0E       		.uleb128 0xe
+ 1569 0ae8 09010000 		.long	0x109
+ 1570 0aec 00       		.byte	0
+ 1571 0aed 1F       		.uleb128 0x1f
+ 1572 0aee 63685468 		.ascii "chThdCreateI\0"
+ 1572      64437265 
+ 1572      61746549 
+ 1572      00
+ 1573 0afb 06       		.byte	0x6
+ 1574 0afc 6E01     		.word	0x16e
+ 1575 0afe CB030000 		.long	0x3cb
+ 1576 0b02 200B0000 		.long	0xb20
+ 1577 0b06 0E       		.uleb128 0xe
+ 1578 0b07 5C040000 		.long	0x45c
+ 1579 0b0b 0E       		.uleb128 0xe
+ 1580 0b0c 09010000 		.long	0x109
+ 1581 0b10 0E       		.uleb128 0xe
+ 1582 0b11 0B020000 		.long	0x20b
+ 1583 0b15 0E       		.uleb128 0xe
+ 1584 0b16 FD060000 		.long	0x6fd
+ 1585 0b1a 0E       		.uleb128 0xe
+ 1586 0b1b 5C040000 		.long	0x45c
+ 1587 0b1f 00       		.byte	0
+ 1588 0b20 1D       		.uleb128 0x1d
+ 1589 0b21 63685363 		.ascii "chSchWakeupS\0"
+ 1589      6857616B 
+ 1589      65757053 
+ 1589      00
+ 1590 0b2e 0D       		.byte	0xd
+ 1591 0b2f 99       		.byte	0x99
+ 1592 0b30 3F0B0000 		.long	0xb3f
+ 1593 0b34 0E       		.uleb128 0xe
+ 1594 0b35 CB030000 		.long	0x3cb
+ 1595 0b39 0E       		.uleb128 0xe
+ 1596 0b3a 1A020000 		.long	0x21a
+ 1597 0b3e 00       		.byte	0
+ 1598 0b3f 20       		.uleb128 0x20
+GAS LISTING /cygdrive/c/DOCUME~1/andrey/LOCALS~1/Temp/cctzIl9W.s 			page 33
+
+
+ 1599 0b40 6368506F 		.ascii "chPoolAlloc\0"
+ 1599      6F6C416C 
+ 1599      6C6F6300 
+ 1600 0b4c 0B       		.byte	0xb
+ 1601 0b4d 82       		.byte	0x82
+ 1602 0b4e 5C040000 		.long	0x45c
+ 1603 0b52 0E       		.uleb128 0xe
+ 1604 0b53 420A0000 		.long	0xa42
+ 1605 0b57 00       		.byte	0
+ 1606 0b58 00       		.byte	0
+ 1607              		.section	.debug_abbrev,"dr"
+ 1608              	Ldebug_abbrev0:
+ 1609 0000 01       		.uleb128 0x1
+ 1610 0001 11       		.uleb128 0x11
+ 1611 0002 01       		.byte	0x1
+ 1612 0003 25       		.uleb128 0x25
+ 1613 0004 08       		.uleb128 0x8
+ 1614 0005 13       		.uleb128 0x13
+ 1615 0006 0B       		.uleb128 0xb
+ 1616 0007 03       		.uleb128 0x3
+ 1617 0008 08       		.uleb128 0x8
+ 1618 0009 1B       		.uleb128 0x1b
+ 1619 000a 08       		.uleb128 0x8
+ 1620 000b 11       		.uleb128 0x11
+ 1621 000c 01       		.uleb128 0x1
+ 1622 000d 12       		.uleb128 0x12
+ 1623 000e 06       		.uleb128 0x6
+ 1624 000f 10       		.uleb128 0x10
+ 1625 0010 17       		.uleb128 0x17
+ 1626 0011 00       		.byte	0
+ 1627 0012 00       		.byte	0
+ 1628 0013 02       		.uleb128 0x2
+ 1629 0014 24       		.uleb128 0x24
+ 1630 0015 00       		.byte	0
+ 1631 0016 0B       		.uleb128 0xb
+ 1632 0017 0B       		.uleb128 0xb
+ 1633 0018 3E       		.uleb128 0x3e
+ 1634 0019 0B       		.uleb128 0xb
+ 1635 001a 03       		.uleb128 0x3
+ 1636 001b 08       		.uleb128 0x8
+ 1637 001c 00       		.byte	0
+ 1638 001d 00       		.byte	0
+ 1639 001e 03       		.uleb128 0x3
+ 1640 001f 16       		.uleb128 0x16
+ 1641 0020 00       		.byte	0
+ 1642 0021 03       		.uleb128 0x3
+ 1643 0022 08       		.uleb128 0x8
+ 1644 0023 3A       		.uleb128 0x3a
+ 1645 0024 0B       		.uleb128 0xb
+ 1646 0025 3B       		.uleb128 0x3b
+ 1647 0026 0B       		.uleb128 0xb
+ 1648 0027 49       		.uleb128 0x49
+ 1649 0028 13       		.uleb128 0x13
+ 1650 0029 00       		.byte	0
+ 1651 002a 00       		.byte	0
+ 1652 002b 04       		.uleb128 0x4
+ 1653 002c 13       		.uleb128 0x13
+GAS LISTING /cygdrive/c/DOCUME~1/andrey/LOCALS~1/Temp/cctzIl9W.s 			page 34
+
+
+ 1654 002d 01       		.byte	0x1
+ 1655 002e 03       		.uleb128 0x3
+ 1656 002f 08       		.uleb128 0x8
+ 1657 0030 0B       		.uleb128 0xb
+ 1658 0031 0B       		.uleb128 0xb
+ 1659 0032 3A       		.uleb128 0x3a
+ 1660 0033 0B       		.uleb128 0xb
+ 1661 0034 3B       		.uleb128 0x3b
+ 1662 0035 0B       		.uleb128 0xb
+ 1663 0036 01       		.uleb128 0x1
+ 1664 0037 13       		.uleb128 0x13
+ 1665 0038 00       		.byte	0
+ 1666 0039 00       		.byte	0
+ 1667 003a 05       		.uleb128 0x5
+ 1668 003b 0D       		.uleb128 0xd
+ 1669 003c 00       		.byte	0
+ 1670 003d 03       		.uleb128 0x3
+ 1671 003e 0E       		.uleb128 0xe
+ 1672 003f 3A       		.uleb128 0x3a
+ 1673 0040 0B       		.uleb128 0xb
+ 1674 0041 3B       		.uleb128 0x3b
+ 1675 0042 0B       		.uleb128 0xb
+ 1676 0043 49       		.uleb128 0x49
+ 1677 0044 13       		.uleb128 0x13
+ 1678 0045 38       		.uleb128 0x38
+ 1679 0046 0B       		.uleb128 0xb
+ 1680 0047 00       		.byte	0
+ 1681 0048 00       		.byte	0
+ 1682 0049 06       		.uleb128 0x6
+ 1683 004a 0D       		.uleb128 0xd
+ 1684 004b 00       		.byte	0
+ 1685 004c 03       		.uleb128 0x3
+ 1686 004d 08       		.uleb128 0x8
+ 1687 004e 3A       		.uleb128 0x3a
+ 1688 004f 0B       		.uleb128 0xb
+ 1689 0050 3B       		.uleb128 0x3b
+ 1690 0051 0B       		.uleb128 0xb
+ 1691 0052 49       		.uleb128 0x49
+ 1692 0053 13       		.uleb128 0x13
+ 1693 0054 38       		.uleb128 0x38
+ 1694 0055 0B       		.uleb128 0xb
+ 1695 0056 00       		.byte	0
+ 1696 0057 00       		.byte	0
+ 1697 0058 07       		.uleb128 0x7
+ 1698 0059 13       		.uleb128 0x13
+ 1699 005a 01       		.byte	0x1
+ 1700 005b 0B       		.uleb128 0xb
+ 1701 005c 0B       		.uleb128 0xb
+ 1702 005d 3A       		.uleb128 0x3a
+ 1703 005e 0B       		.uleb128 0xb
+ 1704 005f 3B       		.uleb128 0x3b
+ 1705 0060 0B       		.uleb128 0xb
+ 1706 0061 01       		.uleb128 0x1
+ 1707 0062 13       		.uleb128 0x13
+ 1708 0063 00       		.byte	0
+ 1709 0064 00       		.byte	0
+ 1710 0065 08       		.uleb128 0x8
+GAS LISTING /cygdrive/c/DOCUME~1/andrey/LOCALS~1/Temp/cctzIl9W.s 			page 35
+
+
+ 1711 0066 0F       		.uleb128 0xf
+ 1712 0067 00       		.byte	0
+ 1713 0068 0B       		.uleb128 0xb
+ 1714 0069 0B       		.uleb128 0xb
+ 1715 006a 49       		.uleb128 0x49
+ 1716 006b 13       		.uleb128 0x13
+ 1717 006c 00       		.byte	0
+ 1718 006d 00       		.byte	0
+ 1719 006e 09       		.uleb128 0x9
+ 1720 006f 01       		.uleb128 0x1
+ 1721 0070 01       		.byte	0x1
+ 1722 0071 49       		.uleb128 0x49
+ 1723 0072 13       		.uleb128 0x13
+ 1724 0073 01       		.uleb128 0x1
+ 1725 0074 13       		.uleb128 0x13
+ 1726 0075 00       		.byte	0
+ 1727 0076 00       		.byte	0
+ 1728 0077 0A       		.uleb128 0xa
+ 1729 0078 21       		.uleb128 0x21
+ 1730 0079 00       		.byte	0
+ 1731 007a 49       		.uleb128 0x49
+ 1732 007b 13       		.uleb128 0x13
+ 1733 007c 2F       		.uleb128 0x2f
+ 1734 007d 0B       		.uleb128 0xb
+ 1735 007e 00       		.byte	0
+ 1736 007f 00       		.byte	0
+ 1737 0080 0B       		.uleb128 0xb
+ 1738 0081 0F       		.uleb128 0xf
+ 1739 0082 00       		.byte	0
+ 1740 0083 0B       		.uleb128 0xb
+ 1741 0084 0B       		.uleb128 0xb
+ 1742 0085 00       		.byte	0
+ 1743 0086 00       		.byte	0
+ 1744 0087 0C       		.uleb128 0xc
+ 1745 0088 35       		.uleb128 0x35
+ 1746 0089 00       		.byte	0
+ 1747 008a 49       		.uleb128 0x49
+ 1748 008b 13       		.uleb128 0x13
+ 1749 008c 00       		.byte	0
+ 1750 008d 00       		.byte	0
+ 1751 008e 0D       		.uleb128 0xd
+ 1752 008f 15       		.uleb128 0x15
+ 1753 0090 01       		.byte	0x1
+ 1754 0091 27       		.uleb128 0x27
+ 1755 0092 19       		.uleb128 0x19
+ 1756 0093 49       		.uleb128 0x49
+ 1757 0094 13       		.uleb128 0x13
+ 1758 0095 01       		.uleb128 0x1
+ 1759 0096 13       		.uleb128 0x13
+ 1760 0097 00       		.byte	0
+ 1761 0098 00       		.byte	0
+ 1762 0099 0E       		.uleb128 0xe
+ 1763 009a 05       		.uleb128 0x5
+ 1764 009b 00       		.byte	0
+ 1765 009c 49       		.uleb128 0x49
+ 1766 009d 13       		.uleb128 0x13
+ 1767 009e 00       		.byte	0
+GAS LISTING /cygdrive/c/DOCUME~1/andrey/LOCALS~1/Temp/cctzIl9W.s 			page 36
+
+
+ 1768 009f 00       		.byte	0
+ 1769 00a0 0F       		.uleb128 0xf
+ 1770 00a1 17       		.uleb128 0x17
+ 1771 00a2 01       		.byte	0x1
+ 1772 00a3 0B       		.uleb128 0xb
+ 1773 00a4 0B       		.uleb128 0xb
+ 1774 00a5 3A       		.uleb128 0x3a
+ 1775 00a6 0B       		.uleb128 0xb
+ 1776 00a7 3B       		.uleb128 0x3b
+ 1777 00a8 0B       		.uleb128 0xb
+ 1778 00a9 01       		.uleb128 0x1
+ 1779 00aa 13       		.uleb128 0x13
+ 1780 00ab 00       		.byte	0
+ 1781 00ac 00       		.byte	0
+ 1782 00ad 10       		.uleb128 0x10
+ 1783 00ae 0D       		.uleb128 0xd
+ 1784 00af 00       		.byte	0
+ 1785 00b0 03       		.uleb128 0x3
+ 1786 00b1 08       		.uleb128 0x8
+ 1787 00b2 3A       		.uleb128 0x3a
+ 1788 00b3 0B       		.uleb128 0xb
+ 1789 00b4 3B       		.uleb128 0x3b
+ 1790 00b5 0B       		.uleb128 0xb
+ 1791 00b6 49       		.uleb128 0x49
+ 1792 00b7 13       		.uleb128 0x13
+ 1793 00b8 00       		.byte	0
+ 1794 00b9 00       		.byte	0
+ 1795 00ba 11       		.uleb128 0x11
+ 1796 00bb 17       		.uleb128 0x17
+ 1797 00bc 01       		.byte	0x1
+ 1798 00bd 03       		.uleb128 0x3
+ 1799 00be 08       		.uleb128 0x8
+ 1800 00bf 0B       		.uleb128 0xb
+ 1801 00c0 0B       		.uleb128 0xb
+ 1802 00c1 3A       		.uleb128 0x3a
+ 1803 00c2 0B       		.uleb128 0xb
+ 1804 00c3 3B       		.uleb128 0x3b
+ 1805 00c4 0B       		.uleb128 0xb
+ 1806 00c5 01       		.uleb128 0x1
+ 1807 00c6 13       		.uleb128 0x13
+ 1808 00c7 00       		.byte	0
+ 1809 00c8 00       		.byte	0
+ 1810 00c9 12       		.uleb128 0x12
+ 1811 00ca 26       		.uleb128 0x26
+ 1812 00cb 00       		.byte	0
+ 1813 00cc 49       		.uleb128 0x49
+ 1814 00cd 13       		.uleb128 0x13
+ 1815 00ce 00       		.byte	0
+ 1816 00cf 00       		.byte	0
+ 1817 00d0 13       		.uleb128 0x13
+ 1818 00d1 2E       		.uleb128 0x2e
+ 1819 00d2 01       		.byte	0x1
+ 1820 00d3 3F       		.uleb128 0x3f
+ 1821 00d4 19       		.uleb128 0x19
+ 1822 00d5 03       		.uleb128 0x3
+ 1823 00d6 08       		.uleb128 0x8
+ 1824 00d7 3A       		.uleb128 0x3a
+GAS LISTING /cygdrive/c/DOCUME~1/andrey/LOCALS~1/Temp/cctzIl9W.s 			page 37
+
+
+ 1825 00d8 0B       		.uleb128 0xb
+ 1826 00d9 3B       		.uleb128 0x3b
+ 1827 00da 0B       		.uleb128 0xb
+ 1828 00db 27       		.uleb128 0x27
+ 1829 00dc 19       		.uleb128 0x19
+ 1830 00dd 49       		.uleb128 0x49
+ 1831 00de 13       		.uleb128 0x13
+ 1832 00df 11       		.uleb128 0x11
+ 1833 00e0 01       		.uleb128 0x1
+ 1834 00e1 12       		.uleb128 0x12
+ 1835 00e2 06       		.uleb128 0x6
+ 1836 00e3 40       		.uleb128 0x40
+ 1837 00e4 18       		.uleb128 0x18
+ 1838 00e5 9742     		.uleb128 0x2117
+ 1839 00e7 19       		.uleb128 0x19
+ 1840 00e8 01       		.uleb128 0x1
+ 1841 00e9 13       		.uleb128 0x13
+ 1842 00ea 00       		.byte	0
+ 1843 00eb 00       		.byte	0
+ 1844 00ec 14       		.uleb128 0x14
+ 1845 00ed 05       		.uleb128 0x5
+ 1846 00ee 00       		.byte	0
+ 1847 00ef 03       		.uleb128 0x3
+ 1848 00f0 08       		.uleb128 0x8
+ 1849 00f1 3A       		.uleb128 0x3a
+ 1850 00f2 0B       		.uleb128 0xb
+ 1851 00f3 3B       		.uleb128 0x3b
+ 1852 00f4 0B       		.uleb128 0xb
+ 1853 00f5 49       		.uleb128 0x49
+ 1854 00f6 13       		.uleb128 0x13
+ 1855 00f7 02       		.uleb128 0x2
+ 1856 00f8 18       		.uleb128 0x18
+ 1857 00f9 00       		.byte	0
+ 1858 00fa 00       		.byte	0
+ 1859 00fb 15       		.uleb128 0x15
+ 1860 00fc 898201   		.uleb128 0x4109
+ 1861 00ff 00       		.byte	0
+ 1862 0100 11       		.uleb128 0x11
+ 1863 0101 01       		.uleb128 0x1
+ 1864 0102 31       		.uleb128 0x31
+ 1865 0103 13       		.uleb128 0x13
+ 1866 0104 00       		.byte	0
+ 1867 0105 00       		.byte	0
+ 1868 0106 16       		.uleb128 0x16
+ 1869 0107 898201   		.uleb128 0x4109
+ 1870 010a 01       		.byte	0x1
+ 1871 010b 11       		.uleb128 0x11
+ 1872 010c 01       		.uleb128 0x1
+ 1873 010d 31       		.uleb128 0x31
+ 1874 010e 13       		.uleb128 0x13
+ 1875 010f 00       		.byte	0
+ 1876 0110 00       		.byte	0
+ 1877 0111 17       		.uleb128 0x17
+ 1878 0112 8A8201   		.uleb128 0x410a
+ 1879 0115 00       		.byte	0
+ 1880 0116 02       		.uleb128 0x2
+ 1881 0117 18       		.uleb128 0x18
+GAS LISTING /cygdrive/c/DOCUME~1/andrey/LOCALS~1/Temp/cctzIl9W.s 			page 38
+
+
+ 1882 0118 9142     		.uleb128 0x2111
+ 1883 011a 18       		.uleb128 0x18
+ 1884 011b 00       		.byte	0
+ 1885 011c 00       		.byte	0
+ 1886 011d 18       		.uleb128 0x18
+ 1887 011e 2E       		.uleb128 0x2e
+ 1888 011f 01       		.byte	0x1
+ 1889 0120 3F       		.uleb128 0x3f
+ 1890 0121 19       		.uleb128 0x19
+ 1891 0122 03       		.uleb128 0x3
+ 1892 0123 08       		.uleb128 0x8
+ 1893 0124 3A       		.uleb128 0x3a
+ 1894 0125 0B       		.uleb128 0xb
+ 1895 0126 3B       		.uleb128 0x3b
+ 1896 0127 0B       		.uleb128 0xb
+ 1897 0128 27       		.uleb128 0x27
+ 1898 0129 19       		.uleb128 0x19
+ 1899 012a 11       		.uleb128 0x11
+ 1900 012b 01       		.uleb128 0x1
+ 1901 012c 12       		.uleb128 0x12
+ 1902 012d 06       		.uleb128 0x6
+ 1903 012e 40       		.uleb128 0x40
+ 1904 012f 18       		.uleb128 0x18
+ 1905 0130 9742     		.uleb128 0x2117
+ 1906 0132 19       		.uleb128 0x19
+ 1907 0133 01       		.uleb128 0x1
+ 1908 0134 13       		.uleb128 0x13
+ 1909 0135 00       		.byte	0
+ 1910 0136 00       		.byte	0
+ 1911 0137 19       		.uleb128 0x19
+ 1912 0138 34       		.uleb128 0x34
+ 1913 0139 00       		.byte	0
+ 1914 013a 03       		.uleb128 0x3
+ 1915 013b 08       		.uleb128 0x8
+ 1916 013c 3A       		.uleb128 0x3a
+ 1917 013d 0B       		.uleb128 0xb
+ 1918 013e 3B       		.uleb128 0x3b
+ 1919 013f 0B       		.uleb128 0xb
+ 1920 0140 49       		.uleb128 0x49
+ 1921 0141 13       		.uleb128 0x13
+ 1922 0142 02       		.uleb128 0x2
+ 1923 0143 17       		.uleb128 0x17
+ 1924 0144 00       		.byte	0
+ 1925 0145 00       		.byte	0
+ 1926 0146 1A       		.uleb128 0x1a
+ 1927 0147 898201   		.uleb128 0x4109
+ 1928 014a 01       		.byte	0x1
+ 1929 014b 11       		.uleb128 0x11
+ 1930 014c 01       		.uleb128 0x1
+ 1931 014d 31       		.uleb128 0x31
+ 1932 014e 13       		.uleb128 0x13
+ 1933 014f 01       		.uleb128 0x1
+ 1934 0150 13       		.uleb128 0x13
+ 1935 0151 00       		.byte	0
+ 1936 0152 00       		.byte	0
+ 1937 0153 1B       		.uleb128 0x1b
+ 1938 0154 898201   		.uleb128 0x4109
+GAS LISTING /cygdrive/c/DOCUME~1/andrey/LOCALS~1/Temp/cctzIl9W.s 			page 39
+
+
+ 1939 0157 00       		.byte	0
+ 1940 0158 11       		.uleb128 0x11
+ 1941 0159 01       		.uleb128 0x1
+ 1942 015a 9542     		.uleb128 0x2115
+ 1943 015c 19       		.uleb128 0x19
+ 1944 015d 31       		.uleb128 0x31
+ 1945 015e 13       		.uleb128 0x13
+ 1946 015f 00       		.byte	0
+ 1947 0160 00       		.byte	0
+ 1948 0161 1C       		.uleb128 0x1c
+ 1949 0162 2E       		.uleb128 0x2e
+ 1950 0163 00       		.byte	0
+ 1951 0164 3F       		.uleb128 0x3f
+ 1952 0165 19       		.uleb128 0x19
+ 1953 0166 03       		.uleb128 0x3
+ 1954 0167 08       		.uleb128 0x8
+ 1955 0168 3A       		.uleb128 0x3a
+ 1956 0169 0B       		.uleb128 0xb
+ 1957 016a 3B       		.uleb128 0x3b
+ 1958 016b 0B       		.uleb128 0xb
+ 1959 016c 27       		.uleb128 0x27
+ 1960 016d 19       		.uleb128 0x19
+ 1961 016e 3C       		.uleb128 0x3c
+ 1962 016f 19       		.uleb128 0x19
+ 1963 0170 00       		.byte	0
+ 1964 0171 00       		.byte	0
+ 1965 0172 1D       		.uleb128 0x1d
+ 1966 0173 2E       		.uleb128 0x2e
+ 1967 0174 01       		.byte	0x1
+ 1968 0175 3F       		.uleb128 0x3f
+ 1969 0176 19       		.uleb128 0x19
+ 1970 0177 03       		.uleb128 0x3
+ 1971 0178 08       		.uleb128 0x8
+ 1972 0179 3A       		.uleb128 0x3a
+ 1973 017a 0B       		.uleb128 0xb
+ 1974 017b 3B       		.uleb128 0x3b
+ 1975 017c 0B       		.uleb128 0xb
+ 1976 017d 27       		.uleb128 0x27
+ 1977 017e 19       		.uleb128 0x19
+ 1978 017f 3C       		.uleb128 0x3c
+ 1979 0180 19       		.uleb128 0x19
+ 1980 0181 01       		.uleb128 0x1
+ 1981 0182 13       		.uleb128 0x13
+ 1982 0183 00       		.byte	0
+ 1983 0184 00       		.byte	0
+ 1984 0185 1E       		.uleb128 0x1e
+ 1985 0186 2E       		.uleb128 0x2e
+ 1986 0187 01       		.byte	0x1
+ 1987 0188 3F       		.uleb128 0x3f
+ 1988 0189 19       		.uleb128 0x19
+ 1989 018a 03       		.uleb128 0x3
+ 1990 018b 08       		.uleb128 0x8
+ 1991 018c 3A       		.uleb128 0x3a
+ 1992 018d 0B       		.uleb128 0xb
+ 1993 018e 3B       		.uleb128 0x3b
+ 1994 018f 0B       		.uleb128 0xb
+ 1995 0190 27       		.uleb128 0x27
+GAS LISTING /cygdrive/c/DOCUME~1/andrey/LOCALS~1/Temp/cctzIl9W.s 			page 40
+
+
+ 1996 0191 19       		.uleb128 0x19
+ 1997 0192 49       		.uleb128 0x49
+ 1998 0193 13       		.uleb128 0x13
+ 1999 0194 3C       		.uleb128 0x3c
+ 2000 0195 19       		.uleb128 0x19
+ 2001 0196 01       		.uleb128 0x1
+ 2002 0197 13       		.uleb128 0x13
+ 2003 0198 00       		.byte	0
+ 2004 0199 00       		.byte	0
+ 2005 019a 1F       		.uleb128 0x1f
+ 2006 019b 2E       		.uleb128 0x2e
+ 2007 019c 01       		.byte	0x1
+ 2008 019d 3F       		.uleb128 0x3f
+ 2009 019e 19       		.uleb128 0x19
+ 2010 019f 03       		.uleb128 0x3
+ 2011 01a0 08       		.uleb128 0x8
+ 2012 01a1 3A       		.uleb128 0x3a
+ 2013 01a2 0B       		.uleb128 0xb
+ 2014 01a3 3B       		.uleb128 0x3b
+ 2015 01a4 05       		.uleb128 0x5
+ 2016 01a5 27       		.uleb128 0x27
+ 2017 01a6 19       		.uleb128 0x19
+ 2018 01a7 49       		.uleb128 0x49
+ 2019 01a8 13       		.uleb128 0x13
+ 2020 01a9 3C       		.uleb128 0x3c
+ 2021 01aa 19       		.uleb128 0x19
+ 2022 01ab 01       		.uleb128 0x1
+ 2023 01ac 13       		.uleb128 0x13
+ 2024 01ad 00       		.byte	0
+ 2025 01ae 00       		.byte	0
+ 2026 01af 20       		.uleb128 0x20
+ 2027 01b0 2E       		.uleb128 0x2e
+ 2028 01b1 01       		.byte	0x1
+ 2029 01b2 3F       		.uleb128 0x3f
+ 2030 01b3 19       		.uleb128 0x19
+ 2031 01b4 03       		.uleb128 0x3
+ 2032 01b5 08       		.uleb128 0x8
+ 2033 01b6 3A       		.uleb128 0x3a
+ 2034 01b7 0B       		.uleb128 0xb
+ 2035 01b8 3B       		.uleb128 0x3b
+ 2036 01b9 0B       		.uleb128 0xb
+ 2037 01ba 27       		.uleb128 0x27
+ 2038 01bb 19       		.uleb128 0x19
+ 2039 01bc 49       		.uleb128 0x49
+ 2040 01bd 13       		.uleb128 0x13
+ 2041 01be 3C       		.uleb128 0x3c
+ 2042 01bf 19       		.uleb128 0x19
+ 2043 01c0 00       		.byte	0
+ 2044 01c1 00       		.byte	0
+ 2045 01c2 00       		.byte	0
+ 2046              		.section	.debug_loc,"dr"
+ 2047              	Ldebug_loc0:
+ 2048              	LLST0:
+ 2049 0000 7F000000 		.long	LVL6-Ltext0
+ 2050 0004 83000000 		.long	LVL7-1-Ltext0
+ 2051 0008 0100     		.word	0x1
+ 2052 000a 50       		.byte	0x50
+GAS LISTING /cygdrive/c/DOCUME~1/andrey/LOCALS~1/Temp/cctzIl9W.s 			page 41
+
+
+ 2053 000b 83000000 		.long	LVL7-1-Ltext0
+ 2054 000f 96000000 		.long	LVL8-Ltext0
+ 2055 0013 0100     		.word	0x1
+ 2056 0015 56       		.byte	0x56
+ 2057 0016 97000000 		.long	LVL9-Ltext0
+ 2058 001a 9B000000 		.long	LVL10-Ltext0
+ 2059 001e 0100     		.word	0x1
+ 2060 0020 50       		.byte	0x50
+ 2061 0021 9B000000 		.long	LVL10-Ltext0
+ 2062 0025 C6000000 		.long	LVL12-Ltext0
+ 2063 0029 0100     		.word	0x1
+ 2064 002b 56       		.byte	0x56
+ 2065 002c E8000000 		.long	LVL14-Ltext0
+ 2066 0030 00010000 		.long	LVL15-Ltext0
+ 2067 0034 0100     		.word	0x1
+ 2068 0036 56       		.byte	0x56
+ 2069 0037 00000000 		.long	0
+ 2070 003b 00000000 		.long	0
+ 2071              	LLST1:
+ 2072 003f 2D010000 		.long	LVL19-Ltext0
+ 2073 0043 34010000 		.long	LVL20-1-Ltext0
+ 2074 0047 0100     		.word	0x1
+ 2075 0049 50       		.byte	0x50
+ 2076 004a 34010000 		.long	LVL20-1-Ltext0
+ 2077 004e 7C010000 		.long	LVL26-Ltext0
+ 2078 0052 0100     		.word	0x1
+ 2079 0054 56       		.byte	0x56
+ 2080 0055 7D010000 		.long	LVL27-Ltext0
+ 2081 0059 82010000 		.long	LVL28-Ltext0
+ 2082 005d 0100     		.word	0x1
+ 2083 005f 50       		.byte	0x50
+ 2084 0060 82010000 		.long	LVL28-Ltext0
+ 2085 0064 84010000 		.long	LFE9-Ltext0
+ 2086 0068 0100     		.word	0x1
+ 2087 006a 56       		.byte	0x56
+ 2088 006b 00000000 		.long	0
+ 2089 006f 00000000 		.long	0
+ 2090              	LLST2:
+ 2091 0073 5F010000 		.long	LVL22-Ltext0
+ 2092 0077 6E010000 		.long	LVL23-1-Ltext0
+ 2093 007b 0100     		.word	0x1
+ 2094 007d 50       		.byte	0x50
+ 2095 007e 6E010000 		.long	LVL23-1-Ltext0
+ 2096 0082 77010000 		.long	LVL25-Ltext0
+ 2097 0086 0100     		.word	0x1
+ 2098 0088 53       		.byte	0x53
+ 2099 0089 00000000 		.long	0
+ 2100 008d 00000000 		.long	0
+ 2101              	LLST3:
+ 2102 0091 A9010000 		.long	LVL31-Ltext0
+ 2103 0095 B0010000 		.long	LVL32-1-Ltext0
+ 2104 0099 0100     		.word	0x1
+ 2105 009b 50       		.byte	0x50
+ 2106 009c B0010000 		.long	LVL32-1-Ltext0
+ 2107 00a0 DE010000 		.long	LVL34-Ltext0
+ 2108 00a4 0100     		.word	0x1
+ 2109 00a6 56       		.byte	0x56
+GAS LISTING /cygdrive/c/DOCUME~1/andrey/LOCALS~1/Temp/cctzIl9W.s 			page 42
+
+
+ 2110 00a7 21020000 		.long	LVL39-Ltext0
+ 2111 00ab 23020000 		.long	LVL40-Ltext0
+ 2112 00af 0100     		.word	0x1
+ 2113 00b1 50       		.byte	0x50
+ 2114 00b2 23020000 		.long	LVL40-Ltext0
+ 2115 00b6 25020000 		.long	LFE10-Ltext0
+ 2116 00ba 0100     		.word	0x1
+ 2117 00bc 56       		.byte	0x56
+ 2118 00bd 00000000 		.long	0
+ 2119 00c1 00000000 		.long	0
+ 2120              	LLST4:
+ 2121 00c5 DE010000 		.long	LVL34-Ltext0
+ 2122 00c9 F0010000 		.long	LVL35-1-Ltext0
+ 2123 00cd 0100     		.word	0x1
+ 2124 00cf 50       		.byte	0x50
+ 2125 00d0 F0010000 		.long	LVL35-1-Ltext0
+ 2126 00d4 F9010000 		.long	LVL37-Ltext0
+ 2127 00d8 0100     		.word	0x1
+ 2128 00da 56       		.byte	0x56
+ 2129 00db 00000000 		.long	0
+ 2130 00df 00000000 		.long	0
+ 2131              		.section	.debug_aranges,"dr"
+ 2132 0000 1C000000 		.long	0x1c
+ 2133 0004 0200     		.word	0x2
+ 2134 0006 00000000 		.secrel32	Ldebug_info0
+ 2135 000a 04       		.byte	0x4
+ 2136 000b 00       		.byte	0
+ 2137 000c 0000     		.word	0
+ 2138 000e 0000     		.word	0
+ 2139 0010 00000000 		.long	Ltext0
+ 2140 0014 25020000 		.long	Letext0-Ltext0
+ 2141 0018 00000000 		.long	0
+ 2142 001c 00000000 		.long	0
+ 2143              		.section	.debug_line,"dr"
+ 2144              	Ldebug_line0:
+ 2145 0000 EC010000 		.section	.debug_str,"dr"
+ 2145      02006601 
+ 2145      00000101 
+ 2145      FB0E0D00 
+ 2145      01010101 
+ 2146              	LASF0:
+ 2147 0000 705F6E65 		.ascii "p_next\0"
+ 2147      787400
+ 2148              		.ident	"GCC: (GNU) 4.8.2"
+ 2149              		.def	_dbg_check_lock;	.scl	2;	.type	32;	.endef
+ 2150              		.def	_dbg_check_unlock;	.scl	2;	.type	32;	.endef
+ 2151              		.def	_chDbgPanic;	.scl	2;	.type	32;	.endef
+ 2152              		.def	_chPoolFree;	.scl	2;	.type	32;	.endef
+ 2153              		.def	_chHeapFree;	.scl	2;	.type	32;	.endef
+ 2154              		.def	_chHeapAlloc;	.scl	2;	.type	32;	.endef
+ 2155              		.def	_chThdCreateI;	.scl	2;	.type	32;	.endef
+ 2156              		.def	_chSchWakeupS;	.scl	2;	.type	32;	.endef
+ 2157              		.def	_chPoolAlloc;	.scl	2;	.type	32;	.endef
+GAS LISTING /cygdrive/c/DOCUME~1/andrey/LOCALS~1/Temp/cctzIl9W.s 			page 43
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 chdynamic.c
+/cygdrive/c/DOCUME~1/andrey/LOCALS~1/Temp/cctzIl9W.s:77     .text:00000000 _chThdAddRef
+/cygdrive/c/DOCUME~1/andrey/LOCALS~1/Temp/cctzIl9W.s:143    .text:00000060 _chThdRelease
+/cygdrive/c/DOCUME~1/andrey/LOCALS~1/Temp/cctzIl9W.s:270    .text:00000110 _chThdCreateFromHeap
+/cygdrive/c/DOCUME~1/andrey/LOCALS~1/Temp/cctzIl9W.s:368    .text:00000190 _chThdCreateFromMemoryPool
+
+UNDEFINED SYMBOLS
+_dbg_check_lock
+_dbg_check_unlock
+_chDbgPanic
+_chPoolFree
+_chHeapFree
+_chHeapAlloc
+_chThdCreateI
+_chSchWakeupS
+_chPoolAlloc
