@@ -91,7 +91,7 @@
         </option>
         <option>
           <name>GeneralEnableMisra</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>GeneralMisraVerbose</name>
@@ -120,16 +120,16 @@
         <option>
           <name>GeneralMisraRules98</name>
           <version>0</version>
-          <state>0000111110010001101110011100111100101110011001000101000111101101100001111111011100110001111001100111001101110101011111111111111</state>
+          <state>0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000</state>
         </option>
         <option>
           <name>GeneralMisraVer</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>GeneralMisraRules04</name>
           <version>0</version>
-          <state>111101110010111111111000110111111111111111111111111110010111101111010101111111111111111111111111101111111011111001111011111011111111111111111</state>
+          <state>011100010000100010000000000011011000000000001000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000</state>
         </option>
         <option>
           <name>RTConfigPath2</name>

@@ -10,23 +10,30 @@
 #include "ford_escort_gt.h"
 #include "engine_math.h"
 
-void setFordEscortGt(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
-	engineConfiguration->triggerConfig.triggerType = TT_FORD_ESCORT_GT;
+static void setDefaultCrankingFuel(engine_configuration_s *engineConfiguration) {
+	// todo: set cranking parameters method based on injectors and displacement?
+
+	// since CLT is not wired up yet let's just use same value for min and max
+	// set_cranking_fuel_max 6 40
+	engineConfiguration->crankingSettings.coolantTempMaxC = 37.7; // 6ms at 37.7C
+	engineConfiguration->crankingSettings.fuelAtMaxTempMs = 6;
+
+	// set_cranking_fuel_min 6 -40
+	engineConfiguration->crankingSettings.coolantTempMinC = -40; // 6ms at -40C
+	engineConfiguration->crankingSettings.fuelAtMinTempMs = 6;
+}
+
+static void common079721_2351(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
 
 	engineConfiguration->cylindersCount = 4;
 	engineConfiguration->firingOrder = FO_1_THEN_3_THEN_4_THEN2;
-	// set_global_trigger_offset_angle 256
-	engineConfiguration->globalTriggerAngleOffset = 256;
-	// set_ignition_offset 170
-	engineConfiguration->ignitionOffset = 170;
-	// set_injection_offset 510
-	engineConfiguration->injectionOffset = 59;
 
-	setSingleCoilDwell(engineConfiguration);
-	engineConfiguration->ignitionMode = IM_ONE_COIL;
+	boardConfiguration->fuelPumpPin = GPIO_NONE; // fuel pump is not controlled by ECU on this engine
 
-	boardConfiguration->triggerSimulatorPinModes[0] = OM_OPENDRAIN;
-	boardConfiguration->triggerSimulatorPinModes[1] = OM_OPENDRAIN;
+	// set_cranking_injection_mode 0
+	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
+	// set_injection_mode 2
+	engineConfiguration->injectionMode = IM_BATCH;
 
 	// Frankenstein analog input #1: adc1
 	// Frankenstein analog input #2: adc3
@@ -43,6 +50,12 @@ void setFordEscortGt(engine_configuration_s *engineConfiguration, board_configur
 	engineConfiguration->mafAdcChannel = EFI_ADC_1;
 	engineConfiguration->tpsAdcChannel = EFI_ADC_3;
 	engineConfiguration->cltAdcChannel = EFI_ADC_11;
+}
+
+void setMiata1990(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
+	engineConfiguration->triggerConfig.triggerType = TT_FORD_ESCORT_GT;
+
+	common079721_2351(engineConfiguration, boardConfiguration);
 
 
 	// Frankenstein: high side #1 is PE8
@@ -53,11 +66,10 @@ void setFordEscortGt(engine_configuration_s *engineConfiguration, board_configur
 	// Frankenstein: high side #6 is PC7
 
 	boardConfiguration->ignitionPins[0] = GPIOE_12; // Frankenstein: high side #3
-	boardConfiguration->ignitionPins[1] = GPIO_NONE;
+	boardConfiguration->ignitionPins[1] = GPIOE_14; // Frankenstein: high side #4
 	boardConfiguration->ignitionPins[2] = GPIO_NONE;
 	boardConfiguration->ignitionPins[3] = GPIO_NONE;
 	boardConfiguration->ignitionPinMode = OM_DEFAULT;
-
 
 	// Frankenstein: low side - inj #1: PC14
 	// Frankenstein: low side - inj #2: PC15
@@ -80,26 +92,71 @@ void setFordEscortGt(engine_configuration_s *engineConfiguration, board_configur
 	boardConfiguration->injectionPins[5] = GPIO_NONE;
 	boardConfiguration->injectionPinMode = OM_DEFAULT;
 
+
+// todo: idleValvePin
+}
+
+void setFordEscortGt(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
+	engineConfiguration->triggerConfig.triggerType = TT_FORD_ESCORT_GT;
+
+	common079721_2351(engineConfiguration, boardConfiguration);
+
+	// set_global_trigger_offset_angle 256
+	engineConfiguration->globalTriggerAngleOffset = 256;
+	// set_ignition_offset 170
+	engineConfiguration->ignitionOffset = 170;
+	// set_injection_offset 510
+	engineConfiguration->injectionOffset = 59;
+
+	setSingleCoilDwell(engineConfiguration);
+	engineConfiguration->ignitionMode = IM_ONE_COIL;
+
+	boardConfiguration->triggerSimulatorPinModes[0] = OM_OPENDRAIN;
+	boardConfiguration->triggerSimulatorPinModes[1] = OM_OPENDRAIN;
+
+	// Frankenstein: high side #1 is PE8
+	// Frankenstein: high side #2 is PE10
+	// Frankenstein: high side #3 is PE12
+	// Frankenstein: high side #4 is PE14
+	// Frankenstein: high side #5 is PC9
+	// Frankenstein: high side #6 is PC7
+
+	boardConfiguration->ignitionPins[0] = GPIOE_12; // Frankenstein: high side #3
+	boardConfiguration->ignitionPins[1] = GPIO_NONE;
+	boardConfiguration->ignitionPins[2] = GPIO_NONE;
+	boardConfiguration->ignitionPins[3] = GPIO_NONE;
+	boardConfiguration->ignitionPinMode = OM_DEFAULT;
+
 	// set_whole_fuel_map 3
 	setWholeFuelMap(engineConfiguration, 3);
 
-	// since CLT is not wired up yet let's just use same value for min and max
-	// set_cranking_fuel_max 6 40
-	engineConfiguration->crankingSettings.coolantTempMaxC = 37.7; // 6ms at 37.7C
-	engineConfiguration->crankingSettings.fuelAtMaxTempMs = 6;
-
-	// set_cranking_fuel_min 6 -40
-	engineConfiguration->crankingSettings.coolantTempMinC = -40; // 6ms at -40C
-	engineConfiguration->crankingSettings.fuelAtMinTempMs = 6;
-
-	boardConfiguration->fuelPumpPin = GPIO_NONE; // fuel pump is not controlled by ECU on this engine
-
-	// set_cranking_injection_mode 0
-	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
-	// set_injection_mode 2
-	engineConfiguration->injectionMode = IM_BATCH;
-
+	setDefaultCrankingFuel(engineConfiguration);
 }
 
+/**
+ * set_engine_type 20
+ */
+void setMiata1994(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
+	engineConfiguration->triggerConfig.triggerType = TT_MAZDA_MIATA_NA;
+	engineConfiguration->displacement = 1.839;
 
+	boardConfiguration->triggerSimulatorPins[0] = GPIOD_2; // 2G - YEL/BLU
+	boardConfiguration->triggerSimulatorPins[1] = GPIOB_3; // 2E - WHT - four times
+	boardConfiguration->triggerSimulatorPinModes[0] = OM_OPENDRAIN;
+	boardConfiguration->triggerSimulatorPinModes[1] = OM_OPENDRAIN;
+
+	boardConfiguration->triggerInputPins[0] = GPIO_NONE;
+	boardConfiguration->triggerInputPins[1] = GPIO_NONE;
+
+	boardConfiguration->is_enabled_spi_1 = false;
+	boardConfiguration->is_enabled_spi_2 = false;
+	boardConfiguration->is_enabled_spi_3 = false;
+
+	setDefaultCrankingFuel(engineConfiguration);
+}
+
+void setMiata1996(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
+
+	setDefaultCrankingFuel(engineConfiguration);
+}
 

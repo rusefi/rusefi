@@ -152,5 +152,9 @@ void handleTestCommand(void) {
 	 */
 	tunerStudioDebug("got T (Test)");
 	tunerStudioWriteData((const uint8_t *)VCS_VERSION, sizeof(VCS_VERSION));
-	tunerStudioWriteData((const uint8_t *) " alive\r\n", 8);
+	/**
+	 * Please note that this response is a magic constant used by dev console for protocol detection
+	 * @see EngineState#TS_PROTOCOL_TAG
+	 */
+	tunerStudioWriteData((const uint8_t *) " ts_p_alive\r\n", 8);
 }

@@ -30,9 +30,8 @@
 
 #include "trigger_structure.h"
 
-#if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
-static Logging logger;
-#endif
+// todo: better name for this constant
+#define HELPER_PERIOD 100000
 
 static cyclic_buffer errorDetection;
 
@@ -66,6 +65,12 @@ static inline bool noSynchronizationResetNeeded(TriggerState *shaftPositionState
 	return shaftPositionState->getCurrentIndex() >= triggerShape->shaftPositionEventCount - 1;
 }
 
+float TriggerState::getTriggerDutyCycle(int index) {
+	float time = prevTotalTime[index];
+
+	return 100 * time / prevCycleDuration;
+}
+
 static trigger_wheel_e eventIndex[6] = { T_PRIMARY, T_PRIMARY, T_SECONDARY, T_SECONDARY, T_CHANNEL_3, T_CHANNEL_3 };
 static trigger_value_e eventType[6] = { TV_LOW, TV_HIGH, TV_LOW, TV_HIGH, TV_LOW, TV_HIGH };
 
@@ -94,7 +99,7 @@ void TriggerState::decodeTriggerEvent(trigger_shape_s const*triggerShape, trigge
 
 	int64_t currentDuration = isFirstEvent ? 0 : nowUs - toothed_previous_time;
 	isFirstEvent = false;
-	efiAssertVoid(currentDuration >= 0, "negative duration?");
+	efiAssertVoid(currentDuration >= 0, "decode: negative duration?");
 
 // todo: skip a number of signal from the beginning
 
@@ -126,7 +131,7 @@ void TriggerState::decodeTriggerEvent(trigger_shape_s const*triggerShape, trigge
 
 		shaft_is_synchronized = true;
 		// this call would update duty cycle values
-//		nextTriggerEvent(triggerWheel, nowUs);
+		nextTriggerEvent(triggerWheel, nowUs);
 
 		nextRevolution(triggerShape->shaftPositionEventCount, nowUs);
 	} else {
@@ -200,18 +205,21 @@ void initializeTriggerShape(Logging *logger, engine_configuration_s *engineConfi
 
 	setTriggerSynchronizationGap(triggerShape, 2);
 	triggerShape->useRiseEdge = TRUE;
-	triggerShape->needSecondTriggerInput = TRUE;
 
 	switch (triggerConfig->triggerType) {
 
 	case TT_TOOTHED_WHEEL:
-		engineConfiguration2->triggerShape.needSecondTriggerInput = false;
+		// todo: move to into configuration definition		engineConfiguration2->triggerShape.needSecondTriggerInput = false;
 
 		engineConfiguration2->triggerShape.isSynchronizationNeeded =
 				engineConfiguration->triggerConfig.customIsSynchronizationNeeded;
 
 		initializeSkippedToothTriggerShapeExt(triggerShape, triggerConfig->customTotalToothCount,
 				triggerConfig->customSkippedToothCount, getOperationMode(engineConfiguration));
+		return;
+
+	case TT_MAZDA_MIATA_NA:
+		initializeMazdaMiataNaShape(triggerShape);
 		return;
 
 	case TT_MAZDA_MIATA_NB:
@@ -274,6 +282,7 @@ void initializeTriggerShape(Logging *logger, engine_configuration_s *engineConfi
 TriggerStimulatorHelper::TriggerStimulatorHelper() {
 	primaryWheelState = false;
 	secondaryWheelState = false;
+	thirdWheelState = false;
 }
 
 void TriggerStimulatorHelper::nextStep(TriggerState *state, trigger_shape_s * shape, int i,
@@ -282,10 +291,11 @@ void TriggerStimulatorHelper::nextStep(TriggerState *state, trigger_shape_s * sh
 
 	int loopIndex = i / shape->getSize();
 
-	int time = (int) (10000 * (loopIndex + shape->wave.getSwitchTime(stateIndex)));
+	int time = (int) (HELPER_PERIOD * (loopIndex + shape->wave.getSwitchTime(stateIndex)));
 
 	bool newPrimaryWheelState = shape->wave.getChannelState(0, stateIndex);
 	bool newSecondaryWheelState = shape->wave.getChannelState(1, stateIndex);
+	bool new3rdWheelState = shape->wave.getChannelState(2, stateIndex);
 
 	if (primaryWheelState != newPrimaryWheelState) {
 		primaryWheelState = newPrimaryWheelState;
@@ -298,19 +308,28 @@ void TriggerStimulatorHelper::nextStep(TriggerState *state, trigger_shape_s * sh
 		trigger_event_e s = secondaryWheelState ? SHAFT_SECONDARY_UP : SHAFT_SECONDARY_DOWN;
 		state->decodeTriggerEvent(shape, triggerConfig, s, time);
 	}
+
+	if (thirdWheelState != new3rdWheelState) {
+		thirdWheelState = new3rdWheelState;
+		trigger_event_e s = thirdWheelState ? SHAFT_3RD_UP : SHAFT_3RD_DOWN;
+		state->decodeTriggerEvent(shape, triggerConfig, s, time);
+	}
 }
 
 static void onFindIndex(TriggerState *state) {
-
+	for (int i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
+		// todo: that's not the best place for this intermediate data storage, fix it!
+		state->expectedTotalTime[i] = state->totalTime[i];
+	}
 }
 
-static int doFindTrigger(TriggerStimulatorHelper *helper, trigger_shape_s * shape, trigger_config_s const*triggerConfig,
-		TriggerState *state) {
+static uint32_t doFindTrigger(TriggerStimulatorHelper *helper, trigger_shape_s * shape,
+		trigger_config_s const*triggerConfig, TriggerState *state) {
 	for (int i = 0; i < 4 * PWM_PHASE_MAX_COUNT; i++) {
 		helper->nextStep(state, shape, i, triggerConfig);
 
 		if (state->shaft_is_synchronized)
-			return i % shape->getSize();;
+			return i;
 	}
 	firmwareError("findTriggerZeroEventIndex() failed");
 	return EFI_ERROR_CODE;
@@ -322,33 +341,44 @@ static int doFindTrigger(TriggerStimulatorHelper *helper, trigger_shape_s * shap
  *
  * This function finds the index of synchronization event within trigger_shape_s
  */
-int findTriggerZeroEventIndex(trigger_shape_s * shape, trigger_config_s const*triggerConfig) {
+uint32_t findTriggerZeroEventIndex(trigger_shape_s * shape, trigger_config_s const*triggerConfig) {
 
 	TriggerState state;
 	errorDetection.clear();
 
-
 	TriggerStimulatorHelper helper;
 
-	int index = doFindTrigger(&helper, shape, triggerConfig, &state);
+	uint32_t index = doFindTrigger(&helper, shape, triggerConfig, &state);
 	if (index == EFI_ERROR_CODE) {
 		return index;
 	}
+	efiAssert(state.getTotalRevolutionCounter() == 1, "totalRevolutionCounter", EFI_ERROR_CODE);
+
 	/**
 	 * Now that we have just located the synch point, we can simulate the whole cycle
 	 * in order to calculate expected duty cycle
 	 */
-
-
 	state.cycleCallback = onFindIndex;
+	for (uint32_t i = index + 1; i <= index + 2 * shape->getSize(); i++) {
+		helper.nextStep(&state, shape, i, triggerConfig);
+	}
+	efiAssert(state.getTotalRevolutionCounter() > 1, "totalRevolutionCounter2", EFI_ERROR_CODE);
 
+	for (int i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
+		shape->dutyCycle[i] = 1.0 * state.expectedTotalTime[i] / HELPER_PERIOD;
+	}
 
-	return index;
+	return index % shape->getSize();
 }
+
+#if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
+//static Logging logger;
+#endif
+
 
 void initTriggerDecoder(void) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
-	initLogging(&logger, "trigger decoder");
+//	initLogging(&logger, "trigger decoder");
 #endif
 }
 

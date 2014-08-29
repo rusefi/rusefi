@@ -35,6 +35,7 @@ private:
 uint64_t getCrankEventCounter(void);
 uint64_t getStartOfRevolutionIndex(void);
 void hwHandleShaftSignal(trigger_event_e signal);
+float getTriggerDutyCycle(int index);
 void initTriggerCentral(void);
 void printAllCallbacksHistogram(void);
 

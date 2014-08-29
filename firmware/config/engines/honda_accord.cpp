@@ -16,6 +16,7 @@
 #include "trigger_decoder.h"
 #include "thermistors.h"
 #include "honda_accord.h"
+#include "engine_math.h"
 
 static void setHondaAccordConfigurationCommon(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
 	engineConfiguration->map.sensor.sensorType = MT_DENSO183;
@@ -36,6 +37,8 @@ static void setHondaAccordConfigurationCommon(engine_configuration_s *engineConf
 //	engineConfiguration->algorithm = LM_SPEED_DENSITY;
 	// I want to start with a simple Alpha-N
 	engineConfiguration->algorithm = LM_TPS;
+	setFuelLoadBin(engineConfiguration, 0, 100);
+	setTimingLoadBin(engineConfiguration, 0, 100);
 
 	engineConfiguration->crankingSettings.coolantTempMaxC = 65; // 8ms at 65C
 	engineConfiguration->crankingSettings.fuelAtMaxTempMs = 8;
@@ -55,9 +58,9 @@ static void setHondaAccordConfigurationCommon(engine_configuration_s *engineConf
 	engineConfiguration->iatThermistorConf.bias_resistor = 1500; // same as OEM ECU
 
 	// set_cranking_charge_angle 35
-	engineConfiguration->crankingChargeAngle = 35;
+	engineConfiguration->crankingChargeAngle = 70;
 	// set_cranking_timing_angle 0
-	engineConfiguration->crankingTimingAngle = 0;
+	engineConfiguration->crankingTimingAngle = 45;
 
 	// set_global_trigger_offset_angle 34
 	engineConfiguration->globalTriggerAngleOffset = 34;
@@ -65,7 +68,7 @@ static void setHondaAccordConfigurationCommon(engine_configuration_s *engineConf
 	// set_rpm_hard_limit 4000
 	engineConfiguration->rpmHardLimit = 4000; // yes, 4k. let's play it safe for now
 	// set_cranking_rpm 2000
-	engineConfiguration->crankingSettings.crankingRpm = 600;
+	engineConfiguration->crankingSettings.crankingRpm = 500;
 
 
 	// set_ignition_offset 350

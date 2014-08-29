@@ -324,6 +324,7 @@ static bool handlePlainCommand(uint8_t command) {
 		return true;
 	} else if (command == TS_PAGE_COMMAND) {
 		int recieved = chSequentialStreamRead(getTsSerialDevice(), (uint8_t *)&pageIn, sizeof(pageIn));
+		// todo: validate 'recieved' value
 		handlePageSelectCommand(TS_PLAIN, pageIn);
 		return true;
 	} else if (command == TS_READ_COMMAND) {
@@ -357,8 +358,19 @@ static bool isKnownCommand(char command) {
 static uint8_t firstByte;
 static uint8_t secondByte;
 
-// todo: reduce TS page size so that we can reduce buffer size
-static uint8_t crcIoBuffer[4096];
+#define CRC_VALUE_SIZE 4
+// todo: double-check this
+#define CRC_WRAPPING_SIZE 7
+
+/**
+ * we use 'blockingFactor = 256' in rusefi.ini
+ * todo: should we just do (256 + CRC_WRAPPING_SIZE) ?
+ */
+
+static uint8_t crcIoBuffer[300];
+
+
+
 
 static msg_t tsThreadEntryPoint(void *arg) {
 	(void) arg;
@@ -398,7 +410,7 @@ static msg_t tsThreadEntryPoint(void *arg) {
 
 		uint32_t incomingPacketSize = firstByte * 256 + secondByte;
 
-		if (incomingPacketSize == 0 || incomingPacketSize > sizeof(crcIoBuffer)) {
+		if (incomingPacketSize == 0 || incomingPacketSize > (sizeof(crcIoBuffer) - CRC_WRAPPING_SIZE)) {
 			scheduleMsg(&logger, "TunerStudio: invalid size: %d", incomingPacketSize);
 			tunerStudioError("ERROR: size");
 			sendErrorCode();
@@ -420,9 +432,9 @@ static msg_t tsThreadEntryPoint(void *arg) {
 
 //		scheduleMsg(&logger, "TunerStudio: reading %d+4 bytes(s)", incomingPacketSize);
 
-		recieved = chnReadTimeout(getTsSerialDevice(), (uint8_t * ) (crcIoBuffer + 1), incomingPacketSize + 4 - 1,
+		recieved = chnReadTimeout(getTsSerialDevice(), (uint8_t * ) (crcIoBuffer + 1), incomingPacketSize + CRC_VALUE_SIZE - 1,
 				MS2ST(TS_READ_TIMEOUT));
-		int expectedSize = incomingPacketSize + 4 - 1;
+		int expectedSize = incomingPacketSize + CRC_VALUE_SIZE - 1;
 		if (recieved != expectedSize) {
 			scheduleMsg(&logger, "got ONLY %d for packet size %d/%d for command %c", recieved, incomingPacketSize,
 					expectedSize, command);

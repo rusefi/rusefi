@@ -25,7 +25,7 @@ int minI(int i1, int i2) {
 }
 
 float efiRound(float value, float precision) {
-	int a = value / precision;
+	int a = (int)(value / precision);
 	return a * precision;
 }
 

@@ -34,6 +34,8 @@ public:
 	int totalToothCount;
 	int skippedToothCount;
 
+	float dutyCycle[PWM_PHASE_MAX_WAVE_PER_PWM];
+
 	float syncRatioFrom;
 	float syncRatioTo;
 
@@ -44,7 +46,6 @@ public:
 	 */
 	int expectedEventCount[PWM_PHASE_MAX_WAVE_PER_PWM];
 
-	bool needSecondTriggerInput;
 	void addEvent(float angle, trigger_wheel_e const waveIndex, trigger_value_e const state);
 	void reset(operation_mode_e operationMode);
 	int getSize() const;
@@ -56,6 +57,11 @@ public:
 	 * TODO with eliminating RPM_MULT magic constant
 	 */
 	int shaftPositionEventCount;
+
+	/**
+	 * this one is per CRANKshaft revolution
+	 */
+	uint32_t getLength() const;
 
 	// todo: add a runtime validation which would verify that this field was set properly
 	// tood: maybe even automate this flag calculation?

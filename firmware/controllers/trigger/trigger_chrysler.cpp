@@ -13,7 +13,6 @@ void configureNeonTriggerShape(trigger_shape_s *s) {
 	setTriggerSynchronizationGap(s, 0.72);
 
 	s->useRiseEdge = false;
-	s->needSecondTriggerInput = true;
 
 
 	// voodoo magic - we always need 720 at the end

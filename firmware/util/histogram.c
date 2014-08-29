@@ -148,7 +148,7 @@ int hsReport(histogram_s *h, int* report) {
 		float d = bounds[minIndex];
 		if (acc != k)
 			d += (bounds[minIndex + 1] - 1 - bounds[minIndex]) * (k - acc) / h->values[minIndex];
-		report[index++] = d;
+		report[index++] = (int)d;
 	}
 
 	int maxIndex = BOUND_LENGTH - 1;

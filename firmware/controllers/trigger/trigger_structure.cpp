@@ -106,11 +106,12 @@ void multi_wave_s::setSwitchTime(int index, float value) {
 
 TriggerState::TriggerState() {
 	cycleCallback = NULL;
-	shaft_is_synchronized = FALSE;
+	shaft_is_synchronized = false;
 	toothed_previous_time = 0;
 	toothed_previous_duration = 0;
 	totalRevolutionCounter = 0;
 	clear();
+	memset(expectedTotalTime, 0, sizeof(expectedTotalTime));
 	totalEventCountBase = 0;
 	isFirstEvent = true;
 }
@@ -131,6 +132,9 @@ void TriggerState::nextRevolution(int triggerEventCount, uint64_t nowUs) {
 	if (cycleCallback != NULL) {
 		cycleCallback(this);
 	}
+	memcpy(prevTotalTime, totalTime, sizeof(prevTotalTime));
+	prevCycleDuration = nowUs - startOfCycle;
+	startOfCycle = nowUs;
 	clear();
 	totalRevolutionCounter++;
 	totalEventCountBase += triggerEventCount;
@@ -143,9 +147,11 @@ int TriggerState::getTotalRevolutionCounter() {
 void TriggerState::nextTriggerEvent(trigger_wheel_e triggerWheel, uint64_t nowUs) {
 	uint64_t prevTime = timeOfPreviousEvent[triggerWheel];
 	if (prevTime != 0) {
+		// even event - apply the value
 		totalTime[triggerWheel] += (nowUs - prevTime);
 		timeOfPreviousEvent[triggerWheel] = 0;
 	} else {
+		// odd event - start accumulation
 		timeOfPreviousEvent[triggerWheel] = nowUs;
 	}
 
@@ -157,6 +163,10 @@ void TriggerState::clear() {
 	memset(timeOfPreviousEvent, 0, sizeof(timeOfPreviousEvent));
 	memset(totalTime, 0, sizeof(totalTime));
 	current_index = 0;
+}
+
+uint32_t trigger_shape_s::getLength() const {
+	return operationMode == FOUR_STROKE_CAM_SENSOR ? shaftPositionEventCount : 2 * shaftPositionEventCount;
 }
 
 float trigger_shape_s::getAngle(int index) const {
@@ -261,7 +271,7 @@ void setToothedWheelConfiguration(trigger_shape_s *s, int total, int skipped,
 
 	s->totalToothCount = total;
 	s->skippedToothCount = skipped;
-	s->needSecondTriggerInput = false;
+	// todo: move to into configuration definition s->needSecondTriggerInput = false;
 	s->useRiseEdge = true;
 
 	initializeSkippedToothTriggerShapeExt(s, s->totalToothCount, s->skippedToothCount,

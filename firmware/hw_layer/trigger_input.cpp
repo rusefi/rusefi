@@ -1,5 +1,5 @@
 /**
- * @file	trigger_input.c
+ * @file	trigger_input.cpp
  * @brief	Position sensor hardware layer
  *
  * @date Dec 30, 2012
@@ -38,8 +38,10 @@ static inline ICUDriver *getSecondaryInputCaptureDriver(void) {
  * 'width' events happens before the 'period' event
  */
 static void shaft_icu_width_callback(ICUDriver *icup) {
+// todo: support for 3rd trigger input channel
+// todo: start using real event time from HW event, not just software timer?
 	int isPrimary = icup == getPrimaryInputCaptureDriver();
-	if (!isPrimary && !engineConfiguration2->triggerShape.needSecondTriggerInput) {
+	if (!isPrimary && !engineConfiguration->needSecondTriggerInput) {
 		return;
 	}
 	//	icucnt_t last_width = icuGetWidth(icup); so far we are fine with system time
@@ -51,7 +53,7 @@ static void shaft_icu_width_callback(ICUDriver *icup) {
 
 static void shaft_icu_period_callback(ICUDriver *icup) {
 	int isPrimary = icup == getPrimaryInputCaptureDriver();
-	if (!isPrimary && !engineConfiguration2->triggerShape.needSecondTriggerInput) {
+	if (!isPrimary && !engineConfiguration->needSecondTriggerInput) {
 		return;
 	}
 

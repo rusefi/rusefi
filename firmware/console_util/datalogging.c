@@ -162,17 +162,18 @@ char* getCaption(LoggingPoints loggingPoint) {
 		return "MAT";
 	case LP_ECT:
 		return "CLT";
-	case LP_SECONDS:
-		return "SecL";
+//	case LP_SECONDS:
+//		return "SecL";
 	case LP_MAF:
 		return "MAF";
 	case LP_MAP:
 		return "MAP";
 	case LP_MAP_RAW:
 		return "MAP_R";
+	default:
+		firmwareError("No such loggingPoint");
+		return NULL;
 	}
-	firmwareError("No such loggingPoint");
-	return NULL;
 }
 
 /*
