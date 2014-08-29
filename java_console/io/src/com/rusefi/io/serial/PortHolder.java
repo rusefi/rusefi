@@ -62,6 +62,7 @@ class PortHolder {
         }
 
         try {
+            // todo: why is this delay here? add a comment
             Thread.sleep(200);
         } catch (InterruptedException e) {
             throw new IllegalStateException(e);
@@ -70,6 +71,16 @@ class PortHolder {
         synchronized (portLock) {
             this.serialPort = serialPort;
             portLock.notifyAll();
+        }
+
+        try {
+            /**
+             * Let's make sure we have not connected to Tuner Studio port?
+             * @see EngineState#TS_PROTOCOL_TAG
+             */
+            doWriteCommand("test");
+        } catch (SerialPortException e) {
+            return false;
         }
         return true;
     }
@@ -106,11 +117,15 @@ class PortHolder {
             }
             // we are here only when serialPort!=null, that means we have a connection
             try {
-                serialPort.writeString(command + "\r\n");
+                doWriteCommand(command);
             } catch (SerialPortException e) {
                 throw new IllegalStateException(e);
             }
         }
+    }
+
+    private void doWriteCommand(String command) throws SerialPortException {
+        serialPort.writeString(command + "\r\n");
     }
 
     public static PortHolder getInstance() {

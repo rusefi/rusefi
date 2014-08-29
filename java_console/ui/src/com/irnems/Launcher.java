@@ -19,7 +19,7 @@ import javax.swing.*;
  * @see WavePanel
  */
 public class Launcher extends FrameHelper {
-    public static final int CONSOLE_VERSION = 20140828;
+    public static final int CONSOLE_VERSION = 20140829;
     public static final boolean SHOW_STIMULATOR = true;
 
     public Launcher(String port) {
@@ -40,10 +40,10 @@ public class Launcher extends FrameHelper {
 //        tabbedPane.addTab("ADC", new AdcPanel(new BooleanInputsModel()).createAdcPanel());
         if (SHOW_STIMULATOR) {
             EcuStimulator stimulator = EcuStimulator.getInstance();
-            tabbedPane.add("Emulation Map", stimulator.getPanel());
+            tabbedPane.add("ECU stimulation", stimulator.getPanel());
         }
 //        tabbedPane.addTab("live map adjustment", new Live3DReport().getControl());
-        tabbedPane.add("MessagesCentral", new MsgPanel(true).getContent());
+        tabbedPane.add("Messages", new MsgPanel(true).getContent());
 
         tabbedPane.add("Log Viewer", new LogViewer());
 
