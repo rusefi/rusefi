@@ -1,4 +1,4 @@
-update=Tue 24 Jun 2014 23:38:09 CDT
+update=8/28/2014 5:44:49 AM
 version=1
 last_client=eeschema
 [cvpcb]
@@ -47,10 +47,7 @@ LibName16=valves
 version=1
 [eeschema]
 version=1
-PageLayoutDescrFile=
-SubpartIdSeparator=0
-SubpartFirstId=65
-LibDir=lib
+LibDir=../rusefi_lib
 NetFmtName=
 RptD_X=0
 RptD_Y=100

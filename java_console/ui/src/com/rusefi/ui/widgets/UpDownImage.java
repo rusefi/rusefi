@@ -65,7 +65,12 @@ public class UpDownImage extends JPanel {
         control.repaint();
     }
 
+    /**
+     * todo: one 'trueXXX' method should be enough, which one?
+     */
     public static void trueLayout(Component component) {
+        if (component == null)
+            return;
         component.invalidate();
         component.validate();
     }

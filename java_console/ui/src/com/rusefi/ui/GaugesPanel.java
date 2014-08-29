@@ -19,6 +19,11 @@ public class GaugesPanel  {
 
     private final JPanel content = new JPanel(new BorderLayout());
 
+    public static void main(String[] args) {
+        FrameHelper fh = new FrameHelper();
+        fh.showFrame(new GaugesPanel().getContent());
+    }
+
     public GaugesPanel() {
 //        Radial radial2 = createRadial("title");
 

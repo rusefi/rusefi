@@ -5,14 +5,13 @@ LIBS:conn
 LIBS:logo_flipped
 LIBS:art-electro-conn
 LIBS:interface
-LIBS:mmc_usb_1-cache
-EELAYER 24 0
+EELAYER 27 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 1
 Title ""
-Date "25 Фев 2014"
+Date "11 aug 2014"
 Rev ""
 Comp ""
 Comment1 ""
@@ -433,7 +432,7 @@ Text Label 3875 4800 0    60   ~ 0
 SPI_MOSI
 Text Notes 3300 3700 0    60   ~ 0
 Ext SPI
-Text Notes 8300 3475 0    60   ~ 0
+Text Notes 8650 3475 0    60   ~ 0
 For left conn
 Text Notes 5425 3550 0    60   ~ 0
 For right conn
@@ -453,39 +452,39 @@ $EndComp
 $Comp
 L CONN_10X2 P354
 U 1 1 52B479EE
-P 8550 4125
-F 0 "P354" H 8550 4675 60  0000 C CNN
-F 1 "CONN_10X2" V 8550 4025 50  0000 C CNN
-F 2 "" H 8550 4125 60  0000 C CNN
-F 3 "" H 8550 4125 60  0000 C CNN
-	1    8550 4125
+P 8900 4125
+F 0 "P354" H 8900 4675 60  0000 C CNN
+F 1 "CONN_10X2" V 8900 4025 50  0000 C CNN
+F 2 "" H 8900 4125 60  0000 C CNN
+F 3 "" H 8900 4125 60  0000 C CNN
+	1    8900 4125
 	1    0    0    -1  
 $EndComp
-Text Label 8000 3675 2    60   ~ 0
+Text Label 8350 3675 2    60   ~ 0
 CS1
-Text Label 8000 3775 2    60   ~ 0
+Text Label 8350 3775 2    60   ~ 0
 CS3
-Text Label 9100 3675 0    60   ~ 0
+Text Label 9450 3675 0    60   ~ 0
 CS2
-NoConn ~ 8950 3775
-NoConn ~ 8950 4275
-NoConn ~ 8950 4375
-NoConn ~ 8950 4475
-NoConn ~ 8150 3875
-Text Label 9100 3975 0    60   ~ 0
+NoConn ~ 9300 3775
+NoConn ~ 9300 4275
+NoConn ~ 9300 4375
+NoConn ~ 9300 4475
+NoConn ~ 8500 3875
+Text Label 9450 3975 0    60   ~ 0
 SPI_MISO
-Text Label 9100 4075 0    60   ~ 0
+Text Label 9450 4075 0    60   ~ 0
 USART_TX
-Text Label 8000 3975 2    60   ~ 0
+Text Label 8350 3975 2    60   ~ 0
 SPI_SCK
-Text Label 8000 4075 2    60   ~ 0
+Text Label 8150 4075 2    60   ~ 0
 SPI_MOSI
-Text Label 8000 4175 2    60   ~ 0
+Text Label 8150 4175 2    60   ~ 0
 USART_RX
-Text Label 8000 4275 2    60   ~ 0
+Text Label 8150 4275 2    60   ~ 0
 CS_SD_MODULE
-NoConn ~ 8150 4375
-NoConn ~ 8150 4475
+NoConn ~ 8500 4375
+NoConn ~ 8500 4475
 Text Label 3875 5000 0    60   ~ 0
 SPI_SCK
 Text Label 3950 3975 0    60   ~ 0
@@ -500,14 +499,22 @@ Connection ~ 4525 1375
 Wire Wire Line
 	2625 2875 2625 2825
 Wire Wire Line
-	3925 1375 5025 1375
+	3925 1375 4000 1375
+Wire Wire Line
+	4000 1375 4200 1375
+Wire Wire Line
+	4200 1375 4525 1375
+Wire Wire Line
+	4525 1375 5025 1375
 Connection ~ 4200 1375
 Wire Wire Line
 	5025 1275 4525 1275
 Wire Wire Line
 	4525 1275 4525 1375
 Wire Wire Line
-	2100 3075 2100 3275
+	2100 3075 2100 3175
+Wire Wire Line
+	2100 3175 2100 3275
 Wire Wire Line
 	2300 2675 2300 2375
 Connection ~ 2300 2675
@@ -518,7 +525,9 @@ Wire Wire Line
 Wire Wire Line
 	2950 2475 2950 2525
 Wire Wire Line
-	2950 2525 3300 2525
+	2950 2525 3100 2525
+Wire Wire Line
+	3100 2525 3300 2525
 Wire Wire Line
 	3100 2600 3100 2525
 Connection ~ 3100 2525
@@ -554,25 +563,25 @@ Wire Wire Line
 Wire Wire Line
 	3875 4700 3700 4700
 Wire Wire Line
-	8150 3675 8000 3675
+	8500 3675 8350 3675
 Wire Wire Line
-	8150 3775 8000 3775
+	8500 3775 8350 3775
 Wire Wire Line
-	8150 3975 8000 3975
+	8500 3975 8350 3975
 Wire Wire Line
-	8150 4075 8000 4075
+	8500 4075 8150 4075
 Wire Wire Line
-	8150 4175 8000 4175
+	8500 4175 8150 4175
 Wire Wire Line
-	8150 4275 8000 4275
+	8500 4275 8150 4275
 Wire Wire Line
-	8950 3675 9100 3675
+	9300 3675 9450 3675
 Wire Wire Line
-	8950 3975 9100 3975
+	9300 3975 9450 3975
 Wire Wire Line
-	8950 4075 9100 4075
+	9300 4075 9450 4075
 Wire Wire Line
-	8950 4175 9100 4175
+	9300 4175 9450 4175
 Wire Wire Line
 	3825 3975 3950 3975
 Wire Wire Line
@@ -602,23 +611,23 @@ SPI_MISO
 $Comp
 L GND #PWR021
 U 1 1 52B9BB90
-P 8950 4575
-F 0 "#PWR021" H 8950 4575 30  0001 C CNN
-F 1 "GND" H 8950 4505 30  0001 C CNN
-F 2 "" H 8950 4575 60  0001 C CNN
-F 3 "" H 8950 4575 60  0001 C CNN
-	1    8950 4575
+P 9300 4575
+F 0 "#PWR021" H 9300 4575 30  0001 C CNN
+F 1 "GND" H 9300 4505 30  0001 C CNN
+F 2 "" H 9300 4575 60  0001 C CNN
+F 3 "" H 9300 4575 60  0001 C CNN
+	1    9300 4575
 	0    -1   -1   0   
 $EndComp
 $Comp
 L GND #PWR022
 U 1 1 52B9BB96
-P 8150 4575
-F 0 "#PWR022" H 8150 4575 30  0001 C CNN
-F 1 "GND" H 8150 4505 30  0001 C CNN
-F 2 "" H 8150 4575 60  0001 C CNN
-F 3 "" H 8150 4575 60  0001 C CNN
-	1    8150 4575
+P 8500 4575
+F 0 "#PWR022" H 8500 4575 30  0001 C CNN
+F 1 "GND" H 8500 4505 30  0001 C CNN
+F 2 "" H 8500 4575 60  0001 C CNN
+F 3 "" H 8500 4575 60  0001 C CNN
+	1    8500 4575
 	0    1    1    0   
 $EndComp
 Text Label 5125 3950 2    60   ~ 0
@@ -640,24 +649,24 @@ Wire Wire Line
 $Comp
 L CONN_1 P355
 U 1 1 52BAA4A8
-P 9100 3875
-F 0 "P355" H 9180 3875 40  0000 L CNN
-F 1 "CONN_1" H 9100 3930 30  0001 C CNN
-F 2 "" H 9100 3875 60  0000 C CNN
-F 3 "" H 9100 3875 60  0000 C CNN
-	1    9100 3875
+P 9450 3875
+F 0 "P355" H 9530 3875 40  0000 L CNN
+F 1 "CONN_1" H 9450 3930 30  0001 C CNN
+F 2 "" H 9450 3875 60  0000 C CNN
+F 3 "" H 9450 3875 60  0000 C CNN
+	1    9450 3875
 	1    0    0    -1  
 $EndComp
 Text Label 3875 4700 0    60   ~ 0
 CS_SD_MODULE
-Text Label 9100 4175 0    60   ~ 0
+Text Label 9450 4175 0    60   ~ 0
 CS4
 Text Label 5125 4150 2    60   ~ 0
 CS4
-Text Label 5125 4450 2    60   ~ 0
+Text Label 4875 4450 2    60   ~ 0
 USART_TX
 Wire Wire Line
-	5300 4450 5125 4450
+	5300 4450 4875 4450
 Text Label 6275 4450 0    60   ~ 0
 USART_RX
 Wire Wire Line
@@ -730,7 +739,9 @@ F 3 "" H 6900 5175 60  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	6900 5375 6900 5525
+	6900 5375 6900 5475
+Wire Wire Line
+	6900 5475 6900 5525
 Wire Wire Line
 	6600 5475 6900 5475
 Connection ~ 6900 5475
@@ -783,7 +794,13 @@ F 3 "" H 2700 5200 60  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	2700 4850 2700 5200
+	2700 4850 2700 4950
+Wire Wire Line
+	2700 4950 2700 5050
+Wire Wire Line
+	2700 5050 2700 5150
+Wire Wire Line
+	2700 5150 2700 5200
 Connection ~ 2700 4950
 Connection ~ 2700 5050
 Connection ~ 2700 5150
@@ -874,4 +891,12 @@ F 3 "" H 2625 3075 60  0000 C CNN
 	1    2625 3075
 	0    1    1    0   
 $EndComp
+Text Notes 5000 4450 0    60   ~ 0
+PC10
+Text Notes 8300 4200 0    60   ~ 0
+PD9
+Text Notes 6750 4450 0    60   ~ 0
+PC11
+Text Notes 9900 4100 0    60   ~ 0
+PD8
 $EndSCHEMATC

@@ -96,6 +96,8 @@ public class EngineState {
         addDoubleSensor("duty0", Sensor.DUTY0);
         addDoubleSensor("duty1", Sensor.DUTY1);
         addDoubleSensor("timing", Sensor.TIMING);
+        addDoubleSensor(Sensor.TRG_0_DUTY);
+        addDoubleSensor(Sensor.TRG_1_DUTY);
 
         addDoubleSensor("idl", Sensor.IDLE_SWITCH);
 
@@ -162,6 +164,13 @@ public class EngineState {
                     l.onTime(time);
             }
         });
+    }
+
+    /**
+     * Sensor enum name matches the protocol key
+     */
+    private void addDoubleSensor(Sensor sensor) {
+        addDoubleSensor(sensor.name(), sensor);
     }
 
     private void addDoubleSensor(String key, final Sensor sensor) {

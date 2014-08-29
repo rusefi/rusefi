@@ -36,6 +36,7 @@ public class RecentCommands {
             }
         });
 
+        add("help");
         add("showconfig");
         add("writeconfig");
         add("enable_injection");
@@ -52,7 +53,7 @@ public class RecentCommands {
             content.add(createButton(entry));
         }
         UpDownImage.trueRepaint(content.getParent());
-//        UpDownImage.trueLayout(content);
+        UpDownImage.trueLayout(content.getParent());
     }
 
     private JComponent createButton(final Entry entry) {

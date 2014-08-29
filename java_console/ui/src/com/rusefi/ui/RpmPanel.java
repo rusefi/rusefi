@@ -53,7 +53,7 @@ public class RpmPanel {
         gauges.add(SensorGauge.createGauge(Sensor.FUEL));
         //gauges.add(GaugesPanel.createGauge(Sensor.ADVANCE0));
 
-        gauges.add(SensorGauge.createGauge(Sensor.VREF, PotCommand.VOLTAGE_CORRECTION));
+        gauges.add(SensorGauge.createGauge(Sensor.VREF));
         gauges.add(SensorGauge.createGauge(Sensor.MAF));
         gauges.add(SensorGauge.createGauge(Sensor.DWELL1));
 //        gauges.add(GaugesPanel.createGauge(Sensor.ADVANCE1));
