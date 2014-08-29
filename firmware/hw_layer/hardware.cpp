@@ -104,8 +104,12 @@ void turnOnSpi(spi_device_e device) {
 }
 
 void initSpiModules(void) {
-	turnOnSpi(SPI_DEVICE_2);
-	turnOnSpi(SPI_DEVICE_3);
+	if (boardConfiguration->is_enabled_spi_2) {
+		turnOnSpi(SPI_DEVICE_2);
+	}
+	if (boardConfiguration->is_enabled_spi_3) {
+		turnOnSpi(SPI_DEVICE_3);
+	}
 }
 
 static I2CConfig i2cfg = { OPMODE_I2C, 100000, STD_DUTY_CYCLE, };
@@ -137,7 +141,6 @@ void initHardware(Logging *logger) {
 	//flashProtect();
 
 	chMtxInit(&spiMtx);
-
 
 #if EFI_HISTOGRAMS
 	/**
@@ -183,11 +186,11 @@ void initHardware(Logging *logger) {
 
 	mySetPadMode("board test", getHwPort(boardConfiguration->boardTestModeJumperPin),
 			getHwPin(boardConfiguration->boardTestModeJumperPin), PAL_MODE_INPUT_PULLUP);
-	bool isBoardTestMode = GET_BOARD_TEST_MODE_VALUE();
+	bool isBoardTestMode_b = GET_BOARD_TEST_MODE_VALUE();
 
 	initAdcInputs();
 
-	if (isBoardTestMode) {
+	if (isBoardTestMode_b) {
 		initBoardTest();
 		efiAssertVoid(FALSE, "board test done");
 	}

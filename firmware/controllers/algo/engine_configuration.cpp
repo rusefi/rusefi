@@ -70,16 +70,6 @@ void setConstantDwell(engine_configuration_s *engineConfiguration, float dwellMs
 	}
 }
 
-void initBpsxD1Sensor(afr_sensor_s *sensor) {
-	/**
-	 * This decodes BPSX D1 Wideband Controller analog signal
-	 */
-	sensor->v1 = 0;
-	sensor->value1 = 9;
-	sensor->v2 = 5;
-	sensor->value2 = 19;
-}
-
 void setWholeVEMap(engine_configuration_s *engineConfiguration, float value) {
 	// todo: table helper?
 //	for (int l = 0; l < VE_LOAD_COUNT; l++) {
@@ -222,6 +212,7 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	engineConfiguration->logFormat = LF_NATIVE;
 	engineConfiguration->directSelfStimulation = false;
 
+	engineConfiguration->needSecondTriggerInput = true;
 	engineConfiguration->triggerConfig.triggerType = TT_TOOTHED_WHEEL_60_2;
 
 	engineConfiguration->HD44780width = 20;
@@ -234,7 +225,7 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	engineConfiguration->mafAdcChannel = EFI_ADC_0;
 	engineConfiguration->afrSensor.afrAdcChannel = EFI_ADC_14;
 
-	initBpsxD1Sensor(&engineConfiguration->afrSensor);
+	initEgoSensor(&engineConfiguration->afrSensor, ES_BPSX_D1);
 
 	engineConfiguration->globalFuelCorrection = 1;
 
@@ -356,6 +347,10 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	boardConfiguration->digitalPotentiometerChipSelect[1] = GPIO_NONE;
 	boardConfiguration->digitalPotentiometerChipSelect[2] = GPIOD_5;
 	boardConfiguration->digitalPotentiometerChipSelect[3] = GPIO_NONE;
+
+	boardConfiguration->is_enabled_spi_1 = false;
+	boardConfiguration->is_enabled_spi_2 = true;
+	boardConfiguration->is_enabled_spi_3 = true;
 }
 
 //void setDefaultNonPersistentConfiguration(engine_configuration2_s *engineConfiguration2) {
@@ -426,6 +421,15 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType, engine_co
 		break;
 	case FORD_ESCORT_GT:
 		setFordEscortGt(engineConfiguration, boardConfiguration);
+		break;
+	case MIATA_1990:
+		setMiata1990(engineConfiguration, boardConfiguration);
+		break;
+	case MIATA_1994:
+		setMiata1994(engineConfiguration, boardConfiguration);
+		break;
+	case MIATA_1996:
+		setMiata1996(engineConfiguration, boardConfiguration);
 		break;
 	case CITROEN_TU3JP:
 		setCitroenBerlingoTU3JPConfiguration(engineConfiguration, boardConfiguration);

@@ -34,11 +34,18 @@ extern WaveChart waveChart;
 #include "analog_chart.h"
 #endif /* EFI_PROD_CODE */
 
-static RpmCalculator rpmState;
-
 #define UNREALISTIC_RPM 30000
 
 #define TOP_DEAD_CENTER_MESSAGE "r"
+
+
+/**
+ * @return -1 in case of isNoisySignal(), current RPM otherwise
+ */
+int getRpmE(Engine *engine) {
+	efiAssert(engine->rpmCalculator!=NULL, "rpmCalculator not assigned", -1);
+	return engine->rpmCalculator->rpm();
+}
 
 extern engine_configuration_s *engineConfiguration;
 extern engine_configuration2_s *engineConfiguration2;
@@ -73,39 +80,12 @@ bool isValidRpm(int rpm) {
 	return rpm > 0 && rpm < UNREALISTIC_RPM;
 }
 
-uint64_t getLastRpmEventTime(void) {
-	return rpmState.lastRpmEventTimeUs;
-}
-
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
 bool isCranking(void) {
 	int rpm = getRpm();
 	return isCrankingR(rpm);
 }
 #endif
-
-/**
- * @return -1 in case of isNoisySignal(), current RPM otherwise
- */
-int getRpmE(Engine *engine) {
-	efiAssert(engine->rpmCalculator!=NULL, "rpmCalculator not assigned", -1);
-	return engine->rpmCalculator->rpm();
-}
-
-/**
- * @return Current crankshaft angle, 0 to 720 for four-stroke
- */
-float getCrankshaftAngle(uint64_t timeUs) {
-	uint64_t timeSinceZeroAngle = timeUs - rpmState.lastRpmEventTimeUs;
-
-	float cRevolutionTimeMs = getCrankshaftRevolutionTimeMs(rpmState.rpm());
-
-	return 360.0 * timeSinceZeroAngle / cRevolutionTimeMs / 1000;
-}
-
-int getRevolutionCounter(void) {
-	return rpmState.revolutionCounter;
-}
 
 /**
  * Checks for noise on the trigger input line. Noise is detected by an unexpectedly small time gap between
@@ -201,15 +181,36 @@ static void onTdcCallback(void) {
 /**
  * This trigger callback schedules the actual physical TDC callback in relation to trigger synchronization point.
  */
-static void tdcMarkCallback(trigger_event_e ckpSignalType, int index, void *arg) {
-	bool isTriggerSynchronizationPoint = index == 0;
+static void tdcMarkCallback(trigger_event_e ckpSignalType, int index0, void *arg) {
+	bool isTriggerSynchronizationPoint = index0 == 0;
 	if (isTriggerSynchronizationPoint) {
-		int index = getRevolutionCounter() % 2;
+		int revIndex2 = getRevolutionCounter() % 2;
 		// todo: use event-based scheduling, not just time-based scheduling
-		scheduleByAngle(&tdcScheduler[index], engineConfiguration->globalTriggerAngleOffset, (schfunc_t) onTdcCallback, NULL);
+		scheduleByAngle(&tdcScheduler[revIndex2], engineConfiguration->globalTriggerAngleOffset, (schfunc_t) onTdcCallback, NULL);
 	}
 }
 #endif
+
+static RpmCalculator rpmState;
+
+uint64_t getLastRpmEventTime(void) {
+	return rpmState.lastRpmEventTimeUs;
+}
+
+int getRevolutionCounter(void) {
+	return rpmState.revolutionCounter;
+}
+
+/**
+ * @return Current crankshaft angle, 0 to 720 for four-stroke
+ */
+float getCrankshaftAngle(uint64_t timeUs) {
+	uint64_t timeSinceZeroAngle = timeUs - rpmState.lastRpmEventTimeUs;
+
+	float cRevolutionTimeMs = getCrankshaftRevolutionTimeMs(rpmState.rpm());
+
+	return 360.0 * timeSinceZeroAngle / cRevolutionTimeMs / 1000;
+}
 
 void initRpmCalculator(void) {
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)

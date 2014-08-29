@@ -15,7 +15,6 @@
 #include "signal_executor.h"
 
 extern Engine engine;
-extern engine_configuration_s *engineConfiguration;
 static AccelEnrichmemnt instance;
 
 void AccelEnrichmemnt::updateDiffEnrichment(engine_configuration_s *engineConfiguration, float engineLoad) {
@@ -43,6 +42,8 @@ float getAccelEnrichment(void) {
 
 #if EFI_PROD_CODE
 static THD_WORKING_AREA(aeThreadStack, UTILITY_THREAD_STACK_SIZE);
+
+extern engine_configuration_s *engineConfiguration;
 
 static msg_t DiffEnrichmentThread(int param) {
 	chRegSetThreadName("Diff Enrichment");

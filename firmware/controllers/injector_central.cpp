@@ -102,7 +102,7 @@ static float offTime;
 static float delayMs;
 static int count;
 static brain_pin_e brainPin;
-static io_pin_e pin;
+static io_pin_e pinX;
 
 static void pinbench(const char *delayStr, const char *onTimeStr, const char *offTimeStr, const char *countStr,
 		io_pin_e pinParam, brain_pin_e brainPinParam) {
@@ -112,7 +112,7 @@ static void pinbench(const char *delayStr, const char *onTimeStr, const char *of
 	count = atoi(countStr);
 
 	brainPin = brainPinParam;
-	pin = pinParam;
+	pinX = pinParam;
 	needToRunBench = TRUE;
 }
 
@@ -126,7 +126,7 @@ static void fuelbench2(const char *delayStr, const char *indexStr, const char * 
 
 static void fuelpumpbench(int delayParam, int onTimeParam) {
 	brainPin = boardConfiguration->fuelPumpPin;
-	pin = FUEL_PUMP_RELAY;
+	pinX = FUEL_PUMP_RELAY;
 
 	delayMs = delayParam;
 	onTime = onTimeParam;
@@ -162,7 +162,7 @@ static msg_t benchThread(int param) {
 			chThdSleepMilliseconds(200);
 		}
 		needToRunBench = FALSE;
-		runBench(brainPin, pin, delayMs, onTime, offTime, count);
+		runBench(brainPin, pinX, delayMs, onTime, offTime, count);
 	}
 #if defined __GNUC__
 	return 0;
@@ -173,8 +173,9 @@ void initInjectorCentral(void) {
 	initLogging(&logger, "InjectorCentral");
 	chThdCreateStatic(benchThreadStack, sizeof(benchThreadStack), NORMALPRIO, (tfunc_t) benchThread, NULL);
 
-	for (int i = 0; i < engineConfiguration->cylindersCount; i++)
+	for (int i = 0; i < engineConfiguration->cylindersCount; i++) {
 		is_injector_enabled[i] = true;
+        }
 
 	// todo: should we move this code closer to the injection logic?
 	for (int i = 0; i < engineConfiguration->cylindersCount; i++) {

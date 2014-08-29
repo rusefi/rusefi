@@ -51,7 +51,12 @@ typedef struct {
 	unsigned int checkEngine : 1; // bit 8
 	unsigned int needBurn : 1; // bit 9
 	unsigned int secondTriggerChannelEnabled : 1; // bit 10
-	int unused[10];
+	int unused2;
+	unsigned int isTpsError : 1; // bit 0
+	unsigned int isCltError : 1; // bit 1
+	unsigned int isMapError : 1; // bit 2
+	unsigned int isIatError : 1; // bit 3
+	int unused[8];
 } TunerStudioOutputChannels;
 
 #endif /* TUNERSTUDIO_CONFIGURATION_H_ */

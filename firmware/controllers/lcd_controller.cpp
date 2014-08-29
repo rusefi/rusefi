@@ -130,6 +130,9 @@ static void prepareCurrentSecondLine(int index) {
 	case 3:
 		ptr = prepareStatusLine(buffer);
 		break;
+	default:
+		firmwareError("unexpected case");
+		return;
 	}
 	*ptr = ' ';
 }

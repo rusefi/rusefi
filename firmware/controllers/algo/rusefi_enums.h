@@ -79,7 +79,11 @@ typedef enum {
 
 	HONDA_ACCORD_CD_DIP = 18,
 
-	Internal_ForceMyEnumIntSize_engine_type = ENUM_SIZE_HACK,
+	MIATA_1990 = 19,
+	MIATA_1994 = 20,
+	MIATA_1996 = 21,
+
+	Force_4b_engine_type = ENUM_SIZE_HACK,
 } engine_type_e;
 
 typedef enum {
@@ -102,7 +106,7 @@ typedef enum {
 
 	TT_HONDA_ACCORD_CD_DIP = 13,
 
-	Internal_ForceMyEnumIntSize_trigger_type = ENUM_SIZE_HACK,
+	Force_4b_trigger_type = ENUM_SIZE_HACK,
 } trigger_type_e;
 
 typedef enum {
@@ -110,7 +114,7 @@ typedef enum {
 	ADC_SLOW = 1,
 	ADC_FAST = 2,
 
-	Internal_ForceMyEnumIntSize_adc_channel_mode = ENUM_SIZE_HACK,
+	Force_4b_adc_channel_mode = ENUM_SIZE_HACK,
 } adc_channel_mode_e;
 
 // todo: better names?
@@ -160,7 +164,7 @@ typedef enum {
 	 */
 	LM_SPEED_DENSITY = 3,
 
-	Internal_ForceMyEnumIntSize_engine_load_mode = ENUM_SIZE_HACK,
+	Force_4b_engine_load_mode = ENUM_SIZE_HACK,
 } engine_load_mode_e;
 
 typedef enum {
@@ -168,7 +172,7 @@ typedef enum {
 	DM_HD44780 = 1,
 	DM_HD44780_OVER_PCF8574 = 2,
 
-	Internal_ForceMyEnumIntSize_display_mode = ENUM_SIZE_HACK,
+	Force_4b_display_mode = ENUM_SIZE_HACK,
 
 } display_mode_e;
 
@@ -180,14 +184,14 @@ typedef enum {
 	 */
 	LM_MLV = 1,
 
-	Internal_ForceMyEnumIntSize_log_format = ENUM_SIZE_HACK,
+	Force_4b_log_format = ENUM_SIZE_HACK,
 } log_format_e;
 
 
 typedef enum {
 	IM_AUTO = 0,
 	IM_MANUAL = 1,
-	Internal_ForceMyEnumIntSize_idle_mode = ENUM_SIZE_HACK,
+	Force_4b_idle_mode = ENUM_SIZE_HACK,
 } idle_mode_e;
 
 typedef enum {
@@ -205,13 +209,13 @@ typedef enum {
 	OM_OPENDRAIN = 2,
 	OM_OPENDRAIN_INVERTED = 3,
 
-	Internal_ForceMyEnumIntSize_pin_output_mode = ENUM_SIZE_HACK,
+	Force_4b_pin_output_mode = ENUM_SIZE_HACK,
 } pin_output_mode_e;
 
 typedef enum {
 	PI_DEFAULT = 0,
 
-	Internal_ForceMyEnumIntSize_pin_input_mode = ENUM_SIZE_HACK,
+	Force_4b_pin_input_mode = ENUM_SIZE_HACK,
 } pin_input_mode_e;
 
 typedef enum {
@@ -221,7 +225,7 @@ typedef enum {
 	FO_1_THEN_3_THEN_2_THEN4 = 3,
 	FO_1_THEN_5_THEN_3_THEN_6_THEN_2_THEN_4 = 4,
 	FO_1_8_4_3_6_5_7_2 = 5,
-	Internal_ForceMyEnumIntSize_firing_order = ENUM_SIZE_HACK,
+	Force_4b_firing_order = ENUM_SIZE_HACK,
 } firing_order_e;
 
 // todo: better enum name
@@ -230,7 +234,7 @@ typedef enum {
 	FOUR_STROKE_CRANK_SENSOR = 1,
 	FOUR_STROKE_CAM_SENSOR = 2,
 
-	Internal_ForceMyEnumIntSize_operation_mode_e = ENUM_SIZE_HACK,
+	Force_4b_operation_mode_e = ENUM_SIZE_HACK,
 } operation_mode_e;
 
 /**
@@ -247,7 +251,7 @@ typedef enum {
 	IM_INDIVIDUAL_COILS = 1,
 	IM_WASTED_SPARK = 2,
 
-	Internal_ForceMyEnumIntSize_ignition_mode = ENUM_SIZE_HACK,
+	Force_4b_ignition_mode = ENUM_SIZE_HACK,
 } ignition_mode_e;
 
 typedef enum {
@@ -255,7 +259,7 @@ typedef enum {
 	IM_SEQUENTIAL = 1,
 	IM_BATCH = 2,
 
-	Internal_ForceMyEnumIntSize_injection_mode = ENUM_SIZE_HACK,
+	Force_4b_injection_mode = ENUM_SIZE_HACK,
 } injection_mode_e;
 
 /**
@@ -265,7 +269,7 @@ typedef enum {
 	CIM_DEFAULT = 0,
 	CIM_FIXED_ANGLE = 1,
 
-	Internal_ForceMyEnumIntSize_cranking_ignition_mode = ENUM_SIZE_HACK,
+	Force_4b_cranking_ignition_mode = ENUM_SIZE_HACK,
 } cranking_ignition_mode_e;
 
 typedef enum {
@@ -275,14 +279,14 @@ typedef enum {
 	SPI_DEVICE_3 = 3,
 	SPI_DEVICE_4 = 4,
 
-	Internal_ForceMyEnumIntSize_spi_device = ENUM_SIZE_HACK,
+	Force_4b_spi_device = ENUM_SIZE_HACK,
 } spi_device_e;
 
 typedef enum {
 	IE_NO_ERROR = 0,
 	IE_UNEXPECTED_FIRING_ORDER = 1,
 
-	Internal_ForceMyEnumIntSize_cranking_internal_error = ENUM_SIZE_HACK,
+	Force_4b_cranking_internal_error = ENUM_SIZE_HACK,
 } internal_error_e;
 
 typedef enum {
@@ -305,8 +309,18 @@ typedef enum {
 
 	EFI_ADC_ERROR = 999,
 
-	Internal_ForceMyEnumIntSize_cranking_adc_channel = ENUM_SIZE_HACK,
+	Force_4b_cranking_adc_channel = ENUM_SIZE_HACK,
 } adc_channel_e;
+
+
+typedef enum {
+	ES_BPSX_D1 = 0,
+	ES_Innovate_MTX_L = 1,
+
+	Force_4b_ego_sensor = ENUM_SIZE_HACK,
+} ego_sensor_e;
+
+
 
 /**
  * Hardware pin. This enum is platform-specific.
@@ -400,7 +414,7 @@ typedef enum {
 	GPIO_NONE = 80,
 	GPIO_INVALID = 81,
 
-	Internal_ForceMyEnumIntSize_cranking_brain_pin = ENUM_SIZE_HACK,
+	Force_4b_cranking_brain_pin = ENUM_SIZE_HACK,
 } brain_pin_e;
 
 typedef enum {
@@ -409,7 +423,7 @@ typedef enum {
 	MT_MPX4250 = 2,
 	MT_HONDA3BAR = 3,
 
-	Internal_ForceMyEnumIntSize_cranking_map_type = ENUM_SIZE_HACK,
+	Force_4b_cranking_map_type = ENUM_SIZE_HACK,
 } air_pressure_sensor_type_e;
 
 #endif /* RUSEFI_ENUMS_H_ */

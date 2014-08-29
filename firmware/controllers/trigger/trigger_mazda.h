@@ -12,6 +12,7 @@
 #include "engine_configuration.h"
 #include "ec2.h"
 
+void initializeMazdaMiataNaShape(trigger_shape_s *s);
 void initializeMazdaMiataNbShape(trigger_shape_s *s);
 void configureMazdaProtegeLx(trigger_shape_s *s);
 

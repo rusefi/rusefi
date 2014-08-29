@@ -41,50 +41,6 @@
 #include "accel_enrichment.h"
 #endif /* EFI_ACCEL_ENRICHMENT */
 
-extern Engine engine;
-extern engine_configuration_s *engineConfiguration;
-
-static Map3D1616 fuelMap;
-
-/**
- * @brief	Initialize fuel map data structure
- * @note this method has nothing to do with fuel map VALUES - it's job
- * is to prepare the fuel map data structure for 3d interpolation
- */
-void prepareFuelMap(void) {
-	fuelMap.init(engineConfiguration->fuelTable);
-}
-
-/**
- * @brief Engine warm-up fuel correction.
- */
-float getCltCorrection(float clt) {
-	if (cisnan(clt))
-		return 1; // this error should be already reported somewhere else, let's just handle it
-	return interpolate2d(clt, engineConfiguration->cltFuelCorrBins, engineConfiguration->cltFuelCorr, CLT_CURVE_SIZE);
-}
-
-float getIatCorrection(float iat) {
-	if (cisnan(iat))
-		return 1; // this error should be already reported somewhere else, let's just handle it
-	return interpolate2d(iat, engineConfiguration->iatFuelCorrBins, engineConfiguration->iatFuelCorr, IAT_CURVE_SIZE);
-}
-
-/**
- * @brief	Injector lag correction
- * @param	vBatt	Battery voltage.
- * @return	Time in ms for injection opening time based on current battery voltage
- */
-float getInjectorLag(float vBatt) {
-	if (cisnan(vBatt)) {
-		warning(OBD_System_Voltage_Malfunction, "vBatt=%f", vBatt);
-		return 0;
-	}
-	float vBattCorrection = interpolate2d(vBatt, engineConfiguration->battInjectorLagCorrBins,
-			engineConfiguration->battInjectorLagCorr, VBAT_INJECTOR_CURVE_SIZE);
-	return engineConfiguration->injectorLag + vBattCorrection;
-}
-
 float getBaseFuel(Engine *engine, int rpm) {
 	if (engine->engineConfiguration->algorithm == LM_SPEED_DENSITY) {
 		return getSpeedDensityFuel(engine, rpm);
@@ -92,16 +48,6 @@ float getBaseFuel(Engine *engine, int rpm) {
 		float engineLoad = getEngineLoadT(engine);
 		return getBaseTableFuel(rpm, engineLoad);
 	}
-}
-
-float getBaseTableFuel(int rpm, float engineLoad) {
-	efiAssert(!cisnan(engineLoad), "invalid el", NAN);
-	return fuelMap.getValue(engineLoad, engineConfiguration->fuelLoadBins, rpm,
-			engineConfiguration->fuelRpmBins);
-}
-
-float getCrankingFuel(void) {
-	return getStartingFuel(getCoolantTemperature());
 }
 
 /**
@@ -128,6 +74,60 @@ float getRunningFuel(float baseFuel, Engine *engine, int rpm) {
 #endif /* EFI_ACCEL_ENRICHMENT */
 
 	return baseFuel * cltCorrection * iatCorrection + injectorLag;
+}
+
+extern Engine engine;
+extern engine_configuration_s *engineConfiguration;
+
+static Map3D1616 fuelMap;
+
+/**
+ * @brief	Injector lag correction
+ * @param	vBatt	Battery voltage.
+ * @return	Time in ms for injection opening time based on current battery voltage
+ */
+float getInjectorLag(float vBatt) {
+	if (cisnan(vBatt)) {
+		warning(OBD_System_Voltage_Malfunction, "vBatt=%f", vBatt);
+		return 0;
+	}
+	float vBattCorrection = interpolate2d(vBatt, engineConfiguration->battInjectorLagCorrBins,
+			engineConfiguration->battInjectorLagCorr, VBAT_INJECTOR_CURVE_SIZE);
+	return engineConfiguration->injectorLag + vBattCorrection;
+}
+
+/**
+ * @brief	Initialize fuel map data structure
+ * @note this method has nothing to do with fuel map VALUES - it's job
+ * is to prepare the fuel map data structure for 3d interpolation
+ */
+void prepareFuelMap(void) {
+	fuelMap.init(engineConfiguration->fuelTable);
+}
+
+/**
+ * @brief Engine warm-up fuel correction.
+ */
+float getCltCorrection(float clt) {
+	if (cisnan(clt))
+		return 1; // this error should be already reported somewhere else, let's just handle it
+	return interpolate2d(clt, engineConfiguration->cltFuelCorrBins, engineConfiguration->cltFuelCorr, CLT_CURVE_SIZE);
+}
+
+float getIatCorrection(float iat) {
+	if (cisnan(iat))
+		return 1; // this error should be already reported somewhere else, let's just handle it
+	return interpolate2d(iat, engineConfiguration->iatFuelCorrBins, engineConfiguration->iatFuelCorr, IAT_CURVE_SIZE);
+}
+
+float getBaseTableFuel(int rpm, float engineLoad) {
+	efiAssert(!cisnan(engineLoad), "invalid el", NAN);
+	return fuelMap.getValue(engineLoad, engineConfiguration->fuelLoadBins, rpm,
+			engineConfiguration->fuelRpmBins);
+}
+
+float getCrankingFuel(void) {
+	return getStartingFuel(getCoolantTemperature());
 }
 
 float getStartingFuel(float coolantTemperature) {

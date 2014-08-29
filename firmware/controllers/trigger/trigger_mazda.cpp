@@ -20,6 +20,35 @@
 
 #include "trigger_mazda.h"
 
+void initializeMazdaMiataNaShape(trigger_shape_s *s) {
+	s->reset(FOUR_STROKE_CAM_SENSOR);
+	setTriggerSynchronizationGap(s, 1.68f);
+	float z = 0.093;
+	s->useRiseEdge = false;
+
+	s->isSynchronizationNeeded = true;
+
+	s->addEvent(180.0f - 1.75 * z * 720, T_SECONDARY, TV_HIGH);
+	s->addEvent(180.0f - 0.75 * z * 720, T_SECONDARY, TV_LOW);
+
+
+	s->addEvent(360.0f - 2 * z * 720, T_PRIMARY, TV_HIGH);
+	s->addEvent(360.0f - 1.75 * z * 720, T_SECONDARY, TV_HIGH);
+	s->addEvent(360.0f - z * 720, T_PRIMARY, TV_LOW);
+	s->addEvent(360.0f - 0.75 * z * 720, T_SECONDARY, TV_LOW);
+
+	s->addEvent(540.0f - 1.75 * z * 720, T_SECONDARY, TV_HIGH);
+	s->addEvent(540.0f - 0.75 * z * 720, T_SECONDARY, TV_LOW);
+
+	s->addEvent(720.0f - 2 * z * 720, T_PRIMARY, TV_HIGH);
+	s->addEvent(720.0f - 1.75 * z * 720, T_SECONDARY, TV_HIGH);
+	s->addEvent(720.0f - 0.75 * z * 720, T_SECONDARY, TV_LOW);
+	s->addEvent(720.0f, T_PRIMARY, TV_LOW);
+
+	s->shaftPositionEventCount = s->getSize();
+
+}
+
 void initializeMazdaMiataNbShape(trigger_shape_s *s) {
 	setTriggerSynchronizationGap(s, 0.11f);
 	s->useRiseEdge = false;
@@ -62,7 +91,7 @@ void initializeMazdaMiataNbShape(trigger_shape_s *s) {
 
 void configureMazdaProtegeLx(trigger_shape_s *s) {
 
-	s->needSecondTriggerInput = FALSE;
+	// todo: move to into configuration definition s->needSecondTriggerInput = FALSE;
 
 
 	s->reset(FOUR_STROKE_CAM_SENSOR);

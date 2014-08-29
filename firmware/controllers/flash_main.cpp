@@ -52,8 +52,9 @@ bool getNeedToWriteConfiguration(void) {
 }
 
 void writeToFlashIfPending() {
-	if(!getNeedToWriteConfiguration())
+	if (!getNeedToWriteConfiguration()) {
 		return;
+	}
 	// todo: technically we need a lock here, realistically we should be fine.
 	needToWriteConfiguration = false;
 	scheduleMsg(&logger, "Writing pending configuration");
@@ -83,10 +84,11 @@ static int isValidCrc(persistent_config_container_s *state) {
 		return FALSE;
 	}
 	crc_t result = flashStateCrc(state);
-	int isValidCrc = result == state->value;
-	if (!isValidCrc)
+	int isValidCrc_b = result == state->value;
+	if (!isValidCrc_b) {
 		scheduleMsg(&logger, "CRC got %d while %d expected", result, state->value);
-	return isValidCrc;
+	}
+	return isValidCrc_b;
 }
 
 static void doResetConfiguration(void) {

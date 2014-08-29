@@ -15,13 +15,23 @@
 #define DELIMETER	","
 
 typedef enum {
-	LP_RPM,
-	LP_ECT,
-	LP_IAT,
-	LP_THROTTLE, LP_SECONDS,
-	LP_MAP,
-	LP_MAF,
-	LP_MAP_RAW,
+	LP_RPM = 0,
+	LP_ECT = 1,
+	LP_IAT = 2,
+
+	LP_THROTTLE = 3,
+	LP_THROTTLE_ADC = 4,
+
+	LP_MAP = 5,
+	LP_MAP_RAW = 6,
+
+	LP_MAF = 7,
+	LP_TRG_CH0_DUTY = 8,
+	LP_TRG_CH1_DUTY = 9,
+
+
+	//	LP_SECONDS,
+	LP_COUNT = 9
 
 } LoggingPoints;
 
