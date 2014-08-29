@@ -22,6 +22,9 @@ public enum Sensor {
     MAF("MAF", "Volts", 4),
     TPS("throttle", "%", 100),
 
+    TRG_0_DUTY("trg0 duty", "%", 100),
+    TRG_1_DUTY("trg1 duty", "%", 100),
+
 //    COOLANT_WIDTH("c w", "", 30),
 //    INTAKE_AIR_WIDTH("air w", "", 30),
 

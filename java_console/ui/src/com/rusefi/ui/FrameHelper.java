@@ -13,7 +13,7 @@ import java.awt.event.WindowEvent;
 public class FrameHelper {
     protected final JFrame frame = new JFrame();
 
-    protected void showFrame(JComponent container) {
+    protected void showFrame(JComponent component) {
         frame.setSize(800, 500);
         frame.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         frame.addWindowListener(new WindowAdapter() {
@@ -28,7 +28,7 @@ public class FrameHelper {
                 onWindowClosed();
             }
         });
-        frame.add(container);
+        frame.add(component);
         frame.setVisible(true);
     }
 

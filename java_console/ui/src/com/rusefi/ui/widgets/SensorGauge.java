@@ -10,6 +10,8 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.DecimalFormat;
@@ -32,17 +34,22 @@ public class SensorGauge {
     private static final int _5_VOLTS_WITH_DECIMAL = 50;
 
     public static Component createGauge(final Sensor sensor) {
-        return createGauge(sensor, 1);
+        JPanel wrapper = new JPanel(new BorderLayout());
+
+        createGaugeBody(sensor, wrapper);
+
+
+        return wrapper;
     }
 
-    public static Component createGauge(final Sensor sensor, final double correction) {
+    private static void createGaugeBody(final Sensor sensor, final JPanel wrapper) {
         final Radial gauge = createRadial(sensor.getName(), sensor.getUnits(), sensor.getMaxValue(), sensor.getMinValue());
 
         gauge.setBackgroundColor(sensor.getColor());
 
         SensorCentral.getInstance().addListener(sensor, new SensorCentral.AdcListener() {
             public void onAdcUpdate(SensorCentral model, double value) {
-                gauge.setValue(value * correction);
+                gauge.setValue(value);
             }
         });
         gauge.setLcdDecimals(2);
@@ -50,29 +57,58 @@ public class SensorGauge {
         gauge.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2) {
-                    int size = gauge.getSize().width;
-                    JFrame n = new JFrame(sensor.getName());
-                    boolean isMockable = MOCKABLE.contains(sensor);
-                    int h = isMockable ? (int) (size * 1.5) : size;
-
-                    JPanel content = new JPanel(new BorderLayout());
-
-                    content.add(createGauge(sensor, correction), BorderLayout.CENTER);
-
-                    if (isMockable)
-                        content.add(createMockVoltageSlider(sensor), BorderLayout.SOUTH);
-
-                    n.setSize(size, h);
-                    n.setAlwaysOnTop(true);
-                    n.add(content);
-                    n.setVisible(true);
-                    n.setLocation(e.getXOnScreen(), e.getYOnScreen());
+                if (SwingUtilities.isRightMouseButton(e)) {
+                    showPopupMenu(e, wrapper);
+                } else if (e.getClickCount() == 2) {
+                    handleDoubleClick(e, gauge, sensor);
                 }
             }
         });
+        wrapper.removeAll();
+        wrapper.add(gauge, BorderLayout.CENTER);
+        UpDownImage.trueRepaint(wrapper.getParent());
+        UpDownImage.trueLayout(wrapper.getParent());
+    }
 
-        return gauge;
+    private static void showPopupMenu(MouseEvent e, JPanel wrapper) {
+        JPopupMenu pm = new JPopupMenu();
+        JMenu gauges = new JMenu("Gauges...");
+        fillGaugeItems(gauges, wrapper);
+        pm.add(gauges);
+        pm.show(e.getComponent(), e.getX(), e.getY());
+    }
+
+    private static void fillGaugeItems(JMenu gauges, final JPanel wrapper) {
+        for (final Sensor s : Sensor.values()) {
+            JMenuItem mi = new JMenuItem(s.getName());
+            mi.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    createGaugeBody(s, wrapper);
+                }
+            });
+            gauges.add(mi);
+        }
+    }
+
+    private static void handleDoubleClick(MouseEvent e, Radial gauge, Sensor sensor) {
+        int size = gauge.getSize().width;
+        JFrame n = new JFrame(sensor.getName());
+        boolean isMockable = MOCKABLE.contains(sensor);
+        int h = isMockable ? (int) (size * 1.5) : size;
+
+        JPanel content = new JPanel(new BorderLayout());
+
+        content.add(createGauge(sensor), BorderLayout.CENTER);
+
+        if (isMockable)
+            content.add(createMockVoltageSlider(sensor), BorderLayout.SOUTH);
+
+        n.setSize(size, h);
+        n.setAlwaysOnTop(true);
+        n.add(content);
+        n.setVisible(true);
+        n.setLocation(e.getXOnScreen(), e.getYOnScreen());
     }
 
     private final static Hashtable<Integer, JComponent> SLIDER_LABELS = new Hashtable<Integer, JComponent>();
