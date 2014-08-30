@@ -76,6 +76,11 @@ static void reportPins(void) {
 static MemoryStream portNameStream;
 static char portNameBuffer[20];
 
+/**
+ * Parse string representation of physical pin into brain_pin_e ordinal.
+ *
+ * @return GPIO_NONE for "none", GPIO_INVALID for invalid entry
+ */
 brain_pin_e parseBrainPin(const char *str) {
 	if (strEqual(str, "none"))
 		return GPIO_NONE;
