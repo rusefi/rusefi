@@ -190,8 +190,7 @@ void printConfiguration(engine_configuration_s *engineConfiguration, engine_conf
 			pinModeToString(boardConfiguration->malfunctionIndicatorPinMode));
 	scheduleMsg(&logger, "analogInputDividerCoefficient: %f", engineConfiguration->analogInputDividerCoefficient);
 
-	scheduleMsg(&logger, "needSecondTriggerInput: %s",
-			boolToString(engineConfiguration->needSecondTriggerInput));
+	scheduleMsg(&logger, "needSecondTriggerInput: %s", boolToString(engineConfiguration->needSecondTriggerInput));
 
 #if EFI_PROD_CODE
 	scheduleMsg(&logger, "idleValvePin: %s", hwPortname(boardConfiguration->idleValvePin));
@@ -518,6 +517,11 @@ static void setTriggerInputPin(const char *indexStr, const char *pinName) {
 	if (index < 0 || index > 2)
 		return;
 	brain_pin_e pin = parseBrainPin(pinName);
+	// todo: extract method - code duplication with other 'set_xxx_pin' methods?
+	if (pin == GPIO_INVALID) {
+		scheduleMsg(&logger, "invalid pin name [%s]", pinName);
+		return;
+	}
 	scheduleMsg(&logger, "setting trigger pin[%d] to %s please save&restart", index, hwPortname(pin));
 	boardConfiguration->triggerInputPins[index] = pin;
 }
@@ -539,12 +543,20 @@ static void setTriggerSimulatorPin(const char *indexStr, const char *pinName) {
 	if (index < 0 || index > 2)
 		return;
 	brain_pin_e pin = parseBrainPin(pinName);
+	if (pin == GPIO_INVALID) {
+		scheduleMsg(&logger, "invalid pin name [%s]", pinName);
+		return;
+	}
 	scheduleMsg(&logger, "setting trigger simulator pin[%d] to %s please save&restart", index, hwPortname(pin));
 	boardConfiguration->triggerSimulatorPins[index] = pin;
 }
 
 static void setAnalogInputPin(const char *sensorStr, const char *pinName) {
 	brain_pin_e pin = parseBrainPin(pinName);
+	if (pin == GPIO_INVALID) {
+		scheduleMsg(&logger, "invalid pin name [%s]", pinName);
+		return;
+	}
 	adc_channel_e channel = getAdcChannel(pin);
 	if (channel == EFI_ADC_ERROR) {
 		scheduleMsg(&logger, "Error with [%s]", pinName);
@@ -567,9 +579,14 @@ static void setAnalogInputPin(const char *sensorStr, const char *pinName) {
 
 static void setLogicInputPin(const char *indexStr, const char *pinName) {
 	int index = atoi(indexStr);
-	if (index < 0 || index > 2)
+	if (index < 0 || index > 2) {
 		return;
+	}
 	brain_pin_e pin = parseBrainPin(pinName);
+	if (pin == GPIO_INVALID) {
+		scheduleMsg(&logger, "invalid pin name [%s]", pinName);
+		return;
+	}
 	scheduleMsg(&logger, "setting logic input pin[%d] to %s please save&restart", index, hwPortname(pin));
 	boardConfiguration->logicAnalyzerPins[index] = pin;
 }
@@ -604,7 +621,7 @@ static void setFuelMap(const char * rpmStr, const char *loadStr, const char *val
 }
 
 static void setSpiMode(int index, bool mode) {
-	switch(index) {
+	switch (index) {
 	case 1:
 		boardConfiguration->is_enabled_spi_1 = mode;
 		break;
@@ -736,7 +753,6 @@ void initSettings(void) {
 
 	addConsoleActionII("set_toothed_wheel", setToothedWheel);
 	addConsoleActionI("set_trigger_type", setTriggerType);
-
 
 	addConsoleActionF("set_vbatt_divider", setVBattDivider);
 
