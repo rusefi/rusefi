@@ -4,4 +4,4 @@
 4) add two MAX232 chips (four VR stimulation channels)
 5) merge 5v's
 6) add ECU power LED
-7) add 2N7002KCT-ND as mosfet part #
+7) 
