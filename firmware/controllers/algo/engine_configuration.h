@@ -399,7 +399,9 @@ typedef struct {
 	bool secondTriggerChannelEnabled : 1; // bit 3
 	bool needSecondTriggerInput : 1; // bit 4
 
-	int unused3[8];
+	int digitalChartSize;
+
+	int unused3[7];
 
 } engine_configuration_s;
 
