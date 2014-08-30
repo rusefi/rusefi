@@ -11,7 +11,7 @@
 
 #include "engine_configuration.h"
 
-#define FLASH_DATA_VERSION 4320
+#define FLASH_DATA_VERSION 4480
 
 #ifdef __cplusplus
 extern "C"

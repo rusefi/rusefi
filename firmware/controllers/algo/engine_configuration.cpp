@@ -244,6 +244,8 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 //	engineConfiguration->idleMode = IM_AUTO;
 	engineConfiguration->idleMode = IM_MANUAL;
 
+	engineConfiguration->digitalChartSize = 300;
+
 	engineConfiguration->isInjectionEnabled = true;
 	engineConfiguration->isIgnitionEnabled = true;
 	engineConfiguration->isCylinderCleanupEnabled = true;
