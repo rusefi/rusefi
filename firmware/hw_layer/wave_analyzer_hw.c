@@ -150,7 +150,7 @@ void initWaveAnalyzerDriver(WaveReaderHw *hw, ICUDriver *driver, ioportid_t port
 	}
 }
 
-void setWaveReaderMode(WaveReaderHw *hw, int mode) {
+void setWaveReaderMode(WaveReaderHw *hw, bool mode) {
 	hw->activeMode = mode;
 	if (hw->activeMode) {
 		wave_icucfg.mode = ICU_INPUT_ACTIVE_HIGH;

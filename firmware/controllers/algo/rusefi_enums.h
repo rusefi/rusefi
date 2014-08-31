@@ -19,6 +19,8 @@
 
 #define DIGIPOT_COUNT 4
 
+#define LOGIC_ANALYZER_CHANNEL_COUNT 2
+
 typedef enum {
 	AUDI_AAN = 1,
 #if EFI_SUPPORT_DODGE_NEON

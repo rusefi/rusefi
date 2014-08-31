@@ -115,7 +115,15 @@ int getEventCounter(int index) {
 	return reader->eventCounter;
 }
 
-static void initWave(const char *name, int index, ICUDriver *driver, ioportid_t port, ioportmask_t pin, int mode) {
+static void initWave(const char *name, int index) {
+	brain_pin_e brainPin = boardConfiguration->logicAnalyzerPins[index];
+
+	ioportid_t port = getHwPort(brainPin);
+	ioportmask_t pin = getHwPin(brainPin);
+	ICUDriver *driver = getInputCaptureDriver(brainPin);
+
+	bool mode = boardConfiguration->logicAnalyzerMode[index];
+
 	waveReaderCount++;
 	efiAssertVoid(index < MAX_ICU_COUNT, "too many ICUs");
 	WaveReader *reader = &readers[index];
@@ -246,13 +254,12 @@ void initWaveAnalyzer(void) {
 #if EFI_WAVE_ANALYZER || defined(__DOXYGEN__)
 	initLogging(&logger, "wave");
 
-	initWave(WA_CHANNEL_1, 0, getInputCaptureDriver(boardConfiguration->logicAnalyzerPins[0]), getHwPort(boardConfiguration->logicAnalyzerPins[0]), getHwPin(boardConfiguration->logicAnalyzerPins[0]), 1);
-	initWave(WA_CHANNEL_2, 1, getInputCaptureDriver(boardConfiguration->logicAnalyzerPins[1]), getHwPort(boardConfiguration->logicAnalyzerPins[1]), getHwPin(boardConfiguration->logicAnalyzerPins[1]), 1);
-	//	initWave("input0 C6", 2, &WAVE_TIMER, WAVE_INPUT_PORT, WAVE_INPUT_PIN, 0);
+	initWave(WA_CHANNEL_1, 0);
+	initWave(WA_CHANNEL_2, 1);
 
 	addTriggerEventListener(&onWaveShaftSignal, "wave analyzer", (void*)NULL);
 
-	addConsoleActionII("wm", setWaveModeSilent);
+	addConsoleActionII("set_logic_input_mode", setWaveModeSilent);
 
 	chThdCreateStatic(waThreadStack, sizeof(waThreadStack), NORMALPRIO, waThread, (void*)NULL);
 
