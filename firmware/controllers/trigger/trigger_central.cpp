@@ -12,11 +12,16 @@
 #include "engine_configuration.h"
 #include "listener_array.h"
 #include "data_buffer.h"
-#include "pin_repository.h"
 #include "histogram.h"
+#include "wave_chart.h"
+
+#include "rpm_calculator.h"
 #if EFI_PROD_CODE
 #include "rfiutil.h"
+#include "pin_repository.h"
 #endif
+
+WaveChart waveChart;
 
 static histogram_s triggerCallback;
 
@@ -67,6 +72,26 @@ int TriggerCentral::getHwEventCounter(int index) {
 	return hwEventCounters[index];
 }
 
+static char shaft_signal_msg_index[15];
+
+static void reportEventToWaveChart(trigger_event_e ckpSignalType, int index) {
+	itoa10(&shaft_signal_msg_index[1], index);
+	if (ckpSignalType == SHAFT_PRIMARY_UP) {
+		addWaveChartEvent(WC_CRANK1, WC_UP, (char*) shaft_signal_msg_index);
+	} else if (ckpSignalType == SHAFT_PRIMARY_DOWN) {
+		addWaveChartEvent(WC_CRANK1, WC_DOWN, (char*) shaft_signal_msg_index);
+	} else if (ckpSignalType == SHAFT_SECONDARY_UP) {
+		addWaveChartEvent(WC_CRANK2, WC_UP, (char*) shaft_signal_msg_index);
+	} else if (ckpSignalType == SHAFT_SECONDARY_DOWN) {
+		addWaveChartEvent(WC_CRANK2, WC_DOWN, (char*) shaft_signal_msg_index);
+	} else if (ckpSignalType == SHAFT_3RD_UP) {
+		addWaveChartEvent(WC_CRANK3, WC_UP, (char*) shaft_signal_msg_index);
+	} else if (ckpSignalType == SHAFT_3RD_DOWN) {
+		addWaveChartEvent(WC_CRANK3, WC_DOWN, (char*) shaft_signal_msg_index);
+	}
+}
+
+
 void TriggerCentral::handleShaftSignal(configuration_s *configuration, trigger_event_e signal, uint64_t nowUs) {
 	efiAssertVoid(configuration!=NULL, "configuration");
 
@@ -101,30 +126,24 @@ void TriggerCentral::handleShaftSignal(configuration_s *configuration, trigger_e
 		return;
 	}
 
-	if (triggerState.getCurrentIndex() >= configuration->engineConfiguration2->triggerShape.shaftPositionEventCount) {
-		int f = warning(OBD_PCM_Processor_Fault, "unexpected eventIndex=%d", triggerState.getCurrentIndex());
-		if (!f) {
-#if EFI_PROD_CODE
-			// this temporary code is about trigger noise debugging
-			for (int i = 0; i < HW_EVENT_TYPES; i++) {
-				scheduleMsg(&logger, "event type: %d count=%d", i, hwEventCounters[i]);
-			}
-#endif
-		}
+	/**
+	 * If we only have a crank position sensor, here we are extending crank revolutions with a 360 degree
+	 * cycle into a four stroke, 720 degrees cycle. TODO
+	 */
+	int triggerIndexForListeners;
+	if (getOperationMode(configuration->engineConfiguration) == FOUR_STROKE_CAM_SENSOR) {
+		// That's easy - trigger cycle matches engine cycle
+		triggerIndexForListeners = triggerState.getCurrentIndex();
 	} else {
-		/**
-		 * If we only have a crank position sensor, here we are extending crank revolutions with a 360 degree
-		 * cycle into a four stroke, 720 degrees cycle. TODO
-		 */
-		int triggerIndexForListeners;
-		if (getOperationMode(configuration->engineConfiguration) == FOUR_STROKE_CAM_SENSOR) {
-			// That's easy - trigger cycle matches engine cycle
-			triggerIndexForListeners = triggerState.getCurrentIndex();
-		} else {
-			bool isEven = (triggerState.getTotalRevolutionCounter() & 1) == 0;
+		bool isEven = (triggerState.getTotalRevolutionCounter() & 1) == 0;
 
-			triggerIndexForListeners = triggerState.getCurrentIndex() + (isEven ? 0 : triggerShape->getSize());
-		}
+		triggerIndexForListeners = triggerState.getCurrentIndex() + (isEven ? 0 : triggerShape->getSize());
+	}
+	reportEventToWaveChart(signal, triggerIndexForListeners);
+
+	if (triggerState.getCurrentIndex() >= configuration->engineConfiguration2->triggerShape.shaftPositionEventCount) {
+		warning(OBD_PCM_Processor_Fault, "unexpected eventIndex=%d", triggerState.getCurrentIndex());
+	} else {
 
 		/**
 		 * Here we invoke all the listeners - the main engine control logic is inside these listeners
@@ -135,8 +154,9 @@ void TriggerCentral::handleShaftSignal(configuration_s *configuration, trigger_e
 	int afterCallback = hal_lld_get_counter_value();
 	int diff = afterCallback - beforeCallback;
 	// this counter is only 32 bits so it overflows every minute, let's ignore the value in case of the overflow for simplicity
-	if (diff > 0)
+	if (diff > 0) {
 		hsAdd(&triggerCallback, diff);
+	}
 #endif /* EFI_HISTOGRAMS */
 }
 
@@ -158,22 +178,20 @@ static void triggerInfo() {
 	scheduleMsg(&logger, "Template %s/%d trigger %d", getConfigurationName(engineConfiguration),
 			engineConfiguration->engineType, engineConfiguration->triggerConfig.triggerType);
 
-
-
 	scheduleMsg(&logger, "trigger event counters %d/%d/%d/%d", triggerCentral.getHwEventCounter(0),
 			triggerCentral.getHwEventCounter(1), triggerCentral.getHwEventCounter(2),
 			triggerCentral.getHwEventCounter(3));
-	scheduleMsg(&logger, "expected cycle events %d/%d/%d",
-	engineConfiguration2->triggerShape.expectedEventCount[0],
-	engineConfiguration2->triggerShape.expectedEventCount[1],
-	engineConfiguration2->triggerShape.expectedEventCount[2]);
+	scheduleMsg(&logger, "expected cycle events %d/%d/%d", engineConfiguration2->triggerShape.expectedEventCount[0],
+			engineConfiguration2->triggerShape.expectedEventCount[1],
+			engineConfiguration2->triggerShape.expectedEventCount[2]);
 
-	scheduleMsg(&logger, "trigger type=%d/need2ndChannel=%s",
-			engineConfiguration->triggerConfig.triggerType,
+	scheduleMsg(&logger, "trigger type=%d/need2ndChannel=%s", engineConfiguration->triggerConfig.triggerType,
 			boolToString(engineConfiguration->needSecondTriggerInput));
 	scheduleMsg(&logger, "expected duty #0=%f/#1=%f", engineConfiguration2->triggerShape.dutyCycle[0],
 			engineConfiguration2->triggerShape.dutyCycle[1]);
+#endif
 
+#if EFI_PROD_CODE
 	scheduleMsg(&logger, "primary trigger simulator: %s %s", hwPortname(boardConfiguration->triggerSimulatorPins[0]),
 			pinModeToString(boardConfiguration->triggerSimulatorPinModes[0]));
 	scheduleMsg(&logger, "secondary trigger simulator: %s %s", hwPortname(boardConfiguration->triggerSimulatorPins[1]),
@@ -185,7 +203,8 @@ static void triggerInfo() {
 	scheduleMsg(&logger, "secondary trigger input: %s", hwPortname(boardConfiguration->triggerInputPins[1]));
 	scheduleMsg(&logger, "primary logic input: %s", hwPortname(boardConfiguration->logicAnalyzerPins[0]));
 	scheduleMsg(&logger, "secondary logic input: %s", hwPortname(boardConfiguration->logicAnalyzerPins[1]));
-#endif
+
+#endif /* EFI_PROD_CODE */
 }
 
 float getTriggerDutyCycle(int index) {
@@ -193,6 +212,12 @@ float getTriggerDutyCycle(int index) {
 }
 
 void initTriggerCentral(void) {
+	strcpy((char*) shaft_signal_msg_index, "_");
+
+#if EFI_WAVE_CHART
+	initWaveChart(&waveChart);
+#endif
+
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	initLogging(&logger, "ShaftPosition");
 	addConsoleAction("triggerinfo", triggerInfo);

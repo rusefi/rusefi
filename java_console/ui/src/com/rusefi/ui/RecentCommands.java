@@ -39,6 +39,7 @@ public class RecentCommands {
         add("help");
         add("showconfig");
         add("writeconfig");
+        add("triggerinfo");
         add("enable_injection");
         add("disable_injection");
         add("enable_ignition");
