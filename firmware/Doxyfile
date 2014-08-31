@@ -740,6 +740,7 @@ INPUT                  = . \
 	config/engines \
 	config/boards \
 	console_util \
+	console_util/tunerstudio \
 	util \
 	console \
 	controllers \
