@@ -1,4 +1,4 @@
-update=8/28/2014 7:44:04 PM
+update=8/30/2014 1:35:04 PM
 version=1
 last_client=pcbnew
 [cvpcb]
@@ -11,7 +11,7 @@ version=1
 [eeschema]
 version=1
 LibDir=../rusefi_lib
-NetFmtName=
+NetFmtName=PcbnewAdvanced
 RptD_X=0
 RptD_Y=100
 RptLab=1
@@ -48,6 +48,8 @@ LibName28=atmel
 LibName29=contrib
 LibName30=valves
 LibName31=ECUStimS
+LibName32=logo_flipped
+LibName33=logo
 [pcbnew]
 version=1
 LastNetListRead=Stimulator.net
@@ -85,3 +87,5 @@ LibName13=led
 LibName14=dip_sockets
 LibName15=pga_sockets
 LibName16=valves
+LibName17=logo
+LibName18=logo_flipped

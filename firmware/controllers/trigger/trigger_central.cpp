@@ -91,7 +91,6 @@ static void reportEventToWaveChart(trigger_event_e ckpSignalType, int index) {
 	}
 }
 
-
 void TriggerCentral::handleShaftSignal(configuration_s *configuration, trigger_event_e signal, uint64_t nowUs) {
 	efiAssertVoid(configuration!=NULL, "configuration");
 
@@ -173,6 +172,15 @@ extern engine_configuration2_s * engineConfiguration2;
 extern board_configuration_s *boardConfiguration;
 #endif
 
+static void triggerShapeInfo() {
+#if EFI_PROD_CODE || EFI_SIMULATOR
+	trigger_shape_s *s = &engineConfiguration2->triggerShape;
+	for (int i = 0; i < s->getSize(); i++) {
+		scheduleMsg(&logger, "event %d %f", i, s->eventAngles[i]);
+	}
+#endif
+}
+
 static void triggerInfo() {
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	scheduleMsg(&logger, "Template %s/%d trigger %d", getConfigurationName(engineConfiguration),
@@ -216,11 +224,12 @@ void initTriggerCentral(void) {
 
 #if EFI_WAVE_CHART
 	initWaveChart(&waveChart);
-#endif
+#endif /* EFI_WAVE_CHART */
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	initLogging(&logger, "ShaftPosition");
 	addConsoleAction("triggerinfo", triggerInfo);
+	addConsoleAction("triggershapeinfo", triggerShapeInfo);
 #endif
 
 #if EFI_HISTOGRAMS
