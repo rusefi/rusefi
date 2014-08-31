@@ -336,6 +336,9 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	boardConfiguration->logicAnalyzerPins[0] = GPIOA_8;
 	boardConfiguration->logicAnalyzerPins[1] = GPIOE_7; // todo: E7 is not timer input, that's a bug!
 
+	boardConfiguration->logicAnalyzerMode[0] = false;
+	boardConfiguration->logicAnalyzerMode[1] = false;
+
 	boardConfiguration->idleThreadPeriod = 100;
 	boardConfiguration->consoleLoopPeriod = 200;
 	boardConfiguration->lcdThreadPeriod = 300;

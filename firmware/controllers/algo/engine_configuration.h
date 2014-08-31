@@ -159,8 +159,10 @@ typedef struct {
 
 	adc_channel_mode_e adcHwChannelEnabled[HW_MAX_ADC_INDEX];
 
+	// todo: we should have up to three trigger input channels
 	brain_pin_e triggerInputPins[2];
-	brain_pin_e logicAnalyzerPins[2];
+	// todo: we should have up to four login input channels
+	brain_pin_e logicAnalyzerPins[LOGIC_ANALYZER_CHANNEL_COUNT];
 
 	int idleThreadPeriod;
 	int consoleLoopPeriod;
@@ -186,7 +188,9 @@ typedef struct {
 	unsigned int is_enabled_spi_2 : 1;
 	unsigned int is_enabled_spi_3 : 1;
 
-	int unused2[7];
+	int unused2[6];
+
+	uint8_t logicAnalyzerMode[4];
 
 
 } board_configuration_s;
