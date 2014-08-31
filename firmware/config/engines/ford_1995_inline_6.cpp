@@ -108,9 +108,7 @@ void setFordInline6(engine_configuration_s *engineConfiguration, board_configura
 	boardConfiguration->triggerInputPins[0] = GPIOA_8;
 	boardConfiguration->triggerInputPins[1] = GPIOA_5;
 	boardConfiguration->logicAnalyzerPins[0] = GPIOC_6;
-	boardConfiguration->logicAnalyzerPins[1] = GPIOE_7;
-
-
+	boardConfiguration->logicAnalyzerPins[1] = GPIOE_5;
 }
 
 #endif /* EFI_SUPPORT_1995_FORD_INLINE_6 */
