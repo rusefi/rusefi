@@ -20,6 +20,10 @@ bool cisnan(float f) {
 	return *(((int*) (&f))) == 0x7FC00000;
 }
 
+const char * boolToString(bool value) {
+	return value ? "Yes" : "No";
+}
+
 int minI(int i1, int i2) {
 	return i1 < i2 ? i1 : i2;
 }

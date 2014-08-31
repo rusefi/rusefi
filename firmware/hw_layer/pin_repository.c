@@ -102,6 +102,21 @@ brain_pin_e parseBrainPin(const char *str) {
 	return basePin + pin;
 }
 
+const char * pinModeToString(pin_output_mode_e mode) {
+	switch (mode) {
+	case OM_DEFAULT:
+		return "default";
+	case OM_INVERTED:
+		return "inverted";
+	case OM_OPENDRAIN:
+		return "open drain";
+	case OM_OPENDRAIN_INVERTED:
+		return "open drain inverted";
+	default:
+		return "unexpected";
+	}
+}
+
 char *hwPortname(brain_pin_e brainPin) {
 	if (brainPin == GPIO_INVALID) {
 		return "INVALID";

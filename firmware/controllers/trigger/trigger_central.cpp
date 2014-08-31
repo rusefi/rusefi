@@ -12,6 +12,7 @@
 #include "engine_configuration.h"
 #include "listener_array.h"
 #include "data_buffer.h"
+#include "pin_repository.h"
 #include "histogram.h"
 #if EFI_PROD_CODE
 #include "rfiutil.h"
@@ -24,7 +25,7 @@ static volatile uint64_t previousShaftEventTime = (efitimems_t) -10 * US_PER_SEC
 
 TriggerCentral triggerCentral;
 
-static Logging logging;
+static Logging logger;
 
 uint64_t getCrankEventCounter() {
 	return triggerCentral.triggerState.getTotalEventCounter();
@@ -106,7 +107,7 @@ void TriggerCentral::handleShaftSignal(configuration_s *configuration, trigger_e
 #if EFI_PROD_CODE
 			// this temporary code is about trigger noise debugging
 			for (int i = 0; i < HW_EVENT_TYPES; i++) {
-				scheduleMsg(&logging, "event type: %d count=%d", i, hwEventCounters[i]);
+				scheduleMsg(&logger, "event type: %d count=%d", i, hwEventCounters[i]);
 			}
 #endif
 		}
@@ -141,7 +142,7 @@ void TriggerCentral::handleShaftSignal(configuration_s *configuration, trigger_e
 
 void printAllCallbacksHistogram(void) {
 #if EFI_PROD_CODE
-	printHistogram(&logging, &triggerCallback);
+	printHistogram(&logger, &triggerCallback);
 #endif
 }
 
@@ -149,18 +150,41 @@ void printAllCallbacksHistogram(void) {
 // todo: eliminate this extern which is needed by 'triggerInfo'
 extern engine_configuration_s *engineConfiguration;
 extern engine_configuration2_s * engineConfiguration2;
+extern board_configuration_s *boardConfiguration;
 #endif
 
 static void triggerInfo() {
 #if EFI_PROD_CODE || EFI_SIMULATOR
-	scheduleMsg(&logging, "trigger event counters %d/%d/%d/%d", triggerCentral.getHwEventCounter(0),
+	scheduleMsg(&logger, "Template %s/%d trigger %d", getConfigurationName(engineConfiguration),
+			engineConfiguration->engineType, engineConfiguration->triggerConfig.triggerType);
+
+
+
+	scheduleMsg(&logger, "trigger event counters %d/%d/%d/%d", triggerCentral.getHwEventCounter(0),
 			triggerCentral.getHwEventCounter(1), triggerCentral.getHwEventCounter(2),
 			triggerCentral.getHwEventCounter(3));
-	scheduleMsg(&logging, "trigger type=%d/need2ndChannel=%d",
+	scheduleMsg(&logger, "expected cycle events %d/%d/%d",
+	engineConfiguration2->triggerShape.expectedEventCount[0],
+	engineConfiguration2->triggerShape.expectedEventCount[1],
+	engineConfiguration2->triggerShape.expectedEventCount[2]);
+
+	scheduleMsg(&logger, "trigger type=%d/need2ndChannel=%s",
 			engineConfiguration->triggerConfig.triggerType,
-			engineConfiguration->needSecondTriggerInput);
-	scheduleMsg(&logging, "expected duty #0=%f/#1=%f", engineConfiguration2->triggerShape.dutyCycle[0],
+			boolToString(engineConfiguration->needSecondTriggerInput));
+	scheduleMsg(&logger, "expected duty #0=%f/#1=%f", engineConfiguration2->triggerShape.dutyCycle[0],
 			engineConfiguration2->triggerShape.dutyCycle[1]);
+
+	scheduleMsg(&logger, "primary trigger simulator: %s %s", hwPortname(boardConfiguration->triggerSimulatorPins[0]),
+			pinModeToString(boardConfiguration->triggerSimulatorPinModes[0]));
+	scheduleMsg(&logger, "secondary trigger simulator: %s %s", hwPortname(boardConfiguration->triggerSimulatorPins[1]),
+			pinModeToString(boardConfiguration->triggerSimulatorPinModes[1]));
+	scheduleMsg(&logger, "3rd trigger simulator: %s %s", hwPortname(boardConfiguration->triggerSimulatorPins[2]),
+			pinModeToString(boardConfiguration->triggerSimulatorPinModes[2]));
+
+	scheduleMsg(&logger, "primary trigger input: %s", hwPortname(boardConfiguration->triggerInputPins[0]));
+	scheduleMsg(&logger, "secondary trigger input: %s", hwPortname(boardConfiguration->triggerInputPins[1]));
+	scheduleMsg(&logger, "primary logic input: %s", hwPortname(boardConfiguration->logicAnalyzerPins[0]));
+	scheduleMsg(&logger, "secondary logic input: %s", hwPortname(boardConfiguration->logicAnalyzerPins[1]));
 #endif
 }
 
@@ -170,7 +194,7 @@ float getTriggerDutyCycle(int index) {
 
 void initTriggerCentral(void) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
-	initLogging(&logging, "ShaftPosition");
+	initLogging(&logger, "ShaftPosition");
 	addConsoleAction("triggerinfo", triggerInfo);
 #endif
 
