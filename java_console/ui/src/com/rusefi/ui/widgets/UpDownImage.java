@@ -207,11 +207,11 @@ public class UpDownImage extends JPanel {
         g.setColor(Color.darkGray);
         if (upDown.upIndex != -1) {
             g.drawString("" + upDown.upIndex, x1, (int) (0.25 * d.height));
-//            System.out.println("digital_event " + upDown.upIndex + " @ " + fromAngle);
+//            System.out.println("digital_event," + upDown.upIndex + "," + fromAngle);
         }
         if (upDown.downIndex != -1) {
             g.drawString("" + upDown.downIndex, x2, (int) (0.25 * d.height));
-//            System.out.println("digital_event " + upDown.downIndex + " @ " + toAngle);
+//            System.out.println("digital_event," + upDown.downIndex + "," + toAngle);
         }
 
         int offset = 3;
