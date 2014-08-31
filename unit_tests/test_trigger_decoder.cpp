@@ -472,7 +472,7 @@ void testTriggerDecoder(void) {
 
 	testTriggerDecoder2("testMitsu", MITSU_4G93, 3, 0.3750, 0.3889);
 //	testTriggerDecoder2("miata 1990", MIATA_1990, 0, 0.6280, 0.0);
-	testTriggerDecoder2("miata 1994", MIATA_1994, 11, 0.2790, 0.3720);
+	testTriggerDecoder2("miata 1994", MIATA_1994, 11, 0.2917, 0.3716);
 
 	testMazda323();
 

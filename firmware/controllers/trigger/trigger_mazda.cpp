@@ -23,26 +23,24 @@
 void initializeMazdaMiataNaShape(trigger_shape_s *s) {
 	s->reset(FOUR_STROKE_CAM_SENSOR);
 	setTriggerSynchronizationGap(s, 1.68f);
-	float z = 0.093;
 	s->useRiseEdge = false;
 
 	s->isSynchronizationNeeded = true;
 
-	s->addEvent(180.0f - 1.75 * z * 720, T_SECONDARY, TV_HIGH);
-	s->addEvent(180.0f - 0.75 * z * 720, T_SECONDARY, TV_LOW);
+	s->addEvent(49.15363636, T_SECONDARY, TV_HIGH);
+	s->addEvent(114.1581818, T_SECONDARY, TV_LOW);
 
+	s->addEvent(213.0222222, T_PRIMARY, TV_HIGH);
+	s->addEvent(225.759, T_SECONDARY, TV_HIGH);
+	s->addEvent(279.54375, T_PRIMARY, TV_LOW);
+	s->addEvent(294.786, T_SECONDARY, TV_LOW);
 
-	s->addEvent(360.0f - 2 * z * 720, T_PRIMARY, TV_HIGH);
-	s->addEvent(360.0f - 1.75 * z * 720, T_SECONDARY, TV_HIGH);
-	s->addEvent(360.0f - z * 720, T_PRIMARY, TV_LOW);
-	s->addEvent(360.0f - 0.75 * z * 720, T_SECONDARY, TV_LOW);
+	s->addEvent(410.318, T_SECONDARY, TV_HIGH);
+	s->addEvent(477.6911111, T_SECONDARY, TV_LOW);
 
-	s->addEvent(540.0f - 1.75 * z * 720, T_SECONDARY, TV_HIGH);
-	s->addEvent(540.0f - 0.75 * z * 720, T_SECONDARY, TV_LOW);
-
-	s->addEvent(720.0f - 2 * z * 720, T_PRIMARY, TV_HIGH);
-	s->addEvent(720.0f - 1.75 * z * 720, T_SECONDARY, TV_HIGH);
-	s->addEvent(720.0f - 0.75 * z * 720, T_SECONDARY, TV_LOW);
+	s->addEvent(576.4975, T_PRIMARY, TV_HIGH);
+	s->addEvent(590.39625, T_SECONDARY, TV_HIGH);
+	s->addEvent(656.5125, T_SECONDARY, TV_LOW);
 	s->addEvent(720.0f, T_PRIMARY, TV_LOW);
 
 	s->shaftPositionEventCount = s->getSize();
