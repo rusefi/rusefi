@@ -27,6 +27,30 @@ static void setDefaultCrankingFuel(engine_configuration_s *engineConfiguration) 
 	engineConfiguration->crankingSettings.fuelAtMinTempMs = 6;
 }
 
+static void commonMiataNa(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
+	engineConfiguration->triggerConfig.triggerType = TT_MAZDA_MIATA_NA;
+
+	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
+
+	// Frankenstein: high side #1 is PE8
+	// Frankenstein: high side #2 is PE10
+	// Frankenstein: high side #3 is PE12
+	// Frankenstein: high side #4 is PE14
+	// Frankenstein: high side #5 is PC9
+	// Frankenstein: high side #6 is PC7
+
+	boardConfiguration->ignitionPins[0] = GPIOE_12; // Frankenstein: high side #3
+	boardConfiguration->ignitionPins[1] = GPIOE_14; // Frankenstein: high side #4
+	boardConfiguration->ignitionPins[2] = GPIO_NONE;
+	boardConfiguration->ignitionPins[3] = GPIO_NONE;
+	boardConfiguration->ignitionPinMode = OM_DEFAULT;
+
+	setDefaultCrankingFuel(engineConfiguration);
+
+	boardConfiguration->triggerSimulatorPinModes[0] = OM_OPENDRAIN;
+	boardConfiguration->triggerSimulatorPinModes[1] = OM_OPENDRAIN;
+}
+
 static void common079721_2351(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
 
 	engineConfiguration->digitalChartSize = 150;
@@ -59,23 +83,10 @@ static void common079721_2351(engine_configuration_s *engineConfiguration, board
 }
 
 void setMiata1990(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
-	engineConfiguration->triggerConfig.triggerType = TT_MAZDA_MIATA_NA;
-
 	common079721_2351(engineConfiguration, boardConfiguration);
 
+	commonMiataNa(engineConfiguration, boardConfiguration);
 
-	// Frankenstein: high side #1 is PE8
-	// Frankenstein: high side #2 is PE10
-	// Frankenstein: high side #3 is PE12
-	// Frankenstein: high side #4 is PE14
-	// Frankenstein: high side #5 is PC9
-	// Frankenstein: high side #6 is PC7
-
-	boardConfiguration->ignitionPins[0] = GPIOE_12; // Frankenstein: high side #3
-	boardConfiguration->ignitionPins[1] = GPIOE_14; // Frankenstein: high side #4
-	boardConfiguration->ignitionPins[2] = GPIO_NONE;
-	boardConfiguration->ignitionPins[3] = GPIO_NONE;
-	boardConfiguration->ignitionPinMode = OM_DEFAULT;
 
 	// Frankenstein: low side - inj #1: PC14
 	// Frankenstein: low side - inj #2: PC15
@@ -143,7 +154,9 @@ void setFordEscortGt(engine_configuration_s *engineConfiguration, board_configur
  * set_engine_type 20
  */
 void setMiata1994(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
-	engineConfiguration->triggerConfig.triggerType = TT_MAZDA_MIATA_NA;
+
+	commonMiataNa(engineConfiguration, boardConfiguration);
+
 	engineConfiguration->displacement = 1.839;
 
 	boardConfiguration->triggerSimulatorPins[0] = GPIOD_2; // 2G - YEL/BLU
@@ -158,11 +171,10 @@ void setMiata1994(engine_configuration_s *engineConfiguration, board_configurati
 	boardConfiguration->is_enabled_spi_2 = false;
 	boardConfiguration->is_enabled_spi_3 = false;
 
-	setDefaultCrankingFuel(engineConfiguration);
 }
 
 void setMiata1996(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
+	commonMiataNa(engineConfiguration, boardConfiguration);
 
-	setDefaultCrankingFuel(engineConfiguration);
 }
 
