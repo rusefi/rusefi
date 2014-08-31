@@ -3,6 +3,10 @@
  *
  * FORD_ESCORT_GT = 14
  *
+ * MIATA_1990 = 19
+ * MIATA_1994 = 20
+ * MIATA_1996 = 21
+ *
  * @date Apr 11, 2014
  * @author Andrey Belomutskiy, (c) 2012-2014
  */

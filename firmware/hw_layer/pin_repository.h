@@ -24,6 +24,7 @@ extern "C"
 
 void initPinRepository(void);
 char *hwPortname(brain_pin_e brainPin);
+const char * pinModeToString(pin_output_mode_e mode);
 brain_pin_e parseBrainPin(const char *str);
 void mySetPadMode(const char *msg, ioportid_t port, ioportmask_t pin, iomode_t mode);
 char *portname(GPIO_TypeDef* GPIOx);

@@ -110,25 +110,6 @@ const char* getConfigurationName(engine_configuration_s *engineConfiguration) {
 	}
 }
 
-static const char * pinModeToString(pin_output_mode_e mode) {
-	switch (mode) {
-	case OM_DEFAULT:
-		return "default";
-	case OM_INVERTED:
-		return "inverted";
-	case OM_OPENDRAIN:
-		return "open drain";
-	case OM_OPENDRAIN_INVERTED:
-		return "open drain inverted";
-	default:
-		return "unexpected";
-	}
-}
-
-static const char * boolToString(bool value) {
-	return value ? "Yes" : "No";
-}
-
 extern board_configuration_s *boardConfiguration;
 
 /**
@@ -190,8 +171,6 @@ void printConfiguration(engine_configuration_s *engineConfiguration, engine_conf
 			pinModeToString(boardConfiguration->malfunctionIndicatorPinMode));
 	scheduleMsg(&logger, "analogInputDividerCoefficient: %f", engineConfiguration->analogInputDividerCoefficient);
 
-	scheduleMsg(&logger, "needSecondTriggerInput: %s", boolToString(engineConfiguration->needSecondTriggerInput));
-
 #if EFI_PROD_CODE
 	scheduleMsg(&logger, "idleValvePin: %s", hwPortname(boardConfiguration->idleValvePin));
 	scheduleMsg(&logger, "fuelPumpPin: mode %s @ %s", pinModeToString(boardConfiguration->fuelPumpPinMode),
@@ -210,18 +189,6 @@ void printConfiguration(engine_configuration_s *engineConfiguration, engine_conf
 		brain_pin_e brainPin = boardConfiguration->ignitionPins[i];
 		scheduleMsg(&logger, "ignition %d @ %s", i, hwPortname(brainPin));
 	}
-
-	scheduleMsg(&logger, "primary trigger simulator: %s %s", hwPortname(boardConfiguration->triggerSimulatorPins[0]),
-			pinModeToString(boardConfiguration->triggerSimulatorPinModes[0]));
-	scheduleMsg(&logger, "secondary trigger simulator: %s %s", hwPortname(boardConfiguration->triggerSimulatorPins[1]),
-			pinModeToString(boardConfiguration->triggerSimulatorPinModes[1]));
-	scheduleMsg(&logger, "3rd trigger simulator: %s %s", hwPortname(boardConfiguration->triggerSimulatorPins[2]),
-			pinModeToString(boardConfiguration->triggerSimulatorPinModes[2]));
-
-	scheduleMsg(&logger, "primary trigger input: %s", hwPortname(boardConfiguration->triggerInputPins[0]));
-	scheduleMsg(&logger, "secondary trigger input: %s", hwPortname(boardConfiguration->triggerInputPins[1]));
-	scheduleMsg(&logger, "primary logic input: %s", hwPortname(boardConfiguration->logicAnalyzerPins[0]));
-	scheduleMsg(&logger, "secondary logic input: %s", hwPortname(boardConfiguration->logicAnalyzerPins[1]));
 
 	scheduleMsg(&logger, "boardTestModeJumperPin: %s", hwPortname(boardConfiguration->boardTestModeJumperPin));
 

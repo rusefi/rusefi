@@ -31,6 +31,8 @@ extern "C"
 
 #define ERROR_CODE -11223344
 
+const char * boolToString(bool value);
+
 int indexOf(const char *string, char ch);
 float atoff(const char *string);
 int atoi(const char *string);

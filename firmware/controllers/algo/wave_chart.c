@@ -24,11 +24,12 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "wave_chart.h"
 #include "main.h"
+#include "wave_chart.h"
 
 #if EFI_WAVE_CHART
 
+#include "engine_configuration.h"
 #include "eficonsole.h"
 #include "status_loop.h"
 
@@ -40,17 +41,15 @@
 static histogram_s waveChartHisto;
 #endif
 
+extern engine_configuration_s *engineConfiguration;
+
 /**
  * This is the number of events in the digital chart which would be displayed
  * on the 'digital sniffer' pane
  */
 #if EFI_PROD_CODE
-// todo: does it really need to be a variable? maybe a constant should be enough?
-static volatile int chartSize = 300;
 #define WAVE_LOGGING_SIZE 5000
 #else
-// need more events for automated test
-static volatile int chartSize = 400;
 #define WAVE_LOGGING_SIZE 35000
 #endif
 
@@ -80,12 +79,12 @@ static char WAVE_LOGGING_BUFFER[WAVE_LOGGING_SIZE] CCM_OPTIONAL
 ;
 
 static int isWaveChartFull(WaveChart *chart) {
-	return chart->counter >= chartSize;
+	return chart->counter >= engineConfiguration->digitalChartSize;
 }
 
 static void printStatus(void) {
 	scheduleIntValue(&logger, "chart", isChartActive);
-	scheduleIntValue(&logger, "chartsize", chartSize);
+	scheduleIntValue(&logger, "chartsize", engineConfiguration->digitalChartSize);
 }
 
 static void setChartActive(int value) {
@@ -94,10 +93,10 @@ static void setChartActive(int value) {
 }
 
 void setChartSize(int newSize) {
-  if (newSize < 5) {
+	if (newSize < 5) {
 		return;
-  }
-	chartSize = newSize;
+	}
+	engineConfiguration->digitalChartSize = newSize;
 	printStatus();
 }
 
@@ -115,10 +114,10 @@ void publishChart(WaveChart *chart) {
 	Logging *l = &chart->logging;
 	scheduleSimpleMsg(&debugLogging, "IT'S TIME", strlen(l->buffer));
 #endif
-        bool isFullLog = getFullLog();
+	bool isFullLog = getFullLog();
 	if (isChartActive && isFullLog) {
 		scheduleLogging(&chart->logging);
-        }
+	}
 }
 
 static char timeBuffer[10];
@@ -133,12 +132,11 @@ void addWaveChartEvent3(WaveChart *chart, const char *name, const char * msg, co
 #endif
 	if (isWaveChartFull(chart)) {
 		return;
-        }
+	}
 
 #if EFI_HISTOGRAMS && EFI_PROD_CODE
 	int beforeCallback = hal_lld_get_counter_value();
 #endif
-
 
 	int time100 = getTimeNowUs() / 10;
 
@@ -146,7 +144,7 @@ void addWaveChartEvent3(WaveChart *chart, const char *name, const char * msg, co
 
 	if (chart->counter == 0) {
 		chart->startTime = time100;
-        }
+	}
 	chart->counter++;
 	if (remainingSize(&chart->logging) > 30) {
 		/**
@@ -168,13 +166,13 @@ void addWaveChartEvent3(WaveChart *chart, const char *name, const char * msg, co
 	}
 	if (!alreadyLocked) {
 		unlockOutputBuffer();
-        }
+	}
 
 #if EFI_HISTOGRAMS && EFI_PROD_CODE
 	int64_t diff = hal_lld_get_counter_value() - beforeCallback;
 	if (diff > 0) {
-	hsAdd(&waveChartHisto, diff);
-        }
+		hsAdd(&waveChartHisto, diff);
+	}
 #endif /* EFI_HISTOGRAMS */
 
 }
@@ -190,7 +188,7 @@ void initWaveChart(WaveChart *chart) {
 
 	if (!isChartActive) {
 		printMsg(&logger, "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! chart disabled");
-        }
+	}
 
 	printStatus();
 

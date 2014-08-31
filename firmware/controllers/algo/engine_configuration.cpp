@@ -244,7 +244,13 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 //	engineConfiguration->idleMode = IM_AUTO;
 	engineConfiguration->idleMode = IM_MANUAL;
 
+#if EFI_PROD_CODE
 	engineConfiguration->digitalChartSize = 300;
+#else
+	// need more events for automated test
+	engineConfiguration->digitalChartSize = 400;
+#endif
+
 
 	engineConfiguration->isInjectionEnabled = true;
 	engineConfiguration->isIgnitionEnabled = true;
