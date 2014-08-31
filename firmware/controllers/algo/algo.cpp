@@ -23,12 +23,9 @@
 #include "algo.h"
 #include "advance_map.h"
 #include "fuel_math.h"
-#include "wave_chart.h"
 #include "settings.h"
 #include "signal_executor.h"
 #include "speed_density.h"
-
-WaveChart waveChart;
 
 void initDataStructures(engine_configuration_s *engineConfiguration) {
 	prepareFuelMap();
@@ -40,9 +37,5 @@ void initAlgo(engine_configuration_s *engineConfiguration) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	initSettings();
 	initSignalExecutor();
-#endif
-
-#if EFI_WAVE_CHART
-	initWaveChart(&waveChart);
 #endif
 }

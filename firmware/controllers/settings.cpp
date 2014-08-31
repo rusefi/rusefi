@@ -166,12 +166,13 @@ void printConfiguration(engine_configuration_s *engineConfiguration, engine_conf
 
 	scheduleMsg(&logger, "crankingRpm: %d", engineConfiguration->crankingSettings.crankingRpm);
 
+	scheduleMsg(&logger, "analogInputDividerCoefficient: %f", engineConfiguration->analogInputDividerCoefficient);
+
+	#if EFI_PROD_CODE
 	scheduleMsg(&logger, "idlePinMode: %s", pinModeToString(boardConfiguration->idleValvePinMode));
 	scheduleMsg(&logger, "malfunctionIndicatorPinMode: %s",
 			pinModeToString(boardConfiguration->malfunctionIndicatorPinMode));
-	scheduleMsg(&logger, "analogInputDividerCoefficient: %f", engineConfiguration->analogInputDividerCoefficient);
 
-#if EFI_PROD_CODE
 	scheduleMsg(&logger, "idleValvePin: %s", hwPortname(boardConfiguration->idleValvePin));
 	scheduleMsg(&logger, "fuelPumpPin: mode %s @ %s", pinModeToString(boardConfiguration->fuelPumpPinMode),
 			hwPortname(boardConfiguration->fuelPumpPin));

@@ -102,8 +102,6 @@ static int isNoisySignal(RpmCalculator * rpmState, uint64_t nowUs) {
 	return diff < 40; // that's 40us
 }
 
-static char shaft_signal_msg_index[15];
-
 /**
  * @brief Shaft position callback used by RPM calculation logic.
  *
@@ -112,20 +110,6 @@ static char shaft_signal_msg_index[15];
  * This callback is invoked on interrupt thread.
  */
 void rpmShaftPositionCallback(trigger_event_e ckpSignalType, int index, RpmCalculator *rpmState) {
-	itoa10(&shaft_signal_msg_index[1], index);
-	if (ckpSignalType == SHAFT_PRIMARY_UP) {
-		addWaveChartEvent(WC_CRANK1, WC_UP, (char*) shaft_signal_msg_index);
-	} else if (ckpSignalType == SHAFT_PRIMARY_DOWN) {
-		addWaveChartEvent(WC_CRANK1, WC_DOWN, (char*) shaft_signal_msg_index);
-	} else if (ckpSignalType == SHAFT_SECONDARY_UP) {
-		addWaveChartEvent(WC_CRANK2, WC_UP, (char*) shaft_signal_msg_index);
-	} else if (ckpSignalType == SHAFT_SECONDARY_DOWN) {
-		addWaveChartEvent(WC_CRANK2, WC_DOWN, (char*) shaft_signal_msg_index);
-	} else if (ckpSignalType == SHAFT_3RD_UP) {
-		addWaveChartEvent(WC_CRANK3, WC_UP, (char*) shaft_signal_msg_index);
-	} else if (ckpSignalType == SHAFT_3RD_DOWN) {
-		addWaveChartEvent(WC_CRANK3, WC_DOWN, (char*) shaft_signal_msg_index);
-	}
 
 	if (index != 0) {
 #if EFI_ANALOG_CHART || defined(__DOXYGEN__)
@@ -221,8 +205,6 @@ void initRpmCalculator(void) {
 	tdcScheduler[1].name = "tdc1";
 	addTriggerEventListener(&tdcMarkCallback, "chart TDC mark", NULL);
 #endif
-
-	strcpy((char*) shaft_signal_msg_index, "_");
 
 	addTriggerEventListener((ShaftPositionListener)&rpmShaftPositionCallback, "rpm reporter", &rpmState);
 }

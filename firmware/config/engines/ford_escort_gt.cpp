@@ -29,6 +29,8 @@ static void setDefaultCrankingFuel(engine_configuration_s *engineConfiguration) 
 
 static void common079721_2351(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
 
+	engineConfiguration->digitalChartSize = 150;
+
 	engineConfiguration->cylindersCount = 4;
 	engineConfiguration->firingOrder = FO_1_THEN_3_THEN_4_THEN2;
 
@@ -57,7 +59,7 @@ static void common079721_2351(engine_configuration_s *engineConfiguration, board
 }
 
 void setMiata1990(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
-	engineConfiguration->triggerConfig.triggerType = TT_FORD_ESCORT_GT;
+	engineConfiguration->triggerConfig.triggerType = TT_MAZDA_MIATA_NA;
 
 	common079721_2351(engineConfiguration, boardConfiguration);
 
