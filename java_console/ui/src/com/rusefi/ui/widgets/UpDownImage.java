@@ -201,20 +201,28 @@ public class UpDownImage extends JPanel {
 
         g.drawString(durationString, x1, (int) (0.5 * d.height));
 
+        String fromAngle = time2rpm.getCrankAngleByTimeString(upDown.upTime);
+        String toAngle = time2rpm.getCrankAngleByTimeString(upDown.downTime);
+
         g.setColor(Color.darkGray);
-        if (upDown.upIndex != -1)
+        if (upDown.upIndex != -1) {
             g.drawString("" + upDown.upIndex, x1, (int) (0.25 * d.height));
-        if (upDown.downIndex != -1)
+//            System.out.println("digital_event " + upDown.upIndex + " @ " + fromAngle);
+        }
+        if (upDown.downIndex != -1) {
             g.drawString("" + upDown.downIndex, x2, (int) (0.25 * d.height));
+//            System.out.println("digital_event " + upDown.downIndex + " @ " + toAngle);
+        }
 
         int offset = 3;
         g.setColor(Color.black);
-        String fromAngle = time2rpm.getCrankAngleByTimeString(upDown.upTime);
         g.drawString(fromAngle, x1 + offset, (int) (0.75 * d.height));
 
         g.setColor(Color.green);
-        String toAngle = time2rpm.getCrankAngleByTimeString(upDown.downTime);
         g.drawString(toAngle, x1 + offset, (int) (1.0 * d.height));
+
+
+
     }
 
     public void setRevolutions(StringBuilder revolutions) {
