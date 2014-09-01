@@ -26,7 +26,10 @@ typedef struct {
 	volatile int eventCounter;
 
 	volatile uint64_t lastActivityTimeUs; // timestamp in microseconds ticks
-	volatile uint64_t periodEventTimeUs; // time of signal fall in microseconds
+	/**
+	 * time of signal fall event, in microseconds
+	 */
+	volatile uint64_t periodEventTimeUs;
 	volatile uint64_t widthEventTimeUs; // time of signal rise in microseconds
 
 	volatile uint32_t signalPeriodUs; // period between two signal rises in microseconds
@@ -45,7 +48,6 @@ void initWaveAnalyzer(void);
 void pokeWaveInfo(void);
 void reportWaveInfo(void);
 uint32_t getWaveLowWidth(int index);
-float getWaveHighWidthMs(int index);
 uint64_t getWaveOffset(int index);
 
 int getWaveMode(int index);

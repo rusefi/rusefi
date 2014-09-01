@@ -185,8 +185,7 @@ void printConfiguration(engine_configuration_s *engineConfiguration, engine_conf
 	}
 
 	scheduleMsg(&logger, "ignitionPins: mode %s", pinModeToString(boardConfiguration->ignitionPinMode));
-	// todo: calculate coils count based on ignition mode
-	for (int i = 0; i < 4; i++) {
+	for (int i = 0; i < engineConfiguration->cylindersCount; i++) {
 		brain_pin_e brainPin = boardConfiguration->ignitionPins[i];
 		scheduleMsg(&logger, "ignition %d @ %s", i, hwPortname(brainPin));
 	}

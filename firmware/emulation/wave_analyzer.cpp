@@ -131,9 +131,9 @@ static void initWave(const char *name, int index) {
 
 	reader->name = name;
 
-	registerCallback(&hw->widthListeners, (IntListener) waAnaWidthCallback, (void*)reader);
+	registerCallback(&hw->widthListeners, (IntListener) waAnaWidthCallback, (void*) reader);
 
-	registerCallback(&hw->periodListeners, (IntListener) waIcuPeriodCallback, (void*)reader);
+	registerCallback(&hw->periodListeners, (IntListener) waIcuPeriodCallback, (void*) reader);
 
 	initWaveAnalyzerDriver(hw, driver, port, pin);
 
@@ -151,9 +151,9 @@ static void initWave(const char *name, int index) {
 //}
 
 static void onWaveShaftSignal(trigger_event_e ckpSignalType, int index, void *arg) {
-  if (index != 0) {
+	if (index != 0) {
 		return;
-  }
+	}
 	uint64_t nowUs = getTimeNowUs();
 	ckpPeriodUs = nowUs - previousCrankSignalStart;
 	previousCrankSignalStart = nowUs;
@@ -183,12 +183,12 @@ uint32_t getWaveLowWidth(int index) {
 	return reader->last_wave_low_widthUs;
 }
 
-float getWaveHighWidthMs(int index) {
+static float getWaveHighWidthMs(int index) {
 	WaveReader *reader = &readers[index];
 	ensureInitialized(reader);
 	if (getTimeNowUs() - reader->lastActivityTimeUs > 4 * US_PER_SECOND) {
 		return 0.0f; // dwell time has expired
-        }
+	}
 	return reader->last_wave_high_widthUs / 1000.0f;
 }
 
@@ -209,14 +209,6 @@ uint64_t getWidthEventTime(int index) {
 	ensureInitialized(reader);
 	return reader->widthEventTimeUs;
 }
-
-uint64_t getPeriodEventTime(int index) {
-	WaveReader *reader = &readers[index];
-	ensureInitialized(reader);
-	return reader->periodEventTimeUs;
-}
-
-int waveBufferReported = 0;
 
 static void reportWave(Logging *logging, int index) {
 //	int counter = getEventCounter(index);
@@ -257,11 +249,11 @@ void initWaveAnalyzer(void) {
 	initWave(WA_CHANNEL_1, 0);
 	initWave(WA_CHANNEL_2, 1);
 
-	addTriggerEventListener(&onWaveShaftSignal, "wave analyzer", (void*)NULL);
+	addTriggerEventListener(&onWaveShaftSignal, "wave analyzer", (void*) NULL);
 
 	addConsoleActionII("set_logic_input_mode", setWaveModeSilent);
 
-	chThdCreateStatic(waThreadStack, sizeof(waThreadStack), NORMALPRIO, waThread, (void*)NULL);
+	chThdCreateStatic(waThreadStack, sizeof(waThreadStack), NORMALPRIO, waThread, (void*) NULL);
 
 #else
 	print("wave disabled\r\n");
