@@ -20,10 +20,22 @@
 #define WA_CHANNEL_3 "input3"
 #define WA_CHANNEL_4 "input4"
 
-typedef struct {
+class WaveReader {
+public:
+	void onFallEvent();
+
 	WaveReaderHw hw;
 	const char *name;
 	volatile int eventCounter;
+
+	int currentRevolutionCounter;
+
+	/**
+	 * Total ON time during last engine cycle
+	 */
+	uint64_t prevTotalOnTimeUs;
+
+	uint64_t totalOnTimeAccumulatorUs;
 
 	volatile uint64_t lastActivityTimeUs; // timestamp in microseconds ticks
 	/**
@@ -37,34 +49,10 @@ typedef struct {
 	volatile uint64_t waveOffsetUs; // offset from CKP signal in systimer ticks
 	volatile uint32_t last_wave_low_widthUs; // time period in systimer ticks
 	volatile uint64_t last_wave_high_widthUs; // time period in systimer ticks
-} WaveReader;
-
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
+};
 
 void initWaveAnalyzer(void);
-void pokeWaveInfo(void);
-void reportWaveInfo(void);
-uint32_t getWaveLowWidth(int index);
-uint64_t getWaveOffset(int index);
-
-int getWaveMode(int index);
-
-int getEventCounter(int index);
-
-float getSignalPeriodMs(int index);
-uint64_t getWidthEventTime(int index);
-uint64_t getPeriodEventTime(int index);
-
-//int getCrankStart();
-//int getCrankPeriod();
-
 void printWave(Logging *logging);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-
 #endif /* WAVE_ANALYZER_H_ */
+

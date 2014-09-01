@@ -22,6 +22,7 @@
 #include "rfiutil.h"
 #include "engine_math.h"
 #include "engine.h"
+#include "rpm_calculator.h"
 
 extern Engine engine;
 
@@ -61,16 +62,28 @@ static void waAnaWidthCallback(WaveReader *reader) {
 	reader->widthEventTimeUs = nowUs;
 }
 
-static void waIcuPeriodCallback(WaveReader *reader) {
+void WaveReader::onFallEvent() {
 	uint64_t nowUs = getTimeNowUs();
-	reader->eventCounter++;
-	reader->lastActivityTimeUs = nowUs;
-	addWaveChartEvent(reader->name, WC_DOWN, "");
+	eventCounter++;
+	lastActivityTimeUs = nowUs;
+	addWaveChartEvent(name, WC_DOWN, "");
 
-	uint64_t width = nowUs - reader->widthEventTimeUs;
-	reader->last_wave_high_widthUs = width;
+	uint64_t width = nowUs - widthEventTimeUs;
+	last_wave_high_widthUs = width;
 
-	reader->periodEventTimeUs = nowUs;
+	int revolutionCounter = getRevolutionCounter();
+
+	totalOnTimeAccumulatorUs += width;
+	if (currentRevolutionCounter != revolutionCounter) {
+		/**
+		 * We are here in case of a new engine cycle
+		 */
+		currentRevolutionCounter = revolutionCounter;
+		prevTotalOnTimeUs = totalOnTimeAccumulatorUs;
+		totalOnTimeAccumulatorUs = 0;
+	}
+
+	periodEventTimeUs = nowUs;
 
 	//scheduleSimpleMsg(&irqLogging, "co", reader->chart.counter);
 
@@ -86,10 +99,15 @@ static void waIcuPeriodCallback(WaveReader *reader) {
 		 */
 		offset -= period;
 	}
-	reader->waveOffsetUs = offset;
+	waveOffsetUs = offset;
 
 	// we want only the low phase length, so we subsctract high width from period
 //	processSignal(1, &dataPinReader, last_period - last_adc_response_width);
+
+}
+
+static void waIcuPeriodCallback(WaveReader *reader) {
+	reader->onFallEvent();
 }
 
 static void setWaveModeSilent(int index, int mode) {
@@ -98,18 +116,7 @@ static void setWaveModeSilent(int index, int mode) {
 	setWaveReaderMode(&reader->hw, mode);
 }
 
-//void setWaveMode(int index, int mode) {
-//	setWaveModeSilent(index, mode);
-//	print("wavemode%d:%d\r\n", index, mode);
-//}
-
-int getWaveMode(int index) {
-	WaveReader *reader = &readers[index];
-	ensureInitialized(reader);
-	return reader->hw.activeMode;
-}
-
-int getEventCounter(int index) {
+static int getEventCounter(int index) {
 	WaveReader *reader = &readers[index];
 	ensureInitialized(reader);
 	return reader->eventCounter;
@@ -142,14 +149,6 @@ static void initWave(const char *name, int index) {
 }
 #endif
 
-//int getCrankStart() {
-//	return previousCrankSignalStart;
-//}
-
-//static int getCrankPeriod(void) {
-//	return ckpPeriod;
-//}
-
 static void onWaveShaftSignal(trigger_event_e ckpSignalType, int index, void *arg) {
 	if (index != 0) {
 		return;
@@ -177,13 +176,13 @@ static msg_t waThread(void *arg) {
 #endif
 }
 
-uint32_t getWaveLowWidth(int index) {
+static uint32_t getWaveLowWidth(int index) {
 	WaveReader *reader = &readers[index];
 	ensureInitialized(reader);
 	return reader->last_wave_low_widthUs;
 }
 
-static float getWaveHighWidthMs(int index) {
+static float getSignalOnTime(int index) {
 	WaveReader *reader = &readers[index];
 	ensureInitialized(reader);
 	if (getTimeNowUs() - reader->lastActivityTimeUs > 4 * US_PER_SECOND) {
@@ -192,19 +191,19 @@ static float getWaveHighWidthMs(int index) {
 	return reader->last_wave_high_widthUs / 1000.0f;
 }
 
-uint64_t getWaveOffset(int index) {
+static uint64_t getWaveOffset(int index) {
 	WaveReader *reader = &readers[index];
 	ensureInitialized(reader);
 	return reader->waveOffsetUs;
 }
 
-float getSignalPeriodMs(int index) {
+static float getSignalPeriodMs(int index) {
 	WaveReader *reader = &readers[index];
 	ensureInitialized(reader);
 	return reader->signalPeriodUs / 1000.0f;
 }
 
-uint64_t getWidthEventTime(int index) {
+static uint64_t getWidthEventTime(int index) {
 	WaveReader *reader = &readers[index];
 	ensureInitialized(reader);
 	return reader->widthEventTimeUs;
@@ -214,16 +213,24 @@ static void reportWave(Logging *logging, int index) {
 //	int counter = getEventCounter(index);
 //	debugInt2(logging, "ev", index, counter);
 
-	float dwellMs = getWaveHighWidthMs(index);
+	float dwellMs = getSignalOnTime(index);
 	float periodMs = getSignalPeriodMs(index);
 
 	appendPrintf(logging, "duty%d%s", index, DELIMETER);
 	appendFloat(logging, 100.0f * dwellMs / periodMs, 2);
 	appendPrintf(logging, "%s", DELIMETER);
 
+	/**
+	 * that's the ON time of the LAST signal
+	 */
 	appendPrintf(logging, "dwell%d%s", index, DELIMETER);
 	appendFloat(logging, dwellMs, 2);
 	appendPrintf(logging, "%s", DELIMETER);
+
+	appendPrintf(logging, "total_dwell%d%s", index, DELIMETER);
+	appendFloat(logging, readers[index].prevTotalOnTimeUs / 1000.0f, 2);
+	appendPrintf(logging, "%s", DELIMETER);
+
 
 	appendPrintf(logging, "period%d%s", index, DELIMETER);
 	appendFloat(logging, periodMs, 2);
