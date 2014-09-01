@@ -83,7 +83,7 @@ public class TcpConnector implements LinkConnector {
                 while (true) {
                     try {
                         String line = reader.readLine();
-                        LinkManager.engineState.append(line + "\r\n");
+                        LinkManager.engineState.processNewData(line + "\r\n");
                     } catch (IOException e) {
                         System.err.println("End of connection");
                         return;

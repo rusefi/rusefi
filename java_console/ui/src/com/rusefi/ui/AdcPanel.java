@@ -65,7 +65,7 @@ public class AdcPanel {
 
 //    private Pair<JPanel, JLabel> createAdcLabel(final int channel) {
 //        final Pair<JPanel, JLabel> result = createLabelWithCaption(SensorCentral.getTitle(channel));
-//        model.addListener(new SensorCentral.AdcListener() {
+//        model.addListener(new SensorCentral.SensorListener() {
 //            public void onAdcUpdate(SensorCentral model, Sensor sensor, double value) {
 //                if (sensor.getMazdaIndex() != channel)
 //                    return;

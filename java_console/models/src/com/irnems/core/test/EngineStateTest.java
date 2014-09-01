@@ -38,10 +38,10 @@ public class EngineStateTest {
                     rpmResult.set(Integer.parseInt(value));
             }
         });
-        es.append("line:7:");
-        es.append(EngineState.RPM_KEY + SEPARATOR);
+        es.processNewData("line:7:");
+        es.processNewData(SensorCentral.RPM_KEY + SEPARATOR);
         assertEquals(0, rpmResult.get());
-        es.append("600\r");
+        es.processNewData("600\r");
         assertEquals(600, rpmResult.get());
     }
 

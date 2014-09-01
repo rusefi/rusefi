@@ -89,9 +89,9 @@ public class IoUtil {
         long time = System.currentTimeMillis();
 
         final CountDownLatch rpmLatch = new CountDownLatch(1);
-        SensorCentral.AdcListener listener = new SensorCentral.AdcListener() {
+        SensorCentral.SensorListener listener = new SensorCentral.SensorListener() {
             @Override
-            public void onAdcUpdate(SensorCentral model, double value) {
+            public void onSensorUpdate(double value) {
                 double actualRpm = SensorCentral.getInstance().getValue(Sensor.RPM);
                 if (isCloseEnough(rpm, actualRpm))
                     rpmLatch.countDown();
@@ -115,9 +115,9 @@ public class IoUtil {
     static void waitForFirstResponse() throws InterruptedException {
         FileLog.MAIN.logLine("Let's give it some time to start...");
         final CountDownLatch startup = new CountDownLatch(1);
-        SensorCentral.AdcListener listener = new SensorCentral.AdcListener() {
+        SensorCentral.SensorListener listener = new SensorCentral.SensorListener() {
             @Override
-            public void onAdcUpdate(SensorCentral model, double value) {
+            public void onSensorUpdate(double value) {
                 startup.countDown();
             }
         };
