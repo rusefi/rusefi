@@ -39,7 +39,7 @@ class PortHolder {
         open(port, new DataListener() {
             public void onStringArrived(String string) {
                 //                jTextAreaIn.append(string);
-                es.append(string);
+                es.processNewData(string);
             }
         });
     }

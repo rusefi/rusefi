@@ -7,14 +7,14 @@ package com.irnems.core;
 public class SensorStats {
     public static void start(final Sensor source, final Sensor destination) {
 
-        SensorCentral.getInstance().addListener(source, new SensorCentral.AdcListener() {
+        SensorCentral.getInstance().addListener(source, new SensorCentral.SensorListener() {
 
             int counter;
             double min = Double.MAX_VALUE;
             double max = Double.MIN_VALUE;
 
             @Override
-            public void onAdcUpdate(SensorCentral model, double value) {
+            public void onSensorUpdate(double value) {
                 counter++;
 
                 min = Math.min(value, min);

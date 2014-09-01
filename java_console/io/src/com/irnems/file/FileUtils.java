@@ -22,7 +22,7 @@ public class FileUtils {
             String line;
             while ((line = reader.readLine()) != null) {
                 String packed = EngineState.packString(line);
-                engineState.append(packed + "\r\n");
+                engineState.processNewData(packed + "\r\n");
             }
         } catch (IOException e) {
             throw new IllegalStateException(e);

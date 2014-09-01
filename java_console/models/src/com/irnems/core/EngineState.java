@@ -14,7 +14,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @see #registerStringValueAction
  */
 public class EngineState {
-    public static final String RPM_KEY = "rpm";
     public static final String SEPARATOR = ",";
     public static final int SNIFFED_ADC_COUNT = 16;
     public static final ValueCallback<String> NOTHING = new ValueCallback<String>() {
@@ -29,7 +28,7 @@ public class EngineState {
     private static final CharSequence TS_PROTOCOL_TAG = "ts_p_al";
     private final Object lock = new Object();
 
-    static class StringActionPair extends Pair<String, ValueCallback<String>> {
+    private static class StringActionPair extends Pair<String, ValueCallback<String>> {
         public final String prefix;
 
         StringActionPair(String key, ValueCallback<String> second) {
@@ -43,7 +42,7 @@ public class EngineState {
         }
     }
 
-    public List<EngineTimeListener> timeListeners = new CopyOnWriteArrayList<EngineTimeListener>();
+    public final List<EngineTimeListener> timeListeners = new CopyOnWriteArrayList<EngineTimeListener>();
 
     private final ResponseBuffer buffer;
     private final List<StringActionPair> actions = new ArrayList<StringActionPair>();
@@ -68,62 +67,17 @@ public class EngineState {
         }
         );
 
+        SensorCentral.getInstance().initialize(this);
 
 //        SensorStats.start(Sensor.CLT, Sensor.COOLANT_WIDTH);
 //        SensorStats.start(Sensor.IAT, Sensor.INTAKE_AIR_WIDTH);
         SensorStats.start(Sensor.VREF, Sensor.VREF_WIDTH);
 
-        addDoubleSensor(RPM_KEY, Sensor.RPM);
-        addDoubleSensor("mat", Sensor.IAT);
-        addDoubleSensor("map", Sensor.MAP);
-        addDoubleSensor("map_r", Sensor.MAP_RAW);
-        addDoubleSensor("baro", Sensor.BARO);
-        addDoubleSensor("clt", Sensor.CLT);
-        addDoubleSensor("tp", Sensor.TPS);
-        addDoubleSensor(Sensor.DWELL0);
-        addDoubleSensor(Sensor.DWELL1);
-        addDoubleSensor(Sensor.TOTAL_DWELL0);
-        addDoubleSensor(Sensor.TOTAL_DWELL1);
-        addDoubleSensor("tch", Sensor.T_CHARGE);
-        addDoubleSensor("afr", Sensor.AFR);
-        addDoubleSensor("d_fuel", Sensor.DEFAULT_FUEL);
-        addDoubleSensor("fuel", Sensor.FUEL);
-        addDoubleSensor("fuel_base", Sensor.FUEL_BASE);
-        addDoubleSensor("fuel_lag", Sensor.FUEL_LAG);
-        addDoubleSensor("fuel_clt", Sensor.FUEL_CLT);
-        addDoubleSensor("fuel_iat", Sensor.FUEL_IAT);
-        addDoubleSensor("table_spark", Sensor.TABLE_SPARK);
-        addDoubleSensor("advance0", Sensor.ADVANCE0);
-        addDoubleSensor("advance1", Sensor.ADVANCE1);
-        addDoubleSensor("vref", Sensor.VREF);
-        addDoubleSensor("vbatt", Sensor.VBATT);
-        addDoubleSensor("maf", Sensor.MAF);
-        addDoubleSensor("period0", Sensor.PERIOD0);
-        addDoubleSensor("period1", Sensor.PERIOD0);
-        addDoubleSensor("duty0", Sensor.DUTY0);
-        addDoubleSensor("duty1", Sensor.DUTY1);
-        addDoubleSensor("timing", Sensor.TIMING);
-        addDoubleSensor(Sensor.TRG_0_DUTY);
-        addDoubleSensor(Sensor.TRG_1_DUTY);
-
-        addDoubleSensor("idl", Sensor.IDLE_SWITCH);
-
-        addDoubleSensor("chart", Sensor.CHART_STATUS, true);
-        addDoubleSensor("chartsize", Sensor.CHARTSIZE, true);
-        addDoubleSensor("adcDebug", Sensor.ADC_STATUS, true);
-        addDoubleSensor("adcfast", Sensor.ADC_FAST);
-        addDoubleSensor("adcfastavg", Sensor.ADC_FAST_AVG);
         registerStringValueAction("adcfast_co", NOTHING);
         registerStringValueAction("adcfast_max", NOTHING);
         registerStringValueAction("adcfast_min", NOTHING);
         registerStringValueAction("key", NOTHING);
         registerStringValueAction("value", NOTHING);
-//        addDoubleSensor("adcfast_co", Sensor.ADC_FAST_AVG);
-
-        addDoubleSensor("injector0", Sensor.INJECTOR_0_STATUS, true);
-        addDoubleSensor("injector1", Sensor.INJECTOR_1_STATUS, true);
-        addDoubleSensor("injector2", Sensor.INJECTOR_2_STATUS, true);
-        addDoubleSensor("injector3", Sensor.INJECTOR_3_STATUS, true);
 
         registerStringValueAction("msg", new ValueCallback<String>() {
             @Override
@@ -157,7 +111,6 @@ public class EngineState {
         registerStringValueAction("i_p", NOTHING);
         registerStringValueAction("a_time", NOTHING);
 
-
         registerStringValueAction("time", new ValueCallback<String>() {
             public void onUpdate(String value) {
                 double time;
@@ -174,35 +127,6 @@ public class EngineState {
     }
 
     /**
-     * Sensor enum name matches the protocol key
-     */
-    private void addDoubleSensor(Sensor sensor) {
-        addDoubleSensor(sensor.name(), sensor);
-    }
-
-    private void addDoubleSensor(String key, final Sensor sensor) {
-        addDoubleSensor(key, sensor, false);
-    }
-
-    private void addDoubleSensor(final String key, final Sensor sensor, final boolean verbose) {
-        registerStringValueAction(key, new ValueCallback<String>() {
-            @Override
-            public void onUpdate(String stringValue) {
-                double value;
-                try {
-                    value = Double.parseDouble(stringValue);
-                } catch (NumberFormatException e) {
-                    // serial protocol is not safe
-                    return;
-                }
-                SensorCentral.getInstance().setValue(value, sensor);
-                if (verbose)
-                    MessagesCentral.getInstance().postMessage(EngineState.class, key + "=" + value);
-            }
-        });
-    }
-
-    /**
      * @see #unpackString(String)
      */
     public static String packString(String a) {
@@ -210,8 +134,11 @@ public class EngineState {
     }
 
     /**
+     * This method extract the content of a 'line with known length' packet
+     * <p/>
      * serial protocol is not error-prone, so our simple approach is to validate the length of incoming strings
      *
+     * @return null in case of error, line message if valid packed ine
      * @see #packString(String)
      */
     public static String unpackString(String message) {
@@ -340,7 +267,7 @@ public class EngineState {
         }
     }
 
-    public void append(String append) {
+    public void processNewData(String append) {
         buffer.append(append);
     }
 

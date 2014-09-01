@@ -40,9 +40,9 @@ public class BooleanFlagControlPanel {
     }
 
     protected void installStatusReader(final Sensor statusSensor) {
-        SensorCentral.getInstance().addListener(statusSensor, new SensorCentral.AdcListener() {
+        SensorCentral.getInstance().addListener(statusSensor, new SensorCentral.SensorListener() {
             @Override
-            public void onAdcUpdate(SensorCentral model, double value) {
+            public void onSensorUpdate(double value) {
                 checkBox.setSelected(value > 0);
             }
         });

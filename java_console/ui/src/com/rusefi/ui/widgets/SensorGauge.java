@@ -47,8 +47,8 @@ public class SensorGauge {
 
         gauge.setBackgroundColor(sensor.getColor());
 
-        SensorCentral.getInstance().addListener(sensor, new SensorCentral.AdcListener() {
-            public void onAdcUpdate(SensorCentral model, double value) {
+        SensorCentral.getInstance().addListener(sensor, new SensorCentral.SensorListener() {
+            public void onSensorUpdate(double value) {
                 gauge.setValue(value);
             }
         });

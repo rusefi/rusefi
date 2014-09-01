@@ -26,9 +26,9 @@ public class RpmModel {
     }
 
     private RpmModel() {
-        SensorCentral.getInstance().addListener(Sensor.RPM, new SensorCentral.AdcListener() {
+        SensorCentral.getInstance().addListener(Sensor.RPM, new SensorCentral.SensorListener() {
             @Override
-            public void onAdcUpdate(SensorCentral model, double value) {
+            public void onSensorUpdate(double value) {
                 setValue((int) value);
             }
         });
