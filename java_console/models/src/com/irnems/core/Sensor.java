@@ -34,6 +34,8 @@ public enum Sensor {
     VREF_WIDTH("VRef w", "", 1),
     DWELL0("Dwell0", "ms", 0, 30, BackgroundColor.BEIGE),
     DWELL1("Dwell1", "ms", 0, 30, BackgroundColor.BEIGE),
+    TOTAL_DWELL0("total Dwell0", "ms", 0, 30, BackgroundColor.BEIGE),
+    TOTAL_DWELL1("total Dwell1", "ms", 0, 30, BackgroundColor.BEIGE),
     ADVANCE0("Advance0", "dg", -40, 40, BackgroundColor.BROWN),
     ADVANCE1("Advance1", "dg", -40, 40, BackgroundColor.BROWN),
     PERIOD0("Period", "dg", 0, 400),
