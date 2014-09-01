@@ -26,15 +26,13 @@
 #include "signal_executor.h"
 
 #if EFI_WAVE_CHART
+/**
+ * Signal executors feed digital events right into WaveChart used by Sniffer tab of Dev Console
+ */
 #include "rpm_calculator.h"
 #endif
 
 #if EFI_WAVE_ANALYZER
-
-/**
- * Signal executors feed digital events right into WaveChart used by Sniffer tab of Dev Console
- */
-#include "wave_analyzer.h"
 
 #endif /* EFI_WAVE_ANALYZER */
 
