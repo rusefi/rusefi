@@ -32,8 +32,11 @@ extern board_configuration_s *boardConfiguration;
 
 extern engine_configuration_s *engineConfiguration;
 
-static volatile uint32_t ckpPeriodUs; // difference between current crank signal and previous crank signal
-static volatile uint64_t previousCrankSignalStart = 0;
+/**
+ * Difference between current 1st trigger event and previous 1st trigger event.
+ */
+static volatile uint32_t engineCycleDurationUs;
+static volatile uint64_t previousEngineCycleTimeUs = 0;
 
 #define MAX_ICU_COUNT 5
 
@@ -81,29 +84,14 @@ void WaveReader::onFallEvent() {
 		currentRevolutionCounter = revolutionCounter;
 		prevTotalOnTimeUs = totalOnTimeAccumulatorUs;
 		totalOnTimeAccumulatorUs = 0;
+
+		waveOffsetUs = nowUs - previousEngineCycleTimeUs;
+
 	}
 
 	periodEventTimeUs = nowUs;
 
-	//scheduleSimpleMsg(&irqLogging, "co", reader->chart.counter);
-
-//	dbAdd(&wavePeriodTime, now);
-
-	uint32_t period = ckpPeriodUs;  // local copy of volatile variable
-
-	uint32_t offset = nowUs - previousCrankSignalStart;
-
-	if (offset > period / 2) {
-		/**
-		 * here we calculate the offset in relation to future cranking signal
-		 */
-		offset -= period;
-	}
-	waveOffsetUs = offset;
-
-	// we want only the low phase length, so we subsctract high width from period
-//	processSignal(1, &dataPinReader, last_period - last_adc_response_width);
-
+//	uint32_t period = engineCycleDurationUs;  // local copy of volatile variable
 }
 
 static void waIcuPeriodCallback(WaveReader *reader) {
@@ -149,13 +137,13 @@ static void initWave(const char *name, int index) {
 }
 #endif
 
-static void onWaveShaftSignal(trigger_event_e ckpSignalType, int index, void *arg) {
+static void waTriggerEventListener(trigger_event_e ckpSignalType, int index, void *arg) {
 	if (index != 0) {
 		return;
 	}
 	uint64_t nowUs = getTimeNowUs();
-	ckpPeriodUs = nowUs - previousCrankSignalStart;
-	previousCrankSignalStart = nowUs;
+	engineCycleDurationUs = nowUs - previousEngineCycleTimeUs;
+	previousEngineCycleTimeUs = nowUs;
 }
 
 static THD_WORKING_AREA(waThreadStack, UTILITY_THREAD_STACK_SIZE);
@@ -227,6 +215,9 @@ static void reportWave(Logging *logging, int index) {
 	appendFloat(logging, dwellMs, 2);
 	appendPrintf(logging, "%s", DELIMETER);
 
+	/**
+	 * that's the total ON time during the previous engine cycle
+	 */
 	appendPrintf(logging, "total_dwell%d%s", index, DELIMETER);
 	appendFloat(logging, readers[index].prevTotalOnTimeUs / 1000.0f, 2);
 	appendPrintf(logging, "%s", DELIMETER);
@@ -236,11 +227,11 @@ static void reportWave(Logging *logging, int index) {
 	appendFloat(logging, periodMs, 2);
 	appendPrintf(logging, "%s", DELIMETER);
 
-	int offset = getWaveOffset(index);
-	int crank = getOneDegreeTimeMs(getRpm()) * 360;
+	uint32_t offsetUs = getWaveOffset(index);
+	float oneDegreeUs = getOneDegreeTimeUs(getRpm());
 
 	appendPrintf(logging, "advance%d%s", index, DELIMETER);
-	appendFloat(logging, 90.0 * offset / crank, 3);
+	appendFloat(logging, fixAngle((offsetUs / oneDegreeUs) - engineConfiguration->globalTriggerAngleOffset), 3);
 	appendPrintf(logging, "%s", DELIMETER);
 }
 
@@ -256,7 +247,7 @@ void initWaveAnalyzer(void) {
 	initWave(WA_CHANNEL_1, 0);
 	initWave(WA_CHANNEL_2, 1);
 
-	addTriggerEventListener(&onWaveShaftSignal, "wave analyzer", (void*) NULL);
+	addTriggerEventListener(&waTriggerEventListener, "wave analyzer", (void*) NULL);
 
 	addConsoleActionII("set_logic_input_mode", setWaveModeSilent);
 

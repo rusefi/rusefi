@@ -46,7 +46,10 @@ public:
 
 	volatile uint32_t signalPeriodUs; // period between two signal rises in microseconds
 
-	volatile uint64_t waveOffsetUs; // offset from CKP signal in systimer ticks
+	/**
+	 * offset from engine cycle start in microseconds
+	 */
+	volatile uint64_t waveOffsetUs;
 	volatile uint32_t last_wave_low_widthUs; // time period in systimer ticks
 	volatile uint64_t last_wave_high_widthUs; // time period in systimer ticks
 };
