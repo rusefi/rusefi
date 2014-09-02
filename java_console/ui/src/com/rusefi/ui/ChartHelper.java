@@ -26,6 +26,7 @@ public class ChartHelper {
 
     public static JPanel create3DControl(final XYData data, SurfaceModel surfaceModel, String title) {
         JPanel result = new JPanel(new BorderLayout());
+        result.setBorder(BorderFactory.createLineBorder(Color.red));
 
         final JSurfacePanel jsp = new JSurfacePanel(surfaceModel);
         jsp.setTitleText(title);

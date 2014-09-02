@@ -52,7 +52,7 @@ public class StimulationInputs {
     }
 
     public double getEngineLoadR2Resistance() {
-        return (double) elResistance2.getValue();
+        return (Integer) elResistance2.getValue();
     }
 }
 

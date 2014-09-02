@@ -184,9 +184,10 @@ typedef struct {
 	brain_pin_e o2heaterPin;
 	pin_output_mode_e o2heaterPinModeTodO;
 
-	unsigned int is_enabled_spi_1 : 1;
-	unsigned int is_enabled_spi_2 : 1;
-	unsigned int is_enabled_spi_3 : 1;
+	unsigned int is_enabled_spi_1 : 1; // bit 0
+	unsigned int is_enabled_spi_2 : 1; // bit 1
+	unsigned int is_enabled_spi_3 : 1; // bit 2
+	unsigned int isSdCardEnabled : 1; // bit 3
 
 	int unused2[6];
 
