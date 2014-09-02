@@ -740,9 +740,9 @@ INPUT                  = . \
 	config/engines \
 	config/boards \
 	console_util \
-	console_util/tunerstudio \
 	util \
 	console \
+	console/tunerstudio \
 	controllers \
 	controllers/algo \
 	controllers/core \
@@ -751,6 +751,7 @@ INPUT                  = . \
 	controllers/system \
 	controllers/trigger \
 	emulation \
+	emulation/hw_layer \
 	hw_layer/lcd \
 	hw_layer
 			
