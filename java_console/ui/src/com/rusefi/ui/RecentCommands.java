@@ -49,12 +49,18 @@ public class RecentCommands {
     public void add(String command) {
         entries.put(new Entry(command), null);
 
-        content.removeAll();
-        for (Entry entry : entries.keySet()) {
-            content.add(createButton(entry));
-        }
-        UpDownImage.trueRepaint(content.getParent());
-        UpDownImage.trueLayout(content.getParent());
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                content.removeAll();
+                for (Entry entry : entries.keySet()) {
+                    content.add(createButton(entry));
+                }
+                UpDownImage.trueRepaint(content.getParent());
+                UpDownImage.trueLayout(content.getParent());
+            }
+        });
+
     }
 
     private JComponent createButton(final Entry entry) {
