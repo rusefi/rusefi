@@ -63,11 +63,13 @@ public class EcuStimulator {
 
     private final JPanel content = new JPanel(new BorderLayout());
 
-    private JPanel panel = ChartHelper.create3DControl(data, model, TITLE);
-
     private static EcuStimulator instance = new EcuStimulator();
 
+    private final JLabel statusLabel = new JLabel();
+
     private EcuStimulator() {
+        JPanel panel = ChartHelper.create3DControl(data, model, TITLE);
+        content.add(statusLabel, BorderLayout.NORTH);
         content.add(panel, BorderLayout.CENTER);
         content.add(inputs.getContent(), BorderLayout.WEST);
     }
@@ -142,6 +144,8 @@ public class EcuStimulator {
              * Let's give the firmware some time to react
              */
             sleepRuntime(SLEEP_TIME);
+
+            statusLabel.setText("RPM " + rpm + ", el " + engineLoad);
 
             /**
              * We are making a number of measurements and then we take the middle one
