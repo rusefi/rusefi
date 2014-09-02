@@ -168,7 +168,7 @@ void printConfiguration(engine_configuration_s *engineConfiguration, engine_conf
 
 	scheduleMsg(&logger, "analogInputDividerCoefficient: %f", engineConfiguration->analogInputDividerCoefficient);
 
-	#if EFI_PROD_CODE
+#if EFI_PROD_CODE
 	scheduleMsg(&logger, "idlePinMode: %s", pinModeToString(boardConfiguration->idleValvePinMode));
 	scheduleMsg(&logger, "malfunctionIndicatorPinMode: %s",
 			pinModeToString(boardConfiguration->malfunctionIndicatorPinMode));
@@ -479,6 +479,10 @@ static void setWholeFuelMapCmd(float value) {
 }
 
 #if EFI_PROD_CODE
+static void setPotSpi(int spi) {
+	boardConfiguration->digitalPotentiometerSpiDevice = (spi_device_e) spi;
+}
+
 static void setTriggerInputPin(const char *indexStr, const char *pinName) {
 	int index = atoi(indexStr);
 	if (index < 0 || index > 2)
@@ -731,6 +735,7 @@ void initSettings(void) {
 	addConsoleAction("mapinfo", printMAPInfo);
 	addConsoleActionSS("set_analog_input_pin", setAnalogInputPin);
 	addConsoleActionSS("set_logic_input_pin", setLogicInputPin);
+	addConsoleActionI("set_pot_spi", setPotSpi);
 #endif /* EFI_PROD_CODE */
 }
 
