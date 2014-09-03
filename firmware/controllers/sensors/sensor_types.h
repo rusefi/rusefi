@@ -17,8 +17,11 @@ typedef struct {
 	/**
 	 * kPa value at zero volts
 	 */
-	float Min;
-	float Max;
+	float customValueAt0;
+	/**
+	 * kPa value at 5 volts
+	 */
+	float customValueAt5;
 	air_pressure_sensor_type_e sensorType;
 	adc_channel_e hwChannel;
 } air_pressure_sensor_config_s;

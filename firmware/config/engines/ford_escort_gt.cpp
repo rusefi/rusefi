@@ -71,6 +71,7 @@ static void common079721_2351(engine_configuration_s *engineConfiguration, board
 	// Frankenstein analog input #2: adc3
 	// Frankenstein analog input #3: adc13
 	// Frankenstein analog input #4: adc11
+	// todo: see https://docs.google.com/spreadsheet/ccc?key=0Arl1FeMZcfisdEdGdUlHdWh6cVBoSzFIbkxqa1QtZ3c
 	// Frankenstein analog input #5: adc
 	// Frankenstein analog input #6: adc
 	// Frankenstein analog input #7: adc
