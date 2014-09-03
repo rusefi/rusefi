@@ -46,6 +46,7 @@ public class EcuStimulator {
     private static final int RPM_MAX = 6000;
     private static final int RPM_INCREMENT = 250;
     private static final Sensor DWELL_SENSOR = Sensor.DWELL0;
+    public static final Sensor ADVANCE_SENSOR = Sensor.ADVANCE0;
 
     private static final String CSV_FILE_NAME = "table" + RPM_INCREMENT + "_" + EL_INCREMENT + ".csv";
 
@@ -71,7 +72,7 @@ public class EcuStimulator {
         JPanel panel = ChartHelper.create3DControl(data, model, TITLE);
         content.add(statusLabel, BorderLayout.NORTH);
         content.add(panel, BorderLayout.CENTER);
-        content.add(inputs.getContent(), BorderLayout.WEST);
+        content.add(inputs.getContent(), BorderLayout.SOUTH);
     }
 
     public static EcuStimulator getInstance() {
@@ -98,12 +99,12 @@ public class EcuStimulator {
 
         ResultListener listener = new ResultListener() {
             @Override
-            public void onResult(int rpm, double maf, float advance, double dwell) {
-                data.addPoint(new Point3D(rpm, maf, (float) dwell));
+            public void onResult(int rpm, double engineLoad, float advance, double dwell) {
+                data.addPoint(new Point3D(rpm, engineLoad, (float) advance));
                 model.plot().execute();
 
                 String msg = putValue("rpm", rpm) +
-                        putValue("engine_load", maf) +
+                        putValue("engine_load", engineLoad) +
                         putValue("advance", advance) +
                         putValue("dwell", dwell);
                 MessagesCentral.getInstance().postMessage(EcuStimulator.class, msg);
@@ -131,50 +132,53 @@ public class EcuStimulator {
     }
 
     private void buildTable(ResultListener listener, Sensor dwellSensor) {
-        for (int rpm = RPM_MIN; rpm <= RPM_MAX; rpm += RPM_INCREMENT)
-            runSimulation(rpm, listener, dwellSensor);
+        for (int rpm = inputs.getRpmFrom(); rpm <= inputs.getRpmTo(); rpm += RPM_INCREMENT) {
+            for (double engineLoad = inputs.getEngineLoadMin(); engineLoad <= inputs.getEngineLoadMax(); engineLoad += EL_INCREMENT) {
+                for (int clt = inputs.getCltFrom(); clt <= inputs.getCltTo(); clt += 100) {
+                    testPoint(rpm, engineLoad, clt, listener, dwellSensor);
+                }
+            }
+        }
     }
 
-    private void runSimulation(int rpm, ResultListener resultListener, final Sensor dwellSensor) {
-        for (double engineLoad = inputs.getEngineLoadMin(); engineLoad <= inputs.getEngineLoadMax(); engineLoad += EL_INCREMENT) {
-            //setPotVoltage(maf, Sensor.MAF);
-            setPotVoltage(engineLoad, null);
-            setRpm(rpm);
-            /**
-             * Let's give the firmware some time to react
-             */
-            sleepRuntime(SLEEP_TIME);
+    private void testPoint(int rpm, double engineLoad, int clt, ResultListener resultListener, Sensor dwellSensor) {
+        //setPotVoltage(maf, Sensor.MAF);
+        setPotVoltage(engineLoad, null);
+        setRpm(rpm);
+        /**
+         * Let's give the firmware some time to react
+         */
+        sleepRuntime(SLEEP_TIME);
 
-            statusLabel.setText("RPM " + rpm + ", el " + engineLoad);
+        statusLabel.setText("RPM " + rpm + ", el " + engineLoad + ", CLT " + clt);
 
-            /**
-             * We are making a number of measurements and then we take the middle one
-             */
-            MultipleMeasurements r = waitForMultipleResults(dwellSensor);
-            List<Double> dwells = r.getDwells();
-            List<Double> advances = r.getAdvances();
+        /**
+         * We are making a number of measurements and then we take the middle one
+         */
+        MultipleMeasurements r = waitForMultipleResults(dwellSensor, ADVANCE_SENSOR);
+        List<Double> dwells = r.getDwells();
+        List<Double> advances = r.getAdvances();
 
-            // sorting measurements, taking middle value
-            Collections.sort(dwells);
-            Collections.sort(advances);
+        // sorting measurements, taking middle value
+        Collections.sort(dwells);
+        Collections.sort(advances);
 
-            double dwellDiff = Math.abs(dwells.get(0) - dwells.get(MEASURES - 1));
-            if (dwellDiff > 1)
-                System.out.println("dwells " + dwells);
+        double dwellDiff = Math.abs(dwells.get(0) - dwells.get(MEASURES - 1));
+        if (dwellDiff > 1)
+            System.out.println("dwells " + dwells);
 
-            double dwell = dwells.get(MEASURES / 2);
-            double advance = advances.get(MEASURES / 2);
+        double dwell = dwells.get(MEASURES / 2);
+        double advance = advances.get(MEASURES / 2);
 
-            if (dwell > 40)
-                throw new IllegalStateException("Unexpected value, how comes? " + dwell);
+//        if (dwell > 40)
+//            throw new IllegalStateException("Unexpected value, how comes? " + dwell);
 
-            log("Stimulator result: " + rpm + "@" + engineLoad + ": " + dwell);
+        log("Stimulator result: " + rpm + "@" + engineLoad + ": " + dwell);
 
 //            double dwell = Launcher.getAdcModel().getValue(Sensor.DWELL0);
 //            double advance = Launcher.getAdcModel().getValue(Sensor.ADVANCE);
 
-            resultListener.onResult(rpm, engineLoad, (float) advance, dwell);
-        }
+        resultListener.onResult(rpm, engineLoad, (float) advance, dwell);
     }
 
     private static void sleepRuntime(long sleepTime) {
@@ -282,7 +286,7 @@ public class EcuStimulator {
         void onResult(int rpm, double engineLoad, float advance, double dwell);
     }
 
-    public MultipleMeasurements waitForMultipleResults(final Sensor dwellSensor) {
+    public MultipleMeasurements waitForMultipleResults(final Sensor dwellSensor, final Sensor advanceSensor) {
         final MultipleMeasurements result = new MultipleMeasurements();
 
         final CountDownLatch latch = new CountDownLatch(MEASURES);
@@ -293,7 +297,8 @@ public class EcuStimulator {
                 if (latch.getCount() == 0)
                     return;
                 double dwell = getValue(dwellSensor);
-                double advance = 0;//getValue(Sensor.ADVANCE0);
+                double advance = getValue(advanceSensor);
+                advance = processAdvance(advance);
                 result.dwells.add(dwell);
                 result.advances.add(advance);
                 latch.countDown();
@@ -307,6 +312,10 @@ public class EcuStimulator {
         }
         LinkManager.engineState.timeListeners.remove(listener);
         return result;
+    }
+
+    private double processAdvance(double advance) {
+        return advance > 360 ? advance - 720 : advance;
     }
 
     private class MultipleMeasurements {

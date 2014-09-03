@@ -84,10 +84,20 @@ public class SensorCentral {
         addDoubleSensor("baro", Sensor.BARO, es);
         addDoubleSensor("clt", Sensor.CLT, es);
         addDoubleSensor("tp", Sensor.TPS, es);
+
         addDoubleSensor(Sensor.DWELL0, es);
         addDoubleSensor(Sensor.DWELL1, es);
+        addDoubleSensor(Sensor.DWELL2, es);
+        addDoubleSensor(Sensor.DWELL3, es);
         addDoubleSensor(Sensor.TOTAL_DWELL0, es);
         addDoubleSensor(Sensor.TOTAL_DWELL1, es);
+        addDoubleSensor(Sensor.TOTAL_DWELL2, es);
+        addDoubleSensor(Sensor.TOTAL_DWELL3, es);
+        addDoubleSensor(Sensor.ADVANCE0, es);
+        addDoubleSensor(Sensor.ADVANCE1, es);
+        addDoubleSensor(Sensor.ADVANCE2, es);
+        addDoubleSensor(Sensor.ADVANCE3, es);
+
         addDoubleSensor("tch", Sensor.T_CHARGE, es);
         addDoubleSensor(Sensor.AFR, es);
         addDoubleSensor("d_fuel", Sensor.DEFAULT_FUEL, es);
@@ -97,8 +107,6 @@ public class SensorCentral {
         addDoubleSensor(Sensor.FUEL_CLT, es);
         addDoubleSensor(Sensor.FUEL_IAT, es);
         addDoubleSensor(Sensor.TABLE_SPARK, es);
-        addDoubleSensor(Sensor.ADVANCE0, es);
-        addDoubleSensor(Sensor.ADVANCE1, es);
         addDoubleSensor(Sensor.VREF, es);
         addDoubleSensor(Sensor.VBATT, es);
         addDoubleSensor(Sensor.MAF, es);
