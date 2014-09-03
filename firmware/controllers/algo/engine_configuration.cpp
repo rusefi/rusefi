@@ -232,8 +232,8 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	engineConfiguration->map.sensor.sensorType = MT_MPX4250;
 
 	engineConfiguration->baroSensor.sensorType = MT_CUSTOM;
-	engineConfiguration->baroSensor.Min = 0;
-	engineConfiguration->baroSensor.Max = 500;
+	engineConfiguration->baroSensor.customValueAt0 = 0;
+	engineConfiguration->baroSensor.customValueAt5 = 500;
 
 	engineConfiguration->diffLoadEnrichmentCoef = 1;
 

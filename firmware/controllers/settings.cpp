@@ -314,12 +314,12 @@ static void printMAPInfo(void) {
 	scheduleMsg(&logger, "map type=%d raw=%f MAP=%f", engineConfiguration->map.sensor.sensorType, getRawMap(),
 			getMap());
 	if (engineConfiguration->map.sensor.sensorType == MT_CUSTOM) {
-		scheduleMsg(&logger, "min=%f max=%f", engineConfiguration->map.sensor.Min, engineConfiguration->map.sensor.Max);
+		scheduleMsg(&logger, "at0=%f at5=%f", engineConfiguration->map.sensor.customValueAt0, engineConfiguration->map.sensor.customValueAt5);
 	}
 
 	scheduleMsg(&logger, "baro type=%d value=%f", engineConfiguration->baroSensor.sensorType, getBaroPressure());
 	if (engineConfiguration->baroSensor.sensorType == MT_CUSTOM) {
-		scheduleMsg(&logger, "min=%f max=%f", engineConfiguration->baroSensor.Min, engineConfiguration->baroSensor.Max);
+		scheduleMsg(&logger, "min=%f max=%f", engineConfiguration->baroSensor.customValueAt0, engineConfiguration->baroSensor.customValueAt5);
 	}
 }
 #endif
