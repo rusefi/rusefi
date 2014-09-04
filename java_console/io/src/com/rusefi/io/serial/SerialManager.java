@@ -2,6 +2,7 @@ package com.rusefi.io.serial;
 
 import com.irnems.FileLog;
 import com.irnems.core.MessagesCentral;
+import com.rusefi.io.DataListener;
 import com.rusefi.io.LinkManager;
 
 /**
@@ -13,13 +14,20 @@ class SerialManager {
 
     private static boolean closed;
 
+    static DataListener listener = new DataListener() {
+        public void onStringArrived(String string) {
+            //                jTextAreaIn.append(string);
+            LinkManager.engineState.processNewData(string);
+        }
+    };
+
     public static void scheduleOpening() {
         FileLog.rlog("scheduleOpening");
         LinkManager.IO_EXECUTOR.execute(new Runnable() {
             @Override
             public void run() {
                 FileLog.rlog("scheduleOpening>openPort");
-                PortHolder.getInstance().openPort(port, LinkManager.engineState);
+                PortHolder.getInstance().openPort(port, listener);
             }
         });
     }
@@ -32,7 +40,7 @@ class SerialManager {
                 if (closed)
                     return;
                 PortHolder.getInstance().close();
-                PortHolder.getInstance().openPort(port, LinkManager.engineState);
+                PortHolder.getInstance().openPort(port, listener);
             }
         });
     }

@@ -2,8 +2,6 @@ package com.rusefi.io.serial;
 
 import com.irnems.FileLog;
 import com.irnems.core.EngineState;
-import com.irnems.core.MessagesCentral;
-import com.rusefi.io.CommandQueue;
 import com.rusefi.io.DataListener;
 import jssc.SerialPort;
 import jssc.SerialPortException;
@@ -15,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
  * 7/25/13
  * (c) Andrey Belomutskiy
  */
-class PortHolder {
+public class PortHolder {
     //    private static final int BAUD_RATE = 8 * 115200;// 921600;
 //    private static final int BAUD_RATE = 2 * 115200;
     private static final int BAUD_RATE = 115200;
@@ -26,22 +24,19 @@ class PortHolder {
 
     public static long startedAt = System.currentTimeMillis();
 
+    public PortHolderListener listener = PortHolderListener.VOID;
+
     private PortHolder() {
     }
 
     @Nullable
     private SerialPort serialPort;
 
-    void openPort(String port, final EngineState es) {
-        MessagesCentral.getInstance().postMessage(SerialManager.class, "Opening port: " + port);
+    void openPort(String port, DataListener dataListener) {
+        listener.onPortHolderMessage(SerialManager.class, "Opening port: " + port);
         if (port == null)
             return;
-        open(port, new DataListener() {
-            public void onStringArrived(String string) {
-                //                jTextAreaIn.append(string);
-                es.processNewData(string);
-            }
-        });
+        open(port, dataListener);
     }
 
     public boolean open(String port, DataListener listener) {
@@ -105,14 +100,14 @@ class PortHolder {
      */
     public void packAndSend(String command) throws InterruptedException {
         FileLog.MAIN.logLine("Sending [" + command + "]");
-        MessagesCentral.getInstance().postMessage(CommandQueue.class, "Sending [" + command + "]");
+        listener.onPortHolderMessage(PortHolder.class, "Sending [" + command + "]");
 
         long now = System.currentTimeMillis();
 
         synchronized (portLock) {
             while (serialPort == null) {
                 if (System.currentTimeMillis() - now > 3 * MINUTE)
-                    MessagesCentral.getInstance().postMessage(PortHolder.class, "Looks like connection is gone :(");
+                    listener.onPortHolderMessage(PortHolder.class, "Looks like connection is gone :(");
                 portLock.wait(MINUTE);
             }
             // we are here only when serialPort!=null, that means we have a connection
