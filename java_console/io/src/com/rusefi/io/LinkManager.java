@@ -87,7 +87,7 @@ public class LinkManager {
         connector.send(encodeCommand(command));
     }
 
-    private static String encodeCommand(String command) {
+    public static String encodeCommand(String command) {
         return "sec!" + command.length() + "!" + command;
     }
 
