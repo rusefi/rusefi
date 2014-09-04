@@ -82,3 +82,18 @@ const char * pinModeToString(pin_output_mode_e mode) {
 		return "unexpected";
 	}
 }
+
+const char * algorithmToString(engine_load_mode_e mode) {
+	switch(mode) {
+	case LM_TPS:
+		return "Alpha-N";
+	case LM_MAF:
+		return "Maf";
+	case LM_MAP:
+		return "pMap";
+	case LM_SPEED_DENSITY:
+		return "SD";
+	default:
+		return "unexpected";
+	}
+}
