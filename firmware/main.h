@@ -26,6 +26,7 @@ extern "C"
 #include "efitime.h"
 #include "boards.h"
 #include "rusefi_enums.h"
+#include "enum_strings.h"
 
 #include "datalogging.h"
 #include "chprintf.h"

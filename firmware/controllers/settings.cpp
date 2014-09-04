@@ -54,61 +54,6 @@ void printFloatArray(const char *prefix, float array[], int size) {
 	scheduleLogging(&logger);
 }
 
-const char* getConfigurationName(engine_configuration_s *engineConfiguration) {
-	switch (engineConfiguration->engineType) {
-#if EFI_SUPPORT_DODGE_NEON
-	case DODGE_NEON_1995:
-		return "Dodge Neon";
-#endif /* EFI_SUPPORT_DODGE_NEON */
-#if EFI_SUPPORT_FORD_ASPIRE
-	case FORD_ASPIRE_1996:
-		return "Ford Aspire";
-#endif /* EFI_SUPPORT_FORD_ASPIRE */
-#if EFI_SUPPORT_FORD_FIESTA
-	case FORD_FIESTA:
-		return "Ford Fiesta";
-#endif /* EFI_SUPPORT_FORD_FIESTA */
-#if EFI_SUPPORT_NISSAN_PRIMERA
-	case NISSAN_PRIMERA:
-		return "Nissan Primera";
-#endif /* EFI_SUPPORT_NISSAN_PRIMERA */
-	case HONDA_ACCORD_CD:
-		return "Honda Accord 3w";
-	case HONDA_ACCORD_CD_TWO_WIRES:
-		return "Honda Accord 2w";
-	case HONDA_ACCORD_CD_DIP:
-		return "Honda Dip";
-	case FORD_INLINE_6_1995:
-		return "Ford 1995 inline 6";
-	case GY6_139QMB:
-		return "Gy6 139qmb";
-	case MAZDA_MIATA_NB:
-		return "Mazda Miata NB";
-	case MAZDA_323:
-		return "Mazda 323";
-	case SATURN_ION_2004:
-		return "Saturn Ion";
-	case MINI_COOPER_R50:
-		return "Mini Cooper R50";
-	case FORD_ESCORT_GT:
-		return "Ford Escort GT";
-	case CITROEN_TU3JP:
-		return "Citroen TU3JP";
-	case ROVER_V8:
-		return "Rover v8";
-	case MITSU_4G93:
-		return "Mitsu 4G93";
-	case MIATA_1990:
-		return "Miata 1990";
-	case MIATA_1994:
-		return "Miata 1994";
-	case MIATA_1996:
-		return "Miata 1996";
-	default:
-		firmwareError("Unexpected: engineType %d", engineConfiguration->engineType);
-		return NULL;
-	}
-}
 
 extern board_configuration_s *boardConfiguration;
 
@@ -117,7 +62,7 @@ extern board_configuration_s *boardConfiguration;
  */
 void printConfiguration(engine_configuration_s *engineConfiguration, engine_configuration2_s *engineConfiguration2) {
 
-	scheduleMsg(&logger, "Template %s/%d trigger %d", getConfigurationName(engineConfiguration),
+	scheduleMsg(&logger, "Template %s/%d trigger %d", getConfigurationName(engineConfiguration->engineType),
 			engineConfiguration->engineType, engineConfiguration->triggerConfig.triggerType);
 
 	scheduleMsg(&logger, "configurationVersion=%d", getGlobalConfigurationVersion());

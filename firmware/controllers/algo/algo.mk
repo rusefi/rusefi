@@ -13,5 +13,6 @@ CONTROLLERS_ALGO_SRC_CPP = $(PROJECT_DIR)/controllers/algo/OutputSignalArray.cpp
 	$(PROJECT_DIR)/controllers/algo/engine_configuration.cpp \
 	$(PROJECT_DIR)/controllers/algo/engine.cpp \
 	$(PROJECT_DIR)/controllers/algo/event_registry.cpp \
-	$(PROJECT_DIR)/controllers/algo/algo.cpp
+	$(PROJECT_DIR)/controllers/algo/algo.cpp \
+	$(PROJECT_DIR)/controllers/algo/enum_strings.cpp
 	

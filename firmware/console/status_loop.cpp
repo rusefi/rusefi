@@ -221,7 +221,7 @@ static void printInfo(systime_t nowSeconds) {
 	}
 	timeOfPreviousPrintVersion = nowSeconds;
 	appendPrintf(&logger, "rusEfiVersion%s%d@%s %s%s", DELIMETER, getRusEfiVersion(), VCS_VERSION,
-			getConfigurationName(engineConfiguration),
+			getConfigurationName(engineConfiguration->engineType),
 			DELIMETER);
 #if EFI_PROD_CODE
 	printOutPin(WC_CRANK1, boardConfiguration->triggerInputPins[0]);
