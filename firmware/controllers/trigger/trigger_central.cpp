@@ -183,7 +183,7 @@ static void triggerShapeInfo() {
 
 static void triggerInfo() {
 #if EFI_PROD_CODE || EFI_SIMULATOR
-	scheduleMsg(&logger, "Template %s/%d trigger %d", getConfigurationName(engineConfiguration),
+	scheduleMsg(&logger, "Template %s/%d trigger %d", getConfigurationName(engineConfiguration->engineType),
 			engineConfiguration->engineType, engineConfiguration->triggerConfig.triggerType);
 
 	scheduleMsg(&logger, "trigger event counters %d/%d/%d/%d", triggerCentral.getHwEventCounter(0),

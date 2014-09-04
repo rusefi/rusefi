@@ -71,7 +71,7 @@ static void emulatorApplyPinState(PwmConfig *state, int stateIndex) {
 
 void initTriggerEmulator(void) {
 #if EFI_EMULATE_POSITION_SENSORS || defined(__DOXYGEN__)
-	print("Emulating %s\r\n", getConfigurationName(engineConfiguration));
+	print("Emulating %s\r\n", getConfigurationName(engineConfiguration->engineType));
 
 	triggerSignal.outputPins[0] = TRIGGER_EMULATOR_PRIMARY;
 	triggerSignal.outputPins[1] = TRIGGER_EMULATOR_SECONDARY;
