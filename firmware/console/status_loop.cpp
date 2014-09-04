@@ -307,7 +307,7 @@ void updateDevConsoleState(void) {
 static void showFuelMap2(float rpm, float engineLoad) {
 	float baseFuel = getBaseTableFuel((int) rpm, engineLoad);
 
-	scheduleMsg(&logger2, "algo=%d", engineConfiguration->algorithm);
+	scheduleMsg(&logger2, "algo=%s", algorithmToString(engineConfiguration->algorithm));
 	float iatCorrection = getIatCorrection(getIntakeAirTemperature());
 	float cltCorrection = getCltCorrection(getCoolantTemperature());
 	float injectorLag = getInjectorLag(getVBatt());
