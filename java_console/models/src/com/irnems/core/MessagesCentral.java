@@ -1,6 +1,8 @@
 package com.irnems.core;
 
 import com.irnems.FileLog;
+import com.rusefi.io.serial.PortHolder;
+import com.rusefi.io.serial.PortHolderListener;
 
 import javax.swing.*;
 import java.util.List;
@@ -17,6 +19,12 @@ public class MessagesCentral {
     private final List<MessageListener> listeners = new CopyOnWriteArrayList<MessageListener>();
 
     private MessagesCentral() {
+        PortHolder.getInstance().listener = new PortHolderListener() {
+            @Override
+            public void onPortHolderMessage(Class clazz, String message) {
+                postMessage(clazz, message);
+            }
+        };
     }
 
     public static MessagesCentral getInstance() {
