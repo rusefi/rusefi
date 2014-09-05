@@ -206,8 +206,7 @@ static systime_t timeOfPreviousPrintVersion = (systime_t) -1;
 
 #if EFI_PROD_CODE
 static void printOutPin(const char *pinName, brain_pin_e hwPin) {
-	appendPrintf(&logger, "outpin%s%s@%s%s", DELIMETER, pinName,
-			hwPortname(hwPin), DELIMETER);
+	appendPrintf(&logger, "outpin%s%s@%s%s", DELIMETER, pinName, hwPortname(hwPin), DELIMETER);
 }
 #endif /* EFI_PROD_CODE */
 
@@ -308,17 +307,22 @@ static void showFuelMap2(float rpm, float engineLoad) {
 	float baseFuel = getBaseTableFuel((int) rpm, engineLoad);
 
 	scheduleMsg(&logger2, "algo=%s", algorithmToString(engineConfiguration->algorithm));
-	float iatCorrection = getIatCorrection(getIntakeAirTemperature());
-	float cltCorrection = getCltCorrection(getCoolantTemperature());
-	float injectorLag = getInjectorLag(getVBatt());
-	scheduleMsg(&logger2, "rpm=%f engineLoad=%f", rpm, engineLoad);
-	scheduleMsg(&logger2, "baseFuel=%f", baseFuel);
 
-	scheduleMsg(&logger2, "iatCorrection=%f cltCorrection=%f injectorLag=%f", iatCorrection, cltCorrection,
-			injectorLag);
+	if (isCrankingR(rpm)) {
+		scheduleMsg(&logger2, "cranking fuel: %f", getCrankingFuel());
+	} else {
+		float iatCorrection = getIatCorrection(getIntakeAirTemperature());
+		float cltCorrection = getCltCorrection(getCoolantTemperature());
+		float injectorLag = getInjectorLag(getVBatt());
+		scheduleMsg(&logger2, "rpm=%f engineLoad=%f", rpm, engineLoad);
+		scheduleMsg(&logger2, "baseFuel=%f", baseFuel);
 
-	float value = getRunningFuel(baseFuel, &engine, (int) rpm);
-	scheduleMsg(&logger2, "injection pulse width: %f", value);
+		scheduleMsg(&logger2, "iatCorrection=%f cltCorrection=%f injectorLag=%f", iatCorrection, cltCorrection,
+				injectorLag);
+
+		float value = getRunningFuel(baseFuel, &engine, (int) rpm);
+		scheduleMsg(&logger2, "injection pulse width: %f", value);
+	}
 }
 
 static void showFuelMap(void) {
