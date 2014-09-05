@@ -16,8 +16,8 @@ public enum Sensor {
     /**
      * Please note that these enum names are used to make 'set_mock_XXX_voltage' commands
      */
-    CLT("Coolant", "temperature, C", 300),
-    IAT("Intake Air", "temperature, C", 150),
+    CLT("Coolant", "temperature, C", -40, 300),
+    IAT("Intake Air", "temperature, C", -40, 150),
     AFR("A/F ratio", "", 0, 20),
     MAF("MAF", "Volts", 4),
     TPS("throttle", "%", 100),
@@ -75,8 +75,6 @@ public enum Sensor {
     private final double minValue;
     private final double maxValue;
     private final BackgroundColor color;
-
-
 
     Sensor(String name) {
         this(name, "", 255);
