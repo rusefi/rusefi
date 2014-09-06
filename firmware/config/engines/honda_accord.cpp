@@ -117,7 +117,7 @@ static void setHondaAccordConfigurationCommon(engine_configuration_s *engineConf
 	/**
 	 * VBatt
 	 */
-	engineConfiguration->vBattAdcChannel = EFI_ADC_14;
+	engineConfiguration->vbattAdcChannel = EFI_ADC_14;
 	engineConfiguration->vbattDividerCoeff = ((float) (8.2 + 33)) / 8.2 * 2;
 
 	//	todo engineConfiguration->afrSensor.afrAdcChannel = 14;

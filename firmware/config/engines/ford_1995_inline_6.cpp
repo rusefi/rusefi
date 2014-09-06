@@ -102,7 +102,7 @@ void setFordInline6(engine_configuration_s *engineConfiguration, board_configura
 	engineConfiguration->tpsMin = convertVoltageTo10bitADC(1.250);
 	engineConfiguration->tpsMax = convertVoltageTo10bitADC(4.538);
 
-	//	engineConfiguration->vBattAdcChannel = 0; //
+	//	engineConfiguration->vbattAdcChannel = 0; //
 //	engineConfiguration->mafAdcChannel = 1;
 
 	boardConfiguration->triggerInputPins[0] = GPIOA_8;

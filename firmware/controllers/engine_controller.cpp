@@ -230,7 +230,7 @@ static void printAnalogInfo(void) {
 	printAnalogChannelInfo("AFR", engineConfiguration->afrSensor.afrAdcChannel);
 	printAnalogChannelInfo("MAP", engineConfiguration->map.sensor.hwChannel);
 	printAnalogChannelInfo("BARO", engineConfiguration->baroSensor.hwChannel);
-	printAnalogChannelInfoExt("Vbatt", engineConfiguration->vBattAdcChannel, getVBatt());
+	printAnalogChannelInfoExt("Vbatt", engineConfiguration->vbattAdcChannel, getVBatt());
 }
 
 static THD_WORKING_AREA(csThreadStack, UTILITY_THREAD_STACK_SIZE);	// declare thread stack
