@@ -19,7 +19,7 @@
 
 #define DIGIPOT_COUNT 4
 
-#define LOGIC_ANALYZER_CHANNEL_COUNT 2
+#define LOGIC_ANALYZER_CHANNEL_COUNT 4
 
 typedef enum {
 	AUDI_AAN = 1,
