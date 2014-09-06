@@ -99,6 +99,8 @@ static brain_pin_e BLINK_PINS[] = { GPIOE_8, // HIGH DRIVER 1
 		GPIOE_1, // OUT10
 		GPIOB_8, // OUT11
 		GPIOB_9, // OUT12
+		GPIOD_7, // OUT3 Frankenso
+		GPIOB_7, // OUT12 Frankenso
 		};
 
 static THD_WORKING_AREA(btThreadStack, UTILITY_THREAD_STACK_SIZE);

@@ -8,9 +8,11 @@ public class ValueRangeControl {
     private final JSpinner maxSpinner;
 
     private final JPanel panel = new JPanel(new FlowLayout());
+    private final double increment;
 
 
     public ValueRangeControl(String title, double min, double increment, double max) {
+        this.increment = increment;
         minSpinner = new JSpinner(new SpinnerNumberModel(min, min, max, increment));
         maxSpinner = new JSpinner(new SpinnerNumberModel(max, min, max, increment));
 
@@ -26,6 +28,10 @@ public class ValueRangeControl {
 
     public double getTo() {
         return (double) maxSpinner.getModel().getValue();
+    }
+
+    public double getStep() {
+        return increment;
     }
 
     public Component getContent() {

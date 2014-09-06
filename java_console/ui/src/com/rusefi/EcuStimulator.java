@@ -39,24 +39,21 @@ public class EcuStimulator {
 
     private static final String DELIMITER = ",";
     private static final long SLEEP_TIME = 300;
+    private static final double EPS = 0.001;
 
-    private static final double EL_INCREMENT = 0.1;
+    public boolean isDisplayingDwell = true;
 
-    private static final int RPM_MIN = 400;
-    private static final int RPM_MAX = 6000;
-    private static final int RPM_INCREMENT = 250;
-    private static final Sensor DWELL_SENSOR = Sensor.DWELL0;
-    public static final Sensor ADVANCE_SENSOR = Sensor.ADVANCE0;
 
-    private static final String CSV_FILE_NAME = "table" + RPM_INCREMENT + "_" + EL_INCREMENT + ".csv";
+    private static final Sensor DWELL_SENSOR = Sensor.DWELL1;
+    public static final Sensor ADVANCE_SENSOR = Sensor.ADVANCE1;
 
     private static final int MEASURES = 7;
     //    private static final String C_FILE_NAME = "advance_map.c";
 //    private static final String C_PREFIX = "ad_";
-    private static final String C_FILE_NAME = "fuel_map.c";
+
     private static final String C_PREFIX = "fuel_";
 
-    public static Range RPM_RANGE = new Range(0, RPM_MAX); // x-coord
+    public static Range RPM_RANGE = new Range(0, StimulationInputs.DEFAULT_RPM_MAX); // x-coord
     private StimulationInputs inputs = new StimulationInputs(this);
     //
     private XYData data = new XYData();
@@ -90,17 +87,20 @@ public class EcuStimulator {
 //        if (1 == 1)
 //            return;
 
+        String csvFileName = "table_" + inputs.getRpmStep() + "_" + inputs.getEngineLoadStep() + FileLog.getDate() + ".csv";
+        FileLog.MAIN.logLine("Wring to " + csvFileName);
+
         final BufferedWriter csv;
         try {
-            csv = new BufferedWriter(new FileWriter(CSV_FILE_NAME));
+            csv = new BufferedWriter(new FileWriter(csvFileName));
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
 
         ResultListener listener = new ResultListener() {
             @Override
-            public void onResult(int rpm, double engineLoad, float advance, double dwell) {
-                data.addPoint(new Point3D(rpm, engineLoad, (float) advance));
+            public void onResult(int rpm, double engineLoad, double advance, double dwell) {
+                data.addPoint(new Point3D(rpm, engineLoad, isDisplayingDwell ? (float) dwell : (float) advance));
                 model.plot().execute();
 
                 String msg = putValue("rpm", rpm) +
@@ -128,14 +128,14 @@ public class EcuStimulator {
             throw new IllegalStateException(e);
         }
 
-        TableGenerator.writeAsC(data, C_PREFIX, C_FILE_NAME);
+        TableGenerator.writeAsC(data, C_PREFIX, "map" + FileLog.getDate() + ".c");
     }
 
     private void buildTable(ResultListener listener, Sensor dwellSensor) {
-        for (int rpm = inputs.getRpmFrom(); rpm <= inputs.getRpmTo(); rpm += RPM_INCREMENT) {
-            for (double engineLoad = inputs.getEngineLoadMin(); engineLoad <= inputs.getEngineLoadMax(); engineLoad += EL_INCREMENT) {
+        for (double rpm = inputs.getRpmFrom(); rpm <= inputs.getRpmTo() + EPS; rpm += inputs.getRpmStep()) {
+            for (double engineLoad = inputs.getEngineLoadMin(); engineLoad <= inputs.getEngineLoadMax() + EPS; engineLoad += inputs.getEngineLoadStep()) {
                 for (int clt = inputs.getCltFrom(); clt <= inputs.getCltTo(); clt += 100) {
-                    testPoint(rpm, engineLoad, clt, listener, dwellSensor);
+                    testPoint((int) rpm, engineLoad, clt, listener, dwellSensor);
                 }
             }
         }
@@ -173,7 +173,7 @@ public class EcuStimulator {
 //        if (dwell > 40)
 //            throw new IllegalStateException("Unexpected value, how comes? " + dwell);
 
-        log("Stimulator result: " + rpm + "@" + engineLoad + ": " + dwell);
+        log("Stimulator result: " + rpm + "@" + engineLoad + ": " + dwell + ", adv=" + advance);
 
 //            double dwell = Launcher.getAdcModel().getValue(Sensor.DWELL0);
 //            double advance = Launcher.getAdcModel().getValue(Sensor.ADVANCE);
@@ -283,7 +283,7 @@ public class EcuStimulator {
     }
 
     interface ResultListener {
-        void onResult(int rpm, double engineLoad, float advance, double dwell);
+        void onResult(int rpm, double engineLoad, double advance, double dwell);
     }
 
     public MultipleMeasurements waitForMultipleResults(final Sensor dwellSensor, final Sensor advanceSensor) {
