@@ -18,6 +18,15 @@
 #include "honda_accord.h"
 #include "engine_math.h"
 
+void setFrankenso_01_LCD(board_configuration_s *boardConfiguration) {
+	boardConfiguration->HD44780_rs = GPIOE_7;
+	boardConfiguration->HD44780_e = GPIOE_9;
+	boardConfiguration->HD44780_db4 = GPIOE_11;
+	boardConfiguration->HD44780_db5 = GPIOE_13;
+	boardConfiguration->HD44780_db6 = GPIOE_15;
+	boardConfiguration->HD44780_db7 = GPIOB_10;
+}
+
 static void setHondaAccordConfigurationCommon(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
 	engineConfiguration->map.sensor.sensorType = MT_DENSO183;
 
@@ -171,12 +180,7 @@ static void setHondaAccordConfigurationCommon(engine_configuration_s *engineConf
 	boardConfiguration->gps_rx_pin = GPIO_NONE;
 	boardConfiguration->gps_tx_pin = GPIO_NONE;
 
-	boardConfiguration->HD44780_rs = GPIOE_7;
-	boardConfiguration->HD44780_e = GPIOE_9;
-	boardConfiguration->HD44780_db4 = GPIOE_11;
-	boardConfiguration->HD44780_db5 = GPIOE_13;
-	boardConfiguration->HD44780_db6 = GPIOE_15;
-	boardConfiguration->HD44780_db7 = GPIOB_10;
+	setFrankenso_01_LCD(boardConfiguration);
 
 	boardConfiguration->logicAnalyzerPins[1] = GPIO_NONE;
 
