@@ -8,7 +8,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author Andrey Belomutskiy
@@ -31,36 +30,35 @@ public class TableGenerator {
     }
 
     private static void doWrite(XYData data, String prefix, String fileName) throws IOException {
-        List<Double> rpms = new ArrayList<Double>(data.getXSet());
+        List<Double> rpms = new ArrayList<>(data.getXSet());
         BufferedWriter out = new BufferedWriter(new FileWriter(fileName));
         out.write("#include \"thermistors.h\"\n\n\n");
 
-        writeArray(rpms, out, prefix + "rpm");
+//        writeArray(rpms, out, prefix + "rpm");
 
-        Set<Double> mafs = data.getYAxis(rpms.get(0)).getYs();
-        ArrayList<Double> yArray = new ArrayList<Double>(mafs);
-        writeArray(yArray, out, prefix + "maf");
+        List<Double> engineLoadValues = new ArrayList<>(data.getYAxis(rpms.get(0)).getYs());
+//        writeArray(yArray, out, prefix + "maf");
 
-        out.write("static float " + prefix + "table[" + rpms.size() + "][" + mafs.size() + "] = {\n");
+        out.write("static float " + prefix + "table[" + rpms.size() + "][" + engineLoadValues.size() + "] = {\n");
 
-        boolean isFirstX = true;
+        boolean isFirstEngineLoad = true;
         int indexX = 0;
-        for (double x : data.getXSet()) {
-            if (!isFirstX)
+        for (double engineLoad : engineLoadValues) {
+            if (!isFirstEngineLoad)
                 out.write(",\n");
-            isFirstX = false;
+            isFirstEngineLoad = false;
 
             out.write("{");
 
             int indexY = 0;
-            for (double y : mafs) {
+            for (double rpm : data.getXSet()) {
                 if (indexY == 0)
-                    out.write("/*" + indexX + " rpm=" + rpms.get(indexX) + "*/");
+                    out.write("/*" + indexX + " engineLoad=" + engineLoadValues.get(indexX) + "*/");
 
                 if (indexY > 0)
                     out.write(", ");
 
-                out.write("/*" + indexY + " " + yArray.get(indexY) + "*/" + data.getValue(x, y));
+                out.write("/*" + indexY + " " + rpms.get(indexY) + "*/" + data.getValue(rpm, engineLoad));
                 indexY++;
             }
             out.write("}");
