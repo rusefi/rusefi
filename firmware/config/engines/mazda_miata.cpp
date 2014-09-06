@@ -255,5 +255,28 @@ void setMiata1996(engine_configuration_s *engineConfiguration, board_configurati
 			engineConfiguration->fuelTable[k][r] = miata_maf_fuel_table[k][r];
 		}
 	}
+
+
+	engineConfiguration->mafAdcChannel = EFI_ADC_1;
+	engineConfiguration->cltAdcChannel = EFI_ADC_3;
+	engineConfiguration->tpsAdcChannel = EFI_ADC_13;
+
+	boardConfiguration->ignitionPins[0] = GPIOE_12; // Frankenstein: high side #3
+	boardConfiguration->ignitionPins[1] = GPIOE_14; // Frankenstein: high side #4
+	boardConfiguration->ignitionPins[2] = GPIO_NONE;
+	boardConfiguration->ignitionPins[3] = GPIO_NONE;
+	boardConfiguration->ignitionPinMode = OM_DEFAULT;
+
+	// harness is sequential but we have a limited board
+	engineConfiguration->injectionMode = IM_BATCH;
+
+	boardConfiguration->injectionPins[0] = GPIOB_9; // Frankenstein: low side - inj #12
+	boardConfiguration->injectionPins[1] = GPIOB_8; // Frankenstein: low side - inj #11
+	boardConfiguration->injectionPins[2] = GPIO_NONE;
+	boardConfiguration->injectionPins[3] = GPIO_NONE;
+	boardConfiguration->injectionPins[4] = GPIO_NONE;
+	boardConfiguration->injectionPins[5] = GPIO_NONE;
+	boardConfiguration->injectionPinMode = OM_DEFAULT;
+
 }
 
