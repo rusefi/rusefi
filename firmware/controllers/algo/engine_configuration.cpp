@@ -219,7 +219,7 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	engineConfiguration->HD44780height = 4;
 
 	engineConfiguration->tpsAdcChannel = EFI_ADC_3;
-	engineConfiguration->vBattAdcChannel = EFI_ADC_5;
+	engineConfiguration->vbattAdcChannel = EFI_ADC_5;
 	engineConfiguration->cltAdcChannel = EFI_ADC_6;
 	engineConfiguration->iatAdcChannel = EFI_ADC_7;
 	engineConfiguration->mafAdcChannel = EFI_ADC_0;

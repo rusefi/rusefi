@@ -360,7 +360,7 @@ typedef struct {
 	trigger_config_s triggerConfig;
 
 	int space;
-	adc_channel_e vBattAdcChannel;
+	adc_channel_e vbattAdcChannel;
 
 	float globalFuelCorrection;
 

@@ -241,6 +241,13 @@ void setMiata1994(engine_configuration_s *engineConfiguration, board_configurati
 
 	setFrankenso_01_LCD(boardConfiguration);
 
+
+	/**
+	 * VBatt
+	 */
+	engineConfiguration->vbattAdcChannel = EFI_ADC_14;
+	engineConfiguration->vbattDividerCoeff = ((float) (8.2 + 33)) / 8.2 * 2;
+
 }
 
 /**

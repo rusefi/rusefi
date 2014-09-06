@@ -21,5 +21,5 @@ float getVRef(void) {
 }
 
 float getVBatt(void) {
-	return getVoltage(engineConfiguration->vBattAdcChannel) * engineConfiguration->vbattDividerCoeff;
+	return getVoltage(engineConfiguration->vbattAdcChannel) * engineConfiguration->vbattDividerCoeff;
 }

@@ -149,7 +149,7 @@ void setFordAspireEngineConfiguration(engine_configuration_s *engineConfiguratio
 
 
 	engineConfiguration->tpsAdcChannel = EFI_ADC_3;
-	engineConfiguration->vBattAdcChannel = EFI_ADC_0;
+	engineConfiguration->vbattAdcChannel = EFI_ADC_0;
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
 	engineConfiguration->mafAdcChannel = EFI_ADC_1;
 	engineConfiguration->cltAdcChannel = EFI_ADC_11;
