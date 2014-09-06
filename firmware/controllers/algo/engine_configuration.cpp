@@ -45,7 +45,7 @@
 #include "mazda_323.h"
 #include "saturn_ion.h"
 #include "MiniCooperR50.h"
-#include "ford_escort_gt.h"
+#include "mazda_miata.h"
 #include "citroenBerlingoTU3JP.h"
 #include "rover_v8.h"
 #include "mitsubishi.h"

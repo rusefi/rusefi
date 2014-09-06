@@ -1948,10 +1948,10 @@
         <name>$PROJ_DIR$\..\config\engines\ford_aspire.h</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\config\engines\ford_escort_gt.cpp</name>
+        <name>$PROJ_DIR$\..\config\engines\mazda_miata.cpp</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\config\engines\ford_escort_gt.h</name>
+        <name>$PROJ_DIR$\..\config\engines\mazda_miata.h</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\config\engines\ford_fiesta.cpp</name>

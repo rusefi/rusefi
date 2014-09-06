@@ -24,7 +24,7 @@
  * The convenient way to override these default would be to tune this map using TunerStudio software
  * with which rusEfi is integrated
  */
-static float default_fuel_table[FUEL_LOAD_COUNT][FUEL_RPM_COUNT] = {
+static float default_aspire_fuel_table[FUEL_LOAD_COUNT][FUEL_RPM_COUNT] = {
 /* RPM					800.000000	1213.333374	1626.666748	2040.000000	2453.333496	2866.666748	3280.000000	3693.333496	4106.666992	4520.000000	4933.333496	5346.666992	5760.000000	6173.333496	6586.666992	7000.000000*/
 /* Load 1.200000 */{	1.542000,	1.547600,	1.551867,	1.570000,	1.550000,	0.908666,	0.794800,	0.775200,	0.791733,	0.800000,	0.798667,	0.805733,	0.810000,	0.810000,	0.810000,	0.810000},
 /* Load 1.413333 */{	1.532133,	1.565325,	1.551244,	1.552773,	1.546018,	0.802089,	0.810000,	0.788507,	0.808898,	0.744987,	0.701378,	0.711404,	0.744667,	0.810000,	0.810000,	0.810000},
@@ -44,7 +44,7 @@ static float default_fuel_table[FUEL_LOAD_COUNT][FUEL_RPM_COUNT] = {
 /* Load 4.400000 */{	17.010000,	15.250000,	15.680000,	15.440000,	15.270000,	15.470000,	15.800000,	15.730000,	15.600000,	15.790000,	16.120001,	16.110001,	15.630000,	15.150000,	15.150000,	15.150000}
 };
 
-static float default_timing_table[AD_LOAD_COUNT][AD_RPM_COUNT] = {
+static float default_aspire_timing_table[AD_LOAD_COUNT][AD_RPM_COUNT] = {
 /* RPM					800.000000	1213.333374	1626.666748	2040.000000	2453.333496	2866.666748	3280.000000	3693.333496	4106.666992	4520.000000	4933.333496	5346.666992	5760.000000	6173.333496	6586.666992	7000.000000*/
 /* Load 1.200000 */{	0.662000,	-7.730000,	-16.722000,	-23.139999,	-29.398001,	-31.268000,	-32.108002,	-30.436001,	-30.896000,	-26.656000,	-24.704000,	-25.108000,	-25.132000,	-25.459999,	-25.459999,	-25.459999},
 /* Load 1.413333 */{	0.546000,	-7.662000,	-16.882000,	-23.482000,	-29.520000,	-31.323999,	-32.108002,	-30.656000,	-30.468000,	-26.879999,	-24.746000,	-24.742001,	-29.032000,	-25.562000,	-25.562000,	-25.562000},
@@ -64,7 +64,7 @@ static float default_timing_table[AD_LOAD_COUNT][AD_RPM_COUNT] = {
 /* Load 4.400000 */{	0.350000,	5.590000,	0.502000,	0.910000,	0.864000,	0.954000,	1.324000,	-7.436000,	1.170000,	1.054000,	2.058000,	2.098000,	2.636000,	-12.352000,	-12.352000,	-12.352000}
 };
 
-static void setDefaultMaps(engine_configuration_s *engineConfiguration) {
+static void setDefaultAspireMaps(engine_configuration_s *engineConfiguration) {
 
 	setFuelLoadBin(engineConfiguration, 1.2, 4.4);
 	setFuelRpmBin(engineConfiguration, 800, 7000);
@@ -73,13 +73,13 @@ static void setDefaultMaps(engine_configuration_s *engineConfiguration) {
 
 	for (int k = 0; k < FUEL_LOAD_COUNT; k++) {
 		for (int r = 0; r < FUEL_RPM_COUNT; r++) {
-			engineConfiguration->fuelTable[k][r] = default_fuel_table[k][r];
+			engineConfiguration->fuelTable[k][r] = default_aspire_fuel_table[k][r];
 		}
 	}
 
 	for (int k = 0; k < AD_LOAD_COUNT; k++) {
 		for (int r = 0; r < AD_RPM_COUNT; r++) {
-			engineConfiguration->ignitionTable[k][r] = default_timing_table[k][r];
+			engineConfiguration->ignitionTable[k][r] = default_aspire_timing_table[k][r];
 		}
 	}
 }
@@ -116,7 +116,7 @@ void setFordAspireEngineConfiguration(engine_configuration_s *engineConfiguratio
 	engineConfiguration->ignitionOffset = 98 - 11;
 	engineConfiguration->injectionOffset = 59;
 
-	setDefaultMaps(engineConfiguration);
+	setDefaultAspireMaps(engineConfiguration);
 	// set_cranking_rpm 550
 	engineConfiguration->crankingSettings.crankingRpm = 550;
 	// set_cranking_charge_angle 70
