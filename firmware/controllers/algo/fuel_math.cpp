@@ -120,12 +120,18 @@ float getIatCorrection(float iat) {
 	return interpolate2d(iat, engineConfiguration->iatFuelCorrBins, engineConfiguration->iatFuelCorr, IAT_CURVE_SIZE);
 }
 
+/**
+ * @return Fuel injection duration injection as specified in the fuel map, in milliseconds
+ */
 float getBaseTableFuel(int rpm, float engineLoad) {
 	efiAssert(!cisnan(engineLoad), "invalid el", NAN);
 	return fuelMap.getValue(engineLoad, engineConfiguration->fuelLoadBins, rpm,
 			engineConfiguration->fuelRpmBins);
 }
 
+/**
+ * @return Duration of fuel injection while craning, in milliseconds
+ */
 float getCrankingFuel(void) {
 	return getStartingFuel(getCoolantTemperature());
 }
