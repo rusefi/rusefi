@@ -28,6 +28,8 @@ typedef struct {
 	short int crankingRpm;
 } cranking_parameters_s;
 
+#define INJECTION_PIN_COUNT 12
+
 #define FUEL_RPM_COUNT 16
 #define FUEL_LOAD_COUNT 16
 #define VE_RPM_COUNT 16
@@ -115,7 +117,7 @@ typedef struct {
 	brain_pin_e fuelPumpPin;
 	pin_output_mode_e fuelPumpPinMode;
 
-	brain_pin_e injectionPins[12];
+	brain_pin_e injectionPins[INJECTION_PIN_COUNT];
 	pin_output_mode_e injectionPinMode;
 
 	brain_pin_e ignitionPins[12];
