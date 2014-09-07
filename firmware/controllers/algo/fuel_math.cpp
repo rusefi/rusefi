@@ -51,15 +51,33 @@ float getBaseFuel(Engine *engine, int rpm) {
 }
 
 /**
+ * Number of injections into each cylinder per engine cycle
+ */
+static int getNumberOfInjections(engine_configuration_s const *engineConfiguration, injection_mode_e mode) {
+	switch (mode) {
+	case IM_SIMULTANEOUS:
+		return engineConfiguration->cylindersCount;
+	case IM_SEQUENTIAL:
+		return 1;
+	case IM_BATCH:
+		return engineConfiguration->cylindersCount / 2;
+	default:
+		firmwareError("Unexpected getFuelMultiplier %d", mode);
+		return 1;
+	}
+}
+
+
+/**
  * @returns	Length of fuel injection, in milliseconds
  */
 float getFuelMs(int rpm, Engine *engine) {
 	if (isCranking()) {
-		return getCrankingFuel();
+		return getCrankingFuel() / getNumberOfInjections(engine->engineConfiguration, engine->engineConfiguration->crankingInjectionMode);
 	} else {
 		float baseFuel = getBaseFuel(engine, rpm);
-		float fuel = getRunningFuel(baseFuel, engine, rpm);
-		return fuel;
+		float fuelPerCycle = getRunningFuel(baseFuel, engine, rpm);
+		return fuelPerCycle / getNumberOfInjections(engine->engineConfiguration, engine->engineConfiguration->injectionMode);
 	}
 }
 

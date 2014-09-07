@@ -185,22 +185,6 @@ static void registerInjectionEvent(engine_configuration_s const *e,
 		float angle
 		) {
 	registerActuatorEventExt(e, s, list->getNextActuatorEvent(), injectonSignals.add(pin), angle);
-
-}
-
-float getFuelMultiplier(engine_configuration_s const *e, injection_mode_e mode) {
-	switch(mode) {
-	case IM_SEQUENTIAL:
-		return 1;
-	case IM_SIMULTANEOUS:
-		// todo: pre-calculate and save into ec2?
-		return 1.0 / e->cylindersCount;
-	case IM_BATCH:
-		return 2.0 / e->cylindersCount;
-	default:
-		firmwareError("Unexpected getFuelMultiplier %d", mode);
-		return NAN;
-	}
 }
 
 void addFuelEvents(engine_configuration_s const *e, engine_configuration2_s *engineConfiguration2,

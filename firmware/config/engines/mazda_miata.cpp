@@ -56,6 +56,9 @@ static void commonMiataNa(engine_configuration_s *engineConfiguration, board_con
 	setFuelLoadBin(engineConfiguration, 1.2, 4.4);
 	setFuelRpmBin(engineConfiguration, 800, 7000);
 
+	boardConfiguration->gps_rx_pin = GPIO_NONE;
+	boardConfiguration->gps_tx_pin = GPIO_NONE;
+
 	boardConfiguration->idleSolenoidFrequency = 160;
 
 	engineConfiguration->globalTriggerAngleOffset = 114;
@@ -223,15 +226,19 @@ void setMiata1994(engine_configuration_s *engineConfiguration, board_configurati
 	// Frankenso low out #12: PB7
 
 
-	boardConfiguration->idleValvePin = GPIOB_9;
 	boardConfiguration->o2heaterPin = GPIO_NONE;
 
 	boardConfiguration->fuelPumpPin = GPIOE_4;
 
-	boardConfiguration->injectionPins[0] = GPIOE_3;
+	boardConfiguration->injectionPins[0] = GPIO_NONE;
 	boardConfiguration->injectionPins[1] = GPIOE_2;
 	boardConfiguration->injectionPins[2] = GPIOB_8;
 	boardConfiguration->injectionPins[3] = GPIOB_7;
+	boardConfiguration->injectionPins[4] = GPIO_NONE;
+	boardConfiguration->injectionPins[5] = GPIO_NONE;
+	boardConfiguration->injectionPinMode = OM_DEFAULT;
+
+	boardConfiguration->idleValvePin = GPIOB_9;
 
 	boardConfiguration->ignitionPins[0] = GPIOE_12;
 	boardConfiguration->ignitionPins[1] = GPIO_NONE;
@@ -262,6 +269,10 @@ void setMiata1996(engine_configuration_s *engineConfiguration, board_configurati
 			engineConfiguration->fuelTable[k][r] = miata_maf_fuel_table[k][r];
 		}
 	}
+
+	// upside down
+	boardConfiguration->triggerInputPins[0] = GPIOA_5;
+	boardConfiguration->triggerInputPins[1] = GPIOC_6;
 
 
 	engineConfiguration->mafAdcChannel = EFI_ADC_1;
