@@ -1948,12 +1948,6 @@
         <name>$PROJ_DIR$\..\config\engines\ford_aspire.h</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\config\engines\mazda_miata.cpp</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\config\engines\mazda_miata.h</name>
-      </file>
-      <file>
         <name>$PROJ_DIR$\..\config\engines\ford_fiesta.cpp</name>
       </file>
       <file>
@@ -1976,6 +1970,12 @@
       </file>
       <file>
         <name>$PROJ_DIR$\..\config\engines\mazda_323.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\config\engines\mazda_miata.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\config\engines\mazda_miata.h</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\config\engines\mazda_miata_nb.cpp</name>
@@ -2415,6 +2415,12 @@
     </file>
     <file>
       <name>$PROJ_DIR$\..\controllers\engine_controller.h</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\controllers\algo\enum_strings.cpp</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\controllers\algo\enum_strings.h</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\controllers\error_handling.c</name>

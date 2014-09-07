@@ -51,6 +51,7 @@ static void setDefaultCrankingFuel(engine_configuration_s *engineConfiguration) 
 
 static void commonMiataNa(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
 	engineConfiguration->triggerConfig.triggerType = TT_MAZDA_MIATA_NA;
+	engineConfiguration->digitalChartSize = 100;
 
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 	setFuelLoadBin(engineConfiguration, 1.2, 4.4);
@@ -61,7 +62,7 @@ static void commonMiataNa(engine_configuration_s *engineConfiguration, board_con
 
 	boardConfiguration->idleSolenoidFrequency = 160;
 
-	engineConfiguration->globalTriggerAngleOffset = 114;
+	engineConfiguration->globalTriggerAngleOffset = 294;
 
 	// Frankenstein: high side #1 is PE8
 	// Frankenstein: high side #2 is PE10

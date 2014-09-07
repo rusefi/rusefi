@@ -18,6 +18,7 @@
 18)                  BOM issue: D1001 should be BZT52C7V5-FDICT-ND?
 19)                  BOM issue: C1001 sch says 470uF but part number is 100uF?
 20)                  SKQUCAA010 is End of Life. I've placed and order to get these in October, but we need a better solution
+21)                  JP212 should be replaced with JP209 which would be breaking the OUT9 line. That's part of hall-via-op-amp circuirty 
 
 
 For honda add-on / rewiring board
