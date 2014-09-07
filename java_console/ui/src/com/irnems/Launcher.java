@@ -19,10 +19,12 @@ import javax.swing.*;
  * @see WavePanel
  */
 public class Launcher extends FrameHelper {
-    public static final int CONSOLE_VERSION = 20140905;
+    public static final int CONSOLE_VERSION = 20140907;
     public static final boolean SHOW_STIMULATOR = true;
+    private final String port;
 
     public Launcher(String port) {
+        this.port = port;
         FileLog.MAIN.start();
 
         LinkManager.start(port);
@@ -50,9 +52,6 @@ public class Launcher extends FrameHelper {
         tabbedPane.setSelectedIndex(2);
 //        tabbedPane.setSelectedIndex(5);
 
-        for (String p : SerialPortList.getPortNames())
-            MessagesCentral.getInstance().postMessage(Launcher.class, "Available port: " + p);
-
         showFrame(tabbedPane);
     }
 
@@ -73,7 +72,7 @@ public class Launcher extends FrameHelper {
     }
 
     private void setTitle(String value) {
-        frame.setTitle("Console " + CONSOLE_VERSION + "; firmware=" + value);
+        frame.setTitle("Console " + CONSOLE_VERSION + "; firmware=" + value + "@" + port);
     }
 
     @Override
@@ -103,6 +102,8 @@ public class Launcher extends FrameHelper {
             if (isPortDefined) {
                 new Launcher(args[0]);
             } else {
+                for (String p : SerialPortList.getPortNames())
+                    MessagesCentral.getInstance().postMessage(Launcher.class, "Available port: " + p);
                 PortLookupFrame.chooseSerialPort();
             }
 

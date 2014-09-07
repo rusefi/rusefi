@@ -428,6 +428,20 @@ static void setPotSpi(int spi) {
 	boardConfiguration->digitalPotentiometerSpiDevice = (spi_device_e) spi;
 }
 
+static void setIgnitionPin(const char *indexStr, const char *pinName) {
+	int index = atoi(indexStr);
+	if (index < 0 || index > IGNITION_PIN_COUNT)
+		return;
+	brain_pin_e pin = parseBrainPin(pinName);
+	// todo: extract method - code duplication with other 'set_xxx_pin' methods?
+	if (pin == GPIO_INVALID) {
+		scheduleMsg(&logger, "invalid pin name [%s]", pinName);
+		return;
+	}
+	scheduleMsg(&logger, "setting ignition pin[%d] to %s please save&restart", index, hwPortname(pin));
+	boardConfiguration->ignitionPins[index] = pin;
+}
+
 static void setInjectionPin(const char *indexStr, const char *pinName) {
 	int index = atoi(indexStr);
 	if (index < 0 || index > INJECTION_PIN_COUNT)
@@ -688,6 +702,7 @@ void initSettings(void) {
 
 #if EFI_PROD_CODE
 	addConsoleActionSS("set_injection_pin", setInjectionPin);
+	addConsoleActionSS("set_ignition_pin", setIgnitionPin);
 	addConsoleActionSS("set_trigger_input_pin", setTriggerInputPin);
 	addConsoleActionSS("set_trigger_simulator_pin", setTriggerSimulatorPin);
 	addConsoleActionSS("set_trigger_simulator_mode", setTriggerSimulatorMode);

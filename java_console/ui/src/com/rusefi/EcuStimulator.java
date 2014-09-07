@@ -34,18 +34,14 @@ import java.util.concurrent.CountDownLatch;
  * @see EcuStimulatorSandbox
  */
 public class EcuStimulator {
-    //    private static final String TITLE = "Spark Advance";
-    private static final String TITLE = "Fuel Table";
-
     private static final String DELIMITER = ",";
     private static final long SLEEP_TIME = 300;
     private static final double EPS = 0.001;
 
-    public boolean isDisplayingDwell = true;
+    public boolean isDisplayingFuel = true;
 
-
-    private static final Sensor DWELL_SENSOR = Sensor.DWELL1;
-    public static final Sensor ADVANCE_SENSOR = Sensor.ADVANCE1;
+    private static final Sensor DWELL_SENSOR = Sensor.DWELL0;
+    public static final Sensor ADVANCE_SENSOR = Sensor.ADVANCE0;
 
     private static final int MEASURES = 7;
     //    private static final String C_FILE_NAME = "advance_map.c";
@@ -66,7 +62,7 @@ public class EcuStimulator {
     private final JLabel statusLabel = new JLabel();
 
     private EcuStimulator() {
-        JPanel panel = ChartHelper.create3DControl(data, model, TITLE);
+        JPanel panel = ChartHelper.create3DControl(data, model, isDisplayingFuel ? "Fuel Table" : "Timing");
         content.add(statusLabel, BorderLayout.NORTH);
         content.add(panel, BorderLayout.CENTER);
         content.add(inputs.getContent(), BorderLayout.SOUTH);
@@ -100,7 +96,7 @@ public class EcuStimulator {
         ResultListener listener = new ResultListener() {
             @Override
             public void onResult(int rpm, double engineLoad, double advance, double dwell) {
-                data.addPoint(new Point3D(rpm, engineLoad, isDisplayingDwell ? (float) dwell : (float) advance));
+                data.addPoint(new Point3D(rpm, engineLoad, isDisplayingFuel ? (float) dwell : (float) advance));
                 model.plot().execute();
 
                 String msg = putValue("rpm", rpm) +
