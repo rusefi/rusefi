@@ -39,9 +39,7 @@
 #include "engine_configuration.h"
 #include "ec2.h"
 
-extern engine_configuration_s *engineConfiguration;
 extern engine_configuration2_s * engineConfiguration2;
-extern board_configuration_s *boardConfiguration;
 
 static bool isSpiInitialized[5] = { false, false, false, false, false };
 
@@ -103,7 +101,7 @@ void turnOnSpi(spi_device_e device) {
 	}
 }
 
-void initSpiModules(void) {
+static void initSpiModules(board_configuration_s *boardConfiguration) {
 	if (boardConfiguration->is_enabled_spi_2) {
 		turnOnSpi(SPI_DEVICE_2);
 	}
@@ -134,7 +132,10 @@ static void sendI2Cbyte(int addr, int data) {
 //	i2cReleaseBus(&I2CD1);
 }
 
-void initHardware(Logging *logger) {
+void initHardware(Logging *logger, Engine *engine) {
+	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
+	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
+
 	printMsg(logger, "initHardware()");
 	// todo: enable protection. it's disabled because it takes
 	// 10 extra seconds to re-flash the chip
@@ -211,13 +212,13 @@ void initHardware(Logging *logger) {
 //	requestAdcValue(&adcState, 0);
 
 	// todo: figure out better startup logic
-	initTriggerCentral();
+	initTriggerCentral(engine);
 
 #if EFI_SHAFT_POSITION_INPUT
 	initShaftPositionInputCapture();
 #endif /* EFI_SHAFT_POSITION_INPUT */
 
-	initSpiModules();
+	initSpiModules(boardConfiguration);
 
 #if EFI_FILE_LOGGING
 	initMmcCard();
