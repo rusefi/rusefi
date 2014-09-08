@@ -45,6 +45,8 @@ public class SensorGauge {
     private static void createGaugeBody(final Sensor sensor, final JPanel wrapper) {
         final Radial gauge = createRadial(sensor.getName(), sensor.getUnits(), sensor.getMaxValue(), sensor.getMinValue());
 
+        UpDownImage.setTwoLineToolTip(gauge, "Double-click to detach", "Right-click to change");
+
         gauge.setBackgroundColor(sensor.getColor());
 
         SensorCentral.getInstance().addListener(sensor, new SensorCentral.SensorListener() {
