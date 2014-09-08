@@ -271,12 +271,19 @@ void setMiata1994(engine_configuration_s *engineConfiguration, board_configurati
 	boardConfiguration->idleValvePin = GPIOB_9;
 
 	boardConfiguration->ignitionPins[0] = GPIOC_7; // Frankenso high side #3
-	boardConfiguration->ignitionPins[1] = GPIOE_14; // Frankenso high side #2
-	boardConfiguration->ignitionPins[2] = GPIO_NONE;
+	boardConfiguration->ignitionPins[1] = GPIO_NONE;
+	boardConfiguration->ignitionPins[2] = GPIOE_14; // Frankenso high side #2
 	boardConfiguration->ignitionPins[3] = GPIO_NONE;
 	boardConfiguration->ignitionPinMode = OM_DEFAULT;
 
 	setFrankenso_01_LCD(boardConfiguration);
+
+
+	engineConfiguration->tpsAdcChannel = EFI_ADC_2;
+	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
+	engineConfiguration->mafAdcChannel = EFI_ADC_0;
+	engineConfiguration->cltAdcChannel = EFI_ADC_12;
+	engineConfiguration->iatAdcChannel = EFI_ADC_11;
 
 
 	/**
@@ -310,8 +317,8 @@ void setMiata1996(engine_configuration_s *engineConfiguration, board_configurati
 	engineConfiguration->tpsAdcChannel = EFI_ADC_13;
 
 	boardConfiguration->ignitionPins[0] = GPIOE_12; // Frankenstein: high side #3
-	boardConfiguration->ignitionPins[1] = GPIOE_14; // Frankenstein: high side #4
-	boardConfiguration->ignitionPins[2] = GPIO_NONE;
+	boardConfiguration->ignitionPins[1] = GPIO_NONE;
+	boardConfiguration->ignitionPins[2] = GPIOE_14; // Frankenstein: high side #4
 	boardConfiguration->ignitionPins[3] = GPIO_NONE;
 	boardConfiguration->ignitionPinMode = OM_DEFAULT;
 
