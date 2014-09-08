@@ -38,7 +38,11 @@ public class UpDownImage extends JPanel {
     }
 
     public void setToolTip() {
-        setToolTipText("<html>Channel " + name + "<br>Physical pin: " + pin + "</html>");
+        setTwoLineToolTip(this, "Channel " + name, "Physical pin: " + pin);
+    }
+
+    public static void setTwoLineToolTip(JComponent component, String line1, String line2) {
+        component.setToolTipText("<html>" + line1 + "<br>" + line2 + "</html>");
     }
 
     public void setZoomProvider(ZoomProvider zoomProvider) {
