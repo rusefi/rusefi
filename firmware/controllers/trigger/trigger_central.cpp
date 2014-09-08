@@ -219,7 +219,7 @@ float getTriggerDutyCycle(int index) {
 	return triggerCentral.triggerState.getTriggerDutyCycle(index);
 }
 
-void initTriggerCentral(void) {
+void initTriggerCentral(Engine *engine) {
 	strcpy((char*) shaft_signal_msg_index, "_");
 
 #if EFI_WAVE_CHART

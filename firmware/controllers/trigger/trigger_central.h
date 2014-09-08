@@ -16,6 +16,7 @@ typedef void (*ShaftPositionListener)(trigger_event_e signal, int index, void *a
 
 #ifdef __cplusplus
 #include "ec2.h"
+#include "engine.h"
 
 #define HW_EVENT_TYPES 6
 
@@ -36,7 +37,7 @@ uint64_t getCrankEventCounter(void);
 uint64_t getStartOfRevolutionIndex(void);
 void hwHandleShaftSignal(trigger_event_e signal);
 float getTriggerDutyCycle(int index);
-void initTriggerCentral(void);
+void initTriggerCentral(Engine *engine);
 void printAllCallbacksHistogram(void);
 
 #ifdef __cplusplus

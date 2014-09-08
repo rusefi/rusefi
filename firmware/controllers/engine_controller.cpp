@@ -58,6 +58,11 @@ extern board_configuration_s *boardConfiguration;
 persistent_config_container_s persistentState CCM_OPTIONAL
 ;
 
+/**
+ * todo: it really looks like these fields should become 'static', i.e. private
+ * the whole 'extern ...' pattern is less then perfect, I guess the 'God object' Engine
+ * would be a smaller evil. Whatever is needed should be passed into methods/modules/files as an explicit parameter.
+ */
 engine_configuration_s *engineConfiguration = &persistentState.persistentConfiguration.engineConfiguration;
 board_configuration_s *boardConfiguration = &persistentState.persistentConfiguration.engineConfiguration.bc;
 
@@ -79,6 +84,9 @@ static configuration_s cfg = { &persistentState.persistentConfiguration.engineCo
 
 configuration_s * configuration = &cfg;
 
+/**
+ * todo: this should probably become 'static', i.e. private, and propagated around explicitly?
+ */
 Engine engine;
 
 static msg_t csThread(void) {

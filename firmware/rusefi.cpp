@@ -120,6 +120,7 @@ static MemoryStream firmwareErrorMessageStream;
 uint8_t errorMessageBuffer[200];
 static bool hasFirmwareErrorFlag = FALSE;
 extern board_configuration_s *boardConfiguration;
+extern Engine engine;
 
 char *getFirmwareError(void) {
 	return (char*)errorMessageBuffer;
@@ -146,7 +147,7 @@ void runRusEfi(void) {
 	/**
 	 * Initialize hardware drivers
 	 */
-	initHardware(&logging);
+	initHardware(&logging, &engine);
 
 	initStatusLoop();
 	/**
@@ -229,5 +230,5 @@ void firmwareError(const char *fmt, ...) {
 }
 
 int getRusEfiVersion(void) {
-	return 20140907;
+	return 20140908;
 }
