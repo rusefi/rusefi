@@ -119,6 +119,7 @@ int main_loop_started = FALSE;
 static MemoryStream firmwareErrorMessageStream;
 uint8_t errorMessageBuffer[200];
 static bool hasFirmwareErrorFlag = FALSE;
+extern engine_configuration_s *engineConfiguration;
 extern board_configuration_s *boardConfiguration;
 extern Engine engine;
 
@@ -128,6 +129,10 @@ char *getFirmwareError(void) {
 
 void runRusEfi(void) {
 	msObjectInit(&firmwareErrorMessageStream, errorMessageBuffer, sizeof(errorMessageBuffer), 0);
+
+	// that's dirty, this assignment should be nicer or in a better spot
+	engine.engineConfiguration = engineConfiguration;
+
 
 	initErrorHandling();
 
