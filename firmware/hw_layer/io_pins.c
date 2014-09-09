@@ -140,7 +140,7 @@ static void outputPinRegisterExt(const char *msg, io_pin_e ioPin, GPIO_TypeDef *
 GPIO_TypeDef * getHwPort(brain_pin_e brainPin) {
 	if (brainPin == GPIO_NONE)
 		return GPIO_NULL ;
-	if (brainPin > GPIO_NONE) {
+	if (brainPin > GPIO_NONE || brainPin < 0) {
 		firmwareError("Invalid brain_pin_e: %d", brainPin);
 		return GPIO_NULL ;
 	}
@@ -150,7 +150,7 @@ GPIO_TypeDef * getHwPort(brain_pin_e brainPin) {
 ioportmask_t getHwPin(brain_pin_e brainPin) {
 	if (brainPin == GPIO_NONE)
 		return EFI_ERROR_CODE;
-	if (brainPin > GPIO_NONE) {
+	if (brainPin > GPIO_NONE || brainPin < 0) {
 		firmwareError("Invalid brain_pin_e: %d", brainPin);
 		return EFI_ERROR_CODE;
 	}

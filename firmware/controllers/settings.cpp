@@ -54,7 +54,6 @@ void printFloatArray(const char *prefix, float array[], int size) {
 	scheduleLogging(&logger);
 }
 
-
 extern board_configuration_s *boardConfiguration;
 
 /**
@@ -259,12 +258,14 @@ static void printMAPInfo(void) {
 	scheduleMsg(&logger, "map type=%d raw=%f MAP=%f", engineConfiguration->map.sensor.sensorType, getRawMap(),
 			getMap());
 	if (engineConfiguration->map.sensor.sensorType == MT_CUSTOM) {
-		scheduleMsg(&logger, "at0=%f at5=%f", engineConfiguration->map.sensor.customValueAt0, engineConfiguration->map.sensor.customValueAt5);
+		scheduleMsg(&logger, "at0=%f at5=%f", engineConfiguration->map.sensor.customValueAt0,
+				engineConfiguration->map.sensor.customValueAt5);
 	}
 
 	scheduleMsg(&logger, "baro type=%d value=%f", engineConfiguration->baroSensor.sensorType, getBaroPressure());
 	if (engineConfiguration->baroSensor.sensorType == MT_CUSTOM) {
-		scheduleMsg(&logger, "min=%f max=%f", engineConfiguration->baroSensor.customValueAt0, engineConfiguration->baroSensor.customValueAt5);
+		scheduleMsg(&logger, "min=%f max=%f", engineConfiguration->baroSensor.customValueAt0,
+				engineConfiguration->baroSensor.customValueAt5);
 	}
 }
 #endif
@@ -399,6 +400,14 @@ static void setGlobalFuelCorrection(float value) {
 		return;
 	scheduleMsg(&logger, "setting fuel mult=%f", value);
 	engineConfiguration->globalFuelCorrection = value;
+}
+
+static void setCltBias(float value) {
+	engineConfiguration->cltThermistorConf.bias_resistor = value;
+}
+
+static void setIatBias(float value) {
+	engineConfiguration->iatThermistorConf.bias_resistor = value;
 }
 
 static void setVBattDivider(float value) {
@@ -699,6 +708,9 @@ void initSettings(void) {
 	addConsoleActionI("set_trigger_type", setTriggerType);
 
 	addConsoleActionF("set_vbatt_divider", setVBattDivider);
+
+	addConsoleActionF("set_clt_bias", setCltBias);
+	addConsoleActionF("set_iat_bias", setIatBias);
 
 #if EFI_PROD_CODE
 	addConsoleActionSS("set_injection_pin", setInjectionPin);

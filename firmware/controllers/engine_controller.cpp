@@ -248,7 +248,6 @@ void initEngineContoller(void) {
 		return;
 	initLogging(&logger, "Engine Controller");
 
-	engine.engineConfiguration = engineConfiguration;
 
 	initSensors();
 
