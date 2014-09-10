@@ -1,5 +1,7 @@
 package com.rusefi.ui.widgets;
 
+import com.irnems.core.Sensor;
+import com.irnems.core.SensorCentral;
 import com.irnems.waves.TimeAxisTranslator;
 import com.rusefi.ui.WavePanel;
 import com.rusefi.waves.WaveReport;
@@ -10,6 +12,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * This is a renderer of an individual {@link WaveReport} - this makes a simple Logical Analyzer
@@ -17,6 +21,7 @@ import java.util.Date;
  * <p/>
  * Date: 6/23/13
  * (c) Andrey Belomutskiy
+ *
  * @see WavePanel
  */
 public class UpDownImage extends JPanel {
@@ -31,6 +36,13 @@ public class UpDownImage extends JPanel {
     private TimeAxisTranslator translator;
     private RevolutionLog time2rpm = RevolutionLog.parseRevolutions(null);
     private String pin = "";
+
+    private static final Map<String, Sensor> name2sensor = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+
+    static {
+        name2sensor.put("inj1", Sensor.INJECTOR_1_DWELL);
+        name2sensor.put("inj2", Sensor.INJECTOR_2_DWELL);
+    }
 
     public UpDownImage(final String name) {
         this(WaveReport.MOCK, name);
@@ -47,10 +59,6 @@ public class UpDownImage extends JPanel {
 
     public void setZoomProvider(ZoomProvider zoomProvider) {
         this.zoomProvider = zoomProvider;
-    }
-
-    public void onUpdate() {
-        trueRepaint(this);
     }
 
     /**
@@ -117,9 +125,21 @@ public class UpDownImage extends JPanel {
 
     public void setWaveReport(WaveReport wr, StringBuilder revolutions) {
         this.wr = wr;
+        propagateDwellIntoSensor(wr);
         this.revolutions = revolutions;
         lastUpdateTime = System.currentTimeMillis();
-        onUpdate();
+        trueRepaint(this);
+    }
+
+    private void propagateDwellIntoSensor(WaveReport wr) {
+        Sensor sensor = name2sensor.get(name);
+        if (sensor == null)
+            return;
+
+        if (!wr.getList().isEmpty()) {
+            WaveReport.UpDown last = wr.getList().get(wr.getList().size() - 1);
+            SensorCentral.getInstance().setValue(last.getDuration(), sensor);
+        }
     }
 
     @Override
@@ -224,9 +244,6 @@ public class UpDownImage extends JPanel {
 
         g.setColor(Color.green);
         g.drawString(toAngle, x1 + offset, (int) (1.0 * d.height));
-
-
-
     }
 
     public void setRevolutions(StringBuilder revolutions) {
