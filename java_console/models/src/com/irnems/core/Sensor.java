@@ -36,6 +36,9 @@ public enum Sensor {
     DWELL1("Input dwl #2", "ms", 0, 30, BackgroundColor.BEIGE),
     DWELL2("Input dwl #3", "ms", 0, 30, BackgroundColor.BEIGE),
     DWELL3("Input dwl #4", "ms", 0, 30, BackgroundColor.BEIGE),
+    DWELL0_SD("Input d #1", "std dev", 100),
+
+
     TOTAL_DWELL0("Input tdwl #1", "ms", 0, 30, BackgroundColor.BEIGE),
     TOTAL_DWELL1("Input tdwl #2", "ms", 0, 30, BackgroundColor.BEIGE),
     TOTAL_DWELL2("Input tdwl #3", "ms", 0, 30, BackgroundColor.BEIGE),
@@ -62,13 +65,9 @@ public enum Sensor {
     CHART_STATUS("CHART_STATUS"),
     ADC_STATUS("ADC_STATUS"),
 
-    INJECTOR_0_STATUS("INJECTOR_0_STATUS"),
-    INJECTOR_1_STATUS("INJECTOR_1_STATUS"),
-    INJECTOR_2_STATUS("INJECTOR_2_STATUS"),
-    INJECTOR_3_STATUS("INJECTOR_3_STATUS"),
-
     ADC_FAST("ADC_FAST", "b", 4000),
-    ADC_FAST_AVG("ADC_FAST_AVG", "b", 4000);
+    ADC_FAST_AVG("ADC_FAST_AVG", "b", 4000),
+    ;
 
     private final String name;
     private final String units;
