@@ -294,7 +294,7 @@ public class EcuStimulator {
                     return;
                 double dwell = getValue(dwellSensor);
                 double advance = getValue(advanceSensor);
-                advance = processAdvance(advance);
+                advance = Sensor.processAdvance(advance);
                 result.dwells.add(dwell);
                 result.advances.add(advance);
                 latch.countDown();
@@ -308,10 +308,6 @@ public class EcuStimulator {
         }
         LinkManager.engineState.timeListeners.remove(listener);
         return result;
-    }
-
-    private double processAdvance(double advance) {
-        return advance > 360 ? advance - 720 : advance;
     }
 
     private class MultipleMeasurements {
