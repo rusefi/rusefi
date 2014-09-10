@@ -365,10 +365,13 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	boardConfiguration->is_enabled_spi_1 = false;
 	boardConfiguration->is_enabled_spi_2 = true;
 	boardConfiguration->is_enabled_spi_3 = true;
-}
 
-//void setDefaultNonPersistentConfiguration(engine_configuration2_s *engineConfiguration2) {
-//}
+	boardConfiguration->isSdCardEnabled = false;
+	boardConfiguration->isFastAdcEnabled = true;
+	boardConfiguration->isEngineControlEnabled = true;
+
+
+}
 
 void resetConfigurationExt(Logging * logger, engine_type_e engineType, engine_configuration_s *engineConfiguration,
 		engine_configuration2_s *engineConfiguration2, board_configuration_s *boardConfiguration) {
