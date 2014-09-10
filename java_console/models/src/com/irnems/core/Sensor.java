@@ -11,7 +11,7 @@ public enum Sensor {
     MAP("MAP"),
     MAP_RAW("MAP_RAW"),
     BARO("Baro"),
-    TIMING("Timing"),
+    TIMING("Timing", "deg", -180, 180),
 
     /**
      * Please note that these enum names are used to make 'set_mock_XXX_voltage' commands
@@ -43,10 +43,10 @@ public enum Sensor {
     TOTAL_DWELL1("Input tdwl #2", "ms", 0, 30, BackgroundColor.BEIGE),
     TOTAL_DWELL2("Input tdwl #3", "ms", 0, 30, BackgroundColor.BEIGE),
     TOTAL_DWELL3("Input tdwl #4", "ms", 0, 30, BackgroundColor.BEIGE),
-    ADVANCE0("Input Adv #1", "dg", -40, 40, BackgroundColor.BROWN),
-    ADVANCE1("Input Adv #2", "dg", -40, 40, BackgroundColor.BROWN),
-    ADVANCE2("Input Adv #3", "dg", -40, 40, BackgroundColor.BROWN),
-    ADVANCE3("Input Adv #4", "dg", -40, 40, BackgroundColor.BROWN),
+    ADVANCE0("Input Adv #1", "deg", -180, 180, BackgroundColor.BROWN),
+    ADVANCE1("Input Adv #2", "deg", -180, 180, BackgroundColor.BROWN),
+    ADVANCE2("Input Adv #3", "deg", -180, 180, BackgroundColor.BROWN),
+    ADVANCE3("Input Adv #4", "deg", -180, 180, BackgroundColor.BROWN),
     PERIOD0("Period", "dg", 0, 400),
     DUTY0("Duty0", "%", 0, 100, BackgroundColor.RED),
     DUTY1("Duty1", "%", 0, 100, BackgroundColor.RED),
@@ -71,8 +71,7 @@ public enum Sensor {
     INJECTOR_2_DWELL("inj #2"),
 
 
-    INJ_1_2_DELTA("inj 1-2 delta"),
-    ;
+    INJ_1_2_DELTA("inj 1-2 delta"),;
 
     private final String name;
     private final String units;
@@ -100,6 +99,10 @@ public enum Sensor {
         this.color = color;
     }
 
+    public static double processAdvance(double advance) {
+        return advance > 360 ? advance - 720 : advance;
+    }
+
     public String getName() {
         return name;
     }
@@ -118,5 +121,18 @@ public enum Sensor {
 
     public BackgroundColor getColor() {
         return color;
+    }
+
+    public double translateValue(double value) {
+        switch (this) {
+            case ADVANCE0:
+            case ADVANCE1:
+            case ADVANCE2:
+            case ADVANCE3:
+            case TIMING:
+                return processAdvance(value);
+            default:
+                return value;
+        }
     }
 }
