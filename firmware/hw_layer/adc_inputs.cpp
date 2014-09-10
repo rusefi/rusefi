@@ -157,9 +157,9 @@ static void pwmpcb_slow(PWMDriver *pwmp) {
 	 terminate before the next PWM cycle.*/
 	chSysLockFromIsr()
 	;
-	if (ADC_FAST_DEVICE.state != ADC_READY &&
-	ADC_FAST_DEVICE.state != ADC_COMPLETE &&
-	ADC_FAST_DEVICE.state != ADC_ERROR) {
+	if (ADC_SLOW_DEVICE.state != ADC_READY &&
+	ADC_SLOW_DEVICE.state != ADC_COMPLETE &&
+	ADC_SLOW_DEVICE.state != ADC_ERROR) {
 		// todo: why and when does this happen? firmwareError("ADC slow not ready?");
 		slowAdc.errorsCount++;
 		chSysUnlockFromIsr()
