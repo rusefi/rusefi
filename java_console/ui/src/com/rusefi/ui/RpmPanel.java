@@ -103,10 +103,10 @@ public class RpmPanel {
 
         controls.add(new AdcDebugControl().getControl(), "grow, wrap");
 
-        controls.add(new InjectorControl(0, Sensor.INJECTOR_0_STATUS).getControl(), "grow, wrap");
-        controls.add(new InjectorControl(1, Sensor.INJECTOR_1_STATUS).getControl(), "grow, wrap");
-        controls.add(new InjectorControl(2, Sensor.INJECTOR_2_STATUS).getControl(), "grow, wrap");
-        controls.add(new InjectorControl(3, Sensor.INJECTOR_3_STATUS).getControl(), "grow, wrap");
+//        controls.add(new InjectorControl(0, Sensor.INJECTOR_0_STATUS).getControl(), "grow, wrap");
+//        controls.add(new InjectorControl(1, Sensor.INJECTOR_1_STATUS).getControl(), "grow, wrap");
+//        controls.add(new InjectorControl(2, Sensor.INJECTOR_2_STATUS).getControl(), "grow, wrap");
+//        controls.add(new InjectorControl(3, Sensor.INJECTOR_3_STATUS).getControl(), "grow, wrap");
 
         controls.add(new LogModeWidget().getPanel(), "grow, wrap");
 
