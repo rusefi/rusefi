@@ -189,6 +189,8 @@ typedef struct {
 	unsigned int is_enabled_spi_2 : 1; // bit 1
 	unsigned int is_enabled_spi_3 : 1; // bit 2
 	unsigned int isSdCardEnabled : 1; // bit 3
+	unsigned int isFastAdcEnabled : 1; // bit 4
+	unsigned int isEngineControlEnabled : 1; // bit 5
 
 	brain_pin_e logicAnalyzerPins[LOGIC_ANALYZER_CHANNEL_COUNT];
 	uint8_t logicAnalyzerMode[LOGIC_ANALYZER_CHANNEL_COUNT];
