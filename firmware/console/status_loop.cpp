@@ -368,6 +368,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels) {
 	tsOutputChannels->mass_air_flow = getMaf();
 	tsOutputChannels->air_fuel_ratio = getAfr();
 	tsOutputChannels->v_batt = getVBatt();
+	tsOutputChannels->tsConfigVersion = TS_FILE_VERSION;
 	tsOutputChannels->tpsADC = getTPS10bitAdc();
 	tsOutputChannels->atmospherePressure = getBaroPressure();
 	tsOutputChannels->manifold_air_pressure = getMap();

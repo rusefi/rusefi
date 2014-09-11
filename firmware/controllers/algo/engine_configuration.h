@@ -213,16 +213,13 @@ typedef struct {
  *  todo: re-arrange this structure one we have a stable code version
  */
 typedef struct {
-	float injectorLag;	// size 4, offset 0
+	// WARNING: by default, our small enums are ONE BYTE. but if the are surrounded by non-enums - alignments do the trick
+	engine_type_e engineType;
 	/**
-	 * cc/min, cubic centimeter per minute
-	 *
-	 * By the way, g/s = 0.125997881 * (lb/hr)
-	 * g/s = 0.125997881 * (cc/min)/10.5
-	 * g/s = 0.0119997981 * cc/min
-	 *
+	 * this magic number is used to make sure that what we read from Flash is in fact some configuration
 	 */
-	float injectorFlow; // size 4, offset 4
+	int headerMagicValue;
+
 	float battInjectorLagCorrBins[VBAT_INJECTOR_CURVE_SIZE]; // size 32, offset 8
 	float battInjectorLagCorr[VBAT_INJECTOR_CURVE_SIZE]; // size 32, offset 40
 
@@ -277,8 +274,8 @@ typedef struct {
 	 */
 	float fixedModeTiming;
 
-	// WARNING: by default, our small enums are ONE BYTE. but if the are surrounded by non-enums - alignments do the trick
-	engine_type_e engineType;
+	float injectorLag;	// size 4, offset 0
+
 
 	float fuelLoadBins[FUEL_LOAD_COUNT]; //
 	// RPM is float and not integer in order to use unified methods for interpolation
@@ -409,8 +406,17 @@ typedef struct {
 	bool needSecondTriggerInput : 1; // bit 4
 
 	int digitalChartSize;
+	/**
+	 * cc/min, cubic centimeter per minute
+	 *
+	 * By the way, g/s = 0.125997881 * (lb/hr)
+	 * g/s = 0.125997881 * (cc/min)/10.5
+	 * g/s = 0.0119997981 * cc/min
+	 *
+	 */
+	float injectorFlow; // size 4
 
-	int unused3[7];
+	int unused3[6];
 
 } engine_configuration_s;
 
