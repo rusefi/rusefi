@@ -51,10 +51,10 @@ static void maThread(int param) {
 		chThdSleepMilliseconds(100);
 
 		systime_t now = chTimeNow();
-		if (!isRunning()) {
-			timeAtNotRunning = now;
-			continue;
-		}
+//todo?		if (!isRunning()) {
+//			timeAtNotRunning = now;
+//			continue;
+//		}
 
 		int wasNotRunningRecently = overflowDiff(now, timeAtNotRunning) < 60 * CH_FREQUENCY;
 		if (!wasNotRunningRecently)

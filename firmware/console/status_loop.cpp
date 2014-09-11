@@ -308,9 +308,9 @@ static void showFuelMap2(float rpm, float engineLoad) {
 
 	scheduleMsg(&logger2, "algo=%s", algorithmToString(engineConfiguration->algorithm));
 
-	if (isCrankingR(rpm)) {
-		scheduleMsg(&logger2, "cranking fuel: %f", getCrankingFuel());
-	} else {
+	scheduleMsg(&logger2, "cranking fuel: %f", getCrankingFuel());
+
+	if (engine.rpmCalculator->isRunning()) {
 		float iatCorrection = getIatCorrection(getIntakeAirTemperature());
 		float cltCorrection = getCltCorrection(getCoolantTemperature());
 		float injectorLag = getInjectorLag(getVBatt());
