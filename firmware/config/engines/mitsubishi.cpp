@@ -51,13 +51,8 @@ void setMitsubishiConfiguration(engine_configuration_s *engineConfiguration, boa
 //	 */
 //	setThermistorConfiguration(&engineConfiguration->cltThermistorConf, 40, 29150, 70, 10160, 150, 1270);
 
-	/**
-	 * 18K Ohm @ -20C
-	 * 2.1K Ohm @ 24C
-	 * 294 Ohm @ 80C
-	 * http://www.rexbo.eu/hella/coolant-temperature-sensor-6pt009107121?c=100334&at=3130
-	 */
-	setThermistorConfiguration(&engineConfiguration->cltThermistorConf, -20, 18000, 23.8889, 2100, 80, 294);
+	setCommonNTCSensor(&engineConfiguration->cltThermistorConf);
+
 
 	engineConfiguration->cltThermistorConf.bias_resistor = 2700;
 

@@ -60,10 +60,10 @@ static void setHondaAccordConfigurationCommon(engine_configuration_s *engineConf
 	 * 2.1K Ohm @ 24C
 	 * 100 Ohm @ 120C
 	 */
-	setThermistorConfiguration(&engineConfiguration->cltThermistorConf, -20.0, 18000.0, 23.8889, 2100.0, 120.0, 100.0);
+	setCommonNTCSensor(&engineConfiguration->cltThermistorConf);
 	engineConfiguration->cltThermistorConf.bias_resistor = 1500; // same as OEM ECU
 
-	setThermistorConfiguration(&engineConfiguration->iatThermistorConf, -20.0, 18000.0, 23.8889, 2100.0, 120.0, 100.0);
+	setCommonNTCSensor(&engineConfiguration->iatThermistorConf);
 	engineConfiguration->iatThermistorConf.bias_resistor = 1500; // same as OEM ECU
 
 	// set_cranking_charge_angle 35

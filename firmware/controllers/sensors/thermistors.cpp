@@ -167,6 +167,17 @@ static void initThermistorCurve(Thermistor * t, ThermistorConf *config, adc_chan
 	t->channel = channel;
 }
 
+// todo: better method name?
+void setCommonNTCSensor(ThermistorConf *thermistorConf) {
+	/**
+	 * 18K Ohm @ -20C
+	 * 2.1K Ohm @ 24C
+	 * 294 Ohm @ 80C
+	 * http://www.rexbo.eu/hella/coolant-temperature-sensor-6pt009107121?c=100334&at=3130
+	 */
+	setThermistorConfiguration(thermistorConf, -20, 18000, 23.8889, 2100, 120.0, 100.0);
+}
+
 void initThermistors(void) {
 	initThermistorCurve(&engineConfiguration2->clt, &engineConfiguration->cltThermistorConf,
 			engineConfiguration->cltAdcChannel);

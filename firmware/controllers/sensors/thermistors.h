@@ -49,6 +49,8 @@ void setThermistorConfiguration(ThermistorConf * tc, float temp1, float r1, floa
 void prepareThermistorCurve(ThermistorConf * config);
 void initThermistors(void);
 
+void setCommonNTCSensor(ThermistorConf *thermistorConf);
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
