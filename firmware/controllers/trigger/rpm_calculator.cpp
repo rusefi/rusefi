@@ -1,5 +1,5 @@
 /**
- * @file    rpm_calculator.c
+ * @file    rpm_calculator.cpp
  * @brief   RPM calculator
  *
  * Here we listen to position sensor events in order to figure our if engine is currently running or not.
