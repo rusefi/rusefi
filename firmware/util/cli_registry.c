@@ -279,7 +279,12 @@ int tokenLength(const char *msgp) {
 	return result;
 }
 
-int strEqual(const char *str1, const char *str2) {
+bool strEqualCaseInsensitive(const char *str1, const char *str2) {
+	// todo: actual implementation!
+	return strEqual(str1, str2);
+}
+
+bool strEqual(const char *str1, const char *str2) {
 	// todo: there must be a standard function?!
 	int len1 = strlen(str1);
 	int len2 = strlen(str2);
@@ -289,7 +294,7 @@ int strEqual(const char *str1, const char *str2) {
 	for (int i = 0; i < len1; i++)
 		if (str1[i] != str2[i])
 			return false;
-	return TRUE;
+	return true;
 }
 
 void initConsoleLogic() {

@@ -120,7 +120,8 @@ static void createLogFile(void) {
 	unlockSpi();
 }
 
-static void ff_cmd_dir(char *path) {
+static void ff_cmd_dir(const char *pathx) {
+	char *path = (char *)pathx; // todo: fix this hack!
 	DIR dir;
 	FILINFO fno;
 	char *fn;
@@ -168,7 +169,7 @@ static int errorReported = FALSE; // this is used to report the error only once
 /**
  * @brief Appends specified line to the current log file
  */
-void appendToLog(char *line) {
+void appendToLog(const char *line) {
 	UINT bytesWrited;
 
 	if (!fs_ready) {

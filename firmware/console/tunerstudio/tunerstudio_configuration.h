@@ -18,8 +18,7 @@
 
 
 /**
- * please be aware that current "stable" version of TunerStudio does not
- * support 'float' (F32) type. You would need a beta version to handle floats
+ * please be aware that 'float' (F32) type requires TunerStudio version 2.6 and later
  */
 typedef struct {
 	// primary instrument cluster gauges

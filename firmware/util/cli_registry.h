@@ -43,13 +43,14 @@ typedef void (*VoidInt)(int);
 typedef void (*VoidFloat)(float);
 typedef void (*VoidFloatFloat)(float, float);
 typedef void (*VoidIntInt)(int, int);
-typedef void (*VoidCharPtr)(char *);
+typedef void (*VoidCharPtr)(const char *);
 typedef void (*VoidCharPtrCharPtr)(const char *, const char *);
 typedef void (*VoidCharPtrCharPtrCharPtr)(const char *, const char *, const char *);
 typedef void (*VoidCharPtrCharPtrCharPtrCharPtrCharPtr)(const char *, const char *, const char *, const char *, const char *);
 
 char *validateSecureLine(char *line);
-int strEqual(const char *str1, const char *str2);
+bool strEqualCaseInsensitive(const char *str1, const char *str2);
+bool strEqual(const char *str1, const char *str2);
 void resetConsoleActions(void);
 void helpCommand(void);
 void initConsoleLogic(void);
