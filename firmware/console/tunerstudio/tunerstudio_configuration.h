@@ -12,6 +12,12 @@
 #define TUNERSTUDIO_CONFIGURATION_H_
 
 /**
+ * this is used to confirm that firmware and TunerStudio are using the same rusefi.ini version
+ */
+#define TS_FILE_VERSION 20140910
+
+
+/**
  * please be aware that current "stable" version of TunerStudio does not
  * support 'float' (F32) type. You would need a beta version to handle floats
  */
@@ -56,7 +62,8 @@ typedef struct {
 	unsigned int isCltError : 1; // bit 1
 	unsigned int isMapError : 1; // bit 2
 	unsigned int isIatError : 1; // bit 3
-	int unused[8];
+	int tsConfigVersion;
+	int unused[7];
 } TunerStudioOutputChannels;
 
 #endif /* TUNERSTUDIO_CONFIGURATION_H_ */
