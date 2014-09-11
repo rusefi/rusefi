@@ -591,6 +591,32 @@ static void setSpiMode(int index, bool mode) {
 	scheduleMsg(&logger, "spi %d mode: %s", index, boolToString(mode));
 }
 
+static void enableOrDisable(const char *param, bool isEnabled) {
+	if (strEqualCaseInsensitive(param, "fastadc")) {
+		boardConfiguration->isFastAdcEnabled = isEnabled;
+	} else if (strEqualCaseInsensitive(param, "injection")) {
+		engineConfiguration->isInjectionEnabled = isEnabled;
+	} else if (strEqualCaseInsensitive(param, "ignition")) {
+		engineConfiguration->isIgnitionEnabled = isEnabled;
+	} else if (strEqualCaseInsensitive(param, "self_stimulation")) {
+		engineConfiguration->directSelfStimulation = isEnabled;
+	} else if (strEqualCaseInsensitive(param, "engine_control")) {
+		boardConfiguration->isEngineControlEnabled = isEnabled;
+	} else {
+		scheduleMsg(&logger, "unexpected [%s]", param);
+		return; // well, MISRA would not like this 'return' here :(
+	}
+	scheduleMsg(&logger, "[%s] %s", param, isEnabled ? "enabled" : "disabled");
+}
+
+static void enable(const char *param) {
+	enableOrDisable(param, true);
+}
+
+static void disable(const char *param) {
+	enableOrDisable(param, false);
+}
+
 static void enableSpi(int index) {
 	setSpiMode(index, true);
 }
@@ -703,6 +729,9 @@ void initSettings(void) {
 
 	addConsoleActionI("enable_spi", enableSpi);
 	addConsoleActionI("disable_spi", disableSpi);
+
+	addConsoleActionS("enable", enable);
+	addConsoleActionS("disable", disable);
 
 	addConsoleActionII("set_toothed_wheel", setToothedWheel);
 	addConsoleActionI("set_trigger_type", setTriggerType);
