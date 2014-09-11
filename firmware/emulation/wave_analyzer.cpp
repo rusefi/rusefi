@@ -156,7 +156,7 @@ static msg_t waThread(void *arg) {
 	while (TRUE) {
 		chThdSleepSeconds(CHART_RESET_DELAY);
 
-		publishChartIfFull(&waveChart);
+		waveChart.publishChartIfFull();
 	}
 #endif /* EFI_WAVE_CHART */
 #if defined __GNUC__

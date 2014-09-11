@@ -21,7 +21,9 @@
 #include "pin_repository.h"
 #endif
 
+#if EFI_WAVE_CHART
 WaveChart waveChart;
+#endif /* EFI_WAVE_CHART */
 
 static histogram_s triggerCallback;
 

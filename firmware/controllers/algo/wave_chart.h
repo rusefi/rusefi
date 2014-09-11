@@ -20,6 +20,13 @@
  */
 class WaveChart {
 public:
+	WaveChart();
+	void publishChart();
+	void resetWaveChart();
+	int isWaveChartFull();
+	void publishChartIfFull();
+	void addWaveChartEvent3(const char *name, const char *msg, const char *msg2);
+private:
 #if EFI_WAVE_CHART
 	Logging logging;
 #endif /* EFI_WAVE_CHART */
@@ -28,12 +35,8 @@ public:
 	volatile int isInitialized;
 };
 
-void addWaveChartEvent3(WaveChart *chart, const char *name, const char *msg, const char *msg2);
-void publishChart(WaveChart *chart);
 void initWaveChart(WaveChart *chart);
 void showWaveChartHistogram(void);
-void resetWaveChart(WaveChart *chart);
 void setChartSize(int newSize);
-void publishChartIfFull(WaveChart *chart);
 
 #endif /* WAVE_CHART_H_ */
