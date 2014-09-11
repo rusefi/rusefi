@@ -62,24 +62,24 @@ static int isChartActive = TRUE;
 
 #if DEBUG_WAVE
 static Logging debugLogging;
-#endif
+#endif /* DEBUG_WAVE */
 
 static Logging logger;
 
-void resetWaveChart(WaveChart *chart) {
+void WaveChart::resetWaveChart() {
 #if DEBUG_WAVE
-	scheduleSimpleMsg(&debugLogging, "reset while at ", chart->counter);
-#endif
-	resetLogging(&chart->logging);
-	chart->counter = 0;
-	appendPrintf(&chart->logging, "wave_chart%s", DELIMETER);
+	scheduleSimpleMsg(&debugLogging, "reset while at ", counter);
+#endif /* DEBUG_WAVE */
+	resetLogging(&logging);
+	counter = 0;
+	appendPrintf(&logging, "wave_chart%s", DELIMETER);
 }
 
 static char WAVE_LOGGING_BUFFER[WAVE_LOGGING_SIZE] CCM_OPTIONAL
 ;
 
-static int isWaveChartFull(WaveChart *chart) {
-	return chart->counter >= engineConfiguration->digitalChartSize;
+int WaveChart::isWaveChartFull() {
+	return counter >= engineConfiguration->digitalChartSize;
 }
 
 static void printStatus(void) {
@@ -100,23 +100,29 @@ void setChartSize(int newSize) {
 	printStatus();
 }
 
-void publishChartIfFull(WaveChart *chart) {
-	if (isWaveChartFull(chart)) {
-		publishChart(chart);
-		resetWaveChart(chart);
+void WaveChart::publishChartIfFull() {
+	if (isWaveChartFull()) {
+		publishChart();
+		resetWaveChart();
 	}
 }
 
-void publishChart(WaveChart *chart) {
-	appendPrintf(&chart->logging, DELIMETER);
-	waveChartUsedSize = loggingSize(&chart->logging);
+WaveChart::WaveChart() {
+	initLoggingExt(&logging, "wave chart", WAVE_LOGGING_BUFFER, sizeof(WAVE_LOGGING_BUFFER));
+	isInitialized = TRUE;
+	resetWaveChart();
+}
+
+void WaveChart::publishChart() {
+	appendPrintf(&logging, DELIMETER);
+	waveChartUsedSize = loggingSize(&logging);
 #if DEBUG_WAVE
 	Logging *l = &chart->logging;
 	scheduleSimpleMsg(&debugLogging, "IT'S TIME", strlen(l->buffer));
 #endif
 	bool isFullLog = getFullLog();
 	if (isChartActive && isFullLog) {
-		scheduleLogging(&chart->logging);
+		scheduleLogging(&logging);
 	}
 }
 
@@ -125,12 +131,12 @@ static char timeBuffer[10];
 /**
  * @brief	Register an event for digital sniffer
  */
-void addWaveChartEvent3(WaveChart *chart, const char *name, const char * msg, const char * msg2) {
-	efiAssertVoid(chart->isInitialized, "chart not initialized");
+void WaveChart::addWaveChartEvent3(const char *name, const char * msg, const char * msg2) {
+	efiAssertVoid(isInitialized, "chart not initialized");
 #if DEBUG_WAVE
 	scheduleSimpleMsg(&debugLogging, "current", chart->counter);
 #endif
-	if (isWaveChartFull(chart)) {
+	if (isWaveChartFull()) {
 		return;
 	}
 
@@ -142,27 +148,27 @@ void addWaveChartEvent3(WaveChart *chart, const char *name, const char * msg, co
 
 	bool alreadyLocked = lockOutputBuffer(); // we have multiple threads writing to the same output buffer
 
-	if (chart->counter == 0) {
-		chart->startTime = time100;
+	if (counter == 0) {
+		startTime = time100;
 	}
-	chart->counter++;
-	if (remainingSize(&chart->logging) > 30) {
+	counter++;
+	if (remainingSize(&logging) > 30) {
 		/**
 		 * printf is a heavy method, append is used here as a performance optimization
 		 */
-		appendFast(&chart->logging, name);
-		appendFast(&chart->logging, CHART_DELIMETER);
-		appendFast(&chart->logging, msg);
-		appendFast(&chart->logging, CHART_DELIMETER);
+		appendFast(&logging, name);
+		appendFast(&logging, CHART_DELIMETER);
+		appendFast(&logging, msg);
+		appendFast(&logging, CHART_DELIMETER);
 		/**
 		 * We want smaller times within a chart in order to reduce packet size.
 		 */
-		time100 -= chart->startTime;
+		time100 -= startTime;
 
 		itoa10(timeBuffer, time100);
-		appendFast(&chart->logging, timeBuffer);
-		appendFast(&chart->logging, msg2);
-		appendFast(&chart->logging, CHART_DELIMETER);
+		appendFast(&logging, timeBuffer);
+		appendFast(&logging, msg2);
+		appendFast(&logging, CHART_DELIMETER);
 	}
 	if (!alreadyLocked) {
 		unlockOutputBuffer();
@@ -192,8 +198,6 @@ void initWaveChart(WaveChart *chart) {
 
 	printStatus();
 
-	initLoggingExt(&chart->logging, "wave chart", WAVE_LOGGING_BUFFER, sizeof(WAVE_LOGGING_BUFFER));
-	chart->isInitialized = TRUE;
 #if DEBUG_WAVE
 	initLoggingExt(&debugLogging, "wave chart debug", &debugLogging.DEFAULT_BUFFER, sizeof(debugLogging.DEFAULT_BUFFER));
 #endif
@@ -202,7 +206,6 @@ void initWaveChart(WaveChart *chart) {
 	initHistogram(&waveChartHisto, "wave chart");
 #endif /* EFI_HISTOGRAMS */
 
-	resetWaveChart(chart);
 	addConsoleActionI("chartsize", setChartSize);
 	addConsoleActionI("chart", setChartActive);
 }

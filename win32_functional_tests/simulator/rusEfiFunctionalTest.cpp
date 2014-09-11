@@ -106,7 +106,7 @@ void rusEfiFunctionalTest(void) {
 
 void printPendingMessages(void) {
 	updateDevConsoleState();
-	publishChartIfFull(&waveChart);
+	waveChart.publishChartIfFull();
 }
 
 static size_t wt_writes(void *ip, const uint8_t *bp, size_t n) {

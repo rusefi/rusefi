@@ -235,6 +235,6 @@ void scheduleByAngle(scheduling_s *timer, float angle, schfunc_t callback, void 
 
 void addWaveChartEvent(const char *name, const char * msg, const char *msg2) {
 #if EFI_WAVE_CHART
-	addWaveChartEvent3(&waveChart, name, msg, msg2);
+	waveChart.addWaveChartEvent3(name, msg, msg2);
 #endif /* EFI_WAVE_CHART */
 }
