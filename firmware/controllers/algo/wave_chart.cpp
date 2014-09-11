@@ -1,5 +1,5 @@
 /**
- * @file	wave_chart.c
+ * @file	wave_chart.cpp
  * @brief	Dev console wave sniffer logic
  *
  * Here we have our own build-in logic analyzer. The data we aggregate here is sent to the

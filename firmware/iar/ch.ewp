@@ -2197,7 +2197,7 @@
         <name>$PROJ_DIR$\..\controllers\algo\signal_executor.h</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\controllers\algo\wave_chart.c</name>
+        <name>$PROJ_DIR$\..\controllers\algo\wave_chart.cpp</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\controllers\algo\wave_chart.h</name>

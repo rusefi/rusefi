@@ -313,7 +313,7 @@ void setMiata1996(engine_configuration_s *engineConfiguration, board_configurati
 
 
 	engineConfiguration->mafAdcChannel = EFI_ADC_1;
-	engineConfiguration->cltAdcChannel = EFI_ADC_3;
+	engineConfiguration->cltAdcChannel = EFI_ADC_11;
 	engineConfiguration->tpsAdcChannel = EFI_ADC_13;
 
 	boardConfiguration->ignitionPins[0] = GPIOE_12; // Frankenstein: high side #3
