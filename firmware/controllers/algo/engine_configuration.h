@@ -151,7 +151,7 @@ typedef struct {
 
 	int idleSolenoidFrequency;
 
-	int unused;
+	int triggerSimulatorFrequency;
 
 
 	/**
@@ -195,7 +195,9 @@ typedef struct {
 	brain_pin_e logicAnalyzerPins[LOGIC_ANALYZER_CHANNEL_COUNT];
 	uint8_t logicAnalyzerMode[LOGIC_ANALYZER_CHANNEL_COUNT];
 
-	int unused2[2];
+	int unrealisticRpmThreashold;
+
+	int unused2;
 
 
 } board_configuration_s;
