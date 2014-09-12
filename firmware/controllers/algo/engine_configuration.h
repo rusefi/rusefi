@@ -404,6 +404,12 @@ typedef struct {
 	bool isCylinderCleanupEnabled : 1; // bit 2
 	bool secondTriggerChannelEnabled : 1; // bit 3
 	bool needSecondTriggerInput : 1; // bit 4
+	bool isMapAveragingEnabled : 1; // bit 5
+	bool isMilEnabled : 1; // bit 6
+	bool isFuelPumpEnabled : 1; // bit 7
+	bool isTunerStudioEnabled : 1; // bit 8
+	bool isWaveAnalyzerEnabled : 1; // bit 9
+	bool isIdleThreadEnabled : 1; // bit 10
 
 	int digitalChartSize;
 	/**
