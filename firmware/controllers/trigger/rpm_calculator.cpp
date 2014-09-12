@@ -38,7 +38,6 @@ extern WaveChart waveChart;
 
 #define TOP_DEAD_CENTER_MESSAGE "r"
 
-
 /**
  * @return -1 in case of isNoisySignal(), current RPM otherwise
  */
@@ -88,21 +87,6 @@ bool isCranking(void) {
 #endif
 
 /**
- * Checks for noise on the trigger input line. Noise is detected by an unexpectedly small time gap between
- * current and previous trigger input events.
- *
- * @return TRUE if noise is detected
- */
-static int isNoisySignal(RpmCalculator * rpmState, uint64_t nowUs) {
-	uint64_t diff = nowUs - rpmState->lastRpmEventTimeUs;
-	/**
-	 * 60/2 wheel at 8000 rpm
-	 * 60000000us / 8000 / 120 = 62us
-	 */
-	return diff < 40; // that's 40us
-}
-
-/**
  * @brief Shaft position callback used by RPM calculation logic.
  *
  * This callback should always be the first of trigger callbacks because other callbacks depend of values
@@ -125,18 +109,17 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType, int index, RpmCalcu
 	bool hadRpmRecently = rpmState->isRunning();
 
 	if (hadRpmRecently) {
-		if (isNoisySignal(rpmState, nowUs)) {
-			// unexpected state. Noise?
+		uint64_t diff = nowUs - rpmState->lastRpmEventTimeUs;
+		/**
+		 * Four stroke cycle is two crankshaft revolutions
+		 *
+		 * We always do '* 2' because the event signal is already adjusted to 'per engine cycle'
+		 * and each revolution of crankshaft consists of two engine cycles revolutions
+		 *
+		 */
+		if (diff == 0) {
 			rpmState->rpmValue = NOISY_RPM;
 		} else {
-			uint64_t diff = nowUs - rpmState->lastRpmEventTimeUs;
-			// 60000 because per minute
-			// * 2 because each revolution of crankshaft consists of two camshaft revolutions
-			// need to measure time from the previous non-skipped event
-			/**
-			 * Four stroke cycle is two crankshaft revolutions
-			 */
-
 			int rpm = (int) (60 * US_PER_SECOND * 2 / diff);
 			rpmState->rpmValue = rpm > UNREALISTIC_RPM ? NOISY_RPM : rpm;
 		}
@@ -170,7 +153,8 @@ static void tdcMarkCallback(trigger_event_e ckpSignalType, int index0, void *arg
 	if (isTriggerSynchronizationPoint) {
 		int revIndex2 = getRevolutionCounter() % 2;
 		// todo: use event-based scheduling, not just time-based scheduling
-		scheduleByAngle(&tdcScheduler[revIndex2], engineConfiguration->globalTriggerAngleOffset, (schfunc_t) onTdcCallback, NULL);
+		scheduleByAngle(&tdcScheduler[revIndex2], engineConfiguration->globalTriggerAngleOffset,
+				(schfunc_t) onTdcCallback, NULL);
 	}
 }
 #endif
@@ -206,7 +190,7 @@ void initRpmCalculator(void) {
 	addTriggerEventListener(&tdcMarkCallback, "chart TDC mark", NULL);
 #endif
 
-	addTriggerEventListener((ShaftPositionListener)&rpmShaftPositionCallback, "rpm reporter", &rpmState);
+	addTriggerEventListener((ShaftPositionListener) &rpmShaftPositionCallback, "rpm reporter", &rpmState);
 }
 
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
@@ -227,7 +211,7 @@ void scheduleByAngle(scheduling_s *timer, float angle, schfunc_t callback, void 
 		firmwareError("NaN delay?");
 		return;
 	}
-	scheduleTask("by angle", timer, (int)MS2US(delayMs), callback, param);
+	scheduleTask("by angle", timer, (int) MS2US(delayMs), callback, param);
 }
 #endif
 
