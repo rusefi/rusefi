@@ -221,8 +221,7 @@ static char pinNameBuffer[16];
 
 static void printAnalogChannelInfoExt(const char *name, adc_channel_e hwChannel, float adcVoltage) {
 	float voltage = adcVoltage * engineConfiguration->analogInputDividerCoefficient;
-	scheduleMsg(&logger, "%s ADC%d %s %s rawValue=%f/divided=%fv", name, hwChannel,
-			getAdcMode(hwChannel),
+	scheduleMsg(&logger, "%s ADC%d %s %s rawValue=%f/divided=%fv", name, hwChannel, getAdcMode(hwChannel),
 			getPinNameByAdcChannel(hwChannel, pinNameBuffer), adcVoltage, voltage);
 }
 
@@ -244,10 +243,10 @@ static void printAnalogInfo(void) {
 static THD_WORKING_AREA(csThreadStack, UTILITY_THREAD_STACK_SIZE);	// declare thread stack
 
 void initEngineContoller(void) {
-	if (hasFirmwareError())
+	if (hasFirmwareError()) {
 		return;
+	}
 	initLogging(&logger, "Engine Controller");
-
 
 	initSensors();
 
@@ -298,10 +297,12 @@ void initEngineContoller(void) {
 #endif /* EFI_MAP_AVERAGING */
 
 #if EFI_ENGINE_CONTROL
-	/**
-	 * This method initialized the main listener which actually runs injectors & ignition
-	 */
-	initMainEventListener(&engine, engineConfiguration2);
+	if (boardConfiguration->isEngineControlEnabled) {
+		/**
+		 * This method initialized the main listener which actually runs injectors & ignition
+		 */
+		initMainEventListener(&engine, engineConfiguration2);
+	}
 #endif /* EFI_ENGINE_CONTROL */
 
 #if EFI_IDLE_CONTROL

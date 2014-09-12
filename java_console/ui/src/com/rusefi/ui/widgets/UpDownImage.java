@@ -42,6 +42,8 @@ public class UpDownImage extends JPanel {
     static {
         name2sensor.put("inj1", Sensor.INJECTOR_1_DWELL);
         name2sensor.put("inj2", Sensor.INJECTOR_2_DWELL);
+        name2sensor.put("inj3", Sensor.INJECTOR_3_DWELL);
+        name2sensor.put("inj4", Sensor.INJECTOR_4_DWELL);
     }
 
     public UpDownImage(final String name) {

@@ -7,6 +7,28 @@
 
 #include "trigger_mitsubishi.h"
 
+void configureFordAspireTriggerShape(trigger_config_s *triggerConfig, trigger_shape_s * s) {
+	s->isSynchronizationNeeded = false;
+	s->reset(FOUR_STROKE_CAM_SENSOR);
+
+	s->shaftPositionEventCount = 10;
+
+	float x = 121.90;
+	float y = 110.86;
+
+	s->addEvent(x + y - 180, T_SECONDARY, TV_HIGH);
+	s->addEvent(x, T_SECONDARY, TV_LOW);
+	s->addEvent(x + y, T_SECONDARY, TV_HIGH);
+	s->addEvent(x + 180, T_SECONDARY, TV_LOW);
+	s->addEvent(360, T_PRIMARY, TV_HIGH);
+
+	s->addEvent(x + 180 + y, T_SECONDARY, TV_HIGH);
+	s->addEvent(x + 360, T_SECONDARY, TV_LOW);
+	s->addEvent(x + 360 + y, T_SECONDARY, TV_HIGH);
+	s->addEvent(x + 540, T_SECONDARY, TV_LOW);
+	s->addEvent(720, T_PRIMARY, TV_LOW);
+}
+
 void initializeMitsubishi4g18(trigger_shape_s *s) {
 	s->reset(FOUR_STROKE_CAM_SENSOR);
 	s->useRiseEdge = false;

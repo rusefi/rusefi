@@ -173,25 +173,6 @@ void initializeSkippedToothTriggerShapeExt(trigger_shape_s *s, int totalTeethCou
 	s->wave.checkSwitchTimes(s->getSize());
 }
 
-static void configureFordAspireTriggerShape(trigger_config_s *triggerConfig, trigger_shape_s * s) {
-	s->isSynchronizationNeeded = false;
-	s->reset(FOUR_STROKE_CAM_SENSOR);
-
-	s->shaftPositionEventCount = 10;
-
-	s->addEvent(53.747, T_SECONDARY, TV_HIGH);
-	s->addEvent(121.90, T_SECONDARY, TV_LOW); // delta = 68.153
-	s->addEvent(232.76, T_SECONDARY, TV_HIGH); // delta = 110.86
-	s->addEvent(300.54, T_SECONDARY, TV_LOW); // delta = 67.78
-	s->addEvent(360, T_PRIMARY, TV_HIGH);
-
-	s->addEvent(409.8412, T_SECONDARY, TV_HIGH); // delta = 49.8412
-	s->addEvent(478.6505, T_SECONDARY, TV_LOW); // delta = 68.8093
-	s->addEvent(588.045, T_SECONDARY, TV_HIGH); // delta = 109.3945
-	s->addEvent(657.03, T_SECONDARY, TV_LOW);
-	s->addEvent(720, T_PRIMARY, TV_LOW);
-}
-
 /**
  * External logger is needed because at this point our logger is not yet initialized
  */
