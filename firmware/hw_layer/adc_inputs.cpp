@@ -227,7 +227,7 @@ static void initAdcPin(ioportid_t port, int pin, const char *msg) {
 }
 
 adc_channel_e getAdcChannel(brain_pin_e pin) {
-	switch(pin) {
+	switch (pin) {
 	case GPIOA_0:
 		return EFI_ADC_0;
 	case GPIOA_1:
@@ -503,11 +503,13 @@ void initAdcInputs(void) {
 
 	slowAdc.init();
 	pwmStart(EFI_INTERNAL_SLOW_ADC_PWM, &pwmcfg_slow);
-	fastAdc.init();
-	/*
-	 * Initializes the PWM driver.
-	 */
-	pwmStart(EFI_INTERNAL_FAST_ADC_PWM, &pwmcfg_fast);
+	if (boardConfiguration->isFastAdcEnabled) {
+		fastAdc.init();
+		/*
+		 * Initializes the PWM driver.
+		 */
+		pwmStart(EFI_INTERNAL_FAST_ADC_PWM, &pwmcfg_fast);
+	}
 
 	// ADC_CHANNEL_IN0 // PA0
 	// ADC_CHANNEL_IN1 // PA1
