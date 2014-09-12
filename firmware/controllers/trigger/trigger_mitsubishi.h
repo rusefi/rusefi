@@ -10,5 +10,6 @@
 #include "trigger_structure.h"
 
 void initializeMitsubishi4g18(trigger_shape_s *s);
+void configureFordAspireTriggerShape(trigger_config_s *triggerConfig, trigger_shape_s * s);
 
 #endif /* TRIGGER_MITSUBISHI_H_ */

@@ -104,11 +104,11 @@ static void setWaveModeSilent(int index, int mode) {
 	setWaveReaderMode(&reader->hw, mode);
 }
 
-static int getEventCounter(int index) {
-	WaveReader *reader = &readers[index];
-	ensureInitialized(reader);
-	return reader->eventCounter;
-}
+//static int getEventCounter(int index) {
+//	WaveReader *reader = &readers[index];
+//	ensureInitialized(reader);
+//	return reader->eventCounter;
+//}
 
 static void initWave(const char *name, int index) {
 	brain_pin_e brainPin = boardConfiguration->logicAnalyzerPins[index];
@@ -191,48 +191,49 @@ static float getSignalPeriodMs(int index) {
 	return reader->signalPeriodUs / 1000.0f;
 }
 
-static uint64_t getWidthEventTime(int index) {
-	WaveReader *reader = &readers[index];
-	ensureInitialized(reader);
-	return reader->widthEventTimeUs;
-}
+//static uint64_t getWidthEventTime(int index) {
+//	WaveReader *reader = &readers[index];
+//	ensureInitialized(reader);
+//	return reader->widthEventTimeUs;
+//}
 
 static void reportWave(Logging *logging, int index) {
+	if (readers[index].hw.started) {
 //	int counter = getEventCounter(index);
 //	debugInt2(logging, "ev", index, counter);
 
-	float dwellMs = getSignalOnTime(index);
-	float periodMs = getSignalPeriodMs(index);
+		float dwellMs = getSignalOnTime(index);
+		float periodMs = getSignalPeriodMs(index);
 
-	appendPrintf(logging, "duty%d%s", index, DELIMETER);
-	appendFloat(logging, 100.0f * dwellMs / periodMs, 2);
-	appendPrintf(logging, "%s", DELIMETER);
+		appendPrintf(logging, "duty%d%s", index, DELIMETER);
+		appendFloat(logging, 100.0f * dwellMs / periodMs, 2);
+		appendPrintf(logging, "%s", DELIMETER);
 
-	/**
-	 * that's the ON time of the LAST signal
-	 */
-	appendPrintf(logging, "dwell%d%s", index, DELIMETER);
-	appendFloat(logging, dwellMs, 2);
-	appendPrintf(logging, "%s", DELIMETER);
+		/**
+		 * that's the ON time of the LAST signal
+		 */
+		appendPrintf(logging, "dwell%d%s", index, DELIMETER);
+		appendFloat(logging, dwellMs, 2);
+		appendPrintf(logging, "%s", DELIMETER);
 
-	/**
-	 * that's the total ON time during the previous engine cycle
-	 */
-	appendPrintf(logging, "total_dwell%d%s", index, DELIMETER);
-	appendFloat(logging, readers[index].prevTotalOnTimeUs / 1000.0f, 2);
-	appendPrintf(logging, "%s", DELIMETER);
+		/**
+		 * that's the total ON time during the previous engine cycle
+		 */
+		appendPrintf(logging, "total_dwell%d%s", index, DELIMETER);
+		appendFloat(logging, readers[index].prevTotalOnTimeUs / 1000.0f, 2);
+		appendPrintf(logging, "%s", DELIMETER);
 
+		appendPrintf(logging, "period%d%s", index, DELIMETER);
+		appendFloat(logging, periodMs, 2);
+		appendPrintf(logging, "%s", DELIMETER);
 
-	appendPrintf(logging, "period%d%s", index, DELIMETER);
-	appendFloat(logging, periodMs, 2);
-	appendPrintf(logging, "%s", DELIMETER);
+		uint32_t offsetUs = getWaveOffset(index);
+		float oneDegreeUs = getOneDegreeTimeUs(getRpm());
 
-	uint32_t offsetUs = getWaveOffset(index);
-	float oneDegreeUs = getOneDegreeTimeUs(getRpm());
-
-	appendPrintf(logging, "advance%d%s", index, DELIMETER);
-	appendFloat(logging, fixAngle((offsetUs / oneDegreeUs) - engineConfiguration->globalTriggerAngleOffset), 3);
-	appendPrintf(logging, "%s", DELIMETER);
+		appendPrintf(logging, "advance%d%s", index, DELIMETER);
+		appendFloat(logging, fixAngle((offsetUs / oneDegreeUs) - engineConfiguration->globalTriggerAngleOffset), 3);
+		appendPrintf(logging, "%s", DELIMETER);
+	}
 }
 
 void printWave(Logging *logging) {

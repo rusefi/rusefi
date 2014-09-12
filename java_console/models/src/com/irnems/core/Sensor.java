@@ -69,9 +69,13 @@ public enum Sensor {
     ADC_FAST_AVG("ADC_FAST_AVG", "b", 4000),
     INJECTOR_1_DWELL("inj #1"),
     INJECTOR_2_DWELL("inj #2"),
+    INJECTOR_3_DWELL("inj #3"),
+    INJECTOR_4_DWELL("inj #4"),
 
 
-    INJ_1_2_DELTA("inj 1-2 delta"),;
+    INJ_1_2_DELTA("inj 1-2 delta"),
+    INJ_3_4_DELTA("inj 3-4 delta"),
+    ;
 
     private final String name;
     private final String units;
