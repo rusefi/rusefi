@@ -257,6 +257,14 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	engineConfiguration->isCylinderCleanupEnabled = true;
 	engineConfiguration->secondTriggerChannelEnabled = true;
 
+	engineConfiguration->isMapAveragingEnabled = true;
+	engineConfiguration->isMilEnabled = true;
+	engineConfiguration->isFuelPumpEnabled = true;
+	engineConfiguration->isTunerStudioEnabled = true;
+	engineConfiguration->isWaveAnalyzerEnabled = true;
+	engineConfiguration->isIdleThreadEnabled = true;
+
+
 	boardConfiguration->idleValvePin = GPIOE_2;
 	boardConfiguration->idleValvePinMode = OM_DEFAULT;
 	boardConfiguration->fuelPumpPin = GPIOC_13;
