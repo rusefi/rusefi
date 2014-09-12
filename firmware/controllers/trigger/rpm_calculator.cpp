@@ -175,6 +175,11 @@ int getRevolutionCounter(void) {
 float getCrankshaftAngle(uint64_t timeUs) {
 	uint64_t timeSinceZeroAngleUs = timeUs - rpmState.lastRpmEventTimeUs;
 
+	/**
+	 * even if we use 'getOneDegreeTimeUs' macros here, it looks like the
+	 * compiler is not smart enough to figure out that "A / ( B / C)" could be optimized into
+	 * "A * C / B" in order to replace a slower division with a faster multiplication.
+	 */
 	return timeSinceZeroAngleUs / getOneDegreeTimeUs(rpmState.rpm());
 }
 
