@@ -259,7 +259,9 @@ void initEngineContoller(void) {
 	initAlgo(engineConfiguration);
 
 #if EFI_WAVE_ANALYZER
-	initWaveAnalyzer();
+	if (engineConfiguration->isWaveAnalyzerEnabled) {
+		initWaveAnalyzer();
+	}
 #endif /* EFI_WAVE_ANALYZER */
 
 #if EFI_SHAFT_POSITION_INPUT
@@ -271,7 +273,9 @@ void initEngineContoller(void) {
 #endif /* EFI_SHAFT_POSITION_INPUT */
 
 #if EFI_TUNER_STUDIO
-	startTunerStudioConnectivity();
+	if (engineConfiguration->isTunerStudioEnabled) {
+		startTunerStudioConnectivity();
+	}
 #endif
 
 // multiple issues with this	initMapAdjusterThread();
@@ -289,11 +293,15 @@ void initEngineContoller(void) {
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 
 #if EFI_MALFUNCTION_INDICATOR
-	initMalfunctionIndicator();
+	if (engineConfiguration->isMilEnabled) {
+		initMalfunctionIndicator();
+	}
 #endif /* EFI_MALFUNCTION_INDICATOR */
 
 #if EFI_MAP_AVERAGING
-	initMapAveraging();
+	if (engineConfiguration->isMapAveragingEnabled) {
+		initMapAveraging();
+	}
 #endif /* EFI_MAP_AVERAGING */
 
 #if EFI_ENGINE_CONTROL
@@ -306,13 +314,17 @@ void initEngineContoller(void) {
 #endif /* EFI_ENGINE_CONTROL */
 
 #if EFI_IDLE_CONTROL
-	startIdleThread();
+	if (engineConfiguration->isIdleThreadEnabled) {
+		startIdleThread();
+	}
 #else
 	scheduleMsg(&logger, "no idle control");
 #endif
 
 #if EFI_FUEL_PUMP
-	initFuelPump();
+	if (engineConfiguration->isFuelPumpEnabled) {
+		initFuelPump();
+	}
 #endif
 
 	addConsoleAction("analoginfo", printAnalogInfo);

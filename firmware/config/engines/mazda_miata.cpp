@@ -13,6 +13,7 @@
 #include "mazda_miata.h"
 #include "engine_math.h"
 #include "advance_map.h"
+#include "allsensors.h"
 
 // setFrankenso_01_LCD
 #include "honda_accord.h"
@@ -102,6 +103,12 @@ static void commonMiataNa(engine_configuration_s *engineConfiguration, board_con
 
 	boardConfiguration->triggerSimulatorPinModes[0] = OM_OPENDRAIN;
 	boardConfiguration->triggerSimulatorPinModes[1] = OM_OPENDRAIN;
+
+	setCommonNTCSensor(&engineConfiguration->cltThermistorConf);
+	engineConfiguration->cltThermistorConf.bias_resistor = 2700;
+	setCommonNTCSensor(&engineConfiguration->iatThermistorConf);
+	engineConfiguration->iatThermistorConf.bias_resistor = 2700;
+
 }
 
 static void common079721_2351(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
@@ -310,6 +317,9 @@ void setMiata1996(engine_configuration_s *engineConfiguration, board_configurati
 	// upside down
 	boardConfiguration->triggerInputPins[0] = GPIOA_5;
 	boardConfiguration->triggerInputPins[1] = GPIOC_6;
+
+	boardConfiguration->fuelPumpPin = GPIOE_4;
+	boardConfiguration->idleValvePin = GPIOE_5;
 
 
 	engineConfiguration->mafAdcChannel = EFI_ADC_1;
