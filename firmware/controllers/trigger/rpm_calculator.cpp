@@ -69,9 +69,12 @@ bool RpmCalculator::isRunning(void) {
 	return nowUs - lastRpmEventTimeUs < US_PER_SECOND;
 }
 
+// todo: migrate to float return result or add a float verion? this would have with calculations
+// todo: add a version which does not check time & saves time? need to profile
 int RpmCalculator::rpm(void) {
-	if (!this->isRunning())
+	if (!isRunning()) {
 		return 0;
+	}
 	return rpmValue;
 }
 
