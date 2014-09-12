@@ -103,20 +103,23 @@ static void testMath(const int count) {
 
 	int64_t temp64 = 0;
 	start = currentTimeMillis();
-	for (int64_t i = 0; i < count; i++)
+	for (int64_t i = 0; i < count; i++) {
 		temp64 += i;
+	}
 	time = currentTimeMillis() - start;
-	if (temp64 != 0)
+	if (temp64 != 0) {
 		scheduleMsg(&logger, "Finished %d iterations of int64_t summation in %dms", count, time);
+	}
 
 	temp64 = 1;
 	start = currentTimeMillis();
-	for (int64_t i = 0; i < count; i++)
+	for (int64_t i = 0; i < count; i++) {
 		temp64 *= i;
+	}
 	time = currentTimeMillis() - start;
-	if (temp64 == 0)
+	if (temp64 == 0) {
 		scheduleMsg(&logger, "Finished %d iterations of int64_t multiplication in %dms", count, time);
-
+	}
 
 	start = currentTimeMillis();
 	for (int i = 0; i < count; i++)
@@ -124,52 +127,65 @@ static void testMath(const int count) {
 	time = currentTimeMillis() - start;
 	scheduleMsg(&logger, "Finished %d iterations of empty loop in %dms", count, time);
 
-	int tempi = 1;
+	uint32_t tempi = 1;
 	start = currentTimeMillis();
-	for (int i = 0; i < count; i++)
+	for (int i = 0; i < count; i++) {
 		tempi += tempi;
+	}
 	time = currentTimeMillis() - start;
-	if (tempi == 0)
-		scheduleMsg(&logger, "Finished %d iterations of int summation in %dms", count, time);
+	if (tempi == 0) {
+		// Finished 100000 iterations of uint32_t summation in 11ms
+		scheduleMsg(&logger, "Finished %d iterations of uint32_t summation in %dms", count, time);
+	}
 
 	start = currentTimeMillis();
 	tempi = 1;
-	for (int i = 0; i < count; i++)
+	for (int i = 0; i < count; i++) {
 		tempi += (tempi + 100) / 130;
+	}
 	time = currentTimeMillis() - start;
-	if (tempi != 0)
-		scheduleMsg(&logger, "Finished %d iterations of int division in %dms", count, time);
+	if (tempi != 0) {
+		// Finished 100000 iterations of uint32_t division in 16ms
+		scheduleMsg(&logger, "Finished %d iterations of uint32_t division in %dms", count, time);
+	}
 
 	start = currentTimeMillis();
-	long templ = 1;
-	for (int i = 0; i < count; i++)
-		templ += templ;
+	temp64 = 1;
+	for (int i = 0; i < count; i++) {
+		temp64 += temp64;
+	}
 	time = currentTimeMillis() - start;
-	if (templ == 0)
-		scheduleMsg(&logger, "Finished %d iterations of long summation in %dms", count, time);
+	if (temp64 == 0) {
+		//  Finished 100000 iterations of int64_t summation in 21ms
+		scheduleMsg(&logger, "Finished %d iterations of int64_t summation in %dms", count, time);
+	}
 
 	start = currentTimeMillis();
-	templ = 1;
-	for (int i = 0; i < count; i++)
-		templ += (templ + 100) / 130;
+	temp64 = 1;
+	for (int i = 0; i < count; i++) {
+		temp64 += (temp64 + 100) / 130;
+	}
 	time = currentTimeMillis() - start;
-	if (templ != 0) {
-		// Finished 100000 iterations of long division in 45ms
-		scheduleMsg(&logger, "Finished %d iterations of long division in %dms", count, time);
+	if (temp64 != 0) {
+		// Finished 100000 iterations of int64_t division in 181ms
+		scheduleMsg(&logger, "Finished %d iterations of int64_t division in %dms", count, time);
 	}
 
 	start = currentTimeMillis();
 	float tempf = 1;
-	for (int i = 0; i < count; i++)
+	for (int i = 0; i < count; i++) {
 		tempf += tempf;
+	}
 	time = currentTimeMillis() - start;
-	if (tempf != 0)
+	if (tempf != 0) {
 		scheduleMsg(&logger, "Finished %d iterations of float summation in %dms", count, time);
+	}
 
 	start = currentTimeMillis();
 	tempf = 1;
-	for (int i = 0; i < count; i++)
+	for (int i = 0; i < count; i++) {
 		tempf += (tempf + 100) / 130.0;
+	}
 	time = currentTimeMillis() - start;
 	if (tempf != 0) {
 		// Finished 100000 iterations of float division in 65ms
@@ -178,35 +194,45 @@ static void testMath(const int count) {
 
 	start = currentTimeMillis();
 	tempf = 1;
-	for (int i = 0; i < count; i++)
+	for (int i = 0; i < count; i++) {
 		tempf += logf(tempf);
+	}
 	time = currentTimeMillis() - start;
-	if (tempf != 0)
+	if (tempf != 0) {
+		// Finished 100000 iterations of float log in 191ms
 		scheduleMsg(&logger, "Finished %d iterations of float log in %dms", count, time);
+	}
 
 	start = currentTimeMillis();
 	double tempd = 1;
 	for (int i = 0; i < count; i++)
 		tempd += tempd / 2;
 	time = currentTimeMillis() - start;
-	if (tempd != 0)
+	if (tempd != 0) {
+		// Finished 100000 iterations of double summation in 80ms
 		scheduleMsg(&logger, "Finished %d iterations of double summation in %dms", count, time);
+	}
 
 	start = currentTimeMillis();
 	tempd = 1;
 	for (int i = 0; i < count; i++)
 		tempd += (tempd + 100) / 130.0;
 	time = currentTimeMillis() - start;
-	if (tempd != 0)
+	if (tempd != 0) {
+		// Finished 100000 iterations of double division in 497ms
 		scheduleMsg(&logger, "Finished %d iterations of double division in %dms", count, time);
+	}
 
 	start = currentTimeMillis();
 	tempd = 1;
-	for (int i = 0; i < count; i++)
+	for (int i = 0; i < count; i++) {
 		tempd += log(tempd);
+	}
 	time = currentTimeMillis() - start;
-	if (tempd != 0)
+	if (tempd != 0) {
+		// Finished 100000 iterations of double log in 242ms
 		scheduleMsg(&logger, "Finished %d iterations of double log in %dms", count, time);
+	}
 }
 
 static void runTests(const int count) {

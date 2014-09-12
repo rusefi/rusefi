@@ -69,6 +69,7 @@ board_configuration_s *boardConfiguration = &persistentState.persistentConfigura
 /**
  * CH_FREQUENCY is the number of system ticks in a second
  */
+// todo: this should probably be configurable?
 #define FUEL_PUMP_DELAY (4 * CH_FREQUENCY)
 
 static VirtualTimer everyMsTimer;

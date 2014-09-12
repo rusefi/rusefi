@@ -303,10 +303,10 @@ void updateDevConsoleState(void) {
  * that would be 'show fuel for rpm 3500 maf 4.0'
  */
 
-static void showFuelMap2(float rpm, float engineLoad) {
+static void showFuelInfo2(float rpm, float engineLoad) {
 	float baseFuel = getBaseTableFuel((int) rpm, engineLoad);
 
-	scheduleMsg(&logger2, "algo=%s", algorithmToString(engineConfiguration->algorithm));
+	scheduleMsg(&logger2, "algo=%s/pump=%s", algorithmToString(engineConfiguration->algorithm), boolToString(getOutputPinValue(FUEL_PUMP_RELAY)));
 
 	scheduleMsg(&logger2, "cranking fuel: %f", getCrankingFuel());
 
@@ -325,8 +325,8 @@ static void showFuelMap2(float rpm, float engineLoad) {
 	}
 }
 
-static void showFuelMap(void) {
-	showFuelMap2((float) getRpm(), getEngineLoad());
+static void showFuelInfo(void) {
+	showFuelInfo2((float) getRpm(), getEngineLoad());
 }
 
 #endif /* EFI_PROD_CODE */
@@ -419,8 +419,8 @@ void initStatusLoop(void) {
 #if EFI_PROD_CODE
 	initLogging(&logger2, "main event handler");
 
-	addConsoleActionFF("fuelinfo2", showFuelMap2);
-	addConsoleAction("fuelinfo", showFuelMap);
+	addConsoleActionFF("fuelinfo2", showFuelInfo2);
+	addConsoleAction("fuelinfo", showFuelInfo);
 
 	addConsoleAction("status", printStatus);
 #endif /* EFI_PROD_CODE */
