@@ -57,9 +57,9 @@
     (pad_drill 0)
     (pad_to_mask_clearance 0.2)
     (aux_axis_origin 204.216 131.445)
-    (visible_elements FFFFFFBF)
+    (visible_elements 7FFFFFFF)
     (pcbplotparams
-      (layerselection 3178497)
+      (layerselection 335314945)
       (usegerberextensions true)
       (excludeedgelayer true)
       (linewidth 0.100000)
@@ -81,9 +81,9 @@
       (subtractmaskfromsilk false)
       (outputformat 1)
       (mirror false)
-      (drillshape 1)
+      (drillshape 0)
       (scaleselection 1)
-      (outputdirectory ""))
+      (outputdirectory waltech))
   )
 
   (net 0 "")
