@@ -56,7 +56,7 @@ static uint64_t getNextSwitchTimeUs(PwmConfig *state) {
 	 * Once 'iteration' gets relatively high, we might lose calculation precision here.
 	 * This is addressed by ITERATION_LIMIT
 	 */
-	uint64_t timeToSwitchUs = (uint64_t)((iteration + switchTime) * periodUs);
+	uint64_t timeToSwitchUs = (uint64_t) ((iteration + switchTime) * periodUs);
 
 #if DEBUG_PWM
 	scheduleMsg(&logger, "start=%d timeToSwitch=%d", state->safe.start, timeToSwitch);
@@ -66,9 +66,9 @@ static uint64_t getNextSwitchTimeUs(PwmConfig *state) {
 
 void PwmConfig::handleCycleStart() {
 	if (safe.phaseIndex == 0) {
-          if (cycleCallback != NULL) {
+		if (cycleCallback != NULL) {
 			cycleCallback(this);
-        }
+		}
 		efiAssertVoid(periodUs != 0, "period not initialized");
 		if (safe.periodUs != periodUs || safe.iteration == ITERATION_LIMIT) {
 			/**
