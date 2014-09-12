@@ -37,20 +37,7 @@
 //		return interpolate(5000, 1.1, 8000, 1, rpm);
 //	return interpolate(500, 0.5, 5000, 1.1, rpm);
 //}
-/**
- * @return time needed to rotate crankshaft by one degree, in milliseconds.
- * @deprecated
- */
-float getOneDegreeTimeMs(int rpm) {
-	return 1000.0f * 60 / 360 / rpm;
-}
 
-/**
- * @return time needed to rotate crankshaft by one degree, in microseconds.
- */
-float getOneDegreeTimeUs(int rpm) {
-	return 1000000.0f * 60 / 360 / rpm;
-}
 
 /**
  * @return number of milliseconds in one crankshaft revolution

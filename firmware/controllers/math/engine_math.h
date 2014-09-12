@@ -32,8 +32,22 @@ extern "C"
 
 float getDefaultFuel(int rpm, float map);
 
-float getOneDegreeTimeMs(int rpm);
-float getOneDegreeTimeUs(int rpm);
+/**
+ * So that's how 'inline' syntax for both GCC and IAR
+ * It is interesting to mention that GCC compiler chooses not to inline this function.
+ *
+ * @return time needed to rotate crankshaft by one degree, in milliseconds.
+ * @deprecated use at least Us, maybe event Nt
+ */
+inline float getOneDegreeTimeMs(int rpm) {
+	return 1000.0f * 60 / 360 / rpm;
+}
+
+/**
+ * @return time needed to rotate crankshaft by one degree, in microseconds.
+ */
+#define getOneDegreeTimeUs(rpm) (1000000.0f * 60 / 360 / (rpm))
+
 float getCrankshaftRevolutionTimeMs(int rpm);
 
 int isCrankingRT(engine_configuration_s *engineConfiguration, int rpm);
