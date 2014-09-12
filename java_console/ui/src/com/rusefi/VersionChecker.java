@@ -65,10 +65,9 @@ public class VersionChecker {
 
 
         final Integer javaVersion = map.get(JAVA_CONSOLE_TAG);
-        System.out.println("Got java_console: " + javaVersion);
+        System.out.println("Server recommends java_console version " + javaVersion + " or newer");
         showUpdateWarningIfNeeded("dev console", javaVersion, CONSOLE_VERSION);
-        System.out.println("Got firmware: " + map.get(FIRMWARE_TAG));
-
+        System.out.println("Server recommends firmware " + map.get(FIRMWARE_TAG) + " or newer");
     }
 
     private static void showUpdateWarningIfNeeded(final String componentName, final Integer latestVersion, final int currentVersion) {
