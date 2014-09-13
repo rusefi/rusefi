@@ -35,7 +35,8 @@ public class ChartHelper {
         jsp.getSurface().setYLabel("MAF voltage");
         result.add(BorderLayout.CENTER, jsp);
 
-        JButton saveImageButton = new JButton("save image");
+        JButton saveImageButton = new JButton(WavePanel.SAVE_IMAGE);
+        saveImageButton.setMnemonic('s');
         saveImageButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

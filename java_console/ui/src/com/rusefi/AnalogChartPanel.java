@@ -54,7 +54,8 @@ public class AnalogChartPanel extends JPanel {
 
         JPanel upperPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
 
-        JButton imageButton = new JButton("save image");
+        JButton imageButton = new JButton(WavePanel.SAVE_IMAGE);
+        imageButton.setMnemonic('s');
         upperPanel.add(imageButton);
         imageButton.addActionListener(new
 
