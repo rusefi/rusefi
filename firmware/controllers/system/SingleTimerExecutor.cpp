@@ -43,24 +43,29 @@ void Executor::unlock(void) {
 	unlockAnyContext();
 }
 
-void Executor::schedule(const char *prefix, scheduling_s *scheduling, uint64_t nowUs, int delayUs, schfunc_t callback, void *param) {
-	if (delayUs < 0) {
-		firmwareError("Negative delayUs %s: %d", prefix, delayUs);
-		return;
-	}
-	if (delayUs == 0) {
-		callback(param);
-		return;
-	}
+void Executor::schedule2(const char *prefix, scheduling_s *scheduling, uint64_t timeUs, schfunc_t callback, void *param) {
+//	if (delayUs < 0) {
+//		firmwareError("Negative delayUs %s: %d", prefix, delayUs);
+//		return;
+//	}
+//	if (delayUs == 0) {
+//		callback(param);
+//		return;
+//	}
 	if (!reentrantLock) {
 		// this would guard the queue and disable interrupts
 		lock();
 	}
-	queue.insertTask(scheduling, nowUs + delayUs, callback, param);
+	queue.insertTask(scheduling, timeUs, callback, param);
 	if (!reentrantLock) {
-		doExecute(nowUs);
+		doExecute(getTimeNowUs());
 		unlock();
 	}
+}
+
+
+void Executor::schedule(const char *prefix, scheduling_s *scheduling, uint64_t nowUs, int delayUs, schfunc_t callback, void *param) {
+	schedule2(prefix, scheduling, nowUs + delayUs, callback, param);
 }
 
 void Executor::execute(uint64_t nowUs) {
@@ -107,6 +112,11 @@ void Executor::doExecute(uint64_t nowUs) {
 void scheduleTask(const char *prefix, scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) {
 	instance.schedule(prefix, scheduling, getTimeNowUs(), delayUs, callback, param);
 }
+
+void scheduleTask2(const char *prefix, scheduling_s *scheduling, uint64_t time, schfunc_t callback, void *param) {
+	instance.schedule2(prefix, scheduling, time, callback, param);
+}
+
 
 void initSignalExecutorImpl(void) {
 	globalTimerCallback = executorCallback;
