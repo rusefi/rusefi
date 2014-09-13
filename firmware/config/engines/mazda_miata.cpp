@@ -333,6 +333,7 @@ void setMiata1996(engine_configuration_s *engineConfiguration, board_configurati
 	boardConfiguration->ignitionPinMode = OM_DEFAULT;
 
 	// harness is sequential but we have a limited board
+	engineConfiguration->crankingInjectionMode = IM_BATCH;
 	engineConfiguration->injectionMode = IM_BATCH;
 
 	boardConfiguration->injectionPins[0] = GPIOB_9; // Frankenstein: low side - inj #12

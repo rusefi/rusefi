@@ -22,16 +22,16 @@ bool EventQueue::checkIfPending(scheduling_s *scheduling) {
 	return assertNotInList<scheduling_s>(head, scheduling);
 }
 
-void EventQueue::insertTask(scheduling_s *scheduling, uint64_t nowUs, int delayUs, schfunc_t callback, void *param) {
+void EventQueue::insertTask(scheduling_s *scheduling, uint64_t timeUs, schfunc_t callback, void *param) {
 	if (callback == NULL)
 		firmwareError("NULL callback");
-	uint64_t time = nowUs + delayUs;
+
 
 	int alreadyPending = checkIfPending(scheduling);
 	if (alreadyPending || hasFirmwareError())
 		return;
 
-	scheduling->momentUs = time;
+	scheduling->momentUs = timeUs;
 	scheduling->callback = callback;
 	scheduling->param = param;
 

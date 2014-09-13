@@ -38,8 +38,7 @@ class EventQueue {
 public:
 	EventQueue();
 
-//	void insertTask(scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param);
-	void insertTask(scheduling_s *scheduling, uint64_t nowUs, int delayUs, schfunc_t callback, void *param);
+	void insertTask(scheduling_s *scheduling, uint64_t timeUs, schfunc_t callback, void *param);
 
 	void executeAll(uint64_t now);
 
