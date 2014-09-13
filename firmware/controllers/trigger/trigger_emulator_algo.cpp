@@ -37,10 +37,10 @@ void setTriggerEmulatorRPM(int rpm) {
 	 * togglePwmState() would see that the periodMs has changed and act accordingly
 	 */
 	if (rpm == 0) {
-		triggerSignal.periodUs = NAN;
+		triggerSignal.periodNt = NAN;
 	} else {
 		float gRpm = rpm * engineConfiguration->rpmMultiplier / 60.0; // per minute converted to per second
-		triggerSignal.periodUs = frequency2periodUs(gRpm);
+		triggerSignal.periodNt = US2NT(frequency2periodUs(gRpm));
 	}
 	scheduleMsg(&logger, "Emulating position sensor(s). RPM=%d", rpm);
 }
@@ -55,7 +55,7 @@ static void updateTriggerShapeIfNeeded(PwmConfig *state) {
 		trigger_shape_s *s = &engineConfiguration2->triggerShape;
 		int *pinStates[PWM_PHASE_MAX_WAVE_PER_PWM] = {s->wave.waves[0].pinStates, s->wave.waves[1].pinStates, s->wave.waves[2].pinStates};
 		copyPwmParameters(state, s->getSize(), s->wave.switchTimes, PWM_PHASE_MAX_WAVE_PER_PWM, pinStates);
-		state->safe.periodUs = -1; // this would cause loop re-initialization
+		state->safe.periodNt = -1; // this would cause loop re-initialization
 	}
 }
 
