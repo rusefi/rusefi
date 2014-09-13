@@ -61,7 +61,7 @@ static uint64_t getNextSwitchTimeUs(PwmConfig *state) {
 #if DEBUG_PWM
 	scheduleMsg(&logger, "start=%d timeToSwitch=%d", state->safe.start, timeToSwitch);
 #endif
-	return state->safe.startUs + timeToSwitchUs;
+	return NT2US(state->safe.startNt) + timeToSwitchUs;
 }
 
 void PwmConfig::handleCycleStart() {
@@ -74,7 +74,7 @@ void PwmConfig::handleCycleStart() {
 			/**
 			 * period length has changed - we need to reset internal state
 			 */
-			safe.startUs = getTimeNowUs();
+			safe.startNt = getTimeNowNt();
 			safe.iteration = 0;
 			safe.periodUs = periodUs;
 #if DEBUG_PWM

@@ -37,10 +37,15 @@ extern "C"
 /**
  * 64-bit counter of microseconds (1/1 000 000 of a second) since MCU reset
  *
- * By using 64 bit, we can achive a very precise timestamp which does not overflow.
+ * By using 64 bit, we can achieve a very precise timestamp which does not overflow.
  * The primary implementation counts the number of CPU cycles from MCU reset.
  */
 uint64_t getTimeNowUs(void);
+
+/**
+ * 64-bit counter CPU cycles since MCU reset
+ */
+uint64_t getTimeNowNt(void);
 
 uint64_t getHalTimer(void);
 
