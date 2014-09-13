@@ -202,7 +202,7 @@ typedef struct {
 
 } board_configuration_s;
 
-
+#define HEADER_MAGIC_NUMBER 0x1221239
 
 /**
  * @brief	Engine configuration.
