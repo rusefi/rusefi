@@ -56,7 +56,6 @@
 
 static LocalVersionHolder localVersion;
 
-
 static MainTriggerCallback mainTriggerCallbackInstance;
 
 /**
@@ -77,7 +76,8 @@ static cyclic_buffer ignitionErrorDetection;
 static Logging logger;
 
 static void handleFuelInjectionEvent(MainTriggerCallback *mainTriggerCallback, ActuatorEvent *event, int rpm) {
-	float fuelMs = getFuelMs(rpm, mainTriggerCallback->engine) * mainTriggerCallback->engineConfiguration->globalFuelCorrection;
+	float fuelMs = getFuelMs(rpm, mainTriggerCallback->engine)
+			* mainTriggerCallback->engineConfiguration->globalFuelCorrection;
 	if (cisnan(fuelMs)) {
 		warning(OBD_PCM_Processor_Fault, "NaN injection pulse");
 		return;
@@ -99,8 +99,7 @@ static void handleFuel(Engine *engine, MainTriggerCallback *mainTriggerCallback,
 	if (!isInjectionEnabled(mainTriggerCallback->engineConfiguration))
 		return;
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 16, "stack#3");
-	efiAssertVoid(eventIndex < mainTriggerCallback->engineConfiguration2->triggerShape.getLength(),
-			"event index");
+	efiAssertVoid(eventIndex < mainTriggerCallback->engineConfiguration2->triggerShape.getLength(), "event index");
 
 	/**
 	 * Ignition events are defined by addFuelEvents() according to selected
@@ -203,7 +202,8 @@ static void handleSpark(MainTriggerCallback *mainTriggerCallback, int eventIndex
 			scheduling_s * sDown = &current->signalTimerDown;
 
 			float timeTillIgnitionUs = getOneDegreeTimeUs(rpm) * current->sparkPosition.angleOffset;
-			scheduleTask("spark 2down", sDown, (int) timeTillIgnitionUs, (schfunc_t) &turnPinLow, (void*) current->io_pin);
+			scheduleTask("spark 2down", sDown, (int) timeTillIgnitionUs, (schfunc_t) &turnPinLow,
+					(void*) current->io_pin);
 		}
 	}
 
@@ -279,6 +279,10 @@ void onTriggerEvent(trigger_event_e ckpSignalType, int eventIndex, MainTriggerCa
 			return;
 		}
 		float advance = getAdvance(rpm, getEngineLoadT(mainTriggerCallback->engine));
+		if (cisnan(advance)) {
+			// error should already be reported
+			return;
+		}
 
 		float dwellAngle = dwellMs / getOneDegreeTimeMs(rpm);
 
@@ -312,19 +316,19 @@ static void showTriggerHistogram(void) {
 
 void MainTriggerCallback::init(Engine *engine, engine_configuration2_s *engineConfiguration2) {
 	efiAssertVoid(engine!=NULL, "engine NULL");
-        this->engine = engine;
+	this->engine = engine;
 	this->engineConfiguration = engine->engineConfiguration;
 	efiAssertVoid(engineConfiguration!=NULL, "engineConfiguration NULL");
 	this->engineConfiguration2 = engineConfiguration2;
 }
-
 
 static void showMainInfo(void) {
 	int rpm = getRpm();
 	float el = getEngineLoadT(mainTriggerCallbackInstance.engine);
 #if EFI_PROD_CODE
 	scheduleMsg(&logger, "rpm %d engine_load %f", rpm, el);
-	scheduleMsg(&logger, "fuel %fms timing %f", getFuelMs(rpm, mainTriggerCallbackInstance.engine), getAdvance(rpm, el));
+	scheduleMsg(&logger, "fuel %fms timing %f", getFuelMs(rpm, mainTriggerCallbackInstance.engine),
+			getAdvance(rpm, el));
 #endif
 }
 
@@ -353,7 +357,5 @@ void initMainEventListener(Engine *engine, engine_configuration2_s *engineConfig
 int isIgnitionTimingError(void) {
 	return ignitionErrorDetection.sum(6) > 4;
 }
-
-
 
 #endif /* EFI_ENGINE_CONTROL */

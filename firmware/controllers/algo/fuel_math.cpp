@@ -142,7 +142,10 @@ float getIatCorrection(float iat) {
  * @return Fuel injection duration injection as specified in the fuel map, in milliseconds
  */
 float getBaseTableFuel(int rpm, float engineLoad) {
-	efiAssert(!cisnan(engineLoad), "invalid el", NAN);
+	if (cisnan(engineLoad)) {
+		warning(OBD_PCM_Processor_Fault, "NaN engine load");
+		return NAN;
+	}
 	return fuelMap.getValue(engineLoad, engineConfiguration->fuelLoadBins, rpm,
 			engineConfiguration->fuelRpmBins);
 }
