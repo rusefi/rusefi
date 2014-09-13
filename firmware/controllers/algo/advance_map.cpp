@@ -33,9 +33,13 @@ extern engine_configuration_s *engineConfiguration;
 static Map3D1616 advanceMap;
 
 float getBaseAdvance(int rpm, float engineLoad) {
+	if (cisnan(engineLoad)) {
+		warning(OBD_PCM_Processor_Fault, "NaN engine load");
+		return NAN;
+	}
 	efiAssert(!cisnan(engineLoad), "invalid el", NAN);
 	efiAssert(!cisnan(engineLoad), "invalid rpm", NAN);
-	return advanceMap.getValue(engineLoad, engineConfiguration->ignitionLoadBins, (float)rpm,
+	return advanceMap.getValue(engineLoad, engineConfiguration->ignitionLoadBins, (float) rpm,
 			engineConfiguration->ignitionRpmBins);
 }
 

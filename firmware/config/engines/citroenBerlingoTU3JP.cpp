@@ -19,8 +19,9 @@ void setCitroenBerlingoTU3JPConfiguration(engine_configuration_s *engineConfigur
 
 	// base engine setting
 	engineConfiguration->triggerConfig.triggerType = TT_TOOTHED_WHEEL_60_2;
+	engineConfiguration->globalTriggerAngleOffset = 144;
 	engineConfiguration->cylindersCount = 4;
-	engineConfiguration->displacement = 1.390;
+	engineConfiguration->displacement = 1.360;
 	engineConfiguration->firingOrder = FO_1_THEN_3_THEN_4_THEN2;
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 	engineConfiguration->injectionMode = IM_BATCH;
@@ -56,48 +57,47 @@ void setCitroenBerlingoTU3JPConfiguration(engine_configuration_s *engineConfigur
 	 */
 
 	// See https://docs.google.com/spreadsheet/ccc?key=0Arl1FeMZcfisdEdGdUlHdWh6cVBoSzFIbkxqa1QtZ3c
-	// Frankenstein analog input #1: PA1 adc1   *2.9    *0.6
-	// Frankenstein analog input #2: PA3 adc3   *2.9    *1.0
-	// Frankenstein analog input #3: PC3 adc13  *2.5    *0.005
-	// Frankenstein analog input #4: PC1 adc11  *0.05   *1.5
-	// Frankenstein analog input #5: PA0 adc0   *0.05   *0.01
-	// Frankenstein analog input #6: PC2 adc12  *0.06   *1.2
-	// Frankenstein analog input #7: PA4 adc4   *3.0    *0.4
-	// Frankenstein analog input #8: PA2 adc2   *2.9    *0.9
-	// Frankenstein analog input #9: PA6 adc6   *3.0    *6.0
-	// Frankenstein analog input #10: PA7 adc7  *2.9    *2.35
-	// Frankenstein analog input #11: PC4 adc14 *0.00   *0.00
-	// Frankenstein analog input #12: PC5 adc15 *0.00   *0.00
+	// Frankenstein analog input #1: PA1 adc1	MAP
+	// Frankenstein analog input #2: PA3 adc3	TPS
+	// Frankenstein analog input #3: PC3 adc13	IAT
+	// Frankenstein analog input #4: PC1 adc11	CLT
+	// Frankenstein analog input #5: PA0 adc0	vBatt
+	// Frankenstein analog input #6: PC2 adc12
+	// Frankenstein analog input #7: PA4 adc4
+	// Frankenstein analog input #8: PA2 adc2
+	// Frankenstein analog input #9: PA6 adc6
+	// Frankenstein analog input #10: PA7 adc7
+	// Frankenstein analog input #11: PC4 adc14
+	// Frankenstein analog input #12: PC5 adc15
 
 	/**
-	 * MAP <need tune>
+	 * MAP <BOSCH 0 261 230 057>
 	 */
-	engineConfiguration->mafAdcChannel = EFI_ADC_1;
+	engineConfiguration->map.sensor.hwChannel = EFI_ADC_1;
 	engineConfiguration->map.sensor.sensorType = MT_CUSTOM;
-	engineConfiguration->map.sensor.customValueAt0 = 20;
-	engineConfiguration->map.sensor.customValueAt5 = 200;
+	engineConfiguration->map.sensor.customValueAt0 = 10;
+	engineConfiguration->map.sensor.customValueAt5 = 110;
 	/**
-	 * TPS <need tune>
+	 * TPS <MAGNETI MARELLI>
 	 */
 	engineConfiguration->tpsAdcChannel = EFI_ADC_3;
-	engineConfiguration->tpsMin = 100;
-	engineConfiguration->tpsMax = 750;
+	engineConfiguration->tpsMin = 433;
+	engineConfiguration->tpsMax = 3248;
 	/**
-	 * IAT
+	 * IAT <OEM ECU>
 	 */
 	engineConfiguration->iatAdcChannel = EFI_ADC_13;
 	setThermistorConfiguration(&engineConfiguration->iatThermistorConf, -20.0, 15600.0, 23.0, 2250.0, 92.0, 240.0);
-	engineConfiguration->iatThermistorConf.bias_resistor = 2700; // same as OEM ECU
+	engineConfiguration->iatThermistorConf.bias_resistor = 2700;
 	/**
-	* CLT
+	* CLT <LADA Samara>
 	*/
-	engineConfiguration->cltAdcChannel = EFI_ADC_15;
+	engineConfiguration->cltAdcChannel = EFI_ADC_11;
 	setThermistorConfiguration(&engineConfiguration->cltThermistorConf, -20.0, 28680.0, 25.0, 2796.0, 100.0, 177.0);
-	engineConfiguration->cltThermistorConf.bias_resistor = 2700; // eah winter is hard, sensor as LADA Samara :)
+	engineConfiguration->cltThermistorConf.bias_resistor = 2700;
 	/**
 	 * vBatt
 	 */
 	engineConfiguration->vbattAdcChannel = EFI_ADC_0;
 	engineConfiguration->vbattDividerCoeff = ((float) (2.7 + 10)) / 2.7 * 2;
 }
-
