@@ -173,8 +173,7 @@ void initHardware(Logging *logger, Engine *engine) {
 	 */
 	if (SHOULD_INGORE_FLASH()) {
 		engineConfiguration->engineType = FORD_ASPIRE_1996;
-		resetConfigurationExt(logger, engineConfiguration->engineType, engineConfiguration, engineConfiguration2,
-				boardConfiguration);
+		resetConfigurationExt(logger, engineConfiguration->engineType, engineConfiguration, engineConfiguration2);
 		writeToFlash();
 	} else {
 		readFromFlash();

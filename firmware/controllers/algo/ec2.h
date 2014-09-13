@@ -73,8 +73,7 @@ void registerActuatorEventExt(engine_configuration_s const *engineConfiguration,
 
 void resetConfigurationExt(Logging * logger, engine_type_e engineType,
 		engine_configuration_s *engineConfiguration,
-		engine_configuration2_s *engineConfiguration2,
-		board_configuration_s *boardConfiguration);
+		engine_configuration2_s *engineConfiguration2);
 void applyNonPersistentConfiguration(Logging * logger, engine_configuration_s *engineConfiguration,
 		engine_configuration2_s *engineConfiguration2);
 
