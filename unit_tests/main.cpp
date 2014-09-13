@@ -45,6 +45,10 @@ uint64_t getTimeNowUs(void) {
 	return timeNow;
 }
 
+uint64_t getTimeNowNt(void) {
+	return getTimeNowUs() * US_TO_NT_MULTIPLIER;
+}
+
 void assertEqualsM(const char *msg, float expected, float actual) {
 	if (cisnan(actual) && !cisnan(expected)) {
 		printf("Unexpected: %s %.4f while expected %.4f\r\n", msg, actual, expected);
