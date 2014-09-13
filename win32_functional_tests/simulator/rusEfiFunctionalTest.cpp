@@ -85,7 +85,7 @@ void rusEfiFunctionalTest(void) {
 	engine.engineConfiguration = engineConfiguration;
 
 
-	resetConfigurationExt(NULL, FORD_ASPIRE_1996, engineConfiguration, engineConfiguration2, boardConfiguration);
+	resetConfigurationExt(NULL, FORD_ASPIRE_1996, engineConfiguration, engineConfiguration2);
 
 	initThermistors();
 	initAlgo(engineConfiguration);

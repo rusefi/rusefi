@@ -7,7 +7,7 @@
 
 #include "trigger_mitsubishi.h"
 
-void configureFordAspireTriggerShape(trigger_config_s *triggerConfig, trigger_shape_s * s) {
+void configureFordAspireTriggerShape(trigger_shape_s * s) {
 	s->isSynchronizationNeeded = false;
 	s->reset(FOUR_STROKE_CAM_SENSOR);
 

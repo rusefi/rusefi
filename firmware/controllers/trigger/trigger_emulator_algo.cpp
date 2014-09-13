@@ -31,6 +31,7 @@ static Logging logger;
 static LocalVersionHolder localVersion;
 
 void setTriggerEmulatorRPM(int rpm) {
+	engineConfiguration->bc.triggerSimulatorFrequency = rpm;
 	/**
 	 * All we need to do here is to change the periodMs
 	 * togglePwmState() would see that the periodMs has changed and act accordingly
@@ -63,7 +64,7 @@ void initTriggerEmulatorLogic(pwm_gen_callback *stateChangeCallback) {
 
 
 	trigger_shape_s *s = &engineConfiguration2->triggerShape;
-	setTriggerEmulatorRPM(DEFAULT_EMULATION_RPM);
+	setTriggerEmulatorRPM(engineConfiguration->bc.triggerSimulatorFrequency);
 	int *pinStates[PWM_PHASE_MAX_WAVE_PER_PWM] = { s->wave.waves[0].pinStates, s->wave.waves[1].pinStates, s->wave.waves[2].pinStates};
 	weComplexInit("position sensor", &triggerSignal, s->getSize(), s->wave.switchTimes, PWM_PHASE_MAX_WAVE_PER_PWM, pinStates,
 			updateTriggerShapeIfNeeded, stateChangeCallback);

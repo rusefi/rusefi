@@ -21,7 +21,7 @@
 
 #include "ec2.h"
 
-static engine_type_e defaultEngineType = FORD_ASPIRE_1996;
+#define DEFAULT_ENGINE_TYPE FORD_ASPIRE_1996
 
 static bool needToWriteConfiguration = false;
 
@@ -30,7 +30,6 @@ static Logging logger;
 extern persistent_config_container_s persistentState;
 
 extern engine_configuration_s *engineConfiguration;
-extern board_configuration_s *boardConfiguration;
 
 extern engine_configuration2_s * engineConfiguration2;
 
@@ -91,23 +90,27 @@ static void doResetConfiguration(void) {
 	resetConfigurationExt(&logger, engineConfiguration->engineType, engineConfiguration, engineConfiguration2);
 }
 
+static bool hasValidEngineType(engine_configuration_s *engineConfiguration) {
+	uint32_t ordinal = (uint32_t)engineConfiguration->engineType;
+	return ordinal < ET_UNUSED && engineConfiguration->headerMagicValue == HEADER_MAGIC_NUMBER;
+}
+
 void readFromFlash(void) {
 	printMsg(&logger, "readFromFlash()");
-
 	flashRead(FLASH_ADDR, (char *) &persistentState, PERSISTENT_SIZE);
 
-	//setDefaultNonPersistentConfiguration(engineConfiguration2);
-
-	if (!isValidCrc(&persistentState) || persistentState.size != PERSISTENT_SIZE) {
+	if (!isValidCrc(&persistentState)) {
 		printMsg(&logger, "Need to reset flash to default due to CRC");
-		resetConfigurationExt(&logger, defaultEngineType, engineConfiguration, engineConfiguration2);
-	} else if (persistentState.version != FLASH_DATA_VERSION) {
-		printMsg(&logger, "Need to reset flash to default due to version change");
-		resetConfigurationExt(&logger, defaultEngineType, engineConfiguration, engineConfiguration2);
-
-	} else {
+		resetConfigurationExt(&logger, DEFAULT_ENGINE_TYPE, engineConfiguration, engineConfiguration2);
+	} else if (persistentState.version == FLASH_DATA_VERSION && persistentState.size == PERSISTENT_SIZE) {
 		printMsg(&logger, "Got valid configuration from flash!");
 		applyNonPersistentConfiguration(&logger, engineConfiguration, engineConfiguration2);
+	} else if (hasValidEngineType(engineConfiguration)) {
+		printMsg(&logger, "Resetting but saving engine type [%d]", engineConfiguration->engineType);
+		resetConfigurationExt(&logger, engineConfiguration->engineType, engineConfiguration, engineConfiguration2);
+	} else {
+		printMsg(&logger, "Need to reset flash to default due to version change");
+		resetConfigurationExt(&logger, DEFAULT_ENGINE_TYPE, engineConfiguration, engineConfiguration2);
 	}
 	// we can only change the state after the CRC check
 	engineConfiguration->firmwareVersion = getRusEfiVersion();

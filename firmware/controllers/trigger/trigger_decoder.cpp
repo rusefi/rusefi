@@ -176,12 +176,12 @@ void initializeSkippedToothTriggerShapeExt(trigger_shape_s *s, int totalTeethCou
 /**
  * External logger is needed because at this point our logger is not yet initialized
  */
-void initializeTriggerShape(Logging *logger, engine_configuration_s *engineConfiguration,
+void initializeTriggerShape(Logging *logger, engine_configuration_s const *engineConfiguration,
 		engine_configuration2_s *engineConfiguration2) {
 #if EFI_PROD_CODE
 	scheduleMsg(logger, "initializeTriggerShape()");
 #endif
-	trigger_config_s *triggerConfig = &engineConfiguration->triggerConfig;
+	const trigger_config_s *triggerConfig = &engineConfiguration->triggerConfig;
 	trigger_shape_s *triggerShape = &engineConfiguration2->triggerShape;
 
 	setTriggerSynchronizationGap(triggerShape, 2);
@@ -212,11 +212,11 @@ void initializeTriggerShape(Logging *logger, engine_configuration_s *engineConfi
 		return;
 
 	case TT_FORD_ASPIRE:
-		configureFordAspireTriggerShape(triggerConfig, triggerShape);
+		configureFordAspireTriggerShape(triggerShape);
 		return;
 
 	case TT_GM_7X:
-		configureGmTriggerShape(triggerConfig, triggerShape);
+		configureGmTriggerShape(triggerShape);
 		return;
 
 	case TT_FORD_ESCORT_GT:

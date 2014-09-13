@@ -264,6 +264,11 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	engineConfiguration->isWaveAnalyzerEnabled = true;
 	engineConfiguration->isIdleThreadEnabled = true;
 
+	/**
+	 * this is RPM. 10000 rpm is only 166Hz, 800 rpm is 13Hz
+	 */
+	boardConfiguration->triggerSimulatorFrequency = 1200;
+
 
 	boardConfiguration->idleValvePin = GPIOE_2;
 	boardConfiguration->idleValvePinMode = OM_DEFAULT;
@@ -387,6 +392,7 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType, engine_co
 	 */
 	setDefaultConfiguration(engineConfiguration, boardConfiguration);
 	engineConfiguration->engineType = engineType;
+	engineConfiguration->headerMagicValue = HEADER_MAGIC_NUMBER;
 	/**
 	 * And override them with engine-specific defaults
 	 */
