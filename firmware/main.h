@@ -40,6 +40,14 @@ extern "C"
 // todo: access some existing configuration field
 #define CORE_CLOCK 168000000
 
+// 168 ticks in microsecond
+#define US_TO_NT_MULTIPLIER 168
+
+#define US2NT(x) ((x)*US_TO_NT_MULTIPLIER)
+
+#define NT2US(x) ((x) / US_TO_NT_MULTIPLIER)
+
+
 /**
  * number of SysClock ticks in one ms
  */

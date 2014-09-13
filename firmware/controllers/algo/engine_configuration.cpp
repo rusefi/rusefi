@@ -156,11 +156,11 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 
 	// set_cranking_fuel_max 6 40
 	engineConfiguration->crankingSettings.coolantTempMaxC = 40; // 6ms at 40C
-	engineConfiguration->crankingSettings.fuelAtMaxTempMs = 6;
+	engineConfiguration->crankingSettings.fuelAtMaxTempMs = 24;
 
 	// set_cranking_fuel_min 6 -40
 	engineConfiguration->crankingSettings.coolantTempMinC = -40; // 6ms at -40C
-	engineConfiguration->crankingSettings.fuelAtMinTempMs = 6;
+	engineConfiguration->crankingSettings.fuelAtMinTempMs = 24;
 
 	engineConfiguration->analogInputDividerCoefficient = 2;
 
@@ -229,6 +229,7 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 
 	engineConfiguration->globalFuelCorrection = 1;
 
+	boardConfiguration->isFastAdcEnabled = false;
 	engineConfiguration->map.sensor.sensorType = MT_MPX4250;
 
 	engineConfiguration->baroSensor.sensorType = MT_CUSTOM;

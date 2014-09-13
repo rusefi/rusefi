@@ -15,6 +15,12 @@
 #include "datalogging.h"
 #include "efitime.h"
 
+#define US_TO_NT_MULTIPLIER 100
+
+#define US2NT(x) (US_TO_NT_MULTIPLIER * (x))
+
+#define NT2US(x) ((x) / US_TO_NT_MULTIPLIER)
+
 #ifndef GLOBAL_FT_H_
 #define GLOBAL_FT_H_
 

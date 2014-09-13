@@ -29,6 +29,8 @@ void setFrankenso_01_LCD(board_configuration_s *boardConfiguration) {
 
 static void setHondaAccordConfigurationCommon(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
 	engineConfiguration->map.sensor.sensorType = MT_DENSO183;
+	boardConfiguration->isFastAdcEnabled = true;
+
 
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
 	engineConfiguration->injectionMode = IM_BATCH;
