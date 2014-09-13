@@ -78,11 +78,7 @@ void writeToFlash(void) {
 #endif /* EFI_INTERNAL_FLASH */
 }
 
-static int isValidCrc(persistent_config_container_s *state) {
-	if (state->version != FLASH_DATA_VERSION) {
-		scheduleMsg(&logger, "Unexpected flash version: %d", state->version);
-		return FALSE;
-	}
+static bool isValidCrc(persistent_config_container_s *state) {
 	crc_t result = flashStateCrc(state);
 	int isValidCrc_b = result == state->value;
 	if (!isValidCrc_b) {
@@ -92,8 +88,7 @@ static int isValidCrc(persistent_config_container_s *state) {
 }
 
 static void doResetConfiguration(void) {
-	resetConfigurationExt(&logger, engineConfiguration->engineType, engineConfiguration, engineConfiguration2,
-			boardConfiguration);
+	resetConfigurationExt(&logger, engineConfiguration->engineType, engineConfiguration, engineConfiguration2);
 }
 
 void readFromFlash(void) {
@@ -104,9 +99,12 @@ void readFromFlash(void) {
 	//setDefaultNonPersistentConfiguration(engineConfiguration2);
 
 	if (!isValidCrc(&persistentState) || persistentState.size != PERSISTENT_SIZE) {
-		printMsg(&logger, "Need to reset flash to default");
-		resetConfigurationExt(&logger, defaultEngineType, engineConfiguration, engineConfiguration2,
-				boardConfiguration);
+		printMsg(&logger, "Need to reset flash to default due to CRC");
+		resetConfigurationExt(&logger, defaultEngineType, engineConfiguration, engineConfiguration2);
+	} else if (persistentState.version != FLASH_DATA_VERSION) {
+		printMsg(&logger, "Need to reset flash to default due to version change");
+		resetConfigurationExt(&logger, defaultEngineType, engineConfiguration, engineConfiguration2);
+
 	} else {
 		printMsg(&logger, "Got valid configuration from flash!");
 		applyNonPersistentConfiguration(&logger, engineConfiguration, engineConfiguration2);

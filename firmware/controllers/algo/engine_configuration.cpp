@@ -377,12 +377,11 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	boardConfiguration->isSdCardEnabled = false;
 	boardConfiguration->isFastAdcEnabled = true;
 	boardConfiguration->isEngineControlEnabled = true;
-
-
 }
 
 void resetConfigurationExt(Logging * logger, engine_type_e engineType, engine_configuration_s *engineConfiguration,
-		engine_configuration2_s *engineConfiguration2, board_configuration_s *boardConfiguration) {
+		engine_configuration2_s *engineConfiguration2) {
+	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 	/**
 	 * Let's apply global defaults first
 	 */
