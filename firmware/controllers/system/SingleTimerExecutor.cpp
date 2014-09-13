@@ -84,6 +84,9 @@ void Executor::doExecute(uint64_t nowUs) {
 	 * further invocations
 	 */
 	reentrantLock = TRUE;
+	/**
+	 * It's worth noting that that the actions might be adding new actions into the queue
+	 */
 	queue.executeAll(nowUs);
 	if (!isLocked()) {
 		firmwareError("Someone has stolen my lock");

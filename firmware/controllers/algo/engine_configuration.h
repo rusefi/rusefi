@@ -163,7 +163,7 @@ typedef struct {
 	adc_channel_mode_e adcHwChannelEnabled[HW_MAX_ADC_INDEX];
 
 	brain_pin_e triggerInputPins[3];
-	int unused4;
+	brain_pin_e mainRelayPin;
 
 	int idleThreadPeriod;
 	int consoleLoopPeriod;
@@ -197,7 +197,7 @@ typedef struct {
 
 	int unrealisticRpmThreashold;
 
-	int unused2;
+	pin_output_mode_e mainRelayPinMode;
 
 
 } board_configuration_s;

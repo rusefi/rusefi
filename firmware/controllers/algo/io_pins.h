@@ -108,6 +108,8 @@ typedef enum {
 	SPI_CS_4,
 	SPI_CS_SD_MODULE,
 
+	MAIN_RELAY,
+
 
 	/**
 	 * This output pin is used to turn alternator on or off
