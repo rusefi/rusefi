@@ -229,7 +229,6 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 
 	engineConfiguration->globalFuelCorrection = 1;
 
-	boardConfiguration->isFastAdcEnabled = false;
 	engineConfiguration->map.sensor.sensorType = MT_MPX4250;
 
 	engineConfiguration->baroSensor.sensorType = MT_CUSTOM;
@@ -381,7 +380,7 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	boardConfiguration->is_enabled_spi_3 = true;
 
 	boardConfiguration->isSdCardEnabled = false;
-	boardConfiguration->isFastAdcEnabled = true;
+	boardConfiguration->isFastAdcEnabled = false;
 	boardConfiguration->isEngineControlEnabled = true;
 }
 
