@@ -26,7 +26,6 @@ void EventQueue::insertTask(scheduling_s *scheduling, uint64_t timeUs, schfunc_t
 	if (callback == NULL)
 		firmwareError("NULL callback");
 
-
 	int alreadyPending = checkIfPending(scheduling);
 	if (alreadyPending || hasFirmwareError())
 		return;
@@ -56,6 +55,12 @@ uint64_t EventQueue::getNextEventTime(uint64_t nowUs) {
 		if (++counter > QUEUE_LENGTH_LIMIT) {
 			firmwareError("Is this list looped #2?");
 			return EMPTY_QUEUE;
+		}
+		if (current->momentUs <= nowUs) {
+			//firmwareError("temperror: executeAll should have been called %d/%d", current->momentUs, nowUs);
+			// todo: looks like we end up here after 'writeconfig' (which freezes the firmware)
+			// todo: figure this out
+			continue;
 		}
 		efiAssert(current->momentUs > nowUs, "executeAll should have been called", EMPTY_QUEUE);
 		if (current->momentUs < result)

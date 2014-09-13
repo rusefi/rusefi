@@ -63,30 +63,34 @@ static uint8_t intermediateLoggingBufferData[INTERMEDIATE_LOGGING_BUFFER_SIZE] C
 //todo define max-printf-buffer
 static bool intermediateLoggingBufferInited = FALSE;
 
-static int validateBuffer(Logging *logging, uint32_t extraLen, const char *text) {
+/**
+ * @returns true if data does not fit into this buffer
+ */
+static bool validateBuffer(Logging *logging, uint32_t extraLen, const char *text) {
 	if (logging->buffer == NULL) {
 		firmwareError("Logging not initialized: %s", logging->name);
-		return TRUE;
+		return true;
 	}
 
 	if (remainingSize(logging) < extraLen + 1) {
-		strcpy(logging->SMALL_BUFFER, "Logging buffer overflow: ");
-		strcat(logging->SMALL_BUFFER, logging->name);
-		strcat(logging->SMALL_BUFFER, "/");
-		strcat(logging->SMALL_BUFFER, text);
-		firmwareError(logging->SMALL_BUFFER);
+		warning(OBD_PCM_Processor_Fault, "buffer overflow %s", logging->name);
+//		strcpy(logging->SMALL_BUFFER, "Logging buffer overflow: ");
+//		strcat(logging->SMALL_BUFFER, logging->name);
+//		strcat(logging->SMALL_BUFFER, "/");
+//		strcat(logging->SMALL_BUFFER, text);
+//		firmwareError(logging->SMALL_BUFFER);
 //		unlockOutputBuffer();
 //		resetLogging(logging);
-		return TRUE;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 
 void append(Logging *logging, const char *text) {
 	efiAssertVoid(text != NULL, "append NULL");
 	uint32_t extraLen = strlen(text);
-	int errcode = validateBuffer(logging, extraLen, text);
-	if (errcode) {
+	int isError = validateBuffer(logging, extraLen, text);
+	if (isError) {
 		return;
 	}
 	strcpy(logging->linePointer, text);
