@@ -26,7 +26,7 @@ void setOutputPinValue(io_pin_e pin, int value) {
 EventQueue schedulingQueue;
 
 void scheduleTask(const char *msg, scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) {
-	schedulingQueue.insertTask(scheduling, getTimeNowUs(), delayUs, callback, param);
+	schedulingQueue.insertTask(scheduling, getTimeNowUs() + delayUs, callback, param);
 }
 
 void initSignalExecutorImpl(void) {
@@ -50,7 +50,7 @@ typedef struct {
 static void complexCallback(TestPwm *testPwm) {
 	callbackCounter++;
 
-	eq.insertTask(&testPwm->s, complexTestNow, testPwm->period, (schfunc_t)complexCallback, testPwm);
+	eq.insertTask(&testPwm->s, complexTestNow + testPwm->period, (schfunc_t)complexCallback, testPwm);
 }
 
 static void testSignalExecutor2(void) {
@@ -63,8 +63,8 @@ static void testSignalExecutor2(void) {
 
 	complexTestNow = 0;
 	callbackCounter = 0;
-	eq.insertTask(&p1.s, 0, 0, (schfunc_t)complexCallback, &p1);
-	eq.insertTask(&p2.s, 0, 0, (schfunc_t)complexCallback, &p2);
+	eq.insertTask(&p1.s, 0, (schfunc_t)complexCallback, &p1);
+	eq.insertTask(&p2.s, 0, (schfunc_t)complexCallback, &p2);
 	eq.executeAll(complexTestNow);
 	assertEqualsM("callbackCounter #1", 2, callbackCounter);
 	assertEquals(2, eq.size());
@@ -87,9 +87,9 @@ void testSignalExecutor(void) {
 	scheduling_s s2;
 	scheduling_s s3;
 
-	eq.insertTask(&s1, 0, 10, callback, NULL);
-	eq.insertTask(&s2, 0, 11, callback, NULL);
-	eq.insertTask(&s3, 0, 12, callback, NULL);
+	eq.insertTask(&s1, 10, callback, NULL);
+	eq.insertTask(&s2, 11, callback, NULL);
+	eq.insertTask(&s3, 12, callback, NULL);
 	callbackCounter = 0;
 	eq.executeAll(10);
 	assertEquals(1, callbackCounter);
@@ -98,9 +98,9 @@ void testSignalExecutor(void) {
 	assertEquals(1, callbackCounter);
 	eq.clear();
 
-	eq.insertTask(&s1, 0, 12, callback, NULL);
-	eq.insertTask(&s2, 0, 11, callback, NULL);
-	eq.insertTask(&s3, 0, 10, callback, NULL);
+	eq.insertTask(&s1, 12, callback, NULL);
+	eq.insertTask(&s2, 11, callback, NULL);
+	eq.insertTask(&s3, 10, callback, NULL);
 	callbackCounter = 0;
 	eq.executeAll(10);
 	assertEquals(1, callbackCounter);
@@ -110,7 +110,7 @@ void testSignalExecutor(void) {
 	eq.clear();
 
 	callbackCounter = 0;
-	eq.insertTask(&s1, 0, 10, callback, NULL);
+	eq.insertTask(&s1, 10, callback, NULL);
 	assertEquals(10, eq.getNextEventTime(0));
 
 	eq.executeAll(1);
@@ -121,8 +121,8 @@ void testSignalExecutor(void) {
 
 	assertEquals(EMPTY_QUEUE, eq.getNextEventTime(0));
 
-	eq.insertTask(&s1, 0, 10, callback, NULL);
-	eq.insertTask(&s2, 0, 13, callback, NULL);
+	eq.insertTask(&s1, 10, callback, NULL);
+	eq.insertTask(&s2, 13, callback, NULL);
 	assertEquals(10, eq.getNextEventTime(0));
 
 	eq.executeAll(1);
@@ -131,8 +131,8 @@ void testSignalExecutor(void) {
 	eq.clear();
 	callbackCounter = 0;
 	// both events are scheduled for the same time
-	eq.insertTask(&s1, 0, 10, callback, NULL);
-	eq.insertTask(&s2, 0, 10, callback, NULL);
+	eq.insertTask(&s1, 10, callback, NULL);
+	eq.insertTask(&s2, 10, callback, NULL);
 
 	eq.executeAll(11);
 

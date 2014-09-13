@@ -4,6 +4,9 @@
  * Here we have a 1MHz timer dedicated to event scheduling. We are using one of the 32-bit timers here,
  * so this timer can schedule events up to 4B/100M ~ 4000 seconds ~ 1 hour from current time.
  *
+ * GPT5 timer clock: 84000000Hz
+ * If only it was a better multiplier of 2 (84000000 = 328125 * 256)
+ *
  * @date Apr 14, 2014
  * @author Andrey Belomutskiy, (c) 2012-2014
  */
