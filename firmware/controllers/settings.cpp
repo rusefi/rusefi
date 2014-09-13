@@ -102,12 +102,13 @@ void printConfiguration(engine_configuration_s *engineConfiguration, engine_conf
 	scheduleMsg(&logger, "injectionOffset=%f/enabled=%s", (double) engineConfiguration->injectionOffset,
 			boolToString(engineConfiguration->isInjectionEnabled));
 
-	scheduleMsg(&logger, "map_avg=%s/mil=%s/fp=%s/ts=%s/wa=%s/it=%s", boolToString(engineConfiguration->isMapAveragingEnabled),
+	scheduleMsg(&logger, "map_avg=%s/mil=%s/fp=%s/ts=%s/wa=%s/it=%s/fastAdc=%s", boolToString(engineConfiguration->isMapAveragingEnabled),
 			boolToString(engineConfiguration->isMilEnabled),
 			boolToString(engineConfiguration->isFuelPumpEnabled),
 			boolToString(engineConfiguration->isTunerStudioEnabled),
 			boolToString(engineConfiguration->isWaveAnalyzerEnabled),
-			boolToString(engineConfiguration->isIdleThreadEnabled));
+			boolToString(engineConfiguration->isIdleThreadEnabled),
+			boolToString(boardConfiguration->isFastAdcEnabled));
 
 	scheduleMsg(&logger, "crankingChargeAngle=%f", engineConfiguration->crankingChargeAngle);
 	scheduleMsg(&logger, "crankingTimingAngle=%f", engineConfiguration->crankingTimingAngle);
