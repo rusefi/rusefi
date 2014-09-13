@@ -1,12 +1,13 @@
 package com.rusefi.ui;
 
 import com.irnems.core.MessagesCentral;
+import com.rusefi.io.CommandQueue;
+import com.rusefi.io.serial.PortHolder;
 import com.rusefi.ui.widgets.AnyCommand;
 import com.rusefi.ui.widgets.IdleLabel;
 
 import javax.swing.*;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
+import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -28,6 +29,8 @@ public class MsgPanel {
 
     private final JTextPane msg = new JTextPane();
     private boolean isPaused;
+    private final Style bold;
+    private final Style italic;
     private final JPanel content = new JPanel(new BorderLayout()) {
         @Override
         public Dimension getPreferredSize() {
@@ -46,17 +49,25 @@ public class MsgPanel {
             middlePanel.add(new RecentCommands().getContent(), BorderLayout.EAST);
 
 
+        StyledDocument d = (StyledDocument) msg.getDocument();
+        bold = d.addStyle("StyleName", null);
+        bold.addAttribute(StyleConstants.CharacterConstants.Bold, Boolean.TRUE);
+
+        italic = d.addStyle("StyleName", null);
+        italic.addAttribute(StyleConstants.CharacterConstants.Italic, Boolean.TRUE);
+
         content.add(middlePanel, BorderLayout.CENTER);
         MessagesCentral.getInstance().addListener(new MessagesCentral.MessageListener() {
             @Override
             public void onMessage(Class clazz, String message) {
                 final String date = DATE_FORMAT.format(new Date());
                 if (!isPaused)
-                    append(date + ": " + clazz.getSimpleName() + ": " + message);
+                    append(date + ": " + clazz.getSimpleName() + ": " + message, clazz);
             }
         });
 
         JButton resetButton = new JButton("clear");
+        resetButton.setMnemonic('c');
         resetButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
@@ -66,6 +77,7 @@ public class MsgPanel {
         });
 
         final JButton pauseButton = new JButton("pause");
+        pauseButton.setMnemonic('p');
         pauseButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -103,15 +115,26 @@ public class MsgPanel {
         }
     }
 
-    private void append(String line) {
+    private void append(String line, Class clazz) {
         Document d = msg.getDocument();
         if (d.getLength() > MAX_SIZE)
             clearMessages(d);
         try {
-            d.insertString(d.getLength(), line + "\r\n", null);
+            d.insertString(d.getLength(), line + "\r\n", getStyle(clazz));
             msg.select(d.getLength(), d.getLength());
         } catch (BadLocationException e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    private AttributeSet getStyle(Class clazz) {
+        /**
+         * this is ugly as hell, but that's so much better then nothing...
+         */
+        if (clazz == CommandQueue.class)
+            return bold;
+        if (clazz == PortHolder.class)
+            return italic;
+        return null;
     }
 }

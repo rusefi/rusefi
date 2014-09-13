@@ -36,6 +36,7 @@ public class WavePanel {
     public static final Comparator<String> INSTANCE = new ImageOrderComparator();
     private static final String HELP_URL = "http://rusefi.com/wiki/index.php?title=Manual:DevConsole#Digital_Chart";
     public static final String HELP_TEXT = "Click here for online help";
+    public static final String SAVE_IMAGE = "save image";
 
     private final JPanel chartPanel = new JPanel(new BorderLayout());
     private final JPanel panel = new JPanel(new BorderLayout());
@@ -87,8 +88,9 @@ public class WavePanel {
 
         statusPanel.setWaveReport(crank.createTranslator());
 
-        JButton resetButton = new JButton("reset");
-        resetButton.addActionListener(new ActionListener() {
+        JButton clearButton = new JButton("clear");
+        clearButton.setMnemonic('c');
+        clearButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 for (UpDownImage image : images.values())
@@ -96,7 +98,8 @@ public class WavePanel {
             }
         });
 
-        JButton saveImageButton = new JButton("save image");
+        JButton saveImageButton = new JButton(SAVE_IMAGE);
+        saveImageButton.setMnemonic('s');
         saveImageButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -105,6 +108,7 @@ public class WavePanel {
         });
 
         final JButton pauseButton = new JButton("pause");
+        pauseButton.setMnemonic('p');
         pauseButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -114,7 +118,7 @@ public class WavePanel {
         });
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
-        buttonPanel.add(resetButton);
+        buttonPanel.add(clearButton);
         buttonPanel.add(saveImageButton);
         buttonPanel.add(pauseButton);
         buttonPanel.add(new RpmControl().setSize(2).getContent());
