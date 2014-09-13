@@ -43,12 +43,20 @@ void Executor::unlock(void) {
 	unlockAnyContext();
 }
 
-void Executor::schedule(scheduling_s *scheduling, uint64_t nowUs, int delayUs, schfunc_t callback, void *param) {
+void Executor::schedule(const char *prefix, scheduling_s *scheduling, uint64_t nowUs, int delayUs, schfunc_t callback, void *param) {
+	if (delayUs < 0) {
+		firmwareError("Negative delayUs %s: %d", prefix, delayUs);
+		return;
+	}
+	if (delayUs == 0) {
+		callback(param);
+		return;
+	}
 	if (!reentrantLock) {
 		// this would guard the queue and disable interrupts
 		lock();
 	}
-	queue.insertTask(scheduling, nowUs, delayUs, callback, param);
+	queue.insertTask(scheduling, nowUs + delayUs, callback, param);
 	if (!reentrantLock) {
 		doExecute(nowUs);
 		unlock();
@@ -97,15 +105,7 @@ void Executor::doExecute(uint64_t nowUs) {
  * @param [in] dwell the number of ticks of output duration.
  */
 void scheduleTask(const char *prefix, scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) {
-	if (delayUs < 0) {
-		firmwareError("Negative delayUs %s: %d", prefix, delayUs);
-		return;
-	}
-	if (delayUs == 0) {
-		callback(param);
-		return;
-	}
-	instance.schedule(scheduling, getTimeNowUs(), delayUs, callback, param);
+	instance.schedule(prefix, scheduling, getTimeNowUs(), delayUs, callback, param);
 }
 
 void initSignalExecutorImpl(void) {
