@@ -61,11 +61,10 @@ static TriggerEmulatorHelper helper;
 #if EFI_EMULATE_POSITION_SENSORS || defined(__DOXYGEN__)
 
 static void emulatorApplyPinState(PwmConfig *state, int stateIndex) {
+	applyPinState(state, stateIndex);
 	if (engineConfiguration->directSelfStimulation) {
 		helper.handleEmulatorCallback(state, stateIndex);
 	}
-
-	applyPinState(state, stateIndex);
 }
 #endif /* EFI_EMULATE_POSITION_SENSORS */
 
