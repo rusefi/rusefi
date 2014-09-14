@@ -23,7 +23,7 @@ extern engine_configuration_s *engineConfiguration;
 #define NUMBER_OF_DIFFERENT_LINES 4
 
 char * appendStr(char *ptr, const char *suffix) {
-	for (uint32_t i = 0; i < strlen(suffix); i++) {
+	for (uint32_t i = 0; i < efiStrlen(suffix); i++) {
 		*ptr++ = suffix[i];
 	}
 	return ptr;

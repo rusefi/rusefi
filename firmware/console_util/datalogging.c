@@ -88,7 +88,7 @@ static bool validateBuffer(Logging *logging, uint32_t extraLen, const char *text
 
 void append(Logging *logging, const char *text) {
 	efiAssertVoid(text != NULL, "append NULL");
-	uint32_t extraLen = strlen(text);
+	uint32_t extraLen = efiStrlen(text);
 	int isError = validateBuffer(logging, extraLen, text);
 	if (isError) {
 		return;
@@ -108,7 +108,7 @@ void appendFast(Logging *logging, const char *text) {
 //		c = *s++;
 //		*logging->linePointer++ = c;
 //	} while (c != '\0');
-	int extraLen = strlen(text);
+	int extraLen = efiStrlen(text);
 	strcpy(logging->linePointer, text);
 	logging->linePointer += extraLen;
 }
@@ -281,9 +281,9 @@ static void printWithLength(char *line) {
 	 * When we work with actual hardware, it is faster to invoke 'chSequentialStreamWrite' for the
 	 * whole buffer then to invoke 'chSequentialStreamPut' once per character.
 	 */
-	int len = strlen(line);
+	int len = efiStrlen(line);
 	strcpy(header, "line:");
-	char *p = header + strlen(header);
+	char *p = header + efiStrlen(header);
 	p = itoa10(p, len);
 	*p++ = ':';
 	*p++ = '\0';
@@ -365,11 +365,11 @@ void scheduleIntValue(Logging *logging, const char *msg, int value) {
 
 void scheduleLogging(Logging *logging) {
 	// this could be done without locking
-	int newLength = strlen(logging->buffer);
+	int newLength = efiStrlen(logging->buffer);
 
 	bool alreadyLocked = lockOutputBuffer();
 	// I hope this is fast enough to operate under sys lock
-	int curLength = strlen(pendingBuffer);
+	int curLength = efiStrlen(pendingBuffer);
 	if (curLength + newLength >= DL_OUTPUT_BUFFER) {
 		/**
 		 * if no one is consuming the data we have to drop it
@@ -407,7 +407,7 @@ void printPending(void) {
 	pendingBuffer[0] = 0; // reset pending buffer
 	unlockOutputBuffer();
 
-	if (strlen(outputBuffer) > 0) {
+	if (efiStrlen(outputBuffer) > 0) {
 		printWithLength(outputBuffer);
 	}
 }

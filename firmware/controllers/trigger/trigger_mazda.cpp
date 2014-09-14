@@ -129,6 +129,6 @@ void configureMazdaProtegeLx(trigger_shape_s *s) {
 
 
 //	s->shaftPositionEventCount = 2 + 8;
-	s->shaftPositionEventCount = 8;
+	s->shaftPositionEventCount = s->getSize();
 	s->isSynchronizationNeeded = false;
 }
