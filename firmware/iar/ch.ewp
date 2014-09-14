@@ -2019,6 +2019,12 @@
       <file>
         <name>$PROJ_DIR$\..\config\engines\snow_blower.h</name>
       </file>
+      <file>
+        <name>$PROJ_DIR$\..\config\engines\subaru.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\config\engines\subaru.h</name>
+      </file>
     </group>
     <group>
       <name>system</name>
