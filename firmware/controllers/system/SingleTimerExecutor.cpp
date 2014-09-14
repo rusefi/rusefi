@@ -43,7 +43,8 @@ void Executor::unlock(void) {
 	unlockAnyContext();
 }
 
-void Executor::schedule2(const char *prefix, scheduling_s *scheduling, uint64_t timeUs, schfunc_t callback, void *param) {
+void Executor::schedule2(const char *prefix, scheduling_s *scheduling, uint64_t timeUs, schfunc_t callback,
+		void *param) {
 //	if (delayUs < 0) {
 //		firmwareError("Negative delayUs %s: %d", prefix, delayUs);
 //		return;
@@ -63,8 +64,8 @@ void Executor::schedule2(const char *prefix, scheduling_s *scheduling, uint64_t 
 	}
 }
 
-
-void Executor::schedule(const char *prefix, scheduling_s *scheduling, uint64_t nowUs, int delayUs, schfunc_t callback, void *param) {
+void Executor::schedule(const char *prefix, scheduling_s *scheduling, uint64_t nowUs, int delayUs, schfunc_t callback,
+		void *param) {
 	schedule2(prefix, scheduling, nowUs + delayUs, callback, param);
 }
 
@@ -84,15 +85,24 @@ void Executor::doExecute() {
 	 * further invocations
 	 */
 	reentrantLock = TRUE;
+	bool shouldExecute = true;
 	/**
-	 * It's worth noting that that the actions might be adding new actions into the queue
+	 * in real life it could be that while we executing listeners time passes and it's already time to execute
+	 * next listeners.
+	 * TODO: add a counter & figure out a limit of iterations?
 	 */
-	uint64_t nowUs = getTimeNowUs();
-	queue.executeAll(nowUs);
+	while (shouldExecute) {
+		/**
+		 * It's worth noting that that the actions might be adding new actions into the queue
+		 */
+		uint64_t nowUs = getTimeNowUs();
+		shouldExecute = queue.executeAll(nowUs);
+	}
 	if (!isLocked()) {
 		firmwareError("Someone has stolen my lock");
 		return;
 	}
+	uint64_t nowUs = getTimeNowUs();
 	reentrantLock = false;
 	/**
 	 * 'executeAll' is potentially invoking heavy callbacks, let's grab fresh time value?
@@ -123,7 +133,6 @@ void scheduleTask(const char *prefix, scheduling_s *scheduling, int delayUs, sch
 void scheduleTask2(const char *prefix, scheduling_s *scheduling, uint64_t time, schfunc_t callback, void *param) {
 	instance.schedule2(prefix, scheduling, time, callback, param);
 }
-
 
 void initSignalExecutorImpl(void) {
 	globalTimerCallback = executorCallback;
