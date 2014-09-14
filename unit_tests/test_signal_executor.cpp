@@ -29,6 +29,12 @@ void scheduleTask(const char *msg, scheduling_s *scheduling, int delayUs, schfun
 	schedulingQueue.insertTask(scheduling, getTimeNowUs() + delayUs, callback, param);
 }
 
+void scheduleTask2(const char *prefix, scheduling_s *scheduling, uint64_t time, schfunc_t callback, void *param) {
+	firmwareError("not implemented");
+	//schedulingQueue.insertTask(scheduling, getTimeNowUs() + delayUs, callback, param);
+}
+
+
 void initSignalExecutorImpl(void) {
 }
 
