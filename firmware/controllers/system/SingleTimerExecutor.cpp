@@ -28,7 +28,7 @@ static Executor instance;
 extern schfunc_t globalTimerCallback;
 
 static void executorCallback(void *arg) {
-	instance.execute(getTimeNowUs());
+	instance.onTimerCallback(getTimeNowUs());
 }
 
 Executor::Executor() {
@@ -68,7 +68,7 @@ void Executor::schedule(const char *prefix, scheduling_s *scheduling, uint64_t n
 	schedule2(prefix, scheduling, nowUs + delayUs, callback, param);
 }
 
-void Executor::execute(uint64_t nowUs) {
+void Executor::onTimerCallback(uint64_t nowUs) {
 	lock();
 	doExecute(nowUs);
 	unlock();
