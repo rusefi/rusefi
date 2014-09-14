@@ -82,9 +82,9 @@ int histogramGetIndex(int64_t value) {
  * @brief Reset histogram_s to orignal state
  */
 void initHistogram(histogram_s *h, const char *name) {
-  if(strlen(name) > sizeof(h->name) - 1) {
+	if (efiStrlen(name) > sizeof(h->name) - 1) {
 		firmwareError("Histogram name [%s] too long", name);
-  }
+	}
 	strcpy(h->name, name);
 	h->total_value = 0;
 	h->total_count = 0;
@@ -99,7 +99,7 @@ void hsAdd(histogram_s *h, int64_t value) {
 	int count = 1;
 	h->total_value += value;
 	h->total_count += count;
-	efiAssertVoid(index < BOUND_LENGTH, "histogram issue" );
+	efiAssertVoid(index < BOUND_LENGTH, "histogram issue");
 
 	h->values[index] += count;
 }
@@ -112,18 +112,18 @@ int hsReport(histogram_s *h, int* report) {
 	int index = 0;
 
 	if (h->total_count <= 5) {
-          for (int j = 0; j < BOUND_LENGTH; j++) {
+		for (int j = 0; j < BOUND_LENGTH; j++) {
 			for (int k = 0; k < h->values[j]; k++) {
 				report[index++] = (bounds[j] + bounds[j + 1]) / 2;
 			}
-          }
+		}
 		return index;
 	}
 
 	int minIndex = 0;
 	while (h->values[minIndex] == 0) {
 		minIndex++;
-        }
+	}
 	report[index++] = h->values[minIndex];
 
 	int64_t acc = 0;
@@ -133,10 +133,10 @@ int hsReport(histogram_s *h, int* report) {
 		// Always drop at least 1 'non-confident' sample...
 		if (k == 0) {
 			k = 1;
-                }
+		}
 		if (k == h->total_count) {
 			k = h->total_count - 1;
-                }
+		}
 		// 'k' is desired number of samples.
 		while (acc + h->values[minIndex] < k)
 			acc += h->values[minIndex++];
@@ -148,7 +148,7 @@ int hsReport(histogram_s *h, int* report) {
 		float d = bounds[minIndex];
 		if (acc != k)
 			d += (bounds[minIndex + 1] - 1 - bounds[minIndex]) * (k - acc) / h->values[minIndex];
-		report[index++] = (int)d;
+		report[index++] = (int) d;
 	}
 
 	int maxIndex = BOUND_LENGTH - 1;

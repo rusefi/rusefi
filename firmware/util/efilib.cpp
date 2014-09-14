@@ -49,9 +49,13 @@ float maxF(float i1, float i2) {
 	return i1 > i2 ? i1 : i2;
 }
 
+int efiStrlen(const char *param) {
+	return strlen(param);
+}
+
 int indexOf(const char *string, char ch) {
 	// todo: there should be a standard function for this
-	int len = strlen(string);
+	int len = efiStrlen(string);
 	for (int i = 0; i < len; i++) {
 		if (string[i] == ch) {
 			return i;
