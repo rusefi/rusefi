@@ -57,14 +57,17 @@ uint64_t EventQueue::getNextEventTime(uint64_t nowUs) {
 			return EMPTY_QUEUE;
 		}
 		if (current->momentUs <= nowUs) {
-			//firmwareError("temperror: executeAll should have been called %d/%d", current->momentUs, nowUs);
-			// todo: looks like we end up here after 'writeconfig' (which freezes the firmware)
-			// todo: figure this out
-			continue;
+			/**
+			 * looks like we end up here after 'writeconfig' (which freezes the firmware) - we are late
+			 * for the next scheduled event
+			 */
+			uint64_t mock = nowUs + MS2US(10);
+			if (mock < result)
+				result = mock;
+		} else {
+			if (current->momentUs < result)
+				result = current->momentUs;
 		}
-		efiAssert(current->momentUs > nowUs, "executeAll should have been called", EMPTY_QUEUE);
-		if (current->momentUs < result)
-			result = current->momentUs;
 	}
 	return result;
 }
