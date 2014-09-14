@@ -28,7 +28,7 @@ static Executor instance;
 extern schfunc_t globalTimerCallback;
 
 static void executorCallback(void *arg) {
-	instance.onTimerCallback(getTimeNowUs());
+	instance.onTimerCallback();
 }
 
 Executor::Executor() {
@@ -58,7 +58,7 @@ void Executor::schedule2(const char *prefix, scheduling_s *scheduling, uint64_t 
 	}
 	queue.insertTask(scheduling, timeUs, callback, param);
 	if (!reentrantLock) {
-		doExecute(getTimeNowUs());
+		doExecute();
 		unlock();
 	}
 }
@@ -68,16 +68,16 @@ void Executor::schedule(const char *prefix, scheduling_s *scheduling, uint64_t n
 	schedule2(prefix, scheduling, nowUs + delayUs, callback, param);
 }
 
-void Executor::onTimerCallback(uint64_t nowUs) {
+void Executor::onTimerCallback() {
 	lock();
-	doExecute(nowUs);
+	doExecute();
 	unlock();
 }
 
 /*
  * this private method is executed under lock
  */
-void Executor::doExecute(uint64_t nowUs) {
+void Executor::doExecute() {
 	/**
 	 * Let's execute actions we should execute at this point.
 	 * reentrantLock takes care of the use case where the actions we are executing are scheduling
@@ -87,12 +87,16 @@ void Executor::doExecute(uint64_t nowUs) {
 	/**
 	 * It's worth noting that that the actions might be adding new actions into the queue
 	 */
+	uint64_t nowUs = getTimeNowUs();
 	queue.executeAll(nowUs);
 	if (!isLocked()) {
 		firmwareError("Someone has stolen my lock");
 		return;
 	}
 	reentrantLock = false;
+	/**
+	 * 'executeAll' is potentially invoking heavy callbacks, let's grab fresh time value?
+	 */
 	/**
 	 * Let's set up the timer for the next execution
 	 */
