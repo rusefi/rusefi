@@ -16,11 +16,11 @@ public:
 	Executor();
 	void schedule(const char *prefix, scheduling_s *scheduling, uint64_t nowUs, int delayUs, schfunc_t callback, void *param);
 	void schedule2(const char *prefix, scheduling_s *scheduling, uint64_t timeUs, schfunc_t callback, void *param);
-	void onTimerCallback(uint64_t nowUs);
+	void onTimerCallback();
 private:
 	EventQueue queue;
 	bool reentrantLock;
-	void doExecute(uint64_t nowUs);
+	void doExecute();
 	void lock(void);
 	void unlock(void);
 };
