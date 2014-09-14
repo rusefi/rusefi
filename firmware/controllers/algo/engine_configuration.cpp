@@ -49,6 +49,7 @@
 #include "citroenBerlingoTU3JP.h"
 #include "rover_v8.h"
 #include "mitsubishi.h"
+#include "subaru.h"
 
 static volatile int globalConfigurationVersion = 0;
 
@@ -466,6 +467,9 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType, engine_co
 		break;
 	case ROVER_V8:
 		setRoverv8(engineConfiguration, boardConfiguration);
+		break;
+	case SUBARU_2003_WRX:
+		setSubaru2003Wrx(engineConfiguration, boardConfiguration);
 		break;
 
 	default:

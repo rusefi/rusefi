@@ -85,7 +85,9 @@ typedef enum {
 	MIATA_1994 = 20,
 	MIATA_1996 = 21,
 
-	ET_UNUSED = 22,
+	SUBARU_2003_WRX = 22,
+
+	ET_UNUSED = 23,
 
 	Force_4b_engine_type = ENUM_SIZE_HACK,
 } engine_type_e;
