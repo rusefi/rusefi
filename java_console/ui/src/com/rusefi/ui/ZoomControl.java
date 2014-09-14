@@ -42,6 +42,7 @@ public class ZoomControl extends JPanel {
         add(currentValue);
 
         JButton plus = new JButton("+");
+        plus.setMnemonic('z');
         plus.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -62,6 +63,7 @@ public class ZoomControl extends JPanel {
         add(resetZoom);
 
         JButton minus = new JButton("-");
+        plus.setMnemonic('x');
         minus.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

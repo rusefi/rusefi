@@ -27,6 +27,7 @@ import java.util.TreeMap;
 public class UpDownImage extends JPanel {
     private static final SimpleDateFormat FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
     private static final int LINE_SIZE = 20;
+    private static final Color TIME_SCALE_COLOR = Color.red;
 
     private long lastUpdateTime;
     private ZoomProvider zoomProvider = ZoomProvider.DEFAULT;
@@ -193,9 +194,19 @@ public class UpDownImage extends JPanel {
     private void paintScaleLines(Graphics2D g2, Dimension d) {
         int fromMs = translator.getMinTime() / WaveReport.mult;
         g2.setStroke(LONG_STROKE);
-        g2.setColor(Color.red);
+        g2.setColor(TIME_SCALE_COLOR);
 
         int toMs = translator.getMaxTime() / WaveReport.mult;
+
+        if (toMs - fromMs > d.getWidth() / 5) {
+            /**
+             * we should not paint time scale lines if the chart is so long that the whole screen would be covered with
+             * lines
+             * todo: maybe draw scale lines in seconds, not milliseconds?
+             */
+            return;
+        }
+
         for (int ms = fromMs; ms <= toMs; ms++) {
             int tick = ms * WaveReport.mult;
             int x = translator.timeToScreen(tick, d.width, zoomProvider);
