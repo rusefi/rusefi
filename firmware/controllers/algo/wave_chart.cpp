@@ -144,12 +144,18 @@ void WaveChart::addWaveChartEvent3(const char *name, const char * msg, const cha
 	int beforeCallback = hal_lld_get_counter_value();
 #endif
 
-	int time100 = getTimeNowUs() / 10;
+	uint64_t nowUs = getTimeNowUs();
+	/**
+	 * todo: migrate to binary fractions in order to eliminate
+	 * this division? I do not like division
+	 */
+	uint64_t time100 = nowUs / 10;
 
 	bool alreadyLocked = lockOutputBuffer(); // we have multiple threads writing to the same output buffer
 
 	if (counter == 0) {
-		startTime = time100;
+		startTime100 = time100;
+		startTimeUs = nowUs;
 	}
 	counter++;
 	if (remainingSize(&logging) > 30) {
@@ -163,7 +169,7 @@ void WaveChart::addWaveChartEvent3(const char *name, const char * msg, const cha
 		/**
 		 * We want smaller times within a chart in order to reduce packet size.
 		 */
-		time100 -= startTime;
+		time100 -= startTime100;
 
 		itoa10(timeBuffer, time100);
 		appendFast(&logging, timeBuffer);
