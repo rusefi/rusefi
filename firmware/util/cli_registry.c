@@ -90,6 +90,27 @@ void addConsoleActionFF(const char *token, VoidFloatFloat callback) {
 	doAddAction(token, FLOAT_FLOAT_PARAMETER, (Void) callback);
 }
 
+static int getParameterCount(action_type_e parameterType) {
+	switch (parameterType) {
+	case NO_PARAMETER:
+		return 0;
+	case ONE_PARAMETER:
+	case FLOAT_PARAMETER:
+	case STRING_PARAMETER:
+		return 1;
+	case FLOAT_FLOAT_PARAMETER:
+	case STRING2_PARAMETER:
+	case TWO_INTS_PARAMETER:
+		return 2;
+	case STRING3_PARAMETER:
+		return 3;
+	case STRING5_PARAMETER:
+		return 5;
+	default:
+		return -1;
+	}
+}
+
 /**
  * @brief This function prints out a list of all available commands
  */
@@ -105,7 +126,7 @@ void helpCommand(void) {
 	scheduleMsg(&logging, "%d actions available", consoleActionCount);
 	for (int i = 0; i < consoleActionCount; i++) {
 		TokenCallback *current = &consoleActions[i];
-		scheduleMsg(&logging, "  %s: %d parameters", current->token, current->parameterType);
+		scheduleMsg(&logging, "  %s: %d parameters", current->token, getParameterCount(current->parameterType));
 	}
 #endif
 }
