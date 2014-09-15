@@ -26,11 +26,11 @@ typedef enum {
 	STRING5_PARAMETER,
 	TWO_INTS_PARAMETER,
 	FLOAT_FLOAT_PARAMETER
-} ACTION_PARAMETER_TYPE;
+} action_type_e;
 
 typedef struct {
 	const char *token;
-	int parameterType;
+	action_type_e parameterType;
 	void (*callback)(void);
 } TokenCallback;
 
