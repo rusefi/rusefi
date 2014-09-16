@@ -424,7 +424,13 @@ typedef struct {
 	 */
 	float injectorFlow; // size 4
 
-	int unused3[6];
+	/**
+	 * 360 for two-stroke
+	 * 720 for four-stroke
+	 */
+	int engineCycle;
+
+	int unused3[5];
 
 } engine_configuration_s;
 

@@ -253,6 +253,8 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 #endif
 
 
+	engineConfiguration->engineCycle = 720;
+
 	engineConfiguration->isInjectionEnabled = true;
 	engineConfiguration->isIgnitionEnabled = true;
 	engineConfiguration->isCylinderCleanupEnabled = true;
