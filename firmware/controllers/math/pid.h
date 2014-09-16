@@ -11,13 +11,15 @@
 class Pid {
 
 public:
-	Pid(float pFactor, float iFactor, float dFactor);
+	Pid(float pFactor, float iFactor, float dFactor, float minResult, float maxResult);
 	float getValue(float target, float input, float dTime);
 
 private:
 	float pFactor;
 	float iFactor;
 	float dFactor;
+	float minResult;
+	float maxResult;
 
 	float integration;
 	float prevError;
