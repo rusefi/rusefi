@@ -13,9 +13,19 @@ Pid::Pid(float pFactor, float iFactor, float dFactor) {
 	this->pFactor = pFactor;
 	this->iFactor = iFactor;
 	this->dFactor = dFactor;
+
+	integration = 0;
+	prevError = 0;
 }
 
-float Pid::getValue(float input) {
-	return 0;
+float Pid::getValue(float target, float input, float dTime) {
+	float error = target - input;
+
+	float pTerm = pFactor * error;
+	integration += iFactor * dTime * error;
+	float dTerm = dFactor / dTime * (error - prevError);
+
+	prevError = error;
+	return pTerm + integration + dTerm;
 }
 
