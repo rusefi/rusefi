@@ -413,7 +413,7 @@ typedef struct {
 	bool isWaveAnalyzerEnabled : 1; // bit 9
 	bool isIdleThreadEnabled : 1; // bit 10
 
-	int digitalChartSize;
+	uint32_t digitalChartSize;
 	/**
 	 * cc/min, cubic centimeter per minute
 	 *

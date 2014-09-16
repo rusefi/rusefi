@@ -72,6 +72,7 @@ void WaveChart::resetWaveChart() {
 #endif /* DEBUG_WAVE */
 	resetLogging(&logging);
 	counter = 0;
+	startTimeUs = 0;
 	appendPrintf(&logging, "wave_chart%s", DELIMETER);
 }
 
@@ -79,7 +80,15 @@ static char WAVE_LOGGING_BUFFER[WAVE_LOGGING_SIZE] CCM_OPTIONAL
 ;
 
 int WaveChart::isWaveChartFull() {
-	return counter >= engineConfiguration->digitalChartSize;
+	/**
+	 * Say at 300rpm we should get at least four events per revolution.
+	 * That's 300/60*4=20 events per second
+	 * digitalChartSize/20 is the longest meaningful chart.
+	 *
+	 */
+	uint64_t chartDurationInSeconds = (getTimeNowUs() - startTimeUs) / 1000000;
+	bool startedTooLongAgo = startTimeUs!= 0 && chartDurationInSeconds > engineConfiguration->digitalChartSize / 20;
+	return startedTooLongAgo || counter >= engineConfiguration->digitalChartSize;
 }
 
 static void printStatus(void) {
