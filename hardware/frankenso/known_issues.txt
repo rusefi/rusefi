@@ -14,12 +14,12 @@
 14)                  separate VP lines of our three hi-side mosfers
 15) RESOLVED IN R0.2 look into flipping the VR + and - pins
 16)                  add vias for GND, 12V and 5V for test purposes
-17)                  add option to GND one side of VR in ECU
-18)                  BOM issue: D1001 should be BZT52C7V5-FDICT-ND?
-19)                  BOM issue: C1001 sch says 470uF but part number is 100uF?
-20)                  SKQUCAA010 is End of Life. I've placed and order to get these in October, but we need a better solution
-21)                  JP212 should be replaced with JP209 which would be breaking the OUT9 line. That's part of hall-via-op-amp circuirty 
-
+17) RESOLVED IN R0.2 add option to GND one side of VR in ECU
+18) RESOLVED IN R0.2 HC-OX needs 3.3V not 5V. 
+19)                  BOM issue: D1001 should be BZT52C7V5-FDICT-ND?
+20)                  BOM issue: C1001 sch says 470uF but part number is 100uF?
+21)                  SKQUCAA010 is End of Life. I've placed and order to get these in October, but we need a better solution
+22)                  JP212 should be replaced with JP209 which would be breaking the OUT9 line. That's part of hall-via-op-amp circuirty. JP212 does not work because it's now VBatt channel 
 
 For honda add-on / rewiring board
 -- Add 2A high side solinoid drive for VTec sol

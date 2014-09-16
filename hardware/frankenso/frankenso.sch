@@ -55,7 +55,7 @@ $Descr B 17000 11000
 encoding utf-8
 Sheet 1 14
 Title "Frankenso"
-Date "27 aug 2014"
+Date "15 sep 2014"
 Rev ".02"
 Comp "rusEFI.com"
 Comment1 ""
@@ -1875,7 +1875,7 @@ $EndComp
 Text Label 6500 8800 3    60   ~ 0
 GND
 Text Label 6600 6900 1    60   ~ 0
-5V
+3.3V
 Text Label 6600 8800 3    60   ~ 0
 GND
 Text Label 6700 8800 3    60   ~ 0
