@@ -31,6 +31,8 @@ typedef struct {
 #define INJECTION_PIN_COUNT 12
 #define IGNITION_PIN_COUNT 12
 
+#define MAX31855_CS_COUNT 8
+
 #define FUEL_RPM_COUNT 16
 #define FUEL_LOAD_COUNT 16
 #define VE_RPM_COUNT 16
@@ -198,6 +200,8 @@ typedef struct {
 	int unrealisticRpmThreashold;
 
 	pin_output_mode_e mainRelayPinMode;
+
+	int unusedbs[100];
 
 
 } board_configuration_s;

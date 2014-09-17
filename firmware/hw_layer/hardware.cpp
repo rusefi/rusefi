@@ -22,6 +22,7 @@
 
 #include "mcp3208.h"
 #include "HIP9011.h"
+#include "max31855.h"
 #include "can_hw.h"
 #include "histogram.h"
 #include "mmc_card.h"
@@ -205,6 +206,9 @@ void initHardware(Logging *logger, Engine *engine) {
 #if EFI_HIP_9011
 	initHip9011();
 #endif /* EFI_HIP_9011 */
+
+	initMax31855(boardConfiguration);
+
 
 #if EFI_CAN_SUPPORT
 	initCan();
