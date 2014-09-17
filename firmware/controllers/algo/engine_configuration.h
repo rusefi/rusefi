@@ -195,6 +195,9 @@ typedef struct {
 	unsigned int isEngineControlEnabled : 1; // bit 5
 
 	brain_pin_e logicAnalyzerPins[LOGIC_ANALYZER_CHANNEL_COUNT];
+	/**
+	 * default or inverted input
+	 */
 	uint8_t logicAnalyzerMode[LOGIC_ANALYZER_CHANNEL_COUNT];
 
 	int unrealisticRpmThreashold;
@@ -203,7 +206,9 @@ typedef struct {
 
 	brain_pin_e max31855_cs[MAX31855_CS_COUNT];
 
-	int unusedbs[92];
+	spi_device_e max31855spiDevice;
+
+	int unusedbs[91];
 
 
 } board_configuration_s;
