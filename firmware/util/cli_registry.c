@@ -37,7 +37,7 @@ void resetConsoleActions(void) {
 	consoleActionCount = 0;
 }
 
-static void doAddAction(const char *token, int type, Void callback) {
+static void doAddAction(const char *token, int type, Void callback, void *param) {
 	efiAssertVoid(consoleActionCount < CONSOLE_MAX_ACTIONS, "Too many console actions");
 	TokenCallback *current = &consoleActions[consoleActionCount++];
 	current->token = token;
@@ -49,45 +49,45 @@ static void doAddAction(const char *token, int type, Void callback) {
  * @brief	Register console action without parameters
  */
 void addConsoleAction(const char *token, Void callback) {
-	doAddAction(token, NO_PARAMETER, callback);
+	doAddAction(token, NO_PARAMETER, callback, NULL);
 }
 
 /**
  * @brief	Register a console command with one Integer parameter
  */
 void addConsoleActionI(const char *token, VoidInt callback) {
-	doAddAction(token, ONE_PARAMETER, (Void) callback);
+	doAddAction(token, ONE_PARAMETER, (Void) callback, NULL);
 }
 
 /**
  * @brief	Register a console command with two Integer parameters
  */
 void addConsoleActionII(const char *token, VoidIntInt callback) {
-	doAddAction(token, TWO_INTS_PARAMETER, (Void) callback);
+	doAddAction(token, TWO_INTS_PARAMETER, (Void) callback, NULL);
 }
 
 void addConsoleActionS(const char *token, VoidCharPtr callback) {
-	doAddAction(token, STRING_PARAMETER, (Void) callback);
+	doAddAction(token, STRING_PARAMETER, (Void) callback, NULL);
 }
 
 void addConsoleActionSS(const char *token, VoidCharPtrCharPtr callback) {
-	doAddAction(token, STRING2_PARAMETER, (Void) callback);
+	doAddAction(token, STRING2_PARAMETER, (Void) callback, NULL);
 }
 
 void addConsoleActionSSS(const char *token, VoidCharPtrCharPtrCharPtr callback) {
-	doAddAction(token, STRING3_PARAMETER, (Void) callback);
+	doAddAction(token, STRING3_PARAMETER, (Void) callback, NULL);
 }
 
 void addConsoleActionSSSSS(const char *token, VoidCharPtrCharPtrCharPtrCharPtrCharPtr callback) {
-	doAddAction(token, STRING5_PARAMETER, (Void) callback);
+	doAddAction(token, STRING5_PARAMETER, (Void) callback, NULL);
 }
 
 void addConsoleActionF(const char *token, VoidFloat callback) {
-	doAddAction(token, FLOAT_PARAMETER, (Void) callback);
+	doAddAction(token, FLOAT_PARAMETER, (Void) callback, NULL);
 }
 
 void addConsoleActionFF(const char *token, VoidFloatFloat callback) {
-	doAddAction(token, FLOAT_FLOAT_PARAMETER, (Void) callback);
+	doAddAction(token, FLOAT_FLOAT_PARAMETER, (Void) callback, NULL);
 }
 
 static int getParameterCount(action_type_e parameterType) {

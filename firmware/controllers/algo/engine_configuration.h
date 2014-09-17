@@ -201,7 +201,9 @@ typedef struct {
 
 	pin_output_mode_e mainRelayPinMode;
 
-	int unusedbs[100];
+	brain_pin_e max31855_cs[MAX31855_CS_COUNT];
+
+	int unusedbs[92];
 
 
 } board_configuration_s;
