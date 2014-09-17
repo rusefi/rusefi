@@ -43,6 +43,11 @@ static void doAddAction(const char *token, int type, Void callback, void *param)
 	current->token = token;
 	current->parameterType = type;
 	current->callback = callback;
+	current->param = param;
+}
+
+void addConsoleActionP(const char *token, VoidPtr callback, void *param) {
+	doAddAction(token, NO_PARAMETER_P, (Void) callback, param);
 }
 
 /**
@@ -93,6 +98,7 @@ void addConsoleActionFF(const char *token, VoidFloatFloat callback) {
 static int getParameterCount(action_type_e parameterType) {
 	switch (parameterType) {
 	case NO_PARAMETER:
+	case NO_PARAMETER_P:
 		return 0;
 	case ONE_PARAMETER:
 	case FLOAT_PARAMETER:
@@ -373,8 +379,12 @@ static bool handleConsoleLineInternal(char *line, int lineLength) {
 		for (int i = 0; i < consoleActionCount; i++) {
 			TokenCallback *current = &consoleActions[i];
 			if (strEqual(line, current->token)) {
-				// invoke callback function by reference
-				(*current->callback)();
+				if (current->parameterType == NO_PARAMETER) {
+					(*current->callback)();
+				} else if (current->parameterType == NO_PARAMETER_P) {
+					VoidPtr cb = (VoidPtr) current->callback;
+					(*cb)(current->param);
+				}
 				return true;
 			}
 		}

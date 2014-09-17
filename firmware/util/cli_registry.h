@@ -18,6 +18,7 @@ extern "C"
 
 typedef enum {
 	NO_PARAMETER,
+	NO_PARAMETER_P,
 	ONE_PARAMETER,
 	FLOAT_PARAMETER,
 	STRING_PARAMETER,
@@ -32,11 +33,15 @@ typedef struct {
 	const char *token;
 	action_type_e parameterType;
 	void (*callback)(void);
+	void *param;
 } TokenCallback;
 
 //void addDefaultConsoleActions(void);
 //void handleActionWithParameter(TokenCallback *current, char *parameter);
 int tokenLength(const char *msgp);
+
+typedef void (*VoidPtr)(void*);
+
 
 typedef void (*Void)(void);
 typedef void (*VoidInt)(int);
@@ -56,6 +61,8 @@ void helpCommand(void);
 void initConsoleLogic(void);
 void handleConsoleLine(char *line);
 void addConsoleAction(const char *token, Void callback);
+void addConsoleActionP(const char *token, VoidPtr callback, void *param);
+
 void addConsoleActionI(const char *token, VoidInt callback);
 void addConsoleActionII(const char *token, VoidIntInt callback);
 void addConsoleActionF(const char *token, VoidFloat callback);
