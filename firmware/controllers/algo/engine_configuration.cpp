@@ -272,6 +272,10 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	 */
 	boardConfiguration->triggerSimulatorFrequency = 1200;
 
+	for (int i = 0; i < MAX31855_CS_COUNT; i++) {
+		boardConfiguration->max31855_cs[i] = GPIO_NONE;
+	}
+
 
 	boardConfiguration->idleValvePin = GPIOE_2;
 	boardConfiguration->idleValvePinMode = OM_DEFAULT;
