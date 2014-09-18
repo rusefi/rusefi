@@ -219,6 +219,11 @@ typedef enum {
 } pin_output_mode_e;
 
 typedef enum {
+
+	Force_4b_gpio_mode = ENUM_SIZE_HACK,
+} gpio_mode_e;
+
+typedef enum {
 	PI_DEFAULT = 0,
 
 	Force_4b_pin_input_mode = ENUM_SIZE_HACK,
