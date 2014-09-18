@@ -129,8 +129,8 @@ static void printStats(void) {
 //	int fuelMapOffset = (int) (&engineConfiguration->fuelTable) - (int) engineConfiguration;
 //	scheduleMsg(&logger, "fuelTable %d", fuelMapOffset);
 //
-//	int offset = (int) (&boardConfiguration->o2heaterPin) - (int) engineConfiguration;
-//	scheduleMsg(&logger, "o2heaterPin %d", offset);
+	int offset = (int) (&boardConfiguration->max31855spiDevice) - (int) engineConfiguration;
+	scheduleMsg(&logger, "max31855_SpiDevice %d", offset);
 //
 //	offset = (int) (&boardConfiguration->idleSolenoidFrequency) - (int) engineConfiguration;
 //	scheduleMsg(&logger, "idleSolenoidFrequency %d", offset);

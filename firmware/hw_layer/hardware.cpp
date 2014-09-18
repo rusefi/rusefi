@@ -207,8 +207,9 @@ void initHardware(Logging *logger, Engine *engine) {
 	initHip9011();
 #endif /* EFI_HIP_9011 */
 
+#if EFI_MAX_31855
 	initMax31855(boardConfiguration);
-
+#endif /* EFI_MAX_31855 */
 
 #if EFI_CAN_SUPPORT
 	initCan();
