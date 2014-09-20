@@ -1,11 +1,16 @@
-update=12.02.2014 10:03:26
+update=9/20/2014 5:58:19 AM
 version=1
 last_client=pcbnew
 [general]
 version=1
+[cvpcb]
+version=1
+NetIExt=net
+[cvpcb/libraries]
+EquName1=devcms
 [eeschema]
 version=1
-LibDir=lib
+LibDir=../rusefi_lib
 NetFmtName=PcbnewAdvanced
 RptD_X=0
 RptD_Y=100
@@ -43,12 +48,7 @@ LibName28=atmel
 LibName29=contrib
 LibName30=valves
 LibName31=tle6240
-LibName32=project_specific_libs
-[cvpcb]
-version=1
-NetIExt=net
-[cvpcb/libraries]
-EquName1=devcms
+LibName32=conn_16
 [pcbnew]
 version=1
 LastNetListRead=tle6240_driver.net
@@ -69,7 +69,7 @@ DrawSegmentWidth=0.100000000000
 BoardOutlineThickness=0.100000000000
 ModuleOutlineThickness=0.150000000000
 [pcbnew/libraries]
-LibDir=lib
+LibDir=../rusefi_lib
 LibName1=sockets
 LibName2=connect
 LibName3=discret
@@ -86,6 +86,5 @@ LibName13=led
 LibName14=dip_sockets
 LibName15=pga_sockets
 LibName16=valves
-LibName17=tle6240gp
-LibName18=PIN_ARRAY_10X2
-LibName19=project_specific_modules
+LibName17=PIN_ARRAY_10X2
+LibName18=tle6240gp

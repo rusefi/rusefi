@@ -30,7 +30,7 @@ LIBS:atmel
 LIBS:contrib
 LIBS:valves
 LIBS:tle6240
-LIBS:project_specific_libs
+LIBS:conn_16
 LIBS:tle6240_driver-cache
 EELAYER 27 0
 EELAYER END
