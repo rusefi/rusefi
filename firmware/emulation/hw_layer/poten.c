@@ -36,26 +36,6 @@
  *
  */
 
-SPIDriver * getDigiralPotDevice(spi_device_e spiDevice) {
-#if STM32_SPI_USE_SPI1 || defined(__DOXYGEN__)
-  if (spiDevice == SPI_DEVICE_1) {
-		return &SPID1;
-  }
-#endif
-#if STM32_SPI_USE_SPI2 || defined(__DOXYGEN__)
-  if (spiDevic e== SPI_DEVICE_2) {
-	return &SPID2;
-  }
-#endif
-#if STM32_SPI_USE_SPI3 || defined(__DOXYGEN__)
-  if (spiDevice == SPI_DEVICE_3) {
-		return &SPID3;
-  }
-#endif
-	firmwareError("Unexpected SPI device: %d", spiDevice);
-	return NULL;
-}
-
 /* Low speed SPI configuration (281.250kHz, CPHA=0, CPOL=0, MSb first).*/
 #define SPI_POT_CONFIG SPI_CR1_BR_2 | SPI_CR1_BR_1 | SPI_CR1_DFF
 
@@ -130,7 +110,7 @@ void initPotentiometers(board_configuration_s *boardConfiguration) {
 			continue;
                 }
 
-		initPotentiometer(&config[i], getDigiralPotDevice(boardConfiguration->digitalPotentiometerSpiDevice),
+		initPotentiometer(&config[i], getSpiDevice(boardConfiguration->digitalPotentiometerSpiDevice),
 				getHwPort(csPin), getHwPin(csPin));
 	}
 

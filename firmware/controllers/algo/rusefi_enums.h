@@ -19,6 +19,8 @@
 
 #define DIGIPOT_COUNT 4
 
+#define TRIGGER_SIMULATOR_PIN_COUNT 3
+
 #define LOGIC_ANALYZER_CHANNEL_COUNT 4
 
 typedef enum {
