@@ -289,3 +289,12 @@ SPIDriver * getSpiDevice(spi_device_e spiDevice) {
 	return NULL;
 }
 
+void initSpiCs(SPIConfig *spiConfig, brain_pin_e csPin) {
+	spiConfig->end_cb = NULL;
+	ioportid_t port = getHwPort(csPin);
+	ioportmask_t pin = getHwPin(csPin);
+	spiConfig->ssport = port;
+	spiConfig->sspad = pin;
+	mySetPadMode("chip select", port, pin, PAL_STM32_MODE_OUTPUT);
+}
+

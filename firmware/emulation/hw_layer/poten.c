@@ -44,13 +44,10 @@ static Logging logger;
 #if EFI_POTENTIOMETER || defined(__DOXYGEN__)
 Mcp42010Driver config[DIGIPOT_COUNT];
 
-void initPotentiometer(Mcp42010Driver *driver, SPIDriver *spi, ioportid_t port, ioportmask_t pin) {
-	driver->spiConfig.end_cb = NULL;
-	driver->spiConfig.ssport = port;
-	driver->spiConfig.sspad = pin;
+void initPotentiometer(Mcp42010Driver *driver, SPIDriver *spi, brain_pin_e csPin) {
 	driver->spiConfig.cr1 = SPI_POT_CONFIG;
 	driver->spi = spi;
-	mySetPadMode("pot chip select", port, pin, PAL_STM32_MODE_OUTPUT);
+	initSpiCs(&driver->spiConfig, csPin);
 }
 
 static int getPotStep(int resistanceWA) {
@@ -111,7 +108,7 @@ void initPotentiometers(board_configuration_s *boardConfiguration) {
                 }
 
 		initPotentiometer(&config[i], getSpiDevice(boardConfiguration->digitalPotentiometerSpiDevice),
-				getHwPort(csPin), getHwPin(csPin));
+				csPin);
 	}
 
 	addConsoleActionII("pot", setPotResistanceCommand);
