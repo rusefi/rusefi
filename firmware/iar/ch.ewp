@@ -2666,6 +2666,12 @@
       <name>$PROJ_DIR$\..\hw_layer\io_pins.c</name>
     </file>
     <file>
+      <name>$PROJ_DIR$\..\hw_layer\max31855.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\hw_layer\max31855.h</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\..\hw_layer\mcp3208.c</name>
     </file>
     <file>
