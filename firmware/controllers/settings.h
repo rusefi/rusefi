@@ -17,7 +17,7 @@ extern "C"
 {
 #endif /* __cplusplus */
 
-
+void printSpiState(Logging *logger, board_configuration_s *boardConfiguration);
 void pokeControl(void);
 void setEngineType(int value);
 

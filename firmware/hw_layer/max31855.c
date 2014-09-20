@@ -14,12 +14,16 @@
 
 #include "max31855.h"
 #include "pin_repository.h"
+#include "settings.h"
 
 #if EFI_MAX_31855
 
 static Logging logger;
 
 static void showEgtInfo(board_configuration_s *boardConfiguration) {
+	printSpiState(&logger, boardConfiguration);
+
+
 	for (int i = 0; i < MAX31855_CS_COUNT; i++) {
 		if (boardConfiguration->max31855_cs[i] != GPIO_NONE) {
 			scheduleMsg(&logger, "%d ETG @ %s", i, hwPortname(boardConfiguration->max31855_cs[i]));

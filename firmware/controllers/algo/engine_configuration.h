@@ -183,8 +183,8 @@ typedef struct {
 	brain_pin_e canTxPin;
 	brain_pin_e canRxPin;
 
-	brain_pin_e triggerSimulatorPins[3];
-	pin_output_mode_e triggerSimulatorPinModes[3];
+	brain_pin_e triggerSimulatorPins[TRIGGER_SIMULATOR_PIN_COUNT];
+	pin_output_mode_e triggerSimulatorPinModes[TRIGGER_SIMULATOR_PIN_COUNT];
 
 	brain_pin_e o2heaterPin;
 	pin_output_mode_e o2heaterPinModeTodO;

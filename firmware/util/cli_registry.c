@@ -50,6 +50,10 @@ void addConsoleActionP(const char *token, VoidPtr callback, void *param) {
 	doAddAction(token, NO_PARAMETER_P, (Void) callback, param);
 }
 
+void addConsoleActionSSP(const char *token, VoidCharPtrCharPtrVoidPtr callback, void *param) {
+	doAddAction(token, STRING2_PARAMETER_P, (Void) callback, param);
+}
+
 /**
  * @brief	Register console action without parameters
  */
@@ -105,8 +109,11 @@ static int getParameterCount(action_type_e parameterType) {
 	case STRING_PARAMETER:
 		return 1;
 	case FLOAT_FLOAT_PARAMETER:
+	case FLOAT_FLOAT_PARAMETER_P:
 	case STRING2_PARAMETER:
+	case STRING2_PARAMETER_P:
 	case TWO_INTS_PARAMETER:
+	case TWO_INTS_PARAMETER_P:
 		return 2;
 	case STRING3_PARAMETER:
 		return 3;
@@ -152,7 +159,7 @@ void handleActionWithParameter(TokenCallback *current, char *parameter) {
 	}
 
 	// todo: refactor this hell!
-	if (current->parameterType == STRING2_PARAMETER) {
+	if (current->parameterType == STRING2_PARAMETER || current->parameterType == STRING2_PARAMETER_P) {
 		int spaceIndex = indexOf(parameter, ' ');
 		if (spaceIndex == -1) {
 			return;
@@ -163,10 +170,14 @@ void handleActionWithParameter(TokenCallback *current, char *parameter) {
 		parameter += spaceIndex + 1;
 		char * param1 = parameter;
 
-		VoidCharPtrCharPtr callbackS = (VoidCharPtrCharPtr) current->callback;
-		(*callbackS)(param0, param1);
+		if (current->parameterType == STRING2_PARAMETER) {
+			VoidCharPtrCharPtr callbackS = (VoidCharPtrCharPtr) current->callback;
+			(*callbackS)(param0, param1);
+		} else {
+			VoidCharPtrCharPtrVoidPtr callbackS = (VoidCharPtrCharPtrVoidPtr) current->callback;
+			(*callbackS)(param0, param1, current->param);
+		}
 		return;
-
 	}
 
 	if (current->parameterType == STRING3_PARAMETER) {

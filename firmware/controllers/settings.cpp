@@ -54,6 +54,11 @@ void printFloatArray(const char *prefix, float array[], int size) {
 	scheduleLogging(&logger);
 }
 
+void printSpiState(Logging *logger, board_configuration_s *boardConfiguration) {
+	scheduleMsg(logger, "spi 1=%s/2=%s/3=%s", boolToString(boardConfiguration->is_enabled_spi_1),
+			boolToString(boardConfiguration->is_enabled_spi_2), boolToString(boardConfiguration->is_enabled_spi_3));
+}
+
 extern board_configuration_s *boardConfiguration;
 
 /**
@@ -150,8 +155,8 @@ void printConfiguration(engine_configuration_s *engineConfiguration, engine_conf
 				hwPortname(boardConfiguration->digitalPotentiometerChipSelect[i]));
 	}
 
-	scheduleMsg(&logger, "spi 1=%s/2=%s/3=%s", boolToString(boardConfiguration->is_enabled_spi_1),
-			boolToString(boardConfiguration->is_enabled_spi_2), boolToString(boardConfiguration->is_enabled_spi_3));
+	printSpiState(&logger, boardConfiguration);
+
 
 #endif /* EFI_PROD_CODE */
 }
@@ -504,7 +509,7 @@ static void setTriggerInputPin(const char *indexStr, const char *pinName) {
 
 static void setTriggerSimulatorMode(const char *indexStr, const char *modeCode) {
 	int index = atoi(indexStr);
-	if (index < 0 || index > 2 || absI(index) == ERROR_CODE) {
+	if (index < 0 || index > TRIGGER_SIMULATOR_PIN_COUNT || absI(index) == ERROR_CODE) {
 		return;
 	}
 	int mode = atoi(modeCode);
@@ -514,9 +519,22 @@ static void setTriggerSimulatorMode(const char *indexStr, const char *modeCode) 
 	boardConfiguration->triggerSimulatorPinModes[index] = (pin_output_mode_e) mode;
 }
 
+static void setEgtCSPin(const char *indexStr, const char *pinName, board_configuration_s * board_configuration_s) {
+	int index = atoi(indexStr);
+	if (index < 0 || index > MAX31855_CS_COUNT || absI(index) == ERROR_CODE)
+		return;
+	brain_pin_e pin = parseBrainPin(pinName);
+	if (pin == GPIO_INVALID) {
+		scheduleMsg(&logger, "invalid pin name [%s]", pinName);
+		return;
+	}
+	scheduleMsg(&logger, "setting EGT CS pin[%d] to %s please save&restart", index, hwPortname(pin));
+	boardConfiguration->max31855_cs[index] = pin;
+}
+
 static void setTriggerSimulatorPin(const char *indexStr, const char *pinName) {
 	int index = atoi(indexStr);
-	if (index < 0 || index > 2)
+	if (index < 0 || index > TRIGGER_SIMULATOR_PIN_COUNT || absI(index) == ERROR_CODE)
 		return;
 	brain_pin_e pin = parseBrainPin(pinName);
 	if (pin == GPIO_INVALID) {
@@ -780,6 +798,7 @@ void initSettings(engine_configuration_s *engineConfiguration) {
 	addConsoleActionSS("set_ignition_pin", setIgnitionPin);
 	addConsoleActionSS("set_trigger_input_pin", setTriggerInputPin);
 	addConsoleActionSS("set_trigger_simulator_pin", setTriggerSimulatorPin);
+	addConsoleActionSSP("set_egt_cs_pin", (VoidCharPtrCharPtrVoidPtr)setEgtCSPin, boardConfiguration);
 	addConsoleActionSS("set_trigger_simulator_mode", setTriggerSimulatorMode);
 	addConsoleActionS("set_fuel_pump_pin", setFuelPumpPin);
 	addConsoleActionS("set_idle_pin", setIdlePin);
