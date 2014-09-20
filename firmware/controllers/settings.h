@@ -9,12 +9,15 @@
 #ifndef INJECTOR_CONTROL_H_
 #define INJECTOR_CONTROL_H_
 
+#include "engine_configuration.h"
+void initSettings(engine_configuration_s *engineConfiguration);
+
 #ifdef __cplusplus
 extern "C"
 {
 #endif /* __cplusplus */
 
-void initSettings(void);
+
 void pokeControl(void);
 void setEngineType(int value);
 

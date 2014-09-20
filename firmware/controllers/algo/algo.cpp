@@ -35,7 +35,7 @@ void initDataStructures(engine_configuration_s *engineConfiguration) {
 
 void initAlgo(engine_configuration_s *engineConfiguration) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
-	initSettings();
+	initSettings(engineConfiguration);
 	initSignalExecutor();
 #endif
 }
