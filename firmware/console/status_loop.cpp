@@ -64,6 +64,7 @@
 #include "rusefi.h"
 #include "pin_repository.h"
 #include "flash_main.h"
+#include "max31855.h"
 #endif
 
 extern Engine engine;
@@ -374,6 +375,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels) {
 	tsOutputChannels->manifold_air_pressure = getMap();
 	tsOutputChannels->checkEngine = hasErrorCodes();
 #if EFI_PROD_CODE
+	tsOutputChannels->egtValues.values[0] = getEgtValue(boardConfiguration, 0);
+
 	tsOutputChannels->needBurn = getNeedToWriteConfiguration();
 	tsOutputChannels->hasSdCard = isSdCardAlive();
 	tsOutputChannels->isFuelPumpOn = getOutputPinValue(FUEL_PUMP_RELAY);

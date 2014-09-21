@@ -21,12 +21,16 @@
 
 #if EFI_MAX_31855
 
+#define EGT_ERROR_VALUE -1000
+
 static Logging logger;
 
 static SPIConfig spiConfig[MAX31855_CS_COUNT];
 
 static void showEgtInfo(board_configuration_s *boardConfiguration) {
 	printSpiState(&logger, boardConfiguration);
+
+	scheduleMsg(&logger, "EGT spi: %d", boardConfiguration->max31855spiDevice);
 
 	for (int i = 0; i < MAX31855_CS_COUNT; i++) {
 		if (boardConfiguration->max31855_cs[i] != GPIO_NONE) {
@@ -36,8 +40,6 @@ static void showEgtInfo(board_configuration_s *boardConfiguration) {
 
 	}
 }
-
-static uint32_t rx_buff;
 
 // bits D17 and D3 are always expected to be zero
 #define MC_RESERVED_BITS 0x20008
@@ -64,44 +66,72 @@ static const char * getMcCode(max_32855_code code) {
 	}
 }
 
-static void egtRead(board_configuration_s *boardConfiguration) {
+static max_32855_code getResultCode(uint32_t egtPacket) {
+	if ((egtPacket & MC_RESERVED_BITS) != 0) {
+		return MC_INVALID;
+	} else if ((egtPacket & MC_OPEN_BIT) != 0) {
+		return MC_OPEN;
+	} else if ((egtPacket & MC_GND_BIT) != 0) {
+		return MC_SHORT_GND;
+	} else if ((egtPacket & MC_VCC_BIT) != 0) {
+		return MC_SHORT_VCC;
+	} else {
+		return MC_OK;
+	}
+}
 
-	scheduleMsg(&logger, "Reading egt");
+uint32_t readEgtPacket(board_configuration_s *boardConfiguration, int egtChannel) {
+	uint32_t egtPacket;
+	SPIDriver *driver = getSpiDevice(boardConfiguration->max31855spiDevice);
+	if (driver == NULL) {
+		return 0xFFFFFFFF;
+	}
 
-	SPIDriver *driver = getSpiDevice(SPI_DEVICE_3);
-
-	spiStart(driver, &spiConfig[0]);
+	spiStart(driver, &spiConfig[egtChannel]);
 	spiSelect(driver);
 
-	spiReceive(driver, 4, &rx_buff);
+	spiReceive(driver, 4, &egtPacket);
 
 	spiUnselect(driver);
 	spiStop(driver);
+	egtPacket = SWAP_UINT32(egtPacket);
+	return egtPacket;
+}
 
-	rx_buff = SWAP_UINT32(rx_buff);
+#define GET_TEMPERATURE_C(x) (((x) >> 18) / 4)
 
-	max_32855_code code;
-
-	if ((rx_buff & MC_RESERVED_BITS) != 0) {
-		code = MC_INVALID;
-	} else if ((rx_buff & MC_OPEN_BIT) != 0) {
-		code = MC_OPEN;
-	} else if ((rx_buff & MC_GND_BIT) != 0) {
-		code = MC_SHORT_GND;
-	} else if ((rx_buff & MC_VCC_BIT) != 0) {
-		code = MC_SHORT_VCC;
+uint16_t getEgtValue(board_configuration_s *boardConfiguration, int egtChannel) {
+	uint32_t packet = readEgtPacket(boardConfiguration, egtChannel);
+	max_32855_code code = getResultCode(packet);
+	if (code != MC_OK) {
+		return EGT_ERROR_VALUE + code;
 	} else {
-		code = MC_OK;
+		return GET_TEMPERATURE_C(packet);
+	}
+}
+
+static void egtRead(board_configuration_s *boardConfiguration) {
+
+	if (boardConfiguration->max31855spiDevice == SPI_NONE) {
+		scheduleMsg(&logger, "No SPI selected for EGT");
+		return;
 	}
 
-	scheduleMsg(&logger, "egt %x code=%d %s", rx_buff, code, getMcCode(code));
+	scheduleMsg(&logger, "Reading egt");
+
+	uint32_t egtPacket = readEgtPacket(boardConfiguration, 0);
+
+	max_32855_code code = getResultCode(egtPacket);
+
+	scheduleMsg(&logger, "egt %x code=%d %s", egtPacket, code, getMcCode(code));
 
 	if (code != MC_INVALID) {
-		int refBits = ((rx_buff & 0xFFFF) / 16); // bits 15:4
+		int refBits = ((egtPacket & 0xFFFF) / 16); // bits 15:4
 		float refTemp = refBits / 16.0;
 		scheduleMsg(&logger, "reference temperature %f", refTemp);
-	}
 
+		scheduleMsg(&logger, "EGT temperature %d", GET_TEMPERATURE_C(egtPacket));
+	}
 }
 
 void initMax31855(board_configuration_s *boardConfiguration) {
