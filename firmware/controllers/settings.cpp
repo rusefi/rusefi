@@ -439,6 +439,11 @@ static void setWholeFuelMapCmd(float value) {
 }
 
 #if EFI_PROD_CODE
+
+static void setEgtSpi(int spi) {
+	boardConfiguration->max31855spiDevice = (spi_device_e) spi;
+}
+
 static void setPotSpi(int spi) {
 	boardConfiguration->digitalPotentiometerSpiDevice = (spi_device_e) spi;
 }
@@ -798,7 +803,10 @@ void initSettings(engine_configuration_s *engineConfiguration) {
 	addConsoleActionSS("set_ignition_pin", setIgnitionPin);
 	addConsoleActionSS("set_trigger_input_pin", setTriggerInputPin);
 	addConsoleActionSS("set_trigger_simulator_pin", setTriggerSimulatorPin);
+
 	addConsoleActionSSP("set_egt_cs_pin", (VoidCharPtrCharPtrVoidPtr)setEgtCSPin, boardConfiguration);
+	addConsoleActionI("set_egt_spi", setEgtSpi);
+
 	addConsoleActionSS("set_trigger_simulator_mode", setTriggerSimulatorMode);
 	addConsoleActionS("set_fuel_pump_pin", setFuelPumpPin);
 	addConsoleActionS("set_idle_pin", setIdlePin);

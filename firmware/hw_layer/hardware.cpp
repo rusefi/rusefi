@@ -270,20 +270,23 @@ void initHardware(Logging *logger, Engine *engine) {
 }
 
 SPIDriver * getSpiDevice(spi_device_e spiDevice) {
+	if (spiDevice == SPI_NONE) {
+		return NULL;
+	}
 #if STM32_SPI_USE_SPI1 || defined(__DOXYGEN__)
-  if (spiDevice == SPI_DEVICE_1) {
+	if (spiDevice == SPI_DEVICE_1) {
 		return &SPID1;
-  }
+	}
 #endif
 #if STM32_SPI_USE_SPI2 || defined(__DOXYGEN__)
-  if (spiDevic e== SPI_DEVICE_2) {
-	return &SPID2;
-  }
+	if (spiDevic e== SPI_DEVICE_2) {
+		return &SPID2;
+	}
 #endif
 #if STM32_SPI_USE_SPI3 || defined(__DOXYGEN__)
-  if (spiDevice == SPI_DEVICE_3) {
+	if (spiDevice == SPI_DEVICE_3) {
 		return &SPID3;
-  }
+	}
 #endif
 	firmwareError("Unexpected SPI device: %d", spiDevice);
 	return NULL;

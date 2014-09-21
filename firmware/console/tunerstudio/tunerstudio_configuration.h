@@ -14,7 +14,13 @@
 /**
  * this is used to confirm that firmware and TunerStudio are using the same rusefi.ini version
  */
-#define TS_FILE_VERSION 20140917
+#define TS_FILE_VERSION 20140920
+
+#define EGT_CHANNEL_COUNT 8
+
+typedef struct {
+	uint16_t values[EGT_CHANNEL_COUNT];
+} egt_values_s;
 
 /**
  * please be aware that 'float' (F32) type requires TunerStudio version 2.6 and later
@@ -61,7 +67,8 @@ typedef struct {
 	unsigned int isMapError : 1; // bit 2
 	unsigned int isIatError : 1; // bit 3
 	int tsConfigVersion;
-	int unused[7];
+	egt_values_s egtValues;
+	int unused[3];
 } TunerStudioOutputChannels;
 
 #endif /* TUNERSTUDIO_CONFIGURATION_H_ */
