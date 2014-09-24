@@ -44,7 +44,7 @@ public:
 	/**
 	 * This is used for signal validation
 	 */
-	int expectedEventCount[PWM_PHASE_MAX_WAVE_PER_PWM];
+	uint32_t expectedEventCount[PWM_PHASE_MAX_WAVE_PER_PWM];
 
 	void addEvent(float angle, trigger_wheel_e const waveIndex, trigger_value_e const state);
 	void reset(operation_mode_e operationMode);

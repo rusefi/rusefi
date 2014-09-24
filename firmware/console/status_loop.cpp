@@ -400,6 +400,7 @@ extern TunerStudioOutputChannels tsOutputChannels;
 #endif /* EFI_TUNER_STUDIO */
 
 static void tsStatusThread(void *arg) {
+	(void)arg;
 	chRegSetThreadName("tuner s");
 	while (true) {
 #if EFI_TUNER_STUDIO

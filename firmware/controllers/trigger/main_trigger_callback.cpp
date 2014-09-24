@@ -231,6 +231,7 @@ extern Engine engine;
  * Both injection and ignition are controlled from this method.
  */
 void onTriggerEvent(trigger_event_e ckpSignalType, uint32_t eventIndex, MainTriggerCallback *mainTriggerCallback) {
+	(void)ckpSignalType;
 	efiAssertVoid(eventIndex < 2 * mainTriggerCallback->engineConfiguration2->triggerShape.shaftPositionEventCount,
 			"event index");
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 16, "stack#3");

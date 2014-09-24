@@ -71,7 +71,8 @@ extern engine_configuration_s *engineConfiguration;
 static scheduling_s startTimer[2];
 static scheduling_s endTimer[2];
 
-static void startAveraging(void*arg) {
+static void startAveraging(void *arg) {
+	(void) arg;
 	bool wasLocked = lockAnyContext();
 	;
 	// with locking we would have a consistent state
@@ -111,6 +112,7 @@ void mapAveragingCallback(adcsample_t value) {
 }
 
 static void endAveraging(void *arg) {
+	(void) arg;
 	bool wasLocked = lockAnyContext();
 	// with locking we would have a consistent state
 	v_averagedMapValue = v_mapAccumulator / mapMeasurementsCounter;

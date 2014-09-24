@@ -155,6 +155,7 @@ static void sparkbench(const char * onTimeStr, const char *offTimeStr, const cha
 static THD_WORKING_AREA(benchThreadStack, UTILITY_THREAD_STACK_SIZE);
 
 static msg_t benchThread(int param) {
+	(void)param;
 	chRegSetThreadName("BenchThread");
 
 	while (TRUE) {

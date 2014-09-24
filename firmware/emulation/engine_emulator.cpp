@@ -58,6 +58,7 @@ void emulate(void) {
 static int flag = FALSE;
 
 static msg_t eeThread(void *arg) {
+	(void)arg;
 	chRegSetThreadName("Engine");
 
 	while (TRUE) {
