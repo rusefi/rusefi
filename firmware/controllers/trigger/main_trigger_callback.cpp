@@ -118,7 +118,7 @@ static void handleFuel(Engine *engine, MainTriggerCallback *mainTriggerCallback,
 	}
 }
 
-static void handleSparkEvent(MainTriggerCallback *mainTriggerCallback, int eventIndex, IgnitionEvent *iEvent, int rpm) {
+static void handleSparkEvent(MainTriggerCallback *mainTriggerCallback, uint32_t eventIndex, IgnitionEvent *iEvent, int rpm) {
 	engine_configuration_s *engineConfiguration = mainTriggerCallback->engineConfiguration;
 	engine_configuration2_s *engineConfiguration2 = mainTriggerCallback->engineConfiguration2;
 
@@ -182,7 +182,7 @@ static void handleSparkEvent(MainTriggerCallback *mainTriggerCallback, int event
 	}
 }
 
-static void handleSpark(MainTriggerCallback *mainTriggerCallback, int eventIndex, int rpm, IgnitionEventList *list) {
+static void handleSpark(MainTriggerCallback *mainTriggerCallback, uint32_t eventIndex, int rpm, IgnitionEventList *list) {
 	if (!isValidRpm(rpm) || !mainTriggerCallback->engineConfiguration->isIgnitionEnabled)
 		return; // this might happen for instance in case of a single trigger event after a pause
 
