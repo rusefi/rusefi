@@ -138,6 +138,8 @@ static void initWave(const char *name, int index) {
 #endif
 
 static void waTriggerEventListener(trigger_event_e ckpSignalType, uint32_t index, void *arg) {
+	(void)ckpSignalType;
+	(void)arg;
 	if (index != 0) {
 		return;
 	}
@@ -151,6 +153,7 @@ static THD_WORKING_AREA(waThreadStack, UTILITY_THREAD_STACK_SIZE);
 //static Logging logger;
 
 static msg_t waThread(void *arg) {
+	(void)arg;
 	chRegSetThreadName("Wave Analyzer");
 #if EFI_WAVE_CHART
 	while (TRUE) {

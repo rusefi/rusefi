@@ -80,6 +80,7 @@ static trigger_value_e eventType[6] = { TV_LOW, TV_HIGH, TV_LOW, TV_HIGH, TV_LOW
  */
 void TriggerState::decodeTriggerEvent(trigger_shape_s const*triggerShape, trigger_config_s const*triggerConfig,
 		trigger_event_e const signal, uint64_t nowUs) {
+	(void)triggerConfig; // we might want this for logging?
 	efiAssertVoid(signal <= SHAFT_3RD_UP, "unexpected signal");
 
 	trigger_wheel_e triggerWheel = eventIndex[signal];

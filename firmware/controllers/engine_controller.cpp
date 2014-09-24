@@ -199,6 +199,7 @@ static void fuelPumpOff(void *arg) {
 }
 
 static void fuelPumpOn(trigger_event_e signal, uint32_t index, void *arg) {
+	(void)arg;
 	if (index != 0)
 		return; // let's not abuse the timer - one time per revolution would be enough
 	// todo: the check about GPIO_NONE should be somewhere else!

@@ -26,12 +26,14 @@ static void date_help(void) {
 #endif /* EFI_RTC */
 
 void date_set_tm(struct tm *timp) {
+	(void)timp;
 #if EFI_RTC
 	rtcSetTimeTm(&RTCD1, timp);
 #endif /* EFI_RTC */
 }
 
 void date_get_tm(struct tm *timp) {
+	(void)timp;
 #if EFI_RTC
 	rtcGetTimeTm(&RTCD1, timp);
 #endif /* EFI_RTC */

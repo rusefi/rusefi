@@ -81,6 +81,7 @@ float getFuelMs(int rpm, Engine *engine) {
 	}
 }
 
+// todo: start using 'engine' parameter and not 'extern'
 float getRunningFuel(float baseFuel, Engine *engine, int rpm) {
 	float iatCorrection = getIatCorrection(getIntakeAirTemperature());
 	float cltCorrection = getCltCorrection(getCoolantTemperature());
