@@ -49,7 +49,7 @@ float maxF(float i1, float i2) {
 	return i1 > i2 ? i1 : i2;
 }
 
-int efiStrlen(const char *param) {
+uint32_t efiStrlen(const char *param) {
 	return strlen(param);
 }
 

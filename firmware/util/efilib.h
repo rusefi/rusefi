@@ -33,7 +33,7 @@ extern "C"
 
 const char * boolToString(bool value);
 
-int efiStrlen(const char *param);
+uint32_t efiStrlen(const char *param);
 int indexOf(const char *string, char ch);
 float atoff(const char *string);
 int atoi(const char *string);
