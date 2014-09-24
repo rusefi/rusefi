@@ -78,6 +78,7 @@ void setDefaultPinState(io_pin_e pin, pin_output_mode_e *outputMode) {
 }
 
 static void comBlinkingThread(void *arg) {
+	(void)arg;
 	chRegSetThreadName("communication blinking");
 	while (TRUE) {
 		int delay;
@@ -105,6 +106,7 @@ static void comBlinkingThread(void *arg) {
 int isTriggerDecoderError(void);
 
 static void errBlinkingThread(void *arg) {
+	(void)arg;
 	chRegSetThreadName("err blinking");
 #if EFI_ENGINE_CONTROL
 	while (TRUE) {

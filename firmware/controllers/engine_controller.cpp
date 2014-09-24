@@ -163,6 +163,7 @@ int getTimeNowSeconds(void) {
 }
 
 static void onEvenyGeneralMilliseconds(void *arg) {
+	(void)arg;
 	/**
 	 * We need to push current value into the 64 bit counter often enough so that we do not miss an overflow
 	 */
@@ -191,6 +192,7 @@ static void initPeriodicEvents(void) {
 }
 
 static void fuelPumpOff(void *arg) {
+	(void)arg;
 	if (getOutputPinValue(FUEL_PUMP_RELAY))
 		scheduleMsg(&logger, "fuelPump OFF at %s%d", hwPortname(boardConfiguration->fuelPumpPin));
 	turnOutputPinOff(FUEL_PUMP_RELAY);

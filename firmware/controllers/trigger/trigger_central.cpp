@@ -222,6 +222,7 @@ float getTriggerDutyCycle(int index) {
 }
 
 void initTriggerCentral(Engine *engine) {
+	// todo: use 'engine' parameter and eliminate 'extern'
 	strcpy((char*) shaft_signal_msg_index, "_");
 
 #if EFI_WAVE_CHART

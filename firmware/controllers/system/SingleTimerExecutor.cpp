@@ -28,6 +28,7 @@ static Executor instance;
 extern schfunc_t globalTimerCallback;
 
 static void executorCallback(void *arg) {
+	(void)arg;
 	instance.onTimerCallback();
 }
 
