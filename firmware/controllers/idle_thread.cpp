@@ -80,6 +80,7 @@ static void setIdleValvePwm(int value) {
 }
 
 static msg_t ivThread(int param) {
+	(void)param;
 	chRegSetThreadName("IdleValve");
 
 	int currentIdleValve = -1;

@@ -52,6 +52,7 @@ void setHardwareUsTimer(int32_t timeUs) {
 }
 
 static void callback(GPTDriver *gptp) {
+	(void)gptp;
 	timerCallbackCounter++;
 	if (globalTimerCallback == NULL) {
 		firmwareError("NULL globalTimerCallback");
@@ -78,6 +79,7 @@ static const char * msg;
 static char buff[32];
 
 static msg_t mwThread(int param) {
+	(void)param;
 	chRegSetThreadName("timer watchdog");
 
 	while (TRUE) {

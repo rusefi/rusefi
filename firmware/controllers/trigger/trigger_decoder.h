@@ -45,7 +45,7 @@ public:
 	/**
 	 * Total time result for previous trigger cycle
 	 */
-	int prevTotalTime[PWM_PHASE_MAX_WAVE_PER_PWM];
+	uint32_t prevTotalTime[PWM_PHASE_MAX_WAVE_PER_PWM];
 	int expectedTotalTime[PWM_PHASE_MAX_WAVE_PER_PWM];
 
 private:
@@ -53,15 +53,15 @@ private:
 	/**
 	 * index within trigger revolution, from 0 to trigger event count
 	 */
-	int current_index;
+	uint32_t current_index;
 	/**
 	 * Number of actual events within current trigger cycle
 	 * see trigger_shape_s
 	 */
-	int eventCount[PWM_PHASE_MAX_WAVE_PER_PWM];
+	uint32_t eventCount[PWM_PHASE_MAX_WAVE_PER_PWM];
 	uint64_t timeOfPreviousEvent[PWM_PHASE_MAX_WAVE_PER_PWM];
 	uint64_t totalEventCountBase;
-	int totalRevolutionCounter;
+	uint32_t totalRevolutionCounter;
 	bool isFirstEvent;
 	uint64_t prevCycleDuration;
 	uint64_t startOfCycle;

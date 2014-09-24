@@ -152,6 +152,7 @@ static void onTdcCallback(void) {
  * This trigger callback schedules the actual physical TDC callback in relation to trigger synchronization point.
  */
 static void tdcMarkCallback(trigger_event_e ckpSignalType, uint32_t index0, void *arg) {
+	(void)ckpSignalType;
 	bool isTriggerSynchronizationPoint = index0 == 0;
 	if (isTriggerSynchronizationPoint) {
 		int revIndex2 = getRevolutionCounter() % 2;
