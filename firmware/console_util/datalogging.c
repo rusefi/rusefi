@@ -66,7 +66,7 @@ static bool intermediateLoggingBufferInited = FALSE;
 /**
  * @returns true if data does not fit into this buffer
  */
-static bool validateBuffer(Logging *logging, uint32_t extraLen, const char *text) {
+static bool validateBuffer(Logging *logging, uint32_t extraLen) {
 	if (logging->buffer == NULL) {
 		firmwareError("Logging not initialized: %s", logging->name);
 		return true;
@@ -74,13 +74,6 @@ static bool validateBuffer(Logging *logging, uint32_t extraLen, const char *text
 
 	if (remainingSize(logging) < extraLen + 1) {
 		warning(OBD_PCM_Processor_Fault, "buffer overflow %s", logging->name);
-//		strcpy(logging->SMALL_BUFFER, "Logging buffer overflow: ");
-//		strcat(logging->SMALL_BUFFER, logging->name);
-//		strcat(logging->SMALL_BUFFER, "/");
-//		strcat(logging->SMALL_BUFFER, text);
-//		firmwareError(logging->SMALL_BUFFER);
-//		unlockOutputBuffer();
-//		resetLogging(logging);
 		return true;
 	}
 	return false;
@@ -89,7 +82,7 @@ static bool validateBuffer(Logging *logging, uint32_t extraLen, const char *text
 void append(Logging *logging, const char *text) {
 	efiAssertVoid(text != NULL, "append NULL");
 	uint32_t extraLen = efiStrlen(text);
-	int isError = validateBuffer(logging, extraLen, text);
+	int isError = validateBuffer(logging, extraLen);
 	if (isError) {
 		return;
 	}

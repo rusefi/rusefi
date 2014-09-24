@@ -137,7 +137,7 @@ static void initWave(const char *name, int index) {
 }
 #endif
 
-static void waTriggerEventListener(trigger_event_e ckpSignalType, int index, void *arg) {
+static void waTriggerEventListener(trigger_event_e ckpSignalType, uint32_t index, void *arg) {
 	if (index != 0) {
 		return;
 	}

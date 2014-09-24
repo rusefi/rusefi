@@ -95,7 +95,7 @@ static void handleFuelInjectionEvent(MainTriggerCallback *mainTriggerCallback, A
 	scheduleOutput(event->actuator, delay, fuelMs);
 }
 
-static void handleFuel(Engine *engine, MainTriggerCallback *mainTriggerCallback, int eventIndex, int rpm) {
+static void handleFuel(Engine *engine, MainTriggerCallback *mainTriggerCallback, uint32_t eventIndex, int rpm) {
 	if (!isInjectionEnabled(mainTriggerCallback->engineConfiguration))
 		return;
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 16, "stack#3");
@@ -230,7 +230,7 @@ extern Engine engine;
  * This is the main trigger event handler.
  * Both injection and ignition are controlled from this method.
  */
-void onTriggerEvent(trigger_event_e ckpSignalType, int eventIndex, MainTriggerCallback *mainTriggerCallback) {
+void onTriggerEvent(trigger_event_e ckpSignalType, uint32_t eventIndex, MainTriggerCallback *mainTriggerCallback) {
 	efiAssertVoid(eventIndex < 2 * mainTriggerCallback->engineConfiguration2->triggerShape.shaftPositionEventCount,
 			"event index");
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 16, "stack#3");

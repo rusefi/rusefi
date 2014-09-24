@@ -122,7 +122,7 @@ static void endAveraging(void *arg) {
 /**
  * Shaft Position callback used to schedule start and end of MAP averaging
  */
-static void shaftPositionCallback(trigger_event_e ckpEventType, int index, void *arg) {
+static void shaftPositionCallback(trigger_event_e ckpEventType, uint32_t index, void *arg) {
 	// this callback is invoked on interrupt thread
 
 	if (index != 0)

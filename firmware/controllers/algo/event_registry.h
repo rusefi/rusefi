@@ -20,7 +20,7 @@ typedef struct {
 	/**
 	 * That's trigger event index
 	 */
-	int eventIndex;
+	uint32_t eventIndex;
 	float eventAngle;
 	/**
 	 * Angle offset from the trigger event

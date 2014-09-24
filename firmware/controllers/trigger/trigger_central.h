@@ -12,7 +12,7 @@
 #include "listener_array.h"
 #include "trigger_decoder.h"
 
-typedef void (*ShaftPositionListener)(trigger_event_e signal, int index, void *arg);
+typedef void (*ShaftPositionListener)(trigger_event_e signal, uint32_t index, void *arg);
 
 #ifdef __cplusplus
 #include "ec2.h"
