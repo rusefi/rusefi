@@ -32,7 +32,7 @@ public:
 
 };
 void initMainEventListener(Engine *engine, engine_configuration2_s *engineConfiguration2);
-void onTriggerEvent(trigger_event_e ckpSignalType, int eventIndex, MainTriggerCallback *mainTriggerCallback);
+void onTriggerEvent(trigger_event_e ckpSignalType, uint32_t eventIndex, MainTriggerCallback *mainTriggerCallback);
 #endif
 
 

@@ -56,7 +56,7 @@ public:
 	 * TODO this should be migrated to CRANKshaft revolution, this would go together
 	 * TODO with eliminating RPM_MULT magic constant
 	 */
-	int shaftPositionEventCount;
+	uint32_t shaftPositionEventCount;
 
 	/**
 	 * this one is per CRANKshaft revolution

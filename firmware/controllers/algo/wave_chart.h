@@ -30,7 +30,7 @@ private:
 #if EFI_WAVE_CHART
 	Logging logging;
 #endif /* EFI_WAVE_CHART */
-	int counter;
+	uint32_t counter;
 	uint64_t startTime100;
 	uint64_t startTimeUs;
 	volatile int isInitialized;
