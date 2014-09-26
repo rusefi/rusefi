@@ -35,6 +35,8 @@ typedef struct {
 
 #define GPIO_COUNT 8
 
+#define JOYSTICK_PIN_COUNT 5
+
 #define FUEL_RPM_COUNT 16
 #define FUEL_LOAD_COUNT 16
 #define VE_RPM_COUNT 16
@@ -213,7 +215,9 @@ typedef struct {
 	brain_pin_e gpioPins[GPIO_COUNT];
 	pin_output_mode_e gpioPinModes[GPIO_COUNT];
 
-	int unusedbs[75];
+	brain_pin_e joystickPins[JOYSTICK_PIN_COUNT];
+
+	int unusedbs[70];
 
 
 } board_configuration_s;
