@@ -278,6 +278,9 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	for (int i = 0; i < GPIO_COUNT; i++) {
 		boardConfiguration->gpioPins[i] = GPIO_NONE;
 	}
+	for (int i = 0; i < JOYSTICK_PIN_COUNT; i++) {
+		boardConfiguration->joystickPins[i] = GPIO_NONE;
+	}
 
 	boardConfiguration->idleValvePin = GPIOE_2;
 	boardConfiguration->idleValvePinMode = OM_DEFAULT;
