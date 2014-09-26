@@ -8,11 +8,6 @@
 #ifndef FUEL_MAP_H_
 #define FUEL_MAP_H_
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
-
 #include "engine.h"
 
 void prepareFuelMap(void);
@@ -26,9 +21,5 @@ float getRunningFuel(float baseFuel, Engine *engine, int rpm);
 float getCrankingFuel(void);
 float getStartingFuel(float coolantTemperature);
 float getFuelMs(int rpm, Engine *engine);
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
 
 #endif /* FUEL_MAP_H_ */

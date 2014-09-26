@@ -121,6 +121,7 @@ uint8_t errorMessageBuffer[200];
 static bool hasFirmwareErrorFlag = FALSE;
 extern engine_configuration_s *engineConfiguration;
 extern board_configuration_s *boardConfiguration;
+extern engine_configuration2_s *engineConfiguration2;
 extern Engine engine;
 
 char *getFirmwareError(void) {
@@ -132,6 +133,7 @@ void runRusEfi(void) {
 
 	// that's dirty, this assignment should be nicer or in a better spot
 	engine.engineConfiguration = engineConfiguration;
+
 
 
 	initErrorHandling();
