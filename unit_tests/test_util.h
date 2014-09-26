@@ -21,6 +21,7 @@ void testMalfunctionCentral(void);
 void testConsoleLogic(void);
 void testGpsParser(void);
 void testFLStack(void);
+void testMisc(void);
 
 #ifdef __cplusplus
 }

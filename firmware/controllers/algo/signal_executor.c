@@ -117,6 +117,14 @@ void scheduleOutput(OutputSignal *signal, float delayMs, float durationMs) {
 	scheduleTask("out down", sDown, (int)MS2US(delayMs + durationMs), (schfunc_t) &turnPinLow, (void*) signal->io_pin);
 }
 
+io_pin_e getPinByName(const char *name) {
+	if(startsWith(name, "spa")) {
+		int index = atoi(name + 3);
+		return (io_pin_e)((int)SPARKOUT_1_OUTPUT - 1 + index);
+	}
+	return IO_INVALID;
+}
+
 const char *getPinName(io_pin_e io_pin) {
 	switch (io_pin) {
 	// todo: refactor this hell - introduce arrays & checks?

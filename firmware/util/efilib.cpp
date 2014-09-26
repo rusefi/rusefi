@@ -53,8 +53,22 @@ uint32_t efiStrlen(const char *param) {
 	return strlen(param);
 }
 
+bool startsWith(const char *line, const char *prefix) {
+	int len = efiStrlen(prefix);
+	if(efiStrlen(line) < len) {
+		return false;
+	}
+	for(int i =0;i<len;i++) {
+		if(line[i]!=prefix[i]) {
+			return false;
+		}
+	}
+	return true;
+}
+
 int indexOf(const char *string, char ch) {
 	// todo: there should be a standard function for this
+	// todo: on the other hand MISRA wants us not to use standart headers
 	int len = efiStrlen(string);
 	for (int i = 0; i < len; i++) {
 		if (string[i] == ch) {
