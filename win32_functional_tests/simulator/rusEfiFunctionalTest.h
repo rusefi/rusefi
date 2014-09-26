@@ -14,7 +14,6 @@ extern "C"
 #endif /* __cplusplus */
 
 void rusEfiFunctionalTest(void);
-void initTestStream(TestStream *ts);
 void printPendingMessages(void);
 
 #ifdef __cplusplus

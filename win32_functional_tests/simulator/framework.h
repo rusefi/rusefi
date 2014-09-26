@@ -7,8 +7,15 @@
 #ifndef FRAMEWORK_H_
 #define FRAMEWORK_H_
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif /* __cplusplus */
 
+void initTestStream(TestStream *ts);
 
-
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* FRAMEWORK_H_ */
