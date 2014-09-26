@@ -9,6 +9,7 @@
 
 #include "main.h"
 #include "engine_configuration.h"
+#include "ec2.h"
 
 class EngineState {
 public:
@@ -17,6 +18,15 @@ public:
 	 */
 	float iat;
 	float clt;
+
+	/**
+	 * By the way:
+	 * 'cranking' means engine is not stopped and the rpm are below crankingRpm
+	 * 'running' means RPM are above crankingRpm
+	 * 'spinning' means the engine is not stopped
+	 */
+	bool isSpinning;
+
 };
 
 class RpmCalculator;
@@ -25,6 +35,7 @@ class Engine {
 public:
 	RpmCalculator *rpmCalculator;
 	engine_configuration_s *engineConfiguration;
+	engine_configuration2_s *engineConfiguration2;
 
 
 	EngineState engineState;
