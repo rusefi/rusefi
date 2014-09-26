@@ -99,7 +99,7 @@ void printConfiguration(engine_configuration_s *engineConfiguration, engine_conf
 
 	scheduleMsg(&logger, "tpsMin: %d/tpsMax: %d", engineConfiguration->tpsMin, engineConfiguration->tpsMax);
 
-	scheduleMsg(&logger, "ignitionMode: %d/enabled=%s", engineConfiguration->ignitionMode,
+	scheduleMsg(&logger, "ignitionMode: %s/enabled=%s", ignitionModeToString(engineConfiguration->ignitionMode),
 			boolToString(engineConfiguration->isIgnitionEnabled));
 	scheduleMsg(&logger, "timingMode: %d", engineConfiguration->timingMode);
 	scheduleMsg(&logger, "fixedModeTiming: %d", (int) engineConfiguration->fixedModeTiming);

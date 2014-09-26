@@ -68,6 +68,19 @@ const char* getConfigurationName(engine_type_e engineType) {
 	}
 }
 
+const char * ignitionModeToString(ignition_mode_e mode) {
+	switch (mode) {
+	case IM_ONE_COIL:
+		return "single";
+	case IM_INDIVIDUAL_COILS:
+		return "individual";
+	case IM_WASTED_SPARK:
+		return "wasted";
+	default:
+		return "unexpected";
+	}
+}
+
 const char * pinModeToString(pin_output_mode_e mode) {
 	switch (mode) {
 	case OM_DEFAULT:
