@@ -133,6 +133,7 @@ void runRusEfi(void) {
 
 	// that's dirty, this assignment should be nicer or in a better spot
 	engine.engineConfiguration = engineConfiguration;
+	engine.engineConfiguration2 = engineConfiguration2;
 
 
 

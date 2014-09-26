@@ -3194,7 +3194,7 @@
       <name>$PROJ_DIR$\..\util\histogram.h</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\util\listener_array.c</name>
+      <name>$PROJ_DIR$\..\util\listener_array.cpp</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\util\listener_array.h</name>
