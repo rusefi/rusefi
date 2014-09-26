@@ -403,6 +403,9 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType, engine_co
 	 * Let's apply global defaults first
 	 */
 	setDefaultConfiguration(engineConfiguration, boardConfiguration);
+#if EFI_SIMULATOR
+	engineConfiguration->directSelfStimulation = true;
+#endif /* */
 	engineConfiguration->engineType = engineType;
 	engineConfiguration->headerMagicValue = HEADER_MAGIC_NUMBER;
 	/**

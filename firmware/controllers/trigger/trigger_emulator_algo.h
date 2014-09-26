@@ -10,6 +10,16 @@
 
 #include "pwm_generator_logic.h"
 
-void initTriggerEmulatorLogic(pwm_gen_callback *callback);
+class TriggerEmulatorHelper {
+public:
+	bool primaryWheelState;
+	bool secondaryWheelState;
+	bool thirdWheelState;
+
+    TriggerEmulatorHelper();
+	void handleEmulatorCallback(PwmConfig *state, int stateIndex);
+};
+
+void initTriggerEmulatorLogic(void);
 
 #endif /* TRIGGER_EMULATOR_ALGO_H_ */
