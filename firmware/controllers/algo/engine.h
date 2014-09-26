@@ -19,6 +19,25 @@ public:
 	float iat;
 	float clt;
 
+
+};
+
+class RpmCalculator;
+
+class Engine {
+public:
+	void init();
+	RpmCalculator *rpmCalculator;
+	engine_configuration_s *engineConfiguration;
+	engine_configuration2_s *engineConfiguration2;
+
+	void onTriggerEvent(uint64_t nowUs);
+	EngineState engineState;
+	uint64_t lastTriggerEventTimeUs;
+
+	void updateSlowSensors();
+	void watchdog();
+private:
 	/**
 	 * By the way:
 	 * 'cranking' means engine is not stopped and the rpm are below crankingRpm
@@ -27,20 +46,6 @@ public:
 	 */
 	bool isSpinning;
 
-};
-
-class RpmCalculator;
-
-class Engine {
-public:
-	RpmCalculator *rpmCalculator;
-	engine_configuration_s *engineConfiguration;
-	engine_configuration2_s *engineConfiguration2;
-
-
-	EngineState engineState;
-
-	void updateSlowSensors();
 };
 
 #endif /* ENGINE_H_ */

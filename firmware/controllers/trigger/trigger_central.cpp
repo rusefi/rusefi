@@ -93,11 +93,16 @@ static void reportEventToWaveChart(trigger_event_e ckpSignalType, int index) {
 	}
 }
 
+// todo: improve this
+extern Engine engine;
+
 void TriggerCentral::handleShaftSignal(configuration_s *configuration, trigger_event_e signal, uint64_t nowUs) {
 	efiAssertVoid(configuration!=NULL, "configuration");
 
 	efiAssertVoid(configuration->engineConfiguration!=NULL, "engineConfiguration");
 	efiAssertVoid(configuration->engineConfiguration2!=NULL, "engineConfiguration2");
+
+	engine.onTriggerEvent(nowUs);
 
 #if EFI_HISTOGRAMS && EFI_PROD_CODE
 	int beforeCallback = hal_lld_get_counter_value();
