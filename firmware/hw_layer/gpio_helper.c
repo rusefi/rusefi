@@ -47,10 +47,6 @@ void initOutputPin(const char *msg, OutputPin *outputPin, GPIO_TypeDef *port, ui
 	initOutputPinExt(msg, outputPin, port, pinNumber, PAL_MODE_OUTPUT_PUSHPULL);
 }
 
-int getLogicPinValue(OutputPin * outputPin) {
-	return outputPin->currentLogicValue;
-}
-
 /**
  * Set's the value of the pin. On this layer the value is assigned as is, without any conversion.
  */

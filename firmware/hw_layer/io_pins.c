@@ -26,7 +26,7 @@ extern board_configuration_s *boardConfiguration;
 static Logging logger;
 
 static pin_output_mode_e *pinDefaultState[IO_PIN_COUNT];
-static OutputPin outputs[IO_PIN_COUNT];
+extern OutputPin outputs[IO_PIN_COUNT];
 static io_pin_e leds[] = { LED_WARNING, LED_RUNNING, LED_ERROR, LED_COMMUNICATION_1, LED_DEBUG, LED_EXT_1,
 		LED_CHECK_ENGINE };
 
