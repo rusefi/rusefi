@@ -16,6 +16,7 @@
  * Logical pins. See brain_pin_e for physical pins.
  */
 typedef enum {
+	IO_INVALID,
 	LED_WARNING, // Orange on-board LED
 	LED_RUNNING, // Green on-board LED
 	LED_ERROR, // Red on-board LED
@@ -128,6 +129,7 @@ extern "C"
 void initPrimaryPins(void);
 void initOutputPins(void);
 const char *getPinName(io_pin_e io_pin);
+io_pin_e getPinByName(const char *name);
 void turnOutputPinOn(io_pin_e pin);
 void turnOutputPinOff(io_pin_e pin);
 void setOutputPinValue(io_pin_e pin, int logicValue);

@@ -100,6 +100,7 @@ int main(void) {
 	testFindIndex();
 	testInterpolate2d();
 	testGpsParser();
+	testMisc();
 	prepareFuelMap();
 	testFuelMap();
 	testEngineMath();
@@ -130,7 +131,7 @@ int main(void) {
 	testFLStack();
 
 	//	resizeMap();
-	printf("Success 20130914\r\n");
+	printf("Success 20130926\r\n");
 	return EXIT_SUCCESS;
 }
 

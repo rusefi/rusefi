@@ -19,6 +19,7 @@
 #include "efilib2.h"
 #include "crc.h"
 #include "fl_stack.h"
+#include "io_pins.h"
 
 void testCrc(void) {
 	assertEquals(4, efiRound(4.4, 1));
@@ -310,6 +311,9 @@ void testFLStack(void) {
 
 	FLStack<int, 4> stack;
 	assertEquals(0, stack.size());
+}
 
-
+void testMisc(void) {
+	assertEquals(true, strEqual("spa3", getPinName(SPARKOUT_3_OUTPUT)));
+	assertEquals(SPARKOUT_12_OUTPUT, getPinByName("spa12"));
 }

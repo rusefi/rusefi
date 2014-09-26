@@ -23,6 +23,8 @@
 
 extern board_configuration_s *boardConfiguration;
 
+static Logging logger;
+
 static pin_output_mode_e *pinDefaultState[IO_PIN_COUNT];
 static OutputPin outputs[IO_PIN_COUNT];
 static io_pin_e leds[] = { LED_WARNING, LED_RUNNING, LED_ERROR, LED_COMMUNICATION_1, LED_DEBUG, LED_EXT_1,
@@ -59,7 +61,7 @@ inline static void assertOMode(pin_output_mode_e mode) {
  * @brief Sets the value according to current electrical settings
  */
 void setOutputPinValue(io_pin_e pin, int logicValue) {
-	if (outputs[pin].port == GPIO_NULL )
+	if (outputs[pin].port == GPIO_NULL)
 		return;
 	efiAssertVoid(pinDefaultState[pin]!=NULL, "pin mode not initialized");
 	pin_output_mode_e mode = *pinDefaultState[pin];
@@ -78,7 +80,7 @@ void setDefaultPinState(io_pin_e pin, pin_output_mode_e *outputMode) {
 }
 
 static void comBlinkingThread(void *arg) {
-	(void)arg;
+	(void) arg;
 	chRegSetThreadName("communication blinking");
 	while (TRUE) {
 		int delay;
@@ -106,7 +108,7 @@ static void comBlinkingThread(void *arg) {
 int isTriggerDecoderError(void);
 
 static void errBlinkingThread(void *arg) {
-	(void)arg;
+	(void) arg;
 	chRegSetThreadName("err blinking");
 #if EFI_ENGINE_CONTROL
 	while (TRUE) {
@@ -123,16 +125,16 @@ static void errBlinkingThread(void *arg) {
 static void outputPinRegisterExt(const char *msg, io_pin_e ioPin, GPIO_TypeDef *port, uint32_t pin,
 		pin_output_mode_e *outputMode) {
 	efiAssertVoid((int)ioPin < IO_PIN_COUNT, "io pin out of range");
-	if (port == GPIO_NULL ) {
+	if (port == GPIO_NULL) {
 		// that's for GRIO_NONE
 		outputs[ioPin].port = port;
 		return;
 	}
 
 	assertOMode(*outputMode);
-	iomode_t mode =
-			(*outputMode == OM_DEFAULT || *outputMode == OM_INVERTED) ?
-					PAL_MODE_OUTPUT_PUSHPULL : PAL_MODE_OUTPUT_OPENDRAIN;
+	iomode_t mode = (*outputMode == OM_DEFAULT || *outputMode == OM_INVERTED) ?
+	PAL_MODE_OUTPUT_PUSHPULL :
+																				PAL_MODE_OUTPUT_OPENDRAIN;
 
 	initOutputPinExt(msg, &outputs[ioPin], port, pin, mode);
 
@@ -141,10 +143,10 @@ static void outputPinRegisterExt(const char *msg, io_pin_e ioPin, GPIO_TypeDef *
 
 GPIO_TypeDef * getHwPort(brain_pin_e brainPin) {
 	if (brainPin == GPIO_NONE)
-		return GPIO_NULL ;
+		return GPIO_NULL;
 	if (brainPin > GPIO_NONE || brainPin < 0) {
 		firmwareError("Invalid brain_pin_e: %d", brainPin);
-		return GPIO_NULL ;
+		return GPIO_NULL;
 	}
 	return PORTS[brainPin / 16];
 }
@@ -188,7 +190,19 @@ void initPrimaryPins(void) {
 	outputPinRegister("LED_ERROR", LED_ERROR, LED_ERROR_PORT, LED_ERROR_PIN);
 }
 
+static void getPinValue(const char *name) {
+	io_pin_e pin = getPinByName(name);
+	if (pin == IO_INVALID) {
+		return;
+	}
+	OutputPin * outputPin = &outputs[pin];
+	int value = getLogicPinValue(outputPin);
+	scheduleMsg(&logger, "pin_value %s %d", name, value);
+}
+
 void initOutputPins(void) {
+	initLogging(&logger, "io_pins");
+
 	outputPinRegister("warning", LED_WARNING, LED_WARNING_PORT, LED_WARNING_PIN);
 	outputPinRegister("is running status", LED_RUNNING, LED_RUNNING_STATUS_PORT, LED_RUNNING_STATUS_PIN);
 	outputPinRegister("communication status 1", LED_COMMUNICATION_1, LED_COMMUNICATION_PORT, LED_COMMUNICATION_PIN);
@@ -254,6 +268,8 @@ void initOutputPins(void) {
 	 ledRegister(LED_HUGE_20, GPIOE, 1);
 	 */
 
-	chThdCreateStatic(comBlinkingStack, sizeof(comBlinkingStack), NORMALPRIO, (tfunc_t) comBlinkingThread, NULL );
-	chThdCreateStatic(errBlinkingStack, sizeof(errBlinkingStack), NORMALPRIO, (tfunc_t) errBlinkingThread, NULL );
+	chThdCreateStatic(comBlinkingStack, sizeof(comBlinkingStack), NORMALPRIO, (tfunc_t) comBlinkingThread, NULL);
+	chThdCreateStatic(errBlinkingStack, sizeof(errBlinkingStack), NORMALPRIO, (tfunc_t) errBlinkingThread, NULL);
+
+	addConsoleActionS("get_pin_value", getPinValue);
 }
