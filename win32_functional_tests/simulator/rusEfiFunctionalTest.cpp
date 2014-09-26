@@ -68,12 +68,6 @@ float getMap(void) {
 	return getRawMap();
 }
 
-static TriggerEmulatorHelper helper;
-
-static void triggerEmulatorCallback(PwmConfig *state, int stateIndex) {
-	helper.handleEmulatorCallback(state, stateIndex);
-}
-
 void rusEfiFunctionalTest(void) {
 	initializeConsole();
 
@@ -93,7 +87,7 @@ void rusEfiFunctionalTest(void) {
 
 	initAnalogChart();
 
-	initTriggerEmulatorLogic(triggerEmulatorCallback);
+	initTriggerEmulator();
 
 	initMainEventListener(&engine, engineConfiguration2);
 

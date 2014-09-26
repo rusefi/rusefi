@@ -15,19 +15,6 @@
 #include "engine_configuration.h"
 #include "pwm_generator_logic.h"
 
-class TriggerEmulatorHelper {
-public:
-	bool primaryWheelState;
-	bool secondaryWheelState;
-	bool thirdWheelState;
-
-        TriggerEmulatorHelper();
-        
-	void handleEmulatorCallback(PwmConfig *state, int stateIndex);
-
-};
-
-
 void initTriggerEmulator(void);
 void setTriggerEmulatorRPM(int value);
 

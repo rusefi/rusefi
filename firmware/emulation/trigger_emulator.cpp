@@ -27,47 +27,6 @@ extern board_configuration_s *boardConfiguration;
 
 extern PwmConfig triggerSignal;
 
-TriggerEmulatorHelper::TriggerEmulatorHelper() {
-	primaryWheelState = false;
-	secondaryWheelState = false;
-	thirdWheelState = false;
-}
-
-void TriggerEmulatorHelper::handleEmulatorCallback(PwmConfig *state, int stateIndex) {
-	int newPrimaryWheelState = state->multiWave.waves[0].pinStates[stateIndex];
-	int newSecondaryWheelState = state->multiWave.waves[1].pinStates[stateIndex];
-	int new3rdWheelState = state->multiWave.waves[2].pinStates[stateIndex];
-
-	if (primaryWheelState != newPrimaryWheelState) {
-		primaryWheelState = newPrimaryWheelState;
-		hwHandleShaftSignal(primaryWheelState ? SHAFT_PRIMARY_UP : SHAFT_PRIMARY_DOWN);
-	}
-
-	if (secondaryWheelState != newSecondaryWheelState) {
-		secondaryWheelState = newSecondaryWheelState;
-		hwHandleShaftSignal(secondaryWheelState ? SHAFT_SECONDARY_UP : SHAFT_SECONDARY_DOWN);
-	}
-
-	if (thirdWheelState != new3rdWheelState) {
-		thirdWheelState = new3rdWheelState;
-		hwHandleShaftSignal(thirdWheelState ? SHAFT_3RD_UP : SHAFT_3RD_DOWN);
-	}
-
-	//	print("hello %d\r\n", chTimeNow());
-}
-
-static TriggerEmulatorHelper helper;
-
-#if EFI_EMULATE_POSITION_SENSORS || defined(__DOXYGEN__)
-
-static void emulatorApplyPinState(PwmConfig *state, int stateIndex) {
-	applyPinState(state, stateIndex);
-	if (engineConfiguration->directSelfStimulation) {
-		helper.handleEmulatorCallback(state, stateIndex);
-	}
-}
-#endif /* EFI_EMULATE_POSITION_SENSORS */
-
 void initTriggerEmulator(void) {
 #if EFI_EMULATE_POSITION_SENSORS || defined(__DOXYGEN__)
 	print("Emulating %s\r\n", getConfigurationName(engineConfiguration->engineType));
@@ -76,6 +35,7 @@ void initTriggerEmulator(void) {
 	triggerSignal.outputPins[1] = TRIGGER_EMULATOR_SECONDARY;
 	triggerSignal.outputPins[2] = TRIGGER_EMULATOR_3RD;
 
+#if EFI_PROD_CODE
 	// todo: refactor, make this a loop
 	outputPinRegisterExt2("distributor ch1", triggerSignal.outputPins[0], boardConfiguration->triggerSimulatorPins[0],
 			&boardConfiguration->triggerSimulatorPinModes[0]);
@@ -85,9 +45,9 @@ void initTriggerEmulator(void) {
 
 	outputPinRegisterExt2("distributor ch3", triggerSignal.outputPins[2], boardConfiguration->triggerSimulatorPins[2],
 			&boardConfiguration->triggerSimulatorPinModes[2]);
+#endif /* EFI_PROD_CODE */
 
-
-	initTriggerEmulatorLogic(emulatorApplyPinState);
+	initTriggerEmulatorLogic();
 #else
 	print("No position sensor(s) emulation\r\n");
 #endif /* EFI_EMULATE_POSITION_SENSORS */

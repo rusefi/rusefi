@@ -16,6 +16,11 @@
 #define EFI_SUPPORT_NISSAN_PRIMERA TRUE
 #define EFI_SUPPORT_1995_FORD_INLINE_6 TRUE
 
+/**
+ * simulator works via self-stimulation which works via trigger emulation
+ */
+#define EFI_EMULATE_POSITION_SENSORS TRUE
+
 #define EFI_SIGNAL_EXECUTOR_SLEEP TRUE
 #define EFI_INTERNAL_ADC FALSE
 
