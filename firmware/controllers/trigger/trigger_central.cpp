@@ -174,7 +174,7 @@ extern engine_configuration2_s * engineConfiguration2;
 extern board_configuration_s *boardConfiguration;
 #endif
 
-static void triggerShapeInfo() {
+static void triggerShapeInfo(Engine *engine) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	trigger_shape_s *s = &engineConfiguration2->triggerShape;
 	for (int i = 0; i < s->getSize(); i++) {
@@ -183,7 +183,7 @@ static void triggerShapeInfo() {
 #endif
 }
 
-static void triggerInfo() {
+static void triggerInfo(Engine *engine) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	scheduleMsg(&logger, "Template %s/%d trigger %d", getConfigurationName(engineConfiguration->engineType),
 			engineConfiguration->engineType, engineConfiguration->triggerConfig.triggerType);
@@ -231,8 +231,8 @@ void initTriggerCentral(Engine *engine) {
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	initLogging(&logger, "ShaftPosition");
-	addConsoleAction("triggerinfo", triggerInfo);
-	addConsoleAction("triggershapeinfo", triggerShapeInfo);
+	addConsoleActionP("triggerinfo", (VoidPtr)triggerInfo, engine);
+	addConsoleActionP("triggershapeinfo", (VoidPtr)triggerShapeInfo, engine);
 #endif
 
 #if EFI_HISTOGRAMS
