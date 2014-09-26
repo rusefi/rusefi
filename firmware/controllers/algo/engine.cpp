@@ -13,6 +13,10 @@
 #include "engine.h"
 #include "engine_state.h"
 
+#if EFI_PROD_CODE || EFI_SIMULATOR
+static Logging logger;
+#endif
+
 /**
  * We are executing these heavy (logarithm) methods from outside the trigger callbacks for performance reasons.
  */
@@ -21,3 +25,36 @@ void Engine::updateSlowSensors() {
 	engineState.clt = getCoolantTemperature();
 }
 
+void Engine::onTriggerEvent(uint64_t nowUs) {
+	isSpinning = true;
+	lastTriggerEventTimeUs = nowUs;
+}
+
+void Engine::init() {
+#if EFI_PROD_CODE || EFI_SIMULATOR
+	initLogging(&logger, "engine");
+#endif
+}
+void Engine::watchdog() {
+	if (!isSpinning) {
+		return;
+	}
+	uint64_t nowUs = getTimeNowUs();
+	/**
+	 * Lowest possible cranking is about 240 RPM, that's 4 revolutions per second.
+	 * 0.25 second is 250000 uS
+	 */
+	if (nowUs - lastTriggerEventTimeUs < 250000) {
+		return;
+	}
+	isSpinning = true;
+	scheduleMsg(&logger, "engine has STOPPED");
+
+
+	for (int i = 0; i < engineConfiguration->cylindersCount; i++) {
+//		io_pin_e pin = (io_pin_e) ((int) INJECTOR_1_OUTPUT + i);
+
+		//pin = (io_pin_e) ((int) SPARKOUT_1_OUTPUT + i);
+	}
+
+}

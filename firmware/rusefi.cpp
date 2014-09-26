@@ -150,6 +150,8 @@ void runRusEfi(void) {
 	initializeConsole();
 	initLogging(&logging, "main");
 
+	engine.init();
+
 	addConsoleAction("reset", scheduleReset);
 
 	/**

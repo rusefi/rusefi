@@ -172,6 +172,7 @@ static void onEvenyGeneralMilliseconds(void *arg) {
 	if (!engine.rpmCalculator->isRunning())
 		writeToFlashIfPending();
 
+	engine.watchdog();
 	engine.updateSlowSensors();
 
 	updateErrorCodes();
