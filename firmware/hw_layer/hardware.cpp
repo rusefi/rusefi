@@ -133,6 +133,12 @@ static void sendI2Cbyte(int addr, int data) {
 //	i2cReleaseBus(&I2CD1);
 }
 
+// this is all very lame code, just playing with EXTI for now. TODO: refactor it competely!
+static int joyTotal = 0;
+static int joyA = 0;
+static int joyB = 0;
+static int joyC = 0;
+
 void initHardware(Logging *logger, Engine *engine) {
 	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
 	efiAssertVoid(engineConfiguration!=NULL, "engineConfiguration");
@@ -304,36 +310,52 @@ void initSpiCs(SPIConfig *spiConfig, brain_pin_e csPin) {
 //     {EXT_CH_MODE_BOTH_EDGES | EXT_CH_MODE_AUTOSTART | EXT_MODE_GPIOA, extcb1},
 
 static void extCallback(EXTDriver *extp, expchannel_t channel) {
-
+	joyTotal++;
+	if(channel==8) {
+		joyA++;
+	} else if (channel==9){
+		joyB++;
+	} else if (channel==10){
+		joyC++;
+	}
 }
 
+/**
+ * EXTI is a funny thing: you can only use same pin on one port. For example, you can use
+ * PA0 PB5 PE2 PD7
+ * but you cannot use
+ * PA0 PB0 PE2 PD7
+ * because pin '0' would be used on two different ports
+ */
 
-static const EXTConfig extcfg = {
-  {
-    {EXT_CH_MODE_BOTH_EDGES | EXT_CH_MODE_AUTOSTART | EXT_MODE_GPIOA, extCallback},
-    {EXT_CH_MODE_DISABLED, NULL},
-    {EXT_CH_MODE_DISABLED, NULL},
-    {EXT_CH_MODE_DISABLED, NULL},
-    {EXT_CH_MODE_DISABLED, NULL},
-    {EXT_CH_MODE_DISABLED, NULL},
-    {EXT_CH_MODE_DISABLED, NULL},
-    {EXT_CH_MODE_DISABLED, NULL},
-    {EXT_CH_MODE_DISABLED, NULL},
-    {EXT_CH_MODE_DISABLED, NULL},
-    {EXT_CH_MODE_DISABLED, NULL},
-    {EXT_CH_MODE_DISABLED, NULL},
-    {EXT_CH_MODE_DISABLED, NULL},
-    {EXT_CH_MODE_DISABLED, NULL},
-    {EXT_CH_MODE_DISABLED, NULL},
-    {EXT_CH_MODE_DISABLED, NULL},
-    {EXT_CH_MODE_DISABLED, NULL},
-    {EXT_CH_MODE_DISABLED, NULL},
-    {EXT_CH_MODE_DISABLED, NULL},
-    {EXT_CH_MODE_DISABLED, NULL},
-    {EXT_CH_MODE_DISABLED, NULL},
-    {EXT_CH_MODE_DISABLED, NULL},
-    {EXT_CH_MODE_DISABLED, NULL}
-  }
-};
+static EXTConfig extcfg = { { { EXT_CH_MODE_DISABLED, NULL }, { EXT_CH_MODE_DISABLED, NULL }, {
+		EXT_CH_MODE_DISABLED, NULL }, { EXT_CH_MODE_DISABLED, NULL }, { EXT_CH_MODE_DISABLED, NULL }, {
+		EXT_CH_MODE_DISABLED, NULL }, { EXT_CH_MODE_DISABLED, NULL }, { EXT_CH_MODE_DISABLED, NULL }, {
+		EXT_CH_MODE_DISABLED, NULL }, { EXT_CH_MODE_DISABLED, NULL }, { EXT_CH_MODE_DISABLED, NULL }, {
+		EXT_CH_MODE_DISABLED, NULL }, { EXT_CH_MODE_DISABLED, NULL }, { EXT_CH_MODE_DISABLED, NULL }, {
+		EXT_CH_MODE_DISABLED, NULL }, { EXT_CH_MODE_DISABLED, NULL }, { EXT_CH_MODE_DISABLED, NULL }, {
+		EXT_CH_MODE_DISABLED, NULL }, { EXT_CH_MODE_DISABLED, NULL }, { EXT_CH_MODE_DISABLED, NULL }, {
+		EXT_CH_MODE_DISABLED, NULL }, { EXT_CH_MODE_DISABLED, NULL }, { EXT_CH_MODE_DISABLED, NULL } } };
 
+void initExt(void) {
+
+//	if (1 == 1) {
+//		return;
+//	}
+
+	extcfg.channels[8].mode = EXT_CH_MODE_BOTH_EDGES | EXT_CH_MODE_AUTOSTART | EXT_MODE_GPIOD; // PD8
+	extcfg.channels[8].cb = extCallback;
+	extcfg.channels[9].mode = EXT_CH_MODE_BOTH_EDGES | EXT_CH_MODE_AUTOSTART | EXT_MODE_GPIOD; // PD9
+	extcfg.channels[9].cb = extCallback;
+	extcfg.channels[10].mode = EXT_CH_MODE_BOTH_EDGES | EXT_CH_MODE_AUTOSTART | EXT_MODE_GPIOD; // PD10
+	extcfg.channels[10].cb = extCallback;
+	extcfg.channels[11].mode = EXT_CH_MODE_BOTH_EDGES | EXT_CH_MODE_AUTOSTART | EXT_MODE_GPIOD; // PD11
+	extcfg.channels[11].cb = extCallback;
+
+
+	mySetPadMode("joy A", GPIOD, 8, PAL_MODE_INPUT_PULLUP);
+	mySetPadMode("joy A", GPIOD, 9, PAL_MODE_INPUT_PULLUP);
+	mySetPadMode("joy A", GPIOD, 10, PAL_MODE_INPUT_PULLUP);
+	mySetPadMode("joy A", GPIOD, 11, PAL_MODE_INPUT_PULLUP);
+}
 
