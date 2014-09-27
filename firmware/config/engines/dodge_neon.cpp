@@ -21,7 +21,7 @@
 void setDodgeNeonEngineConfiguration(engine_configuration_s *engineConfiguration,
 		board_configuration_s *boardConfiguration) {
 
-	engineConfiguration->triggerConfig.triggerType = TT_DODGE_NEON;
+	engineConfiguration->triggerConfig.triggerType = TT_DODGE_NEON_1995;
 
 	engineConfiguration->algorithm = LM_TPS;
 

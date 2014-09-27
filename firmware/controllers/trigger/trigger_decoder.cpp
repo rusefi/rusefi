@@ -208,7 +208,7 @@ void initializeTriggerShape(Logging *logger, engine_configuration_s const *engin
 		initializeMazdaMiataNbShape(triggerShape);
 		return;
 
-	case TT_DODGE_NEON:
+	case TT_DODGE_NEON_1995:
 		configureNeonTriggerShape(triggerShape);
 		return;
 
