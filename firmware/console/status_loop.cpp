@@ -36,6 +36,7 @@
 #include "trigger_central.h"
 #include "engine_state.h"
 #include "io_pins.h"
+#include "efiGpio.h"
 #include "mmc_card.h"
 #include "console_io.h"
 #include "malfunction_central.h"

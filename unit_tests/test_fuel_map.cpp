@@ -16,9 +16,9 @@
 #include "ec2.h"
 #include "trigger_decoder.h"
 #include "engine_test_helper.h"
+#include "efiGpio.h"
 
 extern float testMafValue;
-
 
 extern engine_configuration_s *engineConfiguration;
 extern engine_configuration2_s *engineConfiguration2;

@@ -68,10 +68,6 @@ void setOutputPinValue(io_pin_e pin, int logicValue) {
 	setPinValue(&outputs[pin], getElectricalValue(logicValue, mode), logicValue);
 }
 
-int getOutputPinValue(io_pin_e pin) {
-	return getLogicPinValue(&outputs[pin]);
-}
-
 void setDefaultPinState(io_pin_e pin, pin_output_mode_e *outputMode) {
 	pin_output_mode_e mode = *outputMode;
 	assertOMode(mode);

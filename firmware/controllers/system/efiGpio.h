@@ -8,6 +8,7 @@
 #define EFIGPIO_H_
 
 #include "main.h"
+#include "io_pins.h"
 
 /**
  * @brief   Single output pin reference and state
@@ -30,6 +31,8 @@ extern "C"
 #endif /* __cplusplus */
 
 int getLogicPinValue(OutputPin * outputPin);
+int getOutputPinValue(io_pin_e pin);
+int getElectricalValue(int logicalValue, pin_output_mode_e mode);
 
 #ifdef __cplusplus
 }
