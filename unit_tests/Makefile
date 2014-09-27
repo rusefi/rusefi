@@ -102,10 +102,10 @@ CPPSRC = $(UTILSRC_CPP) \
 	$(CONTROLLERS_MATH_SRC_CPP) \
 	$(CONTROLLERS_SENSORS_SRC_CPP) \
 	$(TEST_SRC_CPP) \
+	$(SYSTEMSRC_CPP) \
 	$(PROJECT_DIR)/controllers/trigger/trigger_central.cpp \
 	$(PROJECT_DIR)/controllers/trigger/rpm_calculator.cpp \
 	$(PROJECT_DIR)/controllers/trigger/main_trigger_callback.cpp \
-	$(PROJECT_DIR)/controllers/system/event_queue.cpp \
 	main.cpp
 
 # C sources to be compiled in ARM mode regardless of the global setting.

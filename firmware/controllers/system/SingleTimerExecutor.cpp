@@ -15,13 +15,13 @@
 
 #include "SingleTimerExecutor.h"
 #include "efitime.h"
-#include "rfiutil.h"
 
 #if EFI_PROD_CODE
 #include "microsecond_timer.h"
 #endif
 
-#if EFI_SIGNAL_EXECUTOR_ONE_TIMER || defined(__DOXYGEN__)
+#if (EFI_SIGNAL_EXECUTOR_ONE_TIMER && EFI_PROD_CODE )|| defined(__DOXYGEN__)
+#include "rfiutil.h"
 
 static Executor instance;
 
