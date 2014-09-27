@@ -14,6 +14,7 @@
 #include "engine.h"
 #include "rtc_helper.h"
 #include "io_pins.h"
+#include "efiGpio.h"
 
 extern Engine engine;
 extern engine_configuration_s *engineConfiguration;
