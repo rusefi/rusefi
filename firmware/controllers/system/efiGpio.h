@@ -33,6 +33,8 @@ extern "C"
 int getLogicPinValue(OutputPin * outputPin);
 int getOutputPinValue(io_pin_e pin);
 int getElectricalValue(int logicalValue, pin_output_mode_e mode);
+void setOutputPinValue(io_pin_e pin, int logicValue);
+void setPinValue(OutputPin * outputPin, int electricalValue, int logicValue);
 
 #ifdef __cplusplus
 }

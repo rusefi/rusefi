@@ -47,15 +47,4 @@ void initOutputPin(const char *msg, OutputPin *outputPin, GPIO_TypeDef *port, ui
 	initOutputPinExt(msg, outputPin, port, pinNumber, PAL_MODE_OUTPUT_PUSHPULL);
 }
 
-/**
- * Set's the value of the pin. On this layer the value is assigned as is, without any conversion.
- */
-void setPinValue(OutputPin * outputPin, int electricalValue, int logicValue) {
-	if (getLogicPinValue(outputPin) == logicValue)
-		return;
-
-	palWritePad(outputPin->port, outputPin->pin, electricalValue);
-	outputPin->currentLogicValue = logicValue;
-}
-
 #endif /* GPIO_HELPER_C_ */

@@ -91,6 +91,7 @@
 #include "ec2.h"
 #include "hardware.h"
 #include "engine_controller.h"
+#include "efiGpio.h"
 
 #include "global.h"
 extern "C" {
@@ -240,5 +241,5 @@ void firmwareError(const char *fmt, ...) {
 }
 
 int getRusEfiVersion(void) {
-	return 20140926;
+	return 20140927;
 }

@@ -15,6 +15,5 @@
 
 void initOutputPin(const char *msg, OutputPin *outputPin, GPIO_TypeDef *port, uint32_t pinNumber);
 void initOutputPinExt(const char *msg, OutputPin *outputPin, GPIO_TypeDef *port, uint32_t pinNumber, iomode_t mode);
-void setPinValue(OutputPin * outputPin, int electricalValue, int logicValue);
 
 #endif /* GPIO_HELPER_H_ */

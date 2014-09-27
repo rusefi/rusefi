@@ -24,6 +24,7 @@
 
 #include "main.h"
 #include "signal_executor.h"
+#include "efiGpio.h"
 
 #if EFI_WAVE_CHART
 /**

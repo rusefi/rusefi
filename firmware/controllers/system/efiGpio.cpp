@@ -11,6 +11,7 @@
 
 // todo: clean this mess, this should become 'static'/private
 OutputPin outputs[IO_PIN_COUNT];
+pin_output_mode_e *pinDefaultState[IO_PIN_COUNT];
 
 int getOutputPinValue(io_pin_e pin) {
 	return getLogicPinValue(&outputs[pin]);
@@ -35,10 +36,33 @@ inline static int getElectricalValue1(pin_output_mode_e mode) {
 	return mode == OM_DEFAULT || mode == OM_OPENDRAIN;
 }
 
-// todo: this method is here for unit test visibility. todo: move to a bette place!
 int getElectricalValue(int logicalValue, pin_output_mode_e mode) {
 	efiAssert(mode <= OM_OPENDRAIN_INVERTED, "invalid pin_output_mode_e", -1);
 
 	return logicalValue ? getElectricalValue1(mode) : getElectricalValue0(mode);
+}
+
+/**
+ * Set's the value of the pin. On this layer the value is assigned as is, without any conversion.
+ */
+void setPinValue(OutputPin * outputPin, int electricalValue, int logicValue) {
+	if (getLogicPinValue(outputPin) == logicValue)
+		return;
+
+#if EFI_PROD_CODE
+	palWritePad(outputPin->port, outputPin->pin, electricalValue);
+#endif
+	outputPin->currentLogicValue = logicValue;
+}
+
+/**
+ * @brief Sets the value according to current electrical settings
+ */
+void setOutputPinValue(io_pin_e pin, int logicValue) {
+	if (outputs[pin].port == GPIO_NULL)
+		return;
+	efiAssertVoid(pinDefaultState[pin]!=NULL, "pin mode not initialized");
+	pin_output_mode_e mode = *pinDefaultState[pin];
+	setPinValue(&outputs[pin], getElectricalValue(logicValue, mode), logicValue);
 }
 

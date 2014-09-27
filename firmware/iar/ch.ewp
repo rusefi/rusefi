@@ -2311,6 +2311,12 @@
     <group>
       <name>system</name>
       <file>
+        <name>$PROJ_DIR$\..\controllers\system\efiGpio.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\controllers\system\efiGpio.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\controllers\system\event_queue.cpp</name>
       </file>
       <file>
@@ -2815,6 +2821,12 @@
         </file>
         <file>
           <name>$PROJ_DIR$\..\chibios\os\hal\src\ext.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\chibios\os\hal\platforms\STM32\ext_lld.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\chibios\os\hal\platforms\STM32F4xx\ext_lld_isr.c</name>
         </file>
         <file>
           <name>$PROJ_DIR$\..\chibios\os\hal\src\gpt.c</name>
