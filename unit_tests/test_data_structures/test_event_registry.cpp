@@ -13,8 +13,6 @@
 static ActuatorEventList eventList;
 static ActuatorEventList result;
 
-int pinDefaultState[IO_PIN_COUNT];
-
 extern int outputSignalCount;
 
 void testEventRegistry(void) {

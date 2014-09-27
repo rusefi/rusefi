@@ -54,7 +54,7 @@ uint32_t efiStrlen(const char *param) {
 }
 
 bool startsWith(const char *line, const char *prefix) {
-	int len = efiStrlen(prefix);
+	uint32_t len = efiStrlen(prefix);
 	if(efiStrlen(line) < len) {
 		return false;
 	}

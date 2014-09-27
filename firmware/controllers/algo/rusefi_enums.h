@@ -89,7 +89,9 @@ typedef enum {
 
 	SUBARU_2003_WRX = 22,
 
-	ET_UNUSED = 23,
+	DODGE_NEON_2003 = 23,
+
+	ET_UNUSED = 24,
 
 	Force_4b_engine_type = ENUM_SIZE_HACK,
 } engine_type_e;
@@ -97,7 +99,7 @@ typedef enum {
 typedef enum {
 	TT_TOOTHED_WHEEL = 0,
 	TT_FORD_ASPIRE = 1,
-	TT_DODGE_NEON = 2,
+	TT_DODGE_NEON_1995 = 2,
 	TT_MAZDA_MIATA_NA = 3,
 	TT_MAZDA_MIATA_NB = 4,
 	TT_GM_7X = 5,
@@ -113,6 +115,8 @@ typedef enum {
 	TT_HONDA_ACCORD_CD_TWO_WIRES = 12,
 
 	TT_HONDA_ACCORD_CD_DIP = 13,
+
+	TT_DODGE_NEON_2003 = 14,
 
 	Force_4b_trigger_type = ENUM_SIZE_HACK,
 } trigger_type_e;

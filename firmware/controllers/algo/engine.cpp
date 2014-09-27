@@ -12,6 +12,7 @@
 #include "main.h"
 #include "engine.h"
 #include "engine_state.h"
+#include "efiGpio.h"
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
 static Logging logger;
@@ -35,8 +36,34 @@ void Engine::init() {
 	initLogging(&logger, "engine");
 #endif
 }
+
+static bool stopPin(io_pin_e pin) {
+	if (getOutputPinValue(pin)) {
+		setOutputPinValue(pin, 0);
+#if EFI_PROD_CODE || EFI_SIMULATOR
+		scheduleMsg(&logger, "turning off %s", getPinName(pin));
+#endif
+		return true;
+	}
+	return false;
+}
+
+bool Engine::stopPins() {
+	bool result = false;
+	for (int i = 0; i < engineConfiguration->cylindersCount; i++) {
+		io_pin_e pin = (io_pin_e) ((int) INJECTOR_1_OUTPUT + i);
+		result |= stopPin(pin);
+		pin = (io_pin_e) ((int) SPARKOUT_1_OUTPUT + i);
+		result |= stopPin(pin);
+	}
+	return result;
+}
+
 void Engine::watchdog() {
 	if (!isSpinning) {
+		if (stopPins()) {
+			firmwareError("Some pins were turned off by 2nd pass watchdog");
+		}
 		return;
 	}
 	uint64_t nowUs = getTimeNowUs();
@@ -47,15 +74,10 @@ void Engine::watchdog() {
 	if (nowUs - lastTriggerEventTimeUs < 250000) {
 		return;
 	}
-	isSpinning = true;
+	isSpinning = false;
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	scheduleMsg(&logger, "engine has STOPPED");
 #endif
 
-	for (int i = 0; i < engineConfiguration->cylindersCount; i++) {
-//		io_pin_e pin = (io_pin_e) ((int) INJECTOR_1_OUTPUT + i);
-
-		//pin = (io_pin_e) ((int) SPARKOUT_1_OUTPUT + i);
-	}
-
+	stopPins();
 }
