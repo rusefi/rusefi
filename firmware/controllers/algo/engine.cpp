@@ -48,8 +48,9 @@ void Engine::watchdog() {
 		return;
 	}
 	isSpinning = true;
+#if EFI_PROD_CODE || EFI_SIMULATOR
 	scheduleMsg(&logger, "engine has STOPPED");
-
+#endif
 
 	for (int i = 0; i < engineConfiguration->cylindersCount; i++) {
 //		io_pin_e pin = (io_pin_e) ((int) INJECTOR_1_OUTPUT + i);
