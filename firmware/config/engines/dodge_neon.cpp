@@ -23,7 +23,7 @@ void setDodgeNeonEngineConfiguration(engine_configuration_s *engineConfiguration
 
 	engineConfiguration->triggerConfig.triggerType = TT_DODGE_NEON_1995;
 
-	engineConfiguration->algorithm = LM_TPS;
+	engineConfiguration->algorithm = LM_ALPHA_N;
 
 	// set_rpm_hard_limit 4000
 	engineConfiguration->rpmHardLimit = 4000; // yes, 4k. let's play it safe for now

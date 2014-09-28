@@ -163,9 +163,8 @@ typedef enum {
 	LM_MAF = 0,
 	/**
 	 * Throttle Position Sensor value is used as engine load. http://en.wikipedia.org/wiki/Throttle_position_sensor
-	 * That's know as Alpha N
 	 */
-	LM_TPS = 1,
+	LM_ALPHA_N = 1,
 	/**
 	 * raw Manifold Absolute Pressure sensor value is used as engine load http://en.wikipedia.org/wiki/MAP_sensor
 	 */

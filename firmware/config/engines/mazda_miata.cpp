@@ -314,6 +314,13 @@ void setMiata1996(engine_configuration_s *engineConfiguration, board_configurati
 		}
 	}
 
+	// todo: extract an array16x16 type? extract a method?
+	for (int k = 0; k < AD_LOAD_COUNT; k++) {
+		for (int r = 0; r < AD_RPM_COUNT; r++) {
+			engineConfiguration->ignitionTable[k][r] = miata_maf_advance_table[k][r];
+		}
+	}
+
 	// upside down
 	boardConfiguration->triggerInputPins[0] = GPIOA_5;
 	boardConfiguration->triggerInputPins[1] = GPIOC_6;
