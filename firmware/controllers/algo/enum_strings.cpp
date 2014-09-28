@@ -98,7 +98,7 @@ const char * pinModeToString(pin_output_mode_e mode) {
 
 const char * algorithmToString(engine_load_mode_e mode) {
 	switch(mode) {
-	case LM_TPS:
+	case LM_ALPHA_N:
 		return "Alpha-N";
 	case LM_MAF:
 		return "Maf";
