@@ -11,43 +11,79 @@
  * @author Andrey Belomutskiy, (c) 2012-2014
  */
 
+#include "engine_math.h"
 #include "thermistors.h"
 #include "citroenBerlingoTU3JP.h"
 
 void setCitroenBerlingoTU3JPConfiguration(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
 	engineConfiguration->engineType = CITROEN_TU3JP;
 
-	// base engine setting
+	/**
+	 * Base engine setting
+	 */
+	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->triggerConfig.triggerType = TT_TOOTHED_WHEEL_60_2;
-	engineConfiguration->globalTriggerAngleOffset = 144;
+	engineConfiguration->globalTriggerAngleOffset = 114;
 	engineConfiguration->cylindersCount = 4;
 	engineConfiguration->displacement = 1.360;
 	engineConfiguration->firingOrder = FO_1_THEN_3_THEN_4_THEN2;
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 	engineConfiguration->injectionMode = IM_BATCH;
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
-
-	// rpm limiter
 	engineConfiguration->rpmHardLimit = 5000;
+	engineConfiguration->crankingSettings.crankingRpm = 600;
+
+	/**
+	* Cranking fuel setting
+	* TODO: they recomend using something like -40C for low point and +80C for high point
+	*/
+	engineConfiguration->crankingSettings.coolantTempMaxC = 65;
+	engineConfiguration->crankingSettings.fuelAtMaxTempMs = 2;
+	engineConfiguration->crankingSettings.coolantTempMinC = 0;
+	engineConfiguration->crankingSettings.fuelAtMinTempMs = 2;
+
+	/**
+	 * Algorithm Alpha-N setting
+	 */
+	engineConfiguration->algorithm = LM_ALPHA_N;
+	setFuelLoadBin(engineConfiguration, 0, 100);
+	setFuelRpmBin(engineConfiguration, 800, 7000);
+	setTimingLoadBin(engineConfiguration, 0, 100);
+	setTimingRpmBin(engineConfiguration, 800, 7000);
 
 	/**
 	 * Outputs
 	 */
-	// Frankenstain low out #3: PE6  injector 1-4
-	// Frankenstain low out #4: PC13 injector 2-3
 
+	// Frankenstein lo-side output #1: PC14 Igniter 1-4
+	// Frankenstein lo-side output #2: PC15 Igniter 2-3
+	// Frankenstein lo-side output #3: PE6  Injector 1-4
+	// Frankenstein lo-side output #4: PC13 Injector 2-3
+	// Frankenstein lo-side output #5: PE4
+	// Frankenstein lo-side output #6: PE5
+	// Frankenstein lo-side output #7: PE2
+	// Frankenstein lo-side output #8: PE3
+	// Frankenstein lo-side output #9: PE0
+	// Frankenstein lo-side output #10: PE1
+	// Frankenstein lo-side output #11: PB8
+	// Frankenstein lo-side output #12: PB9 Fuel pump
+
+	engineConfiguration->injectorFlow = 137; //SIEMENS DEKA VAZ20734
 	boardConfiguration->injectionPins[0] = GPIOE_6;
 	boardConfiguration->injectionPins[1] = GPIOC_13;
 	boardConfiguration->injectionPins[2] = GPIO_NONE;
 	boardConfiguration->injectionPins[3] = GPIO_NONE;
 
-//	boardConfiguration->ignitionPins[0] = GPIO_NONE;
-//	boardConfiguration->ignitionPins[1] = GPIO_NONE;
-//	boardConfiguration->ignitionPins[2] = GPIO_NONE;
-//	boardConfiguration->ignitionPins[3] = GPIO_NONE;
+	boardConfiguration->ignitionPins[0] = GPIOC_14;
+	boardConfiguration->ignitionPins[1] = GPIOC_15;
+	boardConfiguration->ignitionPins[2] = GPIO_NONE;
+	boardConfiguration->ignitionPins[3] = GPIO_NONE;
 
 	boardConfiguration->fuelPumpPin = GPIOB_9;
 	boardConfiguration->fuelPumpPinMode = OM_DEFAULT;
+
+	boardConfiguration->fanPin = GPIO_NONE;
+//	boardConfiguration->fanPinMode = OM_DEFAULT;
 
 //	boardConfiguration->o2heaterPin = GPIOC_13;
 //	boardConfiguration->logicAnalyzerPins[1] = GPIO_NONE;
@@ -81,8 +117,8 @@ void setCitroenBerlingoTU3JPConfiguration(engine_configuration_s *engineConfigur
 	 * TPS <MAGNETI MARELLI>
 	 */
 	engineConfiguration->tpsAdcChannel = EFI_ADC_3;
-	engineConfiguration->tpsMin = 433;
-	engineConfiguration->tpsMax = 3248;
+	engineConfiguration->tpsMin = 108; // convert 12to10 bit (ADC/4)
+	engineConfiguration->tpsMax = 812; // convert 12to10 bit (ADC/4)
 	/**
 	 * IAT <OEM ECU>
 	 */
@@ -101,15 +137,8 @@ void setCitroenBerlingoTU3JPConfiguration(engine_configuration_s *engineConfigur
 	engineConfiguration->vbattAdcChannel = EFI_ADC_0;
 	engineConfiguration->vbattDividerCoeff = ((float) (2.7 + 10)) / 2.7 * 2;
 
-
-	// todo: better values
-	// set_cranking_fuel_max 24 40
-	engineConfiguration->crankingSettings.coolantTempMaxC = 40; // 6ms at 40C
-	engineConfiguration->crankingSettings.fuelAtMaxTempMs = 24;
-
-	// set_cranking_fuel_min 24 -40
-	engineConfiguration->crankingSettings.coolantTempMinC = -40; // 6ms at -40C
-	engineConfiguration->crankingSettings.fuelAtMinTempMs = 24;
-
-
+	/**
+	* Other
+	*/
+//	engineConfiguration->mafAdcChannel = GPIO_NONE;
 }

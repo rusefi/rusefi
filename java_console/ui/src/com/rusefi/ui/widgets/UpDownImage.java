@@ -27,7 +27,8 @@ import java.util.TreeMap;
 public class UpDownImage extends JPanel {
     private static final SimpleDateFormat FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
     private static final int LINE_SIZE = 20;
-    private static final Color TIME_SCALE_COLOR = Color.red;
+    public static final Color TIME_SCALE_COLOR = Color.red;
+    public static final Color ENGINE_CYCLE_COLOR = Color.green;
 
     private long lastUpdateTime;
     private ZoomProvider zoomProvider = ZoomProvider.DEFAULT;
@@ -180,7 +181,7 @@ public class UpDownImage extends JPanel {
         g2.setStroke(new BasicStroke());
         for (int time : time2rpm.keySet()) {
             int x = translator.timeToScreen(time, d.width, zoomProvider);
-            g2.setColor(Color.green);
+            g2.setColor(ENGINE_CYCLE_COLOR);
             g2.drawLine(x, 0, x, d.height);
         }
     }

@@ -33,6 +33,9 @@ public class Launcher extends FrameHelper {
 
         JTabbedPane tabbedPane = new JTabbedPane();
 
+        if (LinkManager.isLogViewerMode(port))
+            tabbedPane.add("Log Viewer", new LogViewer());
+
         RpmPanel rpmPanel = new RpmPanel();
         tabbedPane.addTab("Main", rpmPanel.createRpmPanel());
         tabbedPane.addTab("Gauges", new GaugesPanel().getContent());
@@ -47,10 +50,9 @@ public class Launcher extends FrameHelper {
 //        tabbedPane.addTab("live map adjustment", new Live3DReport().getControl());
         tabbedPane.add("Messages", new MsgPanel(true).getContent());
 
-        tabbedPane.add("Log Viewer", new LogViewer());
 
-        tabbedPane.setSelectedIndex(2);
-//        tabbedPane.setSelectedIndex(5);
+        if (!LinkManager.isLogViewerMode(port))
+            tabbedPane.setSelectedIndex(2);
 
         showFrame(tabbedPane);
     }
