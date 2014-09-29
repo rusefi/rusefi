@@ -100,4 +100,16 @@ void setCitroenBerlingoTU3JPConfiguration(engine_configuration_s *engineConfigur
 	 */
 	engineConfiguration->vbattAdcChannel = EFI_ADC_0;
 	engineConfiguration->vbattDividerCoeff = ((float) (2.7 + 10)) / 2.7 * 2;
+
+
+	// todo: better values
+	// set_cranking_fuel_max 24 40
+	engineConfiguration->crankingSettings.coolantTempMaxC = 40; // 6ms at 40C
+	engineConfiguration->crankingSettings.fuelAtMaxTempMs = 24;
+
+	// set_cranking_fuel_min 24 -40
+	engineConfiguration->crankingSettings.coolantTempMinC = -40; // 6ms at -40C
+	engineConfiguration->crankingSettings.fuelAtMinTempMs = 24;
+
+
 }
