@@ -7,6 +7,6 @@ package com.rusefi.ui.widgets;
 public class WaveInfoPanel extends BooleanFlagControlPanel {
     public WaveInfoPanel(final int index) {
         super("wave" + index, "active on low");
-        installCommand("wm " + index + " ");
+        installCommand("set_logic_input_mode " + index + " ");
     }
 }

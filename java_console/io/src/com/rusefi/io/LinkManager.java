@@ -77,10 +77,6 @@ public class LinkManager {
         connector.connect();
     }
 
-    public static void stop() {
-//        connector.stop();
-    }
-
     public static void send(String command) throws InterruptedException {
         if (connector == null)
             throw new NullPointerException("connector");
