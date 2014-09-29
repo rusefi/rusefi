@@ -1,6 +1,7 @@
 package com.rusefi.ui;
 
 import com.irnems.waves.TimeAxisTranslator;
+import com.rusefi.ui.widgets.UpDownImage;
 import com.rusefi.waves.WaveReport;
 import com.irnems.waves.ZoomProvider;
 import com.rusefi.waves.RevolutionLog;
@@ -65,6 +66,14 @@ public class ChartStatusPanel {
 
         infoPanel.add(new JLabel(" RPM: "));
         infoPanel.add(rpmLabel);
+
+        JLabel green = new JLabel("  Green line is engine cycle");
+        green.setForeground(UpDownImage.ENGINE_CYCLE_COLOR);
+        infoPanel.add(green);
+
+        JLabel red = new JLabel("  Red line is time scale");
+        red.setForeground(UpDownImage.TIME_SCALE_COLOR);
+        infoPanel.add(red);
     }
 
     public void setWaveReport(TimeAxisTranslator translator) {
