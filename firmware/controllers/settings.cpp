@@ -320,7 +320,7 @@ static void printTemperatureInfo(void) {
  * set_cranking_fuel_min 15 0
  * would be 15ms @ 0C
  */
-static void setCrankingFuelMin(int timeMs, int tempC) {
+static void setCrankingFuelMin(float timeMs, float tempC) {
 	engineConfiguration->crankingSettings.coolantTempMinC = tempC;
 	engineConfiguration->crankingSettings.fuelAtMinTempMs = timeMs;
 	printTemperatureInfo();
@@ -346,7 +346,7 @@ static void setRpmHardLimit(int value) {
 	doPrintConfiguration(engineConfiguration2);
 }
 
-static void setCrankingFuelMax(int timeMs, int tempC) {
+static void setCrankingFuelMax(float timeMs, float tempC) {
 	engineConfiguration->crankingSettings.coolantTempMaxC = tempC;
 	engineConfiguration->crankingSettings.fuelAtMaxTempMs = timeMs;
 	printTemperatureInfo();
@@ -757,8 +757,8 @@ void initSettings(engine_configuration_s *engineConfiguration) {
 
 	addConsoleActionF("set_global_fuel_correction", setGlobalFuelCorrection);
 
-	addConsoleActionII("set_cranking_fuel_min", setCrankingFuelMin);
-	addConsoleActionII("set_cranking_fuel_max", setCrankingFuelMax);
+	addConsoleActionFF("set_cranking_fuel_min", setCrankingFuelMin);
+	addConsoleActionFF("set_cranking_fuel_max", setCrankingFuelMax);
 	addConsoleActionI("set_cranking_rpm", setCrankingRpm);
 	addConsoleActionF("set_cranking_timing_angle", setCrankingTimingAngle);
 	addConsoleActionF("set_cranking_charge_angle", setCrankingChargeAngle);

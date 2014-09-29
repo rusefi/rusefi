@@ -63,11 +63,11 @@ static void setDefaultCrankingFuel(engine_configuration_s *engineConfiguration) 
 
 	// since CLT is not wired up yet let's just use same value for min and max
 	// set_cranking_fuel_max 6 40
-	engineConfiguration->crankingSettings.coolantTempMaxC = 37.7; // 6ms at 37.7C
+	engineConfiguration->crankingSettings.coolantTempMaxC = 80; // ms at 80C/176F
 	engineConfiguration->crankingSettings.fuelAtMaxTempMs = 6;
 
 	// set_cranking_fuel_min 6 -40
-	engineConfiguration->crankingSettings.coolantTempMinC = -40; // 6ms at -40C
+	engineConfiguration->crankingSettings.coolantTempMinC = -40; // 6ms at -40C/-40F
 	engineConfiguration->crankingSettings.fuelAtMinTempMs = 6;
 }
 
