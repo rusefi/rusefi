@@ -28,6 +28,7 @@
 #include "OutputSignalList.h"
 #include "trigger_decoder.h"
 #include "event_registry.h"
+#include "efiGpio.h"
 
 /*
  * default Volumetric Efficiency
@@ -37,7 +38,6 @@
 //		return interpolate(5000, 1.1, 8000, 1, rpm);
 //	return interpolate(500, 0.5, 5000, 1.1, rpm);
 //}
-
 
 /**
  * @return number of milliseconds in one crankshaft revolution
@@ -102,7 +102,8 @@ int isCrankingRT(engine_configuration_s *engineConfiguration, int rpm) {
 	return rpm > 0 && rpm < engineConfiguration->crankingSettings.crankingRpm;
 }
 
-OutputSignalList injectonSignals CCM_OPTIONAL;
+OutputSignalList injectonSignals CCM_OPTIONAL
+;
 
 static void registerSparkEvent(engine_configuration_s const *engineConfiguration, trigger_shape_s * s,
 		IgnitionEventList *list, io_pin_e pin, float localAdvance, float dwell) {
@@ -111,6 +112,9 @@ static void registerSparkEvent(engine_configuration_s const *engineConfiguration
 	if (event == NULL)
 		return; // error already reported
 
+	if (!isPinAssigned(pin)) {
+		warning(OBD_PCM_Processor_Fault, "pin not assigned for coil #%d", (int) pin - (int) SPARKOUT_1_OUTPUT);
+	}
 	event->io_pin = pin;
 
 	event->advance = localAdvance;
@@ -131,8 +135,8 @@ void initializeIgnitionActions(float advance, float dwellAngle, engine_configura
 			// todo: extract method
 			float localAdvance = advance + 720.0f * i / engineConfiguration->cylindersCount;
 
-			registerSparkEvent(engineConfiguration, &engineConfiguration2->triggerShape, list,
-					SPARKOUT_1_OUTPUT, localAdvance, dwellAngle);
+			registerSparkEvent(engineConfiguration, &engineConfiguration2->triggerShape, list, SPARKOUT_1_OUTPUT,
+					localAdvance, dwellAngle);
 		}
 		break;
 	case IM_WASTED_SPARK:
@@ -144,8 +148,8 @@ void initializeIgnitionActions(float advance, float dwellAngle, engine_configura
 			int id = getCylinderId(engineConfiguration->firingOrder, wastedIndex) - 1;
 			io_pin_e ioPin = (io_pin_e) (SPARKOUT_1_OUTPUT + id);
 
-			registerSparkEvent(engineConfiguration, &engineConfiguration2->triggerShape, list,
-					ioPin, localAdvance, dwellAngle);
+			registerSparkEvent(engineConfiguration, &engineConfiguration2->triggerShape, list, ioPin, localAdvance,
+					dwellAngle);
 
 		}
 
@@ -155,8 +159,8 @@ void initializeIgnitionActions(float advance, float dwellAngle, engine_configura
 			float localAdvance = advance + 720.0f * i / engineConfiguration->cylindersCount;
 
 			io_pin_e pin = (io_pin_e) ((int) SPARKOUT_1_OUTPUT + getCylinderId(engineConfiguration->firingOrder, i) - 1);
-			registerSparkEvent(engineConfiguration, &engineConfiguration2->triggerShape, list, pin,
-					localAdvance, dwellAngle);
+			registerSparkEvent(engineConfiguration, &engineConfiguration2->triggerShape, list, pin, localAdvance,
+					dwellAngle);
 		}
 		break;
 
@@ -165,12 +169,13 @@ void initializeIgnitionActions(float advance, float dwellAngle, engine_configura
 	}
 }
 
-static void registerInjectionEvent(engine_configuration_s const *e,
-		trigger_shape_s *s,
-		ActuatorEventList *list,
-		io_pin_e pin,
-		float angle
-		) {
+static void registerInjectionEvent(engine_configuration_s const *e, trigger_shape_s *s, ActuatorEventList *list,
+		io_pin_e pin, float angle) {
+
+	if (!isPinAssigned(pin)) {
+		warning(OBD_PCM_Processor_Fault, "pin not assigned for injector #%d", (int) pin - (int) INJECTOR_1_OUTPUT);
+	}
+
 	registerActuatorEventExt(e, s, list->getNextActuatorEvent(), injectonSignals.add(pin), angle);
 }
 
@@ -267,7 +272,7 @@ void findTriggerPosition(engine_configuration_s const *engineConfiguration, trig
 
 		if (middle == left) {
 			break;
-                }
+		}
 
 		if (angleOffset < s->eventAngles[middle]) {
 			right = middle;
@@ -296,9 +301,9 @@ void registerActuatorEventExt(engine_configuration_s const *engineConfiguration,
 	efiAssertVoid(s->getSize() > 0, "uninitialized trigger_shape_s");
 
 	if (e == NULL) {
-           // error already reported
+		// error already reported
 		return;
-        }
+	}
 	e->actuator = actuator;
 
 	findTriggerPosition(engineConfiguration, s, &e->position, angleOffset);
@@ -308,7 +313,7 @@ static int order_1_THEN_3_THEN_4_THEN2[] = { 1, 3, 4, 2 };
 
 static int order_1_THEN_5_THEN_3_THEN_6_THEN_2_THEN_4[] = { 1, 5, 3, 6, 2, 4 };
 
-static int order_1_8_4_3_6_5_7_2[] = {1, 8, 4, 3, 6, 5, 7, 2};
+static int order_1_8_4_3_6_5_7_2[] = { 1, 8, 4, 3, 6, 5, 7, 2 };
 
 /**
  * @param index from zero to cylindersCount - 1
