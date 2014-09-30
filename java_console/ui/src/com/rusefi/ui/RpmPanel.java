@@ -59,6 +59,7 @@ public class RpmPanel {
         rpmPanel.add(controls, BorderLayout.WEST);
         rpmPanel.add(gauges, BorderLayout.CENTER);
         rpmPanel.add(msgPanel, BorderLayout.EAST);
+        rpmPanel.add(new WarningPanel().getPanel(), BorderLayout.SOUTH);
 
         return rpmPanel;
     }
