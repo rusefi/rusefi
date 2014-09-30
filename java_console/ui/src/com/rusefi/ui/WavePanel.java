@@ -69,8 +69,6 @@ public class WavePanel {
     private static WavePanel instance = new WavePanel();
 
     private WavePanel() {
-
-
         LinkManager.engineState.registerStringValueAction("outpin", new EngineState.ValueCallback<String>() {
             @Override
             public void onUpdate(String value) {
