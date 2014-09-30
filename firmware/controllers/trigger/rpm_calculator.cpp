@@ -210,8 +210,10 @@ void initRpmCalculator(void) {
 void scheduleByAngle(scheduling_s *timer, float angle, schfunc_t callback, void *param) {
 	int rpm = getRpm();
 	if (!isValidRpm(rpm)) {
-		// this might happen in case of a single trigger event after a pause
-		warning(OBD_PCM_Processor_Fault, "Invalid rpm: %d", rpm);
+		/**
+		 * this might happen in case of a single trigger event after a pause - this is normal, so no
+		 * warning here
+		 */
 		return;
 	}
 	float delayMs = getOneDegreeTimeMs(rpm) * angle;
