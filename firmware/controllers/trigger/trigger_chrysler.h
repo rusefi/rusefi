@@ -10,6 +10,7 @@
 
 #include "trigger_structure.h"
 
-void configureNeonTriggerShape(trigger_shape_s *s);
+void configureNeon1995TriggerShape(trigger_shape_s *s);
+void configureNeon2003TriggerShape(trigger_shape_s *s);
 
 #endif /* TRIGGER_CHRYSLER_H_ */

@@ -414,7 +414,10 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType, engine_co
 	switch (engineType) {
 #if EFI_SUPPORT_DODGE_NEON || defined(__DOXYGEN__)
 	case DODGE_NEON_1995:
-		setDodgeNeonEngineConfiguration(engineConfiguration, boardConfiguration);
+		setDodgeNeon1995EngineConfiguration(engineConfiguration, boardConfiguration);
+		break;
+	case DODGE_NEON_2003:
+		setDodgeNeonNGCEngineConfiguration(engineConfiguration, boardConfiguration);
 		break;
 #endif /* EFI_SUPPORT_DODGE_NEON */
 #if EFI_SUPPORT_FORD_ASPIRE || defined(__DOXYGEN__)

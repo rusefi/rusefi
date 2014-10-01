@@ -18,7 +18,7 @@
 #include "thermistors.h"
 #include "engine_math.h"
 
-void setDodgeNeonEngineConfiguration(engine_configuration_s *engineConfiguration,
+void setDodgeNeon1995EngineConfiguration(engine_configuration_s *engineConfiguration,
 		board_configuration_s *boardConfiguration) {
 
 	engineConfiguration->triggerConfig.triggerType = TT_DODGE_NEON_1995;
@@ -103,6 +103,12 @@ void setDodgeNeonEngineConfiguration(engine_configuration_s *engineConfiguration
 
 	engineConfiguration->analogChartFrequency = 7;
 }
+
+void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfiguration,
+		board_configuration_s *boardConfiguration) {
+	engineConfiguration->triggerConfig.triggerType = TT_DODGE_NEON_2003;
+}
+
 
 #endif /* EFI_SUPPORT_DODGE_NEON */
 
