@@ -209,7 +209,11 @@ void initializeTriggerShape(Logging *logger, engine_configuration_s const *engin
 		return;
 
 	case TT_DODGE_NEON_1995:
-		configureNeonTriggerShape(triggerShape);
+		configureNeon1995TriggerShape(triggerShape);
+		return;
+
+	case TT_DODGE_NEON_2003:
+		configureNeon2003TriggerShape(triggerShape);
 		return;
 
 	case TT_FORD_ASPIRE:
