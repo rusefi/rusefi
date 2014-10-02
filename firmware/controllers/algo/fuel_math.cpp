@@ -46,7 +46,7 @@ float getBaseFuel(Engine *engine, int rpm) {
 		return getSpeedDensityFuel(engine, rpm);
 	} else {
 		float engineLoad = getEngineLoadT(engine);
-		return getBaseTableFuel(rpm, engineLoad);
+		return getBaseTableFuel(engine->engineConfiguration, rpm, engineLoad);
 	}
 }
 
@@ -83,9 +83,10 @@ float getFuelMs(int rpm, Engine *engine) {
 
 // todo: start using 'engine' parameter and not 'extern'
 float getRunningFuel(float baseFuel, Engine *engine, int rpm) {
-	float iatCorrection = getIatCorrection(getIntakeAirTemperature());
-	float cltCorrection = getCltCorrection(getCoolantTemperature(engine->engineConfiguration2));
-	float injectorLag = getInjectorLag(getVBatt());
+	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
+	float iatCorrection = getIatCorrection(engineConfiguration, getIntakeAirTemperature(engine->engineConfiguration2));
+	float cltCorrection = getCltCorrection(engineConfiguration, getCoolantTemperature(engine->engineConfiguration2));
+	float injectorLag = getInjectorLag(engineConfiguration, getVBatt());
 
 #if EFI_ACCEL_ENRICHMENT
 	float accelEnrichment = getAccelEnrichment();
@@ -105,7 +106,7 @@ static Map3D1616 fuelMap;
  * @param	vBatt	Battery voltage.
  * @return	Time in ms for injection opening time based on current battery voltage
  */
-float getInjectorLag(float vBatt) {
+float getInjectorLag(engine_configuration_s *engineConfiguration, float vBatt) {
 	if (cisnan(vBatt)) {
 		warning(OBD_System_Voltage_Malfunction, "vBatt=%f", vBatt);
 		return 0;
@@ -120,20 +121,20 @@ float getInjectorLag(float vBatt) {
  * @note this method has nothing to do with fuel map VALUES - it's job
  * is to prepare the fuel map data structure for 3d interpolation
  */
-void prepareFuelMap(void) {
+void prepareFuelMap(engine_configuration_s *engineConfiguration) {
 	fuelMap.init(engineConfiguration->fuelTable);
 }
 
 /**
  * @brief Engine warm-up fuel correction.
  */
-float getCltCorrection(float clt) {
+float getCltCorrection(engine_configuration_s *engineConfiguration, float clt) {
 	if (cisnan(clt))
 		return 1; // this error should be already reported somewhere else, let's just handle it
 	return interpolate2d(clt, engineConfiguration->cltFuelCorrBins, engineConfiguration->cltFuelCorr, CLT_CURVE_SIZE);
 }
 
-float getIatCorrection(float iat) {
+float getIatCorrection(engine_configuration_s *engineConfiguration, float iat) {
 	if (cisnan(iat))
 		return 1; // this error should be already reported somewhere else, let's just handle it
 	return interpolate2d(iat, engineConfiguration->iatFuelCorrBins, engineConfiguration->iatFuelCorr, IAT_CURVE_SIZE);
@@ -142,7 +143,7 @@ float getIatCorrection(float iat) {
 /**
  * @return Fuel injection duration injection as specified in the fuel map, in milliseconds
  */
-float getBaseTableFuel(int rpm, float engineLoad) {
+float getBaseTableFuel(engine_configuration_s *engineConfiguration, int rpm, float engineLoad) {
 	if (cisnan(engineLoad)) {
 		warning(OBD_PCM_Processor_Fault, "NaN engine load");
 		return NAN;
@@ -155,10 +156,11 @@ float getBaseTableFuel(int rpm, float engineLoad) {
  * @return Duration of fuel injection while craning, in milliseconds
  */
 float getCrankingFuel(Engine *engine) {
-	return getStartingFuel(getCoolantTemperature(engine->engineConfiguration2));
+	return getStartingFuel(engine->engineConfiguration,
+			getCoolantTemperature(engine->engineConfiguration2));
 }
 
-float getStartingFuel(float coolantTemperature) {
+float getStartingFuel(engine_configuration_s *engineConfiguration, float coolantTemperature) {
 	// these magic constants are in Celsius
 	if (cisnan(coolantTemperature) || coolantTemperature < engineConfiguration->crankingSettings.coolantTempMinC)
 		return engineConfiguration->crankingSettings.fuelAtMinTempMs;

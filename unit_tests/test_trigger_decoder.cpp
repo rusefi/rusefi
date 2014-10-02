@@ -342,9 +342,9 @@ extern EventQueue schedulingQueue;
 static void testRpmCalculator(void) {
 	printf("*************************************************** testRpmCalculator\r\n");
 
-	initThermistors();
-
 	EngineTestHelper eth(FORD_INLINE_6_1995);
+
+	initThermistors(&eth.engine);
 
 	engine_configuration_s *ec = &eth.persistentConfig.engineConfiguration;
 
@@ -375,7 +375,7 @@ static void testRpmCalculator(void) {
 	eth.triggerCentral.handleShaftSignal(&configuration, SHAFT_PRIMARY_UP, timeNow);
 	assertEqualsM("index #2", 0, eth.triggerCentral.triggerState.getCurrentIndex());
 	assertEqualsM("queue size", 4, schedulingQueue.size());
-	assertEqualsM("ev 1", 695000, schedulingQueue.getForUnitText(0)->momentUs);
+	assertEqualsM("ev 1", 248000, schedulingQueue.getForUnitText(0)->momentUs);
 	assertEqualsM("ev 2", 245000, schedulingQueue.getForUnitText(1)->momentUs);
 	schedulingQueue.clear();
 
@@ -389,7 +389,7 @@ static void testRpmCalculator(void) {
 	assertEqualsM("queue size 3", 6, schedulingQueue.size());
 	assertEquals(258333, schedulingQueue.getForUnitText(0)->momentUs);
 	assertEquals(257833, schedulingQueue.getForUnitText(1)->momentUs);
-	assertEqualsM("ev 5", 708333, schedulingQueue.getForUnitText(2)->momentUs);
+	assertEqualsM("ev 5", 261333, schedulingQueue.getForUnitText(2)->momentUs);
 	assertEqualsM("3/3", 258333, schedulingQueue.getForUnitText(3)->momentUs);
 	schedulingQueue.clear();
 
@@ -414,7 +414,7 @@ static void testRpmCalculator(void) {
 	eth.triggerCentral.handleShaftSignal(&configuration, SHAFT_PRIMARY_UP, timeNow);
 	assertEqualsM("queue size 6", 5, schedulingQueue.size());
 	assertEqualsM("6/0", 285000, schedulingQueue.getForUnitText(0)->momentUs);
-	assertEqualsM("6/1", 735000, schedulingQueue.getForUnitText(1)->momentUs);
+	assertEqualsM("6/1", 288000, schedulingQueue.getForUnitText(1)->momentUs);
 	assertEqualsM("6/0", 285000, schedulingQueue.getForUnitText(2)->momentUs);
 	schedulingQueue.clear();
 
@@ -428,7 +428,7 @@ static void testRpmCalculator(void) {
 	assertEqualsM("queue size 8", 6, schedulingQueue.size());
 	assertEqualsM("8/0", 298333, schedulingQueue.getForUnitText(0)->momentUs);
 	assertEqualsM("8/1", 297833, schedulingQueue.getForUnitText(1)->momentUs);
-	assertEqualsM("8/2", 748333, schedulingQueue.getForUnitText(2)->momentUs);
+	assertEqualsM("8/2", 301333, schedulingQueue.getForUnitText(2)->momentUs);
 	assertEqualsM("8/3", 298333, schedulingQueue.getForUnitText(3)->momentUs);
 	schedulingQueue.clear();
 

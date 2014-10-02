@@ -22,7 +22,7 @@ static Logging logger;
  * We are executing these heavy (logarithm) methods from outside the trigger callbacks for performance reasons.
  */
 void Engine::updateSlowSensors() {
-	engineState.iat = getIntakeAirTemperature();
+	engineState.iat = getIntakeAirTemperature(engineConfiguration2);
 	engineState.clt = getCoolantTemperature(engineConfiguration2);
 }
 

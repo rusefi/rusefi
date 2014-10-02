@@ -10,16 +10,16 @@
 
 #include "engine.h"
 
-void prepareFuelMap(void);
+void prepareFuelMap(engine_configuration_s *engineConfiguration);
 
 float getBaseFuel(Engine *engine, int rpm);
-float getBaseTableFuel(int rpm, float engineLoad);
-float getIatCorrection(float iat);
-float getInjectorLag(float vBatt);
-float getCltCorrection(float clt);
+float getBaseTableFuel(engine_configuration_s *engineConfiguration, int rpm, float engineLoad);
+float getIatCorrection(engine_configuration_s *engineConfiguration, float iat);
+float getInjectorLag(engine_configuration_s *engineConfiguration, float vBatt);
+float getCltCorrection(engine_configuration_s *engineConfiguration, float clt);
 float getRunningFuel(float baseFuel, Engine *engine, int rpm);
 float getCrankingFuel(Engine *engine);
-float getStartingFuel(float coolantTemperature);
+float getStartingFuel(engine_configuration_s *engineConfiguration, float coolantTemperature);
 float getFuelMs(int rpm, Engine *engine);
 
 #endif /* FUEL_MAP_H_ */

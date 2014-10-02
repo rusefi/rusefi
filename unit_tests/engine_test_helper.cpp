@@ -9,6 +9,7 @@
 #include "stddef.h"
 #include "trigger_decoder.h"
 #include "speed_density.h"
+#include "fuel_math.h"
 
 extern int timeNow;
 
@@ -19,6 +20,9 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType) {
 
 	configuration.engineConfiguration = ec;
 	configuration.engineConfiguration2 = &ec2;
+	engine.engineConfiguration2 = &ec2;
+
+	prepareFuelMap(engine.engineConfiguration);
 
 
 	initSpeedDensity(ec);
