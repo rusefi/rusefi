@@ -20,6 +20,7 @@ public class RpmModel {
     private int displayedValue;
     private int value;
     private final List<RpmListener> listeners = new ArrayList<RpmListener>();
+    private long timeAtLastUpdate;
 
     public static RpmModel getInstance() {
         return INSTANCE;
@@ -36,6 +37,7 @@ public class RpmModel {
 
     public void setValue(int rpm) {
         value = rpm;
+
         for (RpmListener listener : listeners)
             listener.onRpmChange(this);
     }
@@ -46,8 +48,11 @@ public class RpmModel {
 
     public int getSmoothedValue() {
         int diff = Math.abs(displayedValue - value);
-        if (diff > value * SMOOTHING_RATIO)
+        boolean isOlderThenOneSecond = System.currentTimeMillis() - timeAtLastUpdate > 1000;
+        if (diff > value * SMOOTHING_RATIO || isOlderThenOneSecond) {
+            timeAtLastUpdate = System.currentTimeMillis();
             displayedValue = value;
+        }
         return displayedValue;
     }
 
