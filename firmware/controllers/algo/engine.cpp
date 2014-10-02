@@ -23,7 +23,7 @@ static Logging logger;
  */
 void Engine::updateSlowSensors() {
 	engineState.iat = getIntakeAirTemperature();
-	engineState.clt = getCoolantTemperature();
+	engineState.clt = getCoolantTemperature(engineConfiguration2);
 }
 
 void Engine::onTriggerEvent(uint64_t nowUs) {
