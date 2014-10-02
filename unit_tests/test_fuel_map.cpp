@@ -55,7 +55,7 @@ void testFuelMap(void) {
 	// because all the correction tables are zero
 	printf("*************************************************** getRunningFuel 1\r\n");
 	float baseFuel = getBaseTableFuel(eth.engine.engineConfiguration, 5, getEngineLoadT(&eth.engine));
-	assertEqualsM("base fuel", 5.5, getRunningFuel(baseFuel, &eth.engine, 5));
+	assertEqualsM("base fuel", 5.0, getRunningFuel(baseFuel, &eth.engine, 5));
 
 	printf("*************************************************** setting IAT table\r\n");
 	for (int i = 0; i < IAT_CURVE_SIZE; i++) {
