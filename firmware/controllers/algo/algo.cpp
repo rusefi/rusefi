@@ -28,7 +28,7 @@
 #include "speed_density.h"
 
 void initDataStructures(engine_configuration_s *engineConfiguration) {
-	prepareFuelMap();
+	prepareFuelMap(engineConfiguration);
 	prepareTimingMap();
 	initSpeedDensity(engineConfiguration);
 }

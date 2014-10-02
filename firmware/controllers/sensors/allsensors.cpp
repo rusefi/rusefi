@@ -9,6 +9,8 @@
 
 #include "allsensors.h"
 
+extern Engine engine;
+
 void initSensors(void) {
-	initThermistors();
+	initThermistors(&engine);
 }

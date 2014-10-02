@@ -148,7 +148,7 @@ void printSensors(void) {
 		reportSensorF(getCaption(LP_ECT), getCoolantTemperature(engineConfiguration2), 2);
 	}
 
-	reportSensorF(getCaption(LP_IAT), getIntakeAirTemperature(), 2);
+	reportSensorF(getCaption(LP_IAT), getIntakeAirTemperature(engineConfiguration2), 2);
 
 //	debugFloat(&logger, "tch", getTCharge1(tps), 2);
 
@@ -174,7 +174,7 @@ void printState(int currentCkpEventCounter) {
 	debugFloat(&logger, "fuel_base", baseFuel, 2);
 //	debugFloat(&logger, "fuel_iat", getIatCorrection(getIntakeAirTemperature()), 2);
 //	debugFloat(&logger, "fuel_clt", getCltCorrection(getCoolantTemperature()), 2);
-	debugFloat(&logger, "fuel_lag", getInjectorLag(getVBatt()), 2);
+	debugFloat(&logger, "fuel_lag", getInjectorLag(engineConfiguration, getVBatt()), 2);
 	debugFloat(&logger, "fuel", getRunningFuel(baseFuel, &engine, rpm), 2);
 
 	debugFloat(&logger, "timing", getAdvance(rpm, engineLoad), 2);
@@ -306,16 +306,16 @@ void updateDevConsoleState(void) {
  */
 
 static void showFuelInfo2(float rpm, float engineLoad) {
-	float baseFuel = getBaseTableFuel((int) rpm, engineLoad);
+	float baseFuel = getBaseTableFuel(engineConfiguration, (int) rpm, engineLoad);
 
 	scheduleMsg(&logger2, "algo=%s/pump=%s", algorithmToString(engineConfiguration->algorithm), boolToString(getOutputPinValue(FUEL_PUMP_RELAY)));
 
 	scheduleMsg(&logger2, "cranking fuel: %f", getCrankingFuel(&engine));
 
 	if (engine.rpmCalculator->isRunning()) {
-		float iatCorrection = getIatCorrection(getIntakeAirTemperature());
+		float iatCorrection = getIatCorrection(getIntakeAirTemperature(engineConfiguration2));
 		float cltCorrection = getCltCorrection(getCoolantTemperature(engineConfiguration2));
-		float injectorLag = getInjectorLag(getVBatt());
+		float injectorLag = getInjectorLag(engineConfiguration, getVBatt());
 		scheduleMsg(&logger2, "rpm=%f engineLoad=%f", rpm, engineLoad);
 		scheduleMsg(&logger2, "baseFuel=%f", baseFuel);
 
@@ -358,10 +358,10 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels) {
 
 	float tps = getTPS();
 	float coolant = getCoolantTemperature(engineConfiguration2);
-	float intake = getIntakeAirTemperature();
+	float intake = getIntakeAirTemperature(engineConfiguration2);
 
 	float engineLoad = getEngineLoad();
-	float baseFuel = getBaseTableFuel((int) rpm, engineLoad);
+	float baseFuel = getBaseTableFuel(engineConfiguration, (int) rpm, engineLoad);
 
 	tsOutputChannels->rpm = rpm;
 	tsOutputChannels->coolant_temperature = coolant;
@@ -389,7 +389,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels) {
 	tsOutputChannels->secondTriggerChannelEnabled = engineConfiguration->secondTriggerChannelEnabled;
 
 	tsOutputChannels->isCltError = !isValidCoolantTemperature(getCoolantTemperature(engineConfiguration2));
-	tsOutputChannels->isIatError = !isValidIntakeAirTemperature(getIntakeAirTemperature());
+	tsOutputChannels->isIatError = !isValidIntakeAirTemperature(getIntakeAirTemperature(engineConfiguration2));
 #endif
 	tsOutputChannels->tCharge = getTCharge(rpm, tps, coolant, intake);
 	tsOutputChannels->sparkDwell = getSparkDwellMs(rpm);

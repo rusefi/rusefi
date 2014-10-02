@@ -101,7 +101,6 @@ int main(void) {
 	testInterpolate2d();
 	testGpsParser();
 	testMisc();
-	prepareFuelMap();
 	testFuelMap();
 	testEngineMath();
 	testEventRegistry();
@@ -131,7 +130,7 @@ int main(void) {
 	testFLStack();
 
 	//	resizeMap();
-	printf("Success 20131001\r\n");
+	printf("Success 20131002\r\n");
 	return EXIT_SUCCESS;
 }
 

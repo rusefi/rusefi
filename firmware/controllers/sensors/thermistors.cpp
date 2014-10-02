@@ -78,7 +78,7 @@ float getKelvinTemperature(float resistance, ThermistorConf *thermistor) {
 
 float getResistance(Thermistor *thermistor) {
 	float voltage = getVoltageDivided(thermistor->channel);
-	efiAssert(thermistor->config != NULL, "config is null", NAN);
+	efiAssert(thermistor->config != NULL, "thermistor config is null", NAN);
 	float resistance = getR2InVoltageDividor(voltage, _5_VOLTS, thermistor->config->bias_resistor);
 	return resistance;
 }
@@ -152,7 +152,7 @@ void prepareThermistorCurve(ThermistorConf * config) {
 /**
  * @return Celsius value
  */
-float getIntakeAirTemperature(void) {
+float getIntakeAirTemperature(engine_configuration2_s * engineConfiguration2) {
 	float temperature = getTemperatureC(&engineConfiguration2->iat);
 	if (!isValidIntakeAirTemperature(temperature)) {
 		warning(OBD_PCM_Processor_Fault, "unrealistic IAT %f", temperature);
@@ -178,10 +178,10 @@ void setCommonNTCSensor(ThermistorConf *thermistorConf) {
 	setThermistorConfiguration(thermistorConf, -20, 18000, 23.8889, 2100, 120.0, 100.0);
 }
 
-void initThermistors(void) {
-	initThermistorCurve(&engineConfiguration2->clt, &engineConfiguration->cltThermistorConf,
-			engineConfiguration->cltAdcChannel);
-	initThermistorCurve(&engineConfiguration2->iat, &engineConfiguration->iatThermistorConf,
-			engineConfiguration->iatAdcChannel);
+void initThermistors(Engine *engine) {
+	initThermistorCurve(&engine->engineConfiguration2->clt, &engine->engineConfiguration->cltThermistorConf,
+			engine->engineConfiguration->cltAdcChannel);
+	initThermistorCurve(&engine->engineConfiguration2->iat, &engine->engineConfiguration->iatThermistorConf,
+			engine->engineConfiguration->iatAdcChannel);
 	initialized = TRUE;
 }

@@ -20,75 +20,72 @@
 
 extern float testMafValue;
 
-extern engine_configuration_s *engineConfiguration;
-extern engine_configuration2_s *engineConfiguration2;
-
 void testFuelMap(void) {
-	chDbgCheck(engineConfiguration!=NULL, "engineConfiguration");
-
 	printf("*************************************************** testFuelMap\r\n");
-
-	for (int k = 0; k < FUEL_LOAD_COUNT; k++) {
-		for (int r = 0; r < FUEL_RPM_COUNT; r++) {
-			engineConfiguration->fuelTable[k][r] = k * 200 + r;
-		}
-	}
-	printf("*************************************************** initThermistors\r\n");
-
-	initThermistors();
-
-	printf("*** getInjectorLag\r\n");
-	assertEquals(0, getInjectorLag(12));
-
-	for (int i = 0; i < FUEL_LOAD_COUNT; i++)
-		engineConfiguration->fuelLoadBins[i] = i;
-	for (int i = 0; i < FUEL_RPM_COUNT; i++)
-		engineConfiguration->fuelRpmBins[i] = i;
-
-	printf("*************************************************** prepareFuelMap\r\n");
-	assertEquals(1005, getBaseTableFuel(5, 5));
-
-	engineConfiguration->injectorLag = 0.5;
-
-	for (int i = 0; i < VBAT_INJECTOR_CURVE_SIZE; i++) {
-		engineConfiguration->battInjectorLagCorrBins[i] = i;
-		engineConfiguration->battInjectorLagCorr[i] = 2 * i;
-	}
 
 	EngineTestHelper eth(FORD_ASPIRE_1996);
 
+	for (int k = 0; k < FUEL_LOAD_COUNT; k++) {
+		for (int r = 0; r < FUEL_RPM_COUNT; r++) {
+			eth.engine.engineConfiguration->fuelTable[k][r] = k * 200 + r;
+		}
+	}
+	for (int i = 0; i < FUEL_LOAD_COUNT; i++)
+		eth.engine.engineConfiguration->fuelLoadBins[i] = i;
+	for (int i = 0; i < FUEL_RPM_COUNT; i++)
+		eth.engine.engineConfiguration->fuelRpmBins[i] = i;
+
+	assertEqualsM("base fuel table", 1005, getBaseTableFuel(eth.engine.engineConfiguration, 5, 5));
+
+	printf("*************************************************** initThermistors\r\n");
+
+	initThermistors(&eth.engine);
+
+	printf("*** getInjectorLag\r\n");
+	assertEquals(0, getInjectorLag(eth.engine.engineConfiguration, 12));
+
+	eth.engine.engineConfiguration->injectorLag = 0.5;
+
+	for (int i = 0; i < VBAT_INJECTOR_CURVE_SIZE; i++) {
+		eth.engine.engineConfiguration->battInjectorLagCorrBins[i] = i;
+		eth.engine.engineConfiguration->battInjectorLagCorr[i] = 2 * i;
+	}
+
+
 	// because all the correction tables are zero
-	printf("*************************************************** getRunningFuel\r\n");
-	float baseFuel = getBaseTableFuel(5, getEngineLoadT(&eth.engine));
-	assertEqualsM("value", 0.5, getRunningFuel(baseFuel, &eth.engine, 5));
+	printf("*************************************************** getRunningFuel 1\r\n");
+	float baseFuel = getBaseTableFuel(eth.engine.engineConfiguration, 5, getEngineLoadT(&eth.engine));
+	assertEqualsM("base fuel", 5.5, getRunningFuel(baseFuel, &eth.engine, 5));
 
 	printf("*************************************************** setting IAT table\r\n");
 	for (int i = 0; i < IAT_CURVE_SIZE; i++) {
-		engineConfiguration->iatFuelCorrBins[i] = i;
-		engineConfiguration->iatFuelCorr[i] = 2 * i;
+		eth.engine.engineConfiguration->iatFuelCorrBins[i] = i;
+		eth.engine.engineConfiguration->iatFuelCorr[i] = 2 * i;
 	}
-	engineConfiguration->iatFuelCorr[0] = 2;
+	eth.engine.engineConfiguration->iatFuelCorr[0] = 2;
 
 	printf("*************************************************** setting CLT table\r\n");
 	for (int i = 0; i < CLT_CURVE_SIZE; i++) {
-		engineConfiguration->cltFuelCorrBins[i] = i;
-		engineConfiguration->cltFuelCorr[i] = 1;
+		eth.engine.engineConfiguration->cltFuelCorrBins[i] = i;
+		eth.engine.engineConfiguration->cltFuelCorr[i] = 1;
 	}
-	engineConfiguration->injectorLag = 0;
+	eth.engine.engineConfiguration->injectorLag = 0;
 
-	assertEquals(NAN, getIntakeAirTemperature());
-	float iatCorrection = getIatCorrection(-KELV);
+	engine_configuration_s *engineConfiguration = eth.engine.engineConfiguration;
+
+	assertEquals(NAN, getIntakeAirTemperature(eth.engine.engineConfiguration2));
+	float iatCorrection = getIatCorrection(engineConfiguration, -KELV);
 	assertEqualsM("IAT", 2, iatCorrection);
-	float cltCorrection = getCltCorrection(getCoolantTemperature(engineConfiguration2));
+	float cltCorrection = getCltCorrection(engineConfiguration, getCoolantTemperature(eth.engine.engineConfiguration2));
 	assertEqualsM("CLT", 1, cltCorrection);
-	float injectorLag = getInjectorLag(getVBatt());
+	float injectorLag = getInjectorLag(engineConfiguration, getVBatt());
 	assertEquals(0, injectorLag);
 
 	testMafValue = 5;
 
 	// 1005 * 2 for IAT correction
-	printf("*************************************************** getRunningFuel\r\n");
-	 baseFuel = getBaseTableFuel(5, getEngineLoadT(&eth.engine));
+	printf("*************************************************** getRunningFuel 2\r\n");
+	 baseFuel = getBaseTableFuel(eth.engine.engineConfiguration, 5, getEngineLoadT(&eth.engine));
 	assertEqualsM("v1", 30150, getRunningFuel(baseFuel, &eth.engine, 5));
 
 	testMafValue = 0;
@@ -102,10 +99,13 @@ void testFuelMap(void) {
 	printf("*************************************************** getStartingFuel\r\n");
 	// NAN in case we have issues with the CLT sensor
 //	assertEquals(16, getStartingFuel(NAN));
-	assertEquals(20, getStartingFuel(0));
-	assertEquals(18.5231, getStartingFuel(8));
-	assertEquals(8, getStartingFuel(70));
+	assertEquals(20, getStartingFuel(engineConfiguration, 0));
+	assertEquals(18.5231, getStartingFuel(engineConfiguration, 8));
+	assertEquals(8, getStartingFuel(engineConfiguration, 70));
 }
+
+extern engine_configuration_s *engineConfiguration;
+extern engine_configuration2_s *engineConfiguration2;
 
 static void confgiureFordAspireTriggerShape(trigger_shape_s * s) {
 	s->reset(FOUR_STROKE_CAM_SENSOR);

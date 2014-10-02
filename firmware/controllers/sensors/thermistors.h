@@ -40,7 +40,7 @@ float getResistance(Thermistor *thermistor);
 float getTemperatureC(Thermistor *thermistor);
 float getCoolantTemperature(engine_configuration2_s * engineConfiguration2);
 bool isValidCoolantTemperature(float temperature);
-float getIntakeAirTemperature(void);
+float getIntakeAirTemperature(engine_configuration2_s * engineConfiguration2);
 bool isValidIntakeAirTemperature(float temperature);
 
 float convertResistanceToKelvinTemperature(float resistance,
@@ -48,7 +48,10 @@ float convertResistanceToKelvinTemperature(float resistance,
 void setThermistorConfiguration(ThermistorConf * tc, float temp1, float r1, float temp2, float r2, float temp3,
 		float r3);
 void prepareThermistorCurve(ThermistorConf * config);
-void initThermistors(void);
+
+class Engine;
+
+void initThermistors(Engine *engine);
 
 void setCommonNTCSensor(ThermistorConf *thermistorConf);
 
