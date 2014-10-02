@@ -25,16 +25,6 @@
 #include "adc_math.h"
 #endif
 
-
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
-
 void initSensors(void);
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
 
 #endif /*SENSORS_H_*/

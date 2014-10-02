@@ -79,7 +79,7 @@ void testFuelMap(void) {
 	assertEquals(NAN, getIntakeAirTemperature());
 	float iatCorrection = getIatCorrection(-KELV);
 	assertEqualsM("IAT", 2, iatCorrection);
-	float cltCorrection = getCltCorrection(getCoolantTemperature());
+	float cltCorrection = getCltCorrection(getCoolantTemperature(engineConfiguration2));
 	assertEqualsM("CLT", 1, cltCorrection);
 	float injectorLag = getInjectorLag(getVBatt());
 	assertEquals(0, injectorLag);

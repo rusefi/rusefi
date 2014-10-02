@@ -14,6 +14,7 @@
 #define KELV 273.15
 
 #include "sensor_types.h"
+#include "ec2.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -37,7 +38,7 @@ float convertFtoCelcius(float tempF);
 float getKelvinTemperature(float resistance, ThermistorConf *thermistor);
 float getResistance(Thermistor *thermistor);
 float getTemperatureC(Thermistor *thermistor);
-float getCoolantTemperature(void);
+float getCoolantTemperature(engine_configuration2_s * engineConfiguration2);
 bool isValidCoolantTemperature(float temperature);
 float getIntakeAirTemperature(void);
 bool isValidIntakeAirTemperature(float temperature);

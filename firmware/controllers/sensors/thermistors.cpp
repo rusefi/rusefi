@@ -107,7 +107,7 @@ bool isValidIntakeAirTemperature(float temperature) {
 /**
  * @return coolant temperature, in Celsius
  */
-float getCoolantTemperature(void) {
+float getCoolantTemperature(engine_configuration2_s * engineConfiguration2) {
 	float temperature = getTemperatureC(&engineConfiguration2->clt);
 	if (!isValidCoolantTemperature(temperature)) {
 		warning(OBD_PCM_Processor_Fault, "unrealistic CLT %f", temperature);

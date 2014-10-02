@@ -46,8 +46,6 @@ void assertTrueM(const char *msg, float actual);
 void assertFalse(float actual);
 void assertFalseM(const char *msg, float actual);
 
-float getIntakeAirTemperature(void);
-float getCoolantTemperature(void);
 float getVBatt(void);
 float getMaf(void);
 

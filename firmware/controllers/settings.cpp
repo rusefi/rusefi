@@ -289,7 +289,7 @@ static void printTPSInfo(void) {
 
 static void printTemperatureInfo(void) {
 	printThermistor("CLT", &engineConfiguration2->clt);
-	if (!isValidCoolantTemperature(getCoolantTemperature())) {
+	if (!isValidCoolantTemperature(getCoolantTemperature(engineConfiguration2))) {
 		scheduleMsg(&logger, "CLT sensing error");
 	}
 	printThermistor("IAT", &engineConfiguration2->iat);

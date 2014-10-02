@@ -73,7 +73,7 @@ static int getNumberOfInjections(engine_configuration_s const *engineConfigurati
  */
 float getFuelMs(int rpm, Engine *engine) {
 	if (isCranking()) {
-		return getCrankingFuel() / getNumberOfInjections(engine->engineConfiguration, engine->engineConfiguration->crankingInjectionMode);
+		return getCrankingFuel(engine) / getNumberOfInjections(engine->engineConfiguration, engine->engineConfiguration->crankingInjectionMode);
 	} else {
 		float baseFuel = getBaseFuel(engine, rpm);
 		float fuelPerCycle = getRunningFuel(baseFuel, engine, rpm);
@@ -84,7 +84,7 @@ float getFuelMs(int rpm, Engine *engine) {
 // todo: start using 'engine' parameter and not 'extern'
 float getRunningFuel(float baseFuel, Engine *engine, int rpm) {
 	float iatCorrection = getIatCorrection(getIntakeAirTemperature());
-	float cltCorrection = getCltCorrection(getCoolantTemperature());
+	float cltCorrection = getCltCorrection(getCoolantTemperature(engine->engineConfiguration2));
 	float injectorLag = getInjectorLag(getVBatt());
 
 #if EFI_ACCEL_ENRICHMENT
@@ -154,8 +154,8 @@ float getBaseTableFuel(int rpm, float engineLoad) {
 /**
  * @return Duration of fuel injection while craning, in milliseconds
  */
-float getCrankingFuel(void) {
-	return getStartingFuel(getCoolantTemperature());
+float getCrankingFuel(Engine *engine) {
+	return getStartingFuel(getCoolantTemperature(engine->engineConfiguration2));
 }
 
 float getStartingFuel(float coolantTemperature) {

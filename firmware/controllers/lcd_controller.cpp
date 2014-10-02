@@ -43,7 +43,7 @@ static char * prepareVBattMapLine(char *buffer) {
 static char * prepareCltIatTpsLine(char *buffer) {
 	char *ptr = buffer;
 	*ptr++ = 'C';
-	ptr = ftoa(ptr, getCoolantTemperature(), 10.0f);
+	ptr = ftoa(ptr, getCoolantTemperature(engine.engineConfiguration2), 10.0f);
 
 	ptr = appendStr(ptr, " C");
 	ptr = ftoa(ptr, getIntakeAirTemperature(), 10.0f);

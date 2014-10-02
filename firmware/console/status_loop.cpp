@@ -145,7 +145,7 @@ void printSensors(void) {
 	reportSensorF(getCaption(LP_THROTTLE), getTPS(), 2);
 
 	if (engineConfiguration->hasCltSensor) {
-		reportSensorF(getCaption(LP_ECT), getCoolantTemperature(), 2);
+		reportSensorF(getCaption(LP_ECT), getCoolantTemperature(engineConfiguration2), 2);
 	}
 
 	reportSensorF(getCaption(LP_IAT), getIntakeAirTemperature(), 2);
@@ -310,11 +310,11 @@ static void showFuelInfo2(float rpm, float engineLoad) {
 
 	scheduleMsg(&logger2, "algo=%s/pump=%s", algorithmToString(engineConfiguration->algorithm), boolToString(getOutputPinValue(FUEL_PUMP_RELAY)));
 
-	scheduleMsg(&logger2, "cranking fuel: %f", getCrankingFuel());
+	scheduleMsg(&logger2, "cranking fuel: %f", getCrankingFuel(&engine));
 
 	if (engine.rpmCalculator->isRunning()) {
 		float iatCorrection = getIatCorrection(getIntakeAirTemperature());
-		float cltCorrection = getCltCorrection(getCoolantTemperature());
+		float cltCorrection = getCltCorrection(getCoolantTemperature(engineConfiguration2));
 		float injectorLag = getInjectorLag(getVBatt());
 		scheduleMsg(&logger2, "rpm=%f engineLoad=%f", rpm, engineLoad);
 		scheduleMsg(&logger2, "baseFuel=%f", baseFuel);
@@ -357,7 +357,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels) {
 #endif
 
 	float tps = getTPS();
-	float coolant = getCoolantTemperature();
+	float coolant = getCoolantTemperature(engineConfiguration2);
 	float intake = getIntakeAirTemperature();
 
 	float engineLoad = getEngineLoad();
@@ -388,13 +388,13 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels) {
 	tsOutputChannels->cylinder_cleanup_enabled = engineConfiguration->isCylinderCleanupEnabled;
 	tsOutputChannels->secondTriggerChannelEnabled = engineConfiguration->secondTriggerChannelEnabled;
 
-	tsOutputChannels->isCltError = !isValidCoolantTemperature(getCoolantTemperature());
+	tsOutputChannels->isCltError = !isValidCoolantTemperature(getCoolantTemperature(engineConfiguration2));
 	tsOutputChannels->isIatError = !isValidIntakeAirTemperature(getIntakeAirTemperature());
 #endif
 	tsOutputChannels->tCharge = getTCharge(rpm, tps, coolant, intake);
 	tsOutputChannels->sparkDwell = getSparkDwellMs(rpm);
 	tsOutputChannels->pulseWidth = getRunningFuel(baseFuel, &engine, rpm);
-	tsOutputChannels->crankingFuel = getCrankingFuel();
+	tsOutputChannels->crankingFuel = getCrankingFuel(&engine);
 }
 
 extern TunerStudioOutputChannels tsOutputChannels;

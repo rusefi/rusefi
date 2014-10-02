@@ -1,5 +1,5 @@
 /**
- * @file    allsensors.h
+ * @file    allsensors.cpp
  * @brief
  *
  *
