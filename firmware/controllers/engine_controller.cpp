@@ -116,7 +116,7 @@ static void updateErrorCodes(void) {
 	/**
 	 * technically we can set error codes right inside the getMethods, but I a bit on a fence about it
 	 */
-	setError(isValidIntakeAirTemperature(getIntakeAirTemperature()), OBD_Intake_Air_Temperature_Circuit_Malfunction);
+	setError(isValidIntakeAirTemperature(getIntakeAirTemperature(engineConfiguration2)), OBD_Intake_Air_Temperature_Circuit_Malfunction);
 	setError(isValidCoolantTemperature(getCoolantTemperature(engineConfiguration2)), OBD_Engine_Coolant_Temperature_Circuit_Malfunction);
 }
 

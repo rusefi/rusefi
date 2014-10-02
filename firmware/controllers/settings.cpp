@@ -293,7 +293,7 @@ static void printTemperatureInfo(void) {
 		scheduleMsg(&logger, "CLT sensing error");
 	}
 	printThermistor("IAT", &engineConfiguration2->iat);
-	if (!isValidIntakeAirTemperature(getIntakeAirTemperature())) {
+	if (!isValidIntakeAirTemperature(getIntakeAirTemperature(engineConfiguration2))) {
 		scheduleMsg(&logger, "IAT sensing error");
 	}
 

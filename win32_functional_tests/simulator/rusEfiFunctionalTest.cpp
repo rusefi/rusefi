@@ -81,7 +81,7 @@ void rusEfiFunctionalTest(void) {
 
 	resetConfigurationExt(NULL, FORD_ASPIRE_1996, engineConfiguration, engineConfiguration2);
 
-	initThermistors();
+	initThermistors(&engine);
 	initAlgo(engineConfiguration);
 	initRpmCalculator();
 
