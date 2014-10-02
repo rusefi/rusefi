@@ -27,7 +27,7 @@ void configureFordAspireTriggerShape(trigger_shape_s * s) {
 	s->addEvent(x + 540, T_SECONDARY, TV_LOW);
 	s->addEvent(720, T_PRIMARY, TV_LOW);
 
-	s->shaftPositionEventCount = s->getSize();
+	s->assignSize();
 }
 
 void initializeMitsubishi4g18(trigger_shape_s *s) {

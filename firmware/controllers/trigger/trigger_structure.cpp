@@ -375,7 +375,7 @@ void configureHondaAccordCDDip(trigger_shape_s *s) {
 
 	s->isSynchronizationNeeded = false;
 
-	s->shaftPositionEventCount = s->getSize();
+	s->assignSize();
 }
 
 void configureHondaAccordCD(trigger_shape_s *s, bool with3rdSignal) {
@@ -424,5 +424,5 @@ void configureHondaAccordCD(trigger_shape_s *s, bool with3rdSignal) {
 		s->addEvent(i * 180.0f, T_PRIMARY, TV_LOW);
 	}
 
-	s->shaftPositionEventCount = s->getSize();
+	s->assignSize();
 }

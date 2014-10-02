@@ -35,8 +35,6 @@ void configureNeon2003TriggerShape(trigger_shape_s *s) {
 
 	s->addEvent(base + 674, T_PRIMARY, TV_HIGH);
 	s->addEvent(base + 710, T_PRIMARY, TV_LOW);
-
-	s->assignSize();
 }
 
 void configureNeon1995TriggerShape(trigger_shape_s *s) {
@@ -95,7 +93,5 @@ void configureNeon1995TriggerShape(trigger_shape_s *s) {
 	s->addEvent(base + 497, T_SECONDARY, TV_LOW);
 
 	s->addEvent(base + 560, T_PRIMARY, TV_HIGH); // width =
-
-	s->shaftPositionEventCount = 4 + 8 + 8 + 8 + 8;
 }
 

@@ -185,8 +185,7 @@ void initializeSkippedToothTriggerShapeExt(trigger_shape_s *s, int totalTeethCou
 	s->skippedToothCount = skippedCount;
 	initializeSkippedToothTriggerShape(s, totalTeethCount, skippedCount, operationMode);
 
-	s->shaftPositionEventCount = ((totalTeethCount - skippedCount) * 2);
-	s->wave.checkSwitchTimes(s->getSize());
+	s->assignSize();
 }
 
 /**
@@ -213,71 +212,73 @@ void initializeTriggerShape(Logging *logger, engine_configuration_s const *engin
 
 		initializeSkippedToothTriggerShapeExt(triggerShape, triggerConfig->customTotalToothCount,
 				triggerConfig->customSkippedToothCount, getOperationMode(engineConfiguration));
-		return;
+		break;
 
 	case TT_MAZDA_MIATA_NA:
 		initializeMazdaMiataNaShape(triggerShape);
-		return;
+		break;
 
 	case TT_MAZDA_MIATA_NB:
 		initializeMazdaMiataNbShape(triggerShape);
-		return;
+		break;
 
 	case TT_DODGE_NEON_1995:
 		configureNeon1995TriggerShape(triggerShape);
-		return;
+		break;
 
 	case TT_DODGE_NEON_2003:
 		configureNeon2003TriggerShape(triggerShape);
-		return;
+		break;
 
 	case TT_FORD_ASPIRE:
 		configureFordAspireTriggerShape(triggerShape);
-		return;
+		break;
 
 	case TT_GM_7X:
 		configureGmTriggerShape(triggerShape);
-		return;
+		break;
 
 	case TT_FORD_ESCORT_GT:
 		configureMazdaProtegeLx(triggerShape);
-		return;
+		break;
 
 	case TT_MINI_COOPER_R50:
 		configureMiniCooperTriggerShape(triggerShape);
-		return;
+		break;
 
 	case TT_TOOTHED_WHEEL_60_2:
 		setToothedWheelConfiguration(triggerShape, 60, 2, engineConfiguration);
 		setTriggerSynchronizationGap(triggerShape, 2.5);
-		return;
+		break;
 
 	case TT_TOOTHED_WHEEL_36_1:
 		setToothedWheelConfiguration(triggerShape, 36, 1, engineConfiguration);
-		return;
+		break;
 
 	case TT_HONDA_ACCORD_CD_TWO_WIRES:
 		configureHondaAccordCD(triggerShape, false);
-		return;
+		break;
 
 	case TT_HONDA_ACCORD_CD:
 		configureHondaAccordCD(triggerShape, true);
-		return;
+		break;
 
 	case TT_HONDA_ACCORD_CD_DIP:
 		configureHondaAccordCDDip(triggerShape);
-		return;
+		break;
 
 	case TT_MITSU:
 		initializeMitsubishi4g18(triggerShape);
-		return;
+		break;
 
 	default:
 		firmwareError("initializeTriggerShape() not implemented: %d", triggerConfig->triggerType);
 		;
+		return;
 	}
-	if (engineConfiguration2->triggerShape.shaftPositionEventCount != engineConfiguration2->triggerShape.getSize())
-		firmwareError("trigger size or shaftPositionEventCount?");
+	trigger_shape_s *s = &engineConfiguration2->triggerShape;
+	s->assignSize();
+	s->wave.checkSwitchTimes(s->getSize());
 }
 
 TriggerStimulatorHelper::TriggerStimulatorHelper() {
