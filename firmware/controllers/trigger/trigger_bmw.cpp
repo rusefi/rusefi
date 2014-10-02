@@ -66,7 +66,6 @@ void configureMiniCooperTriggerShape(trigger_shape_s *s) {
 
 	s->addEvent(720.0, T_PRIMARY, TV_LOW);
 
-	s->shaftPositionEventCount = s->getSize();
 	/**
 	 * With just one tooth on camshaft synchronization is not needed
 	 */

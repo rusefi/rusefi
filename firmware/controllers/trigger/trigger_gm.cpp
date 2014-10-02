@@ -13,8 +13,6 @@ void configureGmTriggerShape(trigger_shape_s *s) {
 	// all angles are x2 here - so, 5 degree width is 10
 	float w = 10;
 
-	s->shaftPositionEventCount = 14;
-
 	s->addEvent(120 - w, T_PRIMARY, TV_HIGH);
 	s->addEvent(120.0, T_PRIMARY, TV_LOW);
 
@@ -36,5 +34,6 @@ void configureGmTriggerShape(trigger_shape_s *s) {
 	s->addEvent(720 - w, T_PRIMARY, TV_HIGH);
 	s->addEvent(720.0, T_PRIMARY, TV_LOW);
 
+	s->assignSize();
 }
 

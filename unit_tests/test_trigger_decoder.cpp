@@ -30,6 +30,8 @@ Engine engine;
 
 extern int timeNow;
 
+extern bool printGapRatio;
+
 extern "C" {
 void sendOutConfirmation(char *value, int i);
 }
@@ -475,6 +477,9 @@ void testTriggerDecoder(void) {
 //	testTriggerDecoder2("miata 1990", MIATA_1990, 0, 0.6280, 0.0);
 	testTriggerDecoder2("miata 1994", MIATA_1994, 11, 0.2917, 0.3716);
 	testTriggerDecoder2("citroen", CITROEN_TU3JP, 0, 0.4833, 0.0);
+
+	printGapRatio = true;
+	testTriggerDecoder2("neon NGC", DODGE_NEON_2003, 6, 0.2139, 0.0);
 
 	testMazda323();
 
