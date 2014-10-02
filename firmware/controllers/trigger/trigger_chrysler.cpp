@@ -10,6 +10,33 @@
 void configureNeon2003TriggerShape(trigger_shape_s *s) {
 	s->reset(FOUR_STROKE_CAM_SENSOR);
 
+	// voodoo magic - we always need 720 at the end
+	int base = 10;
+
+	setTriggerSynchronizationGap(s, 2.5);
+
+	s->addEvent(base + 26, T_PRIMARY, TV_HIGH);
+	s->addEvent(base + 62, T_PRIMARY, TV_LOW);
+
+	s->addEvent(base + 98, T_PRIMARY, TV_HIGH);
+	s->addEvent(base + 134, T_PRIMARY, TV_LOW);
+
+	s->addEvent(base + 180, T_PRIMARY, TV_HIGH);
+	s->addEvent(base + 314, T_PRIMARY, TV_LOW);
+
+	s->addEvent(base + 350, T_PRIMARY, TV_HIGH);
+	s->addEvent(base + 386, T_PRIMARY, TV_LOW);
+
+	s->addEvent(base + 422, T_PRIMARY, TV_HIGH);
+	s->addEvent(base + 458, T_PRIMARY, TV_LOW);
+
+	s->addEvent(base + 494, T_PRIMARY, TV_HIGH);
+	s->addEvent(base + 530, T_PRIMARY, TV_LOW);
+
+	s->addEvent(base + 674, T_PRIMARY, TV_HIGH);
+	s->addEvent(base + 710, T_PRIMARY, TV_LOW);
+
+	s->assignSize();
 }
 
 void configureNeon1995TriggerShape(trigger_shape_s *s) {
@@ -18,7 +45,6 @@ void configureNeon1995TriggerShape(trigger_shape_s *s) {
 	setTriggerSynchronizationGap(s, 0.72);
 
 	s->useRiseEdge = false;
-
 
 	// voodoo magic - we always need 720 at the end
 	int base = 720 - 560;
@@ -67,7 +93,6 @@ void configureNeon1995TriggerShape(trigger_shape_s *s) {
 	s->addEvent(base + 468, T_SECONDARY, TV_LOW);
 	s->addEvent(base + 492, T_SECONDARY, TV_HIGH);
 	s->addEvent(base + 497, T_SECONDARY, TV_LOW);
-
 
 	s->addEvent(base + 560, T_PRIMARY, TV_HIGH); // width =
 

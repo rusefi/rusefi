@@ -49,6 +49,7 @@ public:
 	void addEvent(float angle, trigger_wheel_e const waveIndex, trigger_value_e const state);
 	void reset(operation_mode_e operationMode);
 	int getSize() const;
+	void assignSize();
 	multi_wave_s wave;
 
 	/**
