@@ -3,6 +3,8 @@
  *
  * DODGE_NEON_1995 = 2
  *
+ * DODGE_NEON_2003 = 23
+ *
  * This config overrides some values of the default configuration which is set by setDefaultConfiguration() method
  *
  * @date Dec 16, 2013

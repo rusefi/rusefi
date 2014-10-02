@@ -35,6 +35,12 @@
 
 static cyclic_buffer errorDetection;
 
+#if ! EFI_PROD_CODE
+
+bool printGapRatio = false;
+
+#endif /* ! EFI_PROD_CODE */
+
 /**
  * @return TRUE is something is wrong with trigger decoding
  */
@@ -47,6 +53,15 @@ static inline bool isSynchronizationGap(TriggerState const *shaftPositionState, 
 	if (!triggerShape->isSynchronizationNeeded) {
 		return false;
 	}
+
+#if ! EFI_PROD_CODE
+	if(printGapRatio) {
+
+		float gap = 1.0 * currentDuration / shaftPositionState->toothed_previous_duration;
+		print("current gap %f\r\n", gap);
+	}
+
+#endif /* ! EFI_PROD_CODE */
 
 	return currentDuration > shaftPositionState->toothed_previous_duration * triggerShape->syncRatioFrom
 			&& currentDuration < shaftPositionState->toothed_previous_duration * triggerShape->syncRatioTo;
@@ -80,7 +95,7 @@ static trigger_value_e eventType[6] = { TV_LOW, TV_HIGH, TV_LOW, TV_HIGH, TV_LOW
  */
 void TriggerState::decodeTriggerEvent(trigger_shape_s const*triggerShape, trigger_config_s const*triggerConfig,
 		trigger_event_e const signal, uint64_t nowUs) {
-	(void)triggerConfig; // we might want this for logging?
+	(void) triggerConfig; // we might want this for logging?
 	efiAssertVoid(signal <= SHAFT_3RD_UP, "unexpected signal");
 
 	trigger_wheel_e triggerWheel = eventIndex[signal];
@@ -360,7 +375,6 @@ uint32_t findTriggerZeroEventIndex(trigger_shape_s * shape, trigger_config_s con
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
 //static Logging logger;
 #endif
-
 
 void initTriggerDecoder(void) {
 #if EFI_PROD_CODE || EFI_SIMULATOR

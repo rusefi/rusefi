@@ -35,6 +35,10 @@ trigger_shape_s::trigger_shape_s() :
 	wave.waves = h.waves;
 }
 
+void trigger_shape_s::assignSize() {
+	shaftPositionEventCount = getSize();
+}
+
 int trigger_shape_s::getSize() const {
 	return size;
 }
