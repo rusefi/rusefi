@@ -225,6 +225,7 @@ void showMainHistogram(void) {
 #endif
 }
 
+// todo: eliminate this 'extern'
 extern Engine engine;
 
 /**

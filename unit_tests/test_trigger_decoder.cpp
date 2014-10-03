@@ -339,10 +339,15 @@ void testGY6_139QMB(void) {
 
 extern EventQueue schedulingQueue;
 
+// this is a very dirty and sad hack. todo: eliminate
+extern Engine engine;
+
 static void testRpmCalculator(void) {
 	printf("*************************************************** testRpmCalculator\r\n");
 
 	EngineTestHelper eth(FORD_INLINE_6_1995);
+
+	efiAssertVoid(eth.engine.engineConfiguration!=NULL, "null config in engine");
 
 	initThermistors(&eth.engine);
 
@@ -353,6 +358,9 @@ static void testRpmCalculator(void) {
 	ec->triggerConfig.customTotalToothCount = 8;
 	ec->globalFuelCorrection = 3;
 	eth.initTriggerShapeAndRpmCalculator();
+
+	// this is a very dirty and sad hack.  todo: eliminate
+	engine.engineConfiguration = eth.engine.engineConfiguration;
 
 	configuration_s configuration = { ec, ec2 };
 	timeNow = 0;
