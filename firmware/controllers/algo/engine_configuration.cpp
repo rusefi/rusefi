@@ -194,6 +194,8 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 
 	engineConfiguration->tpsMin = convertVoltageTo10bitADC(1.250);
 	engineConfiguration->tpsMax = convertVoltageTo10bitADC(4.538);
+	engineConfiguration->tpsErrorLowValue = convertVoltageTo10bitADC(0.2);
+	engineConfiguration->tpsErrorHighValue = convertVoltageTo10bitADC(6);
 
 	engineConfiguration->can_nbc_type = CAN_BUS_NBC_BMW;
 	engineConfiguration->can_sleep_period = 50;

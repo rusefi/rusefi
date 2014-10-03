@@ -450,7 +450,10 @@ typedef struct {
 	 */
 	int engineCycle;
 
-	int unused3[5];
+	short int tpsErrorLowValue;
+	short int tpsErrorHighValue;
+
+	int unused3[4];
 
 } engine_configuration_s;
 

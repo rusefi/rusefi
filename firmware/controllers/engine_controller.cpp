@@ -94,8 +94,9 @@ static msg_t csThread(void) {
 	chRegSetThreadName("status");
 #if EFI_SHAFT_POSITION_INPUT
 	while (TRUE) {
-		int is_cranking = isCranking();
-		int is_running = getRpm() > 0 && !is_cranking;
+		int rpm = getRpm();
+		int is_cranking = isCrankingR(rpm);
+		int is_running = rpm > 0 && !is_cranking;
 		if (is_running) {
 			// blinking while running
 			setOutputPinValue(LED_RUNNING, 0);
