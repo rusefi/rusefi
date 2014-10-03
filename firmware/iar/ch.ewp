@@ -2263,7 +2263,7 @@
     <group>
       <name>sensors</name>
       <file>
-        <name>$PROJ_DIR$\..\controllers\sensors\allsensors.c</name>
+        <name>$PROJ_DIR$\..\controllers\sensors\allsensors.cpp</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\controllers\sensors\allsensors.h</name>
