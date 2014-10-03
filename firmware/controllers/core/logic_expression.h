@@ -16,6 +16,8 @@ typedef enum {
 	LE_NUMERIC_VALUE,
 	LE_OPERATOR_LESS,
 	LE_OPERATOR_MORE,
+	LE_OPERATOR_LESS_OR_EQUAL,
+	LE_OPERATOR_MORE_OR_EQUAL,
 	LE_OPERATOR_AND,
 	LE_OPERATOR_OR,
 
@@ -47,6 +49,7 @@ public:
 	LEElement *first;
 
 private:
+	void doJob(LEElement *element);
 	FLStack<float, MAX_STACK_DEPTH> stack;
 };
 

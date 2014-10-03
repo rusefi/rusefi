@@ -30,6 +30,7 @@ void testLogicExpressions(void) {
 	LEElement value3;
 	value3.init(LE_OPERATOR_AND);
 	c.add(&value3);
+	assertEqualsM("123 and 321", 1.0, c.getValue());
 
 	/**
 	 * fuel_pump = (time_since_boot < 4 seconds) OR (rpm > 0)
