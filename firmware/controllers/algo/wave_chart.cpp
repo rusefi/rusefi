@@ -55,8 +55,8 @@ extern engine_configuration_s *engineConfiguration;
 
 int waveChartUsedSize;
 
-static int isChartActive = TRUE;
-//static int isChartActive = FALSE;
+static int isChartActive = true;
+//static int isChartActive = false;
 
 //#define DEBUG_WAVE 1
 
@@ -141,6 +141,10 @@ static char timeBuffer[10];
  * @brief	Register an event for digital sniffer
  */
 void WaveChart::addWaveChartEvent3(const char *name, const char * msg, const char * msg2) {
+	if(!isChartActive) {
+		return;
+	}
+
 	efiAssertVoid(isInitialized, "chart not initialized");
 #if DEBUG_WAVE
 	scheduleSimpleMsg(&debugLogging, "current", chart->counter);

@@ -74,7 +74,7 @@ static int getNumberOfInjections(engine_configuration_s const *engineConfigurati
 float getFuelMs(int rpm, Engine *engine) {
 	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
 	float theoreticalInjectionLength;
-	if (isCranking()) {
+	if (isCrankingR(rpm)) {
 		theoreticalInjectionLength = getCrankingFuel(engine) / getNumberOfInjections(engineConfiguration, engineConfiguration->crankingInjectionMode);
 	} else {
 		float baseFuel = getBaseFuel(engine, rpm);

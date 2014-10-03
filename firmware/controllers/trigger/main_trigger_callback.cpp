@@ -101,12 +101,13 @@ static void handleFuel(Engine *engine, MainTriggerCallback *mainTriggerCallback,
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 16, "stack#3");
 	efiAssertVoid(eventIndex < mainTriggerCallback->engineConfiguration2->triggerShape.getLength(), "event index");
 
+	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
 	/**
 	 * Ignition events are defined by addFuelEvents() according to selected
 	 * fueling strategy
 	 */
 	ActuatorEventList *source =
-			isCranking() ?
+			isCrankingR(rpm) ?
 					&mainTriggerCallback->engineConfiguration2->engineEventConfiguration.crankingInjectionEvents :
 					&mainTriggerCallback->engineConfiguration2->engineEventConfiguration.injectionEvents;
 

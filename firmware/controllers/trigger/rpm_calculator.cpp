@@ -39,6 +39,8 @@ extern WaveChart waveChart;
 #define TOP_DEAD_CENTER_MESSAGE "r"
 
 /**
+ * WARNING: this is a heavy method because 'getRpm()' is relatively heavy
+ *
  * @return -1 in case of isNoisySignal(), current RPM otherwise
  */
 int getRpmE(Engine *engine) {
@@ -83,6 +85,9 @@ bool isValidRpm(int rpm) {
 }
 
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
+/**
+ * WARNING: this is a heavy method because 'getRpm()' is relatively heavy
+ */
 bool isCranking(void) {
 	int rpm = getRpm();
 	return isCrankingR(rpm);
