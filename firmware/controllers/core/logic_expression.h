@@ -21,6 +21,11 @@ typedef enum {
 	LE_OPERATOR_AND,
 	LE_OPERATOR_OR,
 
+	LE_METHOD_RPM,
+	LE_METHOD_COOLANT,
+	LE_METHOD_FAN,
+	LE_METHOD_TIME_SINCE_BOOT,
+
 	Force_4b_le_action = ENUM_SIZE_HACK,
 } le_action_e;
 
@@ -38,6 +43,18 @@ public:
 	LEElement *next;
 };
 
+#define LE_ELEMENT_POOL_SIZE 64
+
+class LEElementPool {
+public:
+	LEElementPool();
+	LEElement pool[LE_ELEMENT_POOL_SIZE];
+	LEElement *next();
+	void reset();
+private:
+	int index;
+};
+
 
 #define MAX_STACK_DEPTH 32
 
@@ -46,10 +63,11 @@ public:
 	LECalculator();
 	float getValue();
 	void add(LEElement *element);
-	LEElement *first;
+	void reset();
 
 private:
 	void doJob(LEElement *element);
+	LEElement *first;
 	FLStack<float, MAX_STACK_DEPTH> stack;
 };
 

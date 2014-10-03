@@ -16,6 +16,7 @@ public:
 	void push(T value);
 	void reset();
 	T pop();
+	T get(int index);
 	int size();
 	bool isEmpty();
 private:
@@ -48,6 +49,10 @@ T FLStack<T, MAXSIZE>::pop() {
 	return values[--index];
 }
 
+template<typename T, int MAXSIZE>
+T FLStack<T, MAXSIZE>::get(int index) {
+	return values[index];
+}
 
 template<typename T, int MAXSIZE>
 int FLStack<T, MAXSIZE>::size() {

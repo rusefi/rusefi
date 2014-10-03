@@ -319,6 +319,7 @@ void testFLStack(void) {
 	int v = stack.pop();
 	assertEquals(234, v);
 	assertEquals(1, stack.size());
+	assertEquals(123, stack.get(0));
 
 	v = stack.pop();
 	assertEquals(123, v);

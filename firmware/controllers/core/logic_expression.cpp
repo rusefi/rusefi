@@ -28,7 +28,12 @@ void LEElement::init(le_action_e action, float fValue) {
 }
 
 LECalculator::LECalculator() {
+	reset();
+}
+
+void LECalculator::reset() {
 	first = NULL;
+	stack.reset();
 }
 
 static bool float2bool(float v) {
@@ -113,4 +118,16 @@ void LECalculator::add(LEElement *element) {
 		}
 		last->next = element;
 	}
+}
+
+LEElementPool::LEElementPool() {
+	reset();
+}
+
+void LEElementPool::reset() {
+	index = 0;
+}
+
+LEElement *LEElementPool::next() {
+	return &pool[index++];
 }
