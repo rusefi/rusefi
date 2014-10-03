@@ -40,10 +40,10 @@ public class RecentCommands {
         add("showconfig");
         add("writeconfig");
         add("triggerinfo");
-        add("enable_injection");
-        add("disable_injection");
-        add("enable_ignition");
-        add("disable_ignition");
+        add("enable injection");
+        add("disable injection");
+        add("enable ignition");
+        add("disable ignition");
     }
 
     public void add(String command) {
