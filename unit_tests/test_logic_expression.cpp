@@ -9,8 +9,28 @@
 
 #include "main.h"
 #include "test_logic_expression.h"
+#include "logic_expression.h"
 
 void testLogicExpressions(void) {
+	printf("*************************************************** testLogicExpressions\r\n");
+
+	LECalculator c;
+
+	LEElement value1;
+	value1.init(LE_NUMERIC_VALUE, 123.0);
+	c.add(&value1);
+
+	assertEqualsM("123", 123.0, c.getValue());
+
+
+	LEElement value2;
+	value2.init(LE_NUMERIC_VALUE, 321.0);
+	c.add(&value2);
+
+	LEElement value3;
+	value3.init(LE_OPERATOR_AND);
+	c.add(&value3);
+
 	/**
 	 * fuel_pump = (time_since_boot < 4 seconds) OR (rpm > 0)
 	 * fuel_pump = time_since_boot 4 less rpm 0 more OR
