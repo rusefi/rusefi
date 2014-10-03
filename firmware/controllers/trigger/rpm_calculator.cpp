@@ -102,17 +102,17 @@ bool isCranking(void) {
  * This callback is invoked on interrupt thread.
  */
 void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index, RpmCalculator *rpmState) {
+	uint64_t nowUs = getTimeNowUs();
 
 	if (index != 0) {
 #if EFI_ANALOG_CHART || defined(__DOXYGEN__)
 		if (engineConfiguration->analogChartMode == AC_TRIGGER)
-			acAddData(getCrankshaftAngle(getTimeNowUs()), 1000 * ckpSignalType + index);
+			acAddData(getCrankshaftAngle(nowUs), 1000 * ckpSignalType + index);
 #endif
 		return;
 	}
 	rpmState->revolutionCounter++;
 
-	uint64_t nowUs = getTimeNowUs();
 
 	bool hadRpmRecently = rpmState->isRunning();
 

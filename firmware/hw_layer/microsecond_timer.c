@@ -22,7 +22,7 @@
 
 #define GPTDEVICE GPTD5
 
-static volatile uint64_t lastSetTimerTime;
+static volatile uint64_t lastSetTimerTimeNt;
 static int lastSetTimerValue;
 static volatile bool isTimerPending = FALSE;
 
@@ -45,7 +45,7 @@ void setHardwareUsTimer(int32_t timeUs) {
 		gptStopTimerI(&GPTDEVICE);
 	gptStartOneShotI(&GPTDEVICE, timeUs);
 
-	lastSetTimerTime = getTimeNowUs();
+	lastSetTimerTimeNt = getTimeNowNt();
 	lastSetTimerValue = timeUs;
 	isTimerPending = TRUE;
 	timerRestartCounter++;
@@ -85,7 +85,7 @@ static msg_t mwThread(int param) {
 	while (TRUE) {
 		chThdSleepMilliseconds(1000); // once a second is enough
 
-		if (getTimeNowUs() >= lastSetTimerTime + 2 * US_PER_SECOND) {
+		if (getTimeNowNt() >= lastSetTimerTimeNt + 2 * CORE_CLOCK) {
 			strcpy(buff, "no_event");
 			itoa10(&buff[8], lastSetTimerValue);
 			firmwareError(buff);
@@ -94,7 +94,7 @@ static msg_t mwThread(int param) {
 
 		msg = isTimerPending ? "No_cb too long" : "Timer not awhile";
 		// 2 seconds of inactivity would not look right
-		efiAssert(getTimeNowUs() < lastSetTimerTime + 2 * US_PER_SECOND, msg, -1);
+		efiAssert(getTimeNowNt() < lastSetTimerTimeNt + 2 * CORE_CLOCK, msg, -1);
 	}
 #if defined __GNUC__
 	return -1;
@@ -111,7 +111,7 @@ void initMicrosecondTimer(void) {
 
 	gptStart(&GPTDEVICE, &gpt5cfg);
 
-	lastSetTimerTime = getTimeNowUs();
+	lastSetTimerTimeNt = getTimeNowNt();
 #if EFI_EMULATE_POSITION_SENSORS
 	chThdCreateStatic(mwThreadStack, sizeof(mwThreadStack), NORMALPRIO, (tfunc_t) mwThread, NULL);
 #endif /* EFI_ENGINE_EMULATOR */

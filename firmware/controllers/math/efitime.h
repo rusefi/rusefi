@@ -39,6 +39,9 @@ extern "C"
  *
  * By using 64 bit, we can achieve a very precise timestamp which does not overflow.
  * The primary implementation counts the number of CPU cycles from MCU reset.
+ *
+ * WARNING: you should use getTimeNowNt where possible for performance reasons.
+ * The heaviest part is '__aeabi_ildivmod' - non-native 64 bit division
  */
 uint64_t getTimeNowUs(void);
 
