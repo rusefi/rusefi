@@ -37,6 +37,31 @@ void testLogicExpressions(void) {
 	 * fuel_pump = time_since_boot 4 less rpm 0 more OR
 	 */
 
+	c.reset();
+
+	LEElementPool pool;
+	LEElement *e = pool.next();
+	e->init(LE_METHOD_TIME_SINCE_BOOT);
+
+	e = pool.next();
+	e->init(LE_NUMERIC_VALUE, 4);
+
+	e = pool.next();
+	e->init(LE_OPERATOR_LESS);
+
+	e = pool.next();
+	e->init(LE_METHOD_RPM);
+
+	e = pool.next();
+	e->init(LE_NUMERIC_VALUE, 0);
+
+	e = pool.next();
+	e->init(LE_OPERATOR_MORE);
+
+	e = pool.next();
+	e->init(LE_OPERATOR_OR);
+
+
 	/**
 	 * fan = (not fan && coolant > 90) OR (fan && coolant > 85)
 	 * fan = fan NOT coolant 90 AND more fan coolant 85 more AND OR
