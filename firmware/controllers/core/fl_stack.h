@@ -14,6 +14,7 @@ class FLStack {
 public:
 	FLStack();
 	void push(T value);
+	void reset();
 	T pop();
 	int size();
 	bool isEmpty();
@@ -24,7 +25,7 @@ private:
 
 template<typename T, int MAXSIZE>
 FLStack<T, MAXSIZE>::FLStack() {
-	index = 0;
+	reset();
 }
 
 template<typename T, int MAXSIZE>
@@ -33,9 +34,20 @@ bool FLStack<T, MAXSIZE>::isEmpty() {
 }
 
 template<typename T, int MAXSIZE>
+void FLStack<T, MAXSIZE>::reset() {
+	index = 0;
+}
+
+template<typename T, int MAXSIZE>
 void FLStack<T, MAXSIZE>::push(T value) {
 	values[index++] = value;
 }
+
+template<typename T, int MAXSIZE>
+T FLStack<T, MAXSIZE>::pop() {
+	return values[--index];
+}
+
 
 template<typename T, int MAXSIZE>
 int FLStack<T, MAXSIZE>::size() {

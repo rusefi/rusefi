@@ -21,6 +21,8 @@
 
 #include "test_fuel_map.h"
 #include "fuel_math.h"
+#include "test_logic_expression.h"
+#include "engine_configuration.h"
 
 extern "C"
 {
@@ -29,7 +31,6 @@ extern "C"
 #include "test_event_registry.h"
 #include "test_signal_executor.h"
 #include "test_util.h"
-#include "engine_configuration.h"
 }
 
 #include "engine_math.h"
@@ -95,6 +96,7 @@ static engine_configuration2_s ec2;
 engine_configuration2_s *engineConfiguration2 = &ec2;
 
 int main(void) {
+	testLogicExpressions();
 	testOverflow64Counter();
 	testInterpolate3d();
 	testFindIndex();
@@ -130,7 +132,7 @@ int main(void) {
 	testFLStack();
 
 	//	resizeMap();
-	printf("Success 20131002\r\n");
+	printf("Success 20131003\r\n");
 	return EXIT_SUCCESS;
 }
 

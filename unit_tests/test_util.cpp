@@ -311,6 +311,19 @@ void testFLStack(void) {
 
 	FLStack<int, 4> stack;
 	assertEquals(0, stack.size());
+
+	stack.push(123);
+	stack.push(234);
+	assertEquals(2, stack.size());
+
+	int v = stack.pop();
+	assertEquals(234, v);
+	assertEquals(1, stack.size());
+
+	v = stack.pop();
+	assertEquals(123, v);
+	assertEquals(0, stack.size());
+
 }
 
 void testMisc(void) {
