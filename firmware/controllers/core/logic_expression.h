@@ -12,6 +12,8 @@
 #include "fl_stack.h"
 
 typedef enum {
+	Force_4b_le_action = ENUM_SIZE_HACK,
+
 	LE_UNDEFINED,
 	LE_NUMERIC_VALUE,
 	LE_OPERATOR_LESS,
@@ -26,7 +28,6 @@ typedef enum {
 	LE_METHOD_FAN,
 	LE_METHOD_TIME_SINCE_BOOT,
 
-	Force_4b_le_action = ENUM_SIZE_HACK,
 } le_action_e;
 
 class LEElement {
