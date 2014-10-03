@@ -31,22 +31,77 @@ LECalculator::LECalculator() {
 	first = NULL;
 }
 
+static bool float2bool(float v) {
+	return v != 0;
+}
+
+void LECalculator::doJob(LEElement *element) {
+	switch (element->action) {
+
+	case LE_NUMERIC_VALUE:
+		stack.push(element->fValue);
+		break;
+	case LE_OPERATOR_AND: {
+		float v1 = stack.pop();
+		float v2 = stack.pop();
+
+		stack.push(float2bool(v1) && float2bool(v2));
+	}
+		break;
+	case LE_OPERATOR_OR: {
+		float v1 = stack.pop();
+		float v2 = stack.pop();
+
+		stack.push(float2bool(v1) || float2bool(v2));
+	}
+		break;
+	case LE_OPERATOR_LESS: {
+		float v1 = stack.pop();
+		float v2 = stack.pop();
+
+		stack.push(v1 < v2);
+	}
+		break;
+	case LE_OPERATOR_MORE: {
+		float v1 = stack.pop();
+		float v2 = stack.pop();
+
+		stack.push(v1 > v2);
+	}
+		break;
+	case LE_OPERATOR_LESS_OR_EQUAL: {
+		float v1 = stack.pop();
+		float v2 = stack.pop();
+
+		stack.push(v1 <= v2);
+	}
+		break;
+	case LE_OPERATOR_MORE_OR_EQUAL: {
+		float v1 = stack.pop();
+		float v2 = stack.pop();
+
+		stack.push(v1 >= v2);
+	}
+		break;
+	default:
+		firmwareError("Not implemented: %d", element->action);
+
+	}
+
+}
+
 float LECalculator::getValue() {
 	LEElement *element = first;
 
 	stack.reset();
 
-	while(element != NULL) {
-
-		stack.push(element->fValue);
-
-
+	while (element != NULL) {
+		doJob(element);
 		element = element->next;
 	}
 
 	return stack.pop();
 }
-
 
 void LECalculator::add(LEElement *element) {
 	if (first == NULL) {
