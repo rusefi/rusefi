@@ -72,4 +72,6 @@ private:
 	FLStack<float, MAX_STACK_DEPTH> stack;
 };
 
+const char *processToken(const char *line, char *buffer);
+
 #endif /* LOGIC_EXPRESSION_H_ */

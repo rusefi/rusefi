@@ -10,9 +10,24 @@
 #include "main.h"
 #include "test_logic_expression.h"
 #include "logic_expression.h"
+#include "cli_registry.h"
 
 void testLogicExpressions(void) {
 	printf("*************************************************** testLogicExpressions\r\n");
+
+	char buffer[64];
+
+	const char *ptr;
+	ptr = processToken("  hello  ", buffer);
+	assertTrue(strEqual("hello", buffer));
+
+	ptr = processToken("hello", buffer);
+	assertTrue(strEqual("hello", buffer));
+
+	ptr = processToken("  hello  world ", buffer);
+	assertTrue(strEqual("hello", buffer));
+	ptr = processToken(ptr, buffer);
+	assertTrue(strEqual("world", buffer));
 
 	LECalculator c;
 
@@ -21,7 +36,6 @@ void testLogicExpressions(void) {
 	c.add(&value1);
 
 	assertEqualsM("123", 123.0, c.getValue());
-
 
 	LEElement value2;
 	value2.init(LE_NUMERIC_VALUE, 321.0);
@@ -60,7 +74,6 @@ void testLogicExpressions(void) {
 
 	e = pool.next();
 	e->init(LE_OPERATOR_OR);
-
 
 	/**
 	 * fan = (not fan && coolant > 90) OR (fan && coolant > 85)
