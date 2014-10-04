@@ -131,3 +131,23 @@ void LEElementPool::reset() {
 LEElement *LEElementPool::next() {
 	return &pool[index++];
 }
+
+const char *processToken(const char *line, char *buffer) {
+	while (line[0] != 0 && line[0] == ' ') {
+		line++;
+	}
+	if (line[0] == 0) {
+		return NULL;
+	}
+	int tokenLen = indexOf(line, ' ');
+	if (tokenLen == -1) {
+		// no space - the whole remaining line is the token
+		strcpy(buffer, line);
+		return line + strlen(buffer);
+	}
+	strncpy(buffer, line, tokenLen);
+	buffer[tokenLen] = 0;
+	line += tokenLen;
+	return line;
+}
+
