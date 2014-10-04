@@ -180,3 +180,30 @@ float atoff(const char *param) {
 	}
 	return integerPart + decimal / divider;
 }
+
+#define TO_LOWER(x) (((x)>='A' && (x)<='Z') ? (x) - 'A' + 'a' : (x))
+
+bool strEqualCaseInsensitive(const char *str1, const char *str2) {
+	int len1 = strlen(str1);
+	int len2 = strlen(str2);
+	if (len1 != len2) {
+		return false;
+	}
+	for (int i = 0; i < len1; i++)
+		if (TO_LOWER(str1[i]) != TO_LOWER(str2[i]))
+			return false;
+	return true;
+}
+
+bool strEqual(const char *str1, const char *str2) {
+	// todo: there must be a standard function?!
+	int len1 = strlen(str1);
+	int len2 = strlen(str2);
+	if (len1 != len2) {
+		return false;
+	}
+	for (int i = 0; i < len1; i++)
+		if (str1[i] != str2[i])
+			return false;
+	return true;
+}

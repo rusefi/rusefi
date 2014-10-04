@@ -60,8 +60,6 @@ typedef void (*VoidCharPtrCharPtrCharPtr)(const char *, const char *, const char
 typedef void (*VoidCharPtrCharPtrCharPtrCharPtrCharPtr)(const char *, const char *, const char *, const char *, const char *);
 
 char *validateSecureLine(char *line);
-bool strEqualCaseInsensitive(const char *str1, const char *str2);
-bool strEqual(const char *str1, const char *str2);
 void resetConsoleActions(void);
 void helpCommand(void);
 void initConsoleLogic(void);

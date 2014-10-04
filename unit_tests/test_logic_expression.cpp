@@ -12,10 +12,12 @@
 #include "logic_expression.h"
 #include "cli_registry.h"
 
-void testLogicExpressions(void) {
-	printf("*************************************************** testLogicExpressions\r\n");
 
+static void testParsing(void) {
 	char buffer[64];
+
+	assertTrue(strEqualCaseInsensitive("hello", "HELlo"));
+	assertFalse(strEqualCaseInsensitive("hello", "HElo2"));
 
 	const char *ptr;
 	ptr = processToken("  hello  ", buffer);
@@ -28,6 +30,34 @@ void testLogicExpressions(void) {
 	assertTrue(strEqual("hello", buffer));
 	ptr = processToken(ptr, buffer);
 	assertTrue(strEqual("world", buffer));
+
+	assertTrue(isNumeric("123"));
+	assertFalse(isNumeric("a123"));
+
+	LEElementPool pool;
+
+	LEElement *element;
+	element = parseExpression(&pool, "1 3 AND");
+	assertTrue(element != NULL);
+
+	assertEquals(element->action, LE_NUMERIC_VALUE);
+	assertEquals(element->fValue, 1.0);
+
+	element = element->next;
+	assertEquals(element->action, LE_NUMERIC_VALUE);
+	assertEquals(element->fValue, 3.0);
+
+	element = element->next;
+	assertEquals(element->action, LE_OPERATOR_AND);
+
+	element = element->next;
+	assertTrue(element == NULL);
+}
+
+void testLogicExpressions(void) {
+	printf("*************************************************** testLogicExpressions\r\n");
+
+	testParsing();
 
 	LECalculator c;
 

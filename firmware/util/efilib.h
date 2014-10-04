@@ -49,6 +49,9 @@ float maxF(float i1, float i2);
 char* itoa10(char *p, int num);
 bool isSameF(float v1, float v2);
 
+bool strEqualCaseInsensitive(const char *str1, const char *str2);
+bool strEqual(const char *str1, const char *str2);
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

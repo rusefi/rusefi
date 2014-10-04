@@ -73,5 +73,8 @@ private:
 };
 
 const char *processToken(const char *line, char *buffer);
+bool isNumeric(const char* line);
+le_action_e parseAction(const char * line);
+LEElement * parseExpression(LEElementPool *pool, const char * line);
 
 #endif /* LOGIC_EXPRESSION_H_ */

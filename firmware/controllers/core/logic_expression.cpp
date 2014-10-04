@@ -132,6 +132,10 @@ LEElement *LEElementPool::next() {
 	return &pool[index++];
 }
 
+bool isNumeric(const char* line) {
+	return line[0] >= '0' && line[0] <= '9';
+}
+
 const char *processToken(const char *line, char *buffer) {
 	while (line[0] != 0 && line[0] == ' ') {
 		line++;
@@ -151,3 +155,48 @@ const char *processToken(const char *line, char *buffer) {
 	return line;
 }
 
+le_action_e parseAction(const char * line) {
+	if (strEqualCaseInsensitive("or", line)) {
+		return LE_OPERATOR_OR;
+	} else if (strEqualCaseInsensitive("AND", line)) {
+		return LE_OPERATOR_AND;
+	}
+	return LE_UNDEFINED;
+}
+
+static char parsingBuffer[64];
+
+LEElement * parseExpression(LEElementPool *pool, const char * line) {
+
+	LEElement *first = NULL;
+	LEElement *last = NULL;
+
+	while (true) {
+		line = processToken(line, parsingBuffer);
+
+		if (line == NULL) {
+			/**
+			 * No more tokens in this line
+			 */
+			return first;
+		}
+
+		LEElement *n = pool->next();
+
+		if (isNumeric(parsingBuffer)) {
+			n->init(LE_NUMERIC_VALUE, atoff(parsingBuffer));
+		} else {
+			le_action_e action = parseAction(parsingBuffer);
+			n->init(action);
+		}
+
+		if (first == NULL) {
+			first = n;
+			last = n;
+		} else {
+			last->next = n;
+			last = last->next;
+		}
+	}
+	return first;
+}
