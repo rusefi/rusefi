@@ -8,6 +8,27 @@
 #include "main.h"
 #include "logic_expression.h"
 
+LENameOrdinalPair * LE_FIRST = NULL;
+
+/**
+ * the main point of these static fields is that their constructor would register
+ * them in the magic list of operator name/ordinal pairs
+ */
+static LENameOrdinalPair leAnd(LE_OPERATOR_AND, "and");
+static LENameOrdinalPair leOr(LE_OPERATOR_OR, "or");
+static LENameOrdinalPair leMore(LE_OPERATOR_MORE, ">");
+static LENameOrdinalPair leMoreOrEqual(LE_OPERATOR_MORE_OR_EQUAL, ">=");
+
+LENameOrdinalPair::LENameOrdinalPair(le_action_e action, const char *name) {
+	this->next = NULL;
+	this->action = action;
+	this->name = name;
+	if (LE_FIRST != NULL) {
+		LE_FIRST->next = this;
+	}
+	LE_FIRST = this;
+}
+
 LEElement::LEElement() {
 	action = LE_UNDEFINED;
 	next = NULL;
@@ -156,10 +177,12 @@ const char *processToken(const char *line, char *buffer) {
 }
 
 le_action_e parseAction(const char * line) {
-	if (strEqualCaseInsensitive("or", line)) {
-		return LE_OPERATOR_OR;
-	} else if (strEqualCaseInsensitive("AND", line)) {
-		return LE_OPERATOR_AND;
+	LENameOrdinalPair *pair = LE_FIRST;
+	while (pair != NULL) {
+		if (strEqualCaseInsensitive(pair->name, line)) {
+//			return pair->action;
+		}
+		pair = pair->next;
 	}
 	return LE_UNDEFINED;
 }

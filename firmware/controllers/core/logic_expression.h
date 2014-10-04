@@ -72,6 +72,15 @@ private:
 	FLStack<float, MAX_STACK_DEPTH> stack;
 };
 
+class LENameOrdinalPair {
+public:
+	LENameOrdinalPair(le_action_e action, const char *name);
+	LENameOrdinalPair *next;
+	le_action_e action;
+	const char *name;
+};
+
+
 const char *processToken(const char *line, char *buffer);
 bool isNumeric(const char* line);
 le_action_e parseAction(const char * line);
