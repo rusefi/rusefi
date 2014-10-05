@@ -11,6 +11,21 @@
 #include "test_logic_expression.h"
 #include "logic_expression.h"
 #include "cli_registry.h"
+#include "engine.h"
+
+static float mockCoolant;
+static float mockFan;
+
+float getLEValue(Engine *engine, le_action_e action) {
+	switch(action) {
+	case LE_METHOD_FAN:
+		return mockFan;
+	case LE_METHOD_COOLANT:
+		return mockCoolant;
+	default:
+		firmwareError("No value for %d", action);
+	}
+}
 
 
 static void testParsing(void) {
@@ -37,7 +52,7 @@ static void testParsing(void) {
 	LEElementPool pool;
 
 	LEElement *element;
-	element = parseExpression(&pool, "1 3 AND");
+	element = parseExpression(&pool, "1 3 AND not");
 	assertTrue(element != NULL);
 
 	assertEquals(element->action, LE_NUMERIC_VALUE);
@@ -51,7 +66,20 @@ static void testParsing(void) {
 	assertEquals(element->action, LE_OPERATOR_AND);
 
 	element = element->next;
+	assertEquals(element->action, LE_OPERATOR_NOT);
+
+	element = element->next;
 	assertTrue(element == NULL);
+}
+
+static void testExpression(const char *line, float expected) {
+	LEElementPool pool;
+	pool.reset();
+	LEElement * element = parseExpression(&pool, line);
+	assertTrueM("Not NULL expected", element != NULL);
+	LECalculator c;
+	c.add(element);
+	assertEqualsM(line, expected, c.getValue());
 }
 
 void testLogicExpressions(void) {
@@ -105,8 +133,28 @@ void testLogicExpressions(void) {
 	e = pool.next();
 	e->init(LE_OPERATOR_OR);
 
+	pool.reset();
+	LEElement *element;
+	element = parseExpression(&pool, "fan no_such_method");
+	assertTrueM("NULL expected", element == NULL);
+
+
 	/**
 	 * fan = (not fan && coolant > 90) OR (fan && coolant > 85)
 	 * fan = fan NOT coolant 90 AND more fan coolant 85 more AND OR
 	 */
+
+
+	mockFan = 0;
+	mockCoolant = 100;
+
+	testExpression("coolant", 100);
+	testExpression("fan", 0);
+	testExpression("fan not", 1);
+	testExpression("coolant 90 >", 1);
+	testExpression("fan not coolant 90 > and", 1);
+
+
+	testExpression("fan NOT coolant 90 > AND fan coolant 85 > AND OR", 1);
+
 }

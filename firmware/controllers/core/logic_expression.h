@@ -10,23 +10,28 @@
 
 #include "rusefi_enums.h"
 #include "fl_stack.h"
+#include "engine.h"
 
 typedef enum {
+
+	LE_UNDEFINED = 0 ,
+	LE_NUMERIC_VALUE = 1,
+	LE_OPERATOR_LESS = 2,
+	LE_OPERATOR_MORE = 3,
+	LE_OPERATOR_LESS_OR_EQUAL = 4,
+	LE_OPERATOR_MORE_OR_EQUAL = 5,
+	LE_OPERATOR_AND = 6,
+	LE_OPERATOR_OR = 7,
+	LE_OPERATOR_NOT = 8,
+
+	LE_METHOD_RPM = 100,
+	LE_METHOD_COOLANT = 101,
+	LE_METHOD_FAN = 102,
+	LE_METHOD_TIME_SINCE_BOOT = 103,
+	LE_METHOD_FAN_ON_SETTING = 104,
+	LE_METHOD_FAN_OFF_SETTING = 105,
+
 	Force_4b_le_action = ENUM_SIZE_HACK,
-
-	LE_UNDEFINED,
-	LE_NUMERIC_VALUE,
-	LE_OPERATOR_LESS,
-	LE_OPERATOR_MORE,
-	LE_OPERATOR_LESS_OR_EQUAL,
-	LE_OPERATOR_MORE_OR_EQUAL,
-	LE_OPERATOR_AND,
-	LE_OPERATOR_OR,
-
-	LE_METHOD_RPM,
-	LE_METHOD_COOLANT,
-	LE_METHOD_FAN,
-	LE_METHOD_TIME_SINCE_BOOT,
 
 } le_action_e;
 
@@ -85,5 +90,7 @@ const char *processToken(const char *line, char *buffer);
 bool isNumeric(const char* line);
 le_action_e parseAction(const char * line);
 LEElement * parseExpression(LEElementPool *pool, const char * line);
+
+float getLEValue(Engine *engine, le_action_e action);
 
 #endif /* LOGIC_EXPRESSION_H_ */
