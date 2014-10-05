@@ -5,4 +5,4 @@ CONTROLLERS_CORE_SRC_CPP = $(PROJECT_DIR)/controllers/core/EfiWave.cpp \
 	$(PROJECT_DIR)/controllers/core/table_helper.cpp \
 	$(PROJECT_DIR)/controllers/core/logic_expression.cpp \
 	$(PROJECT_DIR)/controllers/core/interpolation.cpp \
-
+	$(PROJECT_DIR)/controllers/core/le_functions.cpp

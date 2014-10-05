@@ -91,6 +91,4 @@ bool isNumeric(const char* line);
 le_action_e parseAction(const char * line);
 LEElement * parseExpression(LEElementPool *pool, const char * line);
 
-float getLEValue(Engine *engine, le_action_e action);
-
 #endif /* LOGIC_EXPRESSION_H_ */
