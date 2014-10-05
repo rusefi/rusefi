@@ -18,14 +18,18 @@ static LENameOrdinalPair leAnd(LE_OPERATOR_AND, "and");
 static LENameOrdinalPair leOr(LE_OPERATOR_OR, "or");
 static LENameOrdinalPair leMore(LE_OPERATOR_MORE, ">");
 static LENameOrdinalPair leMoreOrEqual(LE_OPERATOR_MORE_OR_EQUAL, ">=");
+static LENameOrdinalPair leNot(LE_OPERATOR_NOT, "not");
+
+static LENameOrdinalPair leRpm(LE_METHOD_RPM, "rpm");
+static LENameOrdinalPair leFan(LE_METHOD_FAN, "fan");
+static LENameOrdinalPair leCoolant(LE_METHOD_COOLANT, "coolant");
+static LENameOrdinalPair leFanOnSetting(LE_METHOD_FAN_ON_SETTING, "fan_on_setting");
+static LENameOrdinalPair leFanOffSetting(LE_METHOD_FAN_OFF_SETTING, "fan_off_setting");
 
 LENameOrdinalPair::LENameOrdinalPair(le_action_e action, const char *name) {
-	this->next = NULL;
 	this->action = action;
 	this->name = name;
-	if (LE_FIRST != NULL) {
-		LE_FIRST->next = this;
-	}
+	this->next = LE_FIRST;
 	LE_FIRST = this;
 }
 
@@ -82,38 +86,48 @@ void LECalculator::doJob(LEElement *element) {
 	}
 		break;
 	case LE_OPERATOR_LESS: {
-		float v1 = stack.pop();
+		// elements on stack are in reverse order
 		float v2 = stack.pop();
+		float v1 = stack.pop();
 
 		stack.push(v1 < v2);
 	}
 		break;
+	case LE_OPERATOR_NOT: {
+		float v = stack.pop();
+		stack.push(!float2bool(v));
+	}
+		break;
 	case LE_OPERATOR_MORE: {
-		float v1 = stack.pop();
+		// elements on stack are in reverse order
 		float v2 = stack.pop();
+		float v1 = stack.pop();
 
 		stack.push(v1 > v2);
 	}
 		break;
 	case LE_OPERATOR_LESS_OR_EQUAL: {
-		float v1 = stack.pop();
+		// elements on stack are in reverse order
 		float v2 = stack.pop();
+		float v1 = stack.pop();
 
 		stack.push(v1 <= v2);
 	}
 		break;
 	case LE_OPERATOR_MORE_OR_EQUAL: {
-		float v1 = stack.pop();
+		// elements on stack are in reverse order
 		float v2 = stack.pop();
+		float v1 = stack.pop();
 
 		stack.push(v1 >= v2);
 	}
 		break;
+	case LE_UNDEFINED:
+		firmwareError("Undefined not expected here");
+		break;
 	default:
-		firmwareError("Not implemented: %d", element->action);
-
+		stack.push(getLEValue(NULL, element->action));
 	}
-
 }
 
 float LECalculator::getValue() {
@@ -180,7 +194,7 @@ le_action_e parseAction(const char * line) {
 	LENameOrdinalPair *pair = LE_FIRST;
 	while (pair != NULL) {
 		if (strEqualCaseInsensitive(pair->name, line)) {
-//			return pair->action;
+			return pair->action;
 		}
 		pair = pair->next;
 	}
@@ -210,6 +224,13 @@ LEElement * parseExpression(LEElementPool *pool, const char * line) {
 			n->init(LE_NUMERIC_VALUE, atoff(parsingBuffer));
 		} else {
 			le_action_e action = parseAction(parsingBuffer);
+			if (action == LE_UNDEFINED) {
+				/**
+				 * Cannot recognize token
+				 */
+				warning((obd_code_e) 0, "unrecognized [%s]", parsingBuffer);
+				return NULL;
+			}
 			n->init(action);
 		}
 
@@ -223,3 +244,9 @@ LEElement * parseExpression(LEElementPool *pool, const char * line) {
 	}
 	return first;
 }
+
+#if EFI_PROD_CODE || EFI_SIMULATOR
+float getLEValue(Engine *engine, le_action_e action) {
+	return NAN;
+}
+#endif
