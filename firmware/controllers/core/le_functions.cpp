@@ -18,6 +18,7 @@ float getLEValue(Engine *engine, le_action_e action) {
 		return getCoolantTemperature(engine->engineConfiguration2);
 	default:
 		firmwareError("No value for %d", action);
+		return NAN;
 	}
 }
 #endif
