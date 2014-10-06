@@ -70,13 +70,13 @@ private:
 class LECalculator {
 public:
 	LECalculator();
-	float getValue();
+	float getValue(Engine *engine);
 	void add(LEElement *element);
 	void reset();
 	void reset(LEElement *element);
 
 private:
-	void doJob(LEElement *element);
+	void doJob(Engine *engine, LEElement *element);
 	LEElement *first;
 	FLStack<float, MAX_STACK_DEPTH> stack;
 };

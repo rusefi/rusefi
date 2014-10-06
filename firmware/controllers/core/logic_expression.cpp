@@ -78,7 +78,7 @@ static bool float2bool(float v) {
 	return v != 0;
 }
 
-void LECalculator::doJob(LEElement *element) {
+void LECalculator::doJob(Engine *engine, LEElement *element) {
 	switch (element->action) {
 
 	case LE_NUMERIC_VALUE:
@@ -143,13 +143,13 @@ void LECalculator::doJob(LEElement *element) {
 	}
 }
 
-float LECalculator::getValue() {
+float LECalculator::getValue(Engine *engine) {
 	LEElement *element = first;
 
 	stack.reset();
 
 	while (element != NULL) {
-		doJob(element);
+		doJob(engine, element);
 		element = element->next;
 	}
 
