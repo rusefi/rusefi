@@ -56,6 +56,24 @@ void LECalculator::reset() {
 	stack.reset();
 }
 
+void LECalculator::reset(LEElement *element) {
+	first = NULL;
+	stack.reset();
+	add(element);
+}
+
+void LECalculator::add(LEElement *element) {
+	if (first == NULL) {
+		first = element;
+	} else {
+		LEElement *last = first;
+		while (last->next != NULL) {
+			last = last->next;
+		}
+		last->next = element;
+	}
+}
+
 static bool float2bool(float v) {
 	return v != 0;
 }
@@ -138,18 +156,6 @@ float LECalculator::getValue() {
 	return stack.pop();
 }
 
-void LECalculator::add(LEElement *element) {
-	if (first == NULL) {
-		first = element;
-	} else {
-		LEElement *last = first;
-		while (last->next != NULL) {
-			last = last->next;
-		}
-		last->next = element;
-	}
-}
-
 LEElementPool::LEElementPool() {
 	reset();
 }
@@ -159,6 +165,10 @@ void LEElementPool::reset() {
 }
 
 LEElement *LEElementPool::next() {
+	if (index == LE_ELEMENT_POOL_SIZE - 1) {
+		firmwareError("LE_ELEMENT_POOL_SIZE overflow");
+		return NULL;
+	}
 	return &pool[index++];
 }
 

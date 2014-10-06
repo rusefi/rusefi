@@ -52,6 +52,15 @@
 #include "ec2.h"
 #include "PwmTester.h"
 #include "engine.h"
+#include "logic_expression.h"
+
+#define FUEL_PUMP_LOGIC "time_since_boot 4 less rpm 0 > OR"
+
+LECalculator calc;
+
+LEElementPool lePool;
+LEElement * fuelPumpLogic;
+LEElement * radiatorFanLogic;
 
 extern board_configuration_s *boardConfiguration;
 
@@ -336,6 +345,8 @@ void initEngineContoller(void) {
 		initFuelPump();
 	}
 #endif
+
+	fuelPumpLogic = parseExpression(&lePool, FUEL_PUMP_LOGIC);
 
 	addConsoleAction("analoginfo", printAnalogInfo);
 }
