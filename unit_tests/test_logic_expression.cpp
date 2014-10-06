@@ -106,7 +106,7 @@ void testLogicExpressions(void) {
 
 	/**
 	 * fuel_pump = (time_since_boot < 4 seconds) OR (rpm > 0)
-	 * fuel_pump = time_since_boot 4 less rpm 0 more OR
+	 * fuel_pump = time_since_boot 4 less rpm 0 > OR
 	 */
 
 	c.reset();

@@ -52,7 +52,7 @@ public:
 	LEElement *next;
 };
 
-#define LE_ELEMENT_POOL_SIZE 64
+#define LE_ELEMENT_POOL_SIZE 256
 
 class LEElementPool {
 public:
@@ -73,6 +73,7 @@ public:
 	float getValue();
 	void add(LEElement *element);
 	void reset();
+	void reset(LEElement *element);
 
 private:
 	void doJob(LEElement *element);
