@@ -82,7 +82,7 @@ board_configuration_s *boardConfiguration = &persistentState.persistentConfigura
 #define FUEL_PUMP_DELAY (4 * CH_FREQUENCY)
 
 static VirtualTimer everyMsTimer;
-static VirtualTimer fuelPumpTimer;
+//static VirtualTimer fuelPumpTimer;
 
 static Logging logger;
 
@@ -185,6 +185,11 @@ static void onEvenyGeneralMilliseconds(void *arg) {
 	engine.watchdog();
 	engine.updateSlowSensors();
 
+	if(boardConfiguration->fuelPumpPin != GPIO_NONE && engineConfiguration->isFuelPumpEnabled) {
+		calc.reset(fuelPumpLogic);
+		//int value = calc.getValue())
+	}
+
 	updateErrorCodes();
 
 	fanRelayControl();
@@ -202,33 +207,33 @@ static void initPeriodicEvents(void) {
 			&onEvenyGeneralMilliseconds, 0);
 }
 
-static void fuelPumpOff(void *arg) {
-	(void)arg;
-	if (getOutputPinValue(FUEL_PUMP_RELAY))
-		scheduleMsg(&logger, "fuelPump OFF at %s%d", hwPortname(boardConfiguration->fuelPumpPin));
-	turnOutputPinOff(FUEL_PUMP_RELAY);
-}
+//static void fuelPumpOff(void *arg) {
+//	(void)arg;
+//	if (getOutputPinValue(FUEL_PUMP_RELAY))
+//		scheduleMsg(&logger, "fuelPump OFF at %s%d", hwPortname(boardConfiguration->fuelPumpPin));
+//	turnOutputPinOff(FUEL_PUMP_RELAY);
+//}
 
-static void fuelPumpOn(trigger_event_e signal, uint32_t index, void *arg) {
-	(void)arg;
-	if (index != 0)
-		return; // let's not abuse the timer - one time per revolution would be enough
-	// todo: the check about GPIO_NONE should be somewhere else!
-	if (!getOutputPinValue(FUEL_PUMP_RELAY) && boardConfiguration->fuelPumpPin != GPIO_NONE)
-		scheduleMsg(&logger, "fuelPump ON at %s", hwPortname(boardConfiguration->fuelPumpPin));
-	turnOutputPinOn(FUEL_PUMP_RELAY);
-	/**
-	 * the idea of this implementation is that we turn the pump when the ECU turns on or
-	 * if the shafts are spinning and then we are constantly postponing the time when we
-	 * will turn it off. Only if the shafts stop the turn off would actually happen.
-	 */
-	chVTSetAny(&fuelPumpTimer, FUEL_PUMP_DELAY, &fuelPumpOff, 0);
-}
+//static void fuelPumpOn(trigger_event_e signal, uint32_t index, void *arg) {
+//	(void)arg;
+//	if (index != 0)
+//		return; // let's not abuse the timer - one time per revolution would be enough
+//	// todo: the check about GPIO_NONE should be somewhere else!
+//	if (!getOutputPinValue(FUEL_PUMP_RELAY) && boardConfiguration->fuelPumpPin != GPIO_NONE)
+//		scheduleMsg(&logger, "fuelPump ON at %s", hwPortname(boardConfiguration->fuelPumpPin));
+//	turnOutputPinOn(FUEL_PUMP_RELAY);
+//	/**
+//	 * the idea of this implementation is that we turn the pump when the ECU turns on or
+//	 * if the shafts are spinning and then we are constantly postponing the time when we
+//	 * will turn it off. Only if the shafts stop the turn off would actually happen.
+//	 */
+//	chVTSetAny(&fuelPumpTimer, FUEL_PUMP_DELAY, &fuelPumpOff, 0);
+//}
 
-static void initFuelPump(void) {
-	addTriggerEventListener(&fuelPumpOn, "fuel pump", NULL);
-	fuelPumpOn(SHAFT_PRIMARY_UP, 0, NULL);
-}
+//static void initFuelPump(void) {
+//	addTriggerEventListener(&fuelPumpOn, "fuel pump", NULL);
+//	fuelPumpOn(SHAFT_PRIMARY_UP, 0, NULL);
+//}
 
 char * getPinNameByAdcChannel(adc_channel_e hwChannel, char *buffer) {
 	strcpy((char*) buffer, portname(getAdcChannelPort(hwChannel)));
@@ -342,7 +347,7 @@ void initEngineContoller(void) {
 
 #if EFI_FUEL_PUMP
 	if (engineConfiguration->isFuelPumpEnabled) {
-		initFuelPump();
+//		initFuelPump();
 	}
 #endif
 

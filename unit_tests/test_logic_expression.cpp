@@ -24,6 +24,7 @@ float getLEValue(Engine *engine, le_action_e action) {
 		return mockCoolant;
 	default:
 		firmwareError("No value for %d", action);
+		return NAN;
 	}
 }
 
@@ -79,7 +80,7 @@ static void testExpression(const char *line, float expected) {
 	assertTrueM("Not NULL expected", element != NULL);
 	LECalculator c;
 	c.add(element);
-	assertEqualsM(line, expected, c.getValue());
+	assertEqualsM(line, expected, c.getValue(NULL));
 }
 
 void testLogicExpressions(void) {
@@ -93,7 +94,7 @@ void testLogicExpressions(void) {
 	value1.init(LE_NUMERIC_VALUE, 123.0);
 	c.add(&value1);
 
-	assertEqualsM("123", 123.0, c.getValue());
+	assertEqualsM("123", 123.0, c.getValue(NULL));
 
 	LEElement value2;
 	value2.init(LE_NUMERIC_VALUE, 321.0);
@@ -102,7 +103,7 @@ void testLogicExpressions(void) {
 	LEElement value3;
 	value3.init(LE_OPERATOR_AND);
 	c.add(&value3);
-	assertEqualsM("123 and 321", 1.0, c.getValue());
+	assertEqualsM("123 and 321", 1.0, c.getValue(NULL));
 
 	/**
 	 * fuel_pump = (time_since_boot < 4 seconds) OR (rpm > 0)
