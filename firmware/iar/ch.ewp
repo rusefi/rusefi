@@ -2230,6 +2230,12 @@
         <name>$PROJ_DIR$\..\controllers\core\interpolation.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\controllers\core\le_functions.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\controllers\core\le_functions.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\controllers\core\logic_expression.cpp</name>
       </file>
       <file>
