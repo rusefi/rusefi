@@ -8,7 +8,7 @@
 #ifndef STATUS_LEDS_H_
 #define STATUS_LEDS_H_
 
-#include "main.h"
+#include "rusefi_enums.h"
 
 #define GPIO_NULL NULL
 

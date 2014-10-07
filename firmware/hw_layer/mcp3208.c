@@ -10,7 +10,7 @@
 #include <hal.h>
 
 #include "mcp3208.h"
-#include "eficonsole.h"
+#include "main.h"
 #include "pin_repository.h"
 
 McpAdcState *hack;
