@@ -1,0 +1,155 @@
+// auto-generated from../../firmware/controllers/algo/io_pins.h
+
+#include "main.h"
+#include "io_pins.h"
+const char *getIo_pin_e(io_pin_e value){
+switch(value) {
+case SPARKOUT_1_OUTPUT:
+  return "SPARKOUT_1_OUTPUT";
+case LED_HUGE_20:
+  return "LED_HUGE_20";
+case SPARKOUT_10_OUTPUT:
+  return "SPARKOUT_10_OUTPUT";
+case LED_EMULATOR:
+  return "LED_EMULATOR";
+case LED_WARNING:
+  return "LED_WARNING";
+case INJECTOR_3_OUTPUT:
+  return "INJECTOR_3_OUTPUT";
+case LED_HUGE_19:
+  return "LED_HUGE_19";
+case IDLE_VALVE:
+  return "IDLE_VALVE";
+case FAN_RELAY:
+  return "FAN_RELAY";
+case INJECTOR_8_OUTPUT:
+  return "INJECTOR_8_OUTPUT";
+case LED_HUGE_16:
+  return "LED_HUGE_16";
+case SPARKOUT_9_OUTPUT:
+  return "SPARKOUT_9_OUTPUT";
+case LED_EXT_1:
+  return "LED_EXT_1";
+case LED_HUGE_15:
+  return "LED_HUGE_15";
+case LED_HUGE_18:
+  return "LED_HUGE_18";
+case LED_HUGE_17:
+  return "LED_HUGE_17";
+case LED_HUGE_12:
+  return "LED_HUGE_12";
+case LED_HUGE_11:
+  return "LED_HUGE_11";
+case LED_HUGE_14:
+  return "LED_HUGE_14";
+case LED_HUGE_13:
+  return "LED_HUGE_13";
+case LED_HUGE_10:
+  return "LED_HUGE_10";
+case LED_EXT_2:
+  return "LED_EXT_2";
+case LED_EXT_3:
+  return "LED_EXT_3";
+case INJECTOR_5_OUTPUT:
+  return "INJECTOR_5_OUTPUT";
+case MAIN_RELAY:
+  return "MAIN_RELAY";
+case LED_CHECK_ENGINE:
+  return "LED_CHECK_ENGINE";
+case TRIGGER_EMULATOR_SECONDARY:
+  return "TRIGGER_EMULATOR_SECONDARY";
+case INJECTOR_9_OUTPUT:
+  return "INJECTOR_9_OUTPUT";
+case LED_DEBUG:
+  return "LED_DEBUG";
+case IO_INVALID:
+  return "IO_INVALID";
+case INJECTOR_1_OUTPUT:
+  return "INJECTOR_1_OUTPUT";
+case INJECTOR_4_OUTPUT:
+  return "INJECTOR_4_OUTPUT";
+case SPARKOUT_3_OUTPUT:
+  return "SPARKOUT_3_OUTPUT";
+case O2_HEATER:
+  return "O2_HEATER";
+case LED_RUNNING:
+  return "LED_RUNNING";
+case TRIGGER_EMULATOR_3RD:
+  return "TRIGGER_EMULATOR_3RD";
+case INJECTOR_10_OUTPUT:
+  return "INJECTOR_10_OUTPUT";
+case INJECTOR_6_OUTPUT:
+  return "INJECTOR_6_OUTPUT";
+case SPI_CS_1:
+  return "SPI_CS_1";
+case SPI_CS_3:
+  return "SPI_CS_3";
+case SPI_CS_2:
+  return "SPI_CS_2";
+case ELECTRONIC_THROTTLE_CONTROL_2:
+  return "ELECTRONIC_THROTTLE_CONTROL_2";
+case ELECTRONIC_THROTTLE_CONTROL_3:
+  return "ELECTRONIC_THROTTLE_CONTROL_3";
+case LED_HUGE_9:
+  return "LED_HUGE_9";
+case LED_COMMUNICATION_1:
+  return "LED_COMMUNICATION_1";
+case LED_HUGE_8:
+  return "LED_HUGE_8";
+case INJECTOR_7_OUTPUT:
+  return "INJECTOR_7_OUTPUT";
+case ELECTRONIC_THROTTLE_CONTROL_1:
+  return "ELECTRONIC_THROTTLE_CONTROL_1";
+case LED_HUGE_7:
+  return "LED_HUGE_7";
+case SPARKOUT_6_OUTPUT:
+  return "SPARKOUT_6_OUTPUT";
+case LED_HUGE_6:
+  return "LED_HUGE_6";
+case LED_HUGE_5:
+  return "LED_HUGE_5";
+case LED_HUGE_4:
+  return "LED_HUGE_4";
+case LED_HUGE_3:
+  return "LED_HUGE_3";
+case SPI_CS_SD_MODULE:
+  return "SPI_CS_SD_MODULE";
+case SPI_CS_4:
+  return "SPI_CS_4";
+case LED_HUGE_2:
+  return "LED_HUGE_2";
+case SPARKOUT_4_OUTPUT:
+  return "SPARKOUT_4_OUTPUT";
+case LED_HUGE_1:
+  return "LED_HUGE_1";
+case FUEL_PUMP_RELAY:
+  return "FUEL_PUMP_RELAY";
+case SPARKOUT_7_OUTPUT:
+  return "SPARKOUT_7_OUTPUT";
+case LED_HUGE_0:
+  return "LED_HUGE_0";
+case TRIGGER_EMULATOR_PRIMARY:
+  return "TRIGGER_EMULATOR_PRIMARY";
+case SPARKOUT_8_OUTPUT:
+  return "SPARKOUT_8_OUTPUT";
+case SPARKOUT_11_OUTPUT:
+  return "SPARKOUT_11_OUTPUT";
+case INJECTOR_11_OUTPUT:
+  return "INJECTOR_11_OUTPUT";
+case LED_ERROR:
+  return "LED_ERROR";
+case INJECTOR_12_OUTPUT:
+  return "INJECTOR_12_OUTPUT";
+case INJECTOR_2_OUTPUT:
+  return "INJECTOR_2_OUTPUT";
+case ALTERNATOR_SWITCH:
+  return "ALTERNATOR_SWITCH";
+case SPARKOUT_12_OUTPUT:
+  return "SPARKOUT_12_OUTPUT";
+case SPARKOUT_2_OUTPUT:
+  return "SPARKOUT_2_OUTPUT";
+case SPARKOUT_5_OUTPUT:
+  return "SPARKOUT_5_OUTPUT";
+  }
+ return NULL;
+}
