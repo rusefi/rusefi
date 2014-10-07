@@ -78,6 +78,14 @@ static bool float2bool(float v) {
 	return v != 0;
 }
 
+float LECalculator::pop(le_action_e action) {
+	if (stack.size() == 0) {
+		firmwareError("empty stack for %d", action);
+		return NAN;
+	}
+	return stack.pop();
+}
+
 void LECalculator::doJob(Engine *engine, LEElement *element) {
 	switch (element->action) {
 
@@ -85,52 +93,52 @@ void LECalculator::doJob(Engine *engine, LEElement *element) {
 		stack.push(element->fValue);
 		break;
 	case LE_OPERATOR_AND: {
-		float v1 = stack.pop();
-		float v2 = stack.pop();
+		float v1 = pop(LE_OPERATOR_AND);
+		float v2 = pop(LE_OPERATOR_AND);
 
 		stack.push(float2bool(v1) && float2bool(v2));
 	}
 		break;
 	case LE_OPERATOR_OR: {
-		float v1 = stack.pop();
-		float v2 = stack.pop();
+		float v1 = pop(LE_OPERATOR_OR);
+		float v2 = pop(LE_OPERATOR_OR);
 
 		stack.push(float2bool(v1) || float2bool(v2));
 	}
 		break;
 	case LE_OPERATOR_LESS: {
 		// elements on stack are in reverse order
-		float v2 = stack.pop();
-		float v1 = stack.pop();
+		float v2 = pop(LE_OPERATOR_LESS);
+		float v1 = pop(LE_OPERATOR_LESS);
 
 		stack.push(v1 < v2);
 	}
 		break;
 	case LE_OPERATOR_NOT: {
-		float v = stack.pop();
+		float v = pop(LE_OPERATOR_NOT);
 		stack.push(!float2bool(v));
 	}
 		break;
 	case LE_OPERATOR_MORE: {
 		// elements on stack are in reverse order
-		float v2 = stack.pop();
-		float v1 = stack.pop();
+		float v2 = pop(LE_OPERATOR_MORE);
+		float v1 = pop(LE_OPERATOR_MORE);
 
 		stack.push(v1 > v2);
 	}
 		break;
 	case LE_OPERATOR_LESS_OR_EQUAL: {
 		// elements on stack are in reverse order
-		float v2 = stack.pop();
-		float v1 = stack.pop();
+		float v2 = pop(LE_OPERATOR_LESS_OR_EQUAL);
+		float v1 = pop(LE_OPERATOR_LESS_OR_EQUAL);
 
 		stack.push(v1 <= v2);
 	}
 		break;
 	case LE_OPERATOR_MORE_OR_EQUAL: {
 		// elements on stack are in reverse order
-		float v2 = stack.pop();
-		float v1 = stack.pop();
+		float v2 = pop(LE_OPERATOR_MORE_OR_EQUAL);
+		float v1 = pop(LE_OPERATOR_MORE_OR_EQUAL);
 
 		stack.push(v1 >= v2);
 	}
@@ -152,6 +160,7 @@ float LECalculator::getValue(Engine *engine) {
 		doJob(engine, element);
 		element = element->next;
 	}
+	efiAssert(stack.size() == 1, "One value expected on stack", NAN);
 
 	return stack.pop();
 }

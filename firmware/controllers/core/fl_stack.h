@@ -46,10 +46,10 @@ void FLStack<T, MAXSIZE>::push(T value) {
 
 template<typename T, int MAXSIZE>
 T FLStack<T, MAXSIZE>::pop() {
-	if(index==0) {
+	if (index == 0) {
 		firmwareError("FLStack is empty");
 	}
- 	return values[--index];
+	return values[--index];
 }
 
 template<typename T, int MAXSIZE>

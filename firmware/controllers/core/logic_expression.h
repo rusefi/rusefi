@@ -77,6 +77,7 @@ public:
 
 private:
 	void doJob(Engine *engine, LEElement *element);
+	float pop(le_action_e action);
 	LEElement *first;
 	FLStack<float, MAX_STACK_DEPTH> stack;
 };

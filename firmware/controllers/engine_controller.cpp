@@ -54,7 +54,7 @@
 #include "engine.h"
 #include "logic_expression.h"
 
-#define FUEL_PUMP_LOGIC "time_since_boot 4 less rpm 0 > OR"
+#define FUEL_PUMP_LOGIC "time_since_boot 4 < rpm 0 > OR"
 
 LECalculator calc;
 
@@ -126,8 +126,10 @@ static void updateErrorCodes(void) {
 	/**
 	 * technically we can set error codes right inside the getMethods, but I a bit on a fence about it
 	 */
-	setError(isValidIntakeAirTemperature(getIntakeAirTemperature(engineConfiguration2)), OBD_Intake_Air_Temperature_Circuit_Malfunction);
-	setError(isValidCoolantTemperature(getCoolantTemperature(engineConfiguration2)), OBD_Engine_Coolant_Temperature_Circuit_Malfunction);
+	setError(isValidIntakeAirTemperature(getIntakeAirTemperature(engineConfiguration2)),
+			OBD_Intake_Air_Temperature_Circuit_Malfunction);
+	setError(isValidCoolantTemperature(getCoolantTemperature(engineConfiguration2)),
+			OBD_Engine_Coolant_Temperature_Circuit_Malfunction);
 }
 
 static void fanRelayControl(void) {
@@ -173,7 +175,7 @@ int getTimeNowSeconds(void) {
 }
 
 static void onEvenyGeneralMilliseconds(void *arg) {
-	(void)arg;
+	(void) arg;
 	/**
 	 * We need to push current value into the 64 bit counter often enough so that we do not miss an overflow
 	 */
@@ -185,10 +187,20 @@ static void onEvenyGeneralMilliseconds(void *arg) {
 	engine.watchdog();
 	engine.updateSlowSensors();
 
-	if(boardConfiguration->fuelPumpPin != GPIO_NONE && engineConfiguration->isFuelPumpEnabled) {
-		calc.reset(fuelPumpLogic);
-		//int value = calc.getValue())
+#if EFI_FUEL_PUMP
+	if (boardConfiguration->fuelPumpPin != GPIO_NONE && engineConfiguration->isFuelPumpEnabled) {
+		if (fuelPumpLogic == NULL) {
+			warning(OBD_PCM_Processor_Fault, "invalid expression for %s", getIo_pin_e(FUEL_PUMP_RELAY));
+		} else {
+			calc.reset(fuelPumpLogic);
+			int value = calc.getValue(&engine);
+			if (value != getOutputPinValue(FUEL_PUMP_RELAY)) {
+				scheduleMsg(&logger, "setting %s %s", getIo_pin_e(FUEL_PUMP_RELAY), boolToString(value));
+				setOutputPinValue(FUEL_PUMP_RELAY, value);
+			}
+		}
 	}
+#endif
 
 	updateErrorCodes();
 
@@ -346,12 +358,8 @@ void initEngineContoller(void) {
 #endif
 
 #if EFI_FUEL_PUMP
-	if (engineConfiguration->isFuelPumpEnabled) {
-//		initFuelPump();
-	}
-#endif
-
 	fuelPumpLogic = parseExpression(&lePool, FUEL_PUMP_LOGIC);
+#endif
 
 	addConsoleAction("analoginfo", printAnalogInfo);
 }
