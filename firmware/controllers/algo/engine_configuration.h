@@ -44,6 +44,11 @@ typedef struct {
 #define AFR_RPM_COUNT 16
 #define AFR_LOAD_COUNT 16
 
+#define LE_COMMAND_LENGTH 200
+#define LE_COMMAND_COUNT 16
+
+typedef char le_formula_t[LE_COMMAND_LENGTH];
+
 #define CLT_CURVE_SIZE 16
 #define IAT_CURVE_SIZE 16
 #define VBAT_INJECTOR_CURVE_SIZE 8
@@ -219,6 +224,7 @@ typedef struct {
 
 	int unusedbs[70];
 
+	le_formula_t le_formulas[LE_COMMAND_COUNT];
 
 } board_configuration_s;
 
@@ -453,7 +459,7 @@ typedef struct {
 	short int tpsErrorLowValue;
 	short int tpsErrorHighValue;
 
-	int unused3[4];
+	int unused3[24];
 
 } engine_configuration_s;
 

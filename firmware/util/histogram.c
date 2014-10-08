@@ -25,7 +25,7 @@ static float confidence_bounds[] = { 0.5 - H_CONFIDENCE * 0.5, 0.5, 0.5 + H_CONF
 /**
  * magic curve lookup table
  */
-static int64_t bounds[BOUND_LENGTH];
+static int64_t bounds[BOUND_LENGTH] CCM_OPTIONAL;
 /**
  * just an optimization - faster lookup for small values
  */
