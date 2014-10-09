@@ -10,11 +10,14 @@
 #include "main.h"
 #include "test_logic_expression.h"
 #include "logic_expression.h"
+#include "le_functions.h"
 #include "cli_registry.h"
 #include "engine.h"
 
 static float mockCoolant;
 static float mockFan;
+static float mockRpm;
+static float mockTimeSinceBoot;
 
 float getLEValue(Engine *engine, le_action_e action) {
 	switch(action) {
@@ -22,12 +25,15 @@ float getLEValue(Engine *engine, le_action_e action) {
 		return mockFan;
 	case LE_METHOD_COOLANT:
 		return mockCoolant;
+	case LE_METHOD_RPM:
+		return mockRpm;
+	case LE_METHOD_TIME_SINCE_BOOT:
+		return mockTimeSinceBoot;
 	default:
-		firmwareError("No value for %d", action);
+		firmwareError("No mock value for %d", action);
 		return NAN;
 	}
 }
-
 
 static void testParsing(void) {
 	char buffer[64];
@@ -77,6 +83,7 @@ static void testExpression(const char *line, float expected) {
 	LEElementPool pool;
 	pool.reset();
 	LEElement * element = parseExpression(&pool, line);
+	print("Parsing [%s]", line);
 	assertTrueM("Not NULL expected", element != NULL);
 	LECalculator c;
 	c.add(element);
@@ -157,5 +164,8 @@ void testLogicExpressions(void) {
 
 
 	testExpression("fan NOT coolant 90 > AND fan coolant 85 > AND OR", 1);
+
+	mockRpm = 900;
+	testExpression(FUEL_PUMP_LOGIC, 1);
 
 }

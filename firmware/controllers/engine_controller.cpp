@@ -53,8 +53,7 @@
 #include "PwmTester.h"
 #include "engine.h"
 #include "logic_expression.h"
-
-#define FUEL_PUMP_LOGIC "time_since_boot 4 < rpm 0 > OR"
+#include "le_functions.h"
 
 LECalculator calc;
 
