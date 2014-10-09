@@ -1,5 +1,13 @@
 /**
  * @file logic_expression.cpp
+ * @brief Logical expressions handling logic
+ *
+ * Here we parse and evaluate logical expressions in
+ * http://en.wikipedia.org/wiki/Reverse_Polish_notation
+ *
+ * Once the expressions are parsed on startup (that's a heavy operation),
+ * evaluating those is relatively efficient.
+ *
  *
  * @date Oct 3, 2014
  * @author Andrey Belomutskiy, (c) 2012-2014
@@ -147,7 +155,7 @@ void LECalculator::doJob(Engine *engine, LEElement *element) {
 		firmwareError("Undefined not expected here");
 		break;
 	default:
-		stack.push(getLEValue(NULL, element->action));
+		stack.push(getLEValue(engine, element->action));
 	}
 }
 
