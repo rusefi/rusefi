@@ -20,6 +20,7 @@
     <orderEntry type="library" name="junit" level="project" />
     <orderEntry type="library" name="SteelSeries" level="project" />
     <orderEntry type="module" module-name="io" />
+    <orderEntry type="library" name="commons-math3" level="project" />
   </component>
 </module>
 
