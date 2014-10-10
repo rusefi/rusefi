@@ -19,7 +19,7 @@ import javax.swing.*;
  * @see WavePanel
  */
 public class Launcher extends FrameHelper {
-    public static final int CONSOLE_VERSION = 20141002;
+    public static final int CONSOLE_VERSION = 20141010;
     public static final boolean SHOW_STIMULATOR = true;
     private final String port;
 
@@ -41,6 +41,8 @@ public class Launcher extends FrameHelper {
         tabbedPane.addTab("Gauges", new GaugesPanel().getContent());
         tabbedPane.addTab("Digital Sniffer", WavePanel.getInstance().getPanel());
         tabbedPane.addTab("Analog Sniffer", new AnalogChartPanel());
+
+        tabbedPane.addTab("LE controls", new FlexibleControls().getPanel());
 
 //        tabbedPane.addTab("ADC", new AdcPanel(new BooleanInputsModel()).createAdcPanel());
         if (SHOW_STIMULATOR) {

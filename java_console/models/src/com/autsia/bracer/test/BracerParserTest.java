@@ -16,6 +16,7 @@
 
 package com.autsia.bracer.test;
 
+import java.text.ParseException;
 import java.util.Collection;
 
 import org.junit.Assert;
@@ -37,18 +38,7 @@ public class BracerParserTest {
 
     @Before
     public void setUp() throws Exception {
-        bracerParser = new BracerParser(3);
-    }
-
-    @Test
-    public void testSetPrecision() throws Exception {
-        bracerParser.setPrecision(10);
-        Assert.assertEquals(10, bracerParser.getPrecision());
-    }
-
-    @Test
-    public void testGetPrecision() throws Exception {
-        Assert.assertEquals(3, bracerParser.getPrecision());
+        bracerParser = new BracerParser();
     }
 
     @Test
@@ -83,6 +73,15 @@ public class BracerParserTest {
     public void testBooleanNot1() throws Exception {
         bracerParser.parse("not( ( true and ( false or ( true and ( not( true ) or ( false ) ) ) ) ) and ( ( false ) ) )");
         Assert.assertEquals("1", bracerParser.evaluate());
+    }
+
+    @Test
+    public void testRusEfi() throws ParseException {
+        bracerParser.parse("(time_since_boot < 4) | (rpm > 0)");
+        Collection<String> stackRPN = bracerParser.getStackRPN();
+
+        Assert.assertEquals("[|, rpm, >, 0, time_since_boot, <, 4]", stackRPN.toString());
+
     }
 
     @Test

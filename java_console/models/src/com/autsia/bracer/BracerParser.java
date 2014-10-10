@@ -38,15 +38,13 @@ public class BracerParser {
     /* list of available functions */
     private final String[] FUNCTIONS = {"abs", "acos", "arg", "asin", "atan",
             "conj", "cos", "cosh", "exp", "imag", "log", "neg", "pow", "real",
-            "sin", "sinh", "sqrt", "tan", "tanh", "not"};
+            "sin", "time_since_boot", "sqrt", "tan", "rpm", "not"};
     /* list of available operators */
-    private final String OPERATORS = "+-*/&|!";
+    private final String OPERATORS = "<>=+-*/&|!";
     /* separator of arguments */
     private final String SEPARATOR = ",";
     /* variable token */
     private final String VARIABLE = "var";
-    /* settings for numbers formatting */
-    private NumberFormat numberFormat = NumberFormat.getInstance(Locale.US);
     /* temporary stack that holds operators, functions and brackets */
     private Stack<String> stackOperations = new Stack<>();
     /* stack for holding expression converted to reversed polish notation */
@@ -57,32 +55,9 @@ public class BracerParser {
     /**
      * Class ctor for setting up the complex format of the parser
      *
-     * @param precision Number of digits after the dot
      * @since 2.0
      */
-    public BracerParser(int precision) {
-        setPrecision(precision);
-    }
-
-    /**
-     * Set the precision of the real and imaginary parts of numbers
-     *
-     * @param precision Number of digits after the dot
-     * @since 2.0
-     */
-    public void setPrecision(int precision) {
-        numberFormat.setMinimumFractionDigits(precision);
-        numberFormat.setMaximumFractionDigits(precision);
-    }
-
-    /**
-     * Get the precision of the real and imaginary parts of numbers
-     *
-     * @return Precision
-     * @since 2.0
-     */
-    public int getPrecision() {
-        return numberFormat.getMinimumFractionDigits();
+    public BracerParser() {
     }
 
     /**
