@@ -33,7 +33,6 @@ import com.autsia.bracer.BracerParser;
  */
 public class BracerParserTest {
     private final String INPUT_NOVAR = "-sin(3+4+cos(6)/exp(10/pow(22,-1)))";
-    private final String INPUT_VAR = "-sin(3+var+cos(10)/exp(10/pow(22,-1)))";
     private BracerParser bracerParser;
 
     @Before
@@ -45,12 +44,6 @@ public class BracerParserTest {
     public void testEvaluateNoVar() throws Exception {
         bracerParser.parse(INPUT_NOVAR);
         Assert.assertEquals("-0.6570194619480038", bracerParser.evaluate());
-    }
-
-    @Test
-    public void testEvaluateVar() throws Exception {
-        bracerParser.parse(INPUT_VAR);
-        Assert.assertEquals("-0.6569578792490918", bracerParser.evaluate(4));
     }
 
     @Test
@@ -78,10 +71,18 @@ public class BracerParserTest {
     @Test
     public void testRusEfi() throws ParseException {
         bracerParser.parse("(time_since_boot < 4) | (rpm > 0)");
-        Collection<String> stackRPN = bracerParser.getStackRPN();
 
-        Assert.assertEquals("[|, rpm, >, 0, time_since_boot, <, 4]", stackRPN.toString());
+        Assert.assertEquals("[|, rpm, >, 0, time_since_boot, <, 4]", bracerParser.getStackRPN().toString());
 
+
+        bracerParser.parse("(time_since_boot <= 4) | (rpm > 0)");
+        Assert.assertEquals("[|, rpm, >, 0, time_since_boot, <=, 4]", bracerParser.getStackRPN().toString());
+
+        bracerParser.parse("(time_since_boot <= 4) | (rpm > 0)");
+        Assert.assertEquals("[|, rpm, >, 0, time_since_boot, <=, 4]", bracerParser.getStackRPN().toString());
+
+        bracerParser.parse("(time_since_boot <= 4) OR (rpm > 0)");
+        Assert.assertEquals("[OR, rpm, >, 0, time_since_boot, <=, 4]", bracerParser.getStackRPN().toString());
     }
 
     @Test

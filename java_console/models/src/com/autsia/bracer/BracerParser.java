@@ -19,11 +19,9 @@
 
 package com.autsia.bracer;
 
-import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Locale;
 import java.util.Stack;
 import java.util.StringTokenizer;
 
@@ -35,16 +33,10 @@ import java.util.StringTokenizer;
  * @since 1.0
  */
 public class BracerParser {
-    /* list of available functions */
-    private final String[] FUNCTIONS = {"abs", "acos", "arg", "asin", "atan",
-            "conj", "cos", "cosh", "exp", "imag", "log", "neg", "pow", "real",
-            "sin", "time_since_boot", "sqrt", "tan", "rpm", "not"};
     /* list of available operators */
     private final String OPERATORS = "<>=+-*/&|!";
     /* separator of arguments */
     private final String SEPARATOR = ",";
-    /* variable token */
-    private final String VARIABLE = "var";
     /* temporary stack that holds operators, functions and brackets */
     private Stack<String> stackOperations = new Stack<>();
     /* stack for holding expression converted to reversed polish notation */
@@ -88,9 +80,21 @@ public class BracerParser {
         StringTokenizer stringTokenizer = new StringTokenizer(expression,
                 OPERATORS + SEPARATOR + "()", true);
 
+        String pendingToken = null;
+
 		/* loop for handling each token - shunting-yard algorithm */
-        while (stringTokenizer.hasMoreTokens()) {
-            String token = stringTokenizer.nextToken();
+        while (pendingToken != null || stringTokenizer.hasMoreTokens()) {
+            String token;
+            if (pendingToken != null) {
+                token = pendingToken;
+                pendingToken = null;
+            } else {
+                token = stringTokenizer.nextToken();
+            }
+            if (stringTokenizer.hasMoreTokens()) {
+                pendingToken = stringTokenizer.nextToken();
+            }
+
             if (isSeparator(token)) {
                 while (!stackOperations.empty()
                         && !isOpenBracket(stackOperations.lastElement())) {
@@ -111,6 +115,12 @@ public class BracerParser {
             } else if (isNumber(token)) {
                 stackRPN.push(token);
             } else if (isOperator(token)) {
+
+                if ((token.equals("<") || token.equals(">")) && "=".equals(pendingToken)) {
+                    token = token + pendingToken;
+                    pendingToken = null;
+                }
+
                 while (!stackOperations.empty()
                         && isOperator(stackOperations.lastElement())
                         && getPrecedence(token) <= getPrecedence(stackOperations
@@ -141,22 +151,6 @@ public class BracerParser {
      * @since 1.0
      */
     public String evaluate() throws ParseException {
-        if (!stackRPN.contains("var")) {
-            return evaluate(0);
-        }
-        throw new ParseException("Unrecognized token: var", 0);
-    }
-
-    /**
-     * Evaluates once parsed math expression with "var" variable included
-     *
-     * @param variableValue User-specified <code>Double</code> value
-     * @return <code>String</code> representation of the result
-     * @throws <code>ParseException</code> if the input expression is not
-     *                                     correct
-     * @since 3.0
-     */
-    public String evaluate(double variableValue) throws ParseException {
         /* check if is there something to evaluate */
         if (stackRPN.empty()) {
             return "";
@@ -168,10 +162,6 @@ public class BracerParser {
 		/* get the clone of the RPN stack for further evaluating */
         @SuppressWarnings("unchecked")
         Stack<String> stackRPN = (Stack<String>) this.stackRPN.clone();
-
-		/* enroll the variable value into expression */
-        Collections.replaceAll(stackRPN, VARIABLE,
-                Double.toString(variableValue));
 
 		/* evaluating the RPN expression */
         while (!stackRPN.empty()) {
@@ -293,8 +283,8 @@ public class BracerParser {
     private boolean isNumber(String token) {
         try {
             Double.parseDouble(token);
-        } catch (Exception e) {
-            return token.equals(VARIABLE);
+        } catch (NumberFormatException e) {
+            return false;
         }
         return true;
     }
@@ -307,12 +297,7 @@ public class BracerParser {
      * @since 1.0
      */
     private boolean isFunction(String token) {
-        for (String item : FUNCTIONS) {
-            if (item.equals(token)) {
-                return true;
-            }
-        }
-        return false;
+        return Character.isAlphabetic(token.charAt(0));
     }
 
     /**
