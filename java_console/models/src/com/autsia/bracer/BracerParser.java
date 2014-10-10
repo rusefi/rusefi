@@ -27,9 +27,6 @@ import java.util.Locale;
 import java.util.Stack;
 import java.util.StringTokenizer;
 
-import org.apache.commons.math3.complex.Complex;
-import org.apache.commons.math3.complex.ComplexFormat;
-
 /**
  * Class for parsing and evaluating math expressions
  *
@@ -46,12 +43,8 @@ public class BracerParser {
     private final String OPERATORS = "+-*/&|!";
     /* separator of arguments */
     private final String SEPARATOR = ",";
-    /* imaginary symbol */
-    private final String IMAGINARY = "I";
     /* variable token */
     private final String VARIABLE = "var";
-    /* settings for complex formatting */
-    private ComplexFormat complexFormat = new ComplexFormat(IMAGINARY);
     /* settings for numbers formatting */
     private NumberFormat numberFormat = NumberFormat.getInstance(Locale.US);
     /* temporary stack that holds operators, functions and brackets */
@@ -80,7 +73,6 @@ public class BracerParser {
     public void setPrecision(int precision) {
         numberFormat.setMinimumFractionDigits(precision);
         numberFormat.setMaximumFractionDigits(precision);
-        complexFormat = new ComplexFormat(IMAGINARY, numberFormat, numberFormat);
     }
 
     /**
@@ -111,7 +103,6 @@ public class BracerParser {
 		 * degree character
 		 */
         expression = expression.replace(" ", "")
-                .replace("°", "*" + Double.toString(Math.PI) + "/180")
                 .replace("(-", "(0-").replace(",-", ",0-").replace("(+", "(0+")
                 .replace(",+", ",0+").replace("true", "1").replace("false", "0")
                 .replace("or", "|").replace("and", "&");
@@ -143,14 +134,7 @@ public class BracerParser {
                     stackRPN.push(stackOperations.pop());
                 }
             } else if (isNumber(token)) {
-                if (token.equals(IMAGINARY)) {
-                    stackRPN.push(complexFormat.format(new Complex(0, 1)));
-                } else if (token.contains(IMAGINARY)) {
-                    stackRPN.push(complexFormat.format(complexFormat.parse("0+"
-                            + token)));
-                } else {
-                    stackRPN.push(token);
-                }
+                stackRPN.push(token);
             } else if (isOperator(token)) {
                 while (!stackOperations.empty()
                         && isOperator(stackOperations.lastElement())
@@ -198,7 +182,7 @@ public class BracerParser {
      * @since 3.0
      */
     public String evaluate(double variableValue) throws ParseException {
-		/* check if is there something to evaluate */
+        /* check if is there something to evaluate */
         if (stackRPN.empty()) {
             return "";
         }
@@ -220,22 +204,22 @@ public class BracerParser {
             if (isNumber(token)) {
                 stackAnswer.push(token);
             } else if (isOperator(token)) {
-                Complex a = complexFormat.parse(stackAnswer.pop());
-                Complex b = complexFormat.parse(stackAnswer.pop());
-                boolean aBoolean = a.getReal() == 1.0;
-                boolean bBoolean = b.getReal() == 1.0;
+                Double a = Double.valueOf(stackAnswer.pop());
+                Double b = Double.valueOf(stackAnswer.pop());
+                boolean aBoolean = a.doubleValue() == 1.0;
+                boolean bBoolean = b.doubleValue() == 1.0;
                 switch (token) {
                     case "+":
-                        stackAnswer.push(complexFormat.format(b.add(a)));
+                        stackAnswer.push(Double.toString(b + a));
                         break;
                     case "-":
-                        stackAnswer.push(complexFormat.format(b.subtract(a)));
+                        stackAnswer.push(Double.toString(b - (a)));
                         break;
                     case "*":
-                        stackAnswer.push(complexFormat.format(b.multiply(a)));
+                        stackAnswer.push(Double.toString(b * (a)));
                         break;
                     case "/":
-                        stackAnswer.push(complexFormat.format(b.divide(a)));
+                        stackAnswer.push(Double.toString(b / (a)));
                         break;
                     case "|":
                         stackAnswer.push(String.valueOf(aBoolean || bBoolean ? "1" : "0"));
@@ -245,70 +229,66 @@ public class BracerParser {
                         break;
                 }
             } else if (isFunction(token)) {
-                Complex a = complexFormat.parse(stackAnswer.pop());
-                boolean aBoolean = a.getReal() == 1.0;
+                Double a = Double.valueOf(stackAnswer.pop());
+                boolean aBoolean = a.doubleValue() == 1.0;
                 switch (token) {
-                    case "abs":
-                        stackAnswer.push(complexFormat.format(a.abs()));
-                        break;
-                    case "acos":
-                        stackAnswer.push(complexFormat.format(a.acos()));
-                        break;
-                    case "arg":
-                        stackAnswer.push(complexFormat.format(a.getArgument()));
-                        break;
-                    case "asin":
-                        stackAnswer.push(complexFormat.format(a.asin()));
-                        break;
-                    case "atan":
-                        stackAnswer.push(complexFormat.format(a.atan()));
-                        break;
-                    case "conj":
-                        stackAnswer.push(complexFormat.format(a.conjugate()));
-                        break;
+//                    case "abs":
+//                        stackAnswer.push(Double.toString(a.abs()));
+//                        break;
+//                    case "acos":
+//                        stackAnswer.push(Double.toString(a.acos()));
+//                        break;
+//                    case "arg":
+//                        stackAnswer.push(complexFormat.format(a.getArgument()));
+//                        break;
+//                    case "asin":
+//                        stackAnswer.push(complexFormat.format(a.asin()));
+//                        break;
+//                    case "atan":
+//                        stackAnswer.push(complexFormat.format(a.atan()));
+//                        break;
+//                    case "conj":
+//                        stackAnswer.push(complexFormat.format(a.conjugate()));
+//                        break;
                     case "cos":
-                        stackAnswer.push(complexFormat.format(a.cos()));
+                        stackAnswer.push(Double.toString(Math.cos(a)));
                         break;
-                    case "cosh":
-                        stackAnswer.push(complexFormat.format(a.cosh()));
-                        break;
+//                    case "cosh":
+//                        stackAnswer.push(complexFormat.format(a.cosh()));
+//                        break;
                     case "exp":
-                        stackAnswer.push(complexFormat.format(a.exp()));
+                        stackAnswer.push(Double.toString(Math.exp(a)));
                         break;
-                    case "imag":
-                        stackAnswer.push(complexFormat.format(a.getImaginary()));
-                        break;
-                    case "log":
-                        stackAnswer.push(complexFormat.format(a.log()));
-                        break;
-                    case "neg":
-                        stackAnswer.push(complexFormat.format(a.negate()));
-                        break;
-                    case "real":
-                        stackAnswer.push(complexFormat.format(a.getReal()));
-                        break;
+//                    case "imag":
+//                        stackAnswer.push(complexFormat.format(a.getImaginary()));
+//                        break;
+//                    case "log":
+//                        stackAnswer.push(complexFormat.format(a.log()));
+//                        break;
+//                    case "neg":
+//                        stackAnswer.push(complexFormat.format(a.negate()));
+//                        break;
                     case "sin":
-                        stackAnswer.push(complexFormat.format(a.sin()));
+                        stackAnswer.push(Double.toString(Math.sin(a)));
                         break;
-                    case "sinh":
-                        stackAnswer.push(complexFormat.format(a.sinh()));
-                        break;
-                    case "sqrt":
-                        stackAnswer.push(complexFormat.format(a.sqrt()));
-                        break;
-                    case "tan":
-                        stackAnswer.push(complexFormat.format(a.tan()));
-                        break;
-                    case "tanh":
-                        stackAnswer.push(complexFormat.format(a.tanh()));
-                        break;
+//                    case "sqrt":
+//                        stackAnswer.push(Double.toString(a.sqrt()));
+//                        break;
+//                    case "tan":
+//                        stackAnswer.push(Double.toString(a.tan()));
+//                        break;
+//                    case "tanh":
+//                        stackAnswer.push(Double.toString(a.tanh()));
+//                        break;
                     case "pow":
-                        Complex b = complexFormat.parse(stackAnswer.pop());
-                        stackAnswer.push(complexFormat.format(b.pow(a)));
+                        Double b = Double.valueOf(stackAnswer.pop());
+                        stackAnswer.push(Double.toString(Math.pow(a, b)));
                         break;
                     case "not":
                         stackAnswer.push(String.valueOf(!aBoolean ? "1" : "0"));
                         break;
+                    default:
+                        throw new IllegalStateException("Unexpected: " + token);
                 }
             }
         }
@@ -318,44 +298,6 @@ public class BracerParser {
         }
 
         return stackAnswer.pop();
-    }
-
-    /**
-     * Evaluates non-variable expression and returns it's value as a Complex
-     * object
-     *
-     * @return <code>Complex</code> representation of complex number
-     * @throws <code>ParseException</code> if the input expression is not
-     *                                     correct
-     * @since 4.0
-     */
-    public Complex evaluateComplex() throws ParseException {
-        return complexFormat.parse(evaluate());
-    }
-
-    /**
-     * Evaluates variable expression and returns it's value as a Complex object
-     *
-     * @param variableValue User-specified <code>Double</code> value
-     * @return <code>Complex</code> representation of complex number
-     * @throws <code>ParseException</code> if the input expression is not
-     *                                     correct
-     * @since 4.0
-     */
-    public Complex evaluateComplex(double variableValue) throws ParseException {
-        return complexFormat.parse(evaluate(variableValue));
-    }
-
-    /**
-     * Converts <code>Complex</code> object to it's <code>String</code>
-     * representation
-     *
-     * @param number Input <code>Complex</code> number to convert
-     * @return <code>String</code> representation of complex number
-     * @since 5.0
-     */
-    public String format(Complex number) {
-        return complexFormat.format(number);
     }
 
     /**
@@ -377,7 +319,7 @@ public class BracerParser {
         try {
             Double.parseDouble(token);
         } catch (Exception e) {
-            return token.contains(IMAGINARY) || token.equals(VARIABLE);
+            return token.equals(VARIABLE);
         }
         return true;
     }
