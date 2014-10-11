@@ -8,6 +8,8 @@
  *
  * TODO: there is too much copy-paste here, this class needs some refactoring :)
  *
+ * see testConsoleLogic()
+ *
  * @date Nov 15, 2012
  * @author Andrey Belomutskiy, (c) 2012-2014
  */
@@ -151,6 +153,10 @@ static void echo(int value) {
 	print("got value: %d\r\n", value);
 }
 
+int findEndOfToken(const char *line) {
+	return indexOf(line, ' ');
+}
+
 void handleActionWithParameter(TokenCallback *current, char *parameter) {
 	if (current->parameterType == STRING_PARAMETER) {
 		VoidCharPtr callbackS = (VoidCharPtr) current->callback;
@@ -160,7 +166,7 @@ void handleActionWithParameter(TokenCallback *current, char *parameter) {
 
 	// todo: refactor this hell!
 	if (current->parameterType == STRING2_PARAMETER || current->parameterType == STRING2_PARAMETER_P) {
-		int spaceIndex = indexOf(parameter, ' ');
+		int spaceIndex = findEndOfToken(parameter);
 		if (spaceIndex == -1) {
 			return;
 		}
@@ -181,7 +187,7 @@ void handleActionWithParameter(TokenCallback *current, char *parameter) {
 	}
 
 	if (current->parameterType == STRING3_PARAMETER) {
-		int spaceIndex = indexOf(parameter, ' ');
+		int spaceIndex = findEndOfToken(parameter);
 		if (spaceIndex == -1) {
 			return;
 		}
@@ -189,7 +195,7 @@ void handleActionWithParameter(TokenCallback *current, char *parameter) {
 		char * param0 = parameter;
 
 		parameter += spaceIndex + 1;
-		spaceIndex = indexOf(parameter, ' ');
+		spaceIndex = findEndOfToken(parameter);
 		if (spaceIndex == -1)
 			return;
 		parameter[spaceIndex] = 0;
@@ -205,7 +211,7 @@ void handleActionWithParameter(TokenCallback *current, char *parameter) {
 
 	// todo: refactor this hell!
 	if (current->parameterType == STRING5_PARAMETER) {
-		int spaceIndex = indexOf(parameter, ' ');
+		int spaceIndex = findEndOfToken(parameter);
 		if (spaceIndex == -1) {
 			return;
 		}
@@ -213,21 +219,21 @@ void handleActionWithParameter(TokenCallback *current, char *parameter) {
 		char * param0 = parameter;
 
 		parameter += spaceIndex + 1;
-		spaceIndex = indexOf(parameter, ' ');
+		spaceIndex = findEndOfToken(parameter);
 		if (spaceIndex == -1)
 			return;
 		parameter[spaceIndex] = 0;
 		char * param1 = parameter;
 
 		parameter += spaceIndex + 1;
-		spaceIndex = indexOf(parameter, ' ');
+		spaceIndex = findEndOfToken(parameter);
 		if (spaceIndex == -1)
 			return;
 		parameter[spaceIndex] = 0;
 		char * param2 = parameter;
 
 		parameter += spaceIndex + 1;
-		spaceIndex = indexOf(parameter, ' ');
+		spaceIndex = findEndOfToken(parameter);
 		if (spaceIndex == -1)
 			return;
 		parameter[spaceIndex] = 0;
@@ -243,7 +249,7 @@ void handleActionWithParameter(TokenCallback *current, char *parameter) {
 	}
 
 	if (current->parameterType == TWO_INTS_PARAMETER) {
-		int spaceIndex = indexOf(parameter, ' ');
+		int spaceIndex = findEndOfToken(parameter);
 		if (spaceIndex == -1)
 			return;
 		parameter[spaceIndex] = 0;
@@ -277,7 +283,7 @@ void handleActionWithParameter(TokenCallback *current, char *parameter) {
 	}
 
 	if (current->parameterType == FLOAT_FLOAT_PARAMETER) {
-		int spaceIndex = indexOf(parameter, ' ');
+		int spaceIndex = findEndOfToken(parameter);
 		if (spaceIndex == -1)
 			return;
 		parameter[spaceIndex] = 0;
@@ -390,7 +396,7 @@ static bool handleConsoleLineInternal(char *line, int lineLength) {
 			TokenCallback *current = &consoleActions[i];
 			if (strEqual(line, current->token)) {
 				handleActionWithParameter(current, ptr);
-				return TRUE;
+				return true;
 			}
 		}
 	}

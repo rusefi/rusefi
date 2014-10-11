@@ -68,7 +68,7 @@ bool startsWith(const char *line, const char *prefix) {
 
 int indexOf(const char *string, char ch) {
 	// todo: there should be a standard function for this
-	// todo: on the other hand MISRA wants us not to use standart headers
+	// todo: on the other hand MISRA wants us not to use standard headers
 	int len = efiStrlen(string);
 	for (int i = 0; i < len; i++) {
 		if (string[i] == ch) {
