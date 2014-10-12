@@ -6,6 +6,7 @@
 
 #include "rusefi_enums.h"
 #include "enum_strings.h"
+#include "auto_generated_enums.h"
 #include "obd_error_codes.h"
 #include "error_handling.h"
 
