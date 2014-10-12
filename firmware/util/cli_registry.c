@@ -153,6 +153,17 @@ static void echo(int value) {
 	print("got value: %d\r\n", value);
 }
 
+char *unquote(char *line) {
+	if (line[0] == '"') {
+		int len = strlen(line);
+		if (line[len - 1] == '"') {
+			line[len - 1] = 0;
+			return line + 1;
+		}
+	}
+	return line;
+}
+
 int findEndOfToken(const char *line) {
 	if (line[0] == '"') {
 		/**
