@@ -278,6 +278,12 @@ void testConsoleLogic(void) {
 	char * cmd = "he ha";
 	assertEquals(2, findEndOfToken(cmd));
 
+	cmd = "\"hee\" ha";
+	assertEquals(5, findEndOfToken(cmd));
+
+	cmd = "\"h e\" ha";
+	assertEquals(5, findEndOfToken(cmd));
+
 
 	char *ptr = validateSecureLine(UNKNOWN_COMMAND);
 	assertEquals(0, strcmp(UNKNOWN_COMMAND, ptr));
@@ -306,6 +312,12 @@ void testConsoleLogic(void) {
 	handleConsoleLine(buffer);
 	assertEquals(111, atoi(lastFirst));
 	assertEquals(333, atoi(lastThird));
+
+
+	strcpy(buffer, "echosss \" 1\" 222 333");
+	handleConsoleLine(buffer);
+	assertTrue(strEqual("\" 1\"", lastFirst));
+
 
 	//addConsoleActionSSS("GPS", testGpsParser);
 }
