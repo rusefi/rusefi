@@ -66,8 +66,8 @@ extern board_configuration_s *boardConfiguration;
  */
 void printConfiguration(engine_configuration_s *engineConfiguration, engine_configuration2_s *engineConfiguration2) {
 
-	scheduleMsg(&logger, "Template %s/%d trigger %d", getConfigurationName(engineConfiguration->engineType),
-			engineConfiguration->engineType, engineConfiguration->triggerConfig.triggerType);
+	scheduleMsg(&logger, "Template %s/%d trigger %s", getConfigurationName(engineConfiguration->engineType),
+			engineConfiguration->engineType, getTrigger_type_e(engineConfiguration->triggerConfig.triggerType));
 
 	scheduleMsg(&logger, "configurationVersion=%d", getGlobalConfigurationVersion());
 
@@ -99,9 +99,9 @@ void printConfiguration(engine_configuration_s *engineConfiguration, engine_conf
 
 	scheduleMsg(&logger, "tpsMin: %d/tpsMax: %d", engineConfiguration->tpsMin, engineConfiguration->tpsMax);
 
-	scheduleMsg(&logger, "ignitionMode: %s/enabled=%s", ignitionModeToString(engineConfiguration->ignitionMode),
+	scheduleMsg(&logger, "ignitionMode: %s/enabled=%s", getIgnition_mode_e(engineConfiguration->ignitionMode),
 			boolToString(engineConfiguration->isIgnitionEnabled));
-	scheduleMsg(&logger, "timingMode: %d", engineConfiguration->timingMode);
+	scheduleMsg(&logger, "timingMode: %d", /*getTiming_mode_etodo*/(engineConfiguration->timingMode));
 	scheduleMsg(&logger, "fixedModeTiming: %d", (int) engineConfiguration->fixedModeTiming);
 	scheduleMsg(&logger, "ignitionOffset=%f", engineConfiguration->ignitionOffset);
 	scheduleMsg(&logger, "injectionOffset=%f/enabled=%s", (double) engineConfiguration->injectionOffset,
@@ -125,12 +125,12 @@ void printConfiguration(engine_configuration_s *engineConfiguration, engine_conf
 	scheduleMsg(&logger, "analogInputDividerCoefficient: %f", engineConfiguration->analogInputDividerCoefficient);
 
 #if EFI_PROD_CODE
-	scheduleMsg(&logger, "idlePin: mode %s @ %s", pinModeToString(boardConfiguration->idleValvePinMode),
+	scheduleMsg(&logger, "idlePin: mode %s @ %s", getPin_output_mode_e(boardConfiguration->idleValvePinMode),
 			hwPortname(boardConfiguration->idleValvePin));
 	scheduleMsg(&logger, "malfunctionIndicatorPinMode: %s",
 			pinModeToString(boardConfiguration->malfunctionIndicatorPinMode));
 
-	scheduleMsg(&logger, "fuelPumpPin: mode %s @ %s", pinModeToString(boardConfiguration->fuelPumpPinMode),
+	scheduleMsg(&logger, "fuelPumpPin: mode %s @ %s", getPin_output_mode_e(boardConfiguration->fuelPumpPinMode),
 			hwPortname(boardConfiguration->fuelPumpPin));
 
 	scheduleMsg(&logger, "injectionPins: mode %s", pinModeToString(boardConfiguration->injectionPinMode));

@@ -65,7 +65,7 @@ void helpCommand(void);
 void initConsoleLogic(void);
 void handleConsoleLine(char *line);
 int findEndOfToken(const char *line);
-
+char *unquote(char *line);
 
 void addConsoleAction(const char *token, Void callback);
 void addConsoleActionP(const char *token, VoidPtr callback, void *param);

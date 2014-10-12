@@ -308,7 +308,7 @@ void updateDevConsoleState(void) {
 static void showFuelInfo2(float rpm, float engineLoad) {
 	float baseFuel = getBaseTableFuel(engineConfiguration, (int) rpm, engineLoad);
 
-	scheduleMsg(&logger2, "algo=%s/pump=%s", algorithmToString(engineConfiguration->algorithm), boolToString(getOutputPinValue(FUEL_PUMP_RELAY)));
+	scheduleMsg(&logger2, "algo=%s/pump=%s", getEngine_load_mode_e(engineConfiguration->algorithm), boolToString(getOutputPinValue(FUEL_PUMP_RELAY)));
 
 	scheduleMsg(&logger2, "cranking fuel: %f", getCrankingFuel(&engine));
 
