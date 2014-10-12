@@ -154,6 +154,22 @@ static void echo(int value) {
 }
 
 int findEndOfToken(const char *line) {
+	if (line[0] == '"') {
+		/**
+		 * Looks like this is a quoted token
+		 */
+		int v = indexOf(line + 1, '"');
+		if (v == -1) {
+			/**
+			 * Matching closing quote not found
+			 */
+			return -1;
+		}
+		/**
+		 * Skipping first quote and the symbol after closing quote
+		 */
+		return v + 2;
+	}
 	return indexOf(line, ' ');
 }
 
