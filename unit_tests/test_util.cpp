@@ -284,6 +284,12 @@ void testConsoleLogic(void) {
 	cmd = "\"h e\" ha";
 	assertEquals(5, findEndOfToken(cmd));
 
+	strcpy(buffer, "echo");
+	assertTrue(strEqual("echo", unquote(buffer)));
+
+	strcpy(buffer, "\"echo\"");
+	assertTrueM("unquote quoted", strEqual("echo", unquote(buffer)));
+
 
 	char *ptr = validateSecureLine(UNKNOWN_COMMAND);
 	assertEquals(0, strcmp(UNKNOWN_COMMAND, ptr));
