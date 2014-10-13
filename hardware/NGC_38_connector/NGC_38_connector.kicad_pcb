@@ -3,7 +3,7 @@
   (general
     (links 10)
     (no_connects 10)
-    (area 144.949999 119.949999 180.050001 190.050001)
+    (area 136.893223 119.949999 180.050001 190.050001)
     (thickness 1.6)
     (drawings 5)
     (tracks 0)
@@ -59,7 +59,7 @@
     (aux_axis_origin 0 0)
     (visible_elements 7FFFFFFF)
     (pcbplotparams
-      (layerselection 3178497)
+      (layerselection 334528513)
       (usegerberextensions true)
       (excludeedgelayer true)
       (linewidth 0.150000)
@@ -81,9 +81,9 @@
       (subtractmaskfromsilk false)
       (outputformat 1)
       (mirror false)
-      (drillshape 1)
+      (drillshape 0)
       (scaleselection 1)
-      (outputdirectory ""))
+      (outputdirectory NGC_38_connector_gerber))
   )
 
   (net 0 "")
