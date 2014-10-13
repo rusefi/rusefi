@@ -1,0 +1,17 @@
+Cmp-Mod V01 Created by CvPcb (2013-07-07 BZR 4022)-stable date = 13/10/2014 14:53:27
+
+BeginCmp
+TimeStamp = /543BAB9B;
+Reference = P1;
+ValeurCmp = DIL38;
+IdModule  = PCM_C1;
+EndCmp
+
+BeginCmp
+TimeStamp = /543BAEB3;
+Reference = P2;
+ValeurCmp = CONN_10;
+IdModule  = SIL-10;
+EndCmp
+
+EndListe
