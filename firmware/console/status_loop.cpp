@@ -306,7 +306,7 @@ void updateDevConsoleState(Engine *engine) {
  */
 
 static void showFuelInfo2(float rpm, float engineLoad) {
-	float baseFuel = getBaseTableFuel(engineConfiguration, (int) rpm, engineLoad);
+	float baseFuelMs = getBaseTableFuel(engineConfiguration, (int) rpm, engineLoad);
 
 	scheduleMsg(&logger2, "algo=%s/pump=%s", getEngine_load_mode_e(engineConfiguration->algorithm), boolToString(getOutputPinValue(FUEL_PUMP_RELAY)));
 
@@ -317,12 +317,12 @@ static void showFuelInfo2(float rpm, float engineLoad) {
 		float cltCorrection = getCltCorrection(engineConfiguration, getCoolantTemperature(engineConfiguration2));
 		float injectorLag = getInjectorLag(engineConfiguration, getVBatt());
 		scheduleMsg(&logger2, "rpm=%f engineLoad=%f", rpm, engineLoad);
-		scheduleMsg(&logger2, "baseFuel=%f", baseFuel);
+		scheduleMsg(&logger2, "baseFuel=%f", baseFuelMs);
 
 		scheduleMsg(&logger2, "iatCorrection=%f cltCorrection=%f injectorLag=%f", iatCorrection, cltCorrection,
 				injectorLag);
 
-		float value = getRunningFuel(baseFuel, &engine, (int) rpm);
+		float value = getRunningFuel(baseFuelMs, &engine, (int) rpm);
 		scheduleMsg(&logger2, "injection pulse width: %f", value);
 	}
 }
@@ -361,7 +361,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels) {
 	float intake = getIntakeAirTemperature(engineConfiguration2);
 
 	float engineLoad = getEngineLoad();
-	float baseFuel = getBaseTableFuel(engineConfiguration, (int) rpm, engineLoad);
+	float baseFuelMs = getBaseTableFuel(engineConfiguration, (int) rpm, engineLoad);
 
 	tsOutputChannels->rpm = rpm;
 	tsOutputChannels->coolant_temperature = coolant;
@@ -393,8 +393,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels) {
 #endif
 	tsOutputChannels->tCharge = getTCharge(rpm, tps, coolant, intake);
 	tsOutputChannels->sparkDwell = getSparkDwellMs(rpm);
-	tsOutputChannels->pulseWidth = getRunningFuel(baseFuel, &engine, rpm);
-	tsOutputChannels->crankingFuel = getCrankingFuel(&engine);
+	tsOutputChannels->pulseWidthMs = getRunningFuel(baseFuelMs, &engine, rpm);
+	tsOutputChannels->crankingFuelMs = getCrankingFuel(&engine);
 }
 
 extern TunerStudioOutputChannels tsOutputChannels;

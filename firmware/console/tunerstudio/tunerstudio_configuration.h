@@ -42,12 +42,12 @@ typedef struct {
 	short int alignment; // size 2, offset 34
 	float atmospherePressure; // size 4, offset 36
 	float manifold_air_pressure; // size 4, offset 40
-	float crankingFuel;
-	int tpsVolrage;
+	float crankingFuelMs;
+	int unused;
 	float tCharge; // 52
 	float inj_adv; // 56
 	float sparkDwell; // 60
-	float pulseWidth; // 64
+	float pulseWidthMs; // 64
 	float warmUpEnrich;	// 68
 	/**
 	 * Yes, I do not really enjoy packing bits into integers but we simply have too many boolean flags and I cannot
@@ -71,7 +71,7 @@ typedef struct {
 	unsigned int isIatError : 1; // bit 3
 	int tsConfigVersion;
 	egt_values_s egtValues;
-	int unused[3];
+	int unused3[3];
 } TunerStudioOutputChannels;
 
 #endif /* TUNERSTUDIO_CONFIGURATION_H_ */
