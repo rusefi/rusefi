@@ -100,7 +100,7 @@ void rusEfiFunctionalTest(void) {
 }
 
 void printPendingMessages(void) {
-	updateDevConsoleState();
+	updateDevConsoleState(&engine);
 	waveChart.publishChartIfFull();
 }
 

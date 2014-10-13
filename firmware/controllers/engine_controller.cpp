@@ -61,8 +61,6 @@ LEElementPool lePool;
 LEElement * fuelPumpLogic;
 LEElement * radiatorFanLogic;
 
-extern board_configuration_s *boardConfiguration;
-
 persistent_config_container_s persistentState CCM_OPTIONAL
 ;
 
@@ -77,11 +75,8 @@ board_configuration_s *boardConfiguration = &persistentState.persistentConfigura
 /**
  * CH_FREQUENCY is the number of system ticks in a second
  */
-// todo: this should probably be configurable?
-#define FUEL_PUMP_DELAY (4 * CH_FREQUENCY)
 
 static VirtualTimer everyMsTimer;
-//static VirtualTimer fuelPumpTimer;
 
 static Logging logger;
 
