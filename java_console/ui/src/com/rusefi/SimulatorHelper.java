@@ -12,12 +12,14 @@ import java.io.IOException;
 public class SimulatorHelper {
     public static final String BINARY = "rusefi_simulator.exe";
     private static Process process;
+    public static boolean RUNNING_SIMULATOR;
 
     public static boolean isBinaryHere() {
         return new File(BINARY).exists();
     }
 
     private static void startSimulator() {
+        RUNNING_SIMULATOR = true;
         try {
             process = Runtime.getRuntime().exec(BINARY);
         } catch (IOException e) {
