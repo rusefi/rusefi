@@ -187,7 +187,7 @@ void runRusEfi(void) {
 
 #if EFI_CLI_SUPPORT && !EFI_UART_ECHO_TEST_MODE
 		// sensor state + all pending messages for our own dev console
-		updateDevConsoleState();
+		updateDevConsoleState(&engine);
 #endif /* EFI_CLI_SUPPORT */
 
 		chThdSleepMilliseconds(boardConfiguration->consoleLoopPeriod);

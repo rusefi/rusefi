@@ -116,7 +116,7 @@ static const char* boolean2string(int value) {
 	return value ? "YES" : "NO";
 }
 
-void printSensors(void) {
+void printSensors(Engine *engine) {
 #if EFI_FILE_LOGGING
 	resetLogging(&fileLogger);
 #endif /* EFI_FILE_LOGGING */
@@ -126,7 +126,7 @@ void printSensors(void) {
 	float sec = ((float) nowMs) / 1000;
 	reportSensorF("time", sec, 3);
 
-	reportSensorI("rpm", getRpm());
+	reportSensorI("rpm", getRpmE(engine));
 	reportSensorF("maf", getMaf(), 2);
 
 	if (engineConfiguration->hasMapSensor) {
@@ -158,24 +158,24 @@ void printSensors(void) {
 #endif /* EFI_FILE_LOGGING */
 }
 
-void printState(int currentCkpEventCounter) {
+void printState(Engine *engine, int currentCkpEventCounter) {
 #if EFI_SHAFT_POSITION_INPUT
-	printSensors();
+	printSensors(engine);
 
-	int rpm = getRpm();
+	int rpm = getRpmE(engine);
 	debugInt(&logger, "ckp_c", currentCkpEventCounter);
 
 //	debugInt(&logger, "idl", getIdleSwitch());
 
 //	debugFloat(&logger, "table_spark", getAdvance(rpm, getMaf()), 2);
 
-	float engineLoad = getEngineLoad();
-	float baseFuel = getBaseFuel(&engine, rpm);
+	float engineLoad = getEngineLoadT(engine);
+	float baseFuel = getBaseFuel(engine, rpm);
 	debugFloat(&logger, "fuel_base", baseFuel, 2);
 //	debugFloat(&logger, "fuel_iat", getIatCorrection(getIntakeAirTemperature()), 2);
 //	debugFloat(&logger, "fuel_clt", getCltCorrection(getCoolantTemperature()), 2);
 	debugFloat(&logger, "fuel_lag", getInjectorLag(engineConfiguration, getVBatt()), 2);
-	debugFloat(&logger, "fuel", getRunningFuel(baseFuel, &engine, rpm), 2);
+	debugFloat(&logger, "fuel", getRunningFuel(baseFuel, engine, rpm), 2);
 
 	debugFloat(&logger, "timing", getAdvance(rpm, engineLoad), 2);
 
@@ -250,7 +250,7 @@ extern char errorMessageBuffer[200];
 /**
  * @brief Sends all pending data to dev console
  */
-void updateDevConsoleState(void) {
+void updateDevConsoleState(Engine *engine) {
 	if (!isConsoleReady()) {
 		return;
 	}
@@ -288,7 +288,7 @@ void updateDevConsoleState(void) {
 
 	prevCkpEventCounter = currentCkpEventCounter;
 
-	printState(currentCkpEventCounter);
+	printState(engine, currentCkpEventCounter);
 
 #if EFI_WAVE_ANALYZER
 	printWave(&logger);

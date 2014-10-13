@@ -11,6 +11,7 @@
 #include "engine.h"
 #include "logic_expression.h"
 
+// todo: the delay should probably be configurable?
 #define FUEL_PUMP_LOGIC "time_since_boot 4 < rpm 0 > OR"
 
 float getLEValue(Engine *engine, le_action_e action);
