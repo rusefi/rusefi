@@ -33,8 +33,6 @@ typedef struct {
 
 #define MAX31855_CS_COUNT 8
 
-#define GPIO_COUNT 8
-
 #define JOYSTICK_PIN_COUNT 5
 
 #define FUEL_RPM_COUNT 16
@@ -217,12 +215,12 @@ typedef struct {
 
 	spi_device_e max31855spiDevice;
 
-	brain_pin_e gpioPins[GPIO_COUNT];
-	pin_output_mode_e gpioPinModes[GPIO_COUNT];
+	brain_pin_e gpioPins[LE_COMMAND_COUNT];
+	pin_output_mode_e gpioPinModes[LE_COMMAND_COUNT];
 
 	brain_pin_e joystickPins[JOYSTICK_PIN_COUNT];
 
-	int unusedbs[70];
+	int unusedbs[54];
 
 	le_formula_t le_formulas[LE_COMMAND_COUNT];
 

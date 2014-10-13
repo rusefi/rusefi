@@ -136,6 +136,10 @@ static inline void markUsed(int index, const char *msg) {
 	totalPinsUsed++;
 }
 
+void mySetPadMode2(const char *msg, brain_pin_e pin, iomode_t mode) {
+	mySetPadMode(msg, getHwPort(pin), getHwPin(pin), mode);
+}
+
 /**
  * This method would set an error condition if pin is already used
  */
@@ -154,7 +158,7 @@ void mySetPadMode(const char *msg, ioportid_t port, ioportmask_t pin, iomode_t m
 	int index = portIndex * 16 + pin;
 
 	if (PIN_USED[index] != NULL) {
-		firmwareError("%s%d req by %s used by %s", portname(port), pin, msg, PIN_USED[index]);
+		warning(OBD_PCM_Processor_Fault, "%s%d req by %s used by %s", portname(port), pin, msg, PIN_USED[index]);
 		return;
 	}
 	markUsed(index, msg);

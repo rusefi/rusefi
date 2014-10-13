@@ -132,7 +132,7 @@ void startIdleThread() {
 
 	// this is idle switch INPUT - sometimes there is a switch on the throttle pedal
 	// this switch is not used yet
-	mySetPadMode("idle switch", getHwPort(boardConfiguration->idleSwitchPin), getHwPin(boardConfiguration->idleSwitchPin), PAL_MODE_INPUT);
+	mySetPadMode2("idle switch", boardConfiguration->idleSwitchPin, PAL_MODE_INPUT);
 
 	addConsoleActionI("set_idle_rpm", setIdleRpmAction);
 	addConsoleActionI("set_idle_pwm", setIdleValvePwm);

@@ -156,9 +156,12 @@ void lcd_HD44780_print_string(const char* string) {
 }
 //getHwPin(boardConfiguration->HD44780_db7)
 static void lcdInfo(void) {
-	scheduleMsg(&logger, "HD44780 RS=%s E=%s", hwPortname(boardConfiguration->HD44780_rs), hwPortname(boardConfiguration->HD44780_e));
-	scheduleMsg(&logger, "HD44780 D4=%s D5=%s", hwPortname(boardConfiguration->HD44780_db4), hwPortname(boardConfiguration->HD44780_db5));
-	scheduleMsg(&logger, "HD44780 D6=%s D7=%s", hwPortname(boardConfiguration->HD44780_db6), hwPortname(boardConfiguration->HD44780_db7));
+	scheduleMsg(&logger, "HD44780 RS=%s E=%s", hwPortname(boardConfiguration->HD44780_rs),
+			hwPortname(boardConfiguration->HD44780_e));
+	scheduleMsg(&logger, "HD44780 D4=%s D5=%s", hwPortname(boardConfiguration->HD44780_db4),
+			hwPortname(boardConfiguration->HD44780_db5));
+	scheduleMsg(&logger, "HD44780 D6=%s D7=%s", hwPortname(boardConfiguration->HD44780_db6),
+			hwPortname(boardConfiguration->HD44780_db7));
 }
 
 void lcd_HD44780_init(void) {
@@ -175,18 +178,12 @@ void lcd_HD44780_init(void) {
 
 	if (engineConfiguration->displayMode == DM_HD44780) {
 		// initialize hardware lines
-		mySetPadMode("lcd RS", getHwPort(boardConfiguration->HD44780_rs), getHwPin(boardConfiguration->HD44780_rs),
-				PAL_MODE_OUTPUT_PUSHPULL);
-		mySetPadMode("lcd E", getHwPort(boardConfiguration->HD44780_e), getHwPin(boardConfiguration->HD44780_e),
-				PAL_MODE_OUTPUT_PUSHPULL);
-		mySetPadMode("lcd DB4", getHwPort(boardConfiguration->HD44780_db4), getHwPin(boardConfiguration->HD44780_db4),
-				PAL_MODE_OUTPUT_PUSHPULL);
-		mySetPadMode("lcd DB6", getHwPort(boardConfiguration->HD44780_db5), getHwPin(boardConfiguration->HD44780_db5),
-				PAL_MODE_OUTPUT_PUSHPULL);
-		mySetPadMode("lcd DB7", getHwPort(boardConfiguration->HD44780_db6), getHwPin(boardConfiguration->HD44780_db6),
-				PAL_MODE_OUTPUT_PUSHPULL);
-		mySetPadMode("lcd DB8", getHwPort(boardConfiguration->HD44780_db7), getHwPin(boardConfiguration->HD44780_db7),
-				PAL_MODE_OUTPUT_PUSHPULL);
+		mySetPadMode2("lcd RS", boardConfiguration->HD44780_rs, PAL_MODE_OUTPUT_PUSHPULL);
+		mySetPadMode2("lcd E", boardConfiguration->HD44780_e, PAL_MODE_OUTPUT_PUSHPULL);
+		mySetPadMode2("lcd DB4", boardConfiguration->HD44780_db4, PAL_MODE_OUTPUT_PUSHPULL);
+		mySetPadMode2("lcd DB6", boardConfiguration->HD44780_db5, PAL_MODE_OUTPUT_PUSHPULL);
+		mySetPadMode2("lcd DB7", boardConfiguration->HD44780_db6, PAL_MODE_OUTPUT_PUSHPULL);
+		mySetPadMode2("lcd DB8", boardConfiguration->HD44780_db7, PAL_MODE_OUTPUT_PUSHPULL);
 		// and zero values
 		palWritePad(getHwPort(boardConfiguration->HD44780_rs), getHwPin(boardConfiguration->HD44780_rs), 0);
 		palWritePad(getHwPort(boardConfiguration->HD44780_e), getHwPin(boardConfiguration->HD44780_e), 0);

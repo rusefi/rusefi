@@ -114,8 +114,8 @@ void initGps(void) {
 
 	sdStart(GPS_SERIAL_DEVICE, &GPSserialConfig);
 //  GPS we have USART1: PB7 -> USART1_RX and PB6 -> USART1_TX
-	mySetPadMode("GPS tx", getHwPort(boardConfiguration->gps_tx_pin), getHwPin(boardConfiguration->gps_tx_pin), PAL_MODE_ALTERNATE(7));
-	mySetPadMode("GPS rx", getHwPort(boardConfiguration->gps_rx_pin), getHwPin(boardConfiguration->gps_rx_pin), PAL_MODE_ALTERNATE(7));
+	mySetPadMode2("GPS tx", boardConfiguration->gps_tx_pin, PAL_MODE_ALTERNATE(7));
+	mySetPadMode2("GPS rx", boardConfiguration->gps_rx_pin, PAL_MODE_ALTERNATE(7));
 
 // todo: add a thread which would save location. If the GPS 5Hz - we should save the location each 200 ms
 	chThdCreateStatic(GPS_WORKING_AREA, sizeof(GPS_WORKING_AREA), LOWPRIO, GpsThreadEntryPoint, NULL);
