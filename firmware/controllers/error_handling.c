@@ -53,6 +53,8 @@ static char warningBuffer[WARNING_BUFFER_SIZE];
 static MemoryStream warningStream;
 
 /**
+ * OBD_PCM_Processor_Fault is the general error code for now
+ *
  * @returns TRUE in case there are too many warnings
  */
 int warning(obd_code_e code, const char *fmt, ...) {

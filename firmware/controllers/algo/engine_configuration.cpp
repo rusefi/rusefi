@@ -277,7 +277,7 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	for (int i = 0; i < MAX31855_CS_COUNT; i++) {
 		boardConfiguration->max31855_cs[i] = GPIO_NONE;
 	}
-	for (int i = 0; i < GPIO_COUNT; i++) {
+	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
 		boardConfiguration->gpioPins[i] = GPIO_NONE;
 	}
 	for (int i = 0; i < JOYSTICK_PIN_COUNT; i++) {

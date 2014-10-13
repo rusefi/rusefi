@@ -373,5 +373,14 @@ void initEngineContoller(void) {
 
 	addConsoleAction("analoginfo", printAnalogInfo);
 
+	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
+		if (boardConfiguration->gpioPins[i] != GPIO_NONE) {
+
+			mySetPadMode2("user-defined", boardConfiguration->gpioPins[i], PAL_STM32_MODE_OUTPUT);
+
+		}
+
+	}
+
 	addConsoleActionSSP("set_user_out", (VoidCharPtrCharPtrVoidPtr) setUserOutput, &engine);
 }
