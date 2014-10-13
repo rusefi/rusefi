@@ -77,6 +77,7 @@ void rusEfiFunctionalTest(void) {
 	initDataStructures(engineConfiguration);
 
 	engine.engineConfiguration = engineConfiguration;
+	engine.engineConfiguration2 = engineConfiguration2;
 
 
 	resetConfigurationExt(NULL, FORD_ASPIRE_1996, engineConfiguration, engineConfiguration2);

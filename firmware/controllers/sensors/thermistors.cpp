@@ -179,6 +179,8 @@ void setCommonNTCSensor(ThermistorConf *thermistorConf) {
 }
 
 void initThermistors(Engine *engine) {
+	efiAssertVoid(engine!=NULL, "e NULL initThermistors");
+	efiAssertVoid(engine->engineConfiguration2!=NULL, "e2 NULL initThermistors");
 	initThermistorCurve(&engine->engineConfiguration2->clt, &engine->engineConfiguration->cltThermistorConf,
 			engine->engineConfiguration->cltAdcChannel);
 	initThermistorCurve(&engine->engineConfiguration2->iat, &engine->engineConfiguration->iatThermistorConf,
