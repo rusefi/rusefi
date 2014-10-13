@@ -272,6 +272,22 @@ static void printAnalogInfo(void) {
 
 static THD_WORKING_AREA(csThreadStack, UTILITY_THREAD_STACK_SIZE);	// declare thread stack
 
+static void setUserOutput(const char *indexStr, const char *quotedLine, Engine *engine) {
+	int index = atoi(indexStr);
+	if (index < 0 || index > LE_COMMAND_COUNT) {
+		scheduleMsg(&logger, "invalid index %d", index);
+		return;
+	}
+	char * l = unquote((char*) quotedLine);
+	if (strlen(l) > LE_COMMAND_LENGTH - 1) {
+		scheduleMsg(&logger, "Too long %d", strlen(l));
+		return;
+	}
+
+	scheduleMsg(&logger, "setting user out %d to [%s]", index, l);
+	strcpy(engine->engineConfiguration->bc.le_formulas[index], l);
+}
+
 void initEngineContoller(void) {
 	if (hasFirmwareError()) {
 		return;
@@ -356,4 +372,6 @@ void initEngineContoller(void) {
 #endif
 
 	addConsoleAction("analoginfo", printAnalogInfo);
+
+	addConsoleActionSSP("set_user_out", (VoidCharPtrCharPtrVoidPtr) setUserOutput, &engine);
 }
