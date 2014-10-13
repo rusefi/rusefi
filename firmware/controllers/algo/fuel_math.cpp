@@ -85,8 +85,7 @@ float getFuelMs(int rpm, Engine *engine) {
 	return theoreticalInjectionLength + injectorLag;
 }
 
-// todo: start using 'engine' parameter and not 'extern'
-float getRunningFuel(float baseFuel, Engine *engine, int rpm) {
+float getRunningFuel(float baseFuelMs, Engine *engine, int rpm) {
 	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
 	float iatCorrection = getIatCorrection(engineConfiguration, getIntakeAirTemperature(engine->engineConfiguration2));
 	float cltCorrection = getCltCorrection(engineConfiguration, getCoolantTemperature(engine->engineConfiguration2));
@@ -96,7 +95,7 @@ float getRunningFuel(float baseFuel, Engine *engine, int rpm) {
 	// todo: accelEnrichment
 #endif /* EFI_ACCEL_ENRICHMENT */
 
-	return baseFuel * cltCorrection * iatCorrection;
+	return baseFuelMs * cltCorrection * iatCorrection;
 }
 
 static Map3D1616 fuelMap;
