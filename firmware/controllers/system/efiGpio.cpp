@@ -62,9 +62,11 @@ void setOutputPinValue(io_pin_e pin, int logicValue) {
 #if EFI_PROD_CODE
 	if (outputs[pin].port == GPIO_NULL)
 		return;
-#endif
 	efiAssertVoid(pinDefaultState[pin]!=NULL, "pin mode not initialized");
 	pin_output_mode_e mode = *pinDefaultState[pin];
+#else
+	pin_output_mode_e mode = OM_DEFAULT;
+#endif
 	setPinValue(&outputs[pin], getElectricalValue(logicValue, mode), logicValue);
 }
 
