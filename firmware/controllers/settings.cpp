@@ -162,7 +162,7 @@ void printConfiguration(engine_configuration_s *engineConfiguration, engine_conf
 	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
 		char * exp = boardConfiguration->le_formulas[i];
 		if (exp[0] != 0) {
-			scheduleMsg(&logger, "user out %d [%s]", i, exp);
+			scheduleMsg(&logger, "user out %d [%s] at %s", i, exp, hwPortname(boardConfiguration->gpioPins[i]));
 		}
 	}
 }
