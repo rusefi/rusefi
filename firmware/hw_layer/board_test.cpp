@@ -160,11 +160,8 @@ void initBoardTest(void) {
 	while (currentIndex < pinsCount) {
 		currentPin = BLINK_PINS[currentIndex];
 
-		GPIO_TypeDef *hwPort = getHwPort(currentPin);
-		uint32_t hwPin = getHwPin(currentPin);
-
 		printBoardTestState();
-		mySetPadMode("test", hwPort, hwPin, PAL_STM32_MODE_OUTPUT);
+		mySetPadMode2("test", currentPin, PAL_STM32_MODE_OUTPUT);
 
 		currentIndex++;
 		waitForKey();
