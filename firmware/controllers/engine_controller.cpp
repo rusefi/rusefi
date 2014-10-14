@@ -181,6 +181,11 @@ static void onEvenyGeneralMilliseconds(void *arg) {
 	engine.watchdog();
 	engine.updateSlowSensors();
 
+	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
+		if (boardConfiguration->gpioPins[i] != GPIO_NONE) {
+		}
+	}
+
 #if EFI_FUEL_PUMP
 	if (boardConfiguration->fuelPumpPin != GPIO_NONE && engineConfiguration->isFuelPumpEnabled) {
 		if (fuelPumpLogic == NULL) {
