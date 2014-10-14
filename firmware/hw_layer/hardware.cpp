@@ -194,8 +194,7 @@ void initHardware(Logging *logger, Engine *engine) {
 		return;
 	}
 
-	mySetPadMode("board test", getHwPort(boardConfiguration->boardTestModeJumperPin),
-			getHwPin(boardConfiguration->boardTestModeJumperPin), PAL_MODE_INPUT_PULLUP);
+	mySetPadMode2("board test", boardConfiguration->boardTestModeJumperPin, PAL_MODE_INPUT_PULLUP);
 	bool isBoardTestMode_b = GET_BOARD_TEST_MODE_VALUE();
 
 	initAdcInputs();
