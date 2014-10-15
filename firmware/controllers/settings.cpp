@@ -125,7 +125,6 @@ void printConfiguration(engine_configuration_s *engineConfiguration, engine_conf
 
 	scheduleMsg(&logger, "analogInputDividerCoefficient: %f", engineConfiguration->analogInputDividerCoefficient);
 
-#if EFI_PROD_CODE
 	scheduleMsg(&logger, "idlePin: mode %s @ %s", getPin_output_mode_e(boardConfiguration->idleValvePinMode),
 			hwPortname(boardConfiguration->idleValvePin));
 	scheduleMsg(&logger, "malfunctionIndicatorPinMode: %s",
@@ -155,6 +154,7 @@ void printConfiguration(engine_configuration_s *engineConfiguration, engine_conf
 		scheduleMsg(&logger, "digitalPotentiometer CS%d %s", i,
 				hwPortname(boardConfiguration->digitalPotentiometerChipSelect[i]));
 	}
+#if EFI_PROD_CODE
 
 	printSpiState(&logger, boardConfiguration);
 
