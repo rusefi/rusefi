@@ -56,6 +56,12 @@ public:
 	 * voltage divider configuration. This is a future (?) performance optimization.
 	 */
 	float adcToVoltageInputDividerCoefficient;
+
+	/**
+	 * This field is true if we are in 'cylinder cleanup' state right now
+	 * see isCylinderCleanupEnabled
+	 */
+	bool isCylinderCleanupMode;
 };
 
 typedef struct {

@@ -168,6 +168,20 @@ int getTimeNowSeconds(void) {
 	return chTimeNow() / CH_FREQUENCY;
 }
 
+static void cylinderCleanupControl(Engine *engine) {
+	bool newValue;
+	if (engineConfiguration->isCylinderCleanupEnabled) {
+		newValue = !engine->rpmCalculator->isRunning() && getTPS() > 95;
+	} else {
+		newValue = false;
+	}
+	if (newValue != engineConfiguration2->isCylinderCleanupMode) {
+		engineConfiguration2->isCylinderCleanupMode = newValue;
+		scheduleMsg(&logger, "isCylinderCleanupMode %s", boolToString(newValue));
+	}
+
+}
+
 static void onEvenyGeneralMilliseconds(void *arg) {
 	(void) arg;
 	/**
@@ -204,6 +218,8 @@ static void onEvenyGeneralMilliseconds(void *arg) {
 	updateErrorCodes();
 
 	fanRelayControl();
+
+	cylinderCleanupControl(&engine);
 
 	setOutputPinValue(O2_HEATER, engine.rpmCalculator->isRunning());
 
