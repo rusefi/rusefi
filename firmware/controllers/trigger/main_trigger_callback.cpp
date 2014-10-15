@@ -87,6 +87,9 @@ static void handleFuelInjectionEvent(MainTriggerCallback *mainTriggerCallback, A
 		return;
 	}
 
+	if (mainTriggerCallback->engineConfiguration2->isCylinderCleanupMode)
+		return;
+
 	float delay = getOneDegreeTimeMs(rpm) * event->position.angleOffset;
 
 //	if (isCranking())
@@ -107,9 +110,9 @@ static void handleFuel(Engine *engine, MainTriggerCallback *mainTriggerCallback,
 	 * fueling strategy
 	 */
 	ActuatorEventList *source =
-			isCrankingR(rpm) ?
-					&mainTriggerCallback->engineConfiguration2->engineEventConfiguration.crankingInjectionEvents :
-					&mainTriggerCallback->engineConfiguration2->engineEventConfiguration.injectionEvents;
+	isCrankingR(rpm) ?
+			&mainTriggerCallback->engineConfiguration2->engineEventConfiguration.crankingInjectionEvents :
+			&mainTriggerCallback->engineConfiguration2->engineEventConfiguration.injectionEvents;
 
 	for (int i = 0; i < source->size; i++) {
 		ActuatorEvent *event = &source->events[i];
@@ -119,7 +122,8 @@ static void handleFuel(Engine *engine, MainTriggerCallback *mainTriggerCallback,
 	}
 }
 
-static void handleSparkEvent(MainTriggerCallback *mainTriggerCallback, uint32_t eventIndex, IgnitionEvent *iEvent, int rpm) {
+static void handleSparkEvent(MainTriggerCallback *mainTriggerCallback, uint32_t eventIndex, IgnitionEvent *iEvent,
+		int rpm) {
 	engine_configuration_s *engineConfiguration = mainTriggerCallback->engineConfiguration;
 	engine_configuration2_s *engineConfiguration2 = mainTriggerCallback->engineConfiguration2;
 
@@ -183,7 +187,8 @@ static void handleSparkEvent(MainTriggerCallback *mainTriggerCallback, uint32_t 
 	}
 }
 
-static void handleSpark(MainTriggerCallback *mainTriggerCallback, uint32_t eventIndex, int rpm, IgnitionEventList *list) {
+static void handleSpark(MainTriggerCallback *mainTriggerCallback, uint32_t eventIndex, int rpm,
+		IgnitionEventList *list) {
 	if (!isValidRpm(rpm) || !mainTriggerCallback->engineConfiguration->isIgnitionEnabled)
 		return; // this might happen for instance in case of a single trigger event after a pause
 
@@ -233,7 +238,7 @@ extern Engine engine;
  * Both injection and ignition are controlled from this method.
  */
 void onTriggerEvent(trigger_event_e ckpSignalType, uint32_t eventIndex, MainTriggerCallback *mainTriggerCallback) {
-	(void)ckpSignalType;
+	(void) ckpSignalType;
 	efiAssertVoid(eventIndex < 2 * mainTriggerCallback->engineConfiguration2->triggerShape.shaftPositionEventCount,
 			"event index");
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 16, "stack#3");
