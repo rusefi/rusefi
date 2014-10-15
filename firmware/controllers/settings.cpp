@@ -115,6 +115,10 @@ void printConfiguration(engine_configuration_s *engineConfiguration, engine_conf
 			boolToString(engineConfiguration->isWaveAnalyzerEnabled),
 			boolToString(engineConfiguration->isIdleThreadEnabled), boolToString(boardConfiguration->isFastAdcEnabled));
 
+	scheduleMsg(&logger, "isManualSpinningMode=%s/isCylinderCleanupEnabled=%s",
+			boolToString(engineConfiguration->isManualSpinningMode),
+			boolToString(engineConfiguration->isCylinderCleanupEnabled));
+
 	scheduleMsg(&logger, "crankingChargeAngle=%f", engineConfiguration->crankingChargeAngle);
 	scheduleMsg(&logger, "crankingTimingAngle=%f", engineConfiguration->crankingTimingAngle);
 	scheduleMsg(&logger, "globalTriggerAngleOffset=%f", engineConfiguration->globalTriggerAngleOffset);
@@ -201,6 +205,10 @@ void setEngineType(int value) {
 #endif /* EFI_PROD_CODE */
 	incrementGlobalConfigurationVersion();
 	doPrintConfiguration(&engine);
+}
+
+static void setIdleSolenoidFrequency(int value) {
+	boardConfiguration->idleSolenoidFrequency = value;
 }
 
 static void setInjectionPinMode(int value) {
@@ -668,6 +676,10 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engineConfiguration->isWaveAnalyzerEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "idle_thread")) {
 		engineConfiguration->isIdleThreadEnabled = isEnabled;
+	} else if (strEqualCaseInsensitive(param, "manual_spinning")) {
+		engineConfiguration->isManualSpinningMode = isEnabled;
+	} else if (strEqualCaseInsensitive(param, "cylinder_cleanup")) {
+		engineConfiguration->isCylinderCleanupEnabled = isEnabled;
 	} else {
 		scheduleMsg(&logger, "unexpected [%s]", param);
 		return; // well, MISRA would not like this 'return' here :(
@@ -805,6 +817,7 @@ void initSettings(engine_configuration_s *engineConfiguration) {
 
 	addConsoleActionF("set_clt_bias", setCltBias);
 	addConsoleActionF("set_iat_bias", setIatBias);
+	addConsoleActionI("set_idle_solenoid_freq", setIdleSolenoidFrequency);
 
 #if EFI_PROD_CODE
 	addConsoleActionSS("set_injection_pin", setInjectionPin);
