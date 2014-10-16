@@ -42,6 +42,7 @@ public:
  * @brief   Current RPM
  */
 int getRpmE(Engine *engine);
+bool isCrankingE(Engine *engine);
 void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index, RpmCalculator *rpmState);
 #endif
 
