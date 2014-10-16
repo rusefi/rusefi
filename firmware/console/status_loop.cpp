@@ -386,6 +386,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels) {
 	tsOutputChannels->ignition_enabled = engineConfiguration->isIgnitionEnabled;
 	tsOutputChannels->injection_enabled = engineConfiguration->isInjectionEnabled;
 	tsOutputChannels->cylinder_cleanup_enabled = engineConfiguration->isCylinderCleanupEnabled;
+	tsOutputChannels->cylinder_cleanup_activated = engineConfiguration2->isCylinderCleanupMode;
 	tsOutputChannels->secondTriggerChannelEnabled = engineConfiguration->secondTriggerChannelEnabled;
 
 	tsOutputChannels->isCltError = !isValidCoolantTemperature(getCoolantTemperature(engineConfiguration2));

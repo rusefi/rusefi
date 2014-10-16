@@ -12,8 +12,16 @@
 #include "global.h"
 #include "signal_executor.h"
 #include "engine_configuration.h"
+#include "engine.h"
 
 char * getPinNameByAdcChannel(adc_channel_e hwChannel, char *buffer);
 void initEngineContoller(void);
+
+class StartupFuelPumping {
+public:
+	void update(Engine *engine);
+	bool isTpsAbove50;
+	int pumpsCounter;
+};
 
 #endif /* ENGINE_STATUS_H_ */

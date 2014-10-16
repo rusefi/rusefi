@@ -57,7 +57,7 @@ typedef struct {
 	unsigned int ignition_enabled : 1; // bit 1
 	unsigned int injection_enabled : 1; // bit 2
 	unsigned int cylinder_cleanup_enabled : 1; // bit 3
-	unsigned int cylinder_cleanup : 1; // bit 4
+	unsigned int cylinder_cleanup_activated : 1; // bit 4
 	unsigned int isFuelPumpOn : 1; // bit 5
 	unsigned int isFanOn : 1; // bit 6
 	unsigned int isO2HeaterOn : 1; // bit 7

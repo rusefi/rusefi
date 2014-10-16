@@ -85,12 +85,16 @@ bool isValidRpm(int rpm) {
 }
 
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
+bool isCrankingE(Engine *engine) {
+	int rpm = getRpmE(engine);
+	return isCrankingR(rpm);
+}
+
 /**
  * WARNING: this is a heavy method because 'getRpm()' is relatively heavy
  */
 bool isCranking(void) {
-	int rpm = getRpm();
-	return isCrankingR(rpm);
+	return isCrankingE(&engine);
 }
 #endif
 
