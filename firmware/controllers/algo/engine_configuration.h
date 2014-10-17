@@ -15,6 +15,8 @@
 #include "can_header.h"
 #include "rusefi_enums.h"
 
+#define MOCK_UNDEFINED -1
+
 typedef struct {
 	float coolantTempMinC;
 	float coolantTempMaxC;
@@ -463,7 +465,9 @@ typedef struct {
 	short int tpsErrorLowValue;
 	short int tpsErrorHighValue;
 
-	int unused3[24];
+	float primingSquirtDurationMs;
+
+	int unused3[23];
 
 } engine_configuration_s;
 

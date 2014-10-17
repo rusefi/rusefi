@@ -4,8 +4,13 @@
 #include "engine_configuration.h"
 #include "interpolation.h"
 #include "adc_inputs.h"
+#include "allsensors.h"
 
 extern engine_configuration_s *engineConfiguration;
+
+#if !EFI_PROD_CODE
+	int mockTps;
+#endif
 
 /**
  * We are using one instance for read and another for modification, this is how we get lock-free thread-safety
@@ -48,12 +53,12 @@ float getTpsRateOfChange(void) {
  *
  * */
 static float getTpsValue(engine_configuration_s *engineConfiguration, int adc) {
-  if (adc < engineConfiguration->tpsMin) {
+	if (adc < engineConfiguration->tpsMin) {
 		return 0.0f;
-  }
+	}
 	if (adc > engineConfiguration->tpsMax) {
 		return 100.0f;
-        }
+	}
 	// todo: double comparison using EPS
 	if (engineConfiguration->tpsMin == engineConfiguration->tpsMax) {
 		firmwareError("Invalid TPS configuration: same value");
@@ -75,6 +80,10 @@ float getTPSVoltage(void) {
  * wants a TPS value.
  */
 int getTPS10bitAdc(void) {
+#if !EFI_PROD_CODE
+	if (mockTps != MOCK_UNDEFINED)
+		return mockTps;
+#endif
 	int adc = getAdcValue(engineConfiguration->tpsAdcChannel);
 	return (int) adc / 4; // Only for TunerStudio compatibility. Max TS adc value in 1023
 }
@@ -106,5 +115,5 @@ float getTPS(engine_configuration_s *engineConfiguration) {
 
 int convertVoltageTo10bitADC(float voltage) {
 	// divided by 2 because of voltage divider, then converted into 10bit ADC value (TunerStudio format)
-	return (int)(voltage / 2 * 1024 / 3.3);
+	return (int) (voltage / 2 * 1024 / 3.3);
 }
