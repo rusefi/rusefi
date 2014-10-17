@@ -91,14 +91,14 @@ void StartupFuelPumping::setPumpsCounter(engine_configuration_s *engineConfigura
 	if (pumpsCounter != newValue) {
 		pumpsCounter = newValue;
 
-		if(pumpsCounter==PUMPS_TO_PRIME) {
+		if (pumpsCounter == PUMPS_TO_PRIME) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
-		scheduleMsg(&logger, "let's squirt prime pulse %f", pumpsCounter);
+			scheduleMsg(&logger, "let's squirt prime pulse %f", pumpsCounter);
 #endif
 			pumpsCounter = 0;
 		} else {
 #if EFI_PROD_CODE || EFI_SIMULATOR
-		scheduleMsg(&logger, "setPumpsCounter %d", pumpsCounter);
+			scheduleMsg(&logger, "setPumpsCounter %d", pumpsCounter);
 #endif
 
 		}

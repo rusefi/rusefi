@@ -48,7 +48,10 @@ private:
 	bool stopPins();
 };
 
-#define PUMPS_TO_PRIME 3
+/**
+ * 6 crossing over 50% TPS means pressing and releasing three times
+ */
+#define PUMPS_TO_PRIME 6
 
 class StartupFuelPumping {
 public:
