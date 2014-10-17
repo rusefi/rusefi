@@ -48,6 +48,8 @@ private:
 	bool stopPins();
 };
 
+#define PUMPS_TO_PRIME 3
+
 class StartupFuelPumping {
 public:
 	StartupFuelPumping();
@@ -55,7 +57,7 @@ public:
 	bool isTpsAbove50;
 	int pumpsCounter;
 private:
-	void setPumpsCounter(int newValue);
+	void setPumpsCounter(engine_configuration_s *engineConfiguration, int newValue);
 };
 
 #endif /* ENGINE_H_ */

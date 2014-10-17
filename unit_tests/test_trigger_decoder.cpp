@@ -342,6 +342,8 @@ extern EventQueue schedulingQueue;
 // this is a very dirty and sad hack. todo: eliminate
 extern Engine engine;
 
+extern int mockTps;
+
 static void testStartupFuelPumping(void) {
 	EngineTestHelper eth(FORD_INLINE_6_1995);
 
@@ -354,10 +356,35 @@ static void testStartupFuelPumping(void) {
 	engine->rpmCalculator->mockRpm = 0;
 
 	engine->engineConfiguration->tpsMin = 0;
-	engine->engineConfiguration->tpsMin = 5;
+	engine->engineConfiguration->tpsMax = 10;
+
+	mockTps = 6;
+	sf.update(engine);
+	assertEqualsM("pc#1", 1, sf.pumpsCounter);
+
+	mockTps = 3;
+	sf.update(engine);
+	assertEqualsM("pc#2", 1, sf.pumpsCounter);
 
 	sf.update(engine);
+	assertEqualsM("pc#3", 1, sf.pumpsCounter);
 
+	engine->rpmCalculator->mockRpm = 10;
+	sf.update(engine);
+	assertEqualsM("pc#4", 0, sf.pumpsCounter);
+
+	mockTps = 7;
+	engine->rpmCalculator->mockRpm = 0;
+	sf.update(engine);
+	assertEqualsM("pc#5", 1, sf.pumpsCounter);
+
+	mockTps = 3;
+	sf.update(engine);
+	assertEqualsM("pc#6", 1, sf.pumpsCounter);
+
+	mockTps = 7;
+	sf.update(engine);
+	assertEqualsM("pc#7", 2, sf.pumpsCounter);
 }
 
 static void testRpmCalculator(void) {

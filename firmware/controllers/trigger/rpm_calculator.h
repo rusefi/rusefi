@@ -22,8 +22,6 @@
 #ifdef __cplusplus
 #include "engine.h"
 
-#define MOCK_UNDEFINED -1
-
 class RpmCalculator {
 public:
 #if !EFI_PROD_CODE

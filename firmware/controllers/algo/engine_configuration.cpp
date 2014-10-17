@@ -256,6 +256,8 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 
 	engineConfiguration->engineCycle = 720;
 
+	engineConfiguration->primingSquirtDurationMs = 5;
+
 	engineConfiguration->isInjectionEnabled = true;
 	engineConfiguration->isIgnitionEnabled = true;
 	engineConfiguration->isCylinderCleanupEnabled = true;
