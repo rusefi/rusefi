@@ -22,8 +22,13 @@
 #ifdef __cplusplus
 #include "engine.h"
 
+#define MOCK_UNDEFINED -1
+
 class RpmCalculator {
 public:
+#if !EFI_PROD_CODE
+	int mockRpm;
+#endif
 	RpmCalculator();
 	int rpm(void);
 	volatile int rpmValue;
@@ -32,8 +37,7 @@ public:
 	 * This counter is incremented with each revolution of one of the shafts. Could be
 	 * crankshaft could be camshaft.
 	 */
-	volatile int revolutionCounter;
-	bool isRunning(void);
+	volatile int revolutionCounter;bool isRunning(void);
 };
 
 #define getRpm() getRpmE(&engine)
@@ -47,8 +51,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index, Rpm
 #endif
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif /* __cplusplus */
 
 /**

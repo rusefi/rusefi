@@ -171,7 +171,7 @@ int getTimeNowSeconds(void) {
 static void cylinderCleanupControl(Engine *engine) {
 	bool newValue;
 	if (engineConfiguration->isCylinderCleanupEnabled) {
-		newValue = isCrankingE(engine) && getTPS() > 95;
+		newValue = isCrankingE(engine) && getTPS(engine->engineConfiguration) > 95;
 	} else {
 		newValue = false;
 	}

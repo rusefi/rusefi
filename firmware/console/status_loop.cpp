@@ -142,7 +142,7 @@ void printSensors(Engine *engine) {
 	reportSensorF("TRG_0_DUTY", getTriggerDutyCycle(0), 2);
 	reportSensorF("TRG_1_DUTY", getTriggerDutyCycle(1), 2);
 
-	reportSensorF(getCaption(LP_THROTTLE), getTPS(), 2);
+	reportSensorF(getCaption(LP_THROTTLE), getTPS(engine->engineConfiguration), 2);
 
 	if (engineConfiguration->hasCltSensor) {
 		reportSensorF(getCaption(LP_ECT), getCoolantTemperature(engineConfiguration2), 2);
@@ -356,7 +356,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels) {
 	int rpm = 0;
 #endif
 
-	float tps = getTPS();
+	float tps = getTPS(engineConfiguration);
 	float coolant = getCoolantTemperature(engineConfiguration2);
 	float intake = getIntakeAirTemperature(engineConfiguration2);
 

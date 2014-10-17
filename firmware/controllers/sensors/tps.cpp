@@ -47,7 +47,7 @@ float getTpsRateOfChange(void) {
  * Return current TPS position based on configured ADC levels, and adc
  *
  * */
-float getTpsValue(int adc) {
+static float getTpsValue(engine_configuration_s *engineConfiguration, int adc) {
   if (adc < engineConfiguration->tpsMin) {
 		return 0.0f;
   }
@@ -82,10 +82,10 @@ int getTPS10bitAdc(void) {
 /**
  * @brief Position on physical primary TPS
  */
-static float getPrimatyRawTPS(void) {
+static float getPrimatyRawTPS(engine_configuration_s *engineConfiguration) {
 	// blue, 1st board
 	/* PA7 - blue TP */
-	float tpsValue = getTpsValue(getTPS10bitAdc());
+	float tpsValue = getTpsValue(engineConfiguration, getTPS10bitAdc());
 	return tpsValue;
 }
 
@@ -96,12 +96,12 @@ static float getPrimatyRawTPS(void) {
  *
  * @return Current TPS position, percent of WOT. 0 means idle and 100 means Wide Open Throttle
  */
-float getTPS(void) {
+float getTPS(engine_configuration_s *engineConfiguration) {
 	// todo: if (config->isDualTps)
 	// todo: blah blah
 	// todo: if two TPS do not match - show OBD code via malfunction_central.c
 
-	return getPrimatyRawTPS();
+	return getPrimatyRawTPS(engineConfiguration);
 }
 
 int convertVoltageTo10bitADC(float voltage) {

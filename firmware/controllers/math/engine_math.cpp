@@ -75,7 +75,7 @@ float getEngineLoadT(Engine *engine) {
 	case LM_MAP:
 		return getMap();
 	case LM_ALPHA_N:
-		return getTPS();
+		return getTPS(engineConfiguration);
 	default:
 		firmwareError("Unexpected engine load parameter: %d", engineConfiguration->algorithm);
 		return -1;

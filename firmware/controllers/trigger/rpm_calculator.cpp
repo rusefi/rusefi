@@ -57,6 +57,9 @@ extern Engine engine;
 #endif
 
 RpmCalculator::RpmCalculator() {
+#if !EFI_PROD_CODE
+	mockRpm = MOCK_UNDEFINED;
+#endif
 	rpmValue = 0;
 
 	// we need this initial to have not_running at first invocation
@@ -74,6 +77,10 @@ bool RpmCalculator::isRunning(void) {
 // todo: migrate to float return result or add a float verion? this would have with calculations
 // todo: add a version which does not check time & saves time? need to profile
 int RpmCalculator::rpm(void) {
+#if !EFI_PROD_CODE
+	if (mockRpm != MOCK_UNDEFINED)
+		return mockRpm;
+#endif
 	if (!isRunning()) {
 		return 0;
 	}
@@ -111,12 +118,11 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index, Rpm
 	if (index != 0) {
 #if EFI_ANALOG_CHART || defined(__DOXYGEN__)
 		if (engineConfiguration->analogChartMode == AC_TRIGGER)
-			acAddData(getCrankshaftAngle(nowUs), 1000 * ckpSignalType + index);
+		acAddData(getCrankshaftAngle(nowUs), 1000 * ckpSignalType + index);
 #endif
 		return;
 	}
 	rpmState->revolutionCounter++;
-
 
 	bool hadRpmRecently = rpmState->isRunning();
 
@@ -139,7 +145,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index, Rpm
 	rpmState->lastRpmEventTimeUs = nowUs;
 #if EFI_ANALOG_CHART || defined(__DOXYGEN__)
 	if (engineConfiguration->analogChartMode == AC_TRIGGER)
-		acAddData(getCrankshaftAngle(nowUs), index);
+	acAddData(getCrankshaftAngle(nowUs), index);
 #endif
 }
 

@@ -241,5 +241,5 @@ void firmwareError(const char *fmt, ...) {
 }
 
 int getRusEfiVersion(void) {
-	return 20141016;
+	return 20141017;
 }

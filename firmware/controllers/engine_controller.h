@@ -17,11 +17,4 @@
 char * getPinNameByAdcChannel(adc_channel_e hwChannel, char *buffer);
 void initEngineContoller(void);
 
-class StartupFuelPumping {
-public:
-	void update(Engine *engine);
-	bool isTpsAbove50;
-	int pumpsCounter;
-};
-
 #endif /* ENGINE_STATUS_H_ */

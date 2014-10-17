@@ -81,3 +81,26 @@ void Engine::watchdog() {
 
 	stopPins();
 }
+
+StartupFuelPumping::StartupFuelPumping() {
+
+}
+
+void StartupFuelPumping::setPumpsCounter(int newValue) {
+	if (pumpsCounter != newValue) {
+		pumpsCounter = newValue;
+	}
+}
+
+void StartupFuelPumping::update(Engine *engine) {
+	if (engine->rpmCalculator->rpm() == 0) {
+		bool isAbove50 = getTPS(engine->engineConfiguration) >= 50;
+
+	} else {
+		/**
+		 * Engine is not stopped - not priming pumping mode
+		 */
+		setPumpsCounter(0);
+	}
+}
+
