@@ -50,7 +50,7 @@ static char * prepareCltIatTpsLine(char *buffer) {
 	ptr = ftoa(ptr, getIntakeAirTemperature(engineConfiguration2), 10.0f);
 
 	ptr = appendStr(ptr, " TP");
-	ptr = itoa10(ptr, (int) getTPS());
+	ptr = itoa10(ptr, (int) getTPS(engine.engineConfiguration));
 	return ptr;
 }
 

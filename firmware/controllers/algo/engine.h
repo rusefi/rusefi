@@ -48,4 +48,14 @@ private:
 	bool stopPins();
 };
 
+class StartupFuelPumping {
+public:
+	StartupFuelPumping();
+	void update(Engine *engine);
+	bool isTpsAbove50;
+	int pumpsCounter;
+private:
+	void setPumpsCounter(int newValue);
+};
+
 #endif /* ENGINE_H_ */

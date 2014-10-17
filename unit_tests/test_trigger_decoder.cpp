@@ -342,6 +342,24 @@ extern EventQueue schedulingQueue;
 // this is a very dirty and sad hack. todo: eliminate
 extern Engine engine;
 
+static void testStartupFuelPumping(void) {
+	EngineTestHelper eth(FORD_INLINE_6_1995);
+
+	StartupFuelPumping sf;
+
+	Engine * engine = &eth.engine;
+	RpmCalculator rc;
+	engine->rpmCalculator = &rc;
+
+	engine->rpmCalculator->mockRpm = 0;
+
+	engine->engineConfiguration->tpsMin = 0;
+	engine->engineConfiguration->tpsMin = 5;
+
+	sf.update(engine);
+
+}
+
 static void testRpmCalculator(void) {
 	printf("*************************************************** testRpmCalculator\r\n");
 
@@ -492,4 +510,5 @@ void testTriggerDecoder(void) {
 	testMazda323();
 
 	testRpmCalculator();
+	testStartupFuelPumping();
 }

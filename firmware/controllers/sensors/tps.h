@@ -11,8 +11,9 @@
 #define TPS_H_
 
 #include "global.h"
+#include "engine_configuration.h"
 
-float getTPS(void);
+float getTPS(engine_configuration_s *engineConfiguration);
 int convertVoltageTo10bitADC(float voltage);
 int getTPS10bitAdc(void);
 float getTPSVoltage(void);
