@@ -13,24 +13,44 @@ case SPARKOUT_10_OUTPUT:
   return "SPARKOUT_10_OUTPUT";
 case LED_EMULATOR:
   return "LED_EMULATOR";
+case GPIO_1:
+  return "GPIO_1";
+case GPIO_0:
+  return "GPIO_0";
 case LED_WARNING:
   return "LED_WARNING";
+case GPIO_3:
+  return "GPIO_3";
+case GPIO_2:
+  return "GPIO_2";
+case GPIO_5:
+  return "GPIO_5";
 case INJECTOR_3_OUTPUT:
   return "INJECTOR_3_OUTPUT";
+case GPIO_4:
+  return "GPIO_4";
 case LED_HUGE_19:
   return "LED_HUGE_19";
 case IDLE_VALVE:
   return "IDLE_VALVE";
+case GPIO_7:
+  return "GPIO_7";
 case FAN_RELAY:
   return "FAN_RELAY";
 case INJECTOR_8_OUTPUT:
   return "INJECTOR_8_OUTPUT";
+case GPIO_6:
+  return "GPIO_6";
+case GPIO_9:
+  return "GPIO_9";
 case LED_HUGE_16:
   return "LED_HUGE_16";
 case SPARKOUT_9_OUTPUT:
   return "SPARKOUT_9_OUTPUT";
 case LED_EXT_1:
   return "LED_EXT_1";
+case GPIO_8:
+  return "GPIO_8";
 case LED_HUGE_15:
   return "LED_HUGE_15";
 case LED_HUGE_18:
@@ -129,14 +149,24 @@ case SPARKOUT_7_OUTPUT:
   return "SPARKOUT_7_OUTPUT";
 case LED_HUGE_0:
   return "LED_HUGE_0";
+case GPIO_15:
+  return "GPIO_15";
 case TRIGGER_EMULATOR_PRIMARY:
   return "TRIGGER_EMULATOR_PRIMARY";
 case SPARKOUT_8_OUTPUT:
   return "SPARKOUT_8_OUTPUT";
 case SPARKOUT_11_OUTPUT:
   return "SPARKOUT_11_OUTPUT";
+case GPIO_11:
+  return "GPIO_11";
 case INJECTOR_11_OUTPUT:
   return "INJECTOR_11_OUTPUT";
+case GPIO_12:
+  return "GPIO_12";
+case GPIO_13:
+  return "GPIO_13";
+case GPIO_14:
+  return "GPIO_14";
 case LED_ERROR:
   return "LED_ERROR";
 case INJECTOR_12_OUTPUT:
@@ -151,6 +181,8 @@ case SPARKOUT_2_OUTPUT:
   return "SPARKOUT_2_OUTPUT";
 case SPARKOUT_5_OUTPUT:
   return "SPARKOUT_5_OUTPUT";
+case GPIO_10:
+  return "GPIO_10";
   }
  return NULL;
 }
