@@ -159,6 +159,11 @@ void LECalculator::doJob(Engine *engine, LEElement *element) {
 	}
 }
 
+float LECalculator::getValue2(LEElement *element, Engine *engine) {
+	reset(element);
+	return getValue(engine);
+}
+
 float LECalculator::getValue(Engine *engine) {
 	LEElement *element = first;
 

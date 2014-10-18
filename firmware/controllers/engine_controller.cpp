@@ -179,6 +179,16 @@ static void cylinderCleanupControl(Engine *engine) {
 		engineConfiguration2->isCylinderCleanupMode = newValue;
 		scheduleMsg(&logger, "isCylinderCleanupMode %s", boolToString(newValue));
 	}
+}
+
+static void handleGpio(int index) {
+	brain_pin_e pin = boardConfiguration->gpioPins[index];
+
+	int value = calc.getValue2(fuelPumpLogic, &engine);
+//	if (value != getOutputPinValue(pin)) {
+//		scheduleMsg(&logger, "setting %s %s", getIo_pin_e(pin), boolToString(value));
+//		setOutputPinValue(pin, value);
+//	}
 
 }
 
@@ -197,6 +207,7 @@ static void onEvenyGeneralMilliseconds(void *arg) {
 
 	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
 		if (boardConfiguration->gpioPins[i] != GPIO_NONE) {
+			handleGpio(i);
 		}
 	}
 
@@ -205,8 +216,7 @@ static void onEvenyGeneralMilliseconds(void *arg) {
 		if (fuelPumpLogic == NULL) {
 			warning(OBD_PCM_Processor_Fault, "invalid expression for %s", getIo_pin_e(FUEL_PUMP_RELAY));
 		} else {
-			calc.reset(fuelPumpLogic);
-			int value = calc.getValue(&engine);
+			int value = calc.getValue2(fuelPumpLogic, &engine);
 			if (value != getOutputPinValue(FUEL_PUMP_RELAY)) {
 				scheduleMsg(&logger, "setting %s %s", getIo_pin_e(FUEL_PUMP_RELAY), boolToString(value));
 				setOutputPinValue(FUEL_PUMP_RELAY, value);

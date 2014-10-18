@@ -281,12 +281,10 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	}
 	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
 		boardConfiguration->gpioPins[i] = GPIO_NONE;
+		boardConfiguration->le_formulas[i][0] = 0;
 	}
 	for (int i = 0; i < JOYSTICK_PIN_COUNT; i++) {
 		boardConfiguration->joystickPins[i] = GPIO_NONE;
-	}
-	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
-		boardConfiguration->le_formulas[i][0] = 0;
 	}
 
 	boardConfiguration->idleValvePin = GPIOE_2;

@@ -71,6 +71,7 @@ class LECalculator {
 public:
 	LECalculator();
 	float getValue(Engine *engine);
+	float getValue2(LEElement *element, Engine *engine);
 	void add(LEElement *element);
 	void reset();
 	void reset(LEElement *element);
