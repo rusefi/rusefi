@@ -20,6 +20,11 @@
 20)                  BOM issue: C1001 sch says 470uF but part number is 100uF?
 21)                  SKQUCAA010 is End of Life. I've placed and order to get these in October, but we need a better solution
 22)                  JP212 should be replaced with JP209 which would be breaking the OUT9 line. That's part of hall-via-op-amp circuirty. JP212 does not work because it's now VBatt channel 
+23)                  chip select and such for SPI on thermo-couple chips. 
+24)                  Change joy stick to ALPS SKRHAAE010 
+25)                  add a prototype area for future circuits to be tossed in.
+26)                  add a couple more low-side chips
+
 
 For honda add-on / rewiring board
 -- Add 2A high side solinoid drive for VTec sol
