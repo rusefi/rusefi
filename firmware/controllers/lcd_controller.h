@@ -8,6 +8,8 @@
 #ifndef LCD_CONTROLLER_H_
 #define LCD_CONTROLLER_H_
 
-void updateHD44780lcd(void);
+#include "engine.h"
+
+void updateHD44780lcd(Engine *engine);
 
 #endif /* LCD_CONTROLLER_H_ */

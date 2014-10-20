@@ -339,7 +339,7 @@ static void lcdThread(void) {
 	chRegSetThreadName("lcd");
 	while (true) {
 #if EFI_HD44780_LCD
-		updateHD44780lcd();
+		updateHD44780lcd(&engine);
 #endif
 		chThdSleepMilliseconds(boardConfiguration->lcdThreadPeriod);
 	}

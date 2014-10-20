@@ -40,8 +40,8 @@ static char * prepareVBattMapLine(char *buffer) {
 	return ptr;
 }
 
-static char * prepareCltIatTpsLine(char *buffer) {
-	engine_configuration2_s *engineConfiguration2 = engine.engineConfiguration2;
+static char * prepareCltIatTpsLine(Engine *engine, char *buffer) {
+	engine_configuration2_s *engineConfiguration2 = engine->engineConfiguration2;
 	char *ptr = buffer;
 	*ptr++ = 'C';
 	ptr = ftoa(ptr, getCoolantTemperature(engineConfiguration2), 10.0f);
@@ -50,7 +50,7 @@ static char * prepareCltIatTpsLine(char *buffer) {
 	ptr = ftoa(ptr, getIntakeAirTemperature(engineConfiguration2), 10.0f);
 
 	ptr = appendStr(ptr, " TP");
-	ptr = itoa10(ptr, (int) getTPS(engine.engineConfiguration));
+	ptr = itoa10(ptr, (int) getTPS(engine->engineConfiguration));
 	return ptr;
 }
 
@@ -116,12 +116,12 @@ static char * prepareStatusLine(char *buffer) {
 static char buffer[LCD_WIDTH + 4];
 static char dateBuffer[30];
 
-static void prepareCurrentSecondLine(int index) {
+static void prepareCurrentSecondLine(Engine *engine, int index) {
 	memset(buffer, ' ', LCD_WIDTH);
 	char *ptr;
 	switch (index) {
 	case 0:
-		ptr = prepareCltIatTpsLine(buffer);
+		ptr = prepareCltIatTpsLine(engine, buffer);
 		break;
 	case 1:
 		ptr = prepareInfoLine(buffer);
@@ -139,7 +139,7 @@ static void prepareCurrentSecondLine(int index) {
 	*ptr = ' ';
 }
 
-void updateHD44780lcd(void) {
+void updateHD44780lcd(Engine *engine) {
 
 	lcd_HD44780_set_position(0, 9);
 	/**
@@ -152,7 +152,7 @@ void updateHD44780lcd(void) {
 	}
 	lcd_HD44780_set_position(0, 10);
 
-	char * ptr = itoa10(buffer, getRpm());
+	char * ptr = itoa10(buffer, getRpmE(engine));
 	ptr[0] = 0;
 	int len = ptr - buffer;
 	for (int i = 0; i < 6 - len; i++) {
@@ -180,12 +180,12 @@ void updateHD44780lcd(void) {
 
 	int index = (getTimeNowSeconds() / 2) % (NUMBER_OF_DIFFERENT_LINES / 2);
 
-	prepareCurrentSecondLine(index);
+	prepareCurrentSecondLine(engine, index);
 	buffer[LCD_WIDTH] = 0;
 	lcd_HD44780_set_position(2, 0);
 	lcd_HD44780_print_string(buffer);
 
-	prepareCurrentSecondLine(index + NUMBER_OF_DIFFERENT_LINES / 2);
+	prepareCurrentSecondLine(engine, index + NUMBER_OF_DIFFERENT_LINES / 2);
 	buffer[LCD_WIDTH] = 0;
 	lcd_HD44780_set_position(3, 0);
 	lcd_HD44780_print_string(buffer);
