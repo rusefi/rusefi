@@ -55,7 +55,7 @@ $Descr B 17000 11000
 encoding utf-8
 Sheet 3 14
 Title "Frankenso"
-Date "15 sep 2014"
+Date "20 oct 2014"
 Rev ".02"
 Comp "rusEFI.com"
 Comment1 ""
@@ -1681,8 +1681,6 @@ Wire Wire Line
 	13950 7400 13950 7750
 Connection ~ 10650 7300
 Connection ~ 13950 8750
-Wire Wire Line
-	13950 8750 13950 9150
 Connection ~ 12350 8650
 Wire Wire Line
 	10300 8650 10650 8650
@@ -2509,14 +2507,14 @@ $EndComp
 $Comp
 L TEST JP212
 U 1 1 5298705E
-P 13950 4700
-F 0 "JP212" H 13950 4760 40  0000 C CNN
-F 1 "TEST-AN" H 13950 4630 40  0001 C CNN
-F 2 "SIL-2" H 13950 4700 60  0001 C CNN
-F 3 "" H 13950 4700 60  0000 C CNN
-F 4 "dnp,dnp" H 13950 4700 60  0001 C CNN "Field4"
-F 5 "dnp,dnp" H 13950 4700 60  0001 C CNN "Field5"
-	1    13950 4700
+P 13950 8950
+F 0 "JP212" H 13950 9010 40  0000 C CNN
+F 1 "TEST-AN" H 13950 8880 40  0001 C CNN
+F 2 "SIL-2" H 13950 8950 60  0001 C CNN
+F 3 "" H 13950 8950 60  0000 C CNN
+F 4 "dnp,dnp" H 13950 8950 60  0001 C CNN "Field4"
+F 5 "dnp,dnp" H 13950 8950 60  0001 C CNN "Field5"
+	1    13950 8950
 	0    -1   -1   0   
 $EndComp
 $Comp
@@ -2986,4 +2984,6 @@ Text HLabel 4300 9000 3    60   Input ~ 0
 GND
 Text HLabel 10650 3900 1    60   Input ~ 0
 12V_bat
+Wire Wire Line
+	13950 4900 13950 4500
 $EndSCHEMATC
