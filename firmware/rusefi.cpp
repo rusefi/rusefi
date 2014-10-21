@@ -74,11 +74,19 @@
  * 2.777ms, so we schedule spark firing at '2.777ms after the 690 position sensor event', thus combining trigger events
  * with time-based offset.
  *
+ * @section config Persistent Configuration
+ * engine_configuration_s structure is kept in the internal flash memory, it has all the settings. Currently rusefi.ini has a direct mapping of this structure.
+ *
+ * Please note that due to TunerStudio protocol it's important to have the total structure size in synch between the firmware and TS .ini file -
+ * just to make sure that this is not forgotten the size of the structure is hard-coded as PAGE_0_SIZE constant. There is always some 'unused' fields added in advance so that
+ * one can add some fields without the pain of increasing the total config page size.
+ * <br>See flash_main.cpp
+ *
  *
  * @section sec_fuel_injection Fuel Injection
  *
  *
- * @sectuion sec_misc
+ * @sectuion sec_misc Misc
  *
  * <BR>See main_trigger_callback.cpp for main trigger event handler
  * <BR>See fuel_math.cpp for details on fuel amount logic

@@ -36,7 +36,7 @@
 #include "console_io.h"
 #include "crc.h"
 
-#if EFI_TUNER_STUDIO
+#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 
 #if EFI_PROD_CODE
 #include "pin_repository.h"
