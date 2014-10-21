@@ -101,6 +101,10 @@ void addConsoleActionFF(const char *token, VoidFloatFloat callback) {
 	doAddAction(token, FLOAT_FLOAT_PARAMETER, (Void) callback, NULL);
 }
 
+void addConsoleActionFFP(const char *token, VoidFloatFloatVoidPtr callback, void *param) {
+	doAddAction(token, FLOAT_FLOAT_PARAMETER_P, (Void) callback, param);
+}
+
 static int getParameterCount(action_type_e parameterType) {
 	switch (parameterType) {
 	case NO_PARAMETER:

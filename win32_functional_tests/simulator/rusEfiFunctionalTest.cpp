@@ -94,7 +94,7 @@ void rusEfiFunctionalTest(void) {
 
 	initTriggerCentral(&engine);
 
-	startStatusThreads();
+	startStatusThreads(&engine);
 	startTunerStudioConnectivity();
 
 }

@@ -50,8 +50,11 @@ typedef void (*Void)(void);
 typedef void (*VoidInt)(int);
 typedef void (*VoidFloat)(float);
 typedef void (*VoidFloatFloat)(float, float);
+typedef void (*VoidFloatFloatVoidPtr)(float, float, void*);
 typedef void (*VoidIntInt)(int, int);
+
 typedef void (*VoidCharPtr)(const char *);
+typedef void (*VoidCharPtrVoidPtr)(const char *, void*);
 
 typedef void (*VoidCharPtrCharPtr)(const char *, const char *);
 typedef void (*VoidCharPtrCharPtrVoidPtr)(const char *, const char *, void*);
@@ -73,8 +76,12 @@ void addConsoleActionP(const char *token, VoidPtr callback, void *param);
 void addConsoleActionI(const char *token, VoidInt callback);
 void addConsoleActionII(const char *token, VoidIntInt callback);
 void addConsoleActionF(const char *token, VoidFloat callback);
+
 void addConsoleActionFF(const char *token, VoidFloatFloat callback);
+void addConsoleActionFFP(const char *token, VoidFloatFloatVoidPtr callback, void *param);
+
 void addConsoleActionS(const char *token, VoidCharPtr callback);
+void addConsoleActionSP(const char *token, VoidCharPtrVoidPtr callback);
 
 void addConsoleActionSS(const char *token, VoidCharPtrCharPtr callback);
 void addConsoleActionSSP(const char *token, VoidCharPtrCharPtrVoidPtr callback, void *param);

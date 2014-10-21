@@ -335,13 +335,13 @@ static void showFuelInfo(void) {
 
 static THD_WORKING_AREA(lcdThreadStack, UTILITY_THREAD_STACK_SIZE);
 
-static void lcdThread(void) {
+static void lcdThread(Engine *engine) {
 	chRegSetThreadName("lcd");
 	while (true) {
 #if EFI_HD44780_LCD
-		updateHD44780lcd(&engine);
+		updateHD44780lcd(engine);
 #endif
-		chThdSleepMilliseconds(boardConfiguration->lcdThreadPeriod);
+		chThdSleepMilliseconds(engine->engineConfiguration->bc.lcdThreadPeriod);
 	}
 }
 
@@ -349,9 +349,9 @@ static THD_WORKING_AREA(tsThreadStack, UTILITY_THREAD_STACK_SIZE);
 
 #if EFI_TUNER_STUDIO
 
-void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels) {
+void updateTunerStudioState(Engine *engine, TunerStudioOutputChannels *tsOutputChannels) {
 #if EFI_SHAFT_POSITION_INPUT
-	int rpm = getRpm();
+	int rpm = getRpmE(engine);
 #else
 	int rpm = 0;
 #endif
@@ -360,7 +360,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels) {
 	float coolant = getCoolantTemperature(engineConfiguration2);
 	float intake = getIntakeAirTemperature(engineConfiguration2);
 
-	float engineLoad = getEngineLoad();
+	float engineLoad = getEngineLoadT(engine);
 	float baseFuelMs = getBaseTableFuel(engineConfiguration, (int) rpm, engineLoad);
 
 	tsOutputChannels->rpm = rpm;
@@ -394,20 +394,19 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels) {
 #endif
 	tsOutputChannels->tCharge = getTCharge(rpm, tps, coolant, intake);
 	tsOutputChannels->sparkDwell = getSparkDwellMs(rpm);
-	tsOutputChannels->pulseWidthMs = getRunningFuel(baseFuelMs, &engine, rpm);
-	tsOutputChannels->crankingFuelMs = getCrankingFuel(&engine);
+	tsOutputChannels->pulseWidthMs = getRunningFuel(baseFuelMs, engine, rpm);
+	tsOutputChannels->crankingFuelMs = getCrankingFuel(engine);
 }
 
 extern TunerStudioOutputChannels tsOutputChannels;
 #endif /* EFI_TUNER_STUDIO */
 
-static void tsStatusThread(void *arg) {
-	(void)arg;
+static void tsStatusThread(Engine *engine) {
 	chRegSetThreadName("tuner s");
 	while (true) {
 #if EFI_TUNER_STUDIO
 		// sensor state for EFI Analytics Tuner Studio
-		updateTunerStudioState(&tsOutputChannels);
+		updateTunerStudioState(engine, &tsOutputChannels);
 #endif /* EFI_TUNER_STUDIO */
 		chThdSleepMilliseconds(boardConfiguration->tunerStudioThreadPeriod);
 	}
@@ -437,10 +436,10 @@ void initStatusLoop(void) {
 
 }
 
-void startStatusThreads(void) {
+void startStatusThreads(Engine *engine) {
 	// todo: refactoring needed, this file should probably be split into pieces
-	chThdCreateStatic(lcdThreadStack, sizeof(lcdThreadStack), NORMALPRIO, (tfunc_t) lcdThread, (void*) NULL);
-	chThdCreateStatic(tsThreadStack, sizeof(tsThreadStack), NORMALPRIO, (tfunc_t) tsStatusThread, (void*) NULL);
+	chThdCreateStatic(lcdThreadStack, sizeof(lcdThreadStack), NORMALPRIO, (tfunc_t) lcdThread, engine);
+	chThdCreateStatic(tsThreadStack, sizeof(tsThreadStack), NORMALPRIO, (tfunc_t) tsStatusThread, engine);
 }
 
 void setFullLog(int value) {
