@@ -168,7 +168,7 @@ void runRusEfi(void) {
 	 */
 	initHardware(&logging, &engine);
 
-	initStatusLoop();
+	initStatusLoop(&engine);
 	/**
 	 * Now let's initialize actual engine control logic
 	 * todo: should we initialize some? most? controllers before hardware?
