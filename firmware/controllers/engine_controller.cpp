@@ -93,6 +93,13 @@ configuration_s * configuration = &cfg;
  */
 Engine engine;
 
+/**
+ * I am not sure if this needs to be configurable.
+ *
+ * Also technically the whole feature might be implemented as cranking fuel coefficient curve by TPS.
+ */
+#define CLEANUP_MODE_TPS 95
+
 static msg_t csThread(void) {
 	chRegSetThreadName("status");
 #if EFI_SHAFT_POSITION_INPUT
@@ -171,7 +178,7 @@ int getTimeNowSeconds(void) {
 static void cylinderCleanupControl(Engine *engine) {
 	bool newValue;
 	if (engineConfiguration->isCylinderCleanupEnabled) {
-		newValue = isCrankingE(engine) && getTPS(engine->engineConfiguration) > 95;
+		newValue = isCrankingE(engine) && getTPS(engine->engineConfiguration) > CLEANUP_MODE_TPS;
 	} else {
 		newValue = false;
 	}
