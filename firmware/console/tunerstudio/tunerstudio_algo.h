@@ -38,7 +38,12 @@ typedef struct {
 	int writeValueCommandCounter;
 	int writeChunkCommandCounter;
 	int errorCounter;
-	// this field is in the end to simply aligning situation
+	/**
+	 * For some reason I could not get the 'pages' feature of Tuner Studio working - as
+	 * a workaround the whole configuration is just one page
+	 *
+	 * this field is in the end to simply aligning situation
+	 */
 	short currentPageId;
 } TunerStudioState;
 
