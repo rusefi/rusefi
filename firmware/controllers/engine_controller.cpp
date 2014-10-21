@@ -188,10 +188,10 @@ static void cylinderCleanupControl(Engine *engine) {
 	}
 }
 
-static void handleGpio(int index) {
+static void handleGpio(Engine *engine, int index) {
 	brain_pin_e pin = boardConfiguration->gpioPins[index];
 
-	int value = calc.getValue2(fuelPumpLogic, &engine);
+	int value = calc.getValue2(fuelPumpLogic, engine);
 //	if (value != getOutputPinValue(pin)) {
 //		scheduleMsg(&logger, "setting %s %s", getIo_pin_e(pin), boolToString(value));
 //		setOutputPinValue(pin, value);
@@ -199,22 +199,21 @@ static void handleGpio(int index) {
 
 }
 
-static void onEvenyGeneralMilliseconds(void *arg) {
-	(void) arg;
+static void onEvenyGeneralMilliseconds(Engine *engine) {
 	/**
 	 * We need to push current value into the 64 bit counter often enough so that we do not miss an overflow
 	 */
 	halTime.get(hal_lld_get_counter_value(), true);
 
-	if (!engine.rpmCalculator->isRunning())
+	if (!engine->rpmCalculator->isRunning())
 		writeToFlashIfPending();
 
-	engine.watchdog();
-	engine.updateSlowSensors();
+	engine->watchdog();
+	engine->updateSlowSensors();
 
 	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
 		if (boardConfiguration->gpioPins[i] != GPIO_NONE) {
-			handleGpio(i);
+			handleGpio(engine, i);
 		}
 	}
 
@@ -223,7 +222,7 @@ static void onEvenyGeneralMilliseconds(void *arg) {
 		if (fuelPumpLogic == NULL) {
 			warning(OBD_PCM_Processor_Fault, "invalid expression for %s", getIo_pin_e(FUEL_PUMP_RELAY));
 		} else {
-			int value = calc.getValue2(fuelPumpLogic, &engine);
+			int value = calc.getValue2(fuelPumpLogic, engine);
 			if (value != getOutputPinValue(FUEL_PUMP_RELAY)) {
 				scheduleMsg(&logger, "setting %s %s", getIo_pin_e(FUEL_PUMP_RELAY), boolToString(value));
 				setOutputPinValue(FUEL_PUMP_RELAY, value);
@@ -236,19 +235,19 @@ static void onEvenyGeneralMilliseconds(void *arg) {
 
 	fanRelayControl();
 
-	cylinderCleanupControl(&engine);
+	cylinderCleanupControl(engine);
 
-	setOutputPinValue(O2_HEATER, engine.rpmCalculator->isRunning());
+	setOutputPinValue(O2_HEATER, engine->rpmCalculator->isRunning());
 
 	// schedule next invocation
 	chVTSetAny(&everyMsTimer, boardConfiguration->generalPeriodicThreadPeriod * TICKS_IN_MS,
-			&onEvenyGeneralMilliseconds, 0);
+			(vtfunc_t)&onEvenyGeneralMilliseconds, engine);
 }
 
-static void initPeriodicEvents(void) {
+static void initPeriodicEvents(Engine *engine) {
 	// schedule first invocation
 	chVTSetAny(&everyMsTimer, boardConfiguration->generalPeriodicThreadPeriod * TICKS_IN_MS,
-			&onEvenyGeneralMilliseconds, 0);
+			(vtfunc_t)&onEvenyGeneralMilliseconds, engine);
 }
 
 //static void fuelPumpOff(void *arg) {
@@ -326,7 +325,7 @@ static void setUserOutput(const char *indexStr, const char *quotedLine, Engine *
 	strcpy(engine->engineConfiguration->bc.le_formulas[index], l);
 }
 
-void initEngineContoller(void) {
+void initEngineContoller(Engine *engine) {
 	if (hasFirmwareError()) {
 		return;
 	}
@@ -363,7 +362,7 @@ void initEngineContoller(void) {
 #endif
 
 // multiple issues with this	initMapAdjusterThread();
-	initPeriodicEvents();
+	initPeriodicEvents(engine);
 
 	chThdCreateStatic(csThreadStack, sizeof(csThreadStack), LOWPRIO, (tfunc_t) csThread, NULL);
 
@@ -393,7 +392,7 @@ void initEngineContoller(void) {
 		/**
 		 * This method initialized the main listener which actually runs injectors & ignition
 		 */
-		initMainEventListener(&engine, engineConfiguration2);
+		initMainEventListener(engine, engineConfiguration2);
 	}
 #endif /* EFI_ENGINE_CONTROL */
 
@@ -420,5 +419,5 @@ void initEngineContoller(void) {
 
 	}
 
-	addConsoleActionSSP("set_user_out", (VoidCharPtrCharPtrVoidPtr) setUserOutput, &engine);
+	addConsoleActionSSP("set_user_out", (VoidCharPtrCharPtrVoidPtr) setUserOutput, engine);
 }

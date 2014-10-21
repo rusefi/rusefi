@@ -15,6 +15,6 @@
 #include "engine.h"
 
 char * getPinNameByAdcChannel(adc_channel_e hwChannel, char *buffer);
-void initEngineContoller(void);
+void initEngineContoller(Engine *engine);
 
 #endif /* ENGINE_STATUS_H_ */

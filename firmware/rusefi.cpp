@@ -173,7 +173,7 @@ void runRusEfi(void) {
 	 * Now let's initialize actual engine control logic
 	 * todo: should we initialize some? most? controllers before hardware?
 	 */
-	initEngineContoller();
+	initEngineContoller(&engine);
 
 #if EFI_PERF_METRICS
 	initTimePerfActions();
