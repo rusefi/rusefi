@@ -20,7 +20,9 @@ typedef enum {
 	NO_PARAMETER,
 	NO_PARAMETER_P,
 	ONE_PARAMETER,
+	ONE_PARAMETER_P,
 	FLOAT_PARAMETER,
+	FLOAT_PARAMETER_P,
 	STRING_PARAMETER,
 	STRING2_PARAMETER,
 	STRING2_PARAMETER_P,
@@ -48,10 +50,12 @@ typedef void (*VoidPtr)(void*);
 
 typedef void (*Void)(void);
 typedef void (*VoidInt)(int);
+typedef void (*VoidIntVoidPtr)(int, void*);
 typedef void (*VoidFloat)(float);
 typedef void (*VoidFloatFloat)(float, float);
 typedef void (*VoidFloatFloatVoidPtr)(float, float, void*);
 typedef void (*VoidIntInt)(int, int);
+typedef void (*VoidIntIntVoidPtr)(int, int, void*);
 
 typedef void (*VoidCharPtr)(const char *);
 typedef void (*VoidCharPtrVoidPtr)(const char *, void*);
@@ -74,7 +78,11 @@ void addConsoleAction(const char *token, Void callback);
 void addConsoleActionP(const char *token, VoidPtr callback, void *param);
 
 void addConsoleActionI(const char *token, VoidInt callback);
+void addConsoleActionIP(const char *token, VoidIntVoidPtr callback, void *param);
+
 void addConsoleActionII(const char *token, VoidIntInt callback);
+void addConsoleActionIIP(const char *token, VoidIntIntVoidPtr callback, void *param);
+
 void addConsoleActionF(const char *token, VoidFloat callback);
 
 void addConsoleActionFF(const char *token, VoidFloatFloat callback);
