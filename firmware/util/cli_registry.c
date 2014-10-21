@@ -70,11 +70,19 @@ void addConsoleActionI(const char *token, VoidInt callback) {
 	doAddAction(token, ONE_PARAMETER, (Void) callback, NULL);
 }
 
+void addConsoleActionIP(const char *token, VoidIntVoidPtr callback, void *param) {
+	doAddAction(token, ONE_PARAMETER_P, (Void) callback, param);
+}
+
 /**
  * @brief	Register a console command with two Integer parameters
  */
 void addConsoleActionII(const char *token, VoidIntInt callback) {
 	doAddAction(token, TWO_INTS_PARAMETER, (Void) callback, NULL);
+}
+
+void addConsoleActionIIP(const char *token, VoidIntIntVoidPtr callback, void *param) {
+	doAddAction(token, TWO_INTS_PARAMETER_P, (Void) callback, param);
 }
 
 void addConsoleActionS(const char *token, VoidCharPtr callback) {
