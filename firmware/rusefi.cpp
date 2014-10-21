@@ -182,7 +182,7 @@ void runRusEfi(void) {
 #if EFI_ENGINE_EMULATOR
 	initEngineEmulator(boardConfiguration);
 #endif
-	startStatusThreads();
+	startStatusThreads(&engine);
 
 	print("Running main loop\r\n");
 	main_loop_started = TRUE;

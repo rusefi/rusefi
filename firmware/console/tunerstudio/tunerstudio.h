@@ -9,6 +9,10 @@
 #define TUNERSTUDIO_H_
 
 #include "tunerstudio_configuration.h"
+#include "engine.h"
+
+void updateTunerStudioState(Engine *engine, TunerStudioOutputChannels *tsOutputChannels);
+
 
 #ifdef __cplusplus
 extern "C" {
@@ -16,7 +20,6 @@ extern "C" {
 
 void startTunerStudioConnectivity(void);
 void syncTunerStudioCopy(void);
-void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels);
 void tunerStudioWriteCrcPacket(const uint8_t command, const void *buf, const uint16_t size);
 
 #ifdef __cplusplus
