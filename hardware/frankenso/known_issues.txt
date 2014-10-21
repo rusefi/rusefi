@@ -24,6 +24,8 @@
 24)                  Change joy stick to ALPS SKRHAAE010 
 25) RESOLVED IN R0.2 add a prototype area for future circuits to be tossed in.
 26)                  add a couple more low-side chips
+27)                  surge suppression diode option for some low-side
+
 For honda add-on / rewiring board
 -- Add 2A high side solinoid drive for VTec sol
 -- Add 3rd VR chip for 3rd signal
