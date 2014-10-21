@@ -313,7 +313,7 @@ void handleActionWithParameter(TokenCallback *current, char *parameter) {
 		return;
 	}
 
-	if (current->parameterType == FLOAT_FLOAT_PARAMETER) {
+	if (current->parameterType == FLOAT_FLOAT_PARAMETER || current->parameterType == FLOAT_FLOAT_PARAMETER_P) {
 		int spaceIndex = findEndOfToken(parameter);
 		if (spaceIndex == -1)
 			return;
@@ -321,8 +321,13 @@ void handleActionWithParameter(TokenCallback *current, char *parameter) {
 		float value1 = atoff(parameter);
 		parameter += spaceIndex + 1;
 		float value2 = atoff(parameter);
-		VoidFloatFloat callbackS = (VoidFloatFloat) current->callback;
-		(*callbackS)(value1, value2);
+		if (current->parameterType == FLOAT_FLOAT_PARAMETER) {
+			VoidFloatFloat callbackS = (VoidFloatFloat) current->callback;
+			(*callbackS)(value1, value2);
+		} else {
+			VoidFloatFloatVoidPtr callbackS = (VoidFloatFloatVoidPtr) current->callback;
+			(*callbackS)(value1, value2, current->param);
+		}
 		return;
 	}
 

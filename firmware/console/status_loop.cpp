@@ -68,8 +68,6 @@
 #include "max31855.h"
 #endif
 
-extern Engine engine;
-
 // this 'true' value is needed for simulator
 static volatile bool fullLog = true;
 int warningEnabled = TRUE;
@@ -305,14 +303,14 @@ void updateDevConsoleState(Engine *engine) {
  * that would be 'show fuel for rpm 3500 maf 4.0'
  */
 
-static void showFuelInfo2(float rpm, float engineLoad) {
+static void showFuelInfo2(float rpm, float engineLoad, Engine *engine) {
 	float baseFuelMs = getBaseTableFuel(engineConfiguration, (int) rpm, engineLoad);
 
 	scheduleMsg(&logger2, "algo=%s/pump=%s", getEngine_load_mode_e(engineConfiguration->algorithm), boolToString(getOutputPinValue(FUEL_PUMP_RELAY)));
 
-	scheduleMsg(&logger2, "cranking fuel: %f", getCrankingFuel(&engine));
+	scheduleMsg(&logger2, "cranking fuel: %f", getCrankingFuel(engine));
 
-	if (engine.rpmCalculator->isRunning()) {
+	if (engine->rpmCalculator->isRunning()) {
 		float iatCorrection = getIatCorrection(engineConfiguration, getIntakeAirTemperature(engineConfiguration2));
 		float cltCorrection = getCltCorrection(engineConfiguration, getCoolantTemperature(engineConfiguration2));
 		float injectorLag = getInjectorLag(engineConfiguration, getVBatt());
@@ -322,13 +320,13 @@ static void showFuelInfo2(float rpm, float engineLoad) {
 		scheduleMsg(&logger2, "iatCorrection=%f cltCorrection=%f injectorLag=%f", iatCorrection, cltCorrection,
 				injectorLag);
 
-		float value = getRunningFuel(baseFuelMs, &engine, (int) rpm);
+		float value = getRunningFuel(baseFuelMs, engine, (int) rpm);
 		scheduleMsg(&logger2, "injection pulse width: %f", value);
 	}
 }
 
-static void showFuelInfo(void) {
-	showFuelInfo2((float) getRpm(), getEngineLoad());
+static void showFuelInfo(Engine *engine) {
+	showFuelInfo2((float) getRpmE(engine), getEngineLoadT(engine), engine);
 }
 
 #endif /* EFI_PROD_CODE */
@@ -412,7 +410,7 @@ static void tsStatusThread(Engine *engine) {
 	}
 }
 
-void initStatusLoop(void) {
+void initStatusLoop(Engine *engine) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	initLoggingExt(&logger, "status loop", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
 #endif /* EFI_PROD_CODE || EFI_SIMULATOR */
@@ -424,8 +422,8 @@ void initStatusLoop(void) {
 #if EFI_PROD_CODE
 	initLogging(&logger2, "main event handler");
 
-	addConsoleActionFF("fuelinfo2", showFuelInfo2);
-	addConsoleAction("fuelinfo", showFuelInfo);
+	addConsoleActionFFP("fuelinfo2", (VoidFloatFloatVoidPtr)showFuelInfo2, engine);
+	addConsoleActionP("fuelinfo", (VoidPtr)showFuelInfo, engine);
 
 	addConsoleAction("status", printStatus);
 #endif /* EFI_PROD_CODE */

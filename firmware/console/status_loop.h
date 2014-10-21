@@ -14,6 +14,7 @@ void updateDevConsoleState(Engine *engine);
 void printSensors(Engine *engine);
 void printState(Engine *engine, int currentCkpEventCounter);
 void startStatusThreads(Engine *engine);
+void initStatusLoop(Engine *engine);
 
 #endif /* __cplusplus */
 
@@ -22,7 +23,6 @@ extern "C"
 {
 #endif /* __cplusplus */
 
-void initStatusLoop(void);
 bool getFullLog(void);
 void setFullLog(int value);
 void sayOsHello(void);
