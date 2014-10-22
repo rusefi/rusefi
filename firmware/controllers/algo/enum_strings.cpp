@@ -60,8 +60,10 @@ const char* getConfigurationName(engine_type_e engineType) {
 		return "Mitsu 4G93";
 	case MIATA_1990:
 		return "Miata 1990";
-	case MIATA_1994:
-		return "Miata 1994";
+	case MIATA_1994_DEVIATOR:
+		return "Miata 1994d";
+	case MIATA_1994_SPAGS:
+		return "Miata 1994s";
 	case MIATA_1996:
 		return "Miata 1996";
 	default:

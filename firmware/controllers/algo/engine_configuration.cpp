@@ -478,8 +478,11 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType, engine_co
 	case MIATA_1990:
 		setMiata1990(engineConfiguration, boardConfiguration);
 		break;
-	case MIATA_1994:
-		setMiata1994(engineConfiguration, boardConfiguration);
+	case MIATA_1994_DEVIATOR:
+		setMiata1994_d(engineConfiguration, boardConfiguration);
+		break;
+	case MIATA_1994_SPAGS:
+		setMiata1994_s(engineConfiguration, boardConfiguration);
 		break;
 	case MIATA_1996:
 		setMiata1996(engineConfiguration, boardConfiguration);

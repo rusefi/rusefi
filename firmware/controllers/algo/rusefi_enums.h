@@ -84,14 +84,15 @@ typedef enum {
 	HONDA_ACCORD_CD_DIP = 18,
 
 	MIATA_1990 = 19,
-	MIATA_1994 = 20,
+	MIATA_1994_DEVIATOR = 20,
 	MIATA_1996 = 21,
 
 	SUBARU_2003_WRX = 22,
 
 	DODGE_NEON_2003 = 23,
+	MIATA_1994_SPAGS = 24,
 
-	ET_UNUSED = 24,
+	ET_UNUSED = 25,
 
 	Force_4b_engine_type = ENUM_SIZE_HACK,
 } engine_type_e;

@@ -16,7 +16,8 @@
 
 void setFordEscortGt(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration);
 void setMiata1990(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration);
-void setMiata1994(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration);
+void setMiata1994_d(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration);
+void setMiata1994_s(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration);
 void setMiata1996(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration);
 
 #endif /* MAZDA_MIATA_H_ */
