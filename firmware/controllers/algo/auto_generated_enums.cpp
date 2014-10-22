@@ -231,8 +231,10 @@ case AUDI_AAN:
   return "AUDI_AAN";
 case MIATA_1996:
   return "MIATA_1996";
-case MIATA_1994:
-  return "MIATA_1994";
+case MIATA_1994_DEVIATOR:
+  return "MIATA_1994d";
+case MIATA_1994_SPAGS:
+  return "MIATA_1994s";
 case FORD_INLINE_6_1995:
   return "FORD_INLINE_6_1995";
 case MIATA_1990:

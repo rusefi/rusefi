@@ -3,8 +3,9 @@
  *
  * FORD_ESCORT_GT = 14
  * MIATA_1990 = 19
- * MIATA_1994 = 20
+ * MIATA_1994_DEVIATOR = 20
  * MIATA_1996 = 21
+ * MIATA_1994_SPAGS = 24
  *
  * @date Apr 11, 2014
  * @author Andrey Belomutskiy, (c) 2012-2014
@@ -211,11 +212,7 @@ void setFordEscortGt(engine_configuration_s *engineConfiguration, board_configur
 	setDefaultCrankingFuel(engineConfiguration);
 }
 
-/**
- * Frankenso board
- * set_engine_type 20
- */
-void setMiata1994(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
+static void setMiata1994_common(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
 	commonMiataNa(engineConfiguration, boardConfiguration);
 	engineConfiguration->displacement = 1.839;
 
@@ -267,10 +264,6 @@ void setMiata1994(engine_configuration_s *engineConfiguration, board_configurati
 
 	boardConfiguration->fuelPumpPin = GPIOE_4;
 
-	boardConfiguration->injectionPins[0] = GPIOD_7;
-	boardConfiguration->injectionPins[1] = GPIOE_2;
-	boardConfiguration->injectionPins[2] = GPIOB_8;
-	boardConfiguration->injectionPins[3] = GPIOB_7;
 	boardConfiguration->injectionPins[4] = GPIO_NONE;
 	boardConfiguration->injectionPins[5] = GPIO_NONE;
 	boardConfiguration->injectionPinMode = OM_DEFAULT;
@@ -292,13 +285,39 @@ void setMiata1994(engine_configuration_s *engineConfiguration, board_configurati
 	engineConfiguration->cltAdcChannel = EFI_ADC_12;
 	engineConfiguration->iatAdcChannel = EFI_ADC_11;
 
-
 	/**
 	 * VBatt
 	 */
 	engineConfiguration->vbattAdcChannel = EFI_ADC_14;
-	engineConfiguration->vbattDividerCoeff = ((float) (8.2 + 33)) / 8.2 * 2;
+}
 
+
+/**
+ * Frankenso board
+ * set_engine_type 20
+ */
+void setMiata1994_d(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
+	setMiata1994_common(engineConfiguration, boardConfiguration);
+	engineConfiguration->vbattDividerCoeff = ((float) (8.2 + 33)) / 8.2 * 2;
+	/**
+	 * This board was avoiding PE0 & PE1 mosfets altogether
+	 */
+	boardConfiguration->injectionPins[0] = GPIOD_7;
+	boardConfiguration->injectionPins[1] = GPIOE_2;
+	boardConfiguration->injectionPins[2] = GPIOB_8;
+	boardConfiguration->injectionPins[3] = GPIOB_7;
+}
+
+void setMiata1994_s(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
+	setMiata1994_common(engineConfiguration, boardConfiguration);
+	engineConfiguration->vbattDividerCoeff = ((float) (10.0 + 33)) / 10 * 2;
+	/**
+	 * This board has PE0 & PE1 mosfets rewires tp PD3 and PD5
+	 */
+	boardConfiguration->injectionPins[0] = GPIOD_7;
+	boardConfiguration->injectionPins[1] = GPIOE_2;
+	boardConfiguration->injectionPins[2] = GPIOB_8;
+	boardConfiguration->injectionPins[3] = GPIOB_7;
 }
 
 /**
