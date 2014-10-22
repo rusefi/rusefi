@@ -398,7 +398,7 @@ void initEngineContoller(Engine *engine) {
 
 #if EFI_IDLE_CONTROL
 	if (engineConfiguration->isIdleThreadEnabled) {
-		startIdleThread();
+		startIdleThread(engine);
 	}
 #else
 	scheduleMsg(&logger, "no idle control");

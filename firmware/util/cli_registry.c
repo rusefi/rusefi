@@ -119,6 +119,7 @@ static int getParameterCount(action_type_e parameterType) {
 	case NO_PARAMETER_P:
 		return 0;
 	case ONE_PARAMETER:
+	case ONE_PARAMETER_P:
 	case FLOAT_PARAMETER:
 	case STRING_PARAMETER:
 		return 1;
@@ -345,10 +346,16 @@ void handleActionWithParameter(TokenCallback *current, char *parameter) {
 		return;
 	}
 
-	VoidInt callback1 = (VoidInt) current->callback;
+	if (current->parameterType == ONE_PARAMETER_P) {
+		VoidIntVoidPtr callback1 = (VoidIntVoidPtr) current->callback;
+		// invoke callback function by reference
+		(*callback1)(value, current->param);
 
-	// invoke callback function by reference
-	(*callback1)(value);
+	} else {
+		VoidInt callback1 = (VoidInt) current->callback;
+		// invoke callback function by reference
+		(*callback1)(value);
+	}
 
 }
 

@@ -1,5 +1,5 @@
 /**
- * @file	idle_controller.c
+ * @file	idle_controller.cpp
  * @brief	Simple Idle Air Valve control algorithm
  *
  *			This algorithm is trying to get current RPM to the desired 'target' value
@@ -13,11 +13,10 @@
  * @author Andrey Belomutskiy, (c) 2012-2014
  */
 
+#include "main.h"
 #include "idle_controller.h"
 #include "efilib.h"
-
-// todo: move this to "idle_controller.h"
-int isCranking(void);
+#include "rpm_calculator.h"
 
 static int lastGoodValue = DEFAULT_IDLE_DUTY;
 
@@ -35,7 +34,7 @@ void setIdleRpm(IdleValveState *idle, int targetRpm) {
 /**
  * @brief	sets new idle valve duty cycle: checks the bounds and reports new value
  */
-static int setNewValue(IdleValveState *idle, int currentRpm, int now, char * msg, int newValue) {
+static int setNewValue(IdleValveState *idle, int currentRpm, int now, const char * msg, int newValue) {
 	newValue = maxI(newValue, MIN_IDLE);
 	newValue = minI(newValue, MAX_IDLE);
 
@@ -48,7 +47,7 @@ static int setNewValue(IdleValveState *idle, int currentRpm, int now, char * msg
 	return newValue;
 }
 
-static int changeValue(IdleValveState *idle, int currentRpm, int now, char * msg, int delta) {
+static int changeValue(IdleValveState *idle, int currentRpm, int now, const char * msg, int delta) {
 	int newValue = idle->value + delta;
 	return setNewValue(idle, currentRpm, now, msg, newValue);
 }

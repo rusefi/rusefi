@@ -56,12 +56,12 @@ int getIdleSwitch() {
 	return idleSwitchState;
 }
 
-void idleDebug(char *msg, int value) {
+void idleDebug(const char *msg, int value) {
 	printMsg(&logger, "%s%d", msg, value);
 	scheduleLogging(&logger);
 }
 
-static void setIdleControlEnabled(int value) {
+static void setIdleControlEnabled(int value, Engine *engine) {
 	engineConfiguration->idleMode = value ? IM_MANUAL : IM_AUTO;
 	scheduleMsg(&logger, "isIdleControlActive=%d", engineConfiguration->idleMode);
 }
@@ -113,7 +113,7 @@ static void setIdleRpmAction(int value) {
 	scheduleMsg(&logger, "target idle RPM %d", value);
 }
 
-void startIdleThread() {
+void startIdleThread(Engine *engine) {
 	initLogging(&logger, "Idle Valve Control");
 
 	/**
@@ -136,5 +136,5 @@ void startIdleThread() {
 
 	addConsoleActionI("set_idle_rpm", setIdleRpmAction);
 	addConsoleActionI("set_idle_pwm", setIdleValvePwm);
-	addConsoleActionI("set_idle_enabled", setIdleControlEnabled);
+	addConsoleActionIP("set_idle_enabled", (VoidIntVoidPtr)setIdleControlEnabled, engine);
 }

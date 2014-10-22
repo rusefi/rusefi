@@ -51,17 +51,11 @@ int isInjectionEnabled(void) {
 	return TRUE;
 }
 
-// todo: move this to "idle_controller.h"
-
-extern "C" {
-void idleDebug(char *msg, int value);
-}
-
 int getRemainingStack(Thread *otp) {
 	return 99999;
 }
 
-void idleDebug(char *msg, int value) {
+void idleDebug(const char *msg, int value) {
 }
 
 float getMap(void) {

@@ -22,26 +22,27 @@
 #define IDLE_INCREASE_STEP 5
 #define IDLE_DECREASE_STEP 5
 
-
-typedef struct {
+class IdleValveState {
+public:
 	int time;
 
 	int targetRpmRangeLeft, targetRpmRangeRight;
 
 	int value;
 	int timeOfLastIdleChange;
-} IdleValveState;
+};
+
+void idleInit(IdleValveState *idle);
+int getIdle(IdleValveState *idle, int currentRpm, int time);
+void setIdleRpm(IdleValveState *idle, int targetRpm);
+
+void idleDebug(const char *msg, int value);
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif /* __cplusplus */
 
-void idleInit(IdleValveState *idle);
-int getIdle(IdleValveState *idle, int currentRpm, int time);
-void setIdleRpm(IdleValveState *idle, int targetRpm);
-
-void idleDebug(char *msg, int value);
 
 #ifdef __cplusplus
 }

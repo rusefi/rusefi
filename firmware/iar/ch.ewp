@@ -2161,7 +2161,7 @@
         <name>$PROJ_DIR$\..\controllers\algo\fuel_math.h</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\controllers\algo\idle_controller.c</name>
+        <name>$PROJ_DIR$\..\controllers\algo\idle_controller.cpp</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\controllers\algo\idle_controller.h</name>
