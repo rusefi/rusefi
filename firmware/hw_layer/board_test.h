@@ -22,12 +22,13 @@
 #ifndef BOARD_TEST_H_
 #define BOARD_TEST_H_
 
+void initBoardTest(void);
+
 #ifdef __cplusplus
 extern "C"
 {
 #endif /* __cplusplus */
 
-void initBoardTest(void);
 bool isBoardTestMode(void);
 void printBoardTestState(void);
 
