@@ -14,7 +14,7 @@
 
 const char * getAdcMode(adc_channel_e hwChannel);
 int getAdcChannelPin(adc_channel_e hwChannel);
-void initAdcInputs(void);
+void initAdcInputs(bool boardTestMode);
 GPIO_TypeDef* getAdcChannelPort(adc_channel_e hwChannel);
 adc_channel_e getAdcChannel(brain_pin_e pin);
 

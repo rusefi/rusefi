@@ -13,6 +13,7 @@
 
 #include "pin_repository.h"
 #include "engine_math.h"
+#include "board_test.h"
 
 #if EFI_SPEED_DENSITY
 #include "map_averaging.h"
@@ -475,7 +476,7 @@ static void adc_callback_fast(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 	}
 }
 
-void initAdcInputs(void) {
+void initAdcInputs(bool boardTestMode) {
 
 	initLoggingExt(&logger, "ADC", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
 	printMsg(&logger, "initAdcInputs()");
@@ -503,7 +504,7 @@ void initAdcInputs(void) {
 
 	slowAdc.init();
 	pwmStart(EFI_INTERNAL_SLOW_ADC_PWM, &pwmcfg_slow);
-	if (boardConfiguration->isFastAdcEnabled) {
+	if (boardConfiguration->isFastAdcEnabled || boardTestMode) {
 		fastAdc.init();
 		/*
 		 * Initializes the PWM driver.

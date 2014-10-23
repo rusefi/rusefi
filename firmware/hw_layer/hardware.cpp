@@ -197,7 +197,7 @@ void initHardware(Logging *logger, Engine *engine) {
 	mySetPadMode2("board test", boardConfiguration->boardTestModeJumperPin, PAL_MODE_INPUT_PULLUP);
 	bool isBoardTestMode_b = GET_BOARD_TEST_MODE_VALUE();
 
-	initAdcInputs();
+	initAdcInputs(isBoardTestMode_b);
 
 	if (isBoardTestMode_b) {
 		initBoardTest();
