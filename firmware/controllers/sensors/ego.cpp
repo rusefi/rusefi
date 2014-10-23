@@ -33,6 +33,12 @@ void initEgoSensor(afr_sensor_s *sensor, ego_sensor_e type) {
 		sensor->v2 = 5;
 		sensor->value2 = 22.39;
 		break;
+	case ES_14Point7_Free:
+		sensor->v1 = 0;
+		sensor->value1 = 10;
+		sensor->v2 = 5;
+		sensor->value2 = 20;
+		break;
 	default:
 		firmwareError("Unexpected EGO %d", type);
 		break;
