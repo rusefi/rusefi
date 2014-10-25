@@ -178,6 +178,39 @@ const char *getPinName(io_pin_e io_pin) {
 		return "inj11";
 	case INJECTOR_12_OUTPUT:
 		return "inj12";
+
+	case GPIO_0:
+		return "gpio0";
+	case GPIO_1:
+		return "gpio1";
+	case GPIO_2:
+		return "gpio2";
+	case GPIO_3:
+		return "gpio3";
+	case GPIO_4:
+		return "gpio4";
+	case GPIO_5:
+		return "gpio5";
+	case GPIO_6:
+		return "gpio6";
+	case GPIO_7:
+		return "gpio7";
+	case GPIO_8:
+		return "gpio8";
+	case GPIO_9:
+		return "gpio9";
+	case GPIO_10:
+		return "gpio10";
+	case GPIO_11:
+		return "gpio11";
+	case GPIO_12:
+		return "gpio12";
+	case GPIO_13:
+		return "gpio13";
+	case GPIO_14:
+		return "gpio14";
+	case GPIO_15:
+		return "gpio15";
 	default:
 		return "Pin needs name";
 	}

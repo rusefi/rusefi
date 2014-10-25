@@ -189,13 +189,17 @@ static void cylinderCleanupControl(Engine *engine) {
 }
 
 static void handleGpio(Engine *engine, int index) {
-	brain_pin_e pin = boardConfiguration->gpioPins[index];
+	if(boardConfiguration->gpioPins[index]==GPIO_NONE)
+		return;
+
+	io_pin_e pin = (io_pin_e)((int)GPIO_0 + index);
+
 
 	int value = calc.getValue2(fuelPumpLogic, engine);
-//	if (value != getOutputPinValue(pin)) {
+	if (value != getOutputPinValue(pin)) {
 //		scheduleMsg(&logger, "setting %s %s", getIo_pin_e(pin), boolToString(value));
-//		setOutputPinValue(pin, value);
-//	}
+		setOutputPinValue(pin, value);
+	}
 
 }
 
@@ -325,6 +329,8 @@ static void setUserOutput(const char *indexStr, const char *quotedLine, Engine *
 	strcpy(engine->engineConfiguration->bc.le_formulas[index], l);
 }
 
+static pin_output_mode_e d = OM_DEFAULT;
+
 void initEngineContoller(Engine *engine) {
 	if (hasFirmwareError()) {
 		return;
@@ -413,10 +419,11 @@ void initEngineContoller(Engine *engine) {
 	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
 		if (boardConfiguration->gpioPins[i] != GPIO_NONE) {
 
-			mySetPadMode2("user-defined", boardConfiguration->gpioPins[i], PAL_STM32_MODE_OUTPUT);
+			//mySetPadMode2("user-defined", boardConfiguration->gpioPins[i], PAL_STM32_MODE_OUTPUT);
 
+			io_pin_e pin = (io_pin_e)((int)GPIO_0 + i);
+			outputPinRegisterExt2(getPinName(pin), pin, boardConfiguration->gpioPins[i], &d);
 		}
-
 	}
 
 	addConsoleActionSSP("set_user_out", (VoidCharPtrCharPtrVoidPtr) setUserOutput, engine);
