@@ -138,13 +138,14 @@ typedef enum {
 
 #define IO_PIN_COUNT 100
 
+void initPrimaryPins(void);
+void initOutputPins(void);
+
 #ifdef __cplusplus
 extern "C"
 {
 #endif /* __cplusplus */
 
-void initPrimaryPins(void);
-void initOutputPins(void);
 const char *getPinName(io_pin_e io_pin);
 io_pin_e getPinByName(const char *name);
 void turnOutputPinOn(io_pin_e pin);
@@ -155,6 +156,5 @@ void outputPinRegisterExt2(const char *msg, io_pin_e ioPin, brain_pin_e brainPin
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-
 
 #endif /* STATUS_LEDS_H_ */
