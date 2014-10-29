@@ -57,7 +57,7 @@ void addTriggerEventListener(ShaftPositionListener listener, const char *name, v
 	triggerCentral.addEventListener(listener, name, arg);
 }
 
-#if EFI_PROD_CODE || EFI_SIMULATOR
+#if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
 extern configuration_s *configuration;
 
 void hwHandleShaftSignal(trigger_event_e signal) {
@@ -189,7 +189,7 @@ static void triggerShapeInfo(Engine *engine) {
 }
 
 static void triggerInfo(Engine *engine) {
-#if EFI_PROD_CODE || EFI_SIMULATOR
+#if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
 	scheduleMsg(&logger, "Template %s/%d trigger %d", getConfigurationName(engineConfiguration->engineType),
 			engineConfiguration->engineType, engineConfiguration->triggerConfig.triggerType);
 
@@ -204,6 +204,8 @@ static void triggerInfo(Engine *engine) {
 			boolToString(engineConfiguration->needSecondTriggerInput));
 	scheduleMsg(&logger, "expected duty #0=%f/#1=%f", engineConfiguration2->triggerShape.dutyCycle[0],
 			engineConfiguration2->triggerShape.dutyCycle[1]);
+
+	scheduleMsg(&logger, "isError %d", isTriggerDecoderError());
 #endif
 
 #if EFI_PROD_CODE
