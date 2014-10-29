@@ -39,7 +39,14 @@ public:
 	float syncRatioFrom;
 	float syncRatioTo;
 
+	/**
+	 * Should we use falls or rises for gap ratio detection?
+	 */
 	bool_t useRiseEdge;
+	/**
+	 * Should we measure gaps with events of both kinds?
+	 */
+	bool_t gapBothDirections;
 
 	/**
 	 * This is used for signal validation

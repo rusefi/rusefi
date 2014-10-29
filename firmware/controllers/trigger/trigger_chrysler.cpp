@@ -13,6 +13,8 @@ void configureNeon2003TriggerShape(trigger_shape_s *s) {
 	// voodoo magic - we always need 720 at the end
 	int base = 10;
 
+	s->gapBothDirections = true;
+
 	setTriggerSynchronizationGap(s, 2.5);
 
 	s->addEvent(base + 26, T_PRIMARY, TV_HIGH);
