@@ -113,6 +113,34 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 		board_configuration_s *boardConfiguration) {
 	engineConfiguration->triggerConfig.triggerType = TT_DODGE_NEON_2003;
 	setFrankenso_01_LCD(boardConfiguration);
+
+	engineConfiguration->cylindersCount = 4;
+
+	// I want to start with a simple Alpha-N
+	engineConfiguration->algorithm = LM_ALPHA_N;
+	setFuelLoadBin(engineConfiguration, 0, 100);
+	setTimingLoadBin(engineConfiguration, 0, 100);
+
+	/**
+	 * VBatt
+	 */
+	engineConfiguration->vbattAdcChannel = EFI_ADC_14;
+	engineConfiguration->vbattDividerCoeff = ((float) (8.2 + 33)) / 8.2 * 2;
+
+	boardConfiguration->injectionPins[0] = GPIOB_8;
+	boardConfiguration->injectionPins[1] = GPIOB_9;
+	boardConfiguration->injectionPins[2] = GPIOE_1;
+	boardConfiguration->injectionPins[3] = GPIOB_7;
+
+	boardConfiguration->idleValvePin = GPIOE_5;
+
+	boardConfiguration->gps_rx_pin = GPIO_NONE;
+	boardConfiguration->gps_tx_pin = GPIO_NONE;
+
+	boardConfiguration->idleSolenoidFrequency = 300;
+
+	boardConfiguration->triggerInputPins[0] = GPIOA_5;
+	boardConfiguration->triggerInputPins[1] = GPIOC_6;
 }
 
 #endif /* EFI_SUPPORT_DODGE_NEON */
