@@ -32,7 +32,7 @@
 #include "pwm_generator.h"
 #include "pwm_generator_logic.h"
 
-#if EFI_ELECTRONIC_THROTTLE_BODY
+#if EFI_ELECTRONIC_THROTTLE_BODY || defined(__DOXYGEN__)
 
 static Logging logger;
 /**

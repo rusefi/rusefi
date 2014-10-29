@@ -34,16 +34,6 @@ static GPIO_TypeDef *PORTS[] = { GPIOA, GPIOB, GPIOC, GPIOD, GPIOE, GPIOF, GPIOG
 
 static pin_output_mode_e DEFAULT_OUTPUT = OM_DEFAULT;
 
-/**
- * blinking thread to show that we are alive
- */
-static THD_WORKING_AREA(comBlinkingStack, UTILITY_THREAD_STACK_SIZE);
-
-/**
- * error thread to show error condition (blinking LED means non-fatal error)
- */
-static THD_WORKING_AREA(errBlinkingStack, UTILITY_THREAD_STACK_SIZE);
-
 void turnOutputPinOn(io_pin_e pin) {
 	setOutputPinValue(pin, TRUE);
 }
@@ -64,48 +54,6 @@ void setDefaultPinState(io_pin_e pin, pin_output_mode_e *outputMode) {
 	setOutputPinValue(pin, FALSE); // initial state
 }
 
-static void comBlinkingThread(void *arg) {
-	(void) arg;
-	chRegSetThreadName("communication blinking");
-	while (TRUE) {
-		int delay;
-		if (getNeedToWriteConfiguration()) {
-			delay = isConsoleReady() ? 200 : 66;
-		} else {
-			delay = isConsoleReady() ? 100 : 33;
-		}
-
-		setOutputPinValue(LED_COMMUNICATION_1, 0);
-		setOutputPinValue(LED_EXT_1, 1);
-//		setOutputPinValue(LED_EXT_2, 1);
-//		setOutputPinValue(LED_EXT_3, 1);
-		chThdSleepMilliseconds(delay);
-
-		setOutputPinValue(LED_COMMUNICATION_1, 1);
-		setOutputPinValue(LED_EXT_1, 0);
-//		setOutputPinValue(LED_EXT_2, 0);
-//		setOutputPinValue(LED_EXT_3, 0);
-		chThdSleepMilliseconds(delay);
-	}
-}
-
-// todo: fix this, should be a proper declaration in a .h file
-int isTriggerDecoderError(void);
-
-static void errBlinkingThread(void *arg) {
-	(void) arg;
-	chRegSetThreadName("err blinking");
-#if EFI_ENGINE_CONTROL
-	while (TRUE) {
-		int delay = 33;
-		if (isTriggerDecoderError() || isIgnitionTimingError())
-			setOutputPinValue(LED_WARNING, 1);
-		chThdSleepMilliseconds(delay);
-		setOutputPinValue(LED_WARNING, 0);
-		chThdSleepMilliseconds(delay);
-	}
-#endif /* EFI_ENGINE_CONTROL */
-}
 
 static void outputPinRegisterExt(const char *msg, io_pin_e ioPin, GPIO_TypeDef *port, uint32_t pin,
 		pin_output_mode_e *outputMode) {
@@ -252,9 +200,6 @@ void initOutputPins(void) {
 	 ledRegister(LED_HUGE_19, GPIOE, 3);
 	 ledRegister(LED_HUGE_20, GPIOE, 1);
 	 */
-
-	chThdCreateStatic(comBlinkingStack, sizeof(comBlinkingStack), NORMALPRIO, (tfunc_t) comBlinkingThread, NULL);
-	chThdCreateStatic(errBlinkingStack, sizeof(errBlinkingStack), NORMALPRIO, (tfunc_t) errBlinkingThread, NULL);
 
 	addConsoleActionS("get_pin_value", getPinValue);
 }

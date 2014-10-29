@@ -35,17 +35,15 @@ void initMainEventListener(Engine *engine, engine_configuration2_s *engineConfig
 void onTriggerEvent(trigger_event_e ckpSignalType, uint32_t eventIndex, MainTriggerCallback *mainTriggerCallback);
 #endif
 
+int isIgnitionTimingError(void);
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif /* __cplusplus */
 
-
-
 void showMainHistogram(void);
 void onEveryMillisecondTimerSignal(void);
-int isIgnitionTimingError(void);
 
 float getFuel(int rpm, float key);
 #ifdef __cplusplus
