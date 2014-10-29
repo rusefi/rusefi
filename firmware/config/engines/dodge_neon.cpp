@@ -20,6 +20,9 @@
 #include "thermistors.h"
 #include "engine_math.h"
 
+// setFrankenso_01_LCD
+#include "honda_accord.h"
+
 void setDodgeNeon1995EngineConfiguration(engine_configuration_s *engineConfiguration,
 		board_configuration_s *boardConfiguration) {
 
@@ -109,8 +112,8 @@ void setDodgeNeon1995EngineConfiguration(engine_configuration_s *engineConfigura
 void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfiguration,
 		board_configuration_s *boardConfiguration) {
 	engineConfiguration->triggerConfig.triggerType = TT_DODGE_NEON_2003;
+	setFrankenso_01_LCD(boardConfiguration);
 }
-
 
 #endif /* EFI_SUPPORT_DODGE_NEON */
 
