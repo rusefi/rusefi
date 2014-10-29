@@ -7,6 +7,6 @@
 
 #include <stdio.h>
 
-void idleDebug(char *msg, int value) {
+void idleDebug(const char *msg, int value) {
 	printf("%s\r\n", msg);
 }
