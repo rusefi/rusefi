@@ -55,7 +55,7 @@ static inline bool isSynchronizationGap(TriggerState const *shaftPositionState, 
 	}
 
 #if ! EFI_PROD_CODE
-	if(printGapRatio) {
+	if (printGapRatio) {
 
 		float gap = 1.0 * currentDuration / shaftPositionState->toothed_previous_duration;
 		print("current gap %f\r\n", gap);
@@ -89,6 +89,12 @@ float TriggerState::getTriggerDutyCycle(int index) {
 static trigger_wheel_e eventIndex[6] = { T_PRIMARY, T_PRIMARY, T_SECONDARY, T_SECONDARY, T_CHANNEL_3, T_CHANNEL_3 };
 static trigger_value_e eventType[6] = { TV_LOW, TV_HIGH, TV_LOW, TV_HIGH, TV_LOW, TV_HIGH };
 
+uint64_t TriggerState::getCurrentGapDuration(uint64_t nowUs) {
+	int64_t currentDuration = isFirstEvent ? 0 : nowUs - toothed_previous_time;
+	isFirstEvent = false;
+	return currentDuration;
+}
+
 /**
  * @brief Trigger decoding happens here
  * This method changes the state of trigger_state_s data structure according to the trigger event
@@ -110,11 +116,14 @@ void TriggerState::decodeTriggerEvent(trigger_shape_s const*triggerShape, trigge
 		 * For less important events we simply increment the index.
 		 */
 		nextTriggerEvent(triggerWheel, nowUs);
+		if (triggerShape->gapBothDirections) {
+//			toothed_previous_duration = getCurrentGapDuration(nowUs);
+//			toothed_previous_time = nowUs;
+		}
 		return;
 	}
 
-	int64_t currentDuration = isFirstEvent ? 0 : nowUs - toothed_previous_time;
-	isFirstEvent = false;
+	int64_t currentDuration = getCurrentGapDuration(nowUs);
 	efiAssertVoid(currentDuration >= 0, "decode: negative duration?");
 
 // todo: skip a number of signal from the beginning
