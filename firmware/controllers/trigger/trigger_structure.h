@@ -8,7 +8,7 @@
 #ifndef TRIGGER_STRUCTURE_H_
 #define TRIGGER_STRUCTURE_H_
 
-#include <stdint.h>
+#include "global.h"
 
 #include "rusefi_enums.h"
 #include "EfiWave.h"
@@ -39,7 +39,7 @@ public:
 	float syncRatioFrom;
 	float syncRatioTo;
 
-	int useRiseEdge;
+	bool_t useRiseEdge;
 
 	/**
 	 * This is used for signal validation

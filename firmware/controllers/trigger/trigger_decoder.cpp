@@ -200,7 +200,7 @@ void initializeTriggerShape(Logging *logger, engine_configuration_s const *engin
 	trigger_shape_s *triggerShape = &engineConfiguration2->triggerShape;
 
 	setTriggerSynchronizationGap(triggerShape, 2);
-	triggerShape->useRiseEdge = TRUE;
+	triggerShape->useRiseEdge = true;
 
 	switch (triggerConfig->triggerType) {
 
@@ -359,12 +359,14 @@ uint32_t findTriggerZeroEventIndex(trigger_shape_s * shape, trigger_config_s con
 	/**
 	 * Now that we have just located the synch point, we can simulate the whole cycle
 	 * in order to calculate expected duty cycle
+	 *
+	 * todo: add a comment why are we doing '2 * shape->getSize()' here?
 	 */
 	state.cycleCallback = onFindIndex;
 	for (uint32_t i = index + 1; i <= index + 2 * shape->getSize(); i++) {
 		helper.nextStep(&state, shape, i, triggerConfig);
 	}
-	efiAssert(state.getTotalRevolutionCounter() > 1, "totalRevolutionCounter2", EFI_ERROR_CODE);
+	efiAssert(state.getTotalRevolutionCounter() == 3, "totalRevolutionCounter2", EFI_ERROR_CODE);
 
 	for (int i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
 		shape->dutyCycle[i] = 1.0 * state.expectedTotalTime[i] / HELPER_PERIOD;
