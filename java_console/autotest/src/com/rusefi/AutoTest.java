@@ -174,7 +174,7 @@ public class AutoTest {
         assertWave(chart, WaveChart.SPARK_2, 0.133, x);
         assertWave(chart, WaveChart.SPARK_3, 0.133, x + 360);
 
-        sendCommand("set_whole_timing_map 200");
+        sendCommand("set_whole_timing_map 520");
         chart = nextChart();
         x = 59;
         assertWave(chart, WaveChart.SPARK_2, 0.133, x);
