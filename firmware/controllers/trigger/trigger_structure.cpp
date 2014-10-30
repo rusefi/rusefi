@@ -33,6 +33,8 @@ trigger_shape_s::trigger_shape_s() :
 		wave(switchTimesBuffer, NULL) {
 	reset(OM_NONE);
 	wave.waves = h.waves;
+	useRiseEdge = false;
+	gapBothDirections = false;
 }
 
 void trigger_shape_s::assignSize() {
