@@ -119,6 +119,9 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 
 	engineConfiguration->cylindersCount = 4;
 
+	// bosch 4G1139
+//	engineConfiguration->injectorFlow =
+
 	// I want to start with a simple Alpha-N
 	engineConfiguration->algorithm = LM_ALPHA_N;
 	setFuelLoadBin(engineConfiguration, 0, 100);
@@ -144,6 +147,10 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 
 	boardConfiguration->triggerInputPins[0] = GPIOA_5;
 	boardConfiguration->triggerInputPins[1] = GPIOC_6;
+
+	setThermistorConfiguration(&engineConfiguration->cltThermistorConf, 0, 32500, 30, 7550, 100, 700);
+	engineConfiguration->cltThermistorConf.bias_resistor = 2700;
+
 }
 
 #endif /* EFI_SUPPORT_DODGE_NEON */
