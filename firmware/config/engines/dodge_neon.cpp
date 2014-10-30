@@ -117,6 +117,7 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 	engineConfiguration->globalTriggerAngleOffset = 46;
 	engineConfiguration->needSecondTriggerInput = false;
 
+	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 	engineConfiguration->cylindersCount = 4;
 
 	// bosch 4G1139
@@ -149,8 +150,28 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 	boardConfiguration->triggerInputPins[1] = GPIOC_6;
 
 	setThermistorConfiguration(&engineConfiguration->cltThermistorConf, 0, 32500, 30, 7550, 100, 700);
-	engineConfiguration->cltThermistorConf.bias_resistor = 2700;
+	engineConfiguration->cltThermistorConf.bias_resistor = 10000;
 
+	/**
+	 * MAP D17/W5
+	 */
+	engineConfiguration->map.sensor.hwChannel = EFI_ADC_0;
+
+
+	/**
+	 * TPS D11/W11
+	 */
+	engineConfiguration->tpsAdcChannel = EFI_ADC_1;
+
+	/**
+	 * IAT D15/W7
+	 */
+	engineConfiguration->iatAdcChannel = EFI_ADC_11;
+
+	/**
+	 * CLT D13/W9
+	 */
+	engineConfiguration->cltAdcChannel = EFI_ADC_12;
 }
 
 #endif /* EFI_SUPPORT_DODGE_NEON */
