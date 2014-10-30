@@ -117,8 +117,8 @@ void TriggerState::decodeTriggerEvent(trigger_shape_s const*triggerShape, trigge
 		 */
 		nextTriggerEvent(triggerWheel, nowUs);
 		if (triggerShape->gapBothDirections) {
-//			toothed_previous_duration = getCurrentGapDuration(nowUs);
-//			toothed_previous_time = nowUs;
+			toothed_previous_duration = getCurrentGapDuration(nowUs);
+			toothed_previous_time = nowUs;
 		}
 		return;
 	}

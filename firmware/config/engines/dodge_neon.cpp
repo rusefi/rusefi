@@ -114,6 +114,9 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 	engineConfiguration->triggerConfig.triggerType = TT_DODGE_NEON_2003;
 	setFrankenso_01_LCD(boardConfiguration);
 
+	engineConfiguration->globalTriggerAngleOffset = 46;
+	engineConfiguration->needSecondTriggerInput = false;
+
 	engineConfiguration->cylindersCount = 4;
 
 	// I want to start with a simple Alpha-N

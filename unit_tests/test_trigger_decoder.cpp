@@ -532,7 +532,7 @@ void testTriggerDecoder(void) {
 	testTriggerDecoder2("citroen", CITROEN_TU3JP, 0, 0.4833, 0.0);
 
 	printGapRatio = true;
-// todo	testTriggerDecoder2("neon NGC", DODGE_NEON_2003, 6, 0.2139, 0.0);
+	testTriggerDecoder2("neon NGC", DODGE_NEON_2003, 12, 0.5139, 0.0);
 
 	testMazda323();
 
