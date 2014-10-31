@@ -272,6 +272,11 @@ static void printThermistor(const char *msg, Thermistor *thermistor) {
 			thermistor->config->s_h_b, thermistor->config->s_h_c);
 #if EFI_ANALOG_INPUTS
 	scheduleMsg(&logger, "@%s", getPinNameByAdcChannel(adcChannel, pinNameBuffer));
+
+	float value = getResistance(thermistor);
+
+	scheduleMsg(&logger, "%s R=%f on channel %d@%s", msg, value, adcChannel,
+			getPinNameByAdcChannel(adcChannel, pinNameBuffer));
 #endif
 }
 
@@ -313,17 +318,7 @@ static void printTemperatureInfo(void) {
 		scheduleMsg(&logger, "IAT sensing error");
 	}
 
-	float rClt = getResistance(&engineConfiguration2->clt);
-	float rIat = getResistance(&engineConfiguration2->iat);
-
 #if EFI_ANALOG_INPUTS
-	adc_channel_e cltChannel = engineConfiguration2->clt.channel;
-	scheduleMsg(&logger, "CLT R=%f on channel %d@%s", rClt, cltChannel,
-			getPinNameByAdcChannel(cltChannel, pinNameBuffer));
-	adc_channel_e iatChannel = engineConfiguration2->iat.channel;
-	scheduleMsg(&logger, "IAT R=%f on channel %d@%s", rIat, iatChannel,
-			getPinNameByAdcChannel(iatChannel, pinNameBuffer));
-
 	scheduleMsg(&logger, "cranking fuel %fms @ %fC", engineConfiguration->crankingSettings.fuelAtMinTempMs,
 			engineConfiguration->crankingSettings.coolantTempMinC);
 	scheduleMsg(&logger, "cranking fuel %fms @ %fC", engineConfiguration->crankingSettings.fuelAtMaxTempMs,
