@@ -14,6 +14,7 @@
 #include "sensor_types.h"
 #include "can_header.h"
 #include "rusefi_enums.h"
+#include "global.h"
 
 #define MOCK_UNDEFINED -1
 
@@ -422,7 +423,11 @@ typedef struct {
 
 	board_configuration_s bc;
 
-	int hasMapSensor;
+	bool_t hasMapSensor : 1; // bit 0
+	bool_t hasIatSensor : 1; // bit 1
+	bool_t hasBaroSensor : 1; // bit 1
+	bool_t hasAfrSensor : 1; // bit 2
+	// that's the next 32 bit field
 	int hasCltSensor;
 
 	idle_mode_e idleMode;

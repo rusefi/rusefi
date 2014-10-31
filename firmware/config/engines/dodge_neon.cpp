@@ -51,6 +51,8 @@ void setDodgeNeon1995EngineConfiguration(engine_configuration_s *engineConfigura
 
 	engineConfiguration->algorithm = LM_ALPHA_N;
 
+	engineConfiguration->hasIatSensor = false;
+
 	// set_rpm_hard_limit 4000
 	engineConfiguration->rpmHardLimit = 4000; // yes, 4k. let's play it safe for now
 	// set_cranking_rpm 550

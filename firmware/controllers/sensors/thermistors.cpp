@@ -34,9 +34,9 @@ float getR1InVoltageDividor(float Vout, float Vin, float r2) {
 }
 
 float getR2InVoltageDividor(float Vout, float Vin, float r1) {
-  if (Vout == 0) {
+	if (Vout == 0) {
 		return NAN;
-  }
+	}
 	return r1 / (Vin / Vout - 1);
 }
 
@@ -110,7 +110,9 @@ bool isValidIntakeAirTemperature(float temperature) {
 float getCoolantTemperature(engine_configuration2_s * engineConfiguration2) {
 	float temperature = getTemperatureC(&engineConfiguration2->clt);
 	if (!isValidCoolantTemperature(temperature)) {
-		warning(OBD_PCM_Processor_Fault, "unrealistic CLT %f", temperature);
+		if (engineConfiguration2->engineConfiguration->hasCltSensor) {
+			warning(OBD_PCM_Processor_Fault, "unrealistic CLT %f", temperature);
+		}
 		return LIMPING_MODE_CLT_TEMPERATURE;
 	}
 	return temperature;
@@ -155,7 +157,9 @@ void prepareThermistorCurve(ThermistorConf * config) {
 float getIntakeAirTemperature(engine_configuration2_s * engineConfiguration2) {
 	float temperature = getTemperatureC(&engineConfiguration2->iat);
 	if (!isValidIntakeAirTemperature(temperature)) {
-		warning(OBD_PCM_Processor_Fault, "unrealistic IAT %f", temperature);
+		if (engineConfiguration2->engineConfiguration->hasIatSensor) {
+			warning(OBD_PCM_Processor_Fault, "unrealistic IAT %f", temperature);
+		}
 		return LIMPING_MODE_IAT_TEMPERATURE;
 	}
 	return temperature;
