@@ -44,6 +44,8 @@ class engine_configuration2_s {
 public:
 	engine_configuration2_s();
 
+	engine_configuration_s *engineConfiguration;
+
 	Thermistor iat;
 	Thermistor clt;
 

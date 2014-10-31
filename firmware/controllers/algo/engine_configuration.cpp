@@ -240,8 +240,10 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 
 	engineConfiguration->diffLoadEnrichmentCoef = 1;
 
-	engineConfiguration->hasMapSensor = TRUE;
-	engineConfiguration->hasCltSensor = TRUE;
+	engineConfiguration->hasMapSensor = true;
+	engineConfiguration->hasAfrSensor = true;
+	engineConfiguration->hasCltSensor = true;
+	engineConfiguration->hasBaroSensor = false;
 
 	boardConfiguration->idleSolenoidFrequency = 200;
 //	engineConfiguration->idleMode = IM_AUTO;

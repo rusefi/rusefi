@@ -189,11 +189,10 @@ static void cylinderCleanupControl(Engine *engine) {
 }
 
 static void handleGpio(Engine *engine, int index) {
-	if(boardConfiguration->gpioPins[index]==GPIO_NONE)
+	if (boardConfiguration->gpioPins[index] == GPIO_NONE)
 		return;
 
-	io_pin_e pin = (io_pin_e)((int)GPIO_0 + index);
-
+	io_pin_e pin = (io_pin_e) ((int) GPIO_0 + index);
 
 	int value = calc.getValue2(fuelPumpLogic, engine);
 	if (value != getOutputPinValue(pin)) {
@@ -245,13 +244,13 @@ static void onEvenyGeneralMilliseconds(Engine *engine) {
 
 	// schedule next invocation
 	chVTSetAny(&everyMsTimer, boardConfiguration->generalPeriodicThreadPeriod * TICKS_IN_MS,
-			(vtfunc_t)&onEvenyGeneralMilliseconds, engine);
+			(vtfunc_t) &onEvenyGeneralMilliseconds, engine);
 }
 
 static void initPeriodicEvents(Engine *engine) {
 	// schedule first invocation
 	chVTSetAny(&everyMsTimer, boardConfiguration->generalPeriodicThreadPeriod * TICKS_IN_MS,
-			(vtfunc_t)&onEvenyGeneralMilliseconds, engine);
+			(vtfunc_t) &onEvenyGeneralMilliseconds, engine);
 }
 
 //static void fuelPumpOff(void *arg) {
@@ -303,11 +302,15 @@ static void printAnalogChannelInfo(const char *name, adc_channel_e hwChannel) {
 static void printAnalogInfo(void) {
 	printAnalogChannelInfo("TPS", engineConfiguration->tpsAdcChannel);
 	printAnalogChannelInfo("CLT", engineConfiguration->cltAdcChannel);
-	printAnalogChannelInfo("IAT", engineConfiguration->iatAdcChannel);
+	if (engineConfiguration->hasIatSensor) {
+		printAnalogChannelInfo("IAT", engineConfiguration->iatAdcChannel);
+	}
 	printAnalogChannelInfo("MAF", engineConfiguration->mafAdcChannel);
 	printAnalogChannelInfo("AFR", engineConfiguration->afrSensor.afrAdcChannel);
 	printAnalogChannelInfo("MAP", engineConfiguration->map.sensor.hwChannel);
-	printAnalogChannelInfo("BARO", engineConfiguration->baroSensor.hwChannel);
+	if (engineConfiguration->hasBaroSensor) {
+		printAnalogChannelInfo("BARO", engineConfiguration->baroSensor.hwChannel);
+	}
 	printAnalogChannelInfoExt("Vbatt", engineConfiguration->vbattAdcChannel, getVBatt());
 }
 
@@ -421,7 +424,7 @@ void initEngineContoller(Engine *engine) {
 
 			//mySetPadMode2("user-defined", boardConfiguration->gpioPins[i], PAL_STM32_MODE_OUTPUT);
 
-			io_pin_e pin = (io_pin_e)((int)GPIO_0 + i);
+			io_pin_e pin = (io_pin_e) ((int) GPIO_0 + i);
 			outputPinRegisterExt2(getPinName(pin), pin, boardConfiguration->gpioPins[i], &d);
 		}
 	}
