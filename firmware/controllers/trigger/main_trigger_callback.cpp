@@ -87,7 +87,7 @@ static void handleFuelInjectionEvent(MainTriggerCallback *mainTriggerCallback, A
 		return;
 	}
 
-	if (mainTriggerCallback->engineConfiguration2->isCylinderCleanupMode)
+	if (mainTriggerCallback->engine->isCylinderCleanupMode)
 		return;
 
 	float delay = getOneDegreeTimeMs(rpm) * event->position.angleOffset;

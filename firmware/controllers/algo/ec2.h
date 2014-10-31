@@ -44,28 +44,16 @@ class engine_configuration2_s {
 public:
 	engine_configuration2_s();
 
+	// todo: this should go, too
 	engine_configuration_s *engineConfiguration;
 
-	Thermistor iat;
-	Thermistor clt;
 
 	trigger_shape_s triggerShape;
 
 	EventHandlerConfiguration engineEventConfiguration;
-
-	/**
-	 * This coefficient translates ADC value directly into voltage adjusted according to
-	 * voltage divider configuration. This is a future (?) performance optimization.
-	 */
-	float adcToVoltageInputDividerCoefficient;
-
-	/**
-	 * This field is true if we are in 'cylinder cleanup' state right now
-	 * see isCylinderCleanupEnabled
-	 */
-	bool isCylinderCleanupMode;
 };
 
+// todo: eliminate this structure? we have Engine and engineConfiguration2 now references engineConfiguration
 typedef struct {
 	engine_configuration_s *engineConfiguration;
 	engine_configuration2_s *engineConfiguration2;

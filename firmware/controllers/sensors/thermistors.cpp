@@ -15,7 +15,6 @@
 #include "adc_inputs.h"
 #include "engine_configuration.h"
 #include "engine_math.h"
-#include "ec2.h"
 
 // Celsius
 #define LIMPING_MODE_IAT_TEMPERATURE 30.0f
@@ -107,9 +106,10 @@ bool isValidIntakeAirTemperature(float temperature) {
 /**
  * @return coolant temperature, in Celsius
  */
-float getCoolantTemperature(engine_configuration2_s * engineConfiguration2) {
-	float temperature = getTemperatureC(&engineConfiguration2->clt);
+float getCoolantTemperature(Engine * engine) {
+	float temperature = getTemperatureC(&engine->clt);
 	if (!isValidCoolantTemperature(temperature)) {
+		efiAssert(engineConfiguration2->engineConfiguration!=NULL, "NULL engineConfiguration", NAN);
 		if (engineConfiguration2->engineConfiguration->hasCltSensor) {
 			warning(OBD_PCM_Processor_Fault, "unrealistic CLT %f", temperature);
 		}
@@ -154,10 +154,11 @@ void prepareThermistorCurve(ThermistorConf * config) {
 /**
  * @return Celsius value
  */
-float getIntakeAirTemperature(engine_configuration2_s * engineConfiguration2) {
-	float temperature = getTemperatureC(&engineConfiguration2->iat);
+float getIntakeAirTemperature(Engine * engine) {
+	float temperature = getTemperatureC(&engine->iat);
 	if (!isValidIntakeAirTemperature(temperature)) {
-		if (engineConfiguration2->engineConfiguration->hasIatSensor) {
+		efiAssert(engine->engineConfiguration!=NULL, "NULL engineConfiguration", NAN);
+		if (engine->engineConfiguration->hasIatSensor) {
 			warning(OBD_PCM_Processor_Fault, "unrealistic IAT %f", temperature);
 		}
 		return LIMPING_MODE_IAT_TEMPERATURE;
@@ -185,9 +186,9 @@ void setCommonNTCSensor(ThermistorConf *thermistorConf) {
 void initThermistors(Engine *engine) {
 	efiAssertVoid(engine!=NULL, "e NULL initThermistors");
 	efiAssertVoid(engine->engineConfiguration2!=NULL, "e2 NULL initThermistors");
-	initThermistorCurve(&engine->engineConfiguration2->clt, &engine->engineConfiguration->cltThermistorConf,
+	initThermistorCurve(&engine->clt, &engine->engineConfiguration->cltThermistorConf,
 			engine->engineConfiguration->cltAdcChannel);
-	initThermistorCurve(&engine->engineConfiguration2->iat, &engine->engineConfiguration->iatThermistorConf,
+	initThermistorCurve(&engine->iat, &engine->engineConfiguration->iatThermistorConf,
 			engine->engineConfiguration->iatAdcChannel);
 	initialized = TRUE;
 }

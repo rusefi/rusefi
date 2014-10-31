@@ -21,6 +21,7 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType) {
 	configuration.engineConfiguration = ec;
 	configuration.engineConfiguration2 = &ec2;
 	engine.engineConfiguration2 = &ec2;
+	ec2.engineConfiguration = ec;
 
 	prepareFuelMap(engine.engineConfiguration);
 

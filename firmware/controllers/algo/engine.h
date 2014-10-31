@@ -31,9 +31,25 @@ public:
 	engine_configuration_s *engineConfiguration;
 	engine_configuration2_s *engineConfiguration2;
 
+	Thermistor iat;
+	Thermistor clt;
+
 	void onTriggerEvent(uint64_t nowUs);
 	EngineState engineState;
 	uint64_t lastTriggerEventTimeUs;
+
+	/**
+	 * This coefficient translates ADC value directly into voltage adjusted according to
+	 * voltage divider configuration. This is a future (?) performance optimization.
+	 */
+	float adcToVoltageInputDividerCoefficient;
+
+	/**
+	 * This field is true if we are in 'cylinder cleanup' state right now
+	 * see isCylinderCleanupEnabled
+	 */
+	bool isCylinderCleanupMode;
+
 
 	void updateSlowSensors();
 	void watchdog();

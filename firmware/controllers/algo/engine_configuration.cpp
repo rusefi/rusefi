@@ -511,6 +511,7 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType, engine_co
 }
 
 engine_configuration2_s::engine_configuration2_s() {
+	engineConfiguration = NULL;
 }
 
 void applyNonPersistentConfiguration(Logging * logger, engine_configuration_s *engineConfiguration,

@@ -87,8 +87,8 @@ float getFuelMs(int rpm, Engine *engine) {
 
 float getRunningFuel(float baseFuelMs, Engine *engine, int rpm) {
 	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
-	float iatCorrection = getIatCorrection(engineConfiguration, getIntakeAirTemperature(engine->engineConfiguration2));
-	float cltCorrection = getCltCorrection(engineConfiguration, getCoolantTemperature(engine->engineConfiguration2));
+	float iatCorrection = getIatCorrection(engineConfiguration, getIntakeAirTemperature(engine));
+	float cltCorrection = getCltCorrection(engineConfiguration, getCoolantTemperature(engine));
 
 #if EFI_ACCEL_ENRICHMENT
 	float accelEnrichment = getAccelEnrichment();
@@ -155,8 +155,7 @@ float getBaseTableFuel(engine_configuration_s *engineConfiguration, int rpm, flo
  * @return Duration of fuel injection while craning, in milliseconds
  */
 float getCrankingFuel(Engine *engine) {
-	return getStartingFuel(engine->engineConfiguration,
-			getCoolantTemperature(engine->engineConfiguration2));
+	return getStartingFuel(engine->engineConfiguration, getCoolantTemperature(engine));
 }
 
 float getStartingFuel(engine_configuration_s *engineConfiguration, float coolantTemperature) {

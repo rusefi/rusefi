@@ -309,12 +309,12 @@ static void printTPSInfo(void) {
 }
 
 static void printTemperatureInfo(void) {
-	printThermistor("CLT", &engineConfiguration2->clt);
-	if (!isValidCoolantTemperature(getCoolantTemperature(engineConfiguration2))) {
+	printThermistor("CLT", &engine.clt);
+	if (!isValidCoolantTemperature(getCoolantTemperature(&engine))) {
 		scheduleMsg(&logger, "CLT sensing error");
 	}
-	printThermistor("IAT", &engineConfiguration2->iat);
-	if (!isValidIntakeAirTemperature(getIntakeAirTemperature(engineConfiguration2))) {
+	printThermistor("IAT", &engine.iat);
+	if (!isValidIntakeAirTemperature(getIntakeAirTemperature(&engine))) {
 		scheduleMsg(&logger, "IAT sensing error");
 	}
 
