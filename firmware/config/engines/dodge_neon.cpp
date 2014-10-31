@@ -178,6 +178,11 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 	boardConfiguration->injectionPins[2] = GPIOE_1;
 	boardConfiguration->injectionPins[3] = GPIOB_7;
 
+	boardConfiguration->ignitionPins[0] = GPIOC_9;
+	boardConfiguration->ignitionPins[1] = GPIO_NONE;
+	boardConfiguration->ignitionPins[2] = GPIOE_8;
+	boardConfiguration->ignitionPins[3] = GPIO_NONE;
+
 	boardConfiguration->idleValvePin = GPIOE_5;
 
 	boardConfiguration->gps_rx_pin = GPIO_NONE;
