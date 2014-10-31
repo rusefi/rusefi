@@ -144,6 +144,12 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 	engineConfiguration->displacement = 1.996;
 	engineConfiguration->cylindersCount = 4;
 
+	// set_cranking_charge_angle 70
+	engineConfiguration->crankingChargeAngle = 70;
+	// set_cranking_timing_angle 0
+	engineConfiguration->crankingTimingAngle = 0;
+
+
 	/**
 	 * bosch 4G1139
 	 * http://forum.2gn.org/viewtopic.php?t=21657
