@@ -19,12 +19,13 @@
 
 #include "datalogging.h"
 
-#include "ec2.h"
+#include "engine.h"
 
 #define DEFAULT_ENGINE_TYPE FORD_ASPIRE_1996
 
 static bool needToWriteConfiguration = false;
 
+extern Engine engine;
 static Logging logger;
 
 extern persistent_config_container_s persistentState;
@@ -87,7 +88,7 @@ static bool isValidCrc(persistent_config_container_s *state) {
 }
 
 static void doResetConfiguration(void) {
-	resetConfigurationExt(&logger, engineConfiguration->engineType, engineConfiguration, engineConfiguration2);
+	resetConfigurationExt(&logger, engineConfiguration->engineType, &engine);
 }
 
 static bool hasValidEngineType(engine_configuration_s *engineConfiguration) {
@@ -101,16 +102,16 @@ void readFromFlash(void) {
 
 	if (!isValidCrc(&persistentState)) {
 		printMsg(&logger, "Need to reset flash to default due to CRC");
-		resetConfigurationExt(&logger, DEFAULT_ENGINE_TYPE, engineConfiguration, engineConfiguration2);
+		resetConfigurationExt(&logger, DEFAULT_ENGINE_TYPE, &engine);
 	} else if (persistentState.version == FLASH_DATA_VERSION && persistentState.size == PERSISTENT_SIZE) {
 		printMsg(&logger, "Got valid configuration from flash!");
-		applyNonPersistentConfiguration(&logger, engineConfiguration, engineConfiguration2);
+		applyNonPersistentConfiguration(&logger, &engine);
 	} else if (hasValidEngineType(engineConfiguration)) {
 		printMsg(&logger, "Resetting but saving engine type [%d]", engineConfiguration->engineType);
-		resetConfigurationExt(&logger, engineConfiguration->engineType, engineConfiguration, engineConfiguration2);
+		resetConfigurationExt(&logger, engineConfiguration->engineType, &engine);
 	} else {
 		printMsg(&logger, "Need to reset flash to default due to version change");
-		resetConfigurationExt(&logger, DEFAULT_ENGINE_TYPE, engineConfiguration, engineConfiguration2);
+		resetConfigurationExt(&logger, DEFAULT_ENGINE_TYPE, &engine);
 	}
 	// we can only change the state after the CRC check
 	engineConfiguration->firmwareVersion = getRusEfiVersion();

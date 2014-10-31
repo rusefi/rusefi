@@ -403,8 +403,9 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	boardConfiguration->isEngineControlEnabled = true;
 }
 
-void resetConfigurationExt(Logging * logger, engine_type_e engineType, engine_configuration_s *engineConfiguration,
-		engine_configuration2_s *engineConfiguration2) {
+void resetConfigurationExt(Logging * logger, engine_type_e engineType, Engine *engine) {
+	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
+	engine_configuration2_s *engineConfiguration2 = engine->engineConfiguration2;
 	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 	/**
 	 * Let's apply global defaults first
@@ -503,7 +504,7 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType, engine_co
 		firmwareError("Unexpected engine type: %d", engineType);
 
 	}
-	applyNonPersistentConfiguration(logger, engineConfiguration, engineConfiguration2);
+	applyNonPersistentConfiguration(logger, engine);
 
 #if EFI_TUNER_STUDIO
 	syncTunerStudioCopy();
@@ -514,8 +515,9 @@ engine_configuration2_s::engine_configuration2_s() {
 	engineConfiguration = NULL;
 }
 
-void applyNonPersistentConfiguration(Logging * logger, engine_configuration_s *engineConfiguration,
-		engine_configuration2_s *engineConfiguration2) {
+void applyNonPersistentConfiguration(Logging * logger, Engine *engine) {
+	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
+	engine_configuration2_s *engineConfiguration2 = engine->engineConfiguration2;
 // todo: this would require 'initThermistors() to re-establish a reference, todo: fix
 //	memset(engineConfiguration2, 0, sizeof(engine_configuration2_s));
 #if EFI_PROD_CODE
@@ -531,7 +533,7 @@ void applyNonPersistentConfiguration(Logging * logger, engine_configuration_s *e
 		return;
 	}
 
-	prepareOutputSignals(engineConfiguration, engineConfiguration2);
+	prepareOutputSignals(engine);
 	// todo: looks like this is here only for unit tests. todo: remove
 	initializeIgnitionActions(0, 0, engineConfiguration, engineConfiguration2,
 			&engineConfiguration2->engineEventConfiguration.ignitionEvents[0]);

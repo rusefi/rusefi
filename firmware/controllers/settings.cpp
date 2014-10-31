@@ -198,7 +198,7 @@ static void setIdleMode(int mode) {
 
 void setEngineType(int value) {
 	engineConfiguration->engineType = (engine_type_e) value;
-	resetConfigurationExt(&logger, (engine_type_e) value, engineConfiguration, engineConfiguration2);
+	resetConfigurationExt(&logger, (engine_type_e) value, &engine);
 #if EFI_INTERNAL_FLASH
 	writeToFlash();
 //	scheduleReset();
