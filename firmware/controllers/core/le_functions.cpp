@@ -32,9 +32,9 @@ float getLEValue(Engine *engine, le_action_e action) {
 //	case LE_METHOD_FAN:
 	//	return ;
 	case LE_METHOD_COOLANT:
-		return getCoolantTemperature(engine->engineConfiguration2);
+		return getCoolantTemperature(engine);
 	case LE_METHOD_INTAKE_AIR:
-		return getIntakeAirTemperature(engine->engineConfiguration2);
+		return getIntakeAirTemperature(engine);
 	case LE_METHOD_RPM:
 		return engine->rpmCalculator->rpm();
 	case LE_METHOD_TIME_SINCE_BOOT:

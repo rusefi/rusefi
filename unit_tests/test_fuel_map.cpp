@@ -73,10 +73,10 @@ void testFuelMap(void) {
 
 	engine_configuration_s *engineConfiguration = eth.engine.engineConfiguration;
 
-	assertEquals(NAN, getIntakeAirTemperature(eth.engine.engineConfiguration2));
+	assertEquals(NAN, getIntakeAirTemperature(&eth.engine));
 	float iatCorrection = getIatCorrection(engineConfiguration, -KELV);
 	assertEqualsM("IAT", 2, iatCorrection);
-	float cltCorrection = getCltCorrection(engineConfiguration, getCoolantTemperature(eth.engine.engineConfiguration2));
+	float cltCorrection = getCltCorrection(engineConfiguration, getCoolantTemperature(&eth.engine));
 	assertEqualsM("CLT", 1, cltCorrection);
 	float injectorLag = getInjectorLag(engineConfiguration, getVBatt());
 	assertEquals(0, injectorLag);
