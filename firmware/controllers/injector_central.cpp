@@ -35,7 +35,13 @@ static Logging logger;
 extern engine_configuration_s *engineConfiguration;
 extern board_configuration_s *boardConfiguration;
 
+static bool_t isRunningBench = false;
+
 static int is_injector_enabled[MAX_INJECTOR_COUNT];
+
+bool_t isRunningBenchTest(void) {
+	return isRunningBench;
+}
 
 void assertCylinderId(int cylinderId, const char *msg) {
 	int isValid = cylinderId >= 1 && cylinderId <= engineConfiguration->cylindersCount;
@@ -85,6 +91,7 @@ static void runBench(brain_pin_e brainPin, io_pin_e pin, float delayMs, float on
 		chThdSleep(delaySt);
 	}
 
+	isRunningBench = true;
 	for (int i = 0; i < count; i++) {
 		setOutputPinValue(pin, TRUE);
 		chThdSleep((int) (onTimeMs * CH_FREQUENCY / 1000));
@@ -95,9 +102,10 @@ static void runBench(brain_pin_e brainPin, io_pin_e pin, float delayMs, float on
 		}
 	}
 	scheduleMsg(&logger, "Done!");
+	isRunningBench = false;
 }
 
-static volatile int needToRunBench = FALSE;
+static volatile bool_t needToRunBench = false;
 static float onTime;
 static float offTime;
 static float delayMs;
@@ -114,7 +122,7 @@ static void pinbench(const char *delayStr, const char *onTimeStr, const char *of
 
 	brainPin = brainPinParam;
 	pinX = pinParam;
-	needToRunBench = TRUE;
+	needToRunBench = true;
 }
 
 static void fuelbench2(const char *delayStr, const char *indexStr, const char * onTimeStr, const char *offTimeStr,
@@ -134,7 +142,7 @@ static void fuelpumpbench(int delayParam, int onTimeParam) {
 	offTime = 0;
 	count = 1;
 
-	needToRunBench = TRUE;
+	needToRunBench = true;
 }
 
 static void fuelbench(const char * onTimeStr, const char *offTimeStr, const char *countStr) {
@@ -163,7 +171,7 @@ static msg_t benchThread(int param) {
 		while (!needToRunBench) {
 			chThdSleepMilliseconds(200);
 		}
-		needToRunBench = FALSE;
+		needToRunBench = false;
 		runBench(brainPin, pinX, delayMs, onTime, offTime, count);
 	}
 #if defined __GNUC__
