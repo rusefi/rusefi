@@ -267,7 +267,7 @@ void onTriggerEvent(trigger_event_e ckpSignalType, uint32_t eventIndex, MainTrig
 
 	if (eventIndex == 0) {
 		if (localVersion.isOld())
-			prepareOutputSignals(mainTriggerCallback->engineConfiguration, mainTriggerCallback->engineConfiguration2);
+			prepareOutputSignals(mainTriggerCallback->engine);
 
 		/**
 		 * TODO: warning. there is a bit of a hack here, todo: improve.

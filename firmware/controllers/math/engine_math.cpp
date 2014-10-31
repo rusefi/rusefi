@@ -339,7 +339,10 @@ int getCylinderId(firing_order_e firingOrder, int index) {
 	return -1;
 }
 
-void prepareOutputSignals(engine_configuration_s *engineConfiguration, engine_configuration2_s *engineConfiguration2) {
+void prepareOutputSignals(Engine *engine) {
+
+	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
+engine_configuration2_s *engineConfiguration2 = engine->engineConfiguration2;
 
 	// todo: move this reset into decoder
 	engineConfiguration2->triggerShape.calculateTriggerSynchPoint(&engineConfiguration->triggerConfig);

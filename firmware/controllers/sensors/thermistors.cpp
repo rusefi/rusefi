@@ -109,8 +109,8 @@ bool isValidIntakeAirTemperature(float temperature) {
 float getCoolantTemperature(Engine * engine) {
 	float temperature = getTemperatureC(&engine->clt);
 	if (!isValidCoolantTemperature(temperature)) {
-		efiAssert(engineConfiguration2->engineConfiguration!=NULL, "NULL engineConfiguration", NAN);
-		if (engineConfiguration2->engineConfiguration->hasCltSensor) {
+		efiAssert(engine->engineConfiguration!=NULL, "NULL engineConfiguration", NAN);
+		if (engine->engineConfiguration->hasCltSensor) {
 			warning(OBD_PCM_Processor_Fault, "unrealistic CLT %f", temperature);
 		}
 		return LIMPING_MODE_CLT_TEMPERATURE;
