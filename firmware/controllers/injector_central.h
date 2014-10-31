@@ -21,6 +21,7 @@ extern "C"
 void initInjectorCentral(void);
 int isInjectorEnabled(int cylinderId);
 void assertCylinderId(int cylinderId, const char *msg);
+bool_t isRunningBenchTest(void);
 
 #ifdef __cplusplus
 }
