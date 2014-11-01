@@ -188,7 +188,6 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 	boardConfiguration->fuelPumpPin = GPIOE_3;
 	boardConfiguration->fuelPumpPinMode = OM_DEFAULT;
 
-
 	boardConfiguration->gps_rx_pin = GPIO_NONE;
 	boardConfiguration->gps_tx_pin = GPIO_NONE;
 
@@ -210,6 +209,8 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 	 * TPS D11/W11
 	 */
 	engineConfiguration->tpsAdcChannel = EFI_ADC_1;
+	engineConfiguration->tpsMin = 125; // convert 12to10 bit (ADC/4)
+	engineConfiguration->tpsMax = 625; // convert 12to10 bit (ADC/4)
 
 	/**
 	 * IAT D15/W7
