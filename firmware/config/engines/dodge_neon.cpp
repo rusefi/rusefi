@@ -204,6 +204,11 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 	 */
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_0;
 
+	boardConfiguration->adcHwChannelEnabled[1] = ADC_SLOW; // TPS
+	boardConfiguration->adcHwChannelEnabled[11] = ADC_SLOW; // IAT
+	boardConfiguration->adcHwChannelEnabled[12] = ADC_SLOW; // CLT
+	boardConfiguration->adcHwChannelEnabled[13] = ADC_SLOW; // AFR
+	boardConfiguration->adcHwChannelEnabled[14] = ADC_SLOW; // VBatt
 
 	/**
 	 * TPS D11/W11
