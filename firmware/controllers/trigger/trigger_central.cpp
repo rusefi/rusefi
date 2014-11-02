@@ -190,15 +190,20 @@ static void triggerShapeInfo(Engine *engine) {
 
 static void triggerInfo(Engine *engine) {
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
+
+	trigger_shape_s *ts = &engineConfiguration2->triggerShape;
+
 	scheduleMsg(&logger, "Template %s/%d trigger %d", getConfigurationName(engineConfiguration->engineType),
 			engineConfiguration->engineType, engineConfiguration->triggerConfig.triggerType);
+
+	scheduleMsg(&logger, "sn=%d", ts->isSynchronizationNeeded);
 
 	scheduleMsg(&logger, "trigger event counters %d/%d/%d/%d", triggerCentral.getHwEventCounter(0),
 			triggerCentral.getHwEventCounter(1), triggerCentral.getHwEventCounter(2),
 			triggerCentral.getHwEventCounter(3));
 	scheduleMsg(&logger, "expected cycle events %d/%d/%d", engineConfiguration2->triggerShape.expectedEventCount[0],
 			engineConfiguration2->triggerShape.expectedEventCount[1],
-			engineConfiguration2->triggerShape.expectedEventCount[2]);
+			ts->expectedEventCount[2]);
 
 	scheduleMsg(&logger, "trigger type=%d/need2ndChannel=%s", engineConfiguration->triggerConfig.triggerType,
 			boolToString(engineConfiguration->needSecondTriggerInput));
@@ -245,5 +250,4 @@ void initTriggerCentral(Engine *engine) {
 #if EFI_HISTOGRAMS
 	initHistogram(&triggerCallback, "all callbacks");
 #endif /* EFI_HISTOGRAMS */
-	initTriggerDecoder();
 }
