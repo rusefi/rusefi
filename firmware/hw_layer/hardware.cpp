@@ -159,6 +159,14 @@ void initHardware(Logging *logger, Engine *engine) {
 #endif /* EFI_HISTOGRAMS */
 
 	/**
+	 * This is so early because we want to init logger
+	 * which would be used while finding trigger synch index
+	 * while config read
+	 */
+	initTriggerDecoder();
+
+
+	/**
 	 * We need the LED_ERROR pin even before we read configuration
 	 */
 	initPrimaryPins();

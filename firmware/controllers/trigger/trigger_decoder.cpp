@@ -39,6 +39,9 @@ static cyclic_buffer errorDetection;
 
 bool printGapRatio = false;
 
+#else
+	Logging logger;
+
 #endif /* ! EFI_PROD_CODE */
 
 /**
@@ -60,6 +63,9 @@ static inline bool isSynchronizationGap(TriggerState const *shaftPositionState, 
 		float gap = 1.0 * currentDuration / shaftPositionState->toothed_previous_duration;
 		print("current gap %f\r\n", gap);
 	}
+#else
+//	float gap = 1.0 * currentDuration / shaftPositionState->toothed_previous_duration;
+//	scheduleMsg(&logger, "gap=%f", gap);
 
 #endif /* ! EFI_PROD_CODE */
 
@@ -390,7 +396,7 @@ uint32_t findTriggerZeroEventIndex(trigger_shape_s * shape, trigger_config_s con
 
 void initTriggerDecoder(void) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
-//	initLogging(&logger, "trigger decoder");
+	initLogging(&logger, "trigger decoder");
 #endif
 }
 
