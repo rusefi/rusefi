@@ -15,7 +15,6 @@
 #include "status_loop.h"
 #include "engine_configuration.h"
 #include "console_io.h"
-#include "flash_main.h"
 
 #if EFI_ENGINE_CONTROL
 #include "main_trigger_callback.h"

@@ -173,7 +173,7 @@ void initHardware(Logging *logger, Engine *engine) {
 
 	palSetPadMode(CONFIG_RESET_SWITCH_PORT, CONFIG_RESET_SWITCH_PIN, PAL_MODE_INPUT_PULLUP);
 
-	initFlash();
+	initFlash(engine);
 	/**
 	 * this call reads configuration from flash memory or sets default configuration
 	 * if flash state does not look right.

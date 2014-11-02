@@ -117,10 +117,16 @@ void readFromFlash(void) {
 	engineConfiguration->firmwareVersion = getRusEfiVersion();
 }
 
-void initFlash(void) {
+static void rewriteConfig(Engine *engine) {
+	doResetConfiguration();
+	writeToFlash();
+}
+
+void initFlash(Engine *engine) {
 	initLogging(&logger, "Flash memory");
 
 	addConsoleAction("readconfig", readFromFlash);
 	addConsoleAction("writeconfig", writeToFlash);
 	addConsoleAction("resetconfig", doResetConfiguration);
+	addConsoleActionP("rewriteconfig", (VoidPtr)rewriteConfig, engine);
 }
