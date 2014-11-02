@@ -201,6 +201,9 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 	setThermistorConfiguration(&engineConfiguration->cltThermistorConf, 0, 32500, 30, 7550, 100, 700);
 	engineConfiguration->cltThermistorConf.bias_resistor = 10000;
 
+	setThermistorConfiguration(&engineConfiguration->iatThermistorConf, 0, 32500, 30, 7550, 100, 700);
+	engineConfiguration->iatThermistorConf.bias_resistor = 10000;
+
 	/**
 	 * MAP D17/W5
 	 */
