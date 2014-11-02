@@ -7,7 +7,7 @@ package com.irnems.waves;
 public interface TimeAxisTranslator {
     int timeToScreen(int time, int width, ZoomProvider zoomProvider);
 
-    double screenToTime(int screen, int width, ZoomProvider zoomProvider);
+    double screenToTime(int screenX, int screenWidth, ZoomProvider zoomProvider);
 
     int getMaxTime();
 

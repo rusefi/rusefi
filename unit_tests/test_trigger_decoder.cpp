@@ -532,6 +532,7 @@ void testTriggerDecoder(void) {
 
 	printGapRatio = true;
 	testTriggerDecoder2("neon NGC", DODGE_NEON_2003, 12, 0.5139, 0.0);
+	printGapRatio = false;
 
 	testMazda323();
 

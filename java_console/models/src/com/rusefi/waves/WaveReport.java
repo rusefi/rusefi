@@ -116,10 +116,10 @@ public class WaveReport implements TimeAxisTranslator {
     }
 
     @Override
-    public double screenToTime(int screen, int width, ZoomProvider zoomProvider) {
+    public double screenToTime(int screenX, int screenWidth, ZoomProvider zoomProvider) {
         //  / SYS_TICKS_PER_MS / 1000
-        double time = 1.0 * screen * getDuration() / width / zoomProvider.getZoomValue() + minTime;
-        int x2 = timeToScreen((int) time, width, zoomProvider);
+        double time = 1.0 * screenX * getDuration() / screenWidth / zoomProvider.getZoomValue() + minTime;
+        int x2 = timeToScreen((int) time, screenWidth, zoomProvider);
 //        FileLog.rlog("screenToTime " + (screen - x2));
         return (int) time;
     }

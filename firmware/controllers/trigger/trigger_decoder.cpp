@@ -36,13 +36,13 @@
 static cyclic_buffer errorDetection;
 
 #if ! EFI_PROD_CODE
-
 bool printGapRatio = false;
-
-#else
-	Logging logger;
-
 #endif /* ! EFI_PROD_CODE */
+
+#if (EFI_PROD_CODE || EFI_SIMULATOR)
+Logging logger;
+#endif
+
 
 /**
  * @return TRUE is something is wrong with trigger decoding
@@ -395,7 +395,7 @@ uint32_t findTriggerZeroEventIndex(trigger_shape_s * shape, trigger_config_s con
 #endif
 
 void initTriggerDecoder(void) {
-#if EFI_PROD_CODE || EFI_SIMULATOR
+#if (EFI_PROD_CODE || EFI_SIMULATOR)
 	initLogging(&logger, "trigger decoder");
 #endif
 }
