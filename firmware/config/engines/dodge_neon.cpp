@@ -163,6 +163,8 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 	setFuelLoadBin(engineConfiguration, 0, 100);
 	setTimingLoadBin(engineConfiguration, 0, 100);
 
+	boardConfiguration->malfunctionIndicatorPin = GPIO_NONE;
+
 	/**
 	 * D14/W10 O2 Sensor
 	 */
@@ -183,7 +185,7 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 	boardConfiguration->ignitionPins[2] = GPIOE_8;
 	boardConfiguration->ignitionPins[3] = GPIO_NONE;
 
-	boardConfiguration->idleValvePin = GPIOE_5;
+	boardConfiguration->idleValvePin = GPIO_NONE;
 
 	boardConfiguration->fuelPumpPin = GPIOE_3;
 	boardConfiguration->fuelPumpPinMode = OM_DEFAULT;

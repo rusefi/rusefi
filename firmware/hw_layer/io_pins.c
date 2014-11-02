@@ -54,7 +54,6 @@ void setDefaultPinState(io_pin_e pin, pin_output_mode_e *outputMode) {
 	setOutputPinValue(pin, FALSE); // initial state
 }
 
-
 static void outputPinRegisterExt(const char *msg, io_pin_e ioPin, GPIO_TypeDef *port, uint32_t pin,
 		pin_output_mode_e *outputMode) {
 	efiAssertVoid((int)ioPin < IO_PIN_COUNT, "io pin out of range");
