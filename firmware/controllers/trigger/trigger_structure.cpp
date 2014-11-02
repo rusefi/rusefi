@@ -284,10 +284,14 @@ void setToothedWheelConfiguration(trigger_shape_s *s, int total, int skipped,
 			getOperationMode(engineConfiguration));
 }
 
-void setTriggerSynchronizationGap(trigger_shape_s *s, float synchGap) {
+void setTriggerSynchronizationGap2(trigger_shape_s *s, float syncGapFrom, float syncRatioTo) {
 	s->isSynchronizationNeeded = true;
-	s->syncRatioFrom = synchGap * 0.75;
-	s->syncRatioTo = synchGap * 1.25;
+	s->syncRatioFrom = syncGapFrom;
+	s->syncRatioTo = syncRatioTo;
+}
+
+void setTriggerSynchronizationGap(trigger_shape_s *s, float synchGap) {
+	setTriggerSynchronizationGap2(s, synchGap * 0.75f, synchGap * 1.25f);
 }
 
 #define S24 (720.0f / 24 / 2)

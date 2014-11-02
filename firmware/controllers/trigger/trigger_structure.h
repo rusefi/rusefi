@@ -121,6 +121,7 @@ private:
 };
 
 void setTriggerSynchronizationGap(trigger_shape_s *s, float synchGap);
+void setTriggerSynchronizationGap2(trigger_shape_s *s, float syncGapFrom, float syncRatioTo);
 void setToothedWheelConfiguration(trigger_shape_s *s, int total, int skipped, engine_configuration_s const *engineConfiguration);
 
 #endif /* TRIGGER_STRUCTURE_H_ */

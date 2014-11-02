@@ -35,10 +35,12 @@ public class ChartStatusPanel {
             int x = event.getX();
             xLabel.setText("" + x);
 
+            UpDownImage s = (UpDownImage) event.getSource();
+
             /**
              * Time which corresponds to the mouse cursor screen location
              */
-            double time = translator.screenToTime(x, infoPanel.getWidth(), zoomProvider);
+            double time = translator.screenToTime(x, s.getWidth(), zoomProvider);
             timeLabel.setText("" + String.format("%.5f sec", time));
 
             String text = time2rpm == null ? "n/a" : time2rpm.getCrankAngleByTimeString(time);
