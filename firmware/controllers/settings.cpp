@@ -131,7 +131,8 @@ void printConfiguration(engine_configuration_s *engineConfiguration, engine_conf
 
 	scheduleMsg(&logger, "idlePin: mode %s @ %s", getPin_output_mode_e(boardConfiguration->idleValvePinMode),
 			hwPortname(boardConfiguration->idleValvePin));
-	scheduleMsg(&logger, "malfunctionIndicatorPinMode: %s",
+	scheduleMsg(&logger, "malfunctionIndicatorn: %s mode=%s",
+			hwPortname(boardConfiguration->malfunctionIndicatorPin),
 			pinModeToString(boardConfiguration->malfunctionIndicatorPinMode));
 
 	scheduleMsg(&logger, "fuelPumpPin: mode %s @ %s", getPin_output_mode_e(boardConfiguration->fuelPumpPinMode),
