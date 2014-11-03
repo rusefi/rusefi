@@ -19,7 +19,7 @@ float getInjectorLag(engine_configuration_s *engineConfiguration, float vBatt);
 float getCltCorrection(engine_configuration_s *engineConfiguration, float clt);
 float getRunningFuel(float baseFuel, Engine *engine, int rpm);
 float getCrankingFuel(Engine *engine);
-float getStartingFuel(engine_configuration_s *engineConfiguration, float coolantTemperature);
+float getCrankingFuel3(engine_configuration_s *engineConfiguration, float coolantTemperature, uint32_t revolutionCounterSinceStart);
 float getFuelMs(int rpm, Engine *engine);
 
 #endif /* FUEL_MAP_H_ */

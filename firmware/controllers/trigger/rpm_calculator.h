@@ -28,14 +28,23 @@ public:
 	int mockRpm;
 #endif
 	RpmCalculator();
+	bool isRunning(void);
 	int rpm(void);
+	void onNewEngineCycle();
+	uint32_t getRevolutionCounter(void);
+	uint32_t getRevolutionCounterSinceStart(void);
 	volatile int rpmValue;
 	volatile uint64_t lastRpmEventTimeUs;
+private:
 	/**
 	 * This counter is incremented with each revolution of one of the shafts. Could be
 	 * crankshaft could be camshaft.
 	 */
-	volatile int revolutionCounter;bool isRunning(void);
+	volatile uint32_t revolutionCounterSinceBoot;
+	/**
+	 * Same as the above, but since the engine started spinning
+	 */
+	volatile uint32_t revolutionCounterSinceStart;
 };
 
 #define getRpm() getRpmE(&engine)

@@ -64,6 +64,8 @@ RpmCalculator::RpmCalculator() {
 
 	// we need this initial to have not_running at first invocation
 	lastRpmEventTimeUs = (uint64_t) -10 * US_PER_SECOND;
+	revolutionCounterSinceStart = 0;
+	revolutionCounterSinceBoot = 0;
 }
 
 /**
@@ -74,6 +76,20 @@ bool RpmCalculator::isRunning(void) {
 	return nowUs - lastRpmEventTimeUs < US_PER_SECOND;
 }
 
+void RpmCalculator::onNewEngineCycle() {
+	revolutionCounterSinceBoot++;
+	revolutionCounterSinceStart++;
+}
+
+uint32_t RpmCalculator::getRevolutionCounter(void) {
+	return revolutionCounterSinceBoot;
+}
+
+uint32_t RpmCalculator::getRevolutionCounterSinceStart(void) {
+	return revolutionCounterSinceStart;
+}
+
+
 // todo: migrate to float return result or add a float verion? this would have with calculations
 // todo: add a version which does not check time & saves time? need to profile
 int RpmCalculator::rpm(void) {
@@ -82,6 +98,7 @@ int RpmCalculator::rpm(void) {
 		return mockRpm;
 #endif
 	if (!isRunning()) {
+		revolutionCounterSinceStart = 0;
 		return 0;
 	}
 	return rpmValue;
@@ -122,7 +139,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index, Rpm
 #endif
 		return;
 	}
-	rpmState->revolutionCounter++;
+	rpmState->onNewEngineCycle();
 
 	bool hadRpmRecently = rpmState->isRunning();
 
@@ -186,7 +203,7 @@ uint64_t getLastRpmEventTime(void) {
 }
 
 int getRevolutionCounter(void) {
-	return rpmState.revolutionCounter;
+	return rpmState.getRevolutionCounter();
 }
 
 /**
