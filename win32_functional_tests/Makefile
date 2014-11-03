@@ -113,7 +113,6 @@ CSRC =	${PORTSRC} \
        ${CHIBIOS}/os/various/memstreams.c \
 	$(UTILSRC) \
        simulator/boards.c \
-	$(PROJECT_DIR)/emulation/analog_chart.c \
 	main.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
@@ -121,6 +120,7 @@ CSRC =	${PORTSRC} \
 CPPSRC = $(UTILSRC_CPP) \
 	$(CONTROLLERS_ALGO_SRC_CPP) \
 	$(PROJECT_DIR)/controllers/settings.cpp \
+	$(PROJECT_DIR)/emulation/analog_chart.cpp \
 	$(TRIGGER_SRC_CPP) \
 	$(TRIGGER_DECODERS_SRC_CPP) \
 	$(SYSTEMSRC_CPP) \

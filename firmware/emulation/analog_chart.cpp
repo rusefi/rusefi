@@ -1,13 +1,13 @@
 /**
- * @file	analog_chart.c
+ * @file	analog_chart.cpp
  *
  * @date Dec 20, 2013
  * @author Andrey Belomutskiy, (c) 2012-2014
  */
 
 #include "main.h"
-#include "rpm_calculator.h"
 #include "analog_chart.h"
+#include "rpm_calculator.h"
 #include "status_loop.h"
 #include "engine_configuration.h"
 
