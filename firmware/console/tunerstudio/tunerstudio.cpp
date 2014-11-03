@@ -127,11 +127,14 @@ static void printStats(void) {
 //	int fuelMapOffset = (int) (&engineConfiguration->fuelTable) - (int) engineConfiguration;
 //	scheduleMsg(&logger, "fuelTable %d", fuelMapOffset);
 //
-	int offset = (int) (&boardConfiguration->max31855spiDevice) - (int) engineConfiguration;
-	scheduleMsg(&logger, "max31855_SpiDevice %d", offset);
+	int offset = (int) (&boardConfiguration->le_formulas) - (int) engineConfiguration;
+	scheduleMsg(&logger, "le_formulas %d", offset);
 //
-//	offset = (int) (&boardConfiguration->idleSolenoidFrequency) - (int) engineConfiguration;
-//	scheduleMsg(&logger, "idleSolenoidFrequency %d", offset);
+	offset = (int) (&engineConfiguration->crankingCycleBins) - (int) engineConfiguration;
+	scheduleMsg(&logger, "crankingCycleBins %d", offset);
+
+	offset = (int) (&engineConfiguration->engineCycle) - (int) engineConfiguration;
+	scheduleMsg(&logger, "engineCycle %d", offset);
 }
 
 void tunerStudioWriteData(const uint8_t * buffer, int size) {

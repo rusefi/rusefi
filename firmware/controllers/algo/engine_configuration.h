@@ -19,7 +19,6 @@
 #define MOCK_UNDEFINED -1
 
 typedef struct {
-	float unused[3];
 	float baseCrankingFuel;
 
 	/**
@@ -261,6 +260,7 @@ typedef struct {
 	/**
 	 * Should the trigger emulator push data right into trigger input, eliminating the need for physical jumper wires?
 	 * PS: Funny name, right? :)
+	 * todo: make this a bit on some bit field
 	 */
 	short int directSelfStimulation; // size 2, offset 328
 
@@ -270,6 +270,19 @@ typedef struct {
 	// tpsMax value as 10 bit ADC value. Not Voltage!
 	short int tpsMax; // size 2, offset 332
 	short int analogChartMode;
+
+	/**
+	 * todo: finish implementation. These values are used for TPS disconnect detection
+	 */
+	short int tpsErrorLowValue;
+	short int tpsErrorHighValue;
+
+	float primingSquirtDurationMs;
+	/**
+	 * 360 for two-stroke
+	 * 720 for four-stroke
+	 */
+	int engineCycle;
 
 	cranking_parameters_s crankingSettings;
 
@@ -461,23 +474,13 @@ typedef struct {
 	 */
 	float injectorFlow; // size 4
 
-	/**
-	 * 360 for two-stroke
-	 * 720 for four-stroke
-	 */
-	int engineCycle;
-
-	short int tpsErrorLowValue;
-	short int tpsErrorHighValue;
-
-	float primingSquirtDurationMs;
-
 	float crankingFuelCoef[CRANKING_CURVE_SIZE];
 	float crankingFuelBins[CRANKING_CURVE_SIZE];
 
 	float crankingCycleCoef[CRANKING_CURVE_SIZE];
 	float crankingCycleBins[CRANKING_CURVE_SIZE];
 
+	int unused33[3];
 	int unused3[91];
 
 } engine_configuration_s;
