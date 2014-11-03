@@ -155,13 +155,42 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	engineConfiguration->rpmHardLimit = 7000;
 	engineConfiguration->crankingSettings.crankingRpm = 550;
 
-	// set_cranking_fuel_max 8 80
-	engineConfiguration->crankingSettings.coolantTempMaxC = 80; // 8ms at 80C
-	engineConfiguration->crankingSettings.fuelAtMaxTempMs = 8;
 
-	// set_cranking_fuel_min 24 -40
-	engineConfiguration->crankingSettings.coolantTempMinC = -40; // 6ms at -40C
-	engineConfiguration->crankingSettings.fuelAtMinTempMs = 24;
+	engineConfiguration->crankingFuelCoef[0] = 5; // base cranking fuel adjustment coefficient
+	engineConfiguration->crankingFuelBins[0] = -20; // temperature in C
+	engineConfiguration->crankingFuelCoef[1] = 3.7;
+	engineConfiguration->crankingFuelBins[1] = -10;
+	engineConfiguration->crankingFuelCoef[2] = 2.6;
+	engineConfiguration->crankingFuelBins[2] = 5;
+	engineConfiguration->crankingFuelCoef[3] = 2.4;
+	engineConfiguration->crankingFuelBins[3] = 20;
+	engineConfiguration->crankingFuelCoef[4] = 2.1;
+	engineConfiguration->crankingFuelBins[4] = 35;
+	engineConfiguration->crankingFuelCoef[5] = 1.8;
+	engineConfiguration->crankingFuelBins[5] = 50;
+	engineConfiguration->crankingFuelCoef[6] = 1.5;
+	engineConfiguration->crankingFuelBins[6] = 65;
+	engineConfiguration->crankingFuelCoef[7] = 1;
+	engineConfiguration->crankingFuelBins[7] = 90;
+
+	engineConfiguration->crankingCycleCoef[0] = 2;
+	engineConfiguration->crankingCycleBins[0] = 10;
+	engineConfiguration->crankingCycleCoef[1] = 1;
+	engineConfiguration->crankingCycleBins[1] = 31;
+	engineConfiguration->crankingCycleCoef[2] = 1;
+	engineConfiguration->crankingCycleBins[2] = 52;
+	engineConfiguration->crankingCycleCoef[3] = 0.5;
+	engineConfiguration->crankingCycleBins[3] = 73;
+	engineConfiguration->crankingCycleCoef[4] = 0.5;
+	engineConfiguration->crankingCycleBins[4] = 74;
+	engineConfiguration->crankingCycleCoef[5] = 0.5;
+	engineConfiguration->crankingCycleBins[5] = 75;
+	engineConfiguration->crankingCycleCoef[6] = 0.5;
+	engineConfiguration->crankingCycleBins[6] = 76;
+	engineConfiguration->crankingCycleCoef[7] = 0.5;
+	engineConfiguration->crankingCycleBins[7] = 77;
+
+	engineConfiguration->crankingSettings.baseCrankingFuel = 5;
 
 	engineConfiguration->analogInputDividerCoefficient = 2;
 

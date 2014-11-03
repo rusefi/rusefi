@@ -90,18 +90,14 @@ void testFuelMap(void) {
 
 	testMafValue = 0;
 
-	engineConfiguration->crankingSettings.coolantTempMaxC = 65; // 8ms at 65C
-	engineConfiguration->crankingSettings.fuelAtMaxTempMs = 8;
-
-	engineConfiguration->crankingSettings.coolantTempMinC = 0; // 20ms at 0C
-	engineConfiguration->crankingSettings.fuelAtMinTempMs = 20;
+	engineConfiguration->crankingSettings.baseCrankingFuel = 4;
 
 	printf("*************************************************** getStartingFuel\r\n");
 	// NAN in case we have issues with the CLT sensor
-//	assertEquals(16, getStartingFuel(NAN));
-	assertEquals(20, getStartingFuel(engineConfiguration, 0));
-	assertEquals(18.5231, getStartingFuel(engineConfiguration, 8));
-	assertEquals(8, getStartingFuel(engineConfiguration, 70));
+	assertEqualsM("getStartingFuel nan", 4, getStartingFuel(engineConfiguration, NAN));
+	assertEqualsM("getStartingFuel#1", 11.8667, getStartingFuel(engineConfiguration, 0));
+	assertEqualsM("getStartingFuel#2", 10.2400, getStartingFuel(engineConfiguration, 8));
+	assertEqualsM("getStartingFuel#3", 5.6000, getStartingFuel(engineConfiguration, 70));
 }
 
 extern engine_configuration_s *engineConfiguration;

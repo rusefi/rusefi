@@ -160,12 +160,9 @@ float getCrankingFuel(Engine *engine) {
 
 float getStartingFuel(engine_configuration_s *engineConfiguration, float coolantTemperature) {
 	// these magic constants are in Celsius
-	if (cisnan(coolantTemperature) || coolantTemperature < engineConfiguration->crankingSettings.coolantTempMinC)
-		return engineConfiguration->crankingSettings.fuelAtMinTempMs;
-	if (coolantTemperature > engineConfiguration->crankingSettings.coolantTempMaxC)
-		return engineConfiguration->crankingSettings.fuelAtMaxTempMs;
-	return interpolate(engineConfiguration->crankingSettings.coolantTempMinC,
-			engineConfiguration->crankingSettings.fuelAtMinTempMs,
-			engineConfiguration->crankingSettings.coolantTempMaxC,
-			engineConfiguration->crankingSettings.fuelAtMaxTempMs, coolantTemperature);
+	float baseCrankingFuel = engineConfiguration->crankingSettings.baseCrankingFuel;
+	if (cisnan(coolantTemperature))
+		return baseCrankingFuel;
+	return interpolate2d(coolantTemperature, engineConfiguration->crankingFuelBins,
+			engineConfiguration->crankingFuelCoef, CRANKING_CURVE_SIZE) * baseCrankingFuel;
 }

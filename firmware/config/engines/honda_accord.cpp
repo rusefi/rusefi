@@ -51,12 +51,6 @@ static void setHondaAccordConfigurationCommon(engine_configuration_s *engineConf
 	setFuelLoadBin(engineConfiguration, 0, 100);
 	setTimingLoadBin(engineConfiguration, 0, 100);
 
-	engineConfiguration->crankingSettings.coolantTempMaxC = 65; // 8ms at 65C
-	engineConfiguration->crankingSettings.fuelAtMaxTempMs = 8;
-
-	engineConfiguration->crankingSettings.coolantTempMinC = 0; // 20ms at 0C
-	engineConfiguration->crankingSettings.fuelAtMinTempMs = 15;
-
 	/**
 	 * 18K Ohm @ -20C
 	 * 2.1K Ohm @ 24C

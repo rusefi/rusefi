@@ -58,14 +58,8 @@ void setDodgeNeon1995EngineConfiguration(engine_configuration_s *engineConfigura
 	// set_cranking_rpm 550
 	engineConfiguration->crankingSettings.crankingRpm = 550;
 
-	// since CLT is not wired up yet let's just use same value for min and max
-	// set_cranking_fuel_max 6 40
-	engineConfiguration->crankingSettings.coolantTempMaxC = 37.7; // 6ms at 37.7C
-	engineConfiguration->crankingSettings.fuelAtMaxTempMs = 6;
-
-	// set_cranking_fuel_min 6 -40
-	engineConfiguration->crankingSettings.coolantTempMinC = -40; // 6ms at -40C
-	engineConfiguration->crankingSettings.fuelAtMinTempMs = 6;
+	// set_cranking_fuel 5
+	engineConfiguration->crankingSettings.baseCrankingFuel = 5;
 
 	// set_whole_fuel_map 3
 	setWholeFuelMap(engineConfiguration, 3);
