@@ -26,13 +26,10 @@
 #include "main_trigger_callback.h"
 #include "engine_configuration.h"
 
-static Logging logger;
-
 extern engine_configuration_s *engineConfiguration;
 extern board_configuration_s *boardConfiguration;
 
 void initIgnitionCentral(void) {
-	initLogging(&logger, "IgnitionCentral");
 
 	for (int i = 0; i < engineConfiguration->cylindersCount; i++) {
 		io_pin_e pin = (io_pin_e)((int)SPARKOUT_1_OUTPUT + i);
