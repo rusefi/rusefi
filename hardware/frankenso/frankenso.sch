@@ -55,7 +55,7 @@ $Descr B 17000 11000
 encoding utf-8
 Sheet 1 14
 Title "Frankenso"
-Date "23 oct 2014"
+Date "3 nov 2014"
 Rev ".02"
 Comp "rusEFI.com"
 Comment1 ""
@@ -178,6 +178,7 @@ F24 "INJ-10" I R 11100 4750 60
 F25 "INJ-12" I R 11100 4950 60 
 F26 "INJ-11_5V" I L 9600 4850 60 
 F27 "INJ-12_5V" I L 9600 4950 60 
+F28 "5V" I L 9600 5050 60 
 $EndSheet
 $Comp
 L TEST W1
@@ -2773,4 +2774,6 @@ Connection ~ 11800 550
 Wire Wire Line
 	12000 650  12000 550 
 Connection ~ 12000 550 
+Text Label 9600 5050 2    60   ~ 0
+5V
 $EndSCHEMATC

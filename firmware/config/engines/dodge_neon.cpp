@@ -131,6 +131,7 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 	engineConfiguration->triggerConfig.triggerType = TT_DODGE_NEON_2003;
 	setFrankenso_01_LCD(boardConfiguration);
 
+	// set_global_trigger_offset_angle 46
 	engineConfiguration->globalTriggerAngleOffset = 46;
 	engineConfiguration->needSecondTriggerInput = false;
 
@@ -142,8 +143,8 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 
 	// set_cranking_charge_angle 70
 	engineConfiguration->crankingChargeAngle = 70;
-	// set_cranking_timing_angle 0
-	engineConfiguration->crankingTimingAngle = 0;
+	// set_cranking_timing_angle 710
+	engineConfiguration->crankingTimingAngle = 710;
 
 
 	/**

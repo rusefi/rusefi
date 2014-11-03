@@ -26,6 +26,7 @@
 26)                  add a couple more low-side chips
 27) RESOLVED IN R0.2 surge suppression diode option for some low-side
 28) RESOLVED IN R0.2 better silkscreen for P602 & P604 - explicit "5v" "12v" "GND"
+29) RESOLVED IN R0.2 Add LED indicators to injector channels. 
 
 For honda add-on / rewiring board
 -- Add 2A high side solinoid drive for VTec sol
