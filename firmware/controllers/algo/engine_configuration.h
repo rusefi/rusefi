@@ -101,6 +101,8 @@ typedef struct {
 
 #define DWELL_COUNT 8
 
+#define CRANKING_CURVE_SIZE 8
+
 /**
  * @brief Trigger wheel(s) configuration
  */
@@ -472,7 +474,13 @@ typedef struct {
 
 	float primingSquirtDurationMs;
 
-	int unused3[23];
+	float crankingFuelCoef[CRANKING_CURVE_SIZE];
+	float crankingFuelBins[CRANKING_CURVE_SIZE];
+
+	float crankingCycleCoef[CRANKING_CURVE_SIZE];
+	float crankingCycleBins[CRANKING_CURVE_SIZE];
+
+	int unused3[91];
 
 } engine_configuration_s;
 
