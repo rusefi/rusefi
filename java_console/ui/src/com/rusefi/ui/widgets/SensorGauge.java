@@ -2,13 +2,10 @@ package com.rusefi.ui.widgets;
 
 import com.irnems.core.Sensor;
 import com.irnems.core.SensorCentral;
-import com.rusefi.io.CommandQueue;
 import eu.hansolo.steelseries.gauges.Radial;
 import eu.hansolo.steelseries.tools.ColorDef;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,8 +13,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.DecimalFormat;
 import java.text.Format;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Hashtable;
 
 /**
@@ -26,23 +21,24 @@ import java.util.Hashtable;
  */
 
 public class SensorGauge {
-    private static final Collection<Sensor> MOCKABLE = Arrays.asList(Sensor.CLT, Sensor.AFR, Sensor.IAT, Sensor.MAF,
-            Sensor.TPS);
-    /**
-     * We need to trick the JSlider into displaying float values
-     */
-    private static final int _5_VOLTS_WITH_DECIMAL = 50;
 
     public static Component createGauge(final Sensor sensor) {
+        return createGauge2(sensor, null);
+    }
+
+    private static Component createGauge2(Sensor sensor, GaugeChangeListener listener) {
         JPanel wrapper = new JPanel(new BorderLayout());
 
-        createGaugeBody(sensor, wrapper);
-
+        createGaugeBody(sensor, wrapper, listener);
 
         return wrapper;
     }
 
-    private static void createGaugeBody(final Sensor sensor, final JPanel wrapper) {
+    interface GaugeChangeListener {
+        void onChange(Sensor sensor);
+    }
+
+    private static void createGaugeBody(final Sensor sensor, final JPanel wrapper, final GaugeChangeListener listener) {
         final Radial gauge = createRadial(sensor.getName(), sensor.getUnits(), sensor.getMaxValue(), sensor.getMinValue());
 
         UpDownImage.setTwoLineToolTip(gauge, "Double-click to detach", "Right-click to change");
@@ -60,7 +56,7 @@ public class SensorGauge {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (SwingUtilities.isRightMouseButton(e)) {
-                    showPopupMenu(e, wrapper);
+                    showPopupMenu(e, wrapper, listener);
                 } else if (e.getClickCount() == 2) {
                     handleDoubleClick(e, gauge, sensor);
                 }
@@ -72,21 +68,23 @@ public class SensorGauge {
         UpDownImage.trueLayout(wrapper.getParent());
     }
 
-    private static void showPopupMenu(MouseEvent e, JPanel wrapper) {
+    private static void showPopupMenu(MouseEvent e, JPanel wrapper, GaugeChangeListener listener) {
         JPopupMenu pm = new JPopupMenu();
         JMenu gauges = new JMenu("Gauges...");
-        fillGaugeItems(gauges, wrapper);
+        fillGaugeItems(gauges, wrapper, listener);
         pm.add(gauges);
         pm.show(e.getComponent(), e.getX(), e.getY());
     }
 
-    private static void fillGaugeItems(JMenu gauges, final JPanel wrapper) {
+    private static void fillGaugeItems(JMenu gauges, final JPanel wrapper, final GaugeChangeListener listener) {
         for (final Sensor s : Sensor.values()) {
             JMenuItem mi = new JMenuItem(s.getName());
             mi.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    createGaugeBody(s, wrapper);
+                    createGaugeBody(s, wrapper, listener);
+                    if (listener != null)
+                        listener.onChange(s);
                 }
             });
             gauges.add(mi);
@@ -94,26 +92,24 @@ public class SensorGauge {
     }
 
     private static void handleDoubleClick(MouseEvent e, Radial gauge, Sensor sensor) {
-        int size = gauge.getSize().width;
-        JFrame n = new JFrame(sensor.getName());
-        boolean isMockable = MOCKABLE.contains(sensor);
-        int h = isMockable ? (int) (size * 1.5) : size;
+        int width = gauge.getSize().width;
+        final DetachedSensor ds = new DetachedSensor(sensor, width);
 
-        JPanel content = new JPanel(new BorderLayout());
+        GaugeChangeListener listener = new GaugeChangeListener() {
+            @Override
+            public void onChange(Sensor sensor) {
+                ds.onChange(sensor);
+            }
+        };
+        ds.content.add(createGauge2(sensor, listener), BorderLayout.CENTER);
+        ds.content.add(ds.mockControlPanel, BorderLayout.SOUTH);
 
-        content.add(createGauge(sensor), BorderLayout.CENTER);
 
-        if (isMockable)
-            content.add(createMockVoltageSlider(sensor), BorderLayout.SOUTH);
-
-        n.setSize(size, h);
-        n.setAlwaysOnTop(true);
-        n.add(content);
-        n.setVisible(true);
-        n.setLocation(e.getXOnScreen(), e.getYOnScreen());
+        ds.frame.add(ds.content);
+        ds.show(e);
     }
 
-    private final static Hashtable<Integer, JComponent> SLIDER_LABELS = new Hashtable<Integer, JComponent>();
+    final static Hashtable<Integer, JComponent> SLIDER_LABELS = new Hashtable<Integer, JComponent>();
 
     static {
         Format f = new DecimalFormat("0.0");
@@ -124,27 +120,6 @@ public class SensorGauge {
         }
     }
 
-
-    private static Component createMockVoltageSlider(final Sensor sensor) {
-        /**
-         */
-        final JSlider slider = new JSlider(0, _5_VOLTS_WITH_DECIMAL);
-        slider.setLabelTable(SLIDER_LABELS);
-        slider.setPaintLabels(true);
-        slider.setPaintTicks(true);
-        slider.setMajorTickSpacing(10);
-        slider.setMinorTickSpacing(5);
-
-        slider.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                double value = slider.getValue() / 10.0;
-                CommandQueue.getInstance().write("set_mock_" + sensor.name().toLowerCase() + "_voltage " + value);
-            }
-        });
-
-        return slider;
-    }
 
     public static Radial createRadial(String title, String units, double maxValue, double minValue) {
 //        final Section[] SECTIONS =
