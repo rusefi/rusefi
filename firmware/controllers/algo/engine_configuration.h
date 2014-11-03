@@ -480,8 +480,7 @@ typedef struct {
 	float crankingCycleCoef[CRANKING_CURVE_SIZE];
 	float crankingCycleBins[CRANKING_CURVE_SIZE];
 
-	int unused33[3];
-	int unused3[91];
+	int unused3[94];
 
 } engine_configuration_s;
 
