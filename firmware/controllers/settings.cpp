@@ -320,22 +320,8 @@ static void printTemperatureInfo(void) {
 	}
 
 #if EFI_ANALOG_INPUTS
-	scheduleMsg(&logger, "cranking fuel %fms @ %fC", engineConfiguration->crankingSettings.fuelAtMinTempMs,
-			engineConfiguration->crankingSettings.coolantTempMinC);
-	scheduleMsg(&logger, "cranking fuel %fms @ %fC", engineConfiguration->crankingSettings.fuelAtMaxTempMs,
-			engineConfiguration->crankingSettings.coolantTempMaxC);
+	scheduleMsg(&logger, "base cranking fuel %f", engineConfiguration->crankingSettings.baseCrankingFuel);
 #endif
-}
-
-/**
- * For example
- * set_cranking_fuel_min 15 0
- * would be 15ms @ 0C
- */
-static void setCrankingFuelMin(float timeMs, float tempC) {
-	engineConfiguration->crankingSettings.coolantTempMinC = tempC;
-	engineConfiguration->crankingSettings.fuelAtMinTempMs = timeMs;
-	printTemperatureInfo();
 }
 
 static void setCrankingRpm(int value) {
@@ -358,17 +344,8 @@ static void setRpmHardLimit(int value) {
 	doPrintConfiguration(&engine);
 }
 
-static void setCrankingFuelMax(float timeMs, float tempC) {
-	engineConfiguration->crankingSettings.coolantTempMaxC = tempC;
-	engineConfiguration->crankingSettings.fuelAtMaxTempMs = timeMs;
-	printTemperatureInfo();
-}
-
 static void setCrankingFuel(float timeMs) {
-	engineConfiguration->crankingSettings.coolantTempMaxC = 0;
-	engineConfiguration->crankingSettings.coolantTempMaxC = 80;
-	engineConfiguration->crankingSettings.fuelAtMaxTempMs = timeMs;
-	engineConfiguration->crankingSettings.fuelAtMinTempMs = timeMs;
+	engineConfiguration->crankingSettings.baseCrankingFuel = timeMs;
 	printTemperatureInfo();
 }
 
@@ -782,8 +759,6 @@ void initSettings(engine_configuration_s *engineConfiguration) {
 	addConsoleActionF("set_global_fuel_correction", setGlobalFuelCorrection);
 
 	addConsoleActionF("set_cranking_fuel", setCrankingFuel);
-	addConsoleActionFF("set_cranking_fuel_min", setCrankingFuelMin);
-	addConsoleActionFF("set_cranking_fuel_max", setCrankingFuelMax);
 	addConsoleActionI("set_cranking_rpm", setCrankingRpm);
 	addConsoleActionF("set_cranking_timing_angle", setCrankingTimingAngle);
 	addConsoleActionF("set_cranking_charge_angle", setCrankingChargeAngle);

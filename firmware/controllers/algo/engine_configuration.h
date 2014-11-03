@@ -19,10 +19,8 @@
 #define MOCK_UNDEFINED -1
 
 typedef struct {
-	float coolantTempMinC;
-	float coolantTempMaxC;
-	float fuelAtMinTempMs;
-	float fuelAtMaxTempMs;
+	float unused[3];
+	float baseCrankingFuel;
 
 	/**
 	 * This value controls what RPM values we consider 'cranking' (any RPM below 'crankingRpm')

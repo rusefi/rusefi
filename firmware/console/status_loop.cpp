@@ -56,7 +56,6 @@
 #include "svnversion.h"
 #include "engine.h"
 #include "lcd_controller.h"
-#include "fuel_math.h"
 
 #if EFI_PROD_CODE
 // todo: move this logic to algo folder!
@@ -173,7 +172,7 @@ void printState(Engine *engine, int currentCkpEventCounter) {
 //	debugFloat(&logger, "fuel_iat", getIatCorrection(getIntakeAirTemperature()), 2);
 //	debugFloat(&logger, "fuel_clt", getCltCorrection(getCoolantTemperature()), 2);
 	debugFloat(&logger, "fuel_lag", getInjectorLag(engineConfiguration, getVBatt()), 2);
-	debugFloat(&logger, "fuel", getRunningFuel(baseFuel, engine, rpm), 2);
+	debugFloat(&logger, "fuel", getFuelMs(rpm, engine), 2);
 
 	debugFloat(&logger, "timing", getAdvance(rpm, engineLoad), 2);
 

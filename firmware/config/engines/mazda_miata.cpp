@@ -60,14 +60,8 @@ static float miata_maf_advance_table[16][16] = {
 static void setDefaultCrankingFuel(engine_configuration_s *engineConfiguration) {
 	// todo: set cranking parameters method based on injectors and displacement?
 
-	// since CLT is not wired up yet let's just use same value for min and max
-	// set_cranking_fuel_max 6 40
-	engineConfiguration->crankingSettings.coolantTempMaxC = 80; // ms at 80C/176F
-	engineConfiguration->crankingSettings.fuelAtMaxTempMs = 6;
-
-	// set_cranking_fuel_min 6 -40
-	engineConfiguration->crankingSettings.coolantTempMinC = -40; // 6ms at -40C/-40F
-	engineConfiguration->crankingSettings.fuelAtMinTempMs = 6;
+	// set_cranking_fuel 5
+	engineConfiguration->crankingSettings.baseCrankingFuel = 5;
 }
 
 static void commonMiataNa(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
