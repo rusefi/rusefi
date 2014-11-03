@@ -364,6 +364,14 @@ static void setCrankingFuelMax(float timeMs, float tempC) {
 	printTemperatureInfo();
 }
 
+static void setCrankingFuel(float timeMs) {
+	engineConfiguration->crankingSettings.coolantTempMaxC = 0;
+	engineConfiguration->crankingSettings.coolantTempMaxC = 80;
+	engineConfiguration->crankingSettings.fuelAtMaxTempMs = timeMs;
+	engineConfiguration->crankingSettings.fuelAtMinTempMs = timeMs;
+	printTemperatureInfo();
+}
+
 static void setGlobalTriggerAngleOffset(int value) {
 	engineConfiguration->globalTriggerAngleOffset = value;
 	incrementGlobalConfigurationVersion();
@@ -773,6 +781,7 @@ void initSettings(engine_configuration_s *engineConfiguration) {
 
 	addConsoleActionF("set_global_fuel_correction", setGlobalFuelCorrection);
 
+	addConsoleActionF("set_cranking_fuel", setCrankingFuel);
 	addConsoleActionFF("set_cranking_fuel_min", setCrankingFuelMin);
 	addConsoleActionFF("set_cranking_fuel_max", setCrankingFuelMax);
 	addConsoleActionI("set_cranking_rpm", setCrankingRpm);
