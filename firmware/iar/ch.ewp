@@ -2546,7 +2546,7 @@
       </file>
     </group>
     <file>
-      <name>$PROJ_DIR$\..\emulation\analog_chart.c</name>
+      <name>$PROJ_DIR$\..\emulation\analog_chart.cpp</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\emulation\analog_chart.h</name>

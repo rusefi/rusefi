@@ -35,6 +35,8 @@ trigger_shape_s::trigger_shape_s() :
 	wave.waves = h.waves;
 	useRiseEdge = false;
 	gapBothDirections = false;
+	isSynchronizationNeeded = false;
+	invertOnAdd = false;
 }
 
 void trigger_shape_s::assignSize() {
@@ -194,8 +196,16 @@ float trigger_shape_s::getAngle(int index) const {
 	}
 }
 
-void trigger_shape_s::addEvent(float angle, trigger_wheel_e const waveIndex, trigger_value_e const state) {
+void trigger_shape_s::addEvent(float angle, trigger_wheel_e const waveIndex, trigger_value_e const stateParam) {
 	efiAssertVoid(operationMode != OM_NONE, "operationMode not set");
+
+	trigger_value_e state;
+	if (invertOnAdd) {
+		state = (stateParam == TV_LOW) ? TV_HIGH : TV_LOW;
+	} else {
+		state = stateParam;
+	}
+
 	/**
 	 * While '720' value works perfectly it has not much sense for crank sensor-only scenario.
 	 * todo: accept angle as a value in the 0..1 range?
