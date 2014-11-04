@@ -11,61 +11,63 @@
 #include "enum_strings.h"
 #include "error_handling.h"
 
-
+/**
+ * These should be not very long because these are displayed on the LCD as is
+ */
 const char* getConfigurationName(engine_type_e engineType) {
 	switch (engineType) {
 #if EFI_SUPPORT_DODGE_NEON
 	case DODGE_NEON_1995:
-		return "Neon 1995";
+		return "Neon95";
 	case DODGE_NEON_2003:
-		return "Neon 2003";
+		return "Neon03";
 #endif /* EFI_SUPPORT_DODGE_NEON */
 #if EFI_SUPPORT_FORD_ASPIRE
 	case FORD_ASPIRE_1996:
-		return "Ford Aspire";
+		return "Aspire";
 #endif /* EFI_SUPPORT_FORD_ASPIRE */
 #if EFI_SUPPORT_FORD_FIESTA
 	case FORD_FIESTA:
-		return "Ford Fiesta";
+		return "Fiesta";
 #endif /* EFI_SUPPORT_FORD_FIESTA */
 #if EFI_SUPPORT_NISSAN_PRIMERA
 	case NISSAN_PRIMERA:
-		return "Nissan Primera";
+		return "Primera";
 #endif /* EFI_SUPPORT_NISSAN_PRIMERA */
 	case HONDA_ACCORD_CD:
-		return "Honda Accord 3w";
+		return "Accord3";
 	case HONDA_ACCORD_CD_TWO_WIRES:
-		return "Honda Accord 2w";
+		return "Accord2";
 	case HONDA_ACCORD_CD_DIP:
-		return "Honda Dip";
+		return "HondaD";
 	case FORD_INLINE_6_1995:
-		return "Ford 1995 inline 6";
+		return "Fordi6";
 	case GY6_139QMB:
-		return "Gy6 139qmb";
+		return "Gy6139";
 	case MAZDA_MIATA_NB:
-		return "Mazda Miata NB";
+		return "MiataNB";
 	case MAZDA_323:
-		return "Mazda 323";
+		return "M323";
 	case SATURN_ION_2004:
 		return "Saturn Ion";
 	case MINI_COOPER_R50:
-		return "Mini Cooper R50";
+		return "CoopR50";
 	case FORD_ESCORT_GT:
-		return "Ford Escort GT";
+		return "EscrtGT";
 	case CITROEN_TU3JP:
-		return "Citroen TU3JP";
+		return "TU3JP";
 	case ROVER_V8:
-		return "Rover v8";
+		return "Rvrv8";
 	case MITSU_4G93:
-		return "Mitsu 4G93";
+		return "Mi4G93";
 	case MIATA_1990:
-		return "Miata 1990";
+		return "MX590";
 	case MIATA_1994_DEVIATOR:
-		return "Miata 1994d";
+		return "MX594d";
 	case MIATA_1994_SPAGS:
-		return "Miata 1994s";
+		return "MX594s";
 	case MIATA_1996:
-		return "Miata 1996";
+		return "MX596";
 	default:
 		firmwareError("Unexpected: engineType %d", engineType);
 		return NULL;

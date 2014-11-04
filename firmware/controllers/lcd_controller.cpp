@@ -15,8 +15,8 @@
 #include "rtc_helper.h"
 #include "io_pins.h"
 #include "efiGpio.h"
+#include "svnversion.h"
 
-extern Engine engine;
 extern engine_configuration_s *engineConfiguration;
 
 #define LCD_WIDTH 20
@@ -30,7 +30,7 @@ char * appendStr(char *ptr, const char *suffix) {
 	return ptr;
 }
 
-static char * prepareVBattMapLine(char *buffer) {
+static char * prepareVBattMapLine(engine_configuration_s *engineConfiguration, char *buffer) {
 	char *ptr = buffer;
 	*ptr++ = 'V';
 	ptr = ftoa(ptr, getVBatt(), 10.0f);
@@ -85,7 +85,7 @@ char * appendPinStatus(char *buffer, io_pin_e pin) {
 	}
 }
 
-static char * prepareInfoLine(char *buffer) {
+static char * prepareInfoLine(engine_configuration_s *engineConfiguration, char *buffer) {
 	char *ptr = buffer;
 
 	ptr = appendStr(ptr, algorithmStr[engineConfiguration->algorithm]);
@@ -123,10 +123,10 @@ static void prepareCurrentSecondLine(Engine *engine, int index) {
 		ptr = prepareCltIatTpsLine(engine, buffer);
 		break;
 	case 1:
-		ptr = prepareInfoLine(buffer);
+		ptr = prepareInfoLine(engine->engineConfiguration, buffer);
 		break;
 	case 2:
-		ptr = prepareVBattMapLine(buffer);
+		ptr = prepareVBattMapLine(engine->engineConfiguration, buffer);
 		break;
 	case 3:
 		ptr = prepareStatusLine(buffer);
@@ -139,12 +139,21 @@ static void prepareCurrentSecondLine(Engine *engine, int index) {
 }
 
 void updateHD44780lcd(Engine *engine) {
+	lcd_HD44780_set_position(0, 0);
+
+	bool_t isEven = getTimeNowSeconds() % 2 == 0;
+
+	if (isEven) {
+		lcd_HD44780_print_string (VCS_VERSION);
+	} else {
+		lcd_HD44780_print_string(getConfigurationName(engine->engineConfiguration->engineType));
+	}
 
 	lcd_HD44780_set_position(0, 9);
 	/**
 	 * this would blink so that we know the LCD is alive
 	 */
-	if (getTimeNowSeconds() % 2 == 0) {
+	if (isEven) {
 		lcd_HD44780_print_char('R');
 	} else {
 		lcd_HD44780_print_char(' ');
