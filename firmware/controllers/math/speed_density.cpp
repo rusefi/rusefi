@@ -47,7 +47,7 @@ float getTCharge(int rpm, float tps, float coolantTemp, float airTemp) {
 /**
  * @return value in seconds
  */
-float sdMath(engine_configuration_s *engineConfiguration, float VE, float MAP, float AFR, float temp) {
+float sdMath(engine_configuration_s *engineConfiguration, float VE, float MAP, float AFR, float tempK) {
 	if (MAP < 0.001 || cisnan(MAP)) {
 		warning(OBD_PCM_Processor_Fault, "invalid MAP value");
 		return 0;
@@ -55,7 +55,7 @@ float sdMath(engine_configuration_s *engineConfiguration, float VE, float MAP, f
 
 	float injectorFlowRate = cc_minute_to_gramm_second(engineConfiguration->injectorFlow);
 	float Vol = engineConfiguration->displacement / engineConfiguration->cylindersCount;
-	return (Vol * VE * MAP) / (AFR * injectorFlowRate * GAS_R * temp);
+	return (Vol * VE * MAP) / (AFR * injectorFlowRate * GAS_R * tempK);
 }
 
 /**
