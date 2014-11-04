@@ -181,15 +181,14 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 	boardConfiguration->ignitionPins[2] = GPIOE_8;
 	boardConfiguration->ignitionPins[3] = GPIO_NONE;
 
-	boardConfiguration->idleValvePin = GPIO_NONE;
+	boardConfiguration->idleValvePin = GPIOC_13;
+	boardConfiguration->idleSolenoidFrequency = 300;
 
 	boardConfiguration->fuelPumpPin = GPIOE_3;
 	boardConfiguration->fuelPumpPinMode = OM_DEFAULT;
 
 	boardConfiguration->gps_rx_pin = GPIO_NONE;
 	boardConfiguration->gps_tx_pin = GPIO_NONE;
-
-	boardConfiguration->idleSolenoidFrequency = 300;
 
 	boardConfiguration->triggerInputPins[0] = GPIOA_5;
 	boardConfiguration->triggerInputPins[1] = GPIOC_6;
