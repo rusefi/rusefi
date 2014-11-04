@@ -504,6 +504,7 @@ extern "C" {
 
 void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration);
 void setWholeFuelMap(engine_configuration_s *engineConfiguration, float value);
+void setWholeTimingTable(engine_configuration_s *engineConfiguration, float value);
 void setConstantDwell(engine_configuration_s *engineConfiguration, float dwellMs);
 void printFloatArray(const char *prefix, float array[], int size);
 

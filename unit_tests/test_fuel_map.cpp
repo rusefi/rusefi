@@ -42,7 +42,7 @@ void testFuelMap(void) {
 	initThermistors(&eth.engine);
 
 	printf("*** getInjectorLag\r\n");
-	assertEquals(0, getInjectorLag(eth.engine.engineConfiguration, 12));
+	assertEquals(1.0, getInjectorLag(eth.engine.engineConfiguration, 12));
 
 	eth.engine.engineConfiguration->injectorLag = 0.5;
 

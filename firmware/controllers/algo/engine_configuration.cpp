@@ -89,6 +89,15 @@ void setWholeFuelMap(engine_configuration_s *engineConfiguration, float value) {
 	}
 }
 
+void setWholeTimingTable(engine_configuration_s *engineConfiguration, float value) {
+	// todo: table helper?
+	for (int l = 0; l < IGN_LOAD_COUNT; l++) {
+		for (int r = 0; r < IGN_RPM_COUNT; r++) {
+			engineConfiguration->ignitionTable[l][r] = value;
+		}
+	}
+}
+
 /**
  * @brief	Global default engine configuration
  * This method sets the default global engine configuration. These values are later overridden by engine-specific defaults
@@ -100,7 +109,7 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 
 	setDetaultVETable(engineConfiguration);
 
-	engineConfiguration->injectorLag = 0.0;
+	engineConfiguration->injectorLag = 1.0;
 
 	for (int i = 0; i < IAT_CURVE_SIZE; i++) {
 		engineConfiguration->iatFuelCorrBins[i] = -40 + i * 10;
