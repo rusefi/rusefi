@@ -129,8 +129,8 @@ void printConfiguration(engine_configuration_s *engineConfiguration, engine_conf
 
 	scheduleMsg(&logger, "analogInputDividerCoefficient: %f", engineConfiguration->analogInputDividerCoefficient);
 
-	scheduleMsg(&logger, "idlePin: mode %s @ %s", getPin_output_mode_e(boardConfiguration->idleValvePinMode),
-			hwPortname(boardConfiguration->idleValvePin));
+	scheduleMsg(&logger, "idlePin: mode %s @ %s freq=%d", getPin_output_mode_e(boardConfiguration->idleValvePinMode),
+			hwPortname(boardConfiguration->idleValvePin), boardConfiguration->idleSolenoidFrequency);
 	scheduleMsg(&logger, "malfunctionIndicatorn: %s mode=%s",
 			hwPortname(boardConfiguration->malfunctionIndicatorPin),
 			pinModeToString(boardConfiguration->malfunctionIndicatorPinMode));
