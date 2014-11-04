@@ -18,8 +18,6 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType) {
 
 	engine.engineConfiguration = ec;
 
-	configuration.engineConfiguration = ec;
-	configuration.engineConfiguration2 = &ec2;
 	engine.engineConfiguration2 = &ec2;
 	ec2.engineConfiguration = ec;
 
