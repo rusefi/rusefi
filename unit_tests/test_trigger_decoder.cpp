@@ -407,16 +407,12 @@ static void testRpmCalculator(void) {
 	engine.engineConfiguration = eth.engine.engineConfiguration;
 	engine.engineConfiguration->injectorLag = 0.0;
 
-
-	configuration_s configuration = { ec, ec2 };
 	timeNow = 0;
 	assertEquals(0, eth.rpmState.rpm());
 
 	eth.fireTriggerEvents();
 	assertEqualsM("RPM", 1500, eth.rpmState.rpm());
-
 	assertEqualsM("index #1", 15, eth.triggerCentral.triggerState.getCurrentIndex());
-
 
 	static MainTriggerCallback triggerCallbackInstance;
 	triggerCallbackInstance.init(&eth.engine, ec2);

@@ -84,10 +84,6 @@ static engine_configuration2_s ec2 CCM_OPTIONAL
 ;
 engine_configuration2_s * engineConfiguration2 = &ec2;
 
-static configuration_s cfg = { &persistentState.persistentConfiguration.engineConfiguration, &ec2 };
-
-configuration_s * configuration = &cfg;
-
 /**
  * todo: this should probably become 'static', i.e. private, and propagated around explicitly?
  */

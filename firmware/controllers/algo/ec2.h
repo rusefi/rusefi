@@ -29,10 +29,8 @@ typedef struct {
 	IgnitionEventList ignitionEvents[2];
 } EventHandlerConfiguration;
 
-
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif /* __cplusplus */
 
 /**
@@ -47,22 +45,18 @@ public:
 	// todo: this should go, too
 	engine_configuration_s *engineConfiguration;
 
-
 	trigger_shape_s triggerShape;
 
 	EventHandlerConfiguration engineEventConfiguration;
 };
 
-// todo: eliminate this structure? we have Engine and engineConfiguration2 now references engineConfiguration
-typedef struct {
-	engine_configuration_s *engineConfiguration;
-	engine_configuration2_s *engineConfiguration2;
-} configuration_s;
+void initializeIgnitionActions(float advance, float dwellAngle, engine_configuration_s *engineConfiguration,
+		engine_configuration2_s *engineConfiguration2, IgnitionEventList *list);
+void addFuelEvents(engine_configuration_s const *e, engine_configuration2_s *engineConfiguration2,
+		ActuatorEventList *list, injection_mode_e mode);
 
-void initializeIgnitionActions(float advance, float dwellAngle, engine_configuration_s *engineConfiguration, engine_configuration2_s *engineConfiguration2, IgnitionEventList *list);
-void addFuelEvents(engine_configuration_s const *e,  engine_configuration2_s *engineConfiguration2, ActuatorEventList *list, injection_mode_e mode);
-
-void registerActuatorEventExt(engine_configuration_s const *engineConfiguration, trigger_shape_s * s, ActuatorEvent *e, OutputSignal *actuator, float angleOffset);
+void registerActuatorEventExt(engine_configuration_s const *engineConfiguration, trigger_shape_s * s, ActuatorEvent *e,
+		OutputSignal *actuator, float angleOffset);
 
 void setDefaultNonPersistentConfiguration(engine_configuration2_s *engineConfiguration2);
 void printConfiguration(engine_configuration_s *engineConfiguration, engine_configuration2_s *engineConfiguration2);
