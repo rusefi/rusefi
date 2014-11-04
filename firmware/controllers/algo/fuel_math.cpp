@@ -108,7 +108,7 @@ static Map3D1616 fuelMap;
 float getInjectorLag(engine_configuration_s *engineConfiguration, float vBatt) {
 	if (cisnan(vBatt)) {
 		warning(OBD_System_Voltage_Malfunction, "vBatt=%f", vBatt);
-		return 0;
+		return engineConfiguration->injectorLag;
 	}
 	float vBattCorrection = interpolate2d(vBatt, engineConfiguration->battInjectorLagCorrBins,
 			engineConfiguration->battInjectorLagCorr, VBAT_INJECTOR_CURVE_SIZE);

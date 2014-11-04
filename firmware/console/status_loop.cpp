@@ -72,8 +72,6 @@ static volatile bool fullLog = true;
 int warningEnabled = TRUE;
 //int warningEnabled = FALSE;
 
-extern engine_configuration_s * engineConfiguration;
-extern engine_configuration2_s * engineConfiguration2;
 extern board_configuration_s *boardConfiguration;
 #define FULL_LOGGING_KEY "fl"
 
@@ -126,6 +124,8 @@ void printSensors(Engine *engine) {
 	reportSensorI("rpm", getRpmE(engine));
 	reportSensorF("maf", getMaf(), 2);
 
+	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
+
 	if (engineConfiguration->hasMapSensor) {
 		reportSensorF(getCaption(LP_MAP), getMap(), 2);
 		reportSensorF("map_r", getRawMap(), 2);
@@ -158,6 +158,8 @@ void printSensors(Engine *engine) {
 void printState(Engine *engine, int currentCkpEventCounter) {
 #if EFI_SHAFT_POSITION_INPUT
 	printSensors(engine);
+
+	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
 
 	int rpm = getRpmE(engine);
 	debugInt(&logger, "ckp_c", currentCkpEventCounter);
@@ -209,7 +211,9 @@ static void printOutPin(const char *pinName, brain_pin_e hwPin) {
 }
 #endif /* EFI_PROD_CODE */
 
-static void printInfo(systime_t nowSeconds) {
+static void printInfo(Engine *engine, systime_t nowSeconds) {
+	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
+
 	/**
 	 * we report the version every 4 seconds - this way the console does not need to
 	 * request it and we will display it pretty soon
@@ -274,7 +278,7 @@ void updateDevConsoleState(Engine *engine) {
 	}
 
 	systime_t nowSeconds = getTimeNowSeconds();
-	printInfo(nowSeconds);
+	printInfo(engine, nowSeconds);
 
 	int currentCkpEventCounter = getCrankEventCounter();
 	if (prevCkpEventCounter == currentCkpEventCounter && timeOfPreviousReport == nowSeconds) {
@@ -303,9 +307,14 @@ void updateDevConsoleState(Engine *engine) {
  */
 
 static void showFuelInfo2(float rpm, float engineLoad, Engine *engine) {
+	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
+
 	float baseFuelMs = getBaseTableFuel(engineConfiguration, (int) rpm, engineLoad);
 
-	scheduleMsg(&logger2, "algo=%s/pump=%s", getEngine_load_mode_e(engineConfiguration->algorithm), boolToString(getOutputPinValue(FUEL_PUMP_RELAY)));
+	scheduleMsg(&logger, "SD magic fuel %f", sdMath(engineConfiguration, 100, 100, 14.7, convertCelsiusToKelvin(20)));
+
+	scheduleMsg(&logger2, "algo=%s/pump=%s", getEngine_load_mode_e(engineConfiguration->algorithm),
+			boolToString(getOutputPinValue(FUEL_PUMP_RELAY)));
 
 	scheduleMsg(&logger2, "cranking fuel: %f", getCrankingFuel(engine));
 
@@ -385,7 +394,6 @@ static void errBlinkingThread(void *arg) {
 }
 #endif /* EFI_PROD_CODE */
 
-
 static void lcdThread(Engine *engine) {
 	chRegSetThreadName("lcd");
 	while (true) {
@@ -406,6 +414,8 @@ void updateTunerStudioState(Engine *engine, TunerStudioOutputChannels *tsOutputC
 #else
 	int rpm = 0;
 #endif
+
+	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
 
 	float tps = getTPS(engineConfiguration);
 	float coolant = getCoolantTemperature(engine);
@@ -475,8 +485,8 @@ void initStatusLoop(Engine *engine) {
 #if EFI_PROD_CODE
 	initLogging(&logger2, "main event handler");
 
-	addConsoleActionFFP("fuelinfo2", (VoidFloatFloatVoidPtr)showFuelInfo2, engine);
-	addConsoleActionP("fuelinfo", (VoidPtr)showFuelInfo, engine);
+	addConsoleActionFFP("fuelinfo2", (VoidFloatFloatVoidPtr) showFuelInfo2, engine);
+	addConsoleActionP("fuelinfo", (VoidPtr) showFuelInfo, engine);
 
 	addConsoleAction("status", printStatus);
 #endif /* EFI_PROD_CODE */

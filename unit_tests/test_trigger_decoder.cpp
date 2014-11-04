@@ -405,6 +405,8 @@ static void testRpmCalculator(void) {
 
 	// this is a very dirty and sad hack.  todo: eliminate
 	engine.engineConfiguration = eth.engine.engineConfiguration;
+	engine.engineConfiguration->injectorLag = 0.0;
+
 
 	configuration_s configuration = { ec, ec2 };
 	timeNow = 0;
