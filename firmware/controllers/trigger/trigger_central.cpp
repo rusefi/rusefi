@@ -58,10 +58,10 @@ void addTriggerEventListener(ShaftPositionListener listener, const char *name, v
 }
 
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
-extern configuration_s *configuration;
+extern Engine engine;
 
 void hwHandleShaftSignal(trigger_event_e signal) {
-	triggerCentral.handleShaftSignal(configuration, signal, getTimeNowUs());
+	triggerCentral.handleShaftSignal(&engine, signal, getTimeNowUs());
 }
 #endif /* EFI_PROD_CODE */
 
@@ -96,13 +96,13 @@ static void reportEventToWaveChart(trigger_event_e ckpSignalType, int index) {
 // todo: improve this
 extern Engine engine;
 
-void TriggerCentral::handleShaftSignal(configuration_s *configuration, trigger_event_e signal, uint64_t nowUs) {
-	efiAssertVoid(configuration!=NULL, "configuration");
+void TriggerCentral::handleShaftSignal(Engine *engine, trigger_event_e signal, uint64_t nowUs) {
+	efiAssertVoid(engine!=NULL, "configuration");
 
-	efiAssertVoid(configuration->engineConfiguration!=NULL, "engineConfiguration");
-	efiAssertVoid(configuration->engineConfiguration2!=NULL, "engineConfiguration2");
+	efiAssertVoid(engine->engineConfiguration!=NULL, "engineConfiguration");
+	efiAssertVoid(engine->engineConfiguration2!=NULL, "engineConfiguration2");
 
-	engine.onTriggerEvent(nowUs);
+	engine->onTriggerEvent(nowUs);
 
 #if EFI_HISTOGRAMS && EFI_PROD_CODE
 	int beforeCallback = hal_lld_get_counter_value();
@@ -120,12 +120,12 @@ void TriggerCentral::handleShaftSignal(configuration_s *configuration, trigger_e
 	}
 	previousShaftEventTime = nowUs;
 
-	trigger_shape_s * triggerShape = &configuration->engineConfiguration2->triggerShape;
+	trigger_shape_s * triggerShape = &engine->engineConfiguration2->triggerShape;
 
 	/**
 	 * This invocation changes the state of triggerState
 	 */
-	triggerState.decodeTriggerEvent(triggerShape, &configuration->engineConfiguration->triggerConfig, signal, nowUs);
+	triggerState.decodeTriggerEvent(triggerShape, &engine->engineConfiguration->triggerConfig, signal, nowUs);
 
 	if (!triggerState.shaft_is_synchronized) {
 		// we should not propagate event if we do not know where we are
@@ -137,7 +137,7 @@ void TriggerCentral::handleShaftSignal(configuration_s *configuration, trigger_e
 	 * cycle into a four stroke, 720 degrees cycle. TODO
 	 */
 	int triggerIndexForListeners;
-	if (getOperationMode(configuration->engineConfiguration) == FOUR_STROKE_CAM_SENSOR) {
+	if (getOperationMode(engine->engineConfiguration) == FOUR_STROKE_CAM_SENSOR) {
 		// That's easy - trigger cycle matches engine cycle
 		triggerIndexForListeners = triggerState.getCurrentIndex();
 	} else {
@@ -147,7 +147,7 @@ void TriggerCentral::handleShaftSignal(configuration_s *configuration, trigger_e
 	}
 	reportEventToWaveChart(signal, triggerIndexForListeners);
 
-	if (triggerState.getCurrentIndex() >= configuration->engineConfiguration2->triggerShape.shaftPositionEventCount) {
+	if (triggerState.getCurrentIndex() >= engine->engineConfiguration2->triggerShape.shaftPositionEventCount) {
 		warning(OBD_PCM_Processor_Fault, "unexpected eventIndex=%d", triggerState.getCurrentIndex());
 	} else {
 

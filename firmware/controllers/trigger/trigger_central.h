@@ -24,7 +24,7 @@ class TriggerCentral {
 public:
 	TriggerCentral();
 	void addEventListener(ShaftPositionListener handler, const char *name, void *arg);
-	void handleShaftSignal(configuration_s *configuration, trigger_event_e signal, uint64_t nowUs);
+	void handleShaftSignal(Engine *engine, trigger_event_e signal, uint64_t nowUs);
 	int getHwEventCounter(int index);
 	TriggerState triggerState;
 private:
