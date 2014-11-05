@@ -1921,6 +1921,12 @@
         <name>$PROJ_DIR$\..\config\engines\audi_aan.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\config\engines\bmw_e34.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\config\engines\bmw_e34.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\config\engines\citroenBerlingoTU3JP.cpp</name>
       </file>
       <file>

@@ -245,6 +245,8 @@ case GY6_139QMB:
   return "GY6_139QMB";
 case MAZDA_MIATA_NB:
   return "MAZDA_MIATA_NB";
+case BMW_E34:
+  return "BMWe34";
   }
  return NULL;
 }

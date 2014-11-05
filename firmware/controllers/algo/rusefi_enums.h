@@ -92,7 +92,9 @@ typedef enum {
 	DODGE_NEON_2003 = 23,
 	MIATA_1994_SPAGS = 24,
 
-	ET_UNUSED = 25,
+	BMW_E34 = 25,
+
+	ET_UNUSED = 26,
 
 	Force_4b_engine_type = ENUM_SIZE_HACK,
 } engine_type_e;
