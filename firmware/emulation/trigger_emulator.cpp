@@ -22,12 +22,13 @@
 #include "trigger_emulator_algo.h"
 #include "trigger_central.h"
 
-extern engine_configuration_s *engineConfiguration;
-extern board_configuration_s *boardConfiguration;
-
 extern PwmConfig triggerSignal;
 
-void initTriggerEmulator(void) {
+void initTriggerEmulator(Engine *engine) {
+
+	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
+	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
+
 #if EFI_EMULATE_POSITION_SENSORS || defined(__DOXYGEN__)
 	print("Emulating %s\r\n", getConfigurationName(engineConfiguration->engineType));
 
@@ -47,7 +48,7 @@ void initTriggerEmulator(void) {
 			&boardConfiguration->triggerSimulatorPinModes[2]);
 #endif /* EFI_PROD_CODE */
 
-	initTriggerEmulatorLogic();
+	initTriggerEmulatorLogic(engine);
 #else
 	print("No position sensor(s) emulation\r\n");
 #endif /* EFI_EMULATE_POSITION_SENSORS */

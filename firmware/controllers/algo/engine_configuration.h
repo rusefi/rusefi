@@ -511,6 +511,8 @@ void printFloatArray(const char *prefix, float array[], int size);
 void incrementGlobalConfigurationVersion(void);
 int getGlobalConfigurationVersion(void);
 
+void commonFrankensoAnalogInputs(engine_configuration_s *engineConfiguration);
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

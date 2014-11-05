@@ -165,10 +165,8 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 	 * D14/W10 O2 Sensor
 	 */
 	engineConfiguration->afrSensor.afrAdcChannel = EFI_ADC_13;
-	/**
-	 * VBatt
-	 */
-	engineConfiguration->vbattAdcChannel = EFI_ADC_14;
+
+	commonFrankensoAnalogInputs(engineConfiguration);
 	engineConfiguration->vbattDividerCoeff = ((float) (8.2 + 33)) / 8.2 * 2;
 
 	boardConfiguration->injectionPins[0] = GPIOB_8;

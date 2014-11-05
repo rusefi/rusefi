@@ -8,7 +8,7 @@
 #ifndef ENGINE_EMULATOR_H_
 #define ENGINE_EMULATOR_H_
 
-#include "engine_configuration.h"
-void initEngineEmulator(board_configuration_s *boardConfiguration);
+#include "engine.h"
+void initEngineEmulator(Engine *engine);
 
 #endif /* ENGINE_EMULATOR_H_ */

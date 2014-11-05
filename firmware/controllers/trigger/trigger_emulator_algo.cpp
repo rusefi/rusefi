@@ -134,7 +134,7 @@ static void resumeStimulator(void) {
 	stopEmulationAtIndex = DO_NOT_STOP;
 }
 
-void initTriggerEmulatorLogic(void) {
+void initTriggerEmulatorLogic(Engine *engine) {
 	initLogging(&logger, "position sensor(s) emulator");
 
 	trigger_shape_s *s = &engineConfiguration2->triggerShape;

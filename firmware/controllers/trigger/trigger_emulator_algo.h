@@ -8,6 +8,7 @@
 #ifndef TRIGGER_EMULATOR_ALGO_H_
 #define TRIGGER_EMULATOR_ALGO_H_
 
+#include "engine.h"
 #include "pwm_generator_logic.h"
 
 class TriggerEmulatorHelper {
@@ -20,6 +21,6 @@ public:
 	void handleEmulatorCallback(PwmConfig *state, int stateIndex);
 };
 
-void initTriggerEmulatorLogic(void);
+void initTriggerEmulatorLogic(Engine *engine);
 
 #endif /* TRIGGER_EMULATOR_ALGO_H_ */
