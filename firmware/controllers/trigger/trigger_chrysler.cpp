@@ -17,7 +17,7 @@ void configureNeon2003TriggerShape(trigger_shape_s *s) {
 
 	s->gapBothDirections = true;
 
-	setTriggerSynchronizationGap(s, 2.91);
+	setTriggerSynchronizationGap2(s, 2.5, 4.5);
 
 	s->addEvent(base + 26, T_PRIMARY, TV_HIGH);
 	s->addEvent(base + 62, T_PRIMARY, TV_LOW);

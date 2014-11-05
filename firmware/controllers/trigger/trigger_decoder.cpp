@@ -51,7 +51,7 @@ int isTriggerDecoderError(void) {
 	return errorDetection.sum(6) > 4;
 }
 
-static inline bool isSynchronizationGap(TriggerState const *shaftPositionState, trigger_shape_s const *triggerShape,
+static inline bool isSynchronizationGap(TriggerState *shaftPositionState, trigger_shape_s const *triggerShape,
 		const int currentDuration) {
 	if (!triggerShape->isSynchronizationNeeded) {
 		return false;
@@ -65,7 +65,7 @@ static inline bool isSynchronizationGap(TriggerState const *shaftPositionState, 
 	}
 #else
 //	float gap = 1.0 * currentDuration / shaftPositionState->toothed_previous_duration;
-//	scheduleMsg(&logger, "gap=%f", gap);
+//	scheduleMsg(&logger, "gap=%f @ %d", gap, shaftPositionState->getCurrentIndex());
 
 #endif /* ! EFI_PROD_CODE */
 
