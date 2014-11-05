@@ -41,7 +41,6 @@ public class VersionChecker {
                 try {
                     instance.readAndProcess();
                 } catch (IOException e) {
-                    e.printStackTrace();
                     FileLog.MAIN.logLine("Failed to read from " + VERSIONS_URL);
                 }
             }
