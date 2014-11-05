@@ -15,6 +15,7 @@
 #include "status_loop.h"
 #include "wave_analyzer.h"
 #include "pin_repository.h"
+#include "pwm_generator_logic.h"
 
 extern "C" {
 #include "poten.h"
@@ -94,14 +95,14 @@ static void initECUstimulator(void) {
 	chThdCreateStatic(eeThreadStack, sizeof(eeThreadStack), NORMALPRIO, (tfunc_t) eeThread, NULL);
 }
 
-void initEngineEmulator(board_configuration_s *boardConfiguration) {
+void initEngineEmulator(Engine *engine) {
 	if (hasFirmwareError())
 		return;
 
 #if EFI_POTENTIOMETER
-	initPotentiometers(boardConfiguration);
+	initPotentiometers(&engine->engineConfiguration->bc);
 #endif /* EFI_POTENTIOMETER */
 
 	//initECUstimulator();
-	initTriggerEmulator();
+	initTriggerEmulator(engine);
 }

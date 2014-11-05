@@ -271,16 +271,14 @@ static void setMiata1994_common(engine_configuration_s *engineConfiguration, boa
 	setFrankenso_01_LCD(boardConfiguration);
 
 
+	commonFrankensoAnalogInputs(engineConfiguration);
+
 	engineConfiguration->tpsAdcChannel = EFI_ADC_2;
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
 	engineConfiguration->mafAdcChannel = EFI_ADC_0;
 	engineConfiguration->cltAdcChannel = EFI_ADC_12;
 	engineConfiguration->iatAdcChannel = EFI_ADC_11;
 
-	/**
-	 * VBatt
-	 */
-	engineConfiguration->vbattAdcChannel = EFI_ADC_14;
 }
 
 

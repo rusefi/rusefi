@@ -78,7 +78,7 @@ void rusEfiFunctionalTest(void) {
 
 	initAnalogChart();
 
-	initTriggerEmulator();
+	initTriggerEmulator(&engine);
 
 	initMainEventListener(&engine, engineConfiguration2);
 

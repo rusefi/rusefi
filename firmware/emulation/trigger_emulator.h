@@ -12,10 +12,9 @@
 #include "main.h"
 
 #include "trigger_structure.h"
-#include "engine_configuration.h"
-#include "pwm_generator_logic.h"
+#include "engine.h"
 
-void initTriggerEmulator(void);
+void initTriggerEmulator(Engine *engine);
 void setTriggerEmulatorRPM(int value);
 
 #endif /* DIST_EMULATOR_H_ */

@@ -590,5 +590,12 @@ operation_mode_e getOperationMode(engine_configuration_s const *engineConfigurat
 	if (engineConfiguration->rpmMultiplier == 1)
 		return FOUR_STROKE_CRANK_SENSOR;
 	return FOUR_STROKE_CAM_SENSOR;
-
 }
+
+void commonFrankensoAnalogInputs(engine_configuration_s *engineConfiguration) {
+	/**
+	 * VBatt
+	 */
+	engineConfiguration->vbattAdcChannel = EFI_ADC_14;
+}
+
