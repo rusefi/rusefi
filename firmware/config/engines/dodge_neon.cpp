@@ -62,7 +62,7 @@ void setDodgeNeon1995EngineConfiguration(engine_configuration_s *engineConfigura
 	engineConfiguration->crankingSettings.baseCrankingFuel = 5;
 
 	// set_whole_fuel_map 3
-	setWholeFuelMap(engineConfiguration, 3);
+	setWholeFuelMap(engineConfiguration, 9);
 	setWholeTimingTable(engineConfiguration, 12);
 
 	// set_cranking_injection_mode 0
