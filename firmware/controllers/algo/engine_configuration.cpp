@@ -33,6 +33,7 @@
 #endif
 
 #include "audi_aan.h"
+#include "bmw_e34.h"
 #include "dodge_neon.h"
 #include "ford_aspire.h"
 #include "ford_fiesta.h"
@@ -537,7 +538,9 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType, Engine *e
 	case SUBARU_2003_WRX:
 		setSubaru2003Wrx(engineConfiguration, boardConfiguration);
 		break;
-
+	case BMW_E34:
+		setBmwE43(engineConfiguration);
+		break;
 	default:
 		firmwareError("Unexpected engine type: %d", engineType);
 
