@@ -142,13 +142,13 @@ void printConfiguration(engine_configuration_s *engineConfiguration, engine_conf
 	for (int i = 0; i < engineConfiguration->cylindersCount; i++) {
 		brain_pin_e brainPin = boardConfiguration->injectionPins[i];
 
-		scheduleMsg(&logger, "injection %d @ %s", i, hwPortname(brainPin));
+		scheduleMsg(&logger, "injection #%d @ %s", (1 + i), hwPortname(brainPin));
 	}
 
 	scheduleMsg(&logger, "ignitionPins: mode %s", pinModeToString(boardConfiguration->ignitionPinMode));
 	for (int i = 0; i < engineConfiguration->cylindersCount; i++) {
 		brain_pin_e brainPin = boardConfiguration->ignitionPins[i];
-		scheduleMsg(&logger, "ignition %d @ %s", i, hwPortname(brainPin));
+		scheduleMsg(&logger, "ignition #%d @ %s", (1 + i), hwPortname(brainPin));
 	}
 
 	scheduleMsg(&logger, "boardTestModeJumperPin: %s", hwPortname(boardConfiguration->boardTestModeJumperPin));
@@ -446,7 +446,7 @@ static void setPotSpi(int spi) {
 }
 
 static void setIgnitionPin(const char *indexStr, const char *pinName) {
-	int index = atoi(indexStr);
+	int index = atoi(indexStr) - 1; // convert from human index into software index
 	if (index < 0 || index > IGNITION_PIN_COUNT)
 		return;
 	brain_pin_e pin = parseBrainPin(pinName);
@@ -482,7 +482,7 @@ static void setFuelPumpPin(const char *pinName) {
 }
 
 static void setInjectionPin(const char *indexStr, const char *pinName) {
-	int index = atoi(indexStr);
+	int index = atoi(indexStr) - 1; // convert from human index into software index
 	if (index < 0 || index > INJECTION_PIN_COUNT)
 		return;
 	brain_pin_e pin = parseBrainPin(pinName);
