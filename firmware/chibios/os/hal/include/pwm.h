@@ -125,8 +125,8 @@ typedef void (*pwmcallback_t)(PWMDriver *pwmp);
  * @api
  */
 #define PWM_FRACTION_TO_WIDTH(pwmp, denominator, numerator)                 \
-  ((uint16_t)((((uint32_t)(pwmp)->period) *                                 \
-               (uint32_t)(numerator)) / (uint32_t)(denominator)))
+  ((pwmcnt_t)((((pwmcnt_t)(pwmp)->period) *                                 \
+               (pwmcnt_t)(numerator)) / (pwmcnt_t)(denominator)))
 
 /**
  * @brief   Converts from degrees to pulse width.

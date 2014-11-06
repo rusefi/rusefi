@@ -31,6 +31,8 @@
 
 #include <time.h>
 
+#if HAL_USE_RTC || defined(__DOXYGEN__)
+
 /*===========================================================================*/
 /* External declarations.                                                    */
 /*===========================================================================*/
@@ -49,6 +51,8 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
+
+#endif /* HAL_USE_RTC */
 
 #endif /* CHRTCLIB_H_ */
 

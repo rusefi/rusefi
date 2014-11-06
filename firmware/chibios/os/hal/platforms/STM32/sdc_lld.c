@@ -497,7 +497,7 @@ bool_t sdc_lld_send_cmd_short(SDCDriver *sdcp, uint8_t cmd, uint32_t arg,
   while (((sta = SDIO->STA) & (SDIO_STA_CMDREND | SDIO_STA_CTIMEOUT |
                                SDIO_STA_CCRCFAIL)) == 0)
     ;
-  SDIO->ICR = sta;
+  SDIO->ICR = sta & (SDIO_STA_CMDREND | SDIO_STA_CTIMEOUT | SDIO_STA_CCRCFAIL);
   if ((sta & (SDIO_STA_CTIMEOUT)) != 0) {
     sdc_lld_collect_errors(sdcp, sta);
     return CH_FAILED;
@@ -531,7 +531,7 @@ bool_t sdc_lld_send_cmd_short_crc(SDCDriver *sdcp, uint8_t cmd, uint32_t arg,
   while (((sta = SDIO->STA) & (SDIO_STA_CMDREND | SDIO_STA_CTIMEOUT |
                                SDIO_STA_CCRCFAIL)) == 0)
     ;
-  SDIO->ICR = sta;
+  SDIO->ICR = sta & (SDIO_STA_CMDREND | SDIO_STA_CTIMEOUT | SDIO_STA_CCRCFAIL);
   if ((sta & (SDIO_STA_CTIMEOUT | SDIO_STA_CCRCFAIL)) != 0) {
     sdc_lld_collect_errors(sdcp, sta);
     return CH_FAILED;
@@ -566,7 +566,7 @@ bool_t sdc_lld_send_cmd_long_crc(SDCDriver *sdcp, uint8_t cmd, uint32_t arg,
   while (((sta = SDIO->STA) & (SDIO_STA_CMDREND | SDIO_STA_CTIMEOUT |
                                SDIO_STA_CCRCFAIL)) == 0)
     ;
-  SDIO->ICR = sta;
+  SDIO->ICR = sta & (SDIO_STA_CMDREND | SDIO_STA_CTIMEOUT | SDIO_STA_CCRCFAIL);
   if ((sta & (STM32_SDIO_STA_ERROR_MASK)) != 0) {
     sdc_lld_collect_errors(sdcp, sta);
     return CH_FAILED;

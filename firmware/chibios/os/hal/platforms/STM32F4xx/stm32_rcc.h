@@ -664,6 +664,24 @@
  * @api
  */
 #define rccResetOTG_HS() rccResetAHB1(RCC_AHB1RSTR_OTGHSRST)
+
+/**
+ * @brief   Enables the OTG_HS peripheral clock.
+ *
+ * @param[in] lp        low power enable flag
+ *
+ * @api
+ */
+#define rccEnableOTG_HSULPI(lp) rccEnableAHB1(RCC_AHB1ENR_OTGHSULPIEN, lp)
+
+/**
+ * @brief   Disables the OTG_HS peripheral clock.
+ *
+ * @param[in] lp        low power enable flag
+ *
+ * @api
+ */
+#define rccDisableOTG_HSULPI(lp) rccDisableAHB1(RCC_AHB1ENR_OTGHSULPIEN, lp)
 /** @} */
 
 /**

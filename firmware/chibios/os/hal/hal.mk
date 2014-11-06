@@ -1,5 +1,5 @@
 # List of all the ChibiOS/RT HAL files, there is no need to remove the files
-# from this list, you can disable parts of the kernel by editing halconf.h.
+# from this list, you can disable parts of the HAL by editing halconf.h.
 HALSRC = ${CHIBIOS}/os/hal/src/hal.c \
          ${CHIBIOS}/os/hal/src/adc.c \
          ${CHIBIOS}/os/hal/src/can.c \

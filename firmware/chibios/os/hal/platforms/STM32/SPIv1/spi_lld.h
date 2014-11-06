@@ -42,7 +42,7 @@
 /**
  * @brief   SPI1 driver enable switch.
  * @details If set to @p TRUE the support for SPI1 is included.
- * @note    The default is @p TRUE.
+ * @note    The default is @p FALSE.
  */
 #if !defined(STM32_SPI_USE_SPI1) || defined(__DOXYGEN__)
 #define STM32_SPI_USE_SPI1                  FALSE
@@ -51,7 +51,7 @@
 /**
  * @brief   SPI2 driver enable switch.
  * @details If set to @p TRUE the support for SPI2 is included.
- * @note    The default is @p TRUE.
+ * @note    The default is @p FALSE.
  */
 #if !defined(STM32_SPI_USE_SPI2) || defined(__DOXYGEN__)
 #define STM32_SPI_USE_SPI2                  FALSE
@@ -60,7 +60,7 @@
 /**
  * @brief   SPI3 driver enable switch.
  * @details If set to @p TRUE the support for SPI3 is included.
- * @note    The default is @p TRUE.
+ * @note    The default is @p FALSE.
  */
 #if !defined(STM32_SPI_USE_SPI3) || defined(__DOXYGEN__)
 #define STM32_SPI_USE_SPI3                  FALSE
@@ -69,7 +69,7 @@
 /**
  * @brief   SPI4 driver enable switch.
  * @details If set to @p TRUE the support for SPI4 is included.
- * @note    The default is @p TRUE.
+ * @note    The default is @p FALSE.
  */
 #if !defined(STM32_SPI_USE_SPI4) || defined(__DOXYGEN__)
 #define STM32_SPI_USE_SPI4                  FALSE
@@ -78,7 +78,7 @@
 /**
  * @brief   SPI5 driver enable switch.
  * @details If set to @p TRUE the support for SPI5 is included.
- * @note    The default is @p TRUE.
+ * @note    The default is @p FALSE.
  */
 #if !defined(STM32_SPI_USE_SPI5) || defined(__DOXYGEN__)
 #define STM32_SPI_USE_SPI5                  FALSE
@@ -87,7 +87,7 @@
 /**
  * @brief   SPI6 driver enable switch.
  * @details If set to @p TRUE the support for SPI6 is included.
- * @note    The default is @p TRUE.
+ * @note    The default is @p FALSE.
  */
 #if !defined(STM32_SPI_USE_SPI6) || defined(__DOXYGEN__)
 #define STM32_SPI_USE_SPI6                  FALSE
@@ -520,7 +520,7 @@ typedef struct {
 /**
  * @brief   Structure representing a SPI driver.
  */
-struct SPIDriver{
+struct SPIDriver {
   /**
    * @brief Driver state.
    */

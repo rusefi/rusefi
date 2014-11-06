@@ -469,28 +469,28 @@ void icu_lld_start(ICUDriver *icup) {
       rccResetTIM9();
       nvicEnableVector(STM32_TIM9_NUMBER,
                        CORTEX_PRIORITY_MASK(STM32_ICU_TIM9_IRQ_PRIORITY));
-      icup->clock = STM32_TIMCLK1;
+      icup->clock = STM32_TIMCLK2;
     }
 #endif
   }
   else {
     /* Driver re-configuration scenario, it must be stopped first.*/
     icup->tim->CR1    = 0;                  /* Timer disabled.              */
-    icup->tim->DIER   = icup->config->dier &/* DMA-related DIER settings.   */
-                        ~STM32_TIM_DIER_IRQ_MASK;
-    icup->tim->SR     = 0;                  /* Clear eventual pending IRQs. */
     icup->tim->CCR[0] = 0;                  /* Comparator 1 disabled.       */
     icup->tim->CCR[1] = 0;                  /* Comparator 2 disabled.       */
     icup->tim->CNT    = 0;                  /* Counter reset to zero.       */
   }
 
   /* Timer configuration.*/
+  icup->tim->SR   = 0;                     /* Clear eventual pending IRQs. */
+  icup->tim->DIER = icup->config->dier &   /* DMA-related DIER settings.   */
+                      ~STM32_TIM_DIER_IRQ_MASK;
   psc = (icup->clock / icup->config->frequency) - 1;
   chDbgAssert((psc <= 0xFFFF) &&
               ((psc + 1) * icup->config->frequency) == icup->clock,
               "icu_lld_start(), #1", "invalid frequency");
   icup->tim->PSC  = (uint16_t)psc;
-  icup->tim->ARR   = 0xFFFF;
+  icup->tim->ARR  = 0xFFFF;
 
   if (icup->config->channel == ICU_CHANNEL_1) {
     /* Selected input 1.

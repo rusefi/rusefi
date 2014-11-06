@@ -284,8 +284,8 @@ typedef msg_t (*tfunc_t)(void *);
  * @brief   Verifies if the current thread has a termination request pending.
  * @note    Can be invoked in any context.
  *
- * @retval TRUE         termination request pending.
- * @retval FALSE        termination request not pending.
+ * @retval 0            termination request not pending.
+ * @retval !0           termination request pending.
  *
  * @special
  */

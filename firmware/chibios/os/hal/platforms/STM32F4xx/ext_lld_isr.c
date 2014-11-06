@@ -239,6 +239,7 @@ CH_IRQ_HANDLER(ETH_WKUP_IRQHandler) {
   CH_IRQ_EPILOGUE();
 }
 
+#if !defined(STM32F401xx)
 /**
  * @brief   EXTI[20] interrupt handler (OTG_HS_WKUP).
  *
@@ -268,6 +269,7 @@ CH_IRQ_HANDLER(TAMPER_STAMP_IRQHandler) {
 
   CH_IRQ_EPILOGUE();
 }
+#endif /* !defined(STM32F401xx) */
 
 /**
  * @brief   EXTI[22] interrupt handler (RTC_WKUP).
@@ -315,12 +317,14 @@ void ext_lld_exti_irq_enable(void) {
                    CORTEX_PRIORITY_MASK(STM32_EXT_EXTI17_IRQ_PRIORITY));
   nvicEnableVector(OTG_FS_WKUP_IRQn,
                    CORTEX_PRIORITY_MASK(STM32_EXT_EXTI18_IRQ_PRIORITY));
+#if !defined(STM32F401xx)
   nvicEnableVector(ETH_WKUP_IRQn,
                    CORTEX_PRIORITY_MASK(STM32_EXT_EXTI19_IRQ_PRIORITY));
   nvicEnableVector(OTG_HS_WKUP_IRQn,
                    CORTEX_PRIORITY_MASK(STM32_EXT_EXTI20_IRQ_PRIORITY));
   nvicEnableVector(TAMP_STAMP_IRQn,
                    CORTEX_PRIORITY_MASK(STM32_EXT_EXTI21_IRQ_PRIORITY));
+#endif /* !defined(STM32F401xx) */
   nvicEnableVector(RTC_WKUP_IRQn,
                    CORTEX_PRIORITY_MASK(STM32_EXT_EXTI22_IRQ_PRIORITY));
 }
@@ -342,9 +346,11 @@ void ext_lld_exti_irq_disable(void) {
   nvicDisableVector(PVD_IRQn);
   nvicDisableVector(RTC_Alarm_IRQn);
   nvicDisableVector(OTG_FS_WKUP_IRQn);
+#if !defined(STM32F401xx)
   nvicDisableVector(ETH_WKUP_IRQn);
   nvicDisableVector(OTG_HS_WKUP_IRQn);
   nvicDisableVector(TAMP_STAMP_IRQn);
+#endif /* !defined(STM32F401xx) */
   nvicDisableVector(RTC_WKUP_IRQn);
 }
 

@@ -273,7 +273,7 @@
 #error "I2C peripheral clock frequency out of range."
 #endif
 
-#elif defined(STM32L1XX_MD)
+#elif defined(STM32L1XX)
 #if !(I2C_CLK_FREQ >= 2) && (I2C_CLK_FREQ <= 32)
 #error "I2C peripheral clock frequency out of range."
 #endif

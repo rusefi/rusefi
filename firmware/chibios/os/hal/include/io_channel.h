@@ -58,7 +58,7 @@
   msg_t (*gett)(void *instance, systime_t time);                            \
   /* Channel write method with timeout specification.*/                     \
   size_t (*writet)(void *instance, const uint8_t *bp,                       \
-                  size_t n, systime_t time);                                \
+                   size_t n, systime_t time);                               \
   /* Channel read method with timeout specification.*/                      \
   size_t (*readt)(void *instance, uint8_t *bp, size_t n, systime_t time);
 

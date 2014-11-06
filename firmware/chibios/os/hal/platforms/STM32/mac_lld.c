@@ -83,8 +83,10 @@ static uint32_t tb[STM32_MAC_TRANSMIT_BUFFERS][BUFFER_SIZE];
  * @param[in] macp      pointer to the @p MACDriver object
  * @param[in] reg       register number
  * @param[in] value     new register value
+ *
+ * @notapi
  */
-static void mii_write(MACDriver *macp, uint32_t reg, uint32_t value) {
+void mii_write(MACDriver *macp, uint32_t reg, uint32_t value) {
 
   ETH->MACMIIDR = value;
   ETH->MACMIIAR = macp->phyaddr | (reg << 6) | MACMIIDR_CR |
@@ -100,8 +102,10 @@ static void mii_write(MACDriver *macp, uint32_t reg, uint32_t value) {
  * @param[in] reg       register number
  *
  * @return              The PHY register content.
+ *
+ * @notapi
  */
-static uint32_t mii_read(MACDriver *macp, uint32_t reg) {
+uint32_t mii_read(MACDriver *macp, uint32_t reg) {
 
   ETH->MACMIIAR = macp->phyaddr | (reg << 6) | MACMIIDR_CR | ETH_MACMIIAR_MB;
   while ((ETH->MACMIIAR & ETH_MACMIIAR_MB) != 0)
@@ -297,9 +301,11 @@ void mac_lld_start(MACDriver *macp) {
 
   /* MAC clocks activation and commanded reset procedure.*/
   rccEnableETH(FALSE);
+#if defined(STM32_MAC_DMABMR_SR)
   ETH->DMABMR |= ETH_DMABMR_SR;
   while(ETH->DMABMR & ETH_DMABMR_SR)
     ;
+#endif
 
   /* ISR vector enabled.*/
   nvicEnableVector(ETH_IRQn,

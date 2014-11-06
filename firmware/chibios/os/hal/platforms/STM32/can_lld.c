@@ -65,8 +65,8 @@ CANDriver CAND2;
  * @notapi
  */
 static void can_lld_set_filters(uint32_t can2sb,
-                         uint32_t num,
-                         const CANFilter *cfp) {
+                                uint32_t num,
+                                const CANFilter *cfp) {
 
   /* Temporarily enabling CAN1 clock.*/
   rccEnableCAN1(FALSE);
@@ -106,12 +106,19 @@ static void can_lld_set_filters(uint32_t can2sb,
        CANs.*/
     CAN1->sFilterRegister[0].FR1 = 0;
     CAN1->sFilterRegister[0].FR2 = 0;
+#if STM32_HAS_CAN2
     CAN1->sFilterRegister[can2sb].FR1 = 0;
     CAN1->sFilterRegister[can2sb].FR2 = 0;
+#endif
     CAN1->FM1R = 0;
     CAN1->FFA1R = 0;
+#if STM32_HAS_CAN2
     CAN1->FS1R = 1 | (1 << can2sb);
     CAN1->FA1R = 1 | (1 << can2sb);
+#else
+    CAN1->FS1R = 1;
+    CAN1->FA1R = 1;
+#endif
   }
   CAN1->FMR &= ~CAN_FMR_FINIT;
 
@@ -383,7 +390,6 @@ void can_lld_init(void) {
 #else
   can_lld_set_filters(STM32_CAN_MAX_FILTERS, 0, NULL);
 #endif
-
 }
 
 /**
@@ -698,8 +704,8 @@ void can_lld_wakeup(CANDriver *canp) {
  */
 void canSTM32SetFilters(uint32_t can2sb, uint32_t num, const CANFilter *cfp) {
 
-  chDbgCheck((can2sb > 1) && (can2sb < STM32_CAN_MAX_FILTERS) &&
-             (num < STM32_CAN_MAX_FILTERS),
+  chDbgCheck((can2sb >= 1) && (can2sb < STM32_CAN_MAX_FILTERS) &&
+             (num <= STM32_CAN_MAX_FILTERS),
              "canSTM32SetFilters");
 
 #if STM32_CAN_USE_CAN1

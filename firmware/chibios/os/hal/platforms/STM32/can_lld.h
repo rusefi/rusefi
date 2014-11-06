@@ -355,6 +355,7 @@ extern "C" {
   void can_lld_sleep(CANDriver *canp);
   void can_lld_wakeup(CANDriver *canp);
 #endif /* CAN_USE_SLEEP_MODE */
+  void canSTM32SetFilters(uint32_t can2sb, uint32_t num, const CANFilter *cfp);
 #ifdef __cplusplus
 }
 #endif

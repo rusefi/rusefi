@@ -33,7 +33,10 @@
 /* Driver local definitions.                                                 */
 /*===========================================================================*/
 
-#define TRDT_VALUE      5
+#define TRDT_VALUE              5
+
+#define EP0_MAX_INSIZE          64
+#define EP0_MAX_OUTSIZE         64
 
 /*===========================================================================*/
 /* Driver exported variables.                                                */
@@ -556,7 +559,23 @@ static void otg_epin_handler(USBDriver *usbp, usbep_t ep) {
   }
   if ((epint & DIEPINT_XFRC) && (otgp->DIEPMSK & DIEPMSK_XFRCM)) {
     /* Transmit transfer complete.*/
-    _usb_isr_invoke_in_cb(usbp, ep);
+    USBInEndpointState *isp = usbp->epc[ep]->in_state;
+
+    if (isp->txsize < isp->totsize) {
+      /* In case the transaction covered only part of the total transfer
+         then another transaction is immediately started in order to
+         cover the remaining.*/
+      isp->txsize = isp->totsize - isp->txsize;
+      isp->txcnt  = 0;
+      usb_lld_prepare_transmit(usbp, ep);
+      chSysLockFromIsr();
+      usb_lld_start_in(usbp, ep);
+      chSysUnlockFromIsr();
+    }
+    else {
+      /* End on IN transfer.*/
+      _usb_isr_invoke_in_cb(usbp, ep);
+    }
   }
   if ((epint & DIEPINT_TXFE) &&
       (otgp->DIEPEMPMSK & DIEPEMPMSK_INEPTXFEM(ep))) {
@@ -592,7 +611,23 @@ static void otg_epout_handler(USBDriver *usbp, usbep_t ep) {
   }
   if ((epint & DOEPINT_XFRC) && (otgp->DOEPMSK & DOEPMSK_XFRCM)) {
     /* Receive transfer complete.*/
-    _usb_isr_invoke_out_cb(usbp, ep);
+    USBOutEndpointState *osp = usbp->epc[ep]->out_state;
+
+    if (osp->rxsize < osp->totsize) {
+      /* In case the transaction covered only part of the total transfer
+         then another transaction is immediately started in order to
+         cover the remaining.*/
+      osp->rxsize = osp->totsize - osp->rxsize;
+      osp->rxcnt  = 0;
+      usb_lld_prepare_receive(usbp, ep);
+      chSysLockFromIsr();
+      usb_lld_start_out(usbp, ep);
+      chSysUnlockFromIsr();
+    }
+    else {
+      /* End on OUT transfer.*/
+      _usb_isr_invoke_out_cb(usbp, ep);
+    }
   }
 }
 
@@ -860,6 +895,10 @@ void usb_lld_start(USBDriver *usbp) {
       /* OTG HS clock enable and reset.*/
       rccEnableOTG_HS(FALSE);
       rccResetOTG_HS();
+
+      /* Workaround for the problem described here:
+         http://forum.chibios.org/phpbb/viewtopic.php?f=16&t=1798 */
+      rccDisableOTG_HSULPI(TRUE);
 
       /* Enables IRQ vector.*/
       nvicEnableVector(STM32_OTG2_NUMBER,
@@ -1192,10 +1231,14 @@ void usb_lld_prepare_receive(USBDriver *usbp, usbep_t ep) {
   USBOutEndpointState *osp = usbp->epc[ep]->out_state;
 
   /* Transfer initialization.*/
+  osp->totsize = osp->rxsize;
+  if ((ep == 0) && (osp->rxsize  > EP0_MAX_OUTSIZE))
+      osp->rxsize = EP0_MAX_OUTSIZE;
+
   pcnt = (osp->rxsize + usbp->epc[ep]->out_maxsize - 1) /
          usbp->epc[ep]->out_maxsize;
   usbp->otg->oe[ep].DOEPTSIZ = DOEPTSIZ_STUPCNT(3) | DOEPTSIZ_PKTCNT(pcnt) |
-                               DOEPTSIZ_XFRSIZ(usbp->epc[ep]->out_maxsize);
+                               DOEPTSIZ_XFRSIZ(osp->rxsize);
 
 }
 
@@ -1211,18 +1254,21 @@ void usb_lld_prepare_transmit(USBDriver *usbp, usbep_t ep) {
   USBInEndpointState *isp = usbp->epc[ep]->in_state;
 
   /* Transfer initialization.*/
+  isp->totsize = isp->txsize;
   if (isp->txsize == 0) {
     /* Special case, sending zero size packet.*/
     usbp->otg->ie[ep].DIEPTSIZ = DIEPTSIZ_PKTCNT(1) | DIEPTSIZ_XFRSIZ(0);
   }
   else {
+    if ((ep == 0) && (isp->txsize  > EP0_MAX_INSIZE))
+      isp->txsize = EP0_MAX_INSIZE;
+
     /* Normal case.*/
     uint32_t pcnt = (isp->txsize + usbp->epc[ep]->in_maxsize - 1) /
                     usbp->epc[ep]->in_maxsize;
     usbp->otg->ie[ep].DIEPTSIZ = DIEPTSIZ_PKTCNT(pcnt) |
-                                 DIEPTSIZ_XFRSIZ(usbp->epc[ep]->in_state->txsize);
+                                 DIEPTSIZ_XFRSIZ(isp->txsize);
   }
-
 }
 
 /**

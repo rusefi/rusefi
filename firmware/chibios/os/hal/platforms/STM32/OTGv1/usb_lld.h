@@ -43,6 +43,11 @@
 #endif
 
 /**
+ * @brief   Status stage handling method.
+ */
+#define USB_EP0_STATUS_STAGE                USB_EP0_STATUS_STAGE_SW
+
+/**
  * @brief   The address can be changed immediately upon packet reception.
  */
 #define USB_SET_ADDRESS_MODE                USB_EARLY_SET_ADDRESS
@@ -221,6 +226,10 @@ typedef struct {
       OutputQueue               *txqueue;
     } queue;
   } mode;
+  /**
+   * @brief   Total transmit transfer size.
+   */
+  size_t                        totsize;
 } USBInEndpointState;
 
 /**
@@ -253,6 +262,10 @@ typedef struct {
       InputQueue               *rxqueue;
     } queue;
   } mode;
+  /**
+   * @brief   Total transmit transfer size.
+   */
+  size_t                        totsize;
 } USBOutEndpointState;
 
 /**

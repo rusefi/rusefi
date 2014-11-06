@@ -33,6 +33,8 @@
  *          - STM32F37X for Analog & DSP devices.
  *          - STM32F4XX for High-performance STM32 F-4 devices.
  *          - STM32L1XX_MD for Ultra Low Power Medium-density devices.
+ *          - STM32L1XX_MDP for Ultra Low Power Medium-density Plus devices.
+ *          - STM32L1XX_HD for Ultra Low Power High-density devices.
  *          .
  *
  * @addtogroup HAL
@@ -66,7 +68,8 @@
       defined(STM32F427_437xx) || defined(STM32F429_439xx)
 #include "stm32f4xx.h"
 
-#elif defined(STM32L1XX_MD)
+#elif defined(STM32L1XX_MD)    || defined(STM32L1XX_MDP)   ||               \
+      defined(STM32L1XX_HD)
 #include "stm32l1xx.h"
 
 #else

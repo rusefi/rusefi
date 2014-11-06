@@ -85,6 +85,12 @@
 #define USB_EARLY_SET_ADDRESS               0
 #define USB_LATE_SET_ADDRESS                1
 
+#define USB_EP0_STATUS_STAGE_SW             0
+#define USB_EP0_STATUS_STAGE_HW             1
+
+#define USB_SET_ADDRESS_ACK_SW              0
+#define USB_SET_ADDRESS_ACK_HW              1
+
 /**
  * @name    Helper macros for USB descriptors
  * @{
