@@ -32,18 +32,13 @@ public class RpmPanel {
 
         JPanel gauges = new JPanel(new GridLayout(2, 3));
         gauges.setBorder(BorderFactory.createLineBorder(Color.black));
-//        gauges.add(GaugesPanel.createCoolantGauge());
-        gauges.add(SensorGauge.createGauge(Sensor.DWELL0));
-        gauges.add(SensorGauge.createGauge(Sensor.DUTY0));
+        gauges.add(SensorGauge.createGauge(Sensor.CLT));
         gauges.add(SensorGauge.createGauge(Sensor.FUEL));
-        //gauges.add(GaugesPanel.createGauge(Sensor.ADVANCE0));
+        gauges.add(SensorGauge.createGauge(Sensor.TIMING));
 
         gauges.add(SensorGauge.createGauge(Sensor.VREF));
         gauges.add(SensorGauge.createGauge(Sensor.MAF));
-        gauges.add(SensorGauge.createGauge(Sensor.DWELL1));
-//        gauges.add(GaugesPanel.createGauge(Sensor.ADVANCE1));
-//        gauges.add(GaugesPanel.createGauge(Sensor.MAF));
-
+        gauges.add(SensorGauge.createGauge(Sensor.TPS));
 
         startConnectionWatchDog();
 
