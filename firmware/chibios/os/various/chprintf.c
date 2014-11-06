@@ -217,9 +217,11 @@ void chvprintf(BaseSequentialStream *chp, const char *fmt, va_list ap) {
       break;
 #if CHPRINTF_USE_FLOAT
     case 'f':
-
       f = (float) va_arg(ap, double);
-
+      if (f < 0) {
+        *p++ = '-';
+        f = -f;
+      }
       p = ftoa(p, f, precision);
       break;
 #endif
@@ -255,9 +257,9 @@ unsigned_common:
         chSequentialStreamPut(chp, (uint8_t)*s++);
         i--;
       }
-      do
+      do {
         chSequentialStreamPut(chp, (uint8_t)filler);
-      while (++width != 0);
+      } while (++width != 0);
     }
     chSequentialStreamWrite(chp, (uint8_t*)s, i);
     s += i;

@@ -9,6 +9,33 @@
 #include "mpu_util.h"
 #include "error_handling.h"
 
+extern "C" {
+int getRemainingStack(Thread *otp);
+}
+
+extern stkalign_t __main_stack_base__;
+
+int getRemainingStack(Thread *otp) {
+#if CH_DBG_ENABLE_STACK_CHECK
+	register struct intctx *r13 asm ("r13");
+	otp->activeStack = r13;
+
+	int rs;
+	if (dbg_isr_cnt > 0) {
+		// ISR context
+		rs = (stkalign_t *) (r13 - 1) - &__main_stack_base__;
+	} else {
+
+		rs = (stkalign_t *) (r13 - 1) - otp->p_stklimit;
+	}
+	otp->remainingStack = rs;
+	return rs;
+#else
+	return 99999;
+#endif /* CH_DBG_ENABLE_STACK_CHECK */
+}
+
+
 void baseHardwareInit(void) {
 	// looks like this holds a random value on start? Let's set a nice clean zero
 	DWT_CYCCNT = 0;
