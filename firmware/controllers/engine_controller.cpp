@@ -198,6 +198,18 @@ static void handleGpio(Engine *engine, int index) {
 
 }
 
+static void setPinState(io_pin_e ioPin, LEElement *element, Engine *engine) {
+	if (element == NULL) {
+		warning(OBD_PCM_Processor_Fault, "invalid expression for %s", getIo_pin_e(ioPin));
+	} else {
+		int value = calc.getValue2(element, engine);
+		if (value != getOutputPinValue(ioPin)) {
+			scheduleMsg(&logger, "setting %s %s", getIo_pin_e(ioPin), boolToString(value));
+			setOutputPinValue(ioPin, value);
+		}
+	}
+}
+
 static void onEvenyGeneralMilliseconds(Engine *engine) {
 	/**
 	 * We need to push current value into the 64 bit counter often enough so that we do not miss an overflow
@@ -218,20 +230,13 @@ static void onEvenyGeneralMilliseconds(Engine *engine) {
 
 #if EFI_FUEL_PUMP
 	if (boardConfiguration->fuelPumpPin != GPIO_NONE && engineConfiguration->isFuelPumpEnabled) {
-		if (fuelPumpLogic == NULL) {
-			warning(OBD_PCM_Processor_Fault, "invalid expression for %s", getIo_pin_e(FUEL_PUMP_RELAY));
-		} else {
-			int value = calc.getValue2(fuelPumpLogic, engine);
-			if (value != getOutputPinValue(FUEL_PUMP_RELAY)) {
-				scheduleMsg(&logger, "setting %s %s", getIo_pin_e(FUEL_PUMP_RELAY), boolToString(value));
-				setOutputPinValue(FUEL_PUMP_RELAY, value);
-			}
-		}
+		setPinState(FUEL_PUMP_RELAY, fuelPumpLogic, engine);
 	}
 #endif
 
 	updateErrorCodes();
 
+	// todo: migrate this to flex logic
 	fanRelayControl();
 
 	cylinderCleanupControl(engine);
@@ -371,7 +376,7 @@ void initEngineContoller(Engine *engine) {
 
 	chThdCreateStatic(csThreadStack, sizeof(csThreadStack), LOWPRIO, (tfunc_t) csThread, NULL);
 
-	initInjectorCentral();
+	initInjectorCentral(engine);
 	initPwmTester();
 	initIgnitionCentral();
 	initMalfunctionCentral();
