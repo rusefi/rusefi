@@ -20,6 +20,6 @@ float getVRef(void) {
 	return getVoltageDivided(ADC_CHANNEL_VREF);
 }
 
-float getVBatt(void) {
+float getVBatt(engine_configuration_s *engineConfiguration) {
 	return getVoltage(engineConfiguration->vbattAdcChannel) * engineConfiguration->vbattDividerCoeff;
 }

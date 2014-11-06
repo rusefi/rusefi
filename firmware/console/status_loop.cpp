@@ -134,12 +134,12 @@ void printSensors(Engine *engine) {
 
 	reportSensorF("afr", getAfr(), 2);
 	reportSensorF("vref", getVRef(), 2);
-	reportSensorF("vbatt", getVBatt(), 2);
+	reportSensorF("vbatt", getVBatt(engineConfiguration), 2);
 
 	reportSensorF("TRG_0_DUTY", getTriggerDutyCycle(0), 2);
 	reportSensorF("TRG_1_DUTY", getTriggerDutyCycle(1), 2);
 
-	reportSensorF(getCaption(LP_THROTTLE), getTPS(engine->engineConfiguration), 2);
+	reportSensorF(getCaption(LP_THROTTLE), getTPS(engineConfiguration), 2);
 
 	if (engineConfiguration->hasCltSensor) {
 		reportSensorF(getCaption(LP_ECT), getCoolantTemperature(engine), 2);
@@ -173,7 +173,7 @@ void printState(Engine *engine, int currentCkpEventCounter) {
 	debugFloat(&logger, "fuel_base", baseFuel, 2);
 //	debugFloat(&logger, "fuel_iat", getIatCorrection(getIntakeAirTemperature()), 2);
 //	debugFloat(&logger, "fuel_clt", getCltCorrection(getCoolantTemperature()), 2);
-	debugFloat(&logger, "fuel_lag", getInjectorLag(engineConfiguration, getVBatt()), 2);
+	debugFloat(&logger, "fuel_lag", getInjectorLag(engineConfiguration, getVBatt(engineConfiguration)), 2);
 	debugFloat(&logger, "fuel", getFuelMs(rpm, engine), 2);
 
 	debugFloat(&logger, "timing", getAdvance(rpm, engineLoad), 2);
@@ -319,7 +319,7 @@ static void showFuelInfo2(float rpm, float engineLoad, Engine *engine) {
 	if (engine->rpmCalculator->isRunning()) {
 		float iatCorrection = getIatCorrection(engineConfiguration, getIntakeAirTemperature(engine));
 		float cltCorrection = getCltCorrection(engineConfiguration, getCoolantTemperature(engine));
-		float injectorLag = getInjectorLag(engineConfiguration, getVBatt());
+		float injectorLag = getInjectorLag(engineConfiguration, getVBatt(engineConfiguration));
 		scheduleMsg(&logger2, "rpm=%f engineLoad=%f", rpm, engineLoad);
 		scheduleMsg(&logger2, "baseFuel=%f", baseFuelMs);
 
@@ -428,7 +428,7 @@ void updateTunerStudioState(Engine *engine, TunerStudioOutputChannels *tsOutputC
 	tsOutputChannels->throttle_positon = tps;
 	tsOutputChannels->mass_air_flow = getMaf();
 	tsOutputChannels->air_fuel_ratio = getAfr();
-	tsOutputChannels->v_batt = getVBatt();
+	tsOutputChannels->v_batt = getVBatt(engineConfiguration);
 	tsOutputChannels->tsConfigVersion = TS_FILE_VERSION;
 	tsOutputChannels->tpsADC = getTPS10bitAdc();
 	tsOutputChannels->atmospherePressure = getBaroPressure();

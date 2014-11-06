@@ -46,7 +46,6 @@ void assertTrueM(const char *msg, float actual);
 void assertFalse(float actual);
 void assertFalseM(const char *msg, float actual);
 
-float getVBatt(void);
 float getMaf(void);
 
 #define systicks2ms(x) (0)

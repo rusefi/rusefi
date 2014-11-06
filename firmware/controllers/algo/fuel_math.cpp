@@ -81,7 +81,7 @@ float getFuelMs(int rpm, Engine *engine) {
 		float fuelPerCycle = getRunningFuel(baseFuel, engine, rpm);
 		theoreticalInjectionLength = fuelPerCycle / getNumberOfInjections(engineConfiguration, engine->engineConfiguration->injectionMode);
 	}
-	float injectorLag = getInjectorLag(engineConfiguration, getVBatt());
+	float injectorLag = getInjectorLag(engineConfiguration, getVBatt(engineConfiguration));
 	return theoreticalInjectionLength + injectorLag;
 }
 
