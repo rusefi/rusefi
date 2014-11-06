@@ -22,6 +22,7 @@
 #include "trigger_structure.h"
 #include "error_handling.h"
 #include "trigger_decoder.h"
+#include "engine_math.h"
 
 trigger_shape_helper::trigger_shape_helper() {
 	for (int i = 0; i < TRIGGER_CHANNEL_COUNT; i++) {
@@ -53,13 +54,12 @@ int trigger_shape_s::getTriggerShapeSynchPointIndex() {
 
 // todo: clean-up!
 int getEngineCycleEventCount2(operation_mode_e mode, trigger_shape_s * s);
-float fixAngle(float angle);
 
-void trigger_shape_s::calculateTriggerSynchPoint(trigger_config_s const*triggerConfig) {
-	setTriggerShapeSynchPointIndex(findTriggerZeroEventIndex(this, triggerConfig));
+void trigger_shape_s::calculateTriggerSynchPoint(engine_configuration_s const*engineConfiguration, trigger_config_s const*triggerConfig) {
+	setTriggerShapeSynchPointIndex(engineConfiguration, findTriggerZeroEventIndex(this, triggerConfig));
 }
 
-void trigger_shape_s::setTriggerShapeSynchPointIndex(int triggerShapeSynchPointIndex) {
+void trigger_shape_s::setTriggerShapeSynchPointIndex(engine_configuration_s const *engineConfiguration, int triggerShapeSynchPointIndex) {
 	this->triggerShapeSynchPointIndex = triggerShapeSynchPointIndex;
 
 	int engineCycleEventCount = getEngineCycleEventCount2(operationMode, this);
@@ -71,7 +71,7 @@ void trigger_shape_s::setTriggerShapeSynchPointIndex(int triggerShapeSynchPointI
 			// explicit check for zero to avoid issues where logical zero is not exactly zero due to float nature
 			eventAngles[i] = 0;
 		} else {
-			eventAngles[i] = fixAngle(getAngle((triggerShapeSynchPointIndex + i) % engineCycleEventCount) - firstAngle);
+			eventAngles[i] = fixAngle(engineConfiguration, getAngle((triggerShapeSynchPointIndex + i) % engineCycleEventCount) - firstAngle);
 		}
 	}
 }

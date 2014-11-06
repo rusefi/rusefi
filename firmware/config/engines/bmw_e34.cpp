@@ -24,6 +24,10 @@ void setBmwE43(engine_configuration_s *engineConfiguration) {
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 
+	setConstantDwell(engineConfiguration, 3); // a bit shorter dwell
+	engineConfiguration->useConstantDwellDuringCranking = true;
+	engineConfiguration->ignitionDwellForCrankingMs = 5;
+
 	// todo: check the digital sniffer while simulating
 	// set_global_trigger_offset_angle 84
 	engineConfiguration->globalTriggerAngleOffset = 84;

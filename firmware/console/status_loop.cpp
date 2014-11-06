@@ -179,8 +179,6 @@ void printState(Engine *engine, int currentCkpEventCounter) {
 	debugFloat(&logger, "timing", getAdvance(rpm, engineLoad), 2);
 
 //		float map = getMap();
-//		float fuel = getDefaultFuel(rpm, map);
-//		debugFloat(&logger, "d_fuel", fuel, 2);
 
 #endif /* EFI_SHAFT_POSITION_INPUT */
 }
@@ -454,7 +452,7 @@ void updateTunerStudioState(Engine *engine, TunerStudioOutputChannels *tsOutputC
 	tsOutputChannels->isIatError = !isValidIntakeAirTemperature(getIntakeAirTemperature(engine));
 #endif
 	tsOutputChannels->tCharge = getTCharge(rpm, tps, coolant, intake);
-	tsOutputChannels->sparkDwell = getSparkDwellMs(rpm);
+	tsOutputChannels->sparkDwell = getSparkDwellMsT(engineConfiguration, rpm);
 	tsOutputChannels->pulseWidthMs = getRunningFuel(baseFuelMs, engine, rpm);
 	tsOutputChannels->crankingFuelMs = getCrankingFuel(engine);
 }

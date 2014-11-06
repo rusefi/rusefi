@@ -21,8 +21,6 @@ void findTriggerPosition(engine_configuration_s const *engineConfiguration, trig
 
 int isInjectionEnabled(engine_configuration_s *engineConfiguration);
 
-float fixAngle(float angle);
-
 #endif
 
 #ifdef __cplusplus
@@ -30,7 +28,7 @@ extern "C"
 {
 #endif /* __cplusplus */
 
-float getDefaultFuel(int rpm, float map);
+float fixAngle(engine_configuration_s const *engineConfiguration, float angle);
 
 /**
  * So that's how 'inline' syntax for both GCC and IAR
@@ -57,7 +55,6 @@ float getEngineLoadT(Engine *engine);
 #define getEngineLoad() getEngineLoadT(&engine)
 
 float getSparkDwellMsT(engine_configuration_s *engineConfiguration, int rpm);
-#define getSparkDwellMs(rpm) getSparkDwellMsT(engineConfiguration, rpm)
 
 int getCylinderId(firing_order_e firingOrder, int index);
 

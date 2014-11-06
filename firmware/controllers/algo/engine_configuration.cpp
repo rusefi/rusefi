@@ -141,6 +141,7 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	}
 
 	setConstantDwell(engineConfiguration, 4); // 4ms is global default dwell
+	engineConfiguration->useConstantDwellDuringCranking = false;
 
 	setFuelLoadBin(engineConfiguration, 1.2, 4.4);
 	setFuelRpmBin(engineConfiguration, 800, 7000);

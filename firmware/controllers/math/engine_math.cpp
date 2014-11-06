@@ -50,7 +50,7 @@ float getCrankshaftRevolutionTimeMs(int rpm) {
  * @brief Shifts angle into the [0..720) range
  * TODO: should be 'crankAngleRange' range?
  */
-float fixAngle(float angle) {
+float fixAngle(engine_configuration_s const *engineConfiguration, float angle) {
 	// I guess this implementation would be faster than 'angle % 720'
 	while (angle < 0)
 		angle += 720;
@@ -231,9 +231,13 @@ void addFuelEvents(engine_configuration_s const *e, engine_configuration2_s *eng
  */
 float getSparkDwellMsT(engine_configuration_s *engineConfiguration, int rpm) {
 	if (isCrankingR(rpm)) {
+		if(engineConfiguration->useConstantDwellDuringCranking) {
+			return engineConfiguration->ignitionDwellForCrankingMs;
+		} else {
 		// technically this could be implemented via interpolate2d
 		float angle = engineConfiguration->crankingChargeAngle;
 		return getOneDegreeTimeMs(rpm) * angle;
+		}
 	}
 	efiAssert(!cisnan(rpm), "invalid rpm", NAN);
 
@@ -255,7 +259,7 @@ int getEngineCycleEventCount(engine_configuration_s const *engineConfiguration, 
 void findTriggerPosition(engine_configuration_s const *engineConfiguration, trigger_shape_s * s,
 		event_trigger_position_s *position, float angleOffset) {
 
-	angleOffset = fixAngle(angleOffset + engineConfiguration->globalTriggerAngleOffset);
+	angleOffset = fixAngle(engineConfiguration, angleOffset + engineConfiguration->globalTriggerAngleOffset);
 
 	int engineCycleEventCount = getEngineCycleEventCount(engineConfiguration, s);
 
@@ -345,7 +349,7 @@ void prepareOutputSignals(Engine *engine) {
 engine_configuration2_s *engineConfiguration2 = engine->engineConfiguration2;
 
 	// todo: move this reset into decoder
-	engineConfiguration2->triggerShape.calculateTriggerSynchPoint(&engineConfiguration->triggerConfig);
+	engineConfiguration2->triggerShape.calculateTriggerSynchPoint(engineConfiguration, &engineConfiguration->triggerConfig);
 
 	injectonSignals.clear();
 	EventHandlerConfiguration *config = &engineConfiguration2->engineEventConfiguration;
