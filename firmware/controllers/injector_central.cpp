@@ -133,6 +133,18 @@ static void fuelbench2(const char *delayStr, const char *indexStr, const char * 
 	pinbench(delayStr, onTimeStr, offTimeStr, countStr, p, b);
 }
 
+static void fanbench(Engine *engine) {
+	brainPin = boardConfiguration->fanPin;
+	pinX = FAN_RELAY;
+
+	delayMs = 1000;
+	onTime = 5000;
+	offTime = 0;
+	count = 1;
+
+	needToRunBench = true;
+}
+
 static void fuelpumpbench(int delayParam, int onTimeParam) {
 	brainPin = boardConfiguration->fuelPumpPin;
 	pinX = FUEL_PUMP_RELAY;
@@ -164,7 +176,7 @@ static void sparkbench(const char * onTimeStr, const char *offTimeStr, const cha
 static THD_WORKING_AREA(benchThreadStack, UTILITY_THREAD_STACK_SIZE);
 
 static msg_t benchThread(int param) {
-	(void)param;
+	(void) param;
 	chRegSetThreadName("BenchThread");
 
 	while (TRUE) {
@@ -179,13 +191,13 @@ static msg_t benchThread(int param) {
 #endif
 }
 
-void initInjectorCentral(void) {
+void initInjectorCentral(Engine *engine) {
 	initLogging(&logger, "InjectorCentral");
 	chThdCreateStatic(benchThreadStack, sizeof(benchThreadStack), NORMALPRIO, (tfunc_t) benchThread, NULL);
 
 	for (int i = 0; i < engineConfiguration->cylindersCount; i++) {
 		is_injector_enabled[i] = true;
-        }
+	}
 
 	// todo: should we move this code closer to the injection logic?
 	for (int i = 0; i < engineConfiguration->cylindersCount; i++) {
@@ -198,11 +210,12 @@ void initInjectorCentral(void) {
 	printStatus();
 	addConsoleActionII("injector", setInjectorEnabled);
 
-	addConsoleActionII("fuelpumpbench", &fuelpumpbench);
+	addConsoleActionII("fuelpumpbench", fuelpumpbench);
+	addConsoleActionP("fanbench", (VoidPtr) fanbench, engine);
 
-	addConsoleActionSSS("fuelbench", &fuelbench);
-	addConsoleActionSSS("sparkbench", &sparkbench);
+	addConsoleActionSSS("fuelbench", fuelbench);
+	addConsoleActionSSS("sparkbench", sparkbench);
 
-	addConsoleActionSSSSS("fuelbench2", &fuelbench2);
-	addConsoleActionSSSSS("sparkbench2", &sparkbench2);
+	addConsoleActionSSSSS("fuelbench2", fuelbench2);
+	addConsoleActionSSSSS("sparkbench2", sparkbench2);
 }
