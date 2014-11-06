@@ -45,4 +45,5 @@ void setBmwE43(engine_configuration_s *engineConfiguration) {
 	bc->ignitionPins[4] = GPIOC_9; // #5
 	bc->ignitionPins[5] = GPIO_NONE; // #6
 
+	engineConfiguration->map.sensor.sensorType = MT_MPX4250;
 }

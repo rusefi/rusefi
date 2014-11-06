@@ -57,13 +57,18 @@ CH_IRQ_HANDLER(SysTickVector) {
 
 #if !CORTEX_SIMPLIFIED_PRIORITY || defined(__DOXYGEN__)
 /**
- * @brief   SVC vector.
- * @details The SVC vector is used for exception mode re-entering after a
+ * @brief   SVCall vector.
+ * @details The SVCall vector is used for exception mode re-entering after a
  *          context switch.
- * @note    The PendSV vector is only used in advanced kernel mode.
+ * @note    The SVCallVector vector is only used in advanced kernel mode.
  */
 void SVCallVector(void) {
   struct extctx *ctxp;
+
+#if CORTEX_USE_FPU
+  /* Enforcing unstacking of the FP part of the context.*/
+  SCB_FPCCR &= ~FPCCR_LSPACT;
+#endif
 
   /* Current PSP value.*/
   asm volatile ("mrs     %0, PSP" : "=r" (ctxp) : : "memory");
@@ -72,11 +77,7 @@ void SVCallVector(void) {
      point to the real one.*/
   ctxp++;
 
-#if CORTEX_USE_FPU
-  /* Restoring the special register SCB_FPCCR.*/
-  SCB_FPCCR = (uint32_t)ctxp->fpccr;
-  SCB_FPCAR = SCB_FPCAR + sizeof (struct extctx);
-#endif
+  /* Restoring real position of the original stack frame.*/
   asm volatile ("msr     PSP, %0" : : "r" (ctxp) : "memory");
   port_unlock_from_isr();
 }
@@ -92,6 +93,11 @@ void SVCallVector(void) {
 void PendSVVector(void) {
   struct extctx *ctxp;
 
+#if CORTEX_USE_FPU
+  /* Enforcing unstacking of the FP part of the context.*/
+  SCB_FPCCR &= ~FPCCR_LSPACT;
+#endif
+
   /* Current PSP value.*/
   asm volatile ("mrs     %0, PSP" : "=r" (ctxp) : : "memory");
 
@@ -99,11 +105,7 @@ void PendSVVector(void) {
      point to the real one.*/
   ctxp++;
 
-#if CORTEX_USE_FPU
-  /* Restoring the special register SCB_FPCCR.*/
-  SCB_FPCCR = (uint32_t)ctxp->fpccr;
-  SCB_FPCAR = SCB_FPCAR + sizeof (struct extctx);
-#endif
+  /* Restoring real position of the original stack frame.*/
   asm volatile ("msr     PSP, %0" : : "r" (ctxp) : "memory");
 }
 #endif /* CORTEX_SIMPLIFIED_PRIORITY */
@@ -151,44 +153,35 @@ void _port_irq_epilogue(void) {
   if ((SCB_ICSR & ICSR_RETTOBASE) != 0) {
     struct extctx *ctxp;
 
+#if CORTEX_USE_FPU
+    /* Enforcing a lazy FPU state save. Note, it goes in the original
+       context because the FPCAR register has not been modified.*/
+    asm volatile ("vmrs    APSR_nzcv, FPSCR" : : : "memory");
+#endif
+
     /* Current PSP value.*/
     asm volatile ("mrs     %0, PSP" : "=r" (ctxp) : : "memory");
 
     /* Adding an artificial exception return context, there is no need to
        populate it fully.*/
     ctxp--;
-    asm volatile ("msr     PSP, %0" : : "r" (ctxp) : "memory");
     ctxp->xpsr = (regarm_t)0x01000000;
+#if CORTEX_USE_FPU
+    ctxp->fpscr = (regarm_t)SCB_FPDSCR;
+#endif
+    asm volatile ("msr     PSP, %0" : : "r" (ctxp) : "memory");
 
     /* The exit sequence is different depending on if a preemption is
        required or not.*/
     if (chSchIsPreemptionRequired()) {
       /* Preemption is required we need to enforce a context switch.*/
-      ctxp->pc = (void *)_port_switch_from_isr;
-#if CORTEX_USE_FPU
-      /* Triggering a lazy FPU state save.*/
-      asm volatile ("vmrs    APSR_nzcv, FPSCR" : : : "memory");
-#endif
+      ctxp->pc = (regarm_t)_port_switch_from_isr;
     }
     else {
       /* Preemption not required, we just need to exit the exception
          atomically.*/
-      ctxp->pc = (void *)_port_exit_from_isr;
+      ctxp->pc = (regarm_t)_port_exit_from_isr;
     }
-
-#if CORTEX_USE_FPU
-    {
-      uint32_t fpccr;
-
-      /* Saving the special register SCB_FPCCR into the reserved offset of
-         the Cortex-M4 exception frame.*/
-      (ctxp + 1)->fpccr = (regarm_t)(fpccr = SCB_FPCCR);
-
-      /* Now the FPCCR is modified in order to not restore the FPU status
-         from the artificial return context.*/
-      SCB_FPCCR = fpccr | FPCCR_LSPACT;
-    }
-#endif
 
     /* Note, returning without unlocking is intentional, this is done in
        order to keep the rest of the context switch atomic.*/
