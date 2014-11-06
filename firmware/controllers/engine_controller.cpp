@@ -312,7 +312,7 @@ static void printAnalogInfo(void) {
 	if (engineConfiguration->hasBaroSensor) {
 		printAnalogChannelInfo("BARO", engineConfiguration->baroSensor.hwChannel);
 	}
-	printAnalogChannelInfoExt("Vbatt", engineConfiguration->vbattAdcChannel, getVBatt());
+	printAnalogChannelInfoExt("Vbatt", engineConfiguration->vbattAdcChannel, getVBatt(engineConfiguration));
 }
 
 static THD_WORKING_AREA(csThreadStack, UTILITY_THREAD_STACK_SIZE);	// declare thread stack

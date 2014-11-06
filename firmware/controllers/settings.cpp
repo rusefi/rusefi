@@ -119,8 +119,12 @@ void printConfiguration(engine_configuration_s *engineConfiguration, engine_conf
 			boolToString(engineConfiguration->isManualSpinningMode),
 			boolToString(engineConfiguration->isCylinderCleanupEnabled));
 
-	scheduleMsg(&logger, "crankingChargeAngle=%f", engineConfiguration->crankingChargeAngle);
-	scheduleMsg(&logger, "crankingTimingAngle=%f", engineConfiguration->crankingTimingAngle);
+	if (engineConfiguration->useConstantDwellDuringCranking) {
+		scheduleMsg(&logger, "ignitionDwellForCrankingMs=%f", engineConfiguration->ignitionDwellForCrankingMs);
+	} else {
+		scheduleMsg(&logger, "crankingChargeAngle=%f", engineConfiguration->crankingChargeAngle);
+		scheduleMsg(&logger, "crankingTimingAngle=%f", engineConfiguration->crankingTimingAngle);
+	}
 	scheduleMsg(&logger, "globalTriggerAngleOffset=%f", engineConfiguration->globalTriggerAngleOffset);
 
 //	scheduleMsg(&logger, "analogChartMode: %d", engineConfiguration->analogChartMode);
@@ -131,8 +135,7 @@ void printConfiguration(engine_configuration_s *engineConfiguration, engine_conf
 
 	scheduleMsg(&logger, "idlePin: mode %s @ %s freq=%d", getPin_output_mode_e(boardConfiguration->idleValvePinMode),
 			hwPortname(boardConfiguration->idleValvePin), boardConfiguration->idleSolenoidFrequency);
-	scheduleMsg(&logger, "malfunctionIndicatorn: %s mode=%s",
-			hwPortname(boardConfiguration->malfunctionIndicatorPin),
+	scheduleMsg(&logger, "malfunctionIndicatorn: %s mode=%s", hwPortname(boardConfiguration->malfunctionIndicatorPin),
 			pinModeToString(boardConfiguration->malfunctionIndicatorPinMode));
 
 	scheduleMsg(&logger, "fuelPumpPin: mode %s @ %s", getPin_output_mode_e(boardConfiguration->fuelPumpPinMode),
@@ -306,7 +309,8 @@ static void printTPSInfo(void) {
 	scheduleMsg(&logger, "tps min %d/max %d v=%f @%s%d", engineConfiguration->tpsMin, engineConfiguration->tpsMax,
 			getTPSVoltage(), portname(port), pin);
 #endif
-	scheduleMsg(&logger, "current 10bit=%d value=%f rate=%f", getTPS10bitAdc(), getTPS(engineConfiguration), getTpsRateOfChange());
+	scheduleMsg(&logger, "current 10bit=%d value=%f rate=%f", getTPS10bitAdc(), getTPS(engineConfiguration),
+			getTpsRateOfChange());
 }
 
 static void printTemperatureInfo(void) {

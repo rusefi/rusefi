@@ -25,6 +25,8 @@ import org.junit.Test;
 
 import com.autsia.bracer.BracerParser;
 
+import static org.junit.Assert.assertEquals;
+
 /**
  * Test class.
  * User: Dmytro
@@ -43,55 +45,69 @@ public class BracerParserTest {
     @Test
     public void testEvaluateNoVar() throws Exception {
         bracerParser.parse(INPUT_NOVAR);
-        Assert.assertEquals("-0.6570194619480038", bracerParser.evaluate());
+        assertEquals("-0.6570194619480038", bracerParser.evaluate());
     }
 
     @Test
     public void testSimpleBoolean() throws Exception {
         bracerParser.parse("true or false");
-        Assert.assertEquals("1", bracerParser.evaluate());
+        assertEquals("1", bracerParser.evaluate());
+        assertEquals("1, 0, |", bracerParser.getRusEfi());
+
+        bracerParser.parse("true > false");
+        assertEquals("1", bracerParser.evaluate());
+        assertEquals("1, 0, >", bracerParser.getRusEfi());
+
+        bracerParser.parse("(true > false)");
+        assertEquals("1", bracerParser.evaluate());
+        assertEquals("1, 0, >", bracerParser.getRusEfi());
+
+        bracerParser.parse("(rpm > false)");
+        // todo: that's weird
+        assertEquals("0, >, rpm", bracerParser.getRusEfi());
     }
 
     @Test
     public void testBoolean() throws Exception {
         bracerParser.parse("( ( true and ( false or ( true and ( ( true ) or ( false ) ) ) ) ) and ( ( false ) ) )");
-        Assert.assertEquals("0", bracerParser.evaluate());
+        assertEquals("0", bracerParser.evaluate());
 
         Collection<String> stackRPN = bracerParser.getStackRPN();
 
-        Assert.assertEquals("[&, 0, &, |, &, |, 0, 1, 1, 0, 1]", stackRPN.toString());
+        assertEquals("[&, 0, &, |, &, |, 0, 1, 1, 0, 1]", stackRPN.toString());
     }
 
     @Test
     public void testBooleanNot1() throws Exception {
         bracerParser.parse("not( ( true and ( false or ( true and ( not( true ) or ( false ) ) ) ) ) and ( ( false ) ) )");
-        Assert.assertEquals("1", bracerParser.evaluate());
+        assertEquals("1", bracerParser.evaluate());
     }
 
     @Test
     public void testRusEfi() throws ParseException {
         bracerParser.parse("(time_since_boot < 4) | (rpm > 0)");
+        assertEquals("4, <, time_since_boot, 0, >, rpm, |", bracerParser.getRusEfi());
 
-        Assert.assertEquals("[|, rpm, >, 0, time_since_boot, <, 4]", bracerParser.getStackRPN().toString());
-
-
-        bracerParser.parse("(time_since_boot <= 4) | (rpm > 0)");
-        Assert.assertEquals("[|, rpm, >, 0, time_since_boot, <=, 4]", bracerParser.getStackRPN().toString());
+        bracerParser.parse("(fan and (coolant > fan_off_setting)) OR (coolant > fan_on_setting)");
+        assertEquals("fan_off_setting, >, coolant, &, fan, fan_on_setting, >, coolant, OR", bracerParser.getRusEfi());
 
         bracerParser.parse("(time_since_boot <= 4) | (rpm > 0)");
-        Assert.assertEquals("[|, rpm, >, 0, time_since_boot, <=, 4]", bracerParser.getStackRPN().toString());
+        assertEquals("4, <=, time_since_boot, 0, >, rpm, |", bracerParser.getRusEfi());
+
+        bracerParser.parse("(time_since_boot <= 4) | (rpm > 0)");
+        assertEquals("4, <=, time_since_boot, 0, >, rpm, |", bracerParser.getRusEfi());
 
         bracerParser.parse("(time_since_boot <= 4) OR (rpm > 0)");
-        Assert.assertEquals("[OR, rpm, >, 0, time_since_boot, <=, 4]", bracerParser.getStackRPN().toString());
+        assertEquals("4, <=, time_since_boot, 0, >, rpm, OR", bracerParser.getRusEfi());
     }
 
     @Test
     public void testBooleanNot2() throws Exception {
         bracerParser.parse("(((true | false) & not(false)) | (true | false))");
-        Assert.assertEquals("1", bracerParser.evaluate());
+        assertEquals("1", bracerParser.evaluate());
 
         Collection<String> stackRPN = bracerParser.getStackRPN();
 
-        Assert.assertEquals("[|, |, 0, 1, &, not, 0, |, 0, 1]", stackRPN.toString());
+        assertEquals("[|, |, 0, 1, &, not, 0, |, 0, 1]", stackRPN.toString());
     }
 }

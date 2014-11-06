@@ -33,7 +33,7 @@ char * appendStr(char *ptr, const char *suffix) {
 static char * prepareVBattMapLine(engine_configuration_s *engineConfiguration, char *buffer) {
 	char *ptr = buffer;
 	*ptr++ = 'V';
-	ptr = ftoa(ptr, getVBatt(), 10.0f);
+	ptr = ftoa(ptr, getVBatt(engineConfiguration), 10.0f);
 
 	ptr = appendStr(ptr, " M");
 	ptr = ftoa(ptr, getRawMap(), 10.0f);

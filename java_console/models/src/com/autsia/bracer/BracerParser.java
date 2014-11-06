@@ -20,10 +20,7 @@
 package com.autsia.bracer;
 
 import java.text.ParseException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Stack;
-import java.util.StringTokenizer;
+import java.util.*;
 
 /**
  * Class for parsing and evaluating math expressions
@@ -186,12 +183,17 @@ public class BracerParser {
                     case "/":
                         stackAnswer.push(Double.toString(b / (a)));
                         break;
+                    case ">":
+                        stackAnswer.push(Integer.toString(b > a ? 1 : 0));
+                        break;
                     case "|":
                         stackAnswer.push(String.valueOf(aBoolean || bBoolean ? "1" : "0"));
                         break;
                     case "&":
                         stackAnswer.push(String.valueOf(aBoolean && bBoolean ? "1" : "0"));
                         break;
+                    default:
+                        throw new IllegalStateException("Do not know " + token);
                 }
             } else if (isFunction(token)) {
                 Double a = Double.valueOf(stackAnswer.pop());
@@ -356,5 +358,16 @@ public class BracerParser {
             return 1;
         }
         return 2;
+    }
+
+    public String getRusEfi() {
+        List<String> list = new ArrayList<>(getStackRPN());
+        ListIterator<String> li = list.listIterator(list.size());
+        List<String> reverse = new ArrayList<>();
+        while (li.hasPrevious()) {
+            reverse.add(li.previous());
+        }
+        String result = reverse.toString();
+        return result.substring(1, result.length() - 1);
     }
 }

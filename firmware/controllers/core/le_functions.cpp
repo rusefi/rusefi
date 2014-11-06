@@ -19,6 +19,7 @@ static LENameOrdinalPair leMoreEquals(LE_OPERATOR_MORE_OR_EQUAL, ">=");
 static LENameOrdinalPair leRpm(LE_METHOD_RPM, "rpm");
 static LENameOrdinalPair leTps(LE_METHOD_TPS, "tps");
 static LENameOrdinalPair leMaf(LE_METHOD_MAF, "maf");
+static LENameOrdinalPair leVBatt(LE_METHOD_VBATT, "vbatt");
 static LENameOrdinalPair leFan(LE_METHOD_FAN, "fan");
 static LENameOrdinalPair leCoolant(LE_METHOD_COOLANT, "coolant");
 static LENameOrdinalPair leFanOnSetting(LE_METHOD_FAN_ON_SETTING, "fan_on_setting");
@@ -39,6 +40,12 @@ float getLEValue(Engine *engine, le_action_e action) {
 		return engine->rpmCalculator->rpm();
 	case LE_METHOD_TIME_SINCE_BOOT:
 		return getTimeNowSeconds();
+	case LE_METHOD_FAN_OFF_SETTING:
+		return engine->engineConfiguration->fanOffTemperature;
+	case LE_METHOD_FAN_ON_SETTING:
+		return engine->engineConfiguration->fanOnTemperature;
+	case LE_METHOD_VBATT:
+		return getVBatt(engine->engineConfiguration);
 	default:
 		firmwareError("No value for %d", action);
 		return NAN;
