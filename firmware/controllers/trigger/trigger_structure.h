@@ -83,9 +83,9 @@ public:
 
 	int getTriggerShapeSynchPointIndex();
 
-	void calculateTriggerSynchPoint(trigger_config_s const*triggerConfig);
+	void calculateTriggerSynchPoint(engine_configuration_s const *engineConfiguration, trigger_config_s const*triggerConfig);
 
-	void setTriggerShapeSynchPointIndex(int triggerShapeSynchPointIndex);
+	void setTriggerShapeSynchPointIndex(engine_configuration_s const *engineConfiguration, int triggerShapeSynchPointIndex);
 	/**
 	 * These angles are in event coordinates - with synchronization point located at angle zero.
 	 * These values are pre-calculated for performance reasons.

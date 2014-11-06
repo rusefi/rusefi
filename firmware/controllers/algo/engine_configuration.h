@@ -440,6 +440,7 @@ typedef struct {
 	bool_t hasIatSensor : 1; // bit 1
 	bool_t hasBaroSensor : 1; // bit 1
 	bool_t hasAfrSensor : 1; // bit 2
+	bool_t useConstantDwellDuringCranking : 1; // bit 3
 	// that's the next 32 bit field
 	int hasCltSensor;
 
@@ -480,7 +481,9 @@ typedef struct {
 	float crankingCycleCoef[CRANKING_CURVE_SIZE];
 	float crankingCycleBins[CRANKING_CURVE_SIZE];
 
-	int unused3[94];
+	float ignitionDwellForCrankingMs;
+
+	int unused3[93];
 
 } engine_configuration_s;
 

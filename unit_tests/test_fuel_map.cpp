@@ -156,7 +156,7 @@ void testAngleResolver(void) {
 
 	confgiureFordAspireTriggerShape(ts);
 
-	ts->calculateTriggerSynchPoint(&engineConfiguration->triggerConfig);
+	ts->calculateTriggerSynchPoint(engineConfiguration, &engineConfiguration->triggerConfig);
 
 	assertEqualsM("index 2", 232.76, ts->eventAngles[3]); // this angle is relation to synch point
 	assertEqualsM("time 2", 0.3233, ts->wave.getSwitchTime(2));
