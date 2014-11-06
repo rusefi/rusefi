@@ -11,7 +11,7 @@ public enum Sensor {
     MAP("MAP"),
     MAP_RAW("MAP_RAW"),
     BARO("Baro"),
-    TIMING("Timing", "deg", -180, 180),
+    TIMING("Timing Advance", "deg", -180, 180),
 
     /**
      * Please note that these enum names are used to make 'set_mock_XXX_voltage' commands
