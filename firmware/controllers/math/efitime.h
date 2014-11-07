@@ -26,6 +26,7 @@ extern "C"
 #endif /* __cplusplus */
 
 #define US_PER_SECOND 1000000
+#define US_PER_SECOND_LL 1000000LL
 
 #define MS2US(MS_TIME) ((MS_TIME) * 1000)
 

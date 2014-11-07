@@ -63,7 +63,7 @@ RpmCalculator::RpmCalculator() {
 	rpmValue = 0;
 
 	// we need this initial to have not_running at first invocation
-	lastRpmEventTimeNt = (uint64_t) -10 * US2NT(US_PER_SECOND);
+	lastRpmEventTimeNt = (uint64_t) -10 * US2NT(US_PER_SECOND_LL);
 	revolutionCounterSinceStart = 0;
 	revolutionCounterSinceBoot = 0;
 }
@@ -155,7 +155,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index, Rpm
 			rpmState->rpmValue = NOISY_RPM;
 		} else {
 			// todo: interesting what is this *2 about? four stroke magic constant?
-			int rpm = (int) (60 * US2NT(US_PER_SECOND) * 2 / diffNt);
+			int rpm = (int) (60 * US2NT(US_PER_SECOND_LL) * 2 / diffNt);
 			rpmState->rpmValue = rpm > UNREALISTIC_RPM ? NOISY_RPM : rpm;
 		}
 	}

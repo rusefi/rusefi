@@ -61,7 +61,7 @@ void addTriggerEventListener(ShaftPositionListener listener, const char *name, v
 extern Engine engine;
 
 void hwHandleShaftSignal(trigger_event_e signal) {
-	triggerCentral.handleShaftSignal(&engine, signal, getTimeNowUs());
+	triggerCentral.handleShaftSignal(&engine, signal);
 }
 #endif /* EFI_PROD_CODE */
 
@@ -96,8 +96,10 @@ static void reportEventToWaveChart(trigger_event_e ckpSignalType, int index) {
 // todo: improve this
 extern Engine engine;
 
-void TriggerCentral::handleShaftSignal(Engine *engine, trigger_event_e signal, uint64_t nowUs) {
+void TriggerCentral::handleShaftSignal(Engine *engine, trigger_event_e signal) {
 	efiAssertVoid(engine!=NULL, "configuration");
+
+	uint64_t nowUs = getTimeNowUs();
 
 	efiAssertVoid(engine->engineConfiguration!=NULL, "engineConfiguration");
 	efiAssertVoid(engine->engineConfiguration2!=NULL, "engineConfiguration2");

@@ -33,9 +33,9 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType) {
 void EngineTestHelper::fireTriggerEvents() {
 	for (int i = 0; i < 24; i++) {
 		timeNow += 5000; // 5ms
-		triggerCentral.handleShaftSignal(&engine, SHAFT_PRIMARY_UP, timeNow);
+		triggerCentral.handleShaftSignal(&engine, SHAFT_PRIMARY_UP);
 		timeNow += 5000;
-		triggerCentral.handleShaftSignal(&engine, SHAFT_PRIMARY_DOWN, timeNow);
+		triggerCentral.handleShaftSignal(&engine, SHAFT_PRIMARY_DOWN);
 	}
 }
 

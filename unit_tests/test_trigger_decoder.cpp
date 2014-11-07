@@ -422,7 +422,7 @@ static void testRpmCalculator(void) {
 	prepareTimingMap();
 
 	timeNow += 5000; // 5ms
-	eth.triggerCentral.handleShaftSignal(&eth.engine, SHAFT_PRIMARY_UP, timeNow);
+	eth.triggerCentral.handleShaftSignal(&eth.engine, SHAFT_PRIMARY_UP);
 	assertEqualsM("index #2", 0, eth.triggerCentral.triggerState.getCurrentIndex());
 	assertEqualsM("queue size", 4, schedulingQueue.size());
 	assertEqualsM("ev 1", 248000, schedulingQueue.getForUnitText(0)->momentUs);
@@ -430,11 +430,11 @@ static void testRpmCalculator(void) {
 	schedulingQueue.clear();
 
 	timeNow += 5000;
-	eth.triggerCentral.handleShaftSignal(&eth.engine, SHAFT_PRIMARY_DOWN, timeNow);
+	eth.triggerCentral.handleShaftSignal(&eth.engine, SHAFT_PRIMARY_DOWN);
 	timeNow += 5000; // 5ms
-	eth.triggerCentral.handleShaftSignal(&eth.engine, SHAFT_PRIMARY_UP, timeNow);
+	eth.triggerCentral.handleShaftSignal(&eth.engine, SHAFT_PRIMARY_UP);
 	timeNow += 5000;
-	eth.triggerCentral.handleShaftSignal(&eth.engine, SHAFT_PRIMARY_DOWN, timeNow);
+	eth.triggerCentral.handleShaftSignal(&eth.engine, SHAFT_PRIMARY_DOWN);
 	assertEqualsM("index #3", 3, eth.triggerCentral.triggerState.getCurrentIndex());
 	assertEqualsM("queue size 3", 6, schedulingQueue.size());
 	assertEquals(258333, schedulingQueue.getForUnitText(0)->momentUs);
@@ -444,24 +444,24 @@ static void testRpmCalculator(void) {
 	schedulingQueue.clear();
 
 	timeNow += 5000;
-	eth.triggerCentral.handleShaftSignal(&eth.engine, SHAFT_PRIMARY_DOWN, timeNow);
+	eth.triggerCentral.handleShaftSignal(&eth.engine, SHAFT_PRIMARY_DOWN);
 	timeNow += 5000; // 5ms
-	eth.triggerCentral.handleShaftSignal(&eth.engine, SHAFT_PRIMARY_UP, timeNow);
+	eth.triggerCentral.handleShaftSignal(&eth.engine, SHAFT_PRIMARY_UP);
 	timeNow += 5000; // 5ms
-	eth.triggerCentral.handleShaftSignal(&eth.engine, SHAFT_PRIMARY_UP, timeNow);
+	eth.triggerCentral.handleShaftSignal(&eth.engine, SHAFT_PRIMARY_UP);
 	assertEqualsM("index #4", 6, eth.triggerCentral.triggerState.getCurrentIndex());
 	assertEqualsM("queue size 4", 6, schedulingQueue.size());
 	assertEqualsM("4/0", 271666, schedulingQueue.getForUnitText(0)->momentUs);
 	schedulingQueue.clear();
 
 	timeNow += 5000;
-	eth.triggerCentral.handleShaftSignal(&eth.engine, SHAFT_PRIMARY_DOWN, timeNow);
+	eth.triggerCentral.handleShaftSignal(&eth.engine, SHAFT_PRIMARY_DOWN);
 	assertEqualsM("queue size 5", 1, schedulingQueue.size());
 	assertEqualsM("5/1", 284500, schedulingQueue.getForUnitText(0)->momentUs);
 	schedulingQueue.clear();
 
 	timeNow += 5000; // 5ms
-	eth.triggerCentral.handleShaftSignal(&eth.engine, SHAFT_PRIMARY_UP, timeNow);
+	eth.triggerCentral.handleShaftSignal(&eth.engine, SHAFT_PRIMARY_UP);
 	assertEqualsM("queue size 6", 5, schedulingQueue.size());
 	assertEqualsM("6/0", 285000, schedulingQueue.getForUnitText(0)->momentUs);
 	assertEqualsM("6/1", 288000, schedulingQueue.getForUnitText(1)->momentUs);
@@ -469,12 +469,12 @@ static void testRpmCalculator(void) {
 	schedulingQueue.clear();
 
 	timeNow += 5000;
-	eth.triggerCentral.handleShaftSignal(&eth.engine, SHAFT_PRIMARY_DOWN, timeNow);
+	eth.triggerCentral.handleShaftSignal(&eth.engine, SHAFT_PRIMARY_DOWN);
 	assertEqualsM("queue size 7", 0, schedulingQueue.size());
 	schedulingQueue.clear();
 
 	timeNow += 5000; // 5ms
-	eth.triggerCentral.handleShaftSignal(&eth.engine, SHAFT_PRIMARY_UP, timeNow);
+	eth.triggerCentral.handleShaftSignal(&eth.engine, SHAFT_PRIMARY_UP);
 	assertEqualsM("queue size 8", 6, schedulingQueue.size());
 	assertEqualsM("8/0", 298333, schedulingQueue.getForUnitText(0)->momentUs);
 	assertEqualsM("8/1", 297833, schedulingQueue.getForUnitText(1)->momentUs);
@@ -483,12 +483,12 @@ static void testRpmCalculator(void) {
 	schedulingQueue.clear();
 
 	timeNow += 5000;
-	eth.triggerCentral.handleShaftSignal(&eth.engine, SHAFT_PRIMARY_DOWN, timeNow);
+	eth.triggerCentral.handleShaftSignal(&eth.engine, SHAFT_PRIMARY_DOWN);
 	assertEqualsM("queue size 9", 0, schedulingQueue.size());
 	schedulingQueue.clear();
 
 	timeNow += 5000; // 5ms
-	eth.triggerCentral.handleShaftSignal(&eth.engine, SHAFT_PRIMARY_UP, timeNow);
+	eth.triggerCentral.handleShaftSignal(&eth.engine, SHAFT_PRIMARY_UP);
 	assertEqualsM("queue size 10", 0, schedulingQueue.size());
 	schedulingQueue.clear();
 }
