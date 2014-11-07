@@ -34,7 +34,7 @@ public:
 	uint32_t getRevolutionCounter(void);
 	uint32_t getRevolutionCounterSinceStart(void);
 	volatile int rpmValue;
-	volatile uint64_t lastRpmEventTimeUs;
+	volatile uint64_t lastRpmEventTimeNt;
 private:
 	/**
 	 * This counter is incremented with each revolution of one of the shafts. Could be
@@ -69,7 +69,7 @@ bool isCranking(void);
 uint64_t getLastRpmEventTime(void);
 
 int getRevolutionCounter(void);
-float getCrankshaftAngle(uint64_t timeUs);
+float getCrankshaftAngleNt(uint64_t timeNt);
 bool isValidRpm(int rpm);
 void addWaveChartEvent(const char *name, const char *msg, const char *msg2);
 
