@@ -735,6 +735,10 @@ static void printAllInfo(void) {
 #endif
 }
 
+static void setInjectorLag(float value) {
+	engineConfiguration->injectorLag = value;
+}
+
 void initSettings(engine_configuration_s *engineConfiguration) {
 	initLoggingExt(&logger, "settings control", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
 
@@ -798,6 +802,8 @@ void initSettings(engine_configuration_s *engineConfiguration) {
 	addConsoleActionI("set_trigger_type", setTriggerType);
 
 	addConsoleActionF("set_vbatt_divider", setVBattDivider);
+
+	addConsoleActionF("set_injector_lag", setInjectorLag);
 
 	addConsoleActionF("set_clt_bias", setCltBias);
 	addConsoleActionF("set_iat_bias", setIatBias);
