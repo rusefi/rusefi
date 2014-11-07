@@ -209,7 +209,8 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	engineConfiguration->timingMode = TM_DYNAMIC;
 	engineConfiguration->fixedModeTiming = 50;
 
-	engineConfiguration->analogChartMode = AC_TRIGGER;
+	// performance optimization
+	engineConfiguration->analogChartMode = AC_OFF;
 
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
 	engineConfiguration->baroSensor.hwChannel = EFI_ADC_4;

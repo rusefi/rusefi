@@ -63,7 +63,7 @@ RpmCalculator::RpmCalculator() {
 	rpmValue = 0;
 
 	// we need this initial to have not_running at first invocation
-	lastRpmEventTimeUs = (uint64_t) -10 * US_PER_SECOND;
+	lastRpmEventTimeNt = (uint64_t) -10 * US2NT(US_PER_SECOND);
 	revolutionCounterSinceStart = 0;
 	revolutionCounterSinceBoot = 0;
 }
@@ -72,8 +72,8 @@ RpmCalculator::RpmCalculator() {
  * @return true if there was a full shaft revolution within the last second
  */
 bool RpmCalculator::isRunning(void) {
-	uint64_t nowUs = getTimeNowUs();
-	return nowUs - lastRpmEventTimeUs < US_PER_SECOND;
+	uint64_t nowNt = getTimeNowNt();
+	return nowNt - lastRpmEventTimeNt < US2NT(US_PER_SECOND);
 }
 
 void RpmCalculator::onNewEngineCycle() {
@@ -89,13 +89,12 @@ uint32_t RpmCalculator::getRevolutionCounterSinceStart(void) {
 	return revolutionCounterSinceStart;
 }
 
-
 // todo: migrate to float return result or add a float verion? this would have with calculations
 // todo: add a version which does not check time & saves time? need to profile
 int RpmCalculator::rpm(void) {
 #if !EFI_PROD_CODE
 	if (mockRpm != MOCK_UNDEFINED)
-		return mockRpm;
+	return mockRpm;
 #endif
 	if (!isRunning()) {
 		revolutionCounterSinceStart = 0;
@@ -130,12 +129,12 @@ bool isCranking(void) {
  * This callback is invoked on interrupt thread.
  */
 void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index, RpmCalculator *rpmState) {
-	uint64_t nowUs = getTimeNowUs();
+	uint64_t nowNt = getTimeNowNt();
 
 	if (index != 0) {
 #if EFI_ANALOG_CHART || defined(__DOXYGEN__)
 		if (engineConfiguration->analogChartMode == AC_TRIGGER)
-		acAddData(getCrankshaftAngle(nowUs), 1000 * ckpSignalType + index);
+			acAddData(getCrankshaftAngleNt(nowNt), 1000 * ckpSignalType + index);
 #endif
 		return;
 	}
@@ -144,7 +143,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index, Rpm
 	bool hadRpmRecently = rpmState->isRunning();
 
 	if (hadRpmRecently) {
-		uint64_t diff = nowUs - rpmState->lastRpmEventTimeUs;
+		uint64_t diffNt = nowNt - rpmState->lastRpmEventTimeNt;
 		/**
 		 * Four stroke cycle is two crankshaft revolutions
 		 *
@@ -152,17 +151,18 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index, Rpm
 		 * and each revolution of crankshaft consists of two engine cycles revolutions
 		 *
 		 */
-		if (diff == 0) {
+		if (diffNt == 0) {
 			rpmState->rpmValue = NOISY_RPM;
 		} else {
-			int rpm = (int) (60 * US_PER_SECOND * 2 / diff);
+			// todo: interesting what is this *2 about? four stroke magic constant?
+			int rpm = (int) (60 * US2NT(US_PER_SECOND) * 2 / diffNt);
 			rpmState->rpmValue = rpm > UNREALISTIC_RPM ? NOISY_RPM : rpm;
 		}
 	}
-	rpmState->lastRpmEventTimeUs = nowUs;
+	rpmState->lastRpmEventTimeNt = nowNt;
 #if EFI_ANALOG_CHART || defined(__DOXYGEN__)
 	if (engineConfiguration->analogChartMode == AC_TRIGGER)
-	acAddData(getCrankshaftAngle(nowUs), index);
+		acAddData(getCrankshaftAngleNt(nowNt), index);
 #endif
 }
 
@@ -184,8 +184,8 @@ static void onTdcCallback(void) {
  * This trigger callback schedules the actual physical TDC callback in relation to trigger synchronization point.
  */
 static void tdcMarkCallback(trigger_event_e ckpSignalType, uint32_t index0, void *arg) {
-	(void)arg;
-	(void)ckpSignalType;
+	(void) arg;
+	(void) ckpSignalType;
 	bool isTriggerSynchronizationPoint = index0 == 0;
 	if (isTriggerSynchronizationPoint) {
 		int revIndex2 = getRevolutionCounter() % 2;
@@ -199,7 +199,7 @@ static void tdcMarkCallback(trigger_event_e ckpSignalType, uint32_t index0, void
 static RpmCalculator rpmState;
 
 uint64_t getLastRpmEventTime(void) {
-	return rpmState.lastRpmEventTimeUs;
+	return NT2US(rpmState.lastRpmEventTimeNt);
 }
 
 int getRevolutionCounter(void) {
@@ -209,15 +209,15 @@ int getRevolutionCounter(void) {
 /**
  * @return Current crankshaft angle, 0 to 720 for four-stroke
  */
-float getCrankshaftAngle(uint64_t timeUs) {
-	uint64_t timeSinceZeroAngleUs = timeUs - rpmState.lastRpmEventTimeUs;
+float getCrankshaftAngleNt(uint64_t timeNt) {
+	uint64_t timeSinceZeroAngleNt = timeNt - rpmState.lastRpmEventTimeNt;
 
 	/**
 	 * even if we use 'getOneDegreeTimeUs' macros here, it looks like the
 	 * compiler is not smart enough to figure out that "A / ( B / C)" could be optimized into
 	 * "A * C / B" in order to replace a slower division with a faster multiplication.
 	 */
-	return timeSinceZeroAngleUs / getOneDegreeTimeUs(rpmState.rpm());
+	return timeSinceZeroAngleNt / getOneDegreeTimeNt(rpmState.rpm());
 }
 
 void initRpmCalculator(void) {
