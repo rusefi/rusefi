@@ -138,7 +138,7 @@ static void test1995FordInline6TriggerDecoder(void) {
 	assertTriggerPosition(&position, 6, 0);
 
 
-	IgnitionEventList *ecl = &eth.ec2.engineEventConfiguration.ignitionEvents[0];
+	IgnitionEventList *ecl = &eth.ec2.ignitionEvents[0];
 	assertEqualsM("ignition events size", 6, ecl->size);
 	assertEqualsM("event index", 0, ecl->events[0].dwellPosition.eventIndex);
 	assertEquals(0, ecl->events[0].dwellPosition.angleOffset);
