@@ -35,7 +35,7 @@
 
 #define CHART_DELIMETER	"!"
 
-#if EFI_HISTOGRAMS
+#if EFI_HISTOGRAMS || defined(__DOXYGEN__)
 #include "rfiutil.h"
 #include "histogram.h"
 static histogram_s waveChartHisto;
@@ -208,7 +208,7 @@ void WaveChart::addWaveChartEvent3(const char *name, const char * msg, const cha
 }
 
 void showWaveChartHistogram(void) {
-#if EFI_PROD_CODE
+#if (EFI_HISTOGRAMS && EFI_PROD_CODE) || defined(__DOXYGEN__)
 	printHistogram(&logger, &waveChartHisto);
 #endif
 }

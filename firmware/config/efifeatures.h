@@ -115,7 +115,7 @@
 
 #define EFI_WAVE_CHART TRUE
 
-#define EFI_HISTOGRAMS TRUE
+#define EFI_HISTOGRAMS FAPSE
 #define EFI_ANALOG_CHART TRUE
 
 #if defined __GNUC__

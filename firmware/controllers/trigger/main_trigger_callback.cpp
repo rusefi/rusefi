@@ -114,8 +114,8 @@ static void handleFuel(Engine *engine, MainTriggerCallback *mainTriggerCallback,
 	 */
 	ActuatorEventList *source =
 	isCrankingR(rpm) ?
-			&mainTriggerCallback->engineConfiguration2->engineEventConfiguration.crankingInjectionEvents :
-			&mainTriggerCallback->engineConfiguration2->engineEventConfiguration.injectionEvents;
+			&mainTriggerCallback->engineConfiguration2->crankingInjectionEvents.events :
+			&mainTriggerCallback->engineConfiguration2->injectionEvents.events;
 
 	for (int i = 0; i < source->size; i++) {
 		ActuatorEvent *event = &source->events[i];
@@ -299,14 +299,14 @@ void onTriggerEvent(trigger_event_e ckpSignalType, uint32_t eventIndex, MainTrig
 
 		initializeIgnitionActions(advance, dwellAngle, mainTriggerCallback->engineConfiguration,
 				mainTriggerCallback->engineConfiguration2,
-				&mainTriggerCallback->engineConfiguration2->engineEventConfiguration.ignitionEvents[revolutionIndex]);
+				&mainTriggerCallback->engineConfiguration2->ignitionEvents[revolutionIndex]);
 	}
 
 	triggerEventsQueue.executeAll(getCrankEventCounter());
 
 	handleFuel(&engine, mainTriggerCallback, eventIndex, rpm);
 	handleSpark(mainTriggerCallback, eventIndex, rpm,
-			&mainTriggerCallback->engineConfiguration2->engineEventConfiguration.ignitionEvents[revolutionIndex]);
+			&mainTriggerCallback->engineConfiguration2->ignitionEvents[revolutionIndex]);
 #if EFI_HISTOGRAMS && EFI_PROD_CODE
 	int diff = hal_lld_get_counter_value() - beforeCallback;
 	if (diff > 0)
