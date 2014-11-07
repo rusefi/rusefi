@@ -42,11 +42,14 @@ int getRemainingStack(Thread *otp) {
 
 #else /* __GNUC__ */
 
+extern uint32_t CSTACK$$Base;            /* symbol created by the IAR linker */
+extern uint32_t IRQSTACK$$Base;            /* symbol created by the IAR linker */
+
 int getRemainingStack(Thread *otp) {
 #if CH_DBG_ENABLE_STACK_CHECK || defined(__DOXYGEN__)
 	int remainingStack;
 	if (dbg_isr_cnt > 0) {
-		remainingStack = 999; // todo
+		remainingStack = (__get_SP() - sizeof(struct intctx)) - (int)&IRQSTACK$$Base;
 	} else {
 		remainingStack = (stkalign_t *)(__get_SP() - sizeof(struct intctx)) - otp->p_stklimit;
 	}
