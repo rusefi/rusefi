@@ -72,7 +72,7 @@ void WaveChart::resetWaveChart() {
 #endif /* DEBUG_WAVE */
 	resetLogging(&logging);
 	counter = 0;
-	startTimeUs = 0;
+	startTimeNt = 0;
 	appendPrintf(&logging, "wave_chart%s", DELIMETER);
 }
 
@@ -86,8 +86,8 @@ int WaveChart::isWaveChartFull() {
 	 * digitalChartSize/20 is the longest meaningful chart.
 	 *
 	 */
-	uint64_t chartDurationInSeconds = (getTimeNowUs() - startTimeUs) / 1000000;
-	bool startedTooLongAgo = startTimeUs!= 0 && chartDurationInSeconds > engineConfiguration->digitalChartSize / 20;
+	uint64_t chartDurationNt = getTimeNowNt() - startTimeNt;
+	bool startedTooLongAgo = startTimeNt!= 0 && NT2US(chartDurationNt) > engineConfiguration->digitalChartSize * 1000000 / 20;
 	return startedTooLongAgo || counter >= engineConfiguration->digitalChartSize;
 }
 
@@ -158,19 +158,24 @@ void WaveChart::addWaveChartEvent3(const char *name, const char * msg, const cha
 #endif
 
 	uint64_t nowUs = getTimeNowUs();
-	/**
-	 * todo: migrate to binary fractions in order to eliminate
-	 * this division? I do not like division
-	 */
-	uint64_t time100 = nowUs / 10;
 
 	bool alreadyLocked = lockOutputBuffer(); // we have multiple threads writing to the same output buffer
 
 	if (counter == 0) {
-		startTime100 = time100;
-		startTimeUs = nowUs;
+		startTimeNt = US2NT(nowUs);
 	}
 	counter++;
+
+	/**
+	 * We want smaller times within a chart in order to reduce packet size.
+	 */
+	/**
+	 * todo: migrate to binary fractions in order to eliminate
+	 * this division? I do not like division
+	 */
+	uint64_t time100 = (nowUs - NT2US(startTimeNt)) / 10;
+
+
 	if (remainingSize(&logging) > 30) {
 		/**
 		 * printf is a heavy method, append is used here as a performance optimization
@@ -179,10 +184,7 @@ void WaveChart::addWaveChartEvent3(const char *name, const char * msg, const cha
 		appendFast(&logging, CHART_DELIMETER);
 		appendFast(&logging, msg);
 		appendFast(&logging, CHART_DELIMETER);
-		/**
-		 * We want smaller times within a chart in order to reduce packet size.
-		 */
-		time100 -= startTime100;
+//		time100 -= startTime100;
 
 		itoa10(timeBuffer, time100);
 		appendFast(&logging, timeBuffer);
