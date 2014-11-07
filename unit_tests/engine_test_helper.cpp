@@ -15,11 +15,10 @@ extern int timeNow;
 
 EngineTestHelper::EngineTestHelper(engine_type_e engineType) {
 	ec = &persistentConfig.engineConfiguration;
-
-	engine.engineConfiguration = ec;
+	engine.engineConfiguration = &persistentConfig.engineConfiguration;
+	ec2.engineConfiguration = &persistentConfig.engineConfiguration;
 
 	engine.engineConfiguration2 = &ec2;
-	ec2.engineConfiguration = ec;
 
 	prepareFuelMap(engine.engineConfiguration);
 
@@ -27,7 +26,7 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType) {
 	initSpeedDensity(ec);
 
 	resetConfigurationExt(NULL, FORD_INLINE_6_1995, &engine);
-	ec->mafAdcChannel = (adc_channel_e)TEST_MAF_CHANNEL;
+	engine.engineConfiguration->mafAdcChannel = (adc_channel_e)TEST_MAF_CHANNEL;
 }
 
 void EngineTestHelper::fireTriggerEvents() {

@@ -25,6 +25,6 @@
 #include "adc_math.h"
 #endif
 
-void initSensors(void);
+void initSensors(Engine *engine);
 
 #endif /*SENSORS_H_*/

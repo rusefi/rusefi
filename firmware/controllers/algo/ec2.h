@@ -47,8 +47,9 @@ public:
 
 void initializeIgnitionActions(float advance, float dwellAngle, engine_configuration_s *engineConfiguration,
 		engine_configuration2_s *engineConfiguration2, IgnitionEventList *list);
-void addFuelEvents(engine_configuration_s const *e, engine_configuration2_s *engineConfiguration2,
-		ActuatorEventList *list, injection_mode_e mode);
+void addFuelEvents(engine_configuration_s const *e,
+		trigger_shape_s * ts,
+		FuelSchedule *fs, injection_mode_e mode);
 
 void setDefaultNonPersistentConfiguration(engine_configuration2_s *engineConfiguration2);
 void printConfiguration(engine_configuration_s *engineConfiguration, engine_configuration2_s *engineConfiguration2);

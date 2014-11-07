@@ -332,8 +332,8 @@ void MainTriggerCallback::init(Engine *engine, engine_configuration2_s *engineCo
 	this->engineConfiguration2 = engineConfiguration2;
 }
 
-static void showMainInfo(void) {
-	int rpm = getRpm();
+static void showMainInfo(Engine *engine) {
+	int rpm = engine->rpmCalculator->rpm();
 	float el = getEngineLoadT(mainTriggerCallbackInstance.engine);
 #if EFI_PROD_CODE
 	scheduleMsg(&logger, "rpm %d engine_load %f", rpm, el);
@@ -349,7 +349,7 @@ void initMainEventListener(Engine *engine, engine_configuration2_s *engineConfig
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	addConsoleAction("performanceinfo", showTriggerHistogram);
-	addConsoleAction("maininfo", showMainInfo);
+	addConsoleActionP("maininfo", (VoidPtr)showMainInfo, engine);
 
 	initLogging(&logger, "main event handler");
 	printMsg(&logger, "initMainLoop: %d", currentTimeMillis());
