@@ -62,7 +62,7 @@ typedef struct {
   irq_vector_t  vector34;
   irq_vector_t  pendsv_vector;
   irq_vector_t  systick_vector;
-  irq_vector_t  vectors[82];
+  irq_vector_t  vectors[91];
 } vectors_t;
 
 #if !defined(__DOXYGEN__)
@@ -164,6 +164,15 @@ extern void Vector178(void);
 extern void Vector17C(void);
 extern void Vector180(void);
 extern void Vector184(void);
+extern void Vector188(void);
+extern void Vector18C(void);
+extern void Vector190(void);
+extern void Vector194(void);
+extern void Vector198(void);
+extern void Vector19C(void);
+extern void Vector1A0(void);
+extern void Vector1A4(void);
+extern void Vector1A8(void);
 #endif
 
 /**
@@ -198,7 +207,9 @@ vectors_t _vectors = {
     Vector150,          Vector154,          Vector158,          Vector15C,
     Vector160,          Vector164,          Vector168,          Vector16C,
     Vector170,          Vector174,          Vector178,          Vector17C,
-    Vector180,          Vector184
+    Vector180,          Vector184,          Vector188,          Vector18C,
+    Vector190,          Vector194,          Vector198,          Vector19C,
+    Vector1A0,          Vector1A4,          Vector1A8
   }
 };
 
@@ -314,5 +325,14 @@ void Vector178(void) __attribute__((weak, alias("_unhandled_exception")));
 void Vector17C(void) __attribute__((weak, alias("_unhandled_exception")));
 void Vector180(void) __attribute__((weak, alias("_unhandled_exception")));
 void Vector184(void) __attribute__((weak, alias("_unhandled_exception")));
+void Vector188(void) __attribute__((weak, alias("_unhandled_exception")));
+void Vector18C(void) __attribute__((weak, alias("_unhandled_exception")));
+void Vector190(void) __attribute__((weak, alias("_unhandled_exception")));
+void Vector194(void) __attribute__((weak, alias("_unhandled_exception")));
+void Vector198(void) __attribute__((weak, alias("_unhandled_exception")));
+void Vector19C(void) __attribute__((weak, alias("_unhandled_exception")));
+void Vector1A0(void) __attribute__((weak, alias("_unhandled_exception")));
+void Vector1A4(void) __attribute__((weak, alias("_unhandled_exception")));
+void Vector1A8(void) __attribute__((weak, alias("_unhandled_exception")));
 
 /** @} */

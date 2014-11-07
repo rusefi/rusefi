@@ -39,21 +39,6 @@
 /* Port interrupt handlers.                                                  */
 /*===========================================================================*/
 
-int getRemainingStack(Thread *otp) {
-#if CH_DBG_ENABLE_STACK_CHECK || defined(__DOXYGEN__)
-  int remainingStack;
-  if (dbg_isr_cnt > 0) {
-    remainingStack = 999; // todo
-  } else {
-    remainingStack = (stkalign_t *)(__get_SP() - sizeof(struct intctx)) - otp->p_stklimit;
-  }
-  otp->remainingStack = remainingStack;
-  return remainingStack;
-#else
-  return 999999;
-#endif  
-}
-
 /**
  * @brief   System Timer vector.
  * @details This interrupt is used as system tick.
@@ -80,6 +65,11 @@ CH_IRQ_HANDLER(SysTickVector) {
 void SVCallVector(void) {
   struct extctx *ctxp;
 
+#if CORTEX_USE_FPU
+  /* Enforcing unstacking of the FP part of the context.*/
+  SCB_FPCCR &= ~FPCCR_LSPACT;
+#endif
+
   /* Current PSP value.*/
   ctxp = (struct extctx *)__get_PSP();
 
@@ -87,11 +77,7 @@ void SVCallVector(void) {
      point to the real one.*/
   ctxp++;
 
-#if CORTEX_USE_FPU
-  /* Restoring the special register SCB_FPCCR.*/
-  SCB_FPCCR = (uint32_t)ctxp->fpccr;
-  SCB_FPCAR = SCB_FPCAR + sizeof (struct extctx);
-#endif
+  /* Restoring real position of the original stack frame.*/
   __set_PSP((unsigned long)ctxp);
   port_unlock_from_isr();
 }
@@ -107,6 +93,11 @@ void SVCallVector(void) {
 void PendSVVector(void) {
   struct extctx *ctxp;
 
+#if CORTEX_USE_FPU
+  /* Enforcing unstacking of the FP part of the context.*/
+  SCB_FPCCR &= ~FPCCR_LSPACT;
+#endif
+
   /* Current PSP value.*/
   ctxp = (struct extctx *)__get_PSP();
 
@@ -114,11 +105,7 @@ void PendSVVector(void) {
      point to the real one.*/
   ctxp++;
 
-#if CORTEX_USE_FPU
-  /* Restoring the special register SCB_FPCCR.*/
-  SCB_FPCCR = (uint32_t)ctxp->fpccr;
-  SCB_FPCAR = SCB_FPCAR + sizeof (struct extctx);
-#endif
+  /* Restoring real position of the original stack frame.*/
   __set_PSP((unsigned long)ctxp);
 }
 #endif /* CORTEX_SIMPLIFIED_PRIORITY */
@@ -171,44 +158,35 @@ void _port_irq_epilogue(void) {
   if ((SCB_ICSR & ICSR_RETTOBASE) != 0) {
     struct extctx *ctxp;
 
+#if CORTEX_USE_FPU
+    /* Enforcing a lazy FPU state save. Note, it goes in the original
+       context because the FPCAR register has not been modified.*/
+      (void)__get_FPSCR();
+#endif
+
     /* Current PSP value.*/
     ctxp = (struct extctx *)__get_PSP();
 
     /* Adding an artificial exception return context, there is no need to
        populate it fully.*/
     ctxp--;
-    __set_PSP((unsigned long)ctxp);
     ctxp->xpsr = (regarm_t)0x01000000;
+#if CORTEX_USE_FPU
+    ctxp->fpscr = (regarm_t)SCB_FPDSCR;
+#endif
+    __set_PSP((unsigned long)ctxp);
 
     /* The exit sequence is different depending on if a preemption is
        required or not.*/
     if (chSchIsPreemptionRequired()) {
       /* Preemption is required we need to enforce a context switch.*/
       ctxp->pc = (regarm_t)_port_switch_from_isr;
-#if CORTEX_USE_FPU
-      /* Triggering a lazy FPU state save.*/
-      (void)__get_FPSCR();
-#endif
     }
     else {
       /* Preemption not required, we just need to exit the exception
          atomically.*/
       ctxp->pc = (regarm_t)_port_exit_from_isr;
     }
-
-#if CORTEX_USE_FPU
-    {
-      uint32_t fpccr;
-
-      /* Saving the special register SCB_FPCCR into the reserved offset of
-         the Cortex-M4 exception frame.*/
-      (ctxp + 1)->fpccr = (regarm_t)(fpccr = SCB_FPCCR);
-
-      /* Now the FPCCR is modified in order to not restore the FPU status
-         from the artificial return context.*/
-      SCB_FPCCR = fpccr | FPCCR_LSPACT;
-    }
-#endif
 
     /* Note, returning without unlocking is intentional, this is done in
        order to keep the rest of the context switch atomic.*/
