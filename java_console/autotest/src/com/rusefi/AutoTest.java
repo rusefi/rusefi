@@ -34,6 +34,7 @@ public class AutoTest {
     private static void testDodgeNeon() {
         sendCommand("set_engine_type 2");
         WaveChart chart;
+        sendCommand("set_whole_fuel_map 3");
         IoUtil.changeRpm(2000);
         sendCommand("set_ignition_mode 1");
         chart = nextChart();
@@ -45,7 +46,7 @@ public class AutoTest {
         assertWave(msg, chart, WaveChart.INJECTOR_1, 0.133, x + 180);
         assertWave(msg, chart, WaveChart.INJECTOR_3, 0.133, x + 360);
 
-        x = 122;
+        x = 106;
         assertWave(msg, chart, WaveChart.SPARK_4, 0.13333, x + 540);
         assertWave(msg, chart, WaveChart.SPARK_2, 0.13333, x);
         assertWave(msg, chart, WaveChart.SPARK_1, 0.13333, x + 180);
