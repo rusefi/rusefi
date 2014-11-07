@@ -76,6 +76,9 @@ static cyclic_buffer ignitionErrorDetection;
 static Logging logger;
 
 static void handleFuelInjectionEvent(MainTriggerCallback *mainTriggerCallback, ActuatorEvent *event, int rpm) {
+	/**
+	 * todo: we do not really need to calculate fuel for each individual cylinder
+	 */
 	float fuelMs = getFuelMs(rpm, mainTriggerCallback->engine)
 			* mainTriggerCallback->engineConfiguration->globalFuelCorrection;
 	if (cisnan(fuelMs)) {
@@ -301,7 +304,6 @@ void onTriggerEvent(trigger_event_e ckpSignalType, uint32_t eventIndex, MainTrig
 
 	triggerEventsQueue.executeAll(getCrankEventCounter());
 
-//todo	handleFuel(mainTriggerCallback->engine, mainTriggerCallback, eventIndex, rpm);
 	handleFuel(&engine, mainTriggerCallback, eventIndex, rpm);
 	handleSpark(mainTriggerCallback, eventIndex, rpm,
 			&mainTriggerCallback->engineConfiguration2->engineEventConfiguration.ignitionEvents[revolutionIndex]);
