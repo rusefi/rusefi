@@ -2,6 +2,7 @@ package com.rusefi;
 
 import com.irnems.FileLog;
 import com.rusefi.io.tcp.TcpConnector;
+import com.rusefi.ui.widgets.URLLabel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,7 +29,7 @@ public class VersionChecker {
     private static final VersionChecker instance = new VersionChecker();
 
 
-    private final Map<String, Integer> map = new HashMap<>();
+    private final Map<String, String> map = new HashMap<>();
     private int previousReportedVersion;
 
     private VersionChecker() {
@@ -59,14 +60,22 @@ public class VersionChecker {
         while ((line = s.readLine()) != null) {
             String[] pair = line.split("=");
             if (pair.length == 2)
-                map.put(pair[0], TcpConnector.parseIntWithReason(pair[1], "VC value"));
+                map.put(pair[0], pair[1]);
         }
 
 
-        final Integer javaVersion = map.get(JAVA_CONSOLE_TAG);
+        final Integer javaVersion = TcpConnector.parseIntWithReason(map.get(JAVA_CONSOLE_TAG), "VC value");
         System.out.println("Server recommends java_console version " + javaVersion + " or newer");
         showUpdateWarningIfNeeded("dev console", javaVersion, CONSOLE_VERSION);
         System.out.println("Server recommends firmware " + map.get(FIRMWARE_TAG) + " or newer");
+
+        String criticalUrl = map.get("critical_url");
+        if (criticalUrl != null && !criticalUrl.trim().isEmpty()) {
+            JPanel panel = new JPanel(new BorderLayout());
+            panel.add(new JLabel("WARNING! CRITICAL ISSUE! Are you sure you want to run rusEfi?"), BorderLayout.NORTH);
+            panel.add(new URLLabel(criticalUrl, criticalUrl), BorderLayout.CENTER);
+            JOptionPane.showMessageDialog(getPaneParent(), panel);
+        }
     }
 
     private static void showUpdateWarningIfNeeded(final String componentName, final Integer latestVersion, final int currentVersion) {
@@ -75,13 +84,16 @@ public class VersionChecker {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                Component parent = JFrame.getFrames()[0];
                 String message = "It's time to update " + componentName + "!\r\n" +
                         "Your version: " + currentVersion + "\r\n" +
                         "Latest version: " + latestVersion;
-                JOptionPane.showMessageDialog(parent, message, "Update", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(getPaneParent(), message, "Update", JOptionPane.WARNING_MESSAGE);
             }
         });
+    }
+
+    private static Component getPaneParent() {
+        return JFrame.getFrames()[0];
     }
 
     public static VersionChecker getInstance() {
@@ -89,11 +101,12 @@ public class VersionChecker {
     }
 
     public void onFirmwareVersion(String firmwareString) {
-        Integer latestVersion = map.get(FIRMWARE_TAG);
-        if (latestVersion == null) {
+        String suggestedFirmware = map.get(FIRMWARE_TAG);
+        if (suggestedFirmware == null) {
             // no version file yet? nothing to bother about
             return;
         }
+        int latestVersion = TcpConnector.parseIntWithReason(suggestedFirmware, "VC value");
         String[] tokens = firmwareString.split("[@\\s]");
         int version;
         try {

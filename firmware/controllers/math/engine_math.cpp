@@ -171,8 +171,9 @@ void initializeIgnitionActions(float advance, float dwellAngle, engine_configura
 	}
 }
 
-static void registerInjectionEvent(engine_configuration_s const *e, trigger_shape_s *s, ActuatorEventList *list,
+void FuelSchedule::registerInjectionEvent(engine_configuration_s const *e, trigger_shape_s *s,
 		io_pin_e pin, float angle) {
+	ActuatorEventList *list = &events;
 
 	if (!isPinAssigned(pin)) {
 		// todo: extact method for this index math
@@ -182,10 +183,9 @@ static void registerInjectionEvent(engine_configuration_s const *e, trigger_shap
 	registerActuatorEventExt(e, s, list->getNextActuatorEvent(), injectonSignals.add(pin), angle);
 }
 
-void addFuelEvents(engine_configuration_s const *e, trigger_shape_s *s,
-		FuelSchedule *fs,
+void FuelSchedule::addFuelEvents(engine_configuration_s const *e, trigger_shape_s *s,
 		injection_mode_e mode) {
-	ActuatorEventList *list = &fs->events;
+	ActuatorEventList *list = &events;
 			;
 	list->resetEventList();
 
@@ -196,7 +196,7 @@ void addFuelEvents(engine_configuration_s const *e, trigger_shape_s *s,
 		for (int i = 0; i < e->cylindersCount; i++) {
 			io_pin_e pin = (io_pin_e) ((int) INJECTOR_1_OUTPUT + getCylinderId(e->firingOrder, i) - 1);
 			float angle = baseAngle + i * 720.0 / e->cylindersCount;
-			registerInjectionEvent(e, s, list, pin, angle);
+			registerInjectionEvent(e, s, pin, angle);
 		}
 		break;
 	case IM_SIMULTANEOUS:
@@ -205,7 +205,7 @@ void addFuelEvents(engine_configuration_s const *e, trigger_shape_s *s,
 
 			for (int j = 0; j < e->cylindersCount; j++) {
 				io_pin_e pin = (io_pin_e) ((int) INJECTOR_1_OUTPUT + j);
-				registerInjectionEvent(e, s, list, pin, angle);
+				registerInjectionEvent(e, s, pin, angle);
 			}
 		}
 		break;
@@ -214,13 +214,13 @@ void addFuelEvents(engine_configuration_s const *e, trigger_shape_s *s,
 			int index = i % (e->cylindersCount / 2);
 			io_pin_e pin = (io_pin_e) ((int) INJECTOR_1_OUTPUT + index);
 			float angle = baseAngle + i * 720.0 / e->cylindersCount;
-			registerInjectionEvent(e, s, list, pin, angle);
+			registerInjectionEvent(e, s, pin, angle);
 
 			/**
 			 * also fire the 2nd half of the injectors so that we can implement a batch mode on individual wires
 			 */
 			pin = (io_pin_e) ((int) INJECTOR_1_OUTPUT + index + (e->cylindersCount / 2));
-			registerInjectionEvent(e, s, list, pin, angle);
+			registerInjectionEvent(e, s, pin, angle);
 		}
 		break;
 	default:
@@ -356,9 +356,9 @@ engine_configuration2_s *engineConfiguration2 = engine->engineConfiguration2;
 	trigger_shape_s * ts = &engineConfiguration2->triggerShape;
 
 	injectonSignals.clear();
-	addFuelEvents(engineConfiguration, ts, &engineConfiguration2->crankingInjectionEvents,
+	engineConfiguration2->crankingInjectionEvents.addFuelEvents(engineConfiguration, ts,
 			engineConfiguration->crankingInjectionMode);
-	addFuelEvents(engineConfiguration, ts, &engineConfiguration2->injectionEvents,
+	engineConfiguration2->injectionEvents.addFuelEvents(engineConfiguration, ts,
 			engineConfiguration->injectionMode);
 }
 
