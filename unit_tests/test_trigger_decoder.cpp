@@ -391,6 +391,9 @@ static void testRpmCalculator(void) {
 
 	EngineTestHelper eth(FORD_INLINE_6_1995);
 
+	assertEquals(720, eth.engine.engineConfiguration->engineCycle);
+	assertEquals(720, eth.ec->engineCycle);
+
 	efiAssertVoid(eth.engine.engineConfiguration!=NULL, "null config in engine");
 
 	initThermistors(&eth.engine);

@@ -51,6 +51,7 @@ float getCrankshaftRevolutionTimeMs(int rpm) {
  * TODO: should be 'crankAngleRange' range?
  */
 float fixAngle(engine_configuration_s const *engineConfiguration, float angle) {
+// todo	efiAssert(engineConfiguration->engineCycle!=0, "engine cycle", NAN);
 	// I guess this implementation would be faster than 'angle % 720'
 	while (angle < 0)
 		angle += 720;
@@ -181,11 +182,12 @@ static void registerInjectionEvent(engine_configuration_s const *e, trigger_shap
 	registerActuatorEventExt(e, s, list->getNextActuatorEvent(), injectonSignals.add(pin), angle);
 }
 
-void addFuelEvents(engine_configuration_s const *e, engine_configuration2_s *engineConfiguration2,
-		ActuatorEventList *list, injection_mode_e mode) {
+void addFuelEvents(engine_configuration_s const *e, trigger_shape_s *s,
+		FuelSchedule *fs,
+		injection_mode_e mode) {
+	ActuatorEventList *list = &fs->events;
+			;
 	list->resetEventList();
-
-	trigger_shape_s *s = &engineConfiguration2->triggerShape;
 
 	float baseAngle = e->globalTriggerAngleOffset + e->injectionOffset;
 
@@ -351,10 +353,12 @@ engine_configuration2_s *engineConfiguration2 = engine->engineConfiguration2;
 	// todo: move this reset into decoder
 	engineConfiguration2->triggerShape.calculateTriggerSynchPoint(engineConfiguration, &engineConfiguration->triggerConfig);
 
+	trigger_shape_s * ts = &engineConfiguration2->triggerShape;
+
 	injectonSignals.clear();
-	addFuelEvents(engineConfiguration, engineConfiguration2, &engineConfiguration2->crankingInjectionEvents.events,
+	addFuelEvents(engineConfiguration, ts, &engineConfiguration2->crankingInjectionEvents,
 			engineConfiguration->crankingInjectionMode);
-	addFuelEvents(engineConfiguration, engineConfiguration2, &engineConfiguration2->injectionEvents.events,
+	addFuelEvents(engineConfiguration, ts, &engineConfiguration2->injectionEvents,
 			engineConfiguration->injectionMode);
 }
 

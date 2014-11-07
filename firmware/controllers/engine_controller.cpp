@@ -341,7 +341,7 @@ void initEngineContoller(Engine *engine) {
 	}
 	initLogging(&logger, "Engine Controller");
 
-	initSensors();
+	initSensors(engine);
 
 	initPwmGenerator();
 
