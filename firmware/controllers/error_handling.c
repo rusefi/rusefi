@@ -38,11 +38,11 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 	 * low-level function is used here to reduce stack usage
 	 */
 	palWritePad(LED_ERROR_PORT, LED_ERROR_PIN, 1);
-    turnAllPinsOff();
+	turnAllPinsOff();
 #if EFI_HD44780_LCD
 	lcdShowFatalMessage((char *) msg);
 #endif /* EFI_HD44780_LCD */
-        
+
 	if (!main_loop_started) {
 		print("fatal %s %s:%d\r\n", msg, file, line);
 		chThdSleepSeconds(1);
@@ -89,5 +89,5 @@ char *getWarninig(void) {
 
 void initErrorHandling(void) {
 	initLogging(&logger, "error handling");
-	msObjectInit(&warningStream, (uint8_t *)warningBuffer, WARNING_BUFFER_SIZE, 0);
+	msObjectInit(&warningStream, (uint8_t *) warningBuffer, WARNING_BUFFER_SIZE, 0);
 }
