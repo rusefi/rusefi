@@ -11,9 +11,9 @@
 #define AD_LOAD_COUNT 16
 #define AD_RPM_COUNT 16
 
-#include "engine_configuration.h"
+#include "engine.h"
 
-float getAdvance(engine_configuration_s *engineConfiguration, int rpm, float engineLoad);
+float getAdvance(int rpm, float engineLoad DECLATE_ENGINE_PARAMETER);
 void prepareTimingMap(void);
 
 #endif /* ADVANCE_H_ */
