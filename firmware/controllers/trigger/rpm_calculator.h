@@ -55,16 +55,16 @@ private:
 int getRpmE(Engine *engine);
 bool isCrankingE(Engine *engine);
 void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index, RpmCalculator *rpmState);
+/**
+ * @brief   Initialize RPM calculator
+ */
+void initRpmCalculator(Engine *engine);
 #endif
 
 #ifdef __cplusplus
 extern "C" {
 #endif /* __cplusplus */
 
-/**
- * @brief   Initialize RPM calculator
- */
-void initRpmCalculator(void);
 bool isCranking(void);
 uint64_t getLastRpmEventTime(void);
 

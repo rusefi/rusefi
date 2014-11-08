@@ -75,7 +75,7 @@ void rusEfiFunctionalTest(void) {
 
 	initThermistors(engine);
 	initAlgo(engineConfiguration);
-	initRpmCalculator();
+	initRpmCalculator(engine);
 
 	initAnalogChart();
 
