@@ -54,7 +54,7 @@ int isCrankingRT(engine_configuration_s *engineConfiguration, int rpm);
 #define isCrankingR(rpm) isCrankingRT(engineConfiguration, rpm)
 
 float getEngineLoadT(Engine *engine);
-#define getEngineLoad() getEngineLoadT(&engine)
+#define getEngineLoad() getEngineLoadT(engine)
 
 float getSparkDwellMsT(engine_configuration_s *engineConfiguration, int rpm);
 

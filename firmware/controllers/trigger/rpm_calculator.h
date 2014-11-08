@@ -47,7 +47,7 @@ private:
 	volatile uint32_t revolutionCounterSinceStart;
 };
 
-#define getRpm() getRpmE(&engine)
+#define getRpm() getRpmE(engine)
 
 /**
  * @brief   Current RPM

@@ -21,7 +21,7 @@ extern engine_configuration_s *engineConfiguration;
 
 static Logging logger;
 
-extern Engine engine;
+EXTERN_ENGINE;
 
 static THD_WORKING_AREA(maThreadStack, UTILITY_THREAD_STACK_SIZE);
 

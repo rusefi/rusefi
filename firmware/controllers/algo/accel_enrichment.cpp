@@ -14,7 +14,9 @@
 #include "engine_math.h"
 #include "signal_executor.h"
 
-extern Engine engine;
+EXTERN_ENGINE;
+
+
 static AccelEnrichmemnt instance;
 
 void AccelEnrichmemnt::updateDiffEnrichment(engine_configuration_s *engineConfiguration, float engineLoad) {

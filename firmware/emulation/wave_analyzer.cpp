@@ -24,7 +24,7 @@
 #include "engine.h"
 #include "rpm_calculator.h"
 
-extern Engine engine;
+EXTERN_ENGINE;
 
 #define CHART_RESET_DELAY 1
 

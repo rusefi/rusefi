@@ -29,7 +29,8 @@
 #include "tunerstudio.h"
 #include "trigger_emulator.h"
 
-Engine engine;
+static Engine _engine;
+Engine *engine = &_engine;
 
 extern WaveChart waveChart;
 
@@ -63,34 +64,34 @@ void rusEfiFunctionalTest(void) {
 
 	initFakeBoard();
 
-	initStatusLoop(&engine);
+	initStatusLoop(engine);
 	initDataStructures(engineConfiguration);
 
-	engine.engineConfiguration = engineConfiguration;
-	engine.engineConfiguration2 = engineConfiguration2;
+	engine->engineConfiguration = engineConfiguration;
+	engine->engineConfiguration2 = engineConfiguration2;
 
 
-	resetConfigurationExt(NULL, FORD_ASPIRE_1996, &engine);
+	resetConfigurationExt(NULL, FORD_ASPIRE_1996, engine);
 
-	initThermistors(&engine);
+	initThermistors(engine);
 	initAlgo(engineConfiguration);
 	initRpmCalculator();
 
 	initAnalogChart();
 
-	initTriggerEmulator(&engine);
+	initTriggerEmulator(engine);
 
-	initMainEventListener(&engine, engineConfiguration2);
+	initMainEventListener(engine, engineConfiguration2);
 
-	initTriggerCentral(&engine);
+	initTriggerCentral(engine);
 
-	startStatusThreads(&engine);
+	startStatusThreads(engine);
 	startTunerStudioConnectivity();
 
 }
 
 void printPendingMessages(void) {
-	updateDevConsoleState(&engine);
+	updateDevConsoleState(engine);
 	waveChart.publishChartIfFull();
 }
 

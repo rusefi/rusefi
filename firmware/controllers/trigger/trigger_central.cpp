@@ -58,11 +58,11 @@ void addTriggerEventListener(ShaftPositionListener listener, const char *name, v
 }
 
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
-extern Engine engine;
+EXTERN_ENGINE;
 
 void hwHandleShaftSignal(trigger_event_e signal) {
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 64, "lowstck#8");
-	triggerCentral.handleShaftSignal(&engine, signal);
+	triggerCentral.handleShaftSignal(engine, signal);
 }
 #endif /* EFI_PROD_CODE */
 
