@@ -180,7 +180,18 @@ void FuelSchedule::registerInjectionEvent(engine_configuration_s const *e, trigg
 		warning(OBD_PCM_Processor_Fault, "pin not assigned for injector #%d", (int) pin - (int) INJECTOR_1_OUTPUT + 1);
 	}
 
-	registerActuatorEventExt(e, s, list->getNextActuatorEvent(), injectonSignals.add(pin), angle);
+	ActuatorEvent *ev = list->getNextActuatorEvent();
+	OutputSignal *actuator = injectonSignals.add(pin);
+
+	efiAssertVoid(s->getSize() > 0, "uninitialized trigger_shape_s");
+
+	if (ev == NULL) {
+		// error already reported
+		return;
+	}
+	ev->actuator = actuator;
+
+	registerActuatorEventExt(e, s, ev, actuator, angle);
 }
 
 void FuelSchedule::addFuelEvents(engine_configuration_s const *e, trigger_shape_s *s,
@@ -304,17 +315,11 @@ void findTriggerPosition(engine_configuration_s const *engineConfiguration, trig
 	position->angleOffset = angleOffset - eventAngle;
 }
 
-void registerActuatorEventExt(engine_configuration_s const *engineConfiguration, trigger_shape_s * s, ActuatorEvent *e,
-		OutputSignal *actuator, float angleOffset) {
-	efiAssertVoid(s->getSize() > 0, "uninitialized trigger_shape_s");
+void registerActuatorEventExt(engine_configuration_s const *e, trigger_shape_s * s, ActuatorEvent *ev,
+		OutputSignal *actuator, float angle) {
 
-	if (e == NULL) {
-		// error already reported
-		return;
-	}
-	e->actuator = actuator;
 
-	findTriggerPosition(engineConfiguration, s, &e->position, angleOffset);
+	findTriggerPosition(e, s, &ev->position, angle);
 }
 
 static int order_1_THEN_3_THEN_4_THEN2[] = { 1, 3, 4, 2 };
