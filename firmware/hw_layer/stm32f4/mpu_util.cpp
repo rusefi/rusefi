@@ -186,7 +186,7 @@ void HardFaultVector(void) {
 	int cfsr = GET_CFSR();
 	if (cfsr & 0x1) {
 		chDbgPanic3("H IACCVIOL", __FILE__, __LINE__);
-        } else if (cfsr & 0x100) {
+	} else if (cfsr & 0x100) {
 		chDbgPanic3("H IBUSERR", __FILE__, __LINE__);
 	} else if (cfsr & 0x20000) {
 		chDbgPanic3("H INVSTATE", __FILE__, __LINE__);
