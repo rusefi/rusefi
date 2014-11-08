@@ -38,7 +38,7 @@ schfunc_t globalTimerCallback;
 void setHardwareUsTimer(int32_t timeUs) {
 	if (timeUs == 1)
 		timeUs = 2; // for some reason '1' does not really work
-	efiAssertVoid(timeUs > 0, "neg timeUs");
+	efiAssertVoid(timeUs > 0, "not positive timeUs");
 	efiAssertVoid(timeUs < 10 * US_PER_SECOND, "setHardwareUsTimer() too large");
 
 	if (GPTDEVICE.state == GPT_ONESHOT)
