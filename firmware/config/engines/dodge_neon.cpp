@@ -61,7 +61,11 @@ void setDodgeNeon1995EngineConfiguration(engine_configuration_s *engineConfigura
 	// set_cranking_fuel 5
 	engineConfiguration->crankingSettings.baseCrankingFuel = 5;
 
-	// set_whole_fuel_map 3
+	/**
+	 * that's 1995 config
+	 */
+
+	// set_whole_fuel_map 9
 	setWholeFuelMap(engineConfiguration, 9);
 	setWholeTimingTable(engineConfiguration, 12);
 
@@ -82,8 +86,12 @@ void setDodgeNeon1995EngineConfiguration(engine_configuration_s *engineConfigura
 	 // set_injection_offset 510
 	engineConfiguration->injectionOffset = 510;
 
+	/**
+	 * that's 1995 config
+	 */
+
 	// set_cranking_charge_angle 70
-	engineConfiguration->crankingChargeAngle = 7;
+	engineConfiguration->crankingChargeAngle = 70;
 	// set_cranking_timing_angle 0
 	engineConfiguration->crankingTimingAngle = 0;
 
@@ -141,6 +149,14 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 	engineConfiguration->displacement = 1.996;
 	engineConfiguration->cylindersCount = 4;
+
+	/**
+	 * that's NGC config
+	 */
+
+	// set_whole_fuel_map 12
+	setWholeFuelMap(engineConfiguration, 12);
+	setWholeTimingTable(engineConfiguration, 12);
 
 	// set_cranking_charge_angle 70
 	engineConfiguration->crankingChargeAngle = 70;
