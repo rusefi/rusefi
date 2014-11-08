@@ -61,7 +61,7 @@ void addTriggerEventListener(ShaftPositionListener listener, const char *name, v
 extern Engine engine;
 
 void hwHandleShaftSignal(trigger_event_e signal) {
-	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#8");
+	efiAssertVoid(getRemainingStack(chThdSelf()) > 64, "lowstck#8");
 	triggerCentral.handleShaftSignal(&engine, signal);
 }
 #endif /* EFI_PROD_CODE */
@@ -93,9 +93,6 @@ static void reportEventToWaveChart(trigger_event_e ckpSignalType, int index) {
 		addWaveChartEvent(WC_CRANK3, WC_DOWN, (char*) shaft_signal_msg_index);
 	}
 }
-
-// todo: improve this
-extern Engine engine;
 
 void TriggerCentral::handleShaftSignal(Engine *engine, trigger_event_e signal) {
 	efiAssertVoid(engine!=NULL, "configuration");

@@ -72,7 +72,7 @@ static LocalVersionHolder localVersion;
 
 extern Engine engine;
 
-void setTriggerEmulatorRPM(int rpm) {
+void setTriggerEmulatorRPM(int rpm, Engine *engine) {
 	engineConfiguration->bc.triggerSimulatorFrequency = rpm;
 	/**
 	 * All we need to do here is to change the periodMs
@@ -125,11 +125,11 @@ static void emulatorApplyPinState(PwmConfig *state, int stateIndex) {
 }
 #endif /* EFI_EMULATE_POSITION_SENSORS */
 
-static void setEmulatorAtIndex(int index) {
+static void setEmulatorAtIndex(int index, Engine *engine) {
 	stopEmulationAtIndex = index;
 }
 
-static void resumeStimulator(void) {
+static void resumeStimulator(Engine *engine) {
 	isEmulating = true;
 	stopEmulationAtIndex = DO_NOT_STOP;
 }
@@ -138,14 +138,14 @@ void initTriggerEmulatorLogic(Engine *engine) {
 	initLogging(&logger, "position sensor(s) emulator");
 
 	trigger_shape_s *s = &engineConfiguration2->triggerShape;
-	setTriggerEmulatorRPM(engineConfiguration->bc.triggerSimulatorFrequency);
+	setTriggerEmulatorRPM(engineConfiguration->bc.triggerSimulatorFrequency, engine);
 	int *pinStates[PWM_PHASE_MAX_WAVE_PER_PWM] = { s->wave.waves[0].pinStates, s->wave.waves[1].pinStates,
 			s->wave.waves[2].pinStates };
 	weComplexInit("position sensor", &triggerSignal, s->getSize(), s->wave.switchTimes, PWM_PHASE_MAX_WAVE_PER_PWM,
 			pinStates, updateTriggerShapeIfNeeded, emulatorApplyPinState);
 
-	addConsoleActionI("rpm", &setTriggerEmulatorRPM);
-	addConsoleActionI("stop_stimulator_at_index", setEmulatorAtIndex);
-	addConsoleAction("resume_stimulator", resumeStimulator);
+	addConsoleActionIP("rpm", (VoidIntVoidPtr)setTriggerEmulatorRPM, engine);
+	addConsoleActionIP("stop_stimulator_at_index", (VoidIntVoidPtr)setEmulatorAtIndex, engine);
+	addConsoleActionP("resume_stimulator", (VoidPtr) resumeStimulator, engine);
 
 }

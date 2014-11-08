@@ -20,6 +20,7 @@
 
 #define NT2US(x) ((x) / US_TO_NT_MULTIPLIER)
 
+#define INLINE inline
 
 typedef int bool_t;
 
