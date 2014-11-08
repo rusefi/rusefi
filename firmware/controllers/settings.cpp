@@ -431,6 +431,11 @@ static void setWholeTimingMap(float value) {
 	}
 }
 
+static void setWholeTimingMapCmd(float value) {
+	scheduleMsg(&logger, "Setting whole timing advance map to %f", value);
+	setWholeTimingMap(value);
+}
+
 static void setWholeFuelMapCmd(float value) {
 	scheduleMsg(&logger, "Setting whole fuel map to %f", value);
 	if (engineConfiguration->algorithm == LM_SPEED_DENSITY) {
@@ -713,6 +718,10 @@ static void enableSelfStimulation(void) {
 	scheduleMsg(&logger, "self stimulation enabled");
 }
 
+static void stopEngine(void) {
+
+}
+
 static void disableSelfStimulation(void) {
 	engineConfiguration->directSelfStimulation = false;
 	scheduleMsg(&logger, "self stimulation disabled");
@@ -774,6 +783,7 @@ void initSettings(engine_configuration_s *engineConfiguration) {
 	addConsoleActionI("set_cranking_injection_mode", setCrankingInjectionMode);
 	addConsoleActionI("set_injection_mode", setInjectionMode);
 
+	addConsoleActionF("set_whole_timing_map", setWholeTimingMapCmd);
 	addConsoleActionF("set_whole_fuel_map", setWholeFuelMapCmd);
 	addConsoleActionSSS("set_fuel_map", setFuelMap);
 
@@ -783,6 +793,7 @@ void initSettings(engine_configuration_s *engineConfiguration) {
 	addConsoleActionI("set_rpm_hard_limit", setRpmHardLimit);
 	addConsoleActionI("set_firing_order", setFiringOrder);
 	addConsoleActionI("set_algorithm", setAlgorithm);
+	addConsoleActionI("stopengine", stopEngine);
 
 	// todo: refactor this - looks like all boolean flags should be controlled with less code duplication
 	addConsoleAction("enable_injection", enableInjection);
