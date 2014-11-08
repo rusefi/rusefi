@@ -222,7 +222,7 @@ float getCrankshaftAngleNt(uint64_t timeNt) {
 	return timeSinceZeroAngleNt / getOneDegreeTimeNt(rpmState.rpm());
 }
 
-void initRpmCalculator(void) {
+void initRpmCalculator(Engine *engine) {
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
 	initLogging(&logger, "rpm calc");
 	engine->rpmCalculator = &rpmState;
