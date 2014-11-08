@@ -46,11 +46,11 @@ float getBaseAdvance(int rpm, float engineLoad) {
 float getAdvance(int rpm, float engineLoad DECLATE_ENGINE_PARAMETER) {
 	float angle;
 	if (isCrankingR(rpm)) {
-		angle = engineConfiguration->crankingTimingAngle;
+		angle = -engineConfiguration->crankingTimingAngle;
 	} else {
-		angle = -getBaseAdvance(rpm, engineLoad);
+		angle = getBaseAdvance(rpm, engineLoad);
 	}
-	return fixAngle(engineConfiguration, angle + engineConfiguration->ignitionOffset);
+	return fixAngle(engineConfiguration, angle - engineConfiguration->ignitionOffset);
 }
 
 void prepareTimingMap(void) {

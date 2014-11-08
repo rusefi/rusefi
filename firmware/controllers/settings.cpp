@@ -793,7 +793,7 @@ void initSettings(engine_configuration_s *engineConfiguration) {
 	addConsoleActionI("set_rpm_hard_limit", setRpmHardLimit);
 	addConsoleActionI("set_firing_order", setFiringOrder);
 	addConsoleActionI("set_algorithm", setAlgorithm);
-	addConsoleActionI("stopengine", stopEngine);
+	addConsoleAction("stopengine", stopEngine);
 
 	// todo: refactor this - looks like all boolean flags should be controlled with less code duplication
 	addConsoleAction("enable_injection", enableInjection);
