@@ -131,7 +131,7 @@ static bool hasFirmwareErrorFlag = FALSE;
 extern engine_configuration_s *engineConfiguration;
 extern board_configuration_s *boardConfiguration;
 extern engine_configuration2_s *engineConfiguration2;
-extern Engine engine;
+EXTERN_ENGINE;
 
 char *getFirmwareError(void) {
 	return (char*)errorMessageBuffer;
@@ -141,8 +141,8 @@ void runRusEfi(void) {
 	msObjectInit(&firmwareErrorMessageStream, errorMessageBuffer, sizeof(errorMessageBuffer), 0);
 
 	// that's dirty, this assignment should be nicer or in a better spot
-	engine.engineConfiguration = engineConfiguration;
-	engine.engineConfiguration2 = engineConfiguration2;
+	engine->engineConfiguration = engineConfiguration;
+	engine->engineConfiguration2 = engineConfiguration2;
 	engineConfiguration2->engineConfiguration = engineConfiguration;
 
 
@@ -159,30 +159,30 @@ void runRusEfi(void) {
 	initializeConsole();
 	initLogging(&logging, "main");
 
-	engine.init();
+	engine->init();
 
 	addConsoleAction("reset", scheduleReset);
 
 	/**
 	 * Initialize hardware drivers
 	 */
-	initHardware(&logging, &engine);
+	initHardware(&logging, engine);
 
-	initStatusLoop(&engine);
+	initStatusLoop(engine);
 	/**
 	 * Now let's initialize actual engine control logic
 	 * todo: should we initialize some? most? controllers before hardware?
 	 */
-	initEngineContoller(&engine);
+	initEngineContoller(engine);
 
 #if EFI_PERF_METRICS
 	initTimePerfActions();
 #endif
 
 #if EFI_ENGINE_EMULATOR
-	initEngineEmulator(&engine);
+	initEngineEmulator(engine);
 #endif
-	startStatusThreads(&engine);
+	startStatusThreads(engine);
 
 	print("Running main loop\r\n");
 	main_loop_started = TRUE;
@@ -195,7 +195,7 @@ void runRusEfi(void) {
 
 #if EFI_CLI_SUPPORT && !EFI_UART_ECHO_TEST_MODE
 		// sensor state + all pending messages for our own dev console
-		updateDevConsoleState(&engine);
+		updateDevConsoleState(engine);
 #endif /* EFI_CLI_SUPPORT */
 
 		chThdSleepMilliseconds(boardConfiguration->consoleLoopPeriod);

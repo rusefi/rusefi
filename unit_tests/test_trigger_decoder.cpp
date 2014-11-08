@@ -26,8 +26,6 @@
 #include "engine_test_helper.h"
 #include "speed_density.h"
 
-//Engine engine;
-
 extern int timeNow;
 
 extern bool printGapRatio;
@@ -337,9 +335,6 @@ void testGY6_139QMB(void) {
 }
 
 extern EventQueue schedulingQueue;
-
-// this is a very dirty and sad hack. todo: eliminate
-extern Engine engine;
 
 extern int mockTps;
 

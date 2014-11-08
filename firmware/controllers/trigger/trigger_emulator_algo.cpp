@@ -70,7 +70,7 @@ static bool isEmulating = true;
 static Logging logger;
 static LocalVersionHolder localVersion;
 
-extern Engine engine;
+EXTERN_ENGINE;
 
 void setTriggerEmulatorRPM(int rpm, Engine *engine) {
 	engineConfiguration->bc.triggerSimulatorFrequency = rpm;
@@ -92,7 +92,7 @@ static void updateTriggerShapeIfNeeded(PwmConfig *state) {
 		scheduleMsg(&logger, "Stimulator: updating trigger shape: %d/%d %d", localVersion.getVersion(),
 				getGlobalConfigurationVersion(), currentTimeMillis());
 
-		applyNonPersistentConfiguration(&logger, &engine);
+		applyNonPersistentConfiguration(&logger, engine);
 
 		trigger_shape_s *s = &engineConfiguration2->triggerShape;
 		int *pinStates[PWM_PHASE_MAX_WAVE_PER_PWM] = { s->wave.waves[0].pinStates, s->wave.waves[1].pinStates,

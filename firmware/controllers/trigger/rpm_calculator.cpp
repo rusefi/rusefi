@@ -53,7 +53,7 @@ extern engine_configuration2_s *engineConfiguration2;
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
 static Logging logger;
-extern Engine engine;
+EXTERN_ENGINE;
 #endif
 
 RpmCalculator::RpmCalculator() {
@@ -117,7 +117,7 @@ bool isCrankingE(Engine *engine) {
  * WARNING: this is a heavy method because 'getRpm()' is relatively heavy
  */
 bool isCranking(void) {
-	return isCrankingE(&engine);
+	return isCrankingE(engine);
 }
 #endif
 
@@ -223,7 +223,7 @@ float getCrankshaftAngleNt(uint64_t timeNt) {
 void initRpmCalculator(void) {
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
 	initLogging(&logger, "rpm calc");
-	engine.rpmCalculator = &rpmState;
+	engine->rpmCalculator = &rpmState;
 
 	tdcScheduler[0].name = "tdc0";
 	tdcScheduler[1].name = "tdc1";

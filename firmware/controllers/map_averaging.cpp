@@ -64,7 +64,7 @@ static volatile int mapMeasurementsCounter = 0;
  */
 static float v_averagedMapValue;
 
-extern Engine engine;
+EXTERN_ENGINE;
 
 extern engine_configuration_s *engineConfiguration;
 

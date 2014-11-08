@@ -43,7 +43,7 @@ extern engine_configuration_s *engineConfiguration;
 static volatile int idleSwitchState;
 
 static Logging logger;
-extern Engine engine;
+EXTERN_ENGINE;
 
 static SimplePwm idleValvePwm;
 

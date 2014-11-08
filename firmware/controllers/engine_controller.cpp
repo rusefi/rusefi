@@ -84,10 +84,14 @@ static engine_configuration2_s ec2 CCM_OPTIONAL
 ;
 engine_configuration2_s * engineConfiguration2 = &ec2;
 
+#if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
+
 /**
  * todo: this should probably become 'static', i.e. private, and propagated around explicitly?
  */
-Engine engine;
+static Engine _engine;
+Engine * engine = &_engine;
+#endif
 
 /**
  * I am not sure if this needs to be configurable.
@@ -123,9 +127,9 @@ static void updateErrorCodes(void) {
 	/**
 	 * technically we can set error codes right inside the getMethods, but I a bit on a fence about it
 	 */
-	setError(isValidIntakeAirTemperature(getIntakeAirTemperature(&engine)),
+	setError(isValidIntakeAirTemperature(getIntakeAirTemperature(engine)),
 			OBD_Intake_Air_Temperature_Circuit_Malfunction);
-	setError(isValidCoolantTemperature(getCoolantTemperature(&engine)),
+	setError(isValidCoolantTemperature(getCoolantTemperature(engine)),
 			OBD_Engine_Coolant_Temperature_Circuit_Malfunction);
 }
 
@@ -137,9 +141,9 @@ static void fanRelayControl(void) {
 	int newValue;
 	if (isCurrentlyOn) {
 		// if the fan is already on, we keep it on till the 'fanOff' temperature
-		newValue = getCoolantTemperature(&engine) > engineConfiguration->fanOffTemperature;
+		newValue = getCoolantTemperature(engine) > engineConfiguration->fanOffTemperature;
 	} else {
-		newValue = getCoolantTemperature(&engine) > engineConfiguration->fanOnTemperature;
+		newValue = getCoolantTemperature(engine) > engineConfiguration->fanOnTemperature;
 	}
 
 	if (isCurrentlyOn != newValue) {
