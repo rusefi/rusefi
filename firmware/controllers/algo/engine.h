@@ -26,6 +26,7 @@ class RpmCalculator;
 
 class Engine {
 public:
+	Engine();
 	void init();
 	RpmCalculator *rpmCalculator;
 	engine_configuration_s *engineConfiguration;

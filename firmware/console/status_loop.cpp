@@ -174,7 +174,7 @@ void printState(Engine *engine, int currentCkpEventCounter) {
 //	debugFloat(&logger, "fuel_iat", getIatCorrection(getIntakeAirTemperature()), 2);
 //	debugFloat(&logger, "fuel_clt", getCltCorrection(getCoolantTemperature()), 2);
 	debugFloat(&logger, "fuel_lag", getInjectorLag(engineConfiguration, getVBatt(engineConfiguration)), 2);
-	debugFloat(&logger, "fuel", getFuelMs(rpm, engine), 2);
+	debugFloat(&logger, "fuel", getFuelMs(rpm PASS_ENGINE_PARAMETER), 2);
 
 	debugFloat(&logger, "timing", getAdvance(engineConfiguration, rpm, engineLoad), 2);
 

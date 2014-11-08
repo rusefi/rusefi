@@ -41,7 +41,7 @@
 static histogram_s waveChartHisto;
 #endif
 
-extern engine_configuration_s *engineConfiguration;
+EXTERN_ENGINE;
 
 /**
  * This is the number of events in the digital chart which would be displayed

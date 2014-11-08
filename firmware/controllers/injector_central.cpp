@@ -32,7 +32,7 @@
 
 static Logging logger;
 
-extern engine_configuration_s *engineConfiguration;
+EXTERN_ENGINE;
 extern board_configuration_s *boardConfiguration;
 
 static bool_t isRunningBench = false;

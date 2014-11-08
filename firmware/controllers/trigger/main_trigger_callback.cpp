@@ -81,8 +81,8 @@ static INLINE void handleFuelInjectionEvent(ActuatorEvent *event, int rpm DECLAT
 	/**
 	 * todo: we do not really need to calculate fuel for each individual cylinder
 	 */
-	float fuelMs = getFuelMs(rpm, engine)
-			* engine->engineConfiguration->globalFuelCorrection;
+	float fuelMs = getFuelMs(rpm PASS_ENGINE_PARAMETER)
+			* engineConfiguration->globalFuelCorrection;
 	if (cisnan(fuelMs)) {
 		warning(OBD_PCM_Processor_Fault, "NaN injection pulse");
 		return;
@@ -109,7 +109,6 @@ static INLINE void handleFuel(uint32_t eventIndex, int rpm DECLATE_ENGINE_PARAME
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 64, "lowstck#3");
 	efiAssertVoid(eventIndex < engine->engineConfiguration2->triggerShape.getLength(), "event index");
 
-	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
 	/**
 	 * Ignition events are defined by addFuelEvents() according to selected
 	 * fueling strategy
@@ -131,7 +130,6 @@ static INLINE void handleFuel(uint32_t eventIndex, int rpm DECLATE_ENGINE_PARAME
 
 static INLINE void handleSparkEvent(uint32_t eventIndex, IgnitionEvent *iEvent,
 		int rpm DECLATE_ENGINE_PARAMETER) {
-	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
 	engine_configuration2_s *engineConfiguration2 = engine->engineConfiguration2;
 
 	float dwellMs = getSparkDwellMsT(engineConfiguration, rpm);
@@ -241,14 +239,14 @@ void showMainHistogram(void) {
  * This is the main trigger event handler.
  * Both injection and ignition are controlled from this method.
  */
-void onTriggerEvent(trigger_event_e ckpSignalType, uint32_t eventIndex, MainTriggerCallback *mainTriggerCallback) {
+void onTriggerEvent(trigger_event_e ckpSignalType, uint32_t eventIndex, MainTriggerCallback *mtc) {
+	Engine *engine = mtc->engine;
 	(void) ckpSignalType;
-	efiAssertVoid(eventIndex < 2 * mainTriggerCallback->engineConfiguration2->triggerShape.shaftPositionEventCount,
+	efiAssertVoid(eventIndex < 2 * engine->engineConfiguration2->triggerShape.shaftPositionEventCount,
 			"event index");
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 64, "lowstck#2");
 
-	int rpm = getRpmE(mainTriggerCallback->engine);
-//	int rpm = getRpmE(&engine);
+	int rpm = getRpmE(engine);
 	if (rpm == 0) {
 		// this happens while we just start cranking
 		// todo: check for 'trigger->is_synchnonized?'
@@ -258,7 +256,7 @@ void onTriggerEvent(trigger_event_e ckpSignalType, uint32_t eventIndex, MainTrig
 		warning(OBD_Camshaft_Position_Sensor_Circuit_Range_Performance, "noisy trigger");
 		return;
 	}
-	if (rpm > mainTriggerCallback->engineConfiguration->rpmHardLimit) {
+	if (rpm > engine->engineConfiguration->rpmHardLimit) {
 		warning(OBD_PCM_Processor_Fault, "skipping stroke due to rpm=%d", rpm);
 		return;
 	}
@@ -271,7 +269,7 @@ void onTriggerEvent(trigger_event_e ckpSignalType, uint32_t eventIndex, MainTrig
 
 	if (eventIndex == 0) {
 		if (localVersion.isOld())
-			prepareOutputSignals(mainTriggerCallback->engine);
+			prepareOutputSignals(engine);
 
 		/**
 		 * TODO: warning. there is a bit of a hack here, todo: improve.
@@ -285,12 +283,12 @@ void onTriggerEvent(trigger_event_e ckpSignalType, uint32_t eventIndex, MainTrig
 		 * Within one engine cycle all cylinders are fired with same timing advance.
 		 * todo: one day we can control cylinders individually
 		 */
-		float dwellMs = getSparkDwellMsT(mainTriggerCallback->engineConfiguration, rpm);
+		float dwellMs = getSparkDwellMsT(engine->engineConfiguration, rpm);
 		if (cisnan(dwellMs) || dwellMs < 0) {
 			firmwareError("invalid dwell: %f at %d", dwellMs, rpm);
 			return;
 		}
-		float advance = getAdvance(mainTriggerCallback->engineConfiguration, rpm, getEngineLoadT(mainTriggerCallback->engine));
+		float advance = getAdvance(engine->engineConfiguration, rpm, getEngineLoadT(engine));
 		if (cisnan(advance)) {
 			// error should already be reported
 			return;
@@ -298,18 +296,20 @@ void onTriggerEvent(trigger_event_e ckpSignalType, uint32_t eventIndex, MainTrig
 
 		float dwellAngle = dwellMs / getOneDegreeTimeMs(rpm);
 
-		initializeIgnitionActions(advance, dwellAngle, mainTriggerCallback->engineConfiguration,
-				mainTriggerCallback->engineConfiguration2,
-				&mainTriggerCallback->engineConfiguration2->ignitionEvents[revolutionIndex]);
+		initializeIgnitionActions(advance, dwellAngle, engine->engineConfiguration,
+				engine->engineConfiguration2,
+				&engine->engineConfiguration2->ignitionEvents[revolutionIndex]);
 	}
 
 	triggerEventsQueue.executeAll(getCrankEventCounter());
 
-	Engine *engine = mainTriggerCallback->engine;
+	// todo: remove these local variables soon
+	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
+
 
 	handleFuel(eventIndex, rpm PASS_ENGINE_PARAMETER);
 	handleSpark(eventIndex, rpm,
-			&mainTriggerCallback->engineConfiguration2->ignitionEvents[revolutionIndex] PASS_ENGINE_PARAMETER);
+			&engine->engineConfiguration2->ignitionEvents[revolutionIndex] PASS_ENGINE_PARAMETER);
 #if EFI_HISTOGRAMS && EFI_PROD_CODE
 	int diff = hal_lld_get_counter_value() - beforeCallback;
 	if (diff > 0)
@@ -330,9 +330,6 @@ static void showTriggerHistogram(void) {
 void MainTriggerCallback::init(Engine *engine, engine_configuration2_s *engineConfiguration2) {
 	efiAssertVoid(engine!=NULL, "engine NULL");
 	this->engine = engine;
-	this->engineConfiguration = engine->engineConfiguration;
-	efiAssertVoid(engineConfiguration!=NULL, "engineConfiguration NULL");
-	this->engineConfiguration2 = engineConfiguration2;
 }
 
 static void showMainInfo(Engine *engine) {
@@ -340,7 +337,7 @@ static void showMainInfo(Engine *engine) {
 	float el = getEngineLoadT(mainTriggerCallbackInstance.engine);
 #if EFI_PROD_CODE
 	scheduleMsg(&logger, "rpm %d engine_load %f", rpm, el);
-	scheduleMsg(&logger, "fuel %fms timing %f", getFuelMs(rpm, mainTriggerCallbackInstance.engine),
+	scheduleMsg(&logger, "fuel %fms timing %f", getFuelMs(rpm PASS_ENGINE_PARAMETER),
 			getAdvance(mainTriggerCallbackInstance.engine->engineConfiguration, rpm, el));
 #endif
 }
@@ -356,7 +353,7 @@ void initMainEventListener(Engine *engine, engine_configuration2_s *engineConfig
 
 	initLogging(&logger, "main event handler");
 	printMsg(&logger, "initMainLoop: %d", currentTimeMillis());
-	if (!isInjectionEnabled(mainTriggerCallbackInstance.engineConfiguration))
+	if (!isInjectionEnabled(mainTriggerCallbackInstance.engine->engineConfiguration))
 		printMsg(&logger, "!!!!!!!!!!!!!!!!!!! injection disabled");
 #endif
 
