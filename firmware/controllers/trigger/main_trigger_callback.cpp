@@ -303,6 +303,7 @@ void onTriggerEvent(trigger_event_e ckpSignalType, uint32_t eventIndex, MainTrig
 			return;
 		}
 		float advance = getAdvance(rpm, getEngineLoadT(engine) PASS_ENGINE_PARAMETER);
+
 		if (cisnan(advance)) {
 			// error should already be reported
 			return;
@@ -310,7 +311,7 @@ void onTriggerEvent(trigger_event_e ckpSignalType, uint32_t eventIndex, MainTrig
 
 		float dwellAngle = dwellMs / getOneDegreeTimeMs(rpm);
 
-		initializeIgnitionActions(advance, dwellAngle, engine->engineConfiguration2,
+		initializeIgnitionActions(fixAngle(engineConfiguration, -advance), dwellAngle, engine->engineConfiguration2,
 				&engine->engineConfiguration2->ignitionEvents[revolutionIndex] PASS_ENGINE_PARAMETER);
 	}
 
