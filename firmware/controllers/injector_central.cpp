@@ -93,9 +93,9 @@ static void runBench(brain_pin_e brainPin, io_pin_e pin, float delayMs, float on
 
 	isRunningBench = true;
 	for (int i = 0; i < count; i++) {
-		setOutputPinValue(pin, TRUE);
+		setOutputPinValue(pin, true);
 		chThdSleep((int) (onTimeMs * CH_FREQUENCY / 1000));
-		setOutputPinValue(pin, FALSE);
+		setOutputPinValue(pin, false);
 		int offTimeSt = (int) (offTimeMs * CH_FREQUENCY / 1000);
 		if (offTimeSt > 0) {
 			chThdSleep(offTimeSt);

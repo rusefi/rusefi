@@ -235,10 +235,12 @@ bool hasFirmwareError(void) {
 	return hasFirmwareErrorFlag;
 }
 
+// todo: why is this method here and not in error_handling.c ?
 void firmwareError(const char *fmt, ...) {
 	if (hasFirmwareErrorFlag)
 		return;
 	setOutputPinValue(LED_ERROR, 1);
+	turnAllPinsOff();
 	hasFirmwareErrorFlag = TRUE;
 	firmwareErrorMessageStream.eos = 0; // reset
 	va_list ap;
