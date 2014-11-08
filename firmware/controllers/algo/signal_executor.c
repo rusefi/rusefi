@@ -110,6 +110,7 @@ void scheduleOutput(OutputSignal *signal, float delayMs, float durationMs) {
 		return;
 	}
 
+	efiAssertVoid(signal!=NULL, "signal is NULL");
 	int index = getRevolutionCounter() % 2;
 	scheduling_s * sUp = &signal->signalTimerUp[index];
 	scheduling_s * sDown = &signal->signalTimerDown[index];
