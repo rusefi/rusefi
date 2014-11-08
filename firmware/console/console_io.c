@@ -126,6 +126,7 @@ static msg_t consoleThreadThreadEntryPoint(void *arg) {
 	chRegSetThreadName("console thread");
 
 	while (TRUE) {
+		efiAssert(getRemainingStack(chThdSelf()) > 32, "lowstck#9e", 0);
 		bool end = getConsoleLine((BaseSequentialStream*) getConsoleChannel(), consoleInput, sizeof(consoleInput));
 		if (end) {
 			// firmware simulator is the only case when this happens

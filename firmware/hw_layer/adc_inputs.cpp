@@ -445,6 +445,7 @@ static void setAdcDebugReporting(int value) {
 static void adc_callback_slow(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 	(void) buffer;
 	(void) n;
+	efiAssertVoid(getRemainingStack(chThdSelf()) > 16, "lowstck#9c");
 	/* Note, only in the ADC_COMPLETE state because the ADC driver fires
 	 * an intermediate callback when the buffer is half full. */
 	if (adcp->state == ADC_COMPLETE) {
@@ -465,6 +466,7 @@ static void adc_callback_fast(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 	(void) n;
 //	/* Note, only in the ADC_COMPLETE state because the ADC driver fires an
 //	 intermediate callback when the buffer is half full.*/
+	efiAssertVoid(getRemainingStack(chThdSelf()) > 16, "lowstck#9b");
 	if (adcp->state == ADC_COMPLETE) {
 		fastAdcValue = getAvgAdcValue(0, samples_fast, ADC_GRP1_BUF_DEPTH_FAST, fastAdc.size());
 

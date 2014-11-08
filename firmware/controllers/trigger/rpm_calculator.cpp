@@ -129,6 +129,9 @@ bool isCranking(void) {
  */
 void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index, RpmCalculator *rpmState) {
 	uint64_t nowNt = getTimeNowNt();
+#if EFI_PROD_CODE
+	efiAssertVoid(getRemainingStack(chThdSelf()) > 32, "lowstck#2z");
+#endif
 
 	if (index != 0) {
 #if EFI_ANALOG_CHART || defined(__DOXYGEN__)
@@ -259,6 +262,9 @@ void scheduleByAngle(scheduling_s *timer, float angle, schfunc_t callback, void 
 #endif /* EFI_SHAFT_POSITION_INPUT */
 
 void addWaveChartEvent(const char *name, const char * msg, const char *msg2) {
+#if EFI_PROD_CODE
+	efiAssertVoid(getRemainingStack(chThdSelf()) > 32, "lowstck#2c");
+#endif
 #if EFI_WAVE_CHART
 	waveChart.addWaveChartEvent3(name, msg, msg2);
 #endif /* EFI_WAVE_CHART */
