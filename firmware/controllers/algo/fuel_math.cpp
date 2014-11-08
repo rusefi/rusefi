@@ -79,17 +79,16 @@ float getFuelMs(int rpm DECLATE_ENGINE_PARAMETER) {
 		theoreticalInjectionLength = getCrankingFuel(engine) / getNumberOfInjections(engineConfiguration, engineConfiguration->crankingInjectionMode);
 	} else {
 		float baseFuel = getBaseFuel(engine, rpm);
-		float fuelPerCycle = getRunningFuel(baseFuel, engine, rpm);
+		float fuelPerCycle = getRunningFuel(baseFuel, rpm PASS_ENGINE_PARAMETER);
 		theoreticalInjectionLength = fuelPerCycle / getNumberOfInjections(engineConfiguration, engine->engineConfiguration->injectionMode);
 	}
-	float injectorLag = getInjectorLag(engineConfiguration, getVBatt(engineConfiguration));
+	float injectorLag = getInjectorLag(getVBatt(engineConfiguration) PASS_ENGINE_PARAMETER);
 	return theoreticalInjectionLength + injectorLag;
 }
 
-float getRunningFuel(float baseFuelMs, Engine *engine, int rpm) {
-	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
-	float iatCorrection = getIatCorrection(engineConfiguration, getIntakeAirTemperature(engine));
-	float cltCorrection = getCltCorrection(engineConfiguration, getCoolantTemperature(engine));
+float getRunningFuel(float baseFuelMs, int rpm DECLATE_ENGINE_PARAMETER) {
+	float iatCorrection = getIatCorrection(getIntakeAirTemperature(engine) PASS_ENGINE_PARAMETER);
+	float cltCorrection = getCltCorrection(getCoolantTemperature(engine) PASS_ENGINE_PARAMETER);
 
 #if EFI_ACCEL_ENRICHMENT
 	float accelEnrichment = getAccelEnrichment();
@@ -106,7 +105,7 @@ static Map3D1616 fuelMap;
  * @param	vBatt	Battery voltage.
  * @return	Time in ms for injection opening time based on current battery voltage
  */
-float getInjectorLag(engine_configuration_s *engineConfiguration, float vBatt) {
+float getInjectorLag(float vBatt DECLATE_ENGINE_PARAMETER) {
 	if (cisnan(vBatt)) {
 		warning(OBD_System_Voltage_Malfunction, "vBatt=%f", vBatt);
 		return engineConfiguration->injectorLag;
@@ -128,13 +127,13 @@ void prepareFuelMap(engine_configuration_s *engineConfiguration) {
 /**
  * @brief Engine warm-up fuel correction.
  */
-float getCltCorrection(engine_configuration_s *engineConfiguration, float clt) {
+float getCltCorrection(float clt DECLATE_ENGINE_PARAMETER) {
 	if (cisnan(clt))
 		return 1; // this error should be already reported somewhere else, let's just handle it
 	return interpolate2d(clt, engineConfiguration->cltFuelCorrBins, engineConfiguration->cltFuelCorr, CLT_CURVE_SIZE);
 }
 
-float getIatCorrection(engine_configuration_s *engineConfiguration, float iat) {
+float getIatCorrection(float iat DECLATE_ENGINE_PARAMETER) {
 	if (cisnan(iat))
 		return 1; // this error should be already reported somewhere else, let's just handle it
 	return interpolate2d(iat, engineConfiguration->iatFuelCorrBins, engineConfiguration->iatFuelCorr, IAT_CURVE_SIZE);

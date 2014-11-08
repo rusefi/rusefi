@@ -27,7 +27,7 @@ void EventQueue::insertTask(scheduling_s *scheduling, uint64_t timeUs, schfunc_t
 		firmwareError("NULL callback");
 
 	int alreadyPending = checkIfPending(scheduling);
-	if (alreadyPending || hasFirmwareError())
+	if (alreadyPending)
 		return;
 
 	scheduling->momentUs = timeUs;

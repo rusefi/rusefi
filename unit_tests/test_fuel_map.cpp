@@ -151,6 +151,8 @@ static ActuatorEventList ae;
 void testAngleResolver(void) {
 	printf("*************************************************** testAngleResolver\r\n");
 
+	Engine *engine = NULL;
+
 	engineConfiguration->globalTriggerAngleOffset = 175;
 	trigger_shape_s * ts = &engineConfiguration2->triggerShape;
 
@@ -171,15 +173,14 @@ void testAngleResolver(void) {
 
 	ae.resetEventList();
 	printf("*************************************************** testAngleResolver 0\r\n");
-	registerActuatorEventExt(engineConfiguration, &engineConfiguration2->triggerShape, ae.getNextActuatorEvent(), list.add(INJECTOR_1_OUTPUT), 53 - 175);
+	findTriggerPosition(&engineConfiguration2->triggerShape, &ae.getNextActuatorEvent()->position, 53 - 175 PASS_ENGINE_PARAMETER);
 	assertEqualsM("size", 1, ae.size);
-	assertEquals(1, list.getSize());
 	assertEquals(0, ae.events[0].position.eventIndex);
 	assertEquals(53, ae.events[0].position.angleOffset);
 
 	printf("*************************************************** testAngleResolver 2\r\n");
 	ae.resetEventList();
-	registerActuatorEventExt(engineConfiguration, &engineConfiguration2->triggerShape, ae.getNextActuatorEvent(), list.add(INJECTOR_1_OUTPUT), 51 + 180 - 175);
+	findTriggerPosition(&engineConfiguration2->triggerShape, &ae.getNextActuatorEvent()->position, 51 + 180 - 175 PASS_ENGINE_PARAMETER);
 	assertEquals(2, ae.events[0].position.eventIndex);
 	assertEquals(109.1, ae.events[0].position.angleOffset);
 }

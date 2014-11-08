@@ -34,6 +34,10 @@ typedef void * Logging;
 
 #define EXTERN_ENGINE
 
+#ifdef __cplusplus
+class Engine;
+#endif
+
 #define DECLATE_ENGINE_PARAMETER , Engine *engine, engine_configuration_s *engineConfiguration
 #define PASS_ENGINE_PARAMETER , engine, engineConfiguration
 

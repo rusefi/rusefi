@@ -14,10 +14,10 @@ void prepareFuelMap(engine_configuration_s *engineConfiguration);
 
 float getBaseFuel(Engine *engine, int rpm);
 float getBaseTableFuel(engine_configuration_s *engineConfiguration, int rpm, float engineLoad);
-float getIatCorrection(engine_configuration_s *engineConfiguration, float iat);
-float getInjectorLag(engine_configuration_s *engineConfiguration, float vBatt);
-float getCltCorrection(engine_configuration_s *engineConfiguration, float clt);
-float getRunningFuel(float baseFuel, Engine *engine, int rpm);
+float getIatCorrection(float iat DECLATE_ENGINE_PARAMETER);
+float getInjectorLag(float vBatt DECLATE_ENGINE_PARAMETER);
+float getCltCorrection(float clt DECLATE_ENGINE_PARAMETER);
+float getRunningFuel(float baseFuel, int rpm DECLATE_ENGINE_PARAMETER);
 float getCrankingFuel(Engine *engine);
 float getCrankingFuel3(engine_configuration_s *engineConfiguration, float coolantTemperature, uint32_t revolutionCounterSinceStart);
 float getFuelMs(int rpm DECLATE_ENGINE_PARAMETER);

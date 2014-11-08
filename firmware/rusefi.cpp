@@ -230,6 +230,7 @@ void chDbgStackOverflowPanic(Thread *otp) {
 	chDbgPanic3(panicMessage, __FILE__, __LINE__);
 }
 
+// todo: make this a macro, noone can trust these compilers
 bool hasFirmwareError(void) {
 	return hasFirmwareErrorFlag;
 }

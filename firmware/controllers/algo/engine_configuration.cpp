@@ -578,8 +578,8 @@ void applyNonPersistentConfiguration(Logging * logger, Engine *engine) {
 
 	prepareOutputSignals(engine);
 	// todo: looks like this is here only for unit tests. todo: remove
-	initializeIgnitionActions(0, 0, engineConfiguration, engineConfiguration2,
-			&engineConfiguration2->ignitionEvents[0]);
+	initializeIgnitionActions(0, 0, engineConfiguration2,
+			&engineConfiguration2->ignitionEvents[0] PASS_ENGINE_PARAMETER);
 
 }
 
