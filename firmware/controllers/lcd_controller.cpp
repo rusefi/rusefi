@@ -17,7 +17,7 @@
 #include "efiGpio.h"
 #include "svnversion.h"
 
-extern engine_configuration_s *engineConfiguration;
+EXTERN_ENGINE;
 
 #define LCD_WIDTH 20
 // this value should be even

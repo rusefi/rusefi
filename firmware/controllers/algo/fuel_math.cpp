@@ -41,6 +41,8 @@
 #include "accel_enrichment.h"
 #endif /* EFI_ACCEL_ENRICHMENT */
 
+EXTERN_ENGINE;
+
 float getBaseFuel(Engine *engine, int rpm) {
 	if (engine->engineConfiguration->algorithm == LM_SPEED_DENSITY) {
 		return getSpeedDensityFuel(engine, rpm);
@@ -71,8 +73,7 @@ static int getNumberOfInjections(engine_configuration_s const *engineConfigurati
 /**
  * @returns	Length of fuel injection, in milliseconds
  */
-float getFuelMs(int rpm, Engine *engine) {
-	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
+float getFuelMs(int rpm DECLATE_ENGINE_PARAMETER) {
 	float theoreticalInjectionLength;
 	if (isCrankingR(rpm)) {
 		theoreticalInjectionLength = getCrankingFuel(engine) / getNumberOfInjections(engineConfiguration, engineConfiguration->crankingInjectionMode);

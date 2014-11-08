@@ -48,8 +48,7 @@ int getRpmE(Engine *engine) {
 	return engine->rpmCalculator->rpm();
 }
 
-extern engine_configuration_s *engineConfiguration;
-extern engine_configuration2_s *engineConfiguration2;
+EXTERN_ENGINE;
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
 static Logging logger;

@@ -64,7 +64,8 @@ typedef Thread thread_t;
  * On the other hand, in order to have a meaningful unit test we are passing Engine * engine as a parameter
  */
 
-#define EXTERN_ENGINE extern Engine *engine;
+#define EXTERN_ENGINE extern Engine *engine; \
+		extern engine_configuration_s *engineConfiguration;
 
 #define DECLATE_ENGINE_PARAMETER
 #define PASS_ENGINE_PARAMETER

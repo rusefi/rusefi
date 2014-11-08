@@ -37,6 +37,10 @@ void Engine::onTriggerEvent(uint64_t nowUs) {
 	lastTriggerEventTimeUs = nowUs;
 }
 
+Engine::Engine() {
+	rpmCalculator = NULL;
+}
+
 void Engine::init() {
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	initLogging(&logger, "engine");
