@@ -15,6 +15,6 @@
 #include "engine.h"
 
 void initTriggerEmulator(Engine *engine);
-void setTriggerEmulatorRPM(int value);
+void setTriggerEmulatorRPM(int value, Engine *engine);
 
 #endif /* DIST_EMULATOR_H_ */
