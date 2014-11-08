@@ -9,6 +9,7 @@
 #include <board.h>
 #include "main.h"
 #include "io_pins.h"
+#include "efiGpio.h"
 
 #include "pin_repository.h"
 #include "gpio_helper.h"
@@ -32,14 +33,6 @@ static io_pin_e leds[] = { LED_WARNING, LED_RUNNING, LED_ERROR, LED_COMMUNICATIO
 static GPIO_TypeDef *PORTS[] = { GPIOA, GPIOB, GPIOC, GPIOD, GPIOE, GPIOF, GPIOG, GPIOH };
 
 static pin_output_mode_e DEFAULT_OUTPUT = OM_DEFAULT;
-
-void turnOutputPinOn(io_pin_e pin) {
-	setOutputPinValue(pin, TRUE);
-}
-
-void turnOutputPinOff(io_pin_e pin) {
-	setOutputPinValue(pin, FALSE);
-}
 
 inline static void assertOMode(pin_output_mode_e mode) {
 	// mode >= 0  is always true since that's an unsigned
@@ -201,3 +194,24 @@ void initOutputPins(void) {
 
 	addConsoleActionS("get_pin_value", getPinValue);
 }
+
+static io_pin_e TO_BE_TURNED_OFF_ON_ERROR[] = { SPARKOUT_1_OUTPUT, SPARKOUT_2_OUTPUT, SPARKOUT_3_OUTPUT,
+		SPARKOUT_4_OUTPUT, SPARKOUT_5_OUTPUT, SPARKOUT_6_OUTPUT, SPARKOUT_7_OUTPUT, SPARKOUT_8_OUTPUT,
+		SPARKOUT_9_OUTPUT, SPARKOUT_10_OUTPUT, SPARKOUT_11_OUTPUT, SPARKOUT_12_OUTPUT,
+
+		INJECTOR_1_OUTPUT, INJECTOR_2_OUTPUT, INJECTOR_3_OUTPUT, INJECTOR_4_OUTPUT, INJECTOR_5_OUTPUT,
+		INJECTOR_6_OUTPUT, INJECTOR_7_OUTPUT, INJECTOR_8_OUTPUT, INJECTOR_9_OUTPUT, INJECTOR_10_OUTPUT,
+		INJECTOR_11_OUTPUT, INJECTOR_12_OUTPUT, FUEL_PUMP_RELAY };
+
+/**
+ * This method is part of fatal error handling.
+ * Please note that worst case scenario the pins might get re-enabled by some other code :(
+ * The whole method is pretty naive, but that's at least something.
+ */
+void turnAllPinsOff(void) {
+	int l = sizeof(TO_BE_TURNED_OFF_ON_ERROR) / sizeof(io_pin_e);
+	for (int i = 0; i < l; i++) {
+		turnOutputPinOff(l);
+	}
+}
+

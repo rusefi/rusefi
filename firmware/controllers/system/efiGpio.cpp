@@ -17,42 +17,13 @@ int getOutputPinValue(io_pin_e pin) {
 	return getLogicPinValue(&outputs[pin]);
 }
 
-int getLogicPinValue(OutputPin * outputPin) {
-	return outputPin->currentLogicValue;
-}
-
 /**
- * @return 0 for OM_DEFAULT and OM_OPENDRAIN
+ * This is used from fatal error handler so it's a macro to be sure that stack is not used
  */
-
-inline static int getElectricalValue0(pin_output_mode_e mode) {
-	return mode == OM_INVERTED || mode == OM_OPENDRAIN_INVERTED;
-}
-
-/**
- * @return 1 for OM_DEFAULT and OM_OPENDRAIN
- */
-inline static int getElectricalValue1(pin_output_mode_e mode) {
-	return mode == OM_DEFAULT || mode == OM_OPENDRAIN;
-}
-
 int getElectricalValue(int logicalValue, pin_output_mode_e mode) {
 	efiAssert(mode <= OM_OPENDRAIN_INVERTED, "invalid pin_output_mode_e", -1);
 
 	return logicalValue ? getElectricalValue1(mode) : getElectricalValue0(mode);
-}
-
-/**
- * Set's the value of the pin. On this layer the value is assigned as is, without any conversion.
- */
-void setPinValue(OutputPin * outputPin, int electricalValue, int logicValue) {
-	if (getLogicPinValue(outputPin) == logicValue)
-		return;
-
-#if EFI_PROD_CODE
-	palWritePad(outputPin->port, outputPin->pin, electricalValue);
-#endif
-	outputPin->currentLogicValue = logicValue;
 }
 
 /**

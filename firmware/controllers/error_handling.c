@@ -25,9 +25,6 @@ extern int main_loop_started;
 const char *dbg_panic_file;
 int dbg_panic_line;
 
-static void turnAllPinsOff(void) {
-}
-
 void chDbgPanic3(const char *msg, const char * file, int line) {
 	if (hasFatalError())
 		return;
@@ -41,10 +38,10 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 	 * low-level function is used here to reduce stack usage
 	 */
 	palWritePad(LED_ERROR_PORT, LED_ERROR_PIN, 1);
+    turnAllPinsOff();
 #if EFI_HD44780_LCD
 	lcdShowFatalMessage((char *) msg);
 #endif /* EFI_HD44780_LCD */
-        turnAllPinsOff();
         
 	if (!main_loop_started) {
 		print("fatal %s %s:%d\r\n", msg, file, line);

@@ -29,6 +29,7 @@
 #include "io_pins.h"
 #include "malfunction_central.h"
 #include "malfunction_indicator.h"
+#include "efiGpio.h"
 
 #if EFI_MALFUNCTION_INDICATOR
 

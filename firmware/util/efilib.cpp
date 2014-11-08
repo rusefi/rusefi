@@ -29,7 +29,7 @@ int minI(int i1, int i2) {
 }
 
 float efiRound(float value, float precision) {
-	int a = (int)(value / precision);
+	int a = (int) (value / precision);
 	return a * precision;
 }
 
@@ -55,11 +55,11 @@ uint32_t efiStrlen(const char *param) {
 
 bool startsWith(const char *line, const char *prefix) {
 	uint32_t len = efiStrlen(prefix);
-	if(efiStrlen(line) < len) {
+	if (efiStrlen(line) < len) {
 		return false;
 	}
-	for(int i =0;i<len;i++) {
-		if(line[i]!=prefix[i]) {
+	for (uint32_t i = 0; i < len; i++) {
+		if (line[i] != prefix[i]) {
 			return false;
 		}
 	}

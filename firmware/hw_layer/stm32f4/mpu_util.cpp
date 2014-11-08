@@ -16,6 +16,8 @@ void prvGetRegistersFromStack(uint32_t *pulFaultStackAddress);
 
 extern stkalign_t __main_stack_base__;
 
+#define GET_CFSR() (*((volatile uint32_t *) (0xE000ED28)))
+
 #if defined __GNUC__
 // GCC version
 
@@ -42,8 +44,8 @@ int getRemainingStack(Thread *otp) {
 
 #else /* __GNUC__ */
 
-extern uint32_t CSTACK$$Base;            /* symbol created by the IAR linker */
-extern uint32_t IRQSTACK$$Base;            /* symbol created by the IAR linker */
+extern uint32_t CSTACK$$Base; /* symbol created by the IAR linker */
+extern uint32_t IRQSTACK$$Base; /* symbol created by the IAR linker */
 
 int getRemainingStack(Thread *otp) {
 #if CH_DBG_ENABLE_STACK_CHECK || defined(__DOXYGEN__)
@@ -134,7 +136,7 @@ void prvGetRegistersFromStack(uint32_t *pulFaultStackAddress) {
 	postmortem_psr = pulFaultStackAddress[7];
 
 	/* Configurable Fault Status Register. Consists of MMSR, BFSR and UFSR */
-	postmortem_CFSR = (*((volatile uint32_t *) (0xE000ED28)));
+	postmortem_CFSR = GET_CFSR();
 
 	/* Hard Fault Status Register */
 	postmortem_HFSR = (*((volatile uint32_t *) (0xE000ED2C)));
@@ -177,13 +179,20 @@ void HardFaultVector(void) {
 			" bx r2                                                     \n"
 			" handler2_address_const: .word prvGetRegistersFromStack    \n"
 	);
-        
+
 #else
 #endif        
-        
-	chDbgPanic3("HardFaultVector", __FILE__, __LINE__);
+
+	int cfsr = GET_CFSR();
+	if (cfsr & 0x100) {
+		chDbgPanic3("H IBUSERR", __FILE__, __LINE__);
+	} else if (cfsr & 0x20000) {
+		chDbgPanic3("H INVSTATE", __FILE__, __LINE__);
+	} else {
+		chDbgPanic3("HardFaultVector", __FILE__, __LINE__);
+	}
 
 	while (TRUE) {
-        }
+	}
 }
 
