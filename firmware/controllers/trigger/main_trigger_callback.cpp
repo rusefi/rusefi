@@ -104,7 +104,7 @@ static void handleFuelInjectionEvent(MainTriggerCallback *mainTriggerCallback, A
 static void handleFuel(Engine *engine, MainTriggerCallback *mainTriggerCallback, uint32_t eventIndex, int rpm) {
 	if (!isInjectionEnabled(mainTriggerCallback->engineConfiguration))
 		return;
-	efiAssertVoid(getRemainingStack(chThdSelf()) > 16, "stack#3");
+	efiAssertVoid(getRemainingStack(chThdSelf()) > 64, "lowstck#3");
 	efiAssertVoid(eventIndex < mainTriggerCallback->engineConfiguration2->triggerShape.getLength(), "event index");
 
 	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
@@ -112,10 +112,12 @@ static void handleFuel(Engine *engine, MainTriggerCallback *mainTriggerCallback,
 	 * Ignition events are defined by addFuelEvents() according to selected
 	 * fueling strategy
 	 */
-	ActuatorEventList *source =
+	FuelSchedule *fs =
 	isCrankingR(rpm) ?
-			&mainTriggerCallback->engineConfiguration2->crankingInjectionEvents.events :
-			&mainTriggerCallback->engineConfiguration2->injectionEvents.events;
+			&mainTriggerCallback->engineConfiguration2->crankingInjectionEvents :
+			&mainTriggerCallback->engineConfiguration2->injectionEvents;
+
+	ActuatorEventList *source = &fs->events;
 
 	for (int i = 0; i < source->size; i++) {
 		ActuatorEvent *event = &source->events[i];
@@ -244,7 +246,7 @@ void onTriggerEvent(trigger_event_e ckpSignalType, uint32_t eventIndex, MainTrig
 	(void) ckpSignalType;
 	efiAssertVoid(eventIndex < 2 * mainTriggerCallback->engineConfiguration2->triggerShape.shaftPositionEventCount,
 			"event index");
-	efiAssertVoid(getRemainingStack(chThdSelf()) > 16, "stack#3");
+	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#2");
 
 // todo	int rpm = getRpmE(mainTriggerCallback->engine);
 	int rpm = getRpmE(&engine);
