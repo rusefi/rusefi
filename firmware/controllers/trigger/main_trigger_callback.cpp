@@ -54,7 +54,8 @@
 #include "event_queue.h"
 #include "engine.h"
 
-EXTERN_ENGINE;
+EXTERN_ENGINE
+;
 
 static LocalVersionHolder localVersion;
 
@@ -114,10 +115,16 @@ static INLINE void handleFuel(uint32_t eventIndex, int rpm DECLATE_ENGINE_PARAME
 	 */
 	FuelSchedule *fs =
 	isCrankingR(rpm) ?
-			&engine->engineConfiguration2->crankingInjectionEvents :
-			&engine->engineConfiguration2->injectionEvents;
+			&engine->engineConfiguration2->crankingInjectionEvents : &engine->engineConfiguration2->injectionEvents;
 
 	ActuatorEventList *source = &fs->events;
+
+	/**
+	 * This is a performance optimization for https://sourceforge.net/p/rusefi/tickets/64/
+	 * TODO: better data structure? better algorithm?
+	 */
+	if (!fs->hasEvents[eventIndex])
+		return;
 
 	for (int i = 0; i < source->size; i++) {
 		ActuatorEvent *event = &source->events[i];
@@ -127,8 +134,7 @@ static INLINE void handleFuel(uint32_t eventIndex, int rpm DECLATE_ENGINE_PARAME
 	}
 }
 
-static INLINE void handleSparkEvent(uint32_t eventIndex, IgnitionEvent *iEvent,
-		int rpm DECLATE_ENGINE_PARAMETER) {
+static INLINE void handleSparkEvent(uint32_t eventIndex, IgnitionEvent *iEvent, int rpm DECLATE_ENGINE_PARAMETER) {
 	engine_configuration2_s *engineConfiguration2 = engine->engineConfiguration2;
 
 	float dwellMs = getSparkDwellMsT(rpm PASS_ENGINE_PARAMETER);
@@ -191,8 +197,7 @@ static INLINE void handleSparkEvent(uint32_t eventIndex, IgnitionEvent *iEvent,
 	}
 }
 
-static INLINE void handleSpark(uint32_t eventIndex, int rpm,
-		IgnitionEventList *list DECLATE_ENGINE_PARAMETER) {
+static INLINE void handleSpark(uint32_t eventIndex, int rpm, IgnitionEventList *list DECLATE_ENGINE_PARAMETER) {
 	if (!isValidRpm(rpm) || !engine->engineConfiguration->isIgnitionEnabled)
 		return; // this might happen for instance in case of a single trigger event after a pause
 
@@ -239,7 +244,7 @@ void showMainHistogram(void) {
  * Both injection and ignition are controlled from this method.
  */
 void onTriggerEvent(trigger_event_e ckpSignalType, uint32_t eventIndex, MainTriggerCallback *mtc) {
-	if(hasFirmwareError()) {
+	if (hasFirmwareError()) {
 		/**
 		 * In case on a major error we should not process any more events.
 		 * TODO: add 'pin shutdown' invocation somewhere
@@ -249,8 +254,7 @@ void onTriggerEvent(trigger_event_e ckpSignalType, uint32_t eventIndex, MainTrig
 
 	Engine *engine = mtc->engine;
 	(void) ckpSignalType;
-	efiAssertVoid(eventIndex < 2 * engine->engineConfiguration2->triggerShape.shaftPositionEventCount,
-			"event index");
+	efiAssertVoid(eventIndex < 2 * engine->engineConfiguration2->triggerShape.shaftPositionEventCount, "event index");
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 64, "lowstck#2");
 
 	// todo: remove these local variables soon?
@@ -306,20 +310,18 @@ void onTriggerEvent(trigger_event_e ckpSignalType, uint32_t eventIndex, MainTrig
 
 		float dwellAngle = dwellMs / getOneDegreeTimeMs(rpm);
 
-		initializeIgnitionActions(advance, dwellAngle,
-				engine->engineConfiguration2,
+		initializeIgnitionActions(advance, dwellAngle, engine->engineConfiguration2,
 				&engine->engineConfiguration2->ignitionEvents[revolutionIndex] PASS_ENGINE_PARAMETER);
 	}
 
 	triggerEventsQueue.executeAll(getCrankEventCounter());
 
 	handleFuel(eventIndex, rpm PASS_ENGINE_PARAMETER);
-	handleSpark(eventIndex, rpm,
-			&engine->engineConfiguration2->ignitionEvents[revolutionIndex] PASS_ENGINE_PARAMETER);
+	handleSpark(eventIndex, rpm, &engine->engineConfiguration2->ignitionEvents[revolutionIndex] PASS_ENGINE_PARAMETER);
 #if EFI_HISTOGRAMS && EFI_PROD_CODE
 	int diff = hal_lld_get_counter_value() - beforeCallback;
 	if (diff > 0)
-		hsAdd(&mainLoopHisto, diff);
+	hsAdd(&mainLoopHisto, diff);
 #endif /* EFI_HISTOGRAMS */
 }
 
@@ -355,7 +357,7 @@ void initMainEventListener(Engine *engine, engine_configuration2_s *engineConfig
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	addConsoleAction("performanceinfo", showTriggerHistogram);
-	addConsoleActionP("maininfo", (VoidPtr)showMainInfo, engine);
+	addConsoleActionP("maininfo", (VoidPtr) showMainInfo, engine);
 
 	initLogging(&logger, "main event handler");
 	printMsg(&logger, "initMainLoop: %d", currentTimeMillis());

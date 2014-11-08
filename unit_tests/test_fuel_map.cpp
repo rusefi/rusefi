@@ -39,10 +39,14 @@ void testFuelMap(void) {
 
 	printf("*************************************************** initThermistors\r\n");
 
-	initThermistors(&eth.engine);
+	Engine *engine = &eth.engine;
+	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
+
+	initThermistors(engine);
+
 
 	printf("*** getInjectorLag\r\n");
-	assertEquals(1.0, getInjectorLag(eth.engine.engineConfiguration, 12));
+	assertEquals(1.0, getInjectorLag(12 PASS_ENGINE_PARAMETER));
 
 	eth.engine.engineConfiguration->injectorLag = 0.5;
 
@@ -55,7 +59,7 @@ void testFuelMap(void) {
 	// because all the correction tables are zero
 	printf("*************************************************** getRunningFuel 1\r\n");
 	float baseFuel = getBaseTableFuel(eth.engine.engineConfiguration, 5, getEngineLoadT(&eth.engine));
-	assertEqualsM("base fuel", 5.0, getRunningFuel(baseFuel, &eth.engine, 5));
+	assertEqualsM("base fuel", 5.0, getRunningFuel(baseFuel, 5 PASS_ENGINE_PARAMETER));
 
 	printf("*************************************************** setting IAT table\r\n");
 	for (int i = 0; i < IAT_CURVE_SIZE; i++) {
@@ -71,14 +75,12 @@ void testFuelMap(void) {
 	}
 	eth.engine.engineConfiguration->injectorLag = 0;
 
-	engine_configuration_s *engineConfiguration = eth.engine.engineConfiguration;
-
 	assertEquals(NAN, getIntakeAirTemperature(&eth.engine));
-	float iatCorrection = getIatCorrection(engineConfiguration, -KELV);
+	float iatCorrection = getIatCorrection(-KELV PASS_ENGINE_PARAMETER);
 	assertEqualsM("IAT", 2, iatCorrection);
-	float cltCorrection = getCltCorrection(engineConfiguration, getCoolantTemperature(&eth.engine));
+	float cltCorrection = getCltCorrection(getCoolantTemperature(&eth.engine) PASS_ENGINE_PARAMETER);
 	assertEqualsM("CLT", 1, cltCorrection);
-	float injectorLag = getInjectorLag(engineConfiguration, getVBatt(engineConfiguration));
+	float injectorLag = getInjectorLag(getVBatt(engineConfiguration) PASS_ENGINE_PARAMETER);
 	assertEquals(0, injectorLag);
 
 	testMafValue = 5;
@@ -86,7 +88,7 @@ void testFuelMap(void) {
 	// 1005 * 2 for IAT correction
 	printf("*************************************************** getRunningFuel 2\r\n");
 	 baseFuel = getBaseTableFuel(eth.engine.engineConfiguration, 5, getEngineLoadT(&eth.engine));
-	assertEqualsM("v1", 30150, getRunningFuel(baseFuel, &eth.engine, 5));
+	assertEqualsM("v1", 30150, getRunningFuel(baseFuel, 5 PASS_ENGINE_PARAMETER));
 
 	testMafValue = 0;
 

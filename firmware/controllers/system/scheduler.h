@@ -17,7 +17,7 @@ struct scheduling_struct {
 	VirtualTimer timer;
 #endif /* EFI_SIGNAL_EXECUTOR_SLEEP */
 
-	volatile uint64_t momentUs;
+	volatile uint64_t momentX;
 	schfunc_t callback;
 	void *param;
 	scheduling_s *next;

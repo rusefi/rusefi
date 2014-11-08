@@ -173,14 +173,6 @@ void initializeIgnitionActions(float advance, float dwellAngle,
 	}
 }
 
-static void registerActuatorEventExt(trigger_shape_s * s, ActuatorEvent *ev,
-		OutputSignal *actuator, float angle DECLATE_ENGINE_PARAMETER) {
-
-
-	findTriggerPosition(s, &ev->position, angle PASS_ENGINE_PARAMETER);
-}
-
-
 void FuelSchedule::registerInjectionEvent(trigger_shape_s *s,
 		io_pin_e pin, float angle DECLATE_ENGINE_PARAMETER) {
 	ActuatorEventList *list = &events;
@@ -201,7 +193,16 @@ void FuelSchedule::registerInjectionEvent(trigger_shape_s *s,
 	}
 	ev->actuator = actuator;
 
-	registerActuatorEventExt(s, ev, actuator, angle PASS_ENGINE_PARAMETER);
+	findTriggerPosition(s, &ev->position, angle PASS_ENGINE_PARAMETER);
+	hasEvents[ev->position.eventIndex] = true;
+}
+
+FuelSchedule::FuelSchedule() {
+	clear();
+}
+
+void FuelSchedule::clear() {
+	memset(hasEvents, 0, sizeof(hasEvents));
 }
 
 void FuelSchedule::addFuelEvents(trigger_shape_s *s,

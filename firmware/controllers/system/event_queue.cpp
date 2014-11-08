@@ -16,13 +16,14 @@
 
 EventQueue::EventQueue() {
 	head = NULL;
+	setLateDelay(100);
 }
 
 bool EventQueue::checkIfPending(scheduling_s *scheduling) {
 	return assertNotInList<scheduling_s>(head, scheduling);
 }
 
-void EventQueue::insertTask(scheduling_s *scheduling, uint64_t timeUs, schfunc_t callback, void *param) {
+void EventQueue::insertTask(scheduling_s *scheduling, uint64_t timeX, schfunc_t callback, void *param) {
 	if (callback == NULL)
 		firmwareError("NULL callback");
 
@@ -30,7 +31,7 @@ void EventQueue::insertTask(scheduling_s *scheduling, uint64_t timeUs, schfunc_t
 	if (alreadyPending)
 		return;
 
-	scheduling->momentUs = timeUs;
+	scheduling->momentX = timeX;
 	scheduling->callback = callback;
 	scheduling->param = param;
 
@@ -42,12 +43,13 @@ void EventQueue::insertTask(scheduling_s *scheduling, uint64_t timeUs, schfunc_t
 //}
 
 /**
+ * On this layer it does not matter which units are used - us, ms ot nt.
  * Get the timestamp of the soonest pending action
  */
-uint64_t EventQueue::getNextEventTime(uint64_t nowUs) {
+uint64_t EventQueue::getNextEventTime(uint64_t nowX) {
 	scheduling_s * current;
 	// this is a large value which is expected to be larger than any real time
-	uint64_t result = EMPTY_QUEUE;
+	uint64_t nextTimeUs = EMPTY_QUEUE;
 
 	int counter = 0;
 	LL_FOREACH(head, current)
@@ -56,20 +58,20 @@ uint64_t EventQueue::getNextEventTime(uint64_t nowUs) {
 			firmwareError("Is this list looped #2?");
 			return EMPTY_QUEUE;
 		}
-		if (current->momentUs <= nowUs) {
+		if (current->momentX <= nowX) {
 			/**
 			 * looks like we end up here after 'writeconfig' (which freezes the firmware) - we are late
 			 * for the next scheduled event
 			 */
-			uint64_t mock = nowUs + 100;
-			if (mock < result)
-				result = mock;
+			uint64_t mock = nowX + lateDelay;
+			if (mock < nextTimeUs)
+				nextTimeUs = mock;
 		} else {
-			if (current->momentUs < result)
-				result = current->momentUs;
+			if (current->momentX < nextTimeUs)
+				nextTimeUs = current->momentX;
 		}
 	}
-	return result;
+	return nextTimeUs;
 }
 
 /**
@@ -90,7 +92,7 @@ bool EventQueue::executeAll(uint64_t now) {
 			firmwareError("Is this list looped?");
 			return false;
 		}
-		if (current->momentUs <= now) {
+		if (current->momentX <= now) {
 			LL_DELETE(head, current);
 			LL_PREPEND(executionList, current);
 		}
@@ -113,6 +115,10 @@ int EventQueue::size(void) {
 	int result;
 	LL_COUNT(head, tmp, result);
 	return result;
+}
+
+void EventQueue::setLateDelay(int value) {
+	lateDelay = value;
 }
 
 scheduling_s *EventQueue::getForUnitText(int index) {
