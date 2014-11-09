@@ -96,6 +96,7 @@ char *ftoa(char *p, double num, unsigned long precision) {
 #endif
 
 #include "error_handling.h"
+int getRemainingStack(Thread *otp);
 
 /**
  * @brief   System formatted output function.
