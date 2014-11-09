@@ -95,6 +95,8 @@ char *ftoa(char *p, double num, unsigned long precision) {
 }
 #endif
 
+#include "error_handling.h"
+
 /**
  * @brief   System formatted output function.
  * @details This function implements a minimal @p vprintf()-like functionality
@@ -130,6 +132,9 @@ void chvprintf(BaseSequentialStream *chp, const char *fmt, va_list ap) {
 #else
   char tmpbuf[MAX_FILLER + 1];
 #endif
+
+  efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#1c");
+
 
   while (TRUE) {
     c = *fmt++;
