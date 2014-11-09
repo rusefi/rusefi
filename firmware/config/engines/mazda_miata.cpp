@@ -301,6 +301,9 @@ void setMiata1994_d(engine_configuration_s *engineConfiguration, board_configura
 void setMiata1994_s(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
 	setMiata1994_common(engineConfiguration, boardConfiguration);
 	engineConfiguration->vbattDividerCoeff = ((float) (10.0 + 33)) / 10 * 2;
+
+	boardConfiguration->triggerSimulatorPins[2] = GPIO_NONE;
+
 	/**
 	 * This board has PE0 & PE1 mosfets rewires to PD3 and PD5
 	 */
