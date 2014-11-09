@@ -108,7 +108,7 @@ static brain_pin_e BLINK_PINS[] = { GPIOE_8, // HIGH DRIVER 1
 static THD_WORKING_AREA(btThreadStack, UTILITY_THREAD_STACK_SIZE);
 
 static msg_t ivThread(int param) {
-	(void)param;
+	(void) param;
 	chRegSetThreadName("board test blinking");
 
 	int value = 0;
@@ -167,5 +167,11 @@ void initBoardTest(void) {
 
 		currentIndex++;
 		waitForKey();
+	}
+	// no buffered logger still, just plain old stdout
+	while (1) {
+		print("Board test done, thank you! Time to remove that jumper and reboot\r\n");
+		print("Bye!\r\n");
+		chThdSleepSeconds(1);
 	}
 }

@@ -165,7 +165,6 @@ void initHardware(Logging *logger, Engine *engine) {
 	 */
 	initTriggerDecoder();
 
-
 	/**
 	 * We need the LED_ERROR pin even before we read configuration
 	 */
@@ -208,8 +207,8 @@ void initHardware(Logging *logger, Engine *engine) {
 	initAdcInputs(isBoardTestMode_b);
 
 	if (isBoardTestMode_b) {
+		// this method never returns
 		initBoardTest();
-		efiAssertVoid(FALSE, "board test done");
 	}
 
 	initRtc();
@@ -318,11 +317,11 @@ void initSpiCs(SPIConfig *spiConfig, brain_pin_e csPin) {
 
 static void extCallback(EXTDriver *extp, expchannel_t channel) {
 	joyTotal++;
-	if(channel==8) {
+	if (channel == 8) {
 		joyA++;
-	} else if (channel==9){
+	} else if (channel == 9) {
 		joyB++;
-	} else if (channel==10){
+	} else if (channel == 10) {
 		joyC++;
 	}
 }
@@ -335,14 +334,14 @@ static void extCallback(EXTDriver *extp, expchannel_t channel) {
  * because pin '0' would be used on two different ports
  */
 
-static EXTConfig extcfg = { { { EXT_CH_MODE_DISABLED, NULL }, { EXT_CH_MODE_DISABLED, NULL }, {
+static EXTConfig extcfg = { { { EXT_CH_MODE_DISABLED, NULL }, { EXT_CH_MODE_DISABLED, NULL }, { EXT_CH_MODE_DISABLED,
+		NULL }, { EXT_CH_MODE_DISABLED, NULL }, { EXT_CH_MODE_DISABLED, NULL }, { EXT_CH_MODE_DISABLED, NULL }, {
 		EXT_CH_MODE_DISABLED, NULL }, { EXT_CH_MODE_DISABLED, NULL }, { EXT_CH_MODE_DISABLED, NULL }, {
 		EXT_CH_MODE_DISABLED, NULL }, { EXT_CH_MODE_DISABLED, NULL }, { EXT_CH_MODE_DISABLED, NULL }, {
 		EXT_CH_MODE_DISABLED, NULL }, { EXT_CH_MODE_DISABLED, NULL }, { EXT_CH_MODE_DISABLED, NULL }, {
 		EXT_CH_MODE_DISABLED, NULL }, { EXT_CH_MODE_DISABLED, NULL }, { EXT_CH_MODE_DISABLED, NULL }, {
 		EXT_CH_MODE_DISABLED, NULL }, { EXT_CH_MODE_DISABLED, NULL }, { EXT_CH_MODE_DISABLED, NULL }, {
-		EXT_CH_MODE_DISABLED, NULL }, { EXT_CH_MODE_DISABLED, NULL }, { EXT_CH_MODE_DISABLED, NULL }, {
-		EXT_CH_MODE_DISABLED, NULL }, { EXT_CH_MODE_DISABLED, NULL }, { EXT_CH_MODE_DISABLED, NULL } } };
+		EXT_CH_MODE_DISABLED, NULL }, { EXT_CH_MODE_DISABLED, NULL } } };
 
 void initExt(void) {
 
@@ -358,7 +357,6 @@ void initExt(void) {
 	extcfg.channels[10].cb = extCallback;
 	extcfg.channels[11].mode = EXT_CH_MODE_BOTH_EDGES | EXT_CH_MODE_AUTOSTART | EXT_MODE_GPIOD; // PD11
 	extcfg.channels[11].cb = extCallback;
-
 
 	mySetPadMode("joy A", GPIOD, 8, PAL_MODE_INPUT_PULLUP);
 	mySetPadMode("joy A", GPIOD, 9, PAL_MODE_INPUT_PULLUP);
