@@ -61,7 +61,7 @@ void addTriggerEventListener(ShaftPositionListener listener, const char *name, v
 EXTERN_ENGINE;
 
 void hwHandleShaftSignal(trigger_event_e signal) {
-	efiAssertVoid(getRemainingStack(chThdSelf()) > 64, "lowstck#8");
+	efiAssertVoid(getRemainingStack(chThdSelf()) > 256, "lowstck#8");
 	triggerCentral.handleShaftSignal(engine, signal);
 }
 #endif /* EFI_PROD_CODE */

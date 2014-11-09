@@ -130,7 +130,7 @@ bool isCranking(void) {
 void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index, RpmCalculator *rpmState) {
 	uint64_t nowNt = getTimeNowNt();
 #if EFI_PROD_CODE
-	efiAssertVoid(getRemainingStack(chThdSelf()) > 32, "lowstck#2z");
+	efiAssertVoid(getRemainingStack(chThdSelf()) > 256, "lowstck#2z");
 #endif
 
 	if (index != 0) {

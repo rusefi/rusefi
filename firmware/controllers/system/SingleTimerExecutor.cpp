@@ -29,7 +29,7 @@ extern schfunc_t globalTimerCallback;
 
 static void executorCallback(void *arg) {
 	(void)arg;
-	efiAssertVoid(getRemainingStack(chThdSelf()) > 32, "lowstck#2y");
+	efiAssertVoid(getRemainingStack(chThdSelf()) > 256, "lowstck#2y");
 	instance.onTimerCallback();
 }
 
