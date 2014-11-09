@@ -27,16 +27,15 @@ int getRemainingStack(Thread *otp) {
 	register struct intctx *r13 asm ("r13");
 	otp->activeStack = r13;
 
-	int rs;
+	int remainingStack;
 	if (dbg_isr_cnt > 0) {
 		// ISR context
-		rs = (stkalign_t *) (r13 - 1) - &__main_stack_base__;
+		remainingStack = (int)(r13 - 1) - (int)&__main_stack_base__;
 	} else {
-
-		rs = (stkalign_t *) (r13 - 1) - otp->p_stklimit;
+		remainingStack = (int)(r13 - 1) - (int)otp->p_stklimit;
 	}
-	otp->remainingStack = rs;
-	return rs;
+	otp->remainingStack = remainingStack;
+	return remainingStack;
 #else
 	return 99999;
 #endif /* CH_DBG_ENABLE_STACK_CHECK */
@@ -53,7 +52,7 @@ int getRemainingStack(Thread *otp) {
 	if (dbg_isr_cnt > 0) {
 		remainingStack = (__get_SP() - sizeof(struct intctx)) - (int)&IRQSTACK$$Base;
 	} else {
-		remainingStack = (stkalign_t *)(__get_SP() - sizeof(struct intctx)) - otp->p_stklimit;
+		remainingStack = (__get_SP() - sizeof(struct intctx)) - (int)otp->p_stklimit;
 	}
 	otp->remainingStack = remainingStack;
 	return remainingStack;

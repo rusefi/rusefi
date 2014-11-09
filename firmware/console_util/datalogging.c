@@ -114,7 +114,7 @@ static void vappendPrintfI(Logging *logging, const char *fmt, va_list arg) {
 }
 
 void vappendPrintf(Logging *logging, const char *fmt, va_list arg) {
-	efiAssertVoid(getRemainingStack(chThdSelf()) > 64, "lowstck#5b");
+	efiAssertVoid(getRemainingStack(chThdSelf()) > 256, "lowstck#5b");
 	if (!intermediateLoggingBufferInited) {
 		firmwareError("intermediateLoggingBufferInited not inited!");
 		return;
@@ -141,7 +141,7 @@ void vappendPrintf(Logging *logging, const char *fmt, va_list arg) {
 }
 
 void appendPrintf(Logging *logging, const char *fmt, ...) {
-	efiAssertVoid(getRemainingStack(chThdSelf()) > 32, "lowstck#4");
+	efiAssertVoid(getRemainingStack(chThdSelf()) > 256, "lowstck#4");
 	va_list ap;
 	va_start(ap, fmt);
 	vappendPrintf(logging, fmt, ap);
@@ -319,6 +319,7 @@ void resetLogging(Logging *logging) {
  * This method should only be invoked on main thread because only the main thread can write to the console
  */
 void printMsg(Logging *logger, const char *fmt, ...) {
+  efiAssertVoid(getRemainingStack(chThdSelf()) > 256, "lowstck#5o");
 //	resetLogging(logging); // I guess 'reset' is not needed here?
 	appendMsgPrefix(logger);
 

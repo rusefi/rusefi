@@ -73,7 +73,7 @@ static scheduling_s endTimer[2];
 
 static void startAveraging(void *arg) {
 	(void) arg;
-	efiAssertVoid(getRemainingStack(chThdSelf()) > 32, "lowstck#9");
+	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#9");
 	bool wasLocked = lockAnyContext();
 	;
 	// with locking we would have a consistent state
@@ -92,7 +92,7 @@ static void startAveraging(void *arg) {
 void mapAveragingCallback(adcsample_t value) {
 	/* Calculates the average values from the ADC samples.*/
 	perRevolutionCounter++;
-	efiAssertVoid(getRemainingStack(chThdSelf()) > 32, "lowstck#9a");
+	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#9a");
 
 	float voltage = adcToVoltsDivided(value);
 	float currentPressure = getMapByVoltage(voltage);

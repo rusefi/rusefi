@@ -106,7 +106,7 @@ static INLINE void handleFuelInjectionEvent(ActuatorEvent *event, int rpm DECLAT
 static INLINE void handleFuel(uint32_t eventIndex, int rpm DECLATE_ENGINE_PARAMETER) {
 	if (!isInjectionEnabled(engine->engineConfiguration))
 		return;
-	efiAssertVoid(getRemainingStack(chThdSelf()) > 64, "lowstck#3");
+	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#3");
 	efiAssertVoid(eventIndex < engine->engineConfiguration2->triggerShape.getLength(), "event index");
 
 	/**
@@ -255,7 +255,7 @@ void onTriggerEvent(trigger_event_e ckpSignalType, uint32_t eventIndex, MainTrig
 	Engine *engine = mtc->engine;
 	(void) ckpSignalType;
 	efiAssertVoid(eventIndex < 2 * engine->engineConfiguration2->triggerShape.shaftPositionEventCount, "event index");
-	efiAssertVoid(getRemainingStack(chThdSelf()) > 64, "lowstck#2");
+	efiAssertVoid(getRemainingStack(chThdSelf()) > 256, "lowstck#2");
 
 	// todo: remove these local variables soon?
 	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
