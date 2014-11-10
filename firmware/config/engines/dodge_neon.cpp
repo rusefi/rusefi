@@ -123,7 +123,7 @@ void setDodgeNeon1995EngineConfiguration(engine_configuration_s *engineConfigura
 	// Frankenstein: high side #2: PE10
 
 	boardConfiguration->ignitionPins[0] = GPIOE_8; // Frankenstein: high side #1
-	boardConfiguration->ignitionPins[1] = GPIO_NONE;
+	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
 	boardConfiguration->ignitionPins[2] = GPIOE_10; // // Frankenstein: high side #2
 
 	// set_ignition_pin_mode 0
@@ -175,7 +175,7 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 	setFuelLoadBin(engineConfiguration, 0, 100);
 	setTimingLoadBin(engineConfiguration, 0, 100);
 
-	boardConfiguration->malfunctionIndicatorPin = GPIO_NONE;
+	boardConfiguration->malfunctionIndicatorPin = GPIO_UNASSIGNED;
 
 	/**
 	 * D14/W10 O2 Sensor
@@ -191,9 +191,9 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 	boardConfiguration->injectionPins[3] = GPIOB_7;
 
 	boardConfiguration->ignitionPins[0] = GPIOC_9;
-	boardConfiguration->ignitionPins[1] = GPIO_NONE;
+	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
 	boardConfiguration->ignitionPins[2] = GPIOE_8;
-	boardConfiguration->ignitionPins[3] = GPIO_NONE;
+	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
 
 	boardConfiguration->idleValvePin = GPIOC_13;
 	boardConfiguration->idleSolenoidFrequency = 300;
@@ -201,8 +201,8 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 	boardConfiguration->fuelPumpPin = GPIOE_3;
 	boardConfiguration->fuelPumpPinMode = OM_DEFAULT;
 
-	boardConfiguration->gps_rx_pin = GPIO_NONE;
-	boardConfiguration->gps_tx_pin = GPIO_NONE;
+	boardConfiguration->gps_rx_pin = GPIO_UNASSIGNED;
+	boardConfiguration->gps_tx_pin = GPIO_UNASSIGNED;
 
 	boardConfiguration->triggerInputPins[0] = GPIOA_5;
 	boardConfiguration->triggerInputPins[1] = GPIOC_6;

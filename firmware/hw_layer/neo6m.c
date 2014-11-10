@@ -106,7 +106,7 @@ static msg_t GpsThreadEntryPoint(void *arg) {
 }
 
 void initGps(void) {
-	if (boardConfiguration->gps_rx_pin == GPIO_NONE || boardConfiguration->gps_tx_pin == GPIO_NONE) {
+	if (boardConfiguration->gps_rx_pin == GPIO_UNASSIGNED || boardConfiguration->gps_tx_pin == GPIO_UNASSIGNED) {
 		return;
 	}
 

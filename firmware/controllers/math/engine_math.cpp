@@ -117,7 +117,7 @@ static void registerSparkEvent(trigger_shape_s * s,
 
 	if (!isPinAssigned(pin)) {
 		// todo: extact method for this index math
-		warning(OBD_PCM_Processor_Fault, "pin not assigned for coil #%d", (int) pin - (int) SPARKOUT_1_OUTPUT + 1);
+		warning(OBD_PCM_Processor_Fault, "no_pin_cl #%d", (int) pin - (int) SPARKOUT_1_OUTPUT + 1);
 	}
 	event->io_pin = pin;
 
@@ -179,7 +179,7 @@ void FuelSchedule::registerInjectionEvent(trigger_shape_s *s,
 
 	if (!isPinAssigned(pin)) {
 		// todo: extact method for this index math
-		warning(OBD_PCM_Processor_Fault, "pin not assigned for injector #%d", (int) pin - (int) INJECTOR_1_OUTPUT + 1);
+		warning(OBD_PCM_Processor_Fault, "no_pin_inj #%d", (int) pin - (int) INJECTOR_1_OUTPUT + 1);
 	}
 
 	ActuatorEvent *ev = list->getNextActuatorEvent();

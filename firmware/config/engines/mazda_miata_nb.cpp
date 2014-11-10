@@ -52,14 +52,14 @@ void setMazdaMiataNbEngineConfiguration(engine_configuration_s *engineConfigurat
 	boardConfiguration->injectionPins[1] = GPIOB_8; // Frankenstein: low side - inj #11
 	boardConfiguration->injectionPins[2] = GPIOE_3; // Frankenstein: low side - inj #8
 	boardConfiguration->injectionPins[3] = GPIOE_5; // Frankenstein: low side - inj #6
-	boardConfiguration->injectionPins[4] = GPIO_NONE;
-	boardConfiguration->injectionPins[5] = GPIO_NONE;
+	boardConfiguration->injectionPins[4] = GPIO_UNASSIGNED;
+	boardConfiguration->injectionPins[5] = GPIO_UNASSIGNED;
 	boardConfiguration->injectionPinMode = OM_DEFAULT;
 
 	boardConfiguration->ignitionPins[0] = GPIOE_10; // Frankenstein: high side #1
-	boardConfiguration->ignitionPins[1] = GPIO_NONE;
+	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
 	boardConfiguration->ignitionPins[2] = GPIOC_9; // // Frankenstein: high side #2
-	boardConfiguration->ignitionPins[3] = GPIO_NONE;
+	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
 	boardConfiguration->ignitionPinMode = OM_INVERTED;
 
 	boardConfiguration->malfunctionIndicatorPin = GPIOE_1;
@@ -68,8 +68,8 @@ void setMazdaMiataNbEngineConfiguration(engine_configuration_s *engineConfigurat
 	boardConfiguration->fanPin = GPIOE_6;
 	boardConfiguration->fanPinMode = OM_DEFAULT;
 
-	boardConfiguration->electronicThrottlePin1 = GPIO_NONE;
-	boardConfiguration->idleSwitchPin = GPIO_NONE;
+	boardConfiguration->electronicThrottlePin1 = GPIO_UNASSIGNED;
+	boardConfiguration->idleSwitchPin = GPIO_UNASSIGNED;
 
 	// set_whole_fuel_map 3
 	setWholeFuelMap(engineConfiguration, 3);

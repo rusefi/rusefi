@@ -727,8 +727,8 @@ case GPIOA_9:
   return "GPIOA_9";
 case GPIOA_0:
   return "GPIOA_0";
-case GPIO_NONE:
-  return "GPIO_NONE";
+case GPIO_UNASSIGNED:
+  return "GPIO_UNASSIGNED";
 case GPIOA_1:
   return "GPIOA_1";
 case GPIOA_2:

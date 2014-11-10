@@ -33,7 +33,7 @@ static void showEgtInfo(board_configuration_s *boardConfiguration) {
 	scheduleMsg(&logger, "EGT spi: %d", boardConfiguration->max31855spiDevice);
 
 	for (int i = 0; i < MAX31855_CS_COUNT; i++) {
-		if (boardConfiguration->max31855_cs[i] != GPIO_NONE) {
+		if (boardConfiguration->max31855_cs[i] != GPIO_UNASSIGNED) {
 			scheduleMsg(&logger, "%d ETG @ %s", i, hwPortname(boardConfiguration->max31855_cs[i]));
 
 		}
@@ -144,7 +144,7 @@ void initMax31855(board_configuration_s *boardConfiguration) {
 	turnOnSpi(SPI_DEVICE_3);
 
 	for (int i = 0; i < MAX31855_CS_COUNT; i++) {
-		if (boardConfiguration->max31855_cs[i] != GPIO_NONE) {
+		if (boardConfiguration->max31855_cs[i] != GPIO_UNASSIGNED) {
 
 			initSpiCs(&spiConfig[i], boardConfiguration->max31855_cs[i]);
 

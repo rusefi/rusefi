@@ -134,7 +134,7 @@ static void updateErrorCodes(void) {
 }
 
 static void fanRelayControl(void) {
-	if (boardConfiguration->fanPin == GPIO_NONE)
+	if (boardConfiguration->fanPin == GPIO_UNASSIGNED)
 		return;
 
 	int isCurrentlyOn = getOutputPinValue(FAN_RELAY);
@@ -189,7 +189,7 @@ static void cylinderCleanupControl(Engine *engine) {
 }
 
 static void handleGpio(Engine *engine, int index) {
-	if (boardConfiguration->gpioPins[index] == GPIO_NONE)
+	if (boardConfiguration->gpioPins[index] == GPIO_UNASSIGNED)
 		return;
 
 	io_pin_e pin = (io_pin_e) ((int) GPIO_0 + index);
@@ -227,13 +227,13 @@ static void onEvenyGeneralMilliseconds(Engine *engine) {
 	engine->updateSlowSensors();
 
 	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
-		if (boardConfiguration->gpioPins[i] != GPIO_NONE) {
+		if (boardConfiguration->gpioPins[i] != GPIO_UNASSIGNED) {
 			handleGpio(engine, i);
 		}
 	}
 
 #if EFI_FUEL_PUMP
-	if (boardConfiguration->fuelPumpPin != GPIO_NONE && engineConfiguration->isFuelPumpEnabled) {
+	if (boardConfiguration->fuelPumpPin != GPIO_UNASSIGNED && engineConfiguration->isFuelPumpEnabled) {
 		setPinState(FUEL_PUMP_RELAY, fuelPumpLogic, engine);
 	}
 #endif
@@ -269,8 +269,8 @@ static void initPeriodicEvents(Engine *engine) {
 //	(void)arg;
 //	if (index != 0)
 //		return; // let's not abuse the timer - one time per revolution would be enough
-//	// todo: the check about GPIO_NONE should be somewhere else!
-//	if (!getOutputPinValue(FUEL_PUMP_RELAY) && boardConfiguration->fuelPumpPin != GPIO_NONE)
+//	// todo: the check about GPIO_UNASSIGNED should be somewhere else!
+//	if (!getOutputPinValue(FUEL_PUMP_RELAY) && boardConfiguration->fuelPumpPin != GPIO_UNASSIGNED)
 //		scheduleMsg(&logger, "fuelPump ON at %s", hwPortname(boardConfiguration->fuelPumpPin));
 //	turnOutputPinOn(FUEL_PUMP_RELAY);
 //	/**
@@ -425,7 +425,7 @@ void initEngineContoller(Engine *engine) {
 	addConsoleAction("analoginfo", printAnalogInfo);
 
 	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
-		if (boardConfiguration->gpioPins[i] != GPIO_NONE) {
+		if (boardConfiguration->gpioPins[i] != GPIO_UNASSIGNED) {
 
 			//mySetPadMode2("user-defined", boardConfiguration->gpioPins[i], PAL_STM32_MODE_OUTPUT);
 

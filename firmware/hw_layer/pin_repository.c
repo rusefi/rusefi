@@ -79,11 +79,11 @@ static char portNameBuffer[20];
 /**
  * Parse string representation of physical pin into brain_pin_e ordinal.
  *
- * @return GPIO_NONE for "none", GPIO_INVALID for invalid entry
+ * @return GPIO_UNASSIGNED for "none", GPIO_INVALID for invalid entry
  */
 brain_pin_e parseBrainPin(const char *str) {
 	if (strEqual(str, "none"))
-		return GPIO_NONE;
+		return GPIO_UNASSIGNED;
 	// todo: create method toLowerCase?
 	if (str[0] != 'p' && str[0] != 'p') {
 		return GPIO_INVALID;

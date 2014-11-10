@@ -431,7 +431,7 @@ typedef enum {
 	GPIOE_14 = 78,
 	GPIOE_15 = 79,
 
-	GPIO_NONE = 80,
+	GPIO_UNASSIGNED = 80,
 	GPIO_INVALID = 81,
 
 	Force_4b_cranking_brain_pin = ENUM_SIZE_HACK,
