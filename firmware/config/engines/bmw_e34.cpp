@@ -24,10 +24,6 @@ void setBmwE43(engine_configuration_s *engineConfiguration) {
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 
-	// emulating this 60-0 takes some resources, let's keep it slow by default
-	// rpm 200
-	boardConfiguration->triggerSimulatorFrequency = 200;
-
 	setConstantDwell(engineConfiguration, 3); // a bit shorter dwell
 	engineConfiguration->useConstantDwellDuringCranking = true;
 	engineConfiguration->ignitionDwellForCrankingMs = 5;
@@ -50,6 +46,10 @@ void setBmwE43(engine_configuration_s *engineConfiguration) {
 	bc->ignitionPins[3] = GPIO_UNASSIGNED; // #4
 	bc->ignitionPins[4] = GPIOC_9; // #5
 	bc->ignitionPins[5] = GPIO_UNASSIGNED; // #6
+
+	// emulating this 60-0 takes some resources, let's keep it slow by default
+	// rpm 200
+	bc->triggerSimulatorFrequency = 200;
 
 	engineConfiguration->map.sensor.sensorType = MT_MPX4250;
 }

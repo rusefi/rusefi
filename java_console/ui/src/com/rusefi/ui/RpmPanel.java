@@ -36,7 +36,7 @@ public class RpmPanel {
         gauges.add(SensorGauge.createGauge(Sensor.FUEL));
         gauges.add(SensorGauge.createGauge(Sensor.TIMING));
 
-        gauges.add(SensorGauge.createGauge(Sensor.VREF));
+        gauges.add(SensorGauge.createGauge(Sensor.VBATT));
         gauges.add(SensorGauge.createGauge(Sensor.MAF));
         gauges.add(SensorGauge.createGauge(Sensor.TPS));
 
