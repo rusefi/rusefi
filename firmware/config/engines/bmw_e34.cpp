@@ -24,6 +24,10 @@ void setBmwE43(engine_configuration_s *engineConfiguration) {
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 
+	// emulating this 60-0 takes some resources, let's keep it slow by default
+	// rpm 200
+	boardConfiguration->triggerSimulatorFrequency = 200;
+
 	setConstantDwell(engineConfiguration, 3); // a bit shorter dwell
 	engineConfiguration->useConstantDwellDuringCranking = true;
 	engineConfiguration->ignitionDwellForCrankingMs = 5;
