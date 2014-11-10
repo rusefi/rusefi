@@ -42,10 +42,7 @@ int getTheAngle(engine_type_e engineType) {
 	EngineTestHelper eth(engineType);
 
 	engine_configuration_s *ec = eth.ec;
-
-
 	initDataStructures(ec);
-	resetConfigurationExt(NULL, engineType, &eth.engine);
 
 	trigger_shape_s * shape = &eth.ec2.triggerShape;
 	return findTriggerZeroEventIndex(shape, &ec->triggerConfig);
@@ -60,8 +57,6 @@ static void testDodgeNeonDecoder(void) {
 	EngineTestHelper eth(DODGE_NEON_1995);
 
 	engine_configuration_s *ec = eth.ec;
-
-	resetConfigurationExt(NULL, DODGE_NEON_1995, &eth.engine);
 	assertEquals(8, eth.ec2.triggerShape.getTriggerShapeSynchPointIndex());
 
 	trigger_shape_s * shape = &eth.ec2.triggerShape;
@@ -121,7 +116,6 @@ static void test1995FordInline6TriggerDecoder(void) {
 	engine_configuration_s *engineConfiguration = eth.engine.engineConfiguration;
 	Engine *engine = &eth.engine;
 
-	resetConfigurationExt(NULL, FORD_INLINE_6_1995, &eth.engine);
 	assertEqualsM("triggerShapeSynchPointIndex", 0, eth.ec2.triggerShape.getTriggerShapeSynchPointIndex());
 
 	trigger_shape_s * shape = &eth.ec2.triggerShape;
@@ -185,7 +179,6 @@ void testFordAspire(void) {
 
 	Engine *engine = &eth.engine;
 	engine_configuration_s *engineConfiguration = eth.ec;
-	resetConfigurationExt(NULL, FORD_ASPIRE_1996, engine);
 	assertEquals(4, eth.ec2.triggerShape.getTriggerShapeSynchPointIndex());
 
 	assertEquals(800, engineConfiguration->fuelRpmBins[0]);
@@ -204,9 +197,6 @@ void testMazda323(void) {
 	printf("*************************************************** testMazda323\r\n");
 
 	EngineTestHelper eth(MAZDA_323);
-	persistent_config_s persistentConfig;
-	engine_configuration_s *ec = eth.ec;
-	resetConfigurationExt(NULL, MAZDA_323, &eth.engine);
 	assertEquals(0, eth.ec2.triggerShape.getTriggerShapeSynchPointIndex());
 }
 
@@ -217,7 +207,6 @@ void testMazdaMianaNbDecoder(void) {
 	engine_configuration_s *ec = eth.ec;
 	Engine *engine = &eth.engine;
 	engine_configuration_s *engineConfiguration = ec;
-	resetConfigurationExt(NULL, MAZDA_MIATA_NB, &eth.engine);
 	assertEquals(11, eth.ec2.triggerShape.getTriggerShapeSynchPointIndex());
 
 	TriggerState state;
@@ -302,10 +291,7 @@ static void testTriggerDecoder2(const char *msg, engine_type_e type, int synchPo
 	EngineTestHelper eth(type);
 	engine_configuration_s *ec = eth.ec;
 
-	assertEquals(0, eth.ec2.triggerShape.getTriggerShapeSynchPointIndex());
-
 	initSpeedDensity(ec);
-	resetConfigurationExt(NULL, type, &eth.engine);
 
 	assertEqualsM("synchPointIndex", synchPointIndex, eth.ec2.triggerShape.getTriggerShapeSynchPointIndex());
 
@@ -318,7 +304,6 @@ void testGY6_139QMB(void) {
 
 	EngineTestHelper eth(GY6_139QMB);
 	engine_configuration_s *ec = eth.ec;
-	resetConfigurationExt(NULL, GY6_139QMB, &eth.engine);
 
 	TriggerState state;
 	assertFalseM("shaft_is_synchronized", state.shaft_is_synchronized);

@@ -153,6 +153,8 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 	/**
 	 * that's NGC config
 	 */
+	// set_cranking_fuel 5
+	engineConfiguration->crankingSettings.baseCrankingFuel = 5;
 
 	// set_whole_fuel_map 12
 	setWholeFuelMap(engineConfiguration, 12);
