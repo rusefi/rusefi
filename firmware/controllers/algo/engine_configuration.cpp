@@ -320,14 +320,14 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 
 	boardConfiguration->max31855spiDevice = SPI_NONE;
 	for (int i = 0; i < MAX31855_CS_COUNT; i++) {
-		boardConfiguration->max31855_cs[i] = GPIO_NONE;
+		boardConfiguration->max31855_cs[i] = GPIO_UNASSIGNED;
 	}
 	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
-		boardConfiguration->gpioPins[i] = GPIO_NONE;
+		boardConfiguration->gpioPins[i] = GPIO_UNASSIGNED;
 		boardConfiguration->le_formulas[i][0] = 0;
 	}
 	for (int i = 0; i < JOYSTICK_PIN_COUNT; i++) {
-		boardConfiguration->joystickPins[i] = GPIO_NONE;
+		boardConfiguration->joystickPins[i] = GPIO_UNASSIGNED;
 	}
 
 	boardConfiguration->idleValvePin = GPIOE_2;
@@ -335,7 +335,7 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	boardConfiguration->fuelPumpPin = GPIOC_13;
 	boardConfiguration->fuelPumpPinMode = OM_DEFAULT;
 	boardConfiguration->electronicThrottlePin1 = GPIOC_9;
-	boardConfiguration->o2heaterPin = GPIO_NONE;
+	boardConfiguration->o2heaterPin = GPIO_UNASSIGNED;
 
 	boardConfiguration->injectionPins[0] = GPIOB_9;
 	boardConfiguration->injectionPins[1] = GPIOB_8;
@@ -343,26 +343,26 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	boardConfiguration->injectionPins[3] = GPIOE_5;
 	boardConfiguration->injectionPins[4] = GPIOE_6;
 	boardConfiguration->injectionPins[5] = GPIOC_12;
-	boardConfiguration->injectionPins[6] = GPIO_NONE;
-	boardConfiguration->injectionPins[7] = GPIO_NONE;
-	boardConfiguration->injectionPins[8] = GPIO_NONE;
-	boardConfiguration->injectionPins[9] = GPIO_NONE;
-	boardConfiguration->injectionPins[10] = GPIO_NONE;
-	boardConfiguration->injectionPins[11] = GPIO_NONE;
+	boardConfiguration->injectionPins[6] = GPIO_UNASSIGNED;
+	boardConfiguration->injectionPins[7] = GPIO_UNASSIGNED;
+	boardConfiguration->injectionPins[8] = GPIO_UNASSIGNED;
+	boardConfiguration->injectionPins[9] = GPIO_UNASSIGNED;
+	boardConfiguration->injectionPins[10] = GPIO_UNASSIGNED;
+	boardConfiguration->injectionPins[11] = GPIO_UNASSIGNED;
 	boardConfiguration->injectionPinMode = OM_DEFAULT;
 
 	boardConfiguration->ignitionPins[0] = GPIOC_7;
 	boardConfiguration->ignitionPins[1] = GPIOE_4; // todo: update this value
 	boardConfiguration->ignitionPins[2] = GPIOE_0; // todo: update this value
 	boardConfiguration->ignitionPins[3] = GPIOE_1; // todo: update this value
-	boardConfiguration->ignitionPins[4] = GPIO_NONE;
-	boardConfiguration->ignitionPins[5] = GPIO_NONE;
-	boardConfiguration->ignitionPins[6] = GPIO_NONE;
-	boardConfiguration->ignitionPins[7] = GPIO_NONE;
-	boardConfiguration->ignitionPins[8] = GPIO_NONE;
-	boardConfiguration->ignitionPins[9] = GPIO_NONE;
-	boardConfiguration->ignitionPins[10] = GPIO_NONE;
-	boardConfiguration->ignitionPins[11] = GPIO_NONE;
+	boardConfiguration->ignitionPins[4] = GPIO_UNASSIGNED;
+	boardConfiguration->ignitionPins[5] = GPIO_UNASSIGNED;
+	boardConfiguration->ignitionPins[6] = GPIO_UNASSIGNED;
+	boardConfiguration->ignitionPins[7] = GPIO_UNASSIGNED;
+	boardConfiguration->ignitionPins[8] = GPIO_UNASSIGNED;
+	boardConfiguration->ignitionPins[9] = GPIO_UNASSIGNED;
+	boardConfiguration->ignitionPins[10] = GPIO_UNASSIGNED;
+	boardConfiguration->ignitionPins[11] = GPIO_UNASSIGNED;
 	boardConfiguration->ignitionPinMode = OM_DEFAULT;
 
 	boardConfiguration->malfunctionIndicatorPin = GPIOC_9;
@@ -407,9 +407,9 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	boardConfiguration->triggerInputPins[0] = GPIOC_6;
 	boardConfiguration->triggerInputPins[1] = GPIOA_5;
 	boardConfiguration->logicAnalyzerPins[0] = GPIOA_8;
-	boardConfiguration->logicAnalyzerPins[1] = GPIO_NONE; // GPIOE_5 is a popular option (if available)
-	boardConfiguration->logicAnalyzerPins[2] = GPIO_NONE;
-	boardConfiguration->logicAnalyzerPins[3] = GPIO_NONE;
+	boardConfiguration->logicAnalyzerPins[1] = GPIO_UNASSIGNED; // GPIOE_5 is a popular option (if available)
+	boardConfiguration->logicAnalyzerPins[2] = GPIO_UNASSIGNED;
+	boardConfiguration->logicAnalyzerPins[3] = GPIO_UNASSIGNED;
 
 	boardConfiguration->logicAnalyzerMode[0] = false;
 	boardConfiguration->logicAnalyzerMode[1] = false;
@@ -431,9 +431,9 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	// set this to SPI_DEVICE_3 to enable stimulation
 	boardConfiguration->digitalPotentiometerSpiDevice = SPI_NONE;
 	boardConfiguration->digitalPotentiometerChipSelect[0] = GPIOD_7;
-	boardConfiguration->digitalPotentiometerChipSelect[1] = GPIO_NONE;
+	boardConfiguration->digitalPotentiometerChipSelect[1] = GPIO_UNASSIGNED;
 	boardConfiguration->digitalPotentiometerChipSelect[2] = GPIOD_5;
-	boardConfiguration->digitalPotentiometerChipSelect[3] = GPIO_NONE;
+	boardConfiguration->digitalPotentiometerChipSelect[3] = GPIO_UNASSIGNED;
 
 	boardConfiguration->is_enabled_spi_1 = false;
 	boardConfiguration->is_enabled_spi_2 = true;
@@ -576,11 +576,17 @@ void applyNonPersistentConfiguration(Logging * logger, Engine *engine) {
 		return;
 	}
 
+	prepareShapes(engine);
+}
+
+void prepareShapes(Engine *engine) {
 	prepareOutputSignals(engine);
+	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
+	engine_configuration2_s *engineConfiguration2 = engine->engineConfiguration2;
+
 	// todo: looks like this is here only for unit tests. todo: remove
 	initializeIgnitionActions(0, 0, engineConfiguration2,
 			&engineConfiguration2->ignitionEvents[0] PASS_ENGINE_PARAMETER);
-
 }
 
 void setOperationMode(engine_configuration_s *engineConfiguration, operation_mode_e mode) {

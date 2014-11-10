@@ -166,19 +166,19 @@ static void setHondaAccordConfigurationCommon(engine_configuration_s *engineConf
 	boardConfiguration->injectionPins[3] = GPIOB_7;
 
 	boardConfiguration->ignitionPins[0] = GPIOE_4;
-	boardConfiguration->ignitionPins[1] = GPIO_NONE;
-	boardConfiguration->ignitionPins[2] = GPIO_NONE;
-	boardConfiguration->ignitionPins[3] = GPIO_NONE;
+	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
+	boardConfiguration->ignitionPins[2] = GPIO_UNASSIGNED;
+	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
 
 	boardConfiguration->fuelPumpPin = GPIOE_3;
 	boardConfiguration->fuelPumpPinMode = OM_DEFAULT;
 
-	boardConfiguration->gps_rx_pin = GPIO_NONE;
-	boardConfiguration->gps_tx_pin = GPIO_NONE;
+	boardConfiguration->gps_rx_pin = GPIO_UNASSIGNED;
+	boardConfiguration->gps_tx_pin = GPIO_UNASSIGNED;
 
 	setFrankenso_01_LCD(boardConfiguration);
 
-	boardConfiguration->logicAnalyzerPins[1] = GPIO_NONE;
+	boardConfiguration->logicAnalyzerPins[1] = GPIO_UNASSIGNED;
 
 
 	boardConfiguration->idleSolenoidFrequency = 500;

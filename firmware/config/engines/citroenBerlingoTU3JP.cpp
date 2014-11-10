@@ -68,22 +68,22 @@ void setCitroenBerlingoTU3JPConfiguration(engine_configuration_s *engineConfigur
 	engineConfiguration->injectorFlow = 137; //SIEMENS DEKA VAZ20734
 	boardConfiguration->injectionPins[0] = GPIOE_6;
 	boardConfiguration->injectionPins[1] = GPIOC_13;
-	boardConfiguration->injectionPins[2] = GPIO_NONE;
-	boardConfiguration->injectionPins[3] = GPIO_NONE;
+	boardConfiguration->injectionPins[2] = GPIO_UNASSIGNED;
+	boardConfiguration->injectionPins[3] = GPIO_UNASSIGNED;
 
 	boardConfiguration->ignitionPins[0] = GPIOC_14;
 	boardConfiguration->ignitionPins[1] = GPIOC_15;
-	boardConfiguration->ignitionPins[2] = GPIO_NONE;
-	boardConfiguration->ignitionPins[3] = GPIO_NONE;
+	boardConfiguration->ignitionPins[2] = GPIO_UNASSIGNED;
+	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
 
 	boardConfiguration->fuelPumpPin = GPIOB_9;
 	boardConfiguration->fuelPumpPinMode = OM_DEFAULT;
 
-	boardConfiguration->fanPin = GPIO_NONE;
+	boardConfiguration->fanPin = GPIO_UNASSIGNED;
 //	boardConfiguration->fanPinMode = OM_DEFAULT;
 
 //	boardConfiguration->o2heaterPin = GPIOC_13;
-//	boardConfiguration->logicAnalyzerPins[1] = GPIO_NONE;
+//	boardConfiguration->logicAnalyzerPins[1] = GPIO_UNASSIGNED;
 
 	/**
 	 * Inputs
@@ -137,5 +137,5 @@ void setCitroenBerlingoTU3JPConfiguration(engine_configuration_s *engineConfigur
 	/**
 	* Other
 	*/
-//	engineConfiguration->mafAdcChannel = GPIO_NONE;
+//	engineConfiguration->mafAdcChannel = GPIO_UNASSIGNED;
 }

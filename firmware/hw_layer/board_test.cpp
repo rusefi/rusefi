@@ -30,7 +30,7 @@
 #include "AdcConfiguration.h"
 
 static volatile int stepCoutner = 0;
-static volatile brain_pin_e currentPin = GPIO_NONE;
+static volatile brain_pin_e currentPin = GPIO_UNASSIGNED;
 
 extern AdcConfiguration slowAdc;
 extern AdcConfiguration fastAdc;
@@ -136,7 +136,7 @@ void printBoardTestState(void) {
 	print("'n' for next step and 'set X' to return to step X\r\n");
 	print("ADC count: slow %d/fast %d\r\n", slowAdc.size(), fastAdc.size());
 
-	if (currentPin != GPIO_NONE) {
+	if (currentPin != GPIO_UNASSIGNED) {
 		print("Blinking %s\r\n", hwPortname(currentPin));
 	}
 }

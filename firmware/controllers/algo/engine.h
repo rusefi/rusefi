@@ -80,6 +80,7 @@ private:
 	void setPumpsCounter(engine_configuration_s *engineConfiguration, int newValue);
 };
 
+void prepareShapes(Engine *engine);
 void resetConfigurationExt(Logging * logger, engine_type_e engineType,
 		Engine *engine);
 void applyNonPersistentConfiguration(Logging * logger, Engine *engine);

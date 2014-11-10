@@ -36,16 +36,16 @@ void setBmwE43(engine_configuration_s *engineConfiguration) {
 	setWholeTimingTable(engineConfiguration, 10);
 
 	board_configuration_s *bc = &engineConfiguration->bc;
-	bc->malfunctionIndicatorPin = GPIO_NONE;
+	bc->malfunctionIndicatorPin = GPIO_UNASSIGNED;
 
 //	bc->isFastAdcEnabled = true;
 
 	bc->ignitionPins[0] = GPIOC_7; // #1
-	bc->ignitionPins[1] = GPIO_NONE; // #2
+	bc->ignitionPins[1] = GPIO_UNASSIGNED; // #2
 	bc->ignitionPins[2] = GPIOE_4; // #3
-	bc->ignitionPins[3] = GPIO_NONE; // #4
+	bc->ignitionPins[3] = GPIO_UNASSIGNED; // #4
 	bc->ignitionPins[4] = GPIOC_9; // #5
-	bc->ignitionPins[5] = GPIO_NONE; // #6
+	bc->ignitionPins[5] = GPIO_UNASSIGNED; // #6
 
 	engineConfiguration->map.sensor.sensorType = MT_MPX4250;
 }

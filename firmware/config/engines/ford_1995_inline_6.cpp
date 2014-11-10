@@ -96,8 +96,8 @@ void setFordInline6(engine_configuration_s *engineConfiguration, board_configura
 	boardConfiguration->injectionPins[1] = GPIOE_3;
 	boardConfiguration->ignitionPins[0] = GPIOC_15;
 
-	boardConfiguration->injectionPins[2] = GPIO_NONE;
-	boardConfiguration->fanPin = GPIO_NONE;
+	boardConfiguration->injectionPins[2] = GPIO_UNASSIGNED;
+	boardConfiguration->fanPin = GPIO_UNASSIGNED;
 
 	engineConfiguration->tpsMin = convertVoltageTo10bitADC(1.250);
 	engineConfiguration->tpsMax = convertVoltageTo10bitADC(4.538);

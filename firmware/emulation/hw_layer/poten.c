@@ -103,7 +103,7 @@ void initPotentiometers(board_configuration_s *boardConfiguration) {
 
 	for (int i = 0; i < DIGIPOT_COUNT; i++) {
 		brain_pin_e csPin = boardConfiguration->digitalPotentiometerChipSelect[i];
-		if (csPin == GPIO_NONE) {
+		if (csPin == GPIO_UNASSIGNED) {
 			continue;
                 }
 
