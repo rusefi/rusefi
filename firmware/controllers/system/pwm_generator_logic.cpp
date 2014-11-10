@@ -15,7 +15,7 @@
  * We need to limit the number of iterations in order to avoid precision loss while calculating
  * next toggle time
  */
-#define ITERATION_LIMIT 10000
+#define ITERATION_LIMIT 1000
 
 SimplePwm::SimplePwm() {
 	wave.init(pinStates);

@@ -35,6 +35,7 @@ static void executorCallback(void *arg) {
 
 Executor::Executor() {
 	reentrantLock = false;
+	queue.setLateDelay(US2NT(100));
 }
 
 void Executor::lock(void) {
@@ -59,7 +60,7 @@ void Executor::schedule2(const char *prefix, scheduling_s *scheduling, uint64_t 
 		// this would guard the queue and disable interrupts
 		lock();
 	}
-	queue.insertTask(scheduling, timeUs, callback, param);
+	queue.insertTask(scheduling, US2NT(timeUs), callback, param);
 	if (!reentrantLock) {
 		doExecute();
 		unlock();
@@ -97,14 +98,14 @@ void Executor::doExecute() {
 		/**
 		 * It's worth noting that that the actions might be adding new actions into the queue
 		 */
-		uint64_t nowUs = getTimeNowUs();
-		shouldExecute = queue.executeAll(nowUs);
+		uint64_t nowNt = getTimeNowNt();
+		shouldExecute = queue.executeAll(nowNt);
 	}
 	if (!isLocked()) {
 		firmwareError("Someone has stolen my lock");
 		return;
 	}
-	uint64_t nowUs = getTimeNowUs();
+	uint64_t nowNt = getTimeNowNt();
 	reentrantLock = false;
 	/**
 	 * 'executeAll' is potentially invoking heavy callbacks, let's grab fresh time value?
@@ -112,11 +113,12 @@ void Executor::doExecute() {
 	/**
 	 * Let's set up the timer for the next execution
 	 */
-	uint64_t nextEventTime = queue.getNextEventTime(nowUs);
-	efiAssertVoid(nextEventTime > nowUs, "setTimer constraint");
-	if (nextEventTime == EMPTY_QUEUE)
+	uint64_t nextEventTimeNt = queue.getNextEventTime(nowNt);
+	efiAssertVoid(nextEventTimeNt > nowNt, "setTimer constraint");
+	if (nextEventTimeNt == EMPTY_QUEUE)
 		return; // no pending events in the queue
-	setHardwareUsTimer(nextEventTime - nowUs);
+	uint64_t delayUs = NT2US(nextEventTimeNt - nowNt);
+	setHardwareUsTimer(delayUs == 0 ? 1 : delayUs);
 }
 
 /**
