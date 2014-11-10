@@ -72,6 +72,7 @@ void rusEfiFunctionalTest(void) {
 
 
 	resetConfigurationExt(NULL, FORD_ASPIRE_1996, engine);
+	prepareShapes(engine);
 
 	initThermistors(engine);
 	initAlgo(engineConfiguration);
@@ -87,7 +88,6 @@ void rusEfiFunctionalTest(void) {
 
 	startStatusThreads(engine);
 	startTunerStudioConnectivity();
-
 }
 
 void printPendingMessages(void) {

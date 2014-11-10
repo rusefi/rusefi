@@ -383,6 +383,14 @@ void initEngineContoller(Engine *engine) {
 	initInjectorCentral(engine);
 	initPwmTester();
 	initIgnitionCentral();
+
+	/**
+	 * This has to go after 'initInjectorCentral' and 'initInjectorCentral' in order to
+	 * properly detect un-assigned output pins
+	 */
+	prepareShapes(engine);
+
+
 	initMalfunctionCentral();
 
 #if EFI_ELECTRONIC_THROTTLE_BODY

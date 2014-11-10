@@ -575,8 +575,6 @@ void applyNonPersistentConfiguration(Logging * logger, Engine *engine) {
 		firmwareError("shaftPositionEventCount is zero");
 		return;
 	}
-
-	prepareShapes(engine);
 }
 
 void prepareShapes(Engine *engine) {
