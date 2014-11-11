@@ -59,7 +59,7 @@ RpmCalculator::RpmCalculator() {
 #if !EFI_PROD_CODE
 	mockRpm = MOCK_UNDEFINED;
 #endif
-	rpmValue = 0;
+	setRpmValue(0);
 
 	// we need this initial to have not_running at first invocation
 	lastRpmEventTimeNt = (uint64_t) -10 * US2NT(US_PER_SECOND_LL);
@@ -73,6 +73,15 @@ RpmCalculator::RpmCalculator() {
 bool RpmCalculator::isRunning(void) {
 	uint64_t nowNt = getTimeNowNt();
 	return nowNt - lastRpmEventTimeNt < US2NT(US_PER_SECOND);
+}
+
+void RpmCalculator::setRpmValue(int value) {
+	rpmValue = value;
+//	if (rpmValue <= 0) {
+//		oneDegreeUs = NAN;
+//	} else {
+//		oneDegreeUs = getOneDegreeTimeUs(rpmValue);
+//	}
 }
 
 void RpmCalculator::onNewEngineCycle() {
@@ -154,11 +163,11 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index, Rpm
 		 *
 		 */
 		if (diffNt == 0) {
-			rpmState->rpmValue = NOISY_RPM;
+			rpmState->setRpmValue(NOISY_RPM);
 		} else {
 			// todo: interesting what is this *2 about? four stroke magic constant?
 			int rpm = (int) (60 * US2NT(US_PER_SECOND_LL) * 2 / diffNt);
-			rpmState->rpmValue = rpm > UNREALISTIC_RPM ? NOISY_RPM : rpm;
+			rpmState->setRpmValue(rpm > UNREALISTIC_RPM ? NOISY_RPM : rpm);
 		}
 	}
 	rpmState->lastRpmEventTimeNt = nowNt;

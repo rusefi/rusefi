@@ -32,8 +32,13 @@ public:
 	int rpm(void);
 	void onNewEngineCycle();
 	uint32_t getRevolutionCounter(void);
+	void setRpmValue(int value);
 	uint32_t getRevolutionCounterSinceStart(void);
 	volatile int rpmValue;
+	/**
+	 * This is a performance optimization: let's pre-calulate this each time RPM changes
+	 */
+//	volatile float oneDegreeUs;
 	volatile uint64_t lastRpmEventTimeNt;
 private:
 	/**
