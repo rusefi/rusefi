@@ -156,7 +156,7 @@ float getBaseTableFuel(engine_configuration_s *engineConfiguration, int rpm, flo
  */
 float getCrankingFuel(Engine *engine) {
 	return getCrankingFuel3(engine->engineConfiguration, getCoolantTemperature(engine),
-			engine->rpmCalculator->getRevolutionCounterSinceStart()
+			engine->rpmCalculator.getRevolutionCounterSinceStart()
 		);
 }
 

@@ -38,7 +38,8 @@ void Engine::onTriggerEvent(uint64_t nowNt) {
 }
 
 Engine::Engine() {
-	rpmCalculator = NULL;
+	lastTriggerEventTimeNt = 0;
+	isCylinderCleanupMode = false;
 }
 
 void Engine::init() {
@@ -120,7 +121,7 @@ void StartupFuelPumping::setPumpsCounter(engine_configuration_s *engineConfigura
 
 void StartupFuelPumping::update(Engine *engine) {
 	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
-	if (engine->rpmCalculator->rpm() == 0) {
+	if (engine->rpmCalculator.rpm() == 0) {
 		bool isTpsAbove50 = getTPS(engineConfiguration) >= 50;
 
 		if (this->isTpsAbove50 != isTpsAbove50) {

@@ -100,7 +100,7 @@ void mapAveragingCallback(adcsample_t value) {
 #if EFI_ANALOG_CHART
 	if (engineConfiguration->analogChartMode == AC_MAP)
 		if (perRevolutionCounter % FAST_MAP_CHART_SKIP_FACTOR == 0)
-			acAddData(getCrankshaftAngleNt(getTimeNowNt()), currentPressure);
+			acAddData(getCrankshaftAngleNt(engine, getTimeNowNt()), currentPressure);
 #endif /* EFI_ANALOG_CHART */
 
 	chSysLockFromIsr()

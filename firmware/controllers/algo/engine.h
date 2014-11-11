@@ -10,6 +10,7 @@
 #include "main.h"
 #include "engine_configuration.h"
 #include "ec2.h"
+#include "rpm_calculator.h"
 
 class EngineState {
 public:
@@ -28,7 +29,7 @@ class Engine {
 public:
 	Engine();
 	void init();
-	RpmCalculator *rpmCalculator;
+	RpmCalculator rpmCalculator;
 	engine_configuration_s *engineConfiguration;
 	engine_configuration2_s *engineConfiguration2;
 

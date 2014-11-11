@@ -220,7 +220,7 @@ static void onEvenyGeneralMilliseconds(Engine *engine) {
 	 */
 	halTime.get(hal_lld_get_counter_value(), true);
 
-	if (!engine->rpmCalculator->isRunning())
+	if (!engine->rpmCalculator.isRunning())
 		writeToFlashIfPending();
 
 	engine->watchdog();
@@ -245,7 +245,7 @@ static void onEvenyGeneralMilliseconds(Engine *engine) {
 
 	cylinderCleanupControl(engine);
 
-	setOutputPinValue(O2_HEATER, engine->rpmCalculator->isRunning());
+	setOutputPinValue(O2_HEATER, engine->rpmCalculator.isRunning());
 
 	// schedule next invocation
 	chVTSetAny(&everyMsTimer, boardConfiguration->generalPeriodicThreadPeriod * TICKS_IN_MS,

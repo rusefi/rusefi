@@ -25,7 +25,6 @@ public:
 	engine_configuration_s *ec;
 
 	TriggerCentral triggerCentral;
-	RpmCalculator rpmState;
 };
 
 #endif /* ENGINE_TEST_HELPER_H_ */
