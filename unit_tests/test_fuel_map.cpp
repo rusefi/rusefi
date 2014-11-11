@@ -153,7 +153,10 @@ static ActuatorEventList ae;
 void testAngleResolver(void) {
 	printf("*************************************************** testAngleResolver\r\n");
 
-	Engine *engine = NULL;
+	EngineTestHelper eth(FORD_ASPIRE_1996);
+	Engine *engine = &eth.engine;
+
+	engine_configuration_s *engineConfiguration = eth.engine.engineConfiguration;
 
 	engineConfiguration->globalTriggerAngleOffset = 175;
 	trigger_shape_s * ts = &engineConfiguration2->triggerShape;

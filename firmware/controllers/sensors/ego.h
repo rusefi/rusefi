@@ -14,7 +14,7 @@
 #include "rusefi_enums.h"
 #include "engine_configuration.h"
 
-float getAfr(void);
+float getAfr(DECLARE_ENGINE_PARAMETER_F);
 void initEgoSensor(afr_sensor_s *sensor, ego_sensor_e type);
 
 #endif

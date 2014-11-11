@@ -1,11 +1,11 @@
 #include "main.h"
 #include "boards.h"
-#include "engine_configuration.h"
+#include "engine.h"
 #include "adc_inputs.h"
 #include "maf.h"
 
-extern engine_configuration_s *engineConfiguration;
+EXTERN_ENGINE;
 
-float getMaf(void) {
+float getMaf(DECLARE_ENGINE_PARAMETER_F) {
 	return getMafT(engineConfiguration);
 }
