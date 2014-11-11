@@ -3,10 +3,11 @@
 #include "interpolation.h"
 #include "boards.h"
 #include "adc_inputs.h"
+#include "engine.h"
 
-extern engine_configuration_s *engineConfiguration;
+EXTERN_ENGINE;
 
-float getAfr(void) {
+float getAfr(DECLARE_ENGINE_PARAMETER_F) {
 	afr_sensor_s * sensor = &engineConfiguration->afrSensor;
 
 	float volts = getVoltageDivided(sensor->afrAdcChannel);

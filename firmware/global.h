@@ -14,9 +14,14 @@
 
 // this is about MISRA not liking 'time.h'. todo: figure out something
 #if defined __GNUC__
+// GCC
 #include <sys/types.h>
+#define ALWAYS_INLINE __attribute__((always_inline))
 #else
+// IAR
 typedef unsigned int time_t;
+// todo: what's the IAR option?
+#define ALWAYS_INLINE INLINE
 #endif
 
 #include "efifeatures.h"
@@ -67,6 +72,8 @@ typedef Thread thread_t;
 #define EXTERN_ENGINE extern Engine *engine; \
 		extern engine_configuration_s *engineConfiguration;
 
+#define DECLARE_ENGINE_PARAMETER_F void
+#define DECLARE_ENGINE_PARAMETER_S
 #define DECLATE_ENGINE_PARAMETER
 #define PASS_ENGINE_PARAMETER
 

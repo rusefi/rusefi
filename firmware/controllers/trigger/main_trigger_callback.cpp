@@ -78,7 +78,7 @@ static cyclic_buffer ignitionErrorDetection;
 
 static Logging logger;
 
-static INLINE void handleFuelInjectionEvent(ActuatorEvent *event, int rpm DECLATE_ENGINE_PARAMETER) {
+static ALWAYS_INLINE void handleFuelInjectionEvent(ActuatorEvent *event, int rpm DECLATE_ENGINE_PARAMETER) {
 	/**
 	 * todo: we do not really need to calculate fuel for each individual cylinder
 	 */
@@ -103,7 +103,7 @@ static INLINE void handleFuelInjectionEvent(ActuatorEvent *event, int rpm DECLAT
 	scheduleOutput(event->actuator, delay, fuelMs);
 }
 
-static INLINE void handleFuel(uint32_t eventIndex, int rpm DECLATE_ENGINE_PARAMETER) {
+static ALWAYS_INLINE void handleFuel(uint32_t eventIndex, int rpm DECLATE_ENGINE_PARAMETER) {
 	if (!isInjectionEnabled(engine->engineConfiguration))
 		return;
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#3");
@@ -134,7 +134,7 @@ static INLINE void handleFuel(uint32_t eventIndex, int rpm DECLATE_ENGINE_PARAME
 	}
 }
 
-static INLINE void handleSparkEvent(uint32_t eventIndex, IgnitionEvent *iEvent, int rpm DECLATE_ENGINE_PARAMETER) {
+static ALWAYS_INLINE void handleSparkEvent(uint32_t eventIndex, IgnitionEvent *iEvent, int rpm DECLATE_ENGINE_PARAMETER) {
 	engine_configuration2_s *engineConfiguration2 = engine->engineConfiguration2;
 
 	float dwellMs = getSparkDwellMsT(rpm PASS_ENGINE_PARAMETER);
@@ -197,7 +197,7 @@ static INLINE void handleSparkEvent(uint32_t eventIndex, IgnitionEvent *iEvent, 
 	}
 }
 
-static INLINE void handleSpark(uint32_t eventIndex, int rpm, IgnitionEventList *list DECLATE_ENGINE_PARAMETER) {
+static ALWAYS_INLINE void handleSpark(uint32_t eventIndex, int rpm, IgnitionEventList *list DECLATE_ENGINE_PARAMETER) {
 	if (!isValidRpm(rpm) || !engine->engineConfiguration->isIgnitionEnabled)
 		return; // this might happen for instance in case of a single trigger event after a pause
 
