@@ -50,7 +50,6 @@ public:
 
 private:
 	void clear();
-	uint64_t getCurrentGapDuration(uint64_t nowUs);
 	/**
 	 * index within trigger revolution, from 0 to trigger event count
 	 */
