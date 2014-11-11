@@ -32,9 +32,9 @@ void Engine::updateSlowSensors() {
 	engineState.clt = getCoolantTemperature(this);
 }
 
-void Engine::onTriggerEvent(uint64_t nowUs) {
+void Engine::onTriggerEvent(uint64_t nowNt) {
 	isSpinning = true;
-	lastTriggerEventTimeUs = nowUs;
+	lastTriggerEventTimeNt = nowNt;
 }
 
 Engine::Engine() {
@@ -76,7 +76,7 @@ void Engine::watchdog() {
 		}
 		return;
 	}
-	uint64_t nowUs = getTimeNowUs();
+	uint64_t nowNt = getTimeNowNt();
 	/**
 	 * Lowest possible cranking is about 240 RPM, that's 4 revolutions per second.
 	 * 0.25 second is 250000 uS
@@ -84,7 +84,7 @@ void Engine::watchdog() {
 	 * todo: better watch dog implementation should be implemented - see
 	 * http://sourceforge.net/p/rusefi/tickets/96/
 	 */
-	if (nowUs - lastTriggerEventTimeUs < 250000) {
+	if (nowNt - lastTriggerEventTimeNt < US2NT(250000LL)) {
 		return;
 	}
 	isSpinning = false;

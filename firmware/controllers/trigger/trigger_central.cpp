@@ -29,7 +29,7 @@ WaveChart waveChart;
 static histogram_s triggerCallback;
 
 // we need this initial to have not_running at first invocation
-static volatile uint64_t previousShaftEventTime = (efitimems_t) -10 * US_PER_SECOND;
+static volatile uint64_t previousShaftEventTimeNt = (efitimems_t) -10 * US2NT(US_PER_SECOND_LL);
 
 TriggerCentral triggerCentral;
 
@@ -98,12 +98,13 @@ static void reportEventToWaveChart(trigger_event_e ckpSignalType, int index) {
 void TriggerCentral::handleShaftSignal(Engine *engine, trigger_event_e signal) {
 	efiAssertVoid(engine!=NULL, "configuration");
 
-	uint64_t nowUs = getTimeNowUs();
+	uint64_t nowNt = getTimeNowNt();
+	uint64_t nowUs = NT2US(nowNt);
 
 	efiAssertVoid(engine->engineConfiguration!=NULL, "engineConfiguration");
 	efiAssertVoid(engine->engineConfiguration2!=NULL, "engineConfiguration2");
 
-	engine->onTriggerEvent(nowUs);
+	engine->onTriggerEvent(nowNt);
 
 #if EFI_HISTOGRAMS && EFI_PROD_CODE
 	int beforeCallback = hal_lld_get_counter_value();
@@ -112,14 +113,14 @@ void TriggerCentral::handleShaftSignal(Engine *engine, trigger_event_e signal) {
 	efiAssertVoid(eventIndex >= 0 && eventIndex < HW_EVENT_TYPES, "signal type");
 	hwEventCounters[eventIndex]++;
 
-	if (nowUs - previousShaftEventTime > US_PER_SECOND) {
+	if (nowNt - previousShaftEventTimeNt > US2NT(US_PER_SECOND_LL)) {
 		/**
 		 * We are here if there is a time gap between now and previous shaft event - that means the engine is not runnig.
 		 * That means we have lost synchronization since the engine is not running :)
 		 */
 		triggerState.shaft_is_synchronized = false;
 	}
-	previousShaftEventTime = nowUs;
+	previousShaftEventTimeNt = nowNt;
 
 	trigger_shape_s * triggerShape = &engine->engineConfiguration2->triggerShape;
 
