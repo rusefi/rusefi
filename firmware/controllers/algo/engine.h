@@ -35,9 +35,9 @@ public:
 	Thermistor iat;
 	Thermistor clt;
 
-	void onTriggerEvent(uint64_t nowUs);
+	void onTriggerEvent(uint64_t nowNt);
 	EngineState engineState;
-	uint64_t lastTriggerEventTimeUs;
+	uint64_t lastTriggerEventTimeNt;
 
 	/**
 	 * This coefficient translates ADC value directly into voltage adjusted according to
