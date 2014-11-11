@@ -53,7 +53,7 @@ void turnPinLow(io_pin_e pin);
 
 void initSignalExecutor(void);
 void initSignalExecutorImpl(void);
-void scheduleByAngle(scheduling_s *timer, float angle, schfunc_t callback, void *param);
+void scheduleByAngle(int rpm, scheduling_s *timer, float angle, schfunc_t callback, void *param);
 
 #ifdef __cplusplus
 }

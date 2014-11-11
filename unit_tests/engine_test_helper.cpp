@@ -20,6 +20,8 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType) {
 
 	engine.engineConfiguration2 = &ec2;
 
+	engine.rpmCalculator = &rpmState;
+
 	prepareFuelMap(engine.engineConfiguration);
 
 
@@ -43,6 +45,6 @@ void EngineTestHelper::initTriggerShapeAndRpmCalculator() {
 	initializeTriggerShape(NULL, ec, &ec2);
 	incrementGlobalConfigurationVersion();
 
-	triggerCentral.addEventListener((ShaftPositionListener) &rpmShaftPositionCallback, "rpm reporter", &rpmState);
+	triggerCentral.addEventListener((ShaftPositionListener) &rpmShaftPositionCallback, "rpm reporter", &engine);
 
 }
