@@ -95,11 +95,9 @@ float TriggerState::getTriggerDutyCycle(int index) {
 static trigger_wheel_e eventIndex[6] = { T_PRIMARY, T_PRIMARY, T_SECONDARY, T_SECONDARY, T_CHANNEL_3, T_CHANNEL_3 };
 static trigger_value_e eventType[6] = { TV_LOW, TV_HIGH, TV_LOW, TV_HIGH, TV_LOW, TV_HIGH };
 
-uint64_t TriggerState::getCurrentGapDuration(uint64_t nowUs) {
-	int64_t currentDuration = isFirstEvent ? 0 : nowUs - toothed_previous_time;
-	isFirstEvent = false;
-	return currentDuration;
-}
+#define getCurrentGapDuration(nowUs) \
+	(isFirstEvent ? 0 : (nowUs) - toothed_previous_time)
+
 
 /**
  * @brief Trigger decoding happens here
@@ -124,12 +122,14 @@ void TriggerState::decodeTriggerEvent(trigger_shape_s const*triggerShape, trigge
 		nextTriggerEvent(triggerWheel, nowUs);
 		if (triggerShape->gapBothDirections) {
 			toothed_previous_duration = getCurrentGapDuration(nowUs);
+			isFirstEvent = false;
 			toothed_previous_time = nowUs;
 		}
 		return;
 	}
 
 	int64_t currentDuration = getCurrentGapDuration(nowUs);
+	isFirstEvent = false;
 	efiAssertVoid(currentDuration >= 0, "decode: negative duration?");
 
 // todo: skip a number of signal from the beginning
