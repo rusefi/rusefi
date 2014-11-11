@@ -14,6 +14,7 @@ extern "C"
 #endif /* __cplusplus */
 
 #include "obd_error_codes.h"
+#include "efifeatures.h"
 #include "stdbool.h"
 
 /**
@@ -53,9 +54,13 @@ int getRusEfiVersion(void);
  * @deprecated Global panic is inconvenient because it's hard to deliver the error message while whole instance
  * is stopped. Please use firmwareWarning() instead
  */
-#define efiAssert(condition, message, result) { if (!(condition)) { firmwareError(message); return result; } }
-
-#define efiAssertVoid(condition, message) { if (!(condition)) { firmwareError(message); return; } }
+#if EFI_ENABLE_ASSERTS
+  #define efiAssert(condition, message, result) { if (!(condition)) { firmwareError(message); return result; } }
+  #define efiAssertVoid(condition, message) { if (!(condition)) { firmwareError(message); return; } }
+#else /* EFI_ENABLE_ASSERTS */
+  #define efiAssert(condition, message, result) { (void)(condition); }
+  #define efiAssertVoid(condition, message) { (void)(condition); }
+#endif /* EFI_ENABLE_ASSERTS */
 
 #ifdef __cplusplus
 }
