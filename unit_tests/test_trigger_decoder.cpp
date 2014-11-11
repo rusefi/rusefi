@@ -333,10 +333,8 @@ static void testStartupFuelPumping(void) {
 	StartupFuelPumping sf;
 
 	Engine * engine = &eth.engine;
-	RpmCalculator rc;
-	engine->rpmCalculator = &rc;
 
-	engine->rpmCalculator->mockRpm = 0;
+	engine->rpmCalculator.mockRpm = 0;
 
 	engine->engineConfiguration->tpsMin = 0;
 	engine->engineConfiguration->tpsMax = 10;
@@ -352,12 +350,12 @@ static void testStartupFuelPumping(void) {
 	sf.update(engine);
 	assertEqualsM("pc#3", 1, sf.pumpsCounter);
 
-	engine->rpmCalculator->mockRpm = 10;
+	engine->rpmCalculator.mockRpm = 10;
 	sf.update(engine);
 	assertEqualsM("pc#4", 0, sf.pumpsCounter);
 
 	mockTps = 7;
-	engine->rpmCalculator->mockRpm = 0;
+	engine->rpmCalculator.mockRpm = 0;
 	sf.update(engine);
 	assertEqualsM("pc#5", 1, sf.pumpsCounter);
 
@@ -395,10 +393,10 @@ static void testRpmCalculator(void) {
 	eth.engine.engineConfiguration->injectorLag = 0.0;
 
 	timeNow = 0;
-	assertEquals(0, eth.rpmState.rpm());
+	assertEquals(0, eth.engine.rpmCalculator.rpm());
 
 	eth.fireTriggerEvents();
-	assertEqualsM("RPM", 1500, eth.rpmState.rpm());
+	assertEqualsM("RPM", 1500, eth.engine.rpmCalculator.rpm());
 	assertEqualsM("index #1", 15, eth.triggerCentral.triggerState.getCurrentIndex());
 
 	static MainTriggerCallback triggerCallbackInstance;

@@ -143,14 +143,14 @@ static INLINE void handleSparkEvent(uint32_t eventIndex, IgnitionEvent *iEvent, 
 		return;
 	}
 
-	float sparkDelay = getOneDegreeTimeMs(rpm) * iEvent->dwellPosition.angleOffset;
-	int isIgnitionError = sparkDelay < 0;
+	float sparkDelayUs = engine->rpmCalculator.oneDegreeUs * iEvent->dwellPosition.angleOffset;
+	int isIgnitionError = sparkDelayUs < 0;
 	ignitionErrorDetection.add(isIgnitionError);
 	if (isIgnitionError) {
 #if EFI_PROD_CODE
-		scheduleMsg(&logger, "Negative spark delay=%f", sparkDelay);
+		scheduleMsg(&logger, "Negative spark delay=%f", sparkDelayUs);
 #endif
-		sparkDelay = 0;
+		sparkDelayUs = 0;
 		return;
 	}
 
@@ -169,7 +169,7 @@ static INLINE void handleSparkEvent(uint32_t eventIndex, IgnitionEvent *iEvent, 
 	/**
 	 * The start of charge is always within the current trigger event range, so just plain time-based scheduling
 	 */
-	scheduleTask("spark up", sUp, (int) MS2US(sparkDelay), (schfunc_t) &turnPinHigh, (void *) iEvent->io_pin);
+	scheduleTask("spark up", sUp, sparkDelayUs, (schfunc_t) &turnPinHigh, (void *) iEvent->io_pin);
 	/**
 	 * Spark event is often happening during a later trigger event timeframe
 	 * TODO: improve precision
@@ -182,7 +182,7 @@ static INLINE void handleSparkEvent(uint32_t eventIndex, IgnitionEvent *iEvent, 
 		/**
 		 * Spark should be fired before the next trigger event - time-based delay is best precision possible
 		 */
-		float timeTillIgnitionUs = getOneDegreeTimeUs(rpm) * iEvent->sparkPosition.angleOffset;
+		float timeTillIgnitionUs = engine->rpmCalculator.oneDegreeUs * iEvent->sparkPosition.angleOffset;
 
 		scheduleTask("spark 1down", sDown, (int) timeTillIgnitionUs, (schfunc_t) &turnPinLow, (void*) iEvent->io_pin);
 	} else {
@@ -216,7 +216,7 @@ static INLINE void handleSpark(uint32_t eventIndex, int rpm, IgnitionEventList *
 
 			scheduling_s * sDown = &current->signalTimerDown;
 
-			float timeTillIgnitionUs = getOneDegreeTimeUs(rpm) * current->sparkPosition.angleOffset;
+			float timeTillIgnitionUs = engine->rpmCalculator.oneDegreeUs * current->sparkPosition.angleOffset;
 			scheduleTask("spark 2down", sDown, (int) timeTillIgnitionUs, (schfunc_t) &turnPinLow,
 					(void*) current->io_pin);
 		}
@@ -278,7 +278,7 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex, Eng
 	int beforeCallback = hal_lld_get_counter_value();
 #endif
 
-	int revolutionIndex = getRevolutionCounter() % 2;
+	int revolutionIndex = engine->rpmCalculator.getRevolutionCounter() % 2;
 
 	if (eventIndex == 0) {
 		if (localVersion.isOld())
@@ -341,7 +341,7 @@ void MainTriggerCallback::init(Engine *engine, engine_configuration2_s *engineCo
 }
 
 static void showMainInfo(Engine *engine) {
-	int rpm = engine->rpmCalculator->rpm();
+	int rpm = engine->rpmCalculator.rpm();
 	float el = getEngineLoadT(mainTriggerCallbackInstance.engine);
 #if EFI_PROD_CODE
 	scheduleMsg(&logger, "rpm %d engine_load %f", rpm, el);

@@ -44,8 +44,7 @@ extern WaveChart waveChart;
  * @return -1 in case of isNoisySignal(), current RPM otherwise
  */
 int getRpmE(Engine *engine) {
-	efiAssert(engine->rpmCalculator!=NULL, "rpmCalculator not assigned", -1);
-	return engine->rpmCalculator->rpm();
+	return engine->rpmCalculator.rpm();
 }
 
 EXTERN_ENGINE;
@@ -65,6 +64,8 @@ RpmCalculator::RpmCalculator() {
 	lastRpmEventTimeNt = (uint64_t) -10 * US2NT(US_PER_SECOND_LL);
 	revolutionCounterSinceStart = 0;
 	revolutionCounterSinceBoot = 0;
+
+	lastRpmEventTimeNt = 0;
 }
 
 /**
@@ -77,11 +78,11 @@ bool RpmCalculator::isRunning(void) {
 
 void RpmCalculator::setRpmValue(int value) {
 	rpmValue = value;
-//	if (rpmValue <= 0) {
-//		oneDegreeUs = NAN;
-//	} else {
-//		oneDegreeUs = getOneDegreeTimeUs(rpmValue);
-//	}
+	if (rpmValue <= 0) {
+		oneDegreeUs = NAN;
+	} else {
+		oneDegreeUs = getOneDegreeTimeUs(rpmValue);
+	}
 }
 
 void RpmCalculator::onNewEngineCycle() {
@@ -137,8 +138,7 @@ bool isCranking(void) {
  * This callback is invoked on interrupt thread.
  */
 void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index, Engine *engine) {
-	RpmCalculator *rpmState = engine->rpmCalculator;
-	efiAssertVoid(rpmState!=NULL, "NULL rpmState");
+	RpmCalculator *rpmState = &engine->rpmCalculator;
 	uint64_t nowNt = getTimeNowNt();
 #if EFI_PROD_CODE
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 256, "lowstck#2z");
@@ -147,7 +147,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index, Eng
 	if (index != 0) {
 #if EFI_ANALOG_CHART || defined(__DOXYGEN__)
 		if (engineConfiguration->analogChartMode == AC_TRIGGER)
-			acAddData(getCrankshaftAngleNt(nowNt), 1000 * ckpSignalType + index);
+			acAddData(getCrankshaftAngleNt(engine, nowNt), 1000 * ckpSignalType + index);
 #endif
 		return;
 	}
@@ -175,7 +175,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index, Eng
 	rpmState->lastRpmEventTimeNt = nowNt;
 #if EFI_ANALOG_CHART || defined(__DOXYGEN__)
 	if (engineConfiguration->analogChartMode == AC_TRIGGER)
-		acAddData(getCrankshaftAngleNt(nowNt), index);
+		acAddData(getCrankshaftAngleNt(engine, nowNt), index);
 #endif
 }
 
@@ -200,7 +200,7 @@ static void tdcMarkCallback(trigger_event_e ckpSignalType, uint32_t index0, Engi
 	(void) ckpSignalType;
 	bool isTriggerSynchronizationPoint = index0 == 0;
 	if (isTriggerSynchronizationPoint) {
-		int revIndex2 = getRevolutionCounter() % 2;
+		int revIndex2 = engine->rpmCalculator.getRevolutionCounter() % 2;
 		int rpm = getRpm();
 		// todo: use event-based scheduling, not just time-based scheduling
 		scheduleByAngle(rpm, &tdcScheduler[revIndex2], engineConfiguration->globalTriggerAngleOffset,
@@ -209,41 +209,36 @@ static void tdcMarkCallback(trigger_event_e ckpSignalType, uint32_t index0, Engi
 }
 #endif
 
-static RpmCalculator rpmState;
-
-uint64_t getLastRpmEventTime(void) {
-	return NT2US(rpmState.lastRpmEventTimeNt);
+#if EFI_PROD_CODE || EFI_SIMULATOR
+int getRevolutionCounter() {
+	return engine->rpmCalculator.getRevolutionCounter();
 }
-
-int getRevolutionCounter(void) {
-	return rpmState.getRevolutionCounter();
-}
+#endif
 
 /**
  * @return Current crankshaft angle, 0 to 720 for four-stroke
  */
-float getCrankshaftAngleNt(uint64_t timeNt) {
-	uint64_t timeSinceZeroAngleNt = timeNt - rpmState.lastRpmEventTimeNt;
+float getCrankshaftAngleNt(Engine *engine, uint64_t timeNt) {
+	uint64_t timeSinceZeroAngleNt = timeNt - engine->rpmCalculator.lastRpmEventTimeNt;
 
 	/**
 	 * even if we use 'getOneDegreeTimeUs' macros here, it looks like the
 	 * compiler is not smart enough to figure out that "A / ( B / C)" could be optimized into
 	 * "A * C / B" in order to replace a slower division with a faster multiplication.
 	 */
-	return timeSinceZeroAngleNt / getOneDegreeTimeNt(rpmState.rpm());
+	return timeSinceZeroAngleNt / getOneDegreeTimeNt(engine->rpmCalculator.rpm());
 }
 
 void initRpmCalculator(Engine *engine) {
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
 	initLogging(&logger, "rpm calc");
-	engine->rpmCalculator = &rpmState;
 
 	tdcScheduler[0].name = "tdc0";
 	tdcScheduler[1].name = "tdc1";
 	addTriggerEventListener(tdcMarkCallback, "chart TDC mark", engine);
 #endif
 
-	addTriggerEventListener((ShaftPositionListener) &rpmShaftPositionCallback, "rpm reporter", engine);
+	addTriggerEventListener(rpmShaftPositionCallback, "rpm reporter", engine);
 }
 
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
@@ -260,12 +255,12 @@ void scheduleByAngle(int rpm, scheduling_s *timer, float angle, schfunc_t callba
 		 */
 		return;
 	}
-	float delayMs = getOneDegreeTimeMs(rpm) * angle;
-	if (cisnan(delayMs)) {
+	float delayUs = getOneDegreeTimeUs(rpm) * angle;
+	if (cisnan(delayUs)) {
 		firmwareError("NaN delay?");
 		return;
 	}
-	scheduleTask("by angle", timer, (int) MS2US(delayMs), callback, param);
+	scheduleTask("by angle", timer, (int) delayUs, callback, param);
 }
 #endif
 

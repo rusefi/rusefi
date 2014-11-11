@@ -95,6 +95,10 @@ void chDbgAssert(int c, char *msg, void *arg) {
 static engine_configuration2_s ec2;
 engine_configuration2_s *engineConfiguration2 = &ec2;
 
+int getRevolutionCounter(void) {
+	return 0;
+}
+
 int main(void) {
 	testLogicExpressions();
 	testOverflow64Counter();
@@ -166,6 +170,6 @@ int warning(const char *fmt, ...) {
 	 exit(-1);
 }
 
-bool_t isCranking(void) {
+bool isCranking(void) {
 	return 0;
 }

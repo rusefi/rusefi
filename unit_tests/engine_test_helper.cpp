@@ -20,8 +20,6 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType) {
 
 	engine.engineConfiguration2 = &ec2;
 
-	engine.rpmCalculator = &rpmState;
-
 	prepareFuelMap(engine.engineConfiguration);
 
 
