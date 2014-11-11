@@ -136,7 +136,9 @@ bool isCranking(void) {
  * updated here.
  * This callback is invoked on interrupt thread.
  */
-void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index, RpmCalculator *rpmState) {
+void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index, Engine *engine) {
+	RpmCalculator *rpmState = engine->rpmCalculator;
+	efiAssertVoid(rpmState!=NULL, "NULL rpmState");
 	uint64_t nowNt = getTimeNowNt();
 #if EFI_PROD_CODE
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 256, "lowstck#2z");
@@ -149,7 +151,6 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index, Rpm
 #endif
 		return;
 	}
-	rpmState->onNewEngineCycle();
 
 	bool hadRpmRecently = rpmState->isRunning();
 
@@ -170,6 +171,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index, Rpm
 			rpmState->setRpmValue(rpm > UNREALISTIC_RPM ? NOISY_RPM : rpm);
 		}
 	}
+	rpmState->onNewEngineCycle();
 	rpmState->lastRpmEventTimeNt = nowNt;
 #if EFI_ANALOG_CHART || defined(__DOXYGEN__)
 	if (engineConfiguration->analogChartMode == AC_TRIGGER)
@@ -194,14 +196,14 @@ static void onTdcCallback(void) {
 /**
  * This trigger callback schedules the actual physical TDC callback in relation to trigger synchronization point.
  */
-static void tdcMarkCallback(trigger_event_e ckpSignalType, uint32_t index0, void *arg) {
-	(void) arg;
+static void tdcMarkCallback(trigger_event_e ckpSignalType, uint32_t index0, Engine *engine) {
 	(void) ckpSignalType;
 	bool isTriggerSynchronizationPoint = index0 == 0;
 	if (isTriggerSynchronizationPoint) {
 		int revIndex2 = getRevolutionCounter() % 2;
+		int rpm = getRpm();
 		// todo: use event-based scheduling, not just time-based scheduling
-		scheduleByAngle(&tdcScheduler[revIndex2], engineConfiguration->globalTriggerAngleOffset,
+		scheduleByAngle(rpm, &tdcScheduler[revIndex2], engineConfiguration->globalTriggerAngleOffset,
 				(schfunc_t) onTdcCallback, NULL);
 	}
 }
@@ -238,10 +240,10 @@ void initRpmCalculator(Engine *engine) {
 
 	tdcScheduler[0].name = "tdc0";
 	tdcScheduler[1].name = "tdc1";
-	addTriggerEventListener(&tdcMarkCallback, "chart TDC mark", NULL);
+	addTriggerEventListener(tdcMarkCallback, "chart TDC mark", engine);
 #endif
 
-	addTriggerEventListener((ShaftPositionListener) &rpmShaftPositionCallback, "rpm reporter", &rpmState);
+	addTriggerEventListener((ShaftPositionListener) &rpmShaftPositionCallback, "rpm reporter", engine);
 }
 
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
@@ -250,8 +252,7 @@ void initRpmCalculator(Engine *engine) {
  * The callback would be executed once after the duration of time which
  * it takes the crankshaft to rotate to the specified angle.
  */
-void scheduleByAngle(scheduling_s *timer, float angle, schfunc_t callback, void *param) {
-	int rpm = getRpm();
+void scheduleByAngle(int rpm, scheduling_s *timer, float angle, schfunc_t callback, void *param) {
 	if (!isValidRpm(rpm)) {
 		/**
 		 * this might happen in case of a single trigger event after a pause - this is normal, so no

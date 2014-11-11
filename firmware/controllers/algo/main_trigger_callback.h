@@ -29,7 +29,7 @@ public:
 
 };
 void initMainEventListener(Engine *engine, engine_configuration2_s *engineConfiguration2);
-void onTriggerEvent(trigger_event_e ckpSignalType, uint32_t eventIndex, MainTriggerCallback *mainTriggerCallback);
+void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex, Engine *engine);
 #endif
 
 int isIgnitionTimingError(void);

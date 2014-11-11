@@ -43,9 +43,9 @@ uint64_t getStartOfRevolutionIndex() {
 	return triggerCentral.triggerState.getStartOfRevolutionIndex();
 }
 
-void TriggerCentral::addEventListener(ShaftPositionListener listener, const char *name, void *arg) {
+void TriggerCentral::addEventListener(ShaftPositionListener listener, const char *name, Engine *engine) {
 	print("registerCkpListener: %s\r\n", name);
-	registerCallback(&triggerListeneres, (IntListener) listener, arg);
+	registerCallback(&triggerListeneres, (IntListener) listener, engine);
 }
 
 /**
@@ -54,8 +54,8 @@ void TriggerCentral::addEventListener(ShaftPositionListener listener, const char
  * Trigger event listener would be invoked on each trigger event. For example, for a 60/2 wheel
  * that would be 116 events: 58 SHAFT_PRIMARY_UP and 58 SHAFT_PRIMARY_DOWN events.
  */
-void addTriggerEventListener(ShaftPositionListener listener, const char *name, void *arg) {
-	triggerCentral.addEventListener(listener, name, arg);
+void addTriggerEventListener(ShaftPositionListener listener, const char *name, Engine *engine) {
+	triggerCentral.addEventListener(listener, name, engine);
 }
 
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)

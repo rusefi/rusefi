@@ -12,7 +12,8 @@
 #include "listener_array.h"
 #include "trigger_decoder.h"
 
-typedef void (*ShaftPositionListener)(trigger_event_e signal, uint32_t index, void *arg);
+class Engine;
+typedef void (*ShaftPositionListener)(trigger_event_e signal, uint32_t index, Engine *engine);
 
 #ifdef __cplusplus
 #include "ec2.h"
@@ -23,7 +24,7 @@ typedef void (*ShaftPositionListener)(trigger_event_e signal, uint32_t index, vo
 class TriggerCentral {
 public:
 	TriggerCentral();
-	void addEventListener(ShaftPositionListener handler, const char *name, void *arg);
+	void addEventListener(ShaftPositionListener handler, const char *name, Engine *engine);
 	void handleShaftSignal(Engine *engine, trigger_event_e signal);
 	int getHwEventCounter(int index);
 	TriggerState triggerState;
@@ -44,7 +45,7 @@ void printAllCallbacksHistogram(void);
 extern "C" {
 #endif /* __cplusplus */
 
-void addTriggerEventListener(ShaftPositionListener handler, const char *name, void *arg);
+void addTriggerEventListener(ShaftPositionListener handler, const char *name, Engine *engine);
 int isSignalDecoderError(void);
 
 #ifdef __cplusplus

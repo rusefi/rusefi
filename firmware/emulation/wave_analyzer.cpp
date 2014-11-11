@@ -137,7 +137,7 @@ static void initWave(const char *name, int index) {
 }
 #endif
 
-static void waTriggerEventListener(trigger_event_e ckpSignalType, uint32_t index, void *arg) {
+static void waTriggerEventListener(trigger_event_e ckpSignalType, uint32_t index, Engine *arg) {
 	(void)ckpSignalType;
 	(void)arg;
 	if (index != 0) {
@@ -251,7 +251,7 @@ void initWaveAnalyzer(void) {
 	initWave(WA_CHANNEL_1, 0);
 	initWave(WA_CHANNEL_2, 1);
 
-	addTriggerEventListener(&waTriggerEventListener, "wave analyzer", (void*) NULL);
+	addTriggerEventListener(waTriggerEventListener, "wave analyzer", NULL);
 
 	addConsoleActionII("set_logic_input_mode", setWaveModeSilent);
 
