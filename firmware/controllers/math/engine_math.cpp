@@ -52,7 +52,7 @@ float getCrankshaftRevolutionTimeMs(int rpm) {
  * @brief Shifts angle into the [0..720) range
  * TODO: should be 'crankAngleRange' range?
  */
-float fixAngle(engine_configuration_s const *engineConfiguration, float angle) {
+float fixAngle(float angle DECLARE_ENGINE_PARAMETER_S) {
 	efiAssert(engineConfiguration->engineCycle!=0, "engine cycle", NAN);
 	// I guess this implementation would be faster than 'angle % 720'
 	while (angle < 0)
@@ -286,7 +286,7 @@ int getEngineCycleEventCount(engine_configuration_s const *engineConfiguration, 
 void findTriggerPosition(trigger_shape_s * s,
 		event_trigger_position_s *position, float angleOffset DECLARE_ENGINE_PARAMETER_S) {
 
-	angleOffset = fixAngle(engineConfiguration, angleOffset + engineConfiguration->globalTriggerAngleOffset);
+	angleOffset = fixAngle(angleOffset + engineConfiguration->globalTriggerAngleOffset PASS_ENGINE_PARAMETER);
 
 	int engineCycleEventCount = getEngineCycleEventCount(engineConfiguration, s);
 
@@ -363,7 +363,7 @@ void prepareOutputSignals(Engine *engine) {
 engine_configuration2_s *engineConfiguration2 = engine->engineConfiguration2;
 
 	// todo: move this reset into decoder
-	engineConfiguration2->triggerShape.calculateTriggerSynchPoint(engineConfiguration, &engineConfiguration->triggerConfig);
+	engineConfiguration2->triggerShape.calculateTriggerSynchPoint(engineConfiguration, &engineConfiguration->triggerConfig, engine);
 
 	trigger_shape_s * ts = &engineConfiguration2->triggerShape;
 

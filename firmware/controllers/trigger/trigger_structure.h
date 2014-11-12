@@ -26,6 +26,8 @@ public:
 	single_wave_s waves[TRIGGER_CHANNEL_COUNT];
 };
 
+class Engine;
+
 class trigger_shape_s {
 public:
 	trigger_shape_s();
@@ -83,9 +85,9 @@ public:
 
 	int getTriggerShapeSynchPointIndex();
 
-	void calculateTriggerSynchPoint(engine_configuration_s const *engineConfiguration, trigger_config_s const*triggerConfig);
+	void calculateTriggerSynchPoint(engine_configuration_s *engineConfiguration, trigger_config_s const*triggerConfig, Engine *engine);
 
-	void setTriggerShapeSynchPointIndex(engine_configuration_s const *engineConfiguration, int triggerShapeSynchPointIndex);
+	void setTriggerShapeSynchPointIndex(engine_configuration_s *engineConfiguration, int triggerShapeSynchPointIndex, Engine *engine);
 	/**
 	 * These angles are in event coordinates - with synchronization point located at angle zero.
 	 * These values are pre-calculated for performance reasons.

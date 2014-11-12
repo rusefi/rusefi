@@ -31,7 +31,7 @@ extern "C"
 {
 #endif /* __cplusplus */
 
-float fixAngle(engine_configuration_s const *engineConfiguration, float angle);
+float fixAngle(float angle DECLARE_ENGINE_PARAMETER_S);
 
 /**
  * So that's how 'inline' syntax for both GCC and IAR
