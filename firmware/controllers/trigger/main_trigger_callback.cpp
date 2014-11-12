@@ -348,7 +348,7 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex, Eng
 
 		float dwellAngle = dwellMs / getOneDegreeTimeMs(rpm);
 
-		initializeIgnitionActions(fixAngle(engineConfiguration, -advance), dwellAngle, engine->engineConfiguration2,
+		initializeIgnitionActions(fixAngle(-advance PASS_ENGINE_PARAMETER), dwellAngle, engine->engineConfiguration2,
 				&engine->engineConfiguration2->ignitionEvents[revolutionIndex] PASS_ENGINE_PARAMETER);
 	}
 
