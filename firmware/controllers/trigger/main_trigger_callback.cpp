@@ -78,7 +78,19 @@ static cyclic_buffer ignitionErrorDetection;
 
 static Logging logger;
 
-static ALWAYS_INLINE void handleFuelInjectionEvent(ActuatorEvent *event, int rpm DECLATE_ENGINE_PARAMETER) {
+static void startSimultaniousInjection(Engine *engine) {
+	for (int i = 0; i < engine->engineConfiguration->cylindersCount; i++) {
+		turnPinHigh(INJECTOR_PIN_BY_INDEX(i));
+	}
+}
+
+static void endSimultaniousInjection(Engine *engine) {
+	for (int i = 0; i < engine->engineConfiguration->cylindersCount; i++) {
+		turnPinLow(INJECTOR_PIN_BY_INDEX(i));
+	}
+}
+
+static ALWAYS_INLINE void handleFuelInjectionEvent(InjectionEvent *event, int rpm DECLATE_ENGINE_PARAMETER) {
 	/**
 	 * todo: we do not really need to calculate fuel for each individual cylinder
 	 */
@@ -95,12 +107,37 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(ActuatorEvent *event, int rpm
 	if (engine->isCylinderCleanupMode)
 		return;
 
-	float delay = getOneDegreeTimeMs(rpm) * event->position.angleOffset;
+	float delayMs = getOneDegreeTimeMs(rpm) * event->position.angleOffset;
 
 //	if (isCranking())
 //		scheduleMsg(&logger, "crankingFuel=%f for CLT=%fC", fuelMs, getCoolantTemperature());
 
-	scheduleOutput(event->actuator, delay, fuelMs);
+	if (event->isSimultanious) {
+		if (fuelMs < 0) {
+			firmwareError("duration cannot be negative: %d", fuelMs);
+			return;
+		}
+		if (cisnan(fuelMs)) {
+			firmwareError("NaN in scheduleOutput", fuelMs);
+			return;
+		}
+		/**
+		 * this is pretty much copy-paste of 'scheduleOutput'
+		 * 'scheduleOutput' is currently only used for injection, so maybe it should be
+		 * changed into 'scheduleInjection' and unified? todo: think about it.
+		 */
+		OutputSignal *signal = event->actuator;
+		efiAssertVoid(signal!=NULL, "signal is NULL");
+		int index = getRevolutionCounter() % 2;
+		scheduling_s * sUp = &signal->signalTimerUp[index];
+		scheduling_s * sDown = &signal->signalTimerDown[index];
+
+		scheduleTask("out up", sUp, (int) MS2US(delayMs), (schfunc_t) &startSimultaniousInjection, engine);
+		scheduleTask("out down", sDown, (int) MS2US(delayMs + fuelMs), (schfunc_t) &endSimultaniousInjection, engine);
+
+	} else {
+		scheduleOutput(event->actuator, delayMs, fuelMs);
+	}
 }
 
 static ALWAYS_INLINE void handleFuel(uint32_t eventIndex, int rpm DECLATE_ENGINE_PARAMETER) {
@@ -127,14 +164,15 @@ static ALWAYS_INLINE void handleFuel(uint32_t eventIndex, int rpm DECLATE_ENGINE
 		return;
 
 	for (int i = 0; i < source->size; i++) {
-		ActuatorEvent *event = &source->events[i];
+		InjectionEvent *event = &source->events[i];
 		if (event->position.eventIndex != eventIndex)
 			continue;
 		handleFuelInjectionEvent(event, rpm PASS_ENGINE_PARAMETER);
 	}
 }
 
-static ALWAYS_INLINE void handleSparkEvent(uint32_t eventIndex, IgnitionEvent *iEvent, int rpm DECLATE_ENGINE_PARAMETER) {
+static ALWAYS_INLINE void handleSparkEvent(uint32_t eventIndex, IgnitionEvent *iEvent,
+		int rpm DECLATE_ENGINE_PARAMETER) {
 	engine_configuration2_s *engineConfiguration2 = engine->engineConfiguration2;
 
 	float dwellMs = getSparkDwellMsT(rpm PASS_ENGINE_PARAMETER);

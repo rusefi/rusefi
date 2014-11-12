@@ -62,12 +62,12 @@ void turnPinHigh(io_pin_e pin) {
 	// sleep for the needed duration
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
-	if (pin == SPARKOUT_1_OUTPUT || pin == SPARKOUT_3_OUTPUT) {
+//	if (pin == SPARKOUT_1_OUTPUT || pin == SPARKOUT_3_OUTPUT) {
 //		time_t now = hTimeNow();
 //		float an = getCrankshaftAngle(now);
 //		scheduleMsg(&logger, "spark up%d %d", pin, now);
 //		scheduleMsg(&logger, "spark angle %d %f", (int)an, an);
-	}
+//	}
 #endif
 
 #if EFI_WAVE_CHART
