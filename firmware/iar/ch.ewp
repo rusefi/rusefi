@@ -2299,7 +2299,7 @@
         <name>$PROJ_DIR$\..\controllers\sensors\ego.h</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\controllers\sensors\maf.c</name>
+        <name>$PROJ_DIR$\..\controllers\sensors\maf.cpp</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\controllers\sensors\maf.h</name>
@@ -2326,7 +2326,7 @@
         <name>$PROJ_DIR$\..\controllers\sensors\tps.h</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\controllers\sensors\voltage.c</name>
+        <name>$PROJ_DIR$\..\controllers\sensors\voltage.cpp</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\controllers\sensors\voltage.h</name>

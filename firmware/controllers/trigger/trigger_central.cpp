@@ -78,7 +78,7 @@ int TriggerCentral::getHwEventCounter(int index) {
 
 static char shaft_signal_msg_index[15];
 
-static void reportEventToWaveChart(trigger_event_e ckpSignalType, int index) {
+static ALWAYS_INLINE void reportEventToWaveChart(trigger_event_e ckpSignalType, int index) {
 	itoa10(&shaft_signal_msg_index[1], index);
 	if (ckpSignalType == SHAFT_PRIMARY_UP) {
 		addWaveChartEvent(WC_CRANK1, WC_UP, (char*) shaft_signal_msg_index);
