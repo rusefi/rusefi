@@ -31,7 +31,12 @@ typedef struct {
 typedef struct {
 	event_trigger_position_s position;
 	OutputSignal *actuator;
-} ActuatorEvent;
+	/**
+	 * This is a performance optimization - it's more efficient to handle all
+	 * injectors together if that's the case
+	 */
+	bool_t isSimultanious;
+} InjectionEvent;
 
 typedef struct IgnitionEvent_struct IgnitionEvent;
 
@@ -66,7 +71,7 @@ Type * ArrayList< Type, Dimention>::getNextActuatorEvent(void) {
 	return &events[size++];
 }
 
-typedef ArrayList<ActuatorEvent, MAX_EVENT_COUNT> ActuatorEventList;
+typedef ArrayList<InjectionEvent, MAX_EVENT_COUNT> ActuatorEventList;
 
 typedef ArrayList<IgnitionEvent, MAX_EVENT_COUNT> IgnitionEventList;
 
