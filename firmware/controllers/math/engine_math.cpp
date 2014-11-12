@@ -244,7 +244,7 @@ void FuelSchedule::addFuelEvents(trigger_shape_s *s,
 			/**
 			 * also fire the 2nd half of the injectors so that we can implement a batch mode on individual wires
 			 */
-			pin = (io_pin_e) ((int) INJECTOR_1_OUTPUT + index + (engineConfiguration->cylindersCount / 2));
+			pin = INJECTOR_PIN_BY_INDEX(index + (engineConfiguration->cylindersCount / 2));
 			registerInjectionEvent(s, pin, angle, false PASS_ENGINE_PARAMETER);
 		}
 		break;
