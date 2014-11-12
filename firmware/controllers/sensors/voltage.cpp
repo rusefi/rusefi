@@ -1,5 +1,5 @@
 /**
- * @file    voltage.c
+ * @file    voltage.cpp
  * @brief
  *
  *
@@ -17,7 +17,7 @@ extern engine_configuration_s *engineConfiguration;
 
 float getVRef(void) {
 //	return getAdcValue(ADC_CHANNEL_VREF);
-	return getVoltageDivided(ADC_CHANNEL_VREF);
+	return getVoltageDivided((adc_channel_e)ADC_CHANNEL_VREF);
 }
 
 float getVBatt(engine_configuration_s *engineConfiguration) {
