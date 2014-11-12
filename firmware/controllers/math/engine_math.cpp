@@ -53,12 +53,12 @@ float getCrankshaftRevolutionTimeMs(int rpm) {
  * TODO: should be 'crankAngleRange' range?
  */
 float fixAngle(engine_configuration_s const *engineConfiguration, float angle) {
-// todo	efiAssert(engineConfiguration->engineCycle!=0, "engine cycle", NAN);
+	efiAssert(engineConfiguration->engineCycle!=0, "engine cycle", NAN);
 	// I guess this implementation would be faster than 'angle % 720'
 	while (angle < 0)
-		angle += 720;
-	while (angle >= 720)
-		angle -= 720;
+		angle += engineConfiguration->engineCycle;
+	while (angle >= engineConfiguration->engineCycle)
+		angle -= engineConfiguration->engineCycle;
 	return angle;
 }
 
@@ -109,7 +109,7 @@ OutputSignalList injectonSignals CCM_OPTIONAL
 ;
 
 static void registerSparkEvent(trigger_shape_s * s,
-		IgnitionEventList *list, io_pin_e pin, float localAdvance, float dwell DECLATE_ENGINE_PARAMETER) {
+		IgnitionEventList *list, io_pin_e pin, float localAdvance, float dwell DECLARE_ENGINE_PARAMETER_S) {
 
 	IgnitionEvent *event = list->getNextActuatorEvent();
 	if (event == NULL)
@@ -127,7 +127,7 @@ static void registerSparkEvent(trigger_shape_s * s,
 }
 
 void initializeIgnitionActions(float advance, float dwellAngle,
-		engine_configuration2_s *engineConfiguration2, IgnitionEventList *list DECLATE_ENGINE_PARAMETER) {
+		engine_configuration2_s *engineConfiguration2, IgnitionEventList *list DECLARE_ENGINE_PARAMETER_S) {
 
 	efiAssertVoid(engineConfiguration->cylindersCount > 0, "cylindersCount");
 
@@ -174,7 +174,7 @@ void initializeIgnitionActions(float advance, float dwellAngle,
 }
 
 void FuelSchedule::registerInjectionEvent(trigger_shape_s *s,
-		io_pin_e pin, float angle, bool_t isSimultanious DECLATE_ENGINE_PARAMETER) {
+		io_pin_e pin, float angle, bool_t isSimultanious DECLARE_ENGINE_PARAMETER_S) {
 	ActuatorEventList *list = &events;
 
 	if (!isPinAssigned(pin)) {
@@ -208,7 +208,7 @@ void FuelSchedule::clear() {
 }
 
 void FuelSchedule::addFuelEvents(trigger_shape_s *s,
-		injection_mode_e mode DECLATE_ENGINE_PARAMETER) {
+		injection_mode_e mode DECLARE_ENGINE_PARAMETER_S) {
 	ActuatorEventList *list = &events;
 			;
 	list->resetEventList();
@@ -256,7 +256,7 @@ void FuelSchedule::addFuelEvents(trigger_shape_s *s,
 /**
  * @return Spark dwell time, in milliseconds.
  */
-float getSparkDwellMsT(int rpm DECLATE_ENGINE_PARAMETER) {
+float getSparkDwellMsT(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	if (isCrankingR(rpm)) {
 		if(engineConfiguration->useConstantDwellDuringCranking) {
 			return engineConfiguration->ignitionDwellForCrankingMs;
@@ -284,7 +284,7 @@ int getEngineCycleEventCount(engine_configuration_s const *engineConfiguration, 
 }
 
 void findTriggerPosition(trigger_shape_s * s,
-		event_trigger_position_s *position, float angleOffset DECLATE_ENGINE_PARAMETER) {
+		event_trigger_position_s *position, float angleOffset DECLARE_ENGINE_PARAMETER_S) {
 
 	angleOffset = fixAngle(engineConfiguration, angleOffset + engineConfiguration->globalTriggerAngleOffset);
 

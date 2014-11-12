@@ -73,7 +73,7 @@ static int getNumberOfInjections(engine_configuration_s const *engineConfigurati
 /**
  * @returns	Length of fuel injection, in milliseconds
  */
-float getFuelMs(int rpm DECLATE_ENGINE_PARAMETER) {
+float getFuelMs(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	float theoreticalInjectionLength;
 	if (isCrankingR(rpm)) {
 		theoreticalInjectionLength = getCrankingFuel(engine) / getNumberOfInjections(engineConfiguration, engineConfiguration->crankingInjectionMode);
@@ -86,7 +86,7 @@ float getFuelMs(int rpm DECLATE_ENGINE_PARAMETER) {
 	return theoreticalInjectionLength + injectorLag;
 }
 
-float getRunningFuel(float baseFuelMs, int rpm DECLATE_ENGINE_PARAMETER) {
+float getRunningFuel(float baseFuelMs, int rpm DECLARE_ENGINE_PARAMETER_S) {
 	float iatCorrection = getIatCorrection(getIntakeAirTemperature(engine) PASS_ENGINE_PARAMETER);
 	float cltCorrection = getCltCorrection(getCoolantTemperature(engine) PASS_ENGINE_PARAMETER);
 
@@ -105,7 +105,7 @@ static Map3D1616 fuelMap;
  * @param	vBatt	Battery voltage.
  * @return	Time in ms for injection opening time based on current battery voltage
  */
-float getInjectorLag(float vBatt DECLATE_ENGINE_PARAMETER) {
+float getInjectorLag(float vBatt DECLARE_ENGINE_PARAMETER_S) {
 	if (cisnan(vBatt)) {
 		warning(OBD_System_Voltage_Malfunction, "vBatt=%f", vBatt);
 		return engineConfiguration->injectorLag;
@@ -127,13 +127,13 @@ void prepareFuelMap(engine_configuration_s *engineConfiguration) {
 /**
  * @brief Engine warm-up fuel correction.
  */
-float getCltCorrection(float clt DECLATE_ENGINE_PARAMETER) {
+float getCltCorrection(float clt DECLARE_ENGINE_PARAMETER_S) {
 	if (cisnan(clt))
 		return 1; // this error should be already reported somewhere else, let's just handle it
 	return interpolate2d(clt, engineConfiguration->cltFuelCorrBins, engineConfiguration->cltFuelCorr, CLT_CURVE_SIZE);
 }
 
-float getIatCorrection(float iat DECLATE_ENGINE_PARAMETER) {
+float getIatCorrection(float iat DECLARE_ENGINE_PARAMETER_S) {
 	if (cisnan(iat))
 		return 1; // this error should be already reported somewhere else, let's just handle it
 	return interpolate2d(iat, engineConfiguration->iatFuelCorrBins, engineConfiguration->iatFuelCorr, IAT_CURVE_SIZE);

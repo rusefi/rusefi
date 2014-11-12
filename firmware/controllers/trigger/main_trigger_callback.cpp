@@ -90,7 +90,7 @@ static void endSimultaniousInjection(Engine *engine) {
 	}
 }
 
-static ALWAYS_INLINE void handleFuelInjectionEvent(InjectionEvent *event, int rpm DECLATE_ENGINE_PARAMETER) {
+static ALWAYS_INLINE void handleFuelInjectionEvent(InjectionEvent *event, int rpm DECLARE_ENGINE_PARAMETER_S) {
 	/**
 	 * todo: we do not really need to calculate fuel for each individual cylinder
 	 */
@@ -140,7 +140,7 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(InjectionEvent *event, int rp
 	}
 }
 
-static ALWAYS_INLINE void handleFuel(uint32_t eventIndex, int rpm DECLATE_ENGINE_PARAMETER) {
+static ALWAYS_INLINE void handleFuel(uint32_t eventIndex, int rpm DECLARE_ENGINE_PARAMETER_S) {
 	if (!isInjectionEnabled(engine->engineConfiguration))
 		return;
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#3");
@@ -172,7 +172,7 @@ static ALWAYS_INLINE void handleFuel(uint32_t eventIndex, int rpm DECLATE_ENGINE
 }
 
 static ALWAYS_INLINE void handleSparkEvent(uint32_t eventIndex, IgnitionEvent *iEvent,
-		int rpm DECLATE_ENGINE_PARAMETER) {
+		int rpm DECLARE_ENGINE_PARAMETER_S) {
 	engine_configuration2_s *engineConfiguration2 = engine->engineConfiguration2;
 
 	float dwellMs = getSparkDwellMsT(rpm PASS_ENGINE_PARAMETER);
@@ -235,7 +235,7 @@ static ALWAYS_INLINE void handleSparkEvent(uint32_t eventIndex, IgnitionEvent *i
 	}
 }
 
-static ALWAYS_INLINE void handleSpark(uint32_t eventIndex, int rpm, IgnitionEventList *list DECLATE_ENGINE_PARAMETER) {
+static ALWAYS_INLINE void handleSpark(uint32_t eventIndex, int rpm, IgnitionEventList *list DECLARE_ENGINE_PARAMETER_S) {
 	if (!isValidRpm(rpm) || !engineConfiguration->isIgnitionEnabled)
 		return; // this might happen for instance in case of a single trigger event after a pause
 
