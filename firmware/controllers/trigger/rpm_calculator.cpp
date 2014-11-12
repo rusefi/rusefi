@@ -34,8 +34,6 @@ extern WaveChart waveChart;
 #include "analog_chart.h"
 #endif /* EFI_PROD_CODE */
 
-#define UNREALISTIC_RPM 30000
-
 #define TOP_DEAD_CENTER_MESSAGE "r"
 
 /**
@@ -110,10 +108,6 @@ int RpmCalculator::rpm(void) {
 		return 0;
 	}
 	return rpmValue;
-}
-
-bool isValidRpm(int rpm) {
-	return rpm > 0 && rpm < UNREALISTIC_RPM;
 }
 
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)

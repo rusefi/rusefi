@@ -198,7 +198,7 @@ static ALWAYS_INLINE void handleSparkEvent(uint32_t eventIndex, IgnitionEvent *i
 }
 
 static ALWAYS_INLINE void handleSpark(uint32_t eventIndex, int rpm, IgnitionEventList *list DECLATE_ENGINE_PARAMETER) {
-	if (!isValidRpm(rpm) || !engine->engineConfiguration->isIgnitionEnabled)
+	if (!isValidRpm(rpm) || !engineConfiguration->isIgnitionEnabled)
 		return; // this might happen for instance in case of a single trigger event after a pause
 
 	/**

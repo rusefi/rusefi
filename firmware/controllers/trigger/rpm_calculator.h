@@ -18,6 +18,7 @@
 #define WC_CRANK3 "c3"
 
 #define NOISY_RPM -1
+#define UNREALISTIC_RPM 30000
 
 #ifdef __cplusplus
 
@@ -76,7 +77,8 @@ extern "C" {
 bool isCranking(void);
 
 int getRevolutionCounter(void);
-bool isValidRpm(int rpm);
+
+#define isValidRpm(rpm) ((rpm) > 0 && (rpm) < UNREALISTIC_RPM)
 void addWaveChartEvent(const char *name, const char *msg, const char *msg2);
 
 #ifdef __cplusplus

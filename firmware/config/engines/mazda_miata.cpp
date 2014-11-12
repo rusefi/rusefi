@@ -208,6 +208,12 @@ static void setMiata1994_common(engine_configuration_s *engineConfiguration, boa
 	commonMiataNa(engineConfiguration, boardConfiguration);
 	engineConfiguration->displacement = 1.839;
 
+	// set_cranking_timing_angle 0
+	engineConfiguration->crankingTimingAngle = 0;
+
+	engineConfiguration->crankingChargeAngle = 70;
+
+
 	// todo: extract an array16x16 type? extract a method?
 	for (int k = 0; k < FUEL_LOAD_COUNT; k++) {
 		for (int r = 0; r < FUEL_RPM_COUNT; r++) {
