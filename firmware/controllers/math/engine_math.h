@@ -20,7 +20,7 @@
 #define INJECTOR_PIN_BY_INDEX(index) (io_pin_e) ((int) INJECTOR_1_OUTPUT + (index))
 
 void findTriggerPosition(trigger_shape_s * s,
-		event_trigger_position_s *position, float angleOffset DECLATE_ENGINE_PARAMETER);
+		event_trigger_position_s *position, float angleOffset DECLARE_ENGINE_PARAMETER_S);
 
 int isInjectionEnabled(engine_configuration_s *engineConfiguration);
 
@@ -59,7 +59,7 @@ int isCrankingRT(engine_configuration_s *engineConfiguration, int rpm);
 float getEngineLoadT(Engine *engine);
 #define getEngineLoad() getEngineLoadT(engine)
 
-float getSparkDwellMsT(int rpm DECLATE_ENGINE_PARAMETER);
+float getSparkDwellMsT(int rpm DECLARE_ENGINE_PARAMETER_S);
 
 int getCylinderId(firing_order_e firingOrder, int index);
 

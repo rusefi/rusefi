@@ -43,7 +43,7 @@ float getBaseAdvance(int rpm, float engineLoad) {
 			engineConfiguration->ignitionRpmBins);
 }
 
-float getAdvance(int rpm, float engineLoad DECLATE_ENGINE_PARAMETER) {
+float getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_S) {
 	float angle;
 	if (isCrankingR(rpm)) {
 		angle = -engineConfiguration->crankingTimingAngle;

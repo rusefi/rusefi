@@ -41,8 +41,7 @@ class Engine;
 #endif
 
 #define DECLARE_ENGINE_PARAMETER_F Engine *engine, engine_configuration_s *engineConfiguration
-#define DECLARE_ENGINE_PARAMETER_S Engine *engine, engine_configuration_s *engineConfiguration
-#define DECLATE_ENGINE_PARAMETER , Engine *engine, engine_configuration_s *engineConfiguration
+#define DECLARE_ENGINE_PARAMETER_S , Engine *engine, engine_configuration_s *engineConfiguration
 #define PASS_ENGINE_PARAMETER , engine, engineConfiguration
 
 #endif /* GLOBAL_H_ */

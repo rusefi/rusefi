@@ -12,6 +12,7 @@
 #ifndef EC2_H_
 #define EC2_H_
 
+#include "global.h"
 #include "engine_configuration.h"
 #include "event_registry.h"
 #include "trigger_structure.h"
@@ -23,9 +24,9 @@ public:
 	ActuatorEventList events;
 
 	void addFuelEvents(trigger_shape_s *s,
-			injection_mode_e mode DECLATE_ENGINE_PARAMETER);
+			injection_mode_e mode DECLARE_ENGINE_PARAMETER_S);
 	void registerInjectionEvent(trigger_shape_s *s,
-			io_pin_e pin, float angle, bool_t isSimultanious DECLATE_ENGINE_PARAMETER);
+			io_pin_e pin, float angle, bool_t isSimultanious DECLARE_ENGINE_PARAMETER_S);
 
 	uint8_t hasEvents[PWM_PHASE_MAX_COUNT];
 
@@ -56,7 +57,7 @@ public:
 };
 
 void initializeIgnitionActions(float advance, float dwellAngle,
-		engine_configuration2_s *engineConfiguration2, IgnitionEventList *list DECLATE_ENGINE_PARAMETER);
+		engine_configuration2_s *engineConfiguration2, IgnitionEventList *list DECLARE_ENGINE_PARAMETER_S);
 
 void setDefaultNonPersistentConfiguration(engine_configuration2_s *engineConfiguration2);
 void printConfiguration(engine_configuration_s *engineConfiguration, engine_configuration2_s *engineConfiguration2);

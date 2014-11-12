@@ -13,7 +13,7 @@
 
 #include "engine.h"
 
-float getAdvance(int rpm, float engineLoad DECLATE_ENGINE_PARAMETER);
+float getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_S);
 void prepareTimingMap(void);
 
 #endif /* ADVANCE_H_ */

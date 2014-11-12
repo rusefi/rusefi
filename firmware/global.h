@@ -74,7 +74,6 @@ typedef Thread thread_t;
 
 #define DECLARE_ENGINE_PARAMETER_F void
 #define DECLARE_ENGINE_PARAMETER_S
-#define DECLATE_ENGINE_PARAMETER
 #define PASS_ENGINE_PARAMETER
 
 #endif /* GLOBAL_H_ */
