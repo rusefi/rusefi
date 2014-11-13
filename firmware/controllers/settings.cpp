@@ -82,6 +82,9 @@ static void printOutputs(engine_configuration_s *engineConfiguration, engine_con
 
 	scheduleMsg(&logger, "fuelPumpPin: mode %s @ %s", getPin_output_mode_e(boardConfiguration->fuelPumpPinMode),
 			hwPortname(boardConfiguration->fuelPumpPin));
+
+	scheduleMsg(&logger, "fanPin: mode %s @ %s", getPin_output_mode_e(boardConfiguration->fanPinMode),
+			hwPortname(boardConfiguration->fanPin));
 }
 
 /**
