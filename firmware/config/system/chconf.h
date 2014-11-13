@@ -50,8 +50,6 @@
 
 #define PORT_IDLE_THREAD_STACK_SIZE     1024
 
-#define PORT_INT_REQUIRED_STACK 		768
-
 #define CHPRINTF_USE_FLOAT          	TRUE
 
 /**
