@@ -106,7 +106,7 @@ public class LogViewer extends JPanel {
             throw new IllegalStateException("Not directory: " + folder);
 
         File[] files = folder.listFiles(FILE_FILTER);
-        fileList.removeAll();
+        fileListModel.removeAllElements();
         for (File file : files)
             fileListModel.addElement(getFileDesc(file));
 
