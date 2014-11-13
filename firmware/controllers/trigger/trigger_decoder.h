@@ -47,6 +47,7 @@ public:
 	 */
 	uint32_t prevTotalTime[PWM_PHASE_MAX_WAVE_PER_PWM];
 	int expectedTotalTime[PWM_PHASE_MAX_WAVE_PER_PWM];
+	uint32_t totalTriggerErrorCounter;
 
 private:
 	void clear();

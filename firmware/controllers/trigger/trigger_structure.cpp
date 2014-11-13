@@ -118,6 +118,7 @@ TriggerState::TriggerState() {
 	toothed_previous_time = 0;
 	toothed_previous_duration = 0;
 	totalRevolutionCounter = 0;
+	totalTriggerErrorCounter = 0;
 	clear();
 	memset(expectedTotalTime, 0, sizeof(expectedTotalTime));
 	totalEventCountBase = 0;

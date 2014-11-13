@@ -216,7 +216,9 @@ static void triggerInfo(Engine *engine) {
 	scheduleMsg(&logger, "expected duty #0=%f/#1=%f", engineConfiguration2->triggerShape.dutyCycle[0],
 			engineConfiguration2->triggerShape.dutyCycle[1]);
 
-	scheduleMsg(&logger, "isError %d", isTriggerDecoderError());
+	scheduleMsg(&logger, "isError %d, total errors=%d/total revolutions=%d", isTriggerDecoderError(),
+			triggerCentral.triggerState.totalTriggerErrorCounter,
+			triggerCentral.triggerState.getTotalRevolutionCounter());
 
 #endif
 
