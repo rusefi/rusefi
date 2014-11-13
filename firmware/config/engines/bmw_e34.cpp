@@ -40,12 +40,15 @@ void setBmwE43(engine_configuration_s *engineConfiguration) {
 
 //	bc->isFastAdcEnabled = true;
 
+	bc->ignitionPinMode = OM_INVERTED;
 	bc->ignitionPins[0] = GPIOC_7; // #1
 	bc->ignitionPins[1] = GPIO_UNASSIGNED; // #2
 	bc->ignitionPins[2] = GPIOE_4; // #3
 	bc->ignitionPins[3] = GPIO_UNASSIGNED; // #4
 	bc->ignitionPins[4] = GPIOC_9; // #5
 	bc->ignitionPins[5] = GPIO_UNASSIGNED; // #6
+
+	bc->injectionPinMode = OM_INVERTED;
 
 	// emulating this 60-0 takes some resources, let's keep it slow by default
 	// rpm 200

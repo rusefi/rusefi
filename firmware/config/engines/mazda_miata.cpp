@@ -302,6 +302,9 @@ void setMiata1994_d(engine_configuration_s *engineConfiguration, board_configura
 	boardConfiguration->injectionPins[1] = GPIOE_2;
 	boardConfiguration->injectionPins[2] = GPIOB_8;
 	boardConfiguration->injectionPins[3] = GPIOB_7;
+
+	// todo: add the diode? change idle valve logic?
+	boardConfiguration->idleValvePin = GPIO_UNASSIGNED;
 }
 
 void setMiata1994_s(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
