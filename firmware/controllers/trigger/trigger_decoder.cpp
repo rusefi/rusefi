@@ -43,7 +43,6 @@ bool printGapRatio = false;
 Logging logger;
 #endif
 
-
 /**
  * @return TRUE is something is wrong with trigger decoding
  */
@@ -98,7 +97,6 @@ static trigger_value_e eventType[6] = { TV_LOW, TV_HIGH, TV_LOW, TV_HIGH, TV_LOW
 #define getCurrentGapDuration(nowUs) \
 	(isFirstEvent ? 0 : (nowUs) - toothed_previous_time)
 
-
 /**
  * @brief Trigger decoding happens here
  * This method changes the state of trigger_state_s data structure according to the trigger event
@@ -151,6 +149,10 @@ void TriggerState::decodeTriggerEvent(trigger_shape_s const*triggerShape, trigge
 		bool isDecodingError = eventCount[0] != triggerShape->expectedEventCount[0]
 				|| eventCount[1] != triggerShape->expectedEventCount[1]
 				|| eventCount[2] != triggerShape->expectedEventCount[2];
+
+		if (isDecodingError) {
+			totalTriggerErrorCounter++;
+		}
 
 		errorDetection.add(isDecodingError);
 
