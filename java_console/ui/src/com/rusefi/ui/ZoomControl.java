@@ -1,11 +1,13 @@
 package com.rusefi.ui;
 
 import com.irnems.waves.ZoomProvider;
+import com.rusefi.KeyStrokeShortcut;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
 /**
  * 7/7/13
@@ -46,7 +48,7 @@ public class ZoomControl extends JPanel {
         plus.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                setValue(value * 1.1);
+                zoomIn();
             }
         });
         plus.setToolTipText("Zoom in");
@@ -67,11 +69,40 @@ public class ZoomControl extends JPanel {
         minus.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                setValue(value / 1.1);
+                zoomOut();
             }
         });
         minus.setToolTipText("Zoom out");
         add(minus);
+
+        bindKeyStrokeActions();
+    }
+
+    private void bindKeyStrokeActions() {
+        InputMap inputMap = getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ADD, 0), KeyStrokeShortcut.ZOOM_IN);
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, 0), KeyStrokeShortcut.ZOOM_OUT);
+
+        getActionMap().put(KeyStrokeShortcut.ZOOM_IN, new AbstractAction() {
+            public void actionPerformed(ActionEvent event) {
+                zoomIn();
+            }
+        });
+
+        getActionMap().put(KeyStrokeShortcut.ZOOM_OUT, new AbstractAction() {
+            public void actionPerformed(ActionEvent event) {
+                zoomOut();
+            }
+        });
+    }
+
+    private void zoomIn() {
+        setValue(value * 1.1);
+    }
+
+    private void zoomOut() {
+        setValue(value / 1.1);
     }
 
     private void setValue(double value) {

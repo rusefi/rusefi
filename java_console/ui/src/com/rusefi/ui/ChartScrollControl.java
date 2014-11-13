@@ -1,9 +1,12 @@
 package com.rusefi.ui;
 
+import com.rusefi.KeyStrokeShortcut;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -14,11 +17,13 @@ public class ChartScrollControl {
     private final JPanel content = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
     private final AtomicInteger index = new AtomicInteger();
     private static final JLabel info = new JLabel();
+    private ChartRepository.CRListener listener;
 
     public ChartScrollControl(final ChartRepository.CRListener listener) {
 
-        content.setBorder(BorderFactory.createLineBorder(Color.red));
+        this.listener = listener;
 
+        content.setBorder(BorderFactory.createLineBorder(Color.red));
 
         setInfoText(index);
 
@@ -27,11 +32,7 @@ public class ChartScrollControl {
         prev.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (index.intValue() > 0) {
-                    index.decrementAndGet();
-                    listener.onDigitalChart(ChartRepository.getInstance().getChart(index.get()));
-                    setInfoText(index);
-                }
+               previousPage();
             }
         });
 
@@ -41,11 +42,7 @@ public class ChartScrollControl {
         next.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (index.intValue() < ChartRepository.getInstance().getSize() - 1) {
-                    index.incrementAndGet();
-                    listener.onDigitalChart(ChartRepository.getInstance().getChart(index.get()));
-                    setInfoText(index);
-                }
+                nextPage();
             }
         });
 
@@ -53,6 +50,41 @@ public class ChartScrollControl {
         content.add(info);
         content.add(next);
 
+        bindKeyStrokeActions();
+    }
+
+    private void previousPage() {
+        if (index.intValue() > 0) {
+            index.decrementAndGet();
+            listener.onDigitalChart(ChartRepository.getInstance().getChart(index.get()));
+            setInfoText(index);
+        }
+    }
+
+    private void nextPage() {
+        if (index.intValue() < ChartRepository.getInstance().getSize() - 1) {
+            index.incrementAndGet();
+            listener.onDigitalChart(ChartRepository.getInstance().getChart(index.get()));
+            setInfoText(index);
+        }
+    }
+
+    private void bindKeyStrokeActions() {
+        InputMap inputMap = content.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), KeyStrokeShortcut.PREVIOUS_PAGE);
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), KeyStrokeShortcut.NEXT_PAGE);
+
+        content.getActionMap().put(KeyStrokeShortcut.PREVIOUS_PAGE, new AbstractAction() {
+            public void actionPerformed(ActionEvent event) {
+                previousPage();
+            }
+        });
+        content.getActionMap().put(KeyStrokeShortcut.NEXT_PAGE, new AbstractAction() {
+            public void actionPerformed(ActionEvent event) {
+                nextPage();
+            }
+        });
     }
 
     public JPanel getContent() {
