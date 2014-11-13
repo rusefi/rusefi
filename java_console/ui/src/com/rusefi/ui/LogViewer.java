@@ -1,8 +1,8 @@
-package com.irnems;
+package com.rusefi.ui;
 
+import com.irnems.FileLog;
 import com.irnems.core.EngineState;
 import com.irnems.file.FileUtils;
-import com.rusefi.ui.WavePanel;
 import com.rusefi.ui.widgets.UpDownImage;
 import com.rusefi.FIleItem;
 import com.rusefi.io.LinkManager;

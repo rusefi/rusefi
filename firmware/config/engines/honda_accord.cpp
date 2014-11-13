@@ -144,14 +144,14 @@ static void setHondaAccordConfigurationCommon(engine_configuration_s *engineConf
 	/**
 	 * Outputs
 	 */
-	// Frankenso low out #:
-	// Frankenso low out #:
-	// Frankenso low out #:
-	// Frankenso low out #:
+	// Frankenso low out #1: PE6
+	// Frankenso low out #2: PE5
+	// Frankenso low out #3: PD7
+	// Frankenso low out #4: PC13
 	// Frankenso low out #5: PE3
 	// Frankenso low out #6: PE4
 	// Frankenso low out #7: PE1 (do not use with discovery!)
-	// Frankenso low out #:
+	// Frankenso low out #8: PE2
 	// Frankenso low out #9: PB9
 	// Frankenso low out #10: PE0 (do not use with discovery!)
 	// Frankenso low out #11: PB8

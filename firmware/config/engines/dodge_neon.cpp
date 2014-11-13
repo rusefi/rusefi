@@ -95,25 +95,25 @@ void setDodgeNeon1995EngineConfiguration(engine_configuration_s *engineConfigura
 	// set_cranking_timing_angle 0
 	engineConfiguration->crankingTimingAngle = 0;
 
-	// Frankenstein: low side - inj #1: PC14
-	// Frankenstein: low side - inj #2: PC15
-	// Frankenstein: low side - inj #3: PE6
-	// Frankenstein: low side - inj #4: PC13
-	// Frankenstein: low side - inj #5: PE4
-	// Frankenstein: low side - inj #6: PE5
-	// Frankenstein: low side - inj #7: PE2
-	// Frankenstein: low side - inj #8: PE3
-	// Frankenstein: low side - inj #9: PE0
-	// Frankenstein: low side - inj #10: PE1
-	// Frankenstein: low side - inj #11: PB8
-	// Frankenstein: low side - inj #12: PB9
+	// Frankenstein: low side - out #1: PC14
+	// Frankenstein: low side - out #2: PC15
+	// Frankenstein: low side - out #3: PE6
+	// Frankenstein: low side - out #4: PC13
+	// Frankenstein: low side - out #5: PE4
+	// Frankenstein: low side - out #6: PE5
+	// Frankenstein: low side - out #7: PE2
+	// Frankenstein: low side - out #8: PE3
+	// Frankenstein: low side - out #9: PE0
+	// Frankenstein: low side - out #10: PE1
+	// Frankenstein: low side - out #11: PB8
+	// Frankenstein: low side - out #12: PB9
 
-	boardConfiguration->injectionPins[0] = GPIOB_9; // Frankenstein: low side - inj #12
-	boardConfiguration->injectionPins[1] = GPIOB_8; // Frankenstein: low side - inj #11
-	boardConfiguration->injectionPins[2] = GPIOE_3; // Frankenstein: low side - inj #8
-	boardConfiguration->injectionPins[3] = GPIOE_5; // Frankenstein: low side - inj #6
+	boardConfiguration->injectionPins[0] = GPIOB_9; // Frankenstein: low side - out #12
+	boardConfiguration->injectionPins[1] = GPIOB_8; // Frankenstein: low side - out #11
+	boardConfiguration->injectionPins[2] = GPIOE_3; // Frankenstein: low side - out #8
+	boardConfiguration->injectionPins[3] = GPIOE_5; // Frankenstein: low side - out #6
 
-	boardConfiguration->fuelPumpPin = GPIOC_13; // Frankenstein: low side - inj #4
+	boardConfiguration->fuelPumpPin = GPIOC_13; // Frankenstein: low side - out #4
 	boardConfiguration->fuelPumpPinMode = OM_DEFAULT;
 
 	// set_injection_pin_mode 0
@@ -180,12 +180,27 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 	boardConfiguration->malfunctionIndicatorPin = GPIO_UNASSIGNED;
 
 	/**
-	 * D14/W10 O2 Sensor
+	 * PA4 Wideband O2 Sensor
 	 */
-	engineConfiguration->afrSensor.afrAdcChannel = EFI_ADC_13;
+	engineConfiguration->afrSensor.afrAdcChannel = EFI_ADC_14;
 
 	commonFrankensoAnalogInputs(engineConfiguration);
 	engineConfiguration->vbattDividerCoeff = ((float) (8.2 + 33)) / 8.2 * 2;
+
+	// Frankenso low out #1: PE6
+	// Frankenso low out #2: PE5 coolant fan relay
+	// Frankenso low out #3: PD7
+	// Frankenso low out #4: PC13 idle valve solenoid
+	// Frankenso low out #5: PE3 fuel pump relay
+	// Frankenso low out #6: PE4
+	// Frankenso low out #7: PE1 (do not use with discovery!)
+	// Frankenso low out #8: PE2 injector #3
+	// Frankenso low out #9: PB9 injector #2
+	// Frankenso low out #10: PE0 (do not use with discovery!)
+	// Frankenso low out #11: PB8 injector #1
+	// Frankenso low out #12: PB7 injector #4
+
+	boardConfiguration->fanPin = GPIOE_6;
 
 	boardConfiguration->injectionPins[0] = GPIOB_8;
 	boardConfiguration->injectionPins[1] = GPIOB_9;

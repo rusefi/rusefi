@@ -1,6 +1,4 @@
-package com.irnems;
-
-import com.rusefi.ui.ChartScrollControl;
+package com.rusefi.ui;
 
 import java.util.ArrayList;
 import java.util.List;
