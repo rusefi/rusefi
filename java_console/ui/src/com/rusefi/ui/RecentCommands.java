@@ -44,6 +44,12 @@ public class RecentCommands {
         add("disable injection");
         add("enable ignition");
         add("disable ignition");
+
+        add("enable self_stimulation");
+        add("disable self_stimulation");
+
+        add("fuelpumpbench");
+        add("fanbench");
     }
 
     public void add(String command) {

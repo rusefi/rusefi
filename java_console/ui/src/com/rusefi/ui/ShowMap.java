@@ -1,9 +1,7 @@
-package com.irnems;
+package com.rusefi.ui;
 
 import com.irnems.file.BaseMap;
 import com.irnems.models.XYData;
-import com.rusefi.ui.FrameHelper;
-import com.rusefi.ui.ChartHelper;
 
 import javax.swing.*;
 

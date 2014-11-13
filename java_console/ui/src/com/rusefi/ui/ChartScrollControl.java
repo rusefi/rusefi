@@ -1,7 +1,5 @@
 package com.rusefi.ui;
 
-import com.irnems.ChartRepository;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;

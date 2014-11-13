@@ -138,19 +138,19 @@ static void fanbench(Engine *engine) {
 	pinX = FAN_RELAY;
 
 	delayMs = 1000;
-	onTime = 5000;
+	onTime = 3000;
 	offTime = 0;
 	count = 1;
 
 	needToRunBench = true;
 }
 
-static void fuelpumpbench(int delayParam, int onTimeParam) {
+static void fuelpumpbench(void) {
 	brainPin = boardConfiguration->fuelPumpPin;
 	pinX = FUEL_PUMP_RELAY;
 
-	delayMs = delayParam;
-	onTime = onTimeParam;
+	delayMs = 1000;
+	onTime = 3000;
 	offTime = 0;
 	count = 1;
 
@@ -210,7 +210,7 @@ void initInjectorCentral(Engine *engine) {
 	printStatus();
 	addConsoleActionII("injector", setInjectorEnabled);
 
-	addConsoleActionII("fuelpumpbench", fuelpumpbench);
+	addConsoleAction("fuelpumpbench", fuelpumpbench);
 	addConsoleActionP("fanbench", (VoidPtr) fanbench, engine);
 
 	addConsoleActionSSS("fuelbench", fuelbench);

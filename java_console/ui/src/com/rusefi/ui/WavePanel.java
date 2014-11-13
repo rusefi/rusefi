@@ -1,6 +1,5 @@
 package com.rusefi.ui;
 
-import com.irnems.ChartRepository;
 import com.irnems.FileLog;
 import com.irnems.core.EngineState;
 import com.irnems.core.Sensor;

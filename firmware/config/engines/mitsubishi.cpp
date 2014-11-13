@@ -50,23 +50,23 @@ void setMitsubishiConfiguration(engine_configuration_s *engineConfiguration, boa
 
 	engineConfiguration->cltThermistorConf.bias_resistor = 2700;
 
-	// Frankenstein: low side - inj #1: PC14
-	// Frankenstein: low side - inj #2: PC15
-	// Frankenstein: low side - inj #3: PE6
-	// Frankenstein: low side - inj #4: PC13
-	// Frankenstein: low side - inj #5: PE4
-	// Frankenstein: low side - inj #6: PE5
-	// Frankenstein: low side - inj #7: PE2
-	// Frankenstein: low side - inj #8: PE3
-	// Frankenstein: low side - inj #9: PE0
-	// Frankenstein: low side - inj #10: PE1
-	// Frankenstein: low side - inj #11: PB8
-	// Frankenstein: low side - inj #12: PB9
+	// Frankenstein: low side - out #1: PC14
+	// Frankenstein: low side - out #2: PC15
+	// Frankenstein: low side - out #3: PE6
+	// Frankenstein: low side - out #4: PC13
+	// Frankenstein: low side - out #5: PE4
+	// Frankenstein: low side - out #6: PE5
+	// Frankenstein: low side - out #7: PE2
+	// Frankenstein: low side - out #8: PE3
+	// Frankenstein: low side - out #9: PE0
+	// Frankenstein: low side - out #10: PE1
+	// Frankenstein: low side - out #11: PB8
+	// Frankenstein: low side - out #12: PB9
 
-	boardConfiguration->injectionPins[0] = GPIOB_9; // Frankenstein: low side - inj #12
-	boardConfiguration->injectionPins[1] = GPIOB_8; // Frankenstein: low side - inj #11
-	boardConfiguration->injectionPins[2] = GPIOE_3; // Frankenstein: low side - inj #8
-	boardConfiguration->injectionPins[3] = GPIOE_5; // Frankenstein: low side - inj #6
+	boardConfiguration->injectionPins[0] = GPIOB_9; // Frankenstein: low side - out #12
+	boardConfiguration->injectionPins[1] = GPIOB_8; // Frankenstein: low side - out #11
+	boardConfiguration->injectionPins[2] = GPIOE_3; // Frankenstein: low side - out #8
+	boardConfiguration->injectionPins[3] = GPIOE_5; // Frankenstein: low side - out #6
 
 
 	// Frankenstein: high side #1: PE8

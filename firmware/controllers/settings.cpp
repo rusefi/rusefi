@@ -803,8 +803,6 @@ void initSettings(engine_configuration_s *engineConfiguration) {
 	addConsoleAction("disable_injection", disableInjection);
 	addConsoleAction("enable_ignition", enableIgnition);
 	addConsoleAction("disable_ignition", disableIgnition);
-	addConsoleAction("enable_self_stimulation", enableSelfStimulation);
-	addConsoleAction("disable_self_stimulation", disableSelfStimulation);
 
 	addConsoleActionI("enable_spi", enableSpi);
 	addConsoleActionI("disable_spi", disableSpi);
