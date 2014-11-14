@@ -152,11 +152,21 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 
 	/**
 	 * that's NGC config
+	 *
+	 * set_cranking_fuel 5
 	 */
-	// set_cranking_fuel 5
 	engineConfiguration->crankingSettings.baseCrankingFuel = 5;
 
-	// set_whole_fuel_map 12
+	/**
+	 * 77C
+	 * 1200 rpm
+	 * fuel 3
+	 *
+	 * 88C
+	 * fuel 2.8
+	 *
+	 * set_whole_fuel_map 12
+	 */
 	setWholeFuelMap(engineConfiguration, 12);
 	setWholeTimingTable(engineConfiguration, 12);
 
@@ -182,7 +192,7 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 	/**
 	 * PA4 Wideband O2 Sensor
 	 */
-	engineConfiguration->afrSensor.afrAdcChannel = EFI_ADC_14;
+	engineConfiguration->afrSensor.afrAdcChannel = EFI_ADC_4;
 
 	commonFrankensoAnalogInputs(engineConfiguration);
 	engineConfiguration->vbattDividerCoeff = ((float) (8.2 + 33)) / 8.2 * 2;
@@ -235,11 +245,15 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 	 */
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_0;
 
+	boardConfiguration->adcHwChannelEnabled[0] = ADC_FAST; // ADC0 - PA0 - MAP
 	boardConfiguration->adcHwChannelEnabled[1] = ADC_SLOW; // TPS
+	boardConfiguration->adcHwChannelEnabled[4] = ADC_SLOW;
 	boardConfiguration->adcHwChannelEnabled[11] = ADC_SLOW; // IAT
 	boardConfiguration->adcHwChannelEnabled[12] = ADC_SLOW; // CLT
 	boardConfiguration->adcHwChannelEnabled[13] = ADC_SLOW; // AFR
 	boardConfiguration->adcHwChannelEnabled[14] = ADC_SLOW; // VBatt
+
+
 
 	/**
 	 * TPS D11/W11

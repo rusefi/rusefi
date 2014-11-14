@@ -38,8 +38,10 @@ public class RecentCommands {
 
         add("help");
         add("showconfig");
-        add("writeconfig");
+        add("analoginfo");
         add("triggerinfo");
+        add("writeconfig");
+        add("rewriteconfig");
         add("enable injection");
         add("disable injection");
         add("enable ignition");
