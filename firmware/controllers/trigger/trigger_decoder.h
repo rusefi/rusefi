@@ -24,7 +24,7 @@ public:
 	uint64_t getTotalEventCounter();
 	uint64_t getStartOfRevolutionIndex();
 	void nextRevolution(int triggerEventCount, uint64_t nowUs);
-	void nextTriggerEvent(trigger_wheel_e triggerWheel, uint64_t nowUs);
+	void nextTriggerEvent(trigger_wheel_e triggerWheel, uint64_t nowNt);
 	void decodeTriggerEvent(trigger_shape_s const*triggerShape, trigger_config_s const*triggerConfig, trigger_event_e const signal, uint64_t nowUs);
 
 	float getTriggerDutyCycle(int index);
@@ -41,7 +41,7 @@ public:
 	/**
 	 * Here we accumulate the amount of time this signal was ON within current trigger cycle
 	 */
-	int totalTime[PWM_PHASE_MAX_WAVE_PER_PWM];
+	int totalTimeNt[PWM_PHASE_MAX_WAVE_PER_PWM];
 	/**
 	 * Total time result for previous trigger cycle
 	 */
@@ -60,12 +60,12 @@ private:
 	 * see trigger_shape_s
 	 */
 	uint32_t eventCount[PWM_PHASE_MAX_WAVE_PER_PWM];
-	uint64_t timeOfPreviousEvent[PWM_PHASE_MAX_WAVE_PER_PWM];
+	uint64_t timeOfPreviousEventNt[PWM_PHASE_MAX_WAVE_PER_PWM];
 	uint64_t totalEventCountBase;
 	uint32_t totalRevolutionCounter;
 	bool isFirstEvent;
 	uint64_t prevCycleDuration;
-	uint64_t startOfCycle;
+	uint64_t startOfCycleNt;
 };
 
 class TriggerStimulatorHelper {

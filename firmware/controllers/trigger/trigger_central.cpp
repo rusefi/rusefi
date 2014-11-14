@@ -99,7 +99,6 @@ void TriggerCentral::handleShaftSignal(Engine *engine, trigger_event_e signal) {
 	efiAssertVoid(engine!=NULL, "configuration");
 
 	uint64_t nowNt = getTimeNowNt();
-	uint64_t nowUs = NT2US(nowNt);
 
 	efiAssertVoid(engine->engineConfiguration!=NULL, "engineConfiguration");
 	efiAssertVoid(engine->engineConfiguration2!=NULL, "engineConfiguration2");
