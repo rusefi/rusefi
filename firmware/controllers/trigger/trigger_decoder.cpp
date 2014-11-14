@@ -46,7 +46,7 @@ Logging logger;
 /**
  * @return TRUE is something is wrong with trigger decoding
  */
-int isTriggerDecoderError(void) {
+bool_t isTriggerDecoderError(void) {
 	return errorDetection.sum(6) > 4;
 }
 

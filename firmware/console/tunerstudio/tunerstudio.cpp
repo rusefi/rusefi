@@ -111,8 +111,8 @@ extern board_configuration_s *boardConfiguration;
 static void printStats(void) {
 #if EFI_PROD_CODE
 	if (!isSerialOverUart()) {
-		scheduleMsg(&logger, "TS RX on %s%d/TX on %s%d", portname(TS_SERIAL_RX_PORT), TS_SERIAL_RX_PIN,
-				portname(TS_SERIAL_TX_PORT), TS_SERIAL_TX_PIN);
+		scheduleMsg(&logger, "TS RX on %s%d/TX on %s%d @%d", portname(TS_SERIAL_RX_PORT), TS_SERIAL_RX_PIN,
+				portname(TS_SERIAL_TX_PORT), TS_SERIAL_TX_PIN, TS_SERIAL_SPEED);
 	}
 #endif /* EFI_PROD_CODE */
 	scheduleMsg(&logger, "TunerStudio total/error counter=%d/%d H=%d / O counter=%d size=%d / P=%d / B=%d", tsCounter, tsState.errorCounter, tsState.queryCommandCounter, tsState.outputChannelsCommandCounter,
