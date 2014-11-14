@@ -722,18 +722,8 @@ static void disableIgnition(void) {
 	scheduleMsg(&logger, "ignition disabled");
 }
 
-static void enableSelfStimulation(void) {
-	engineConfiguration->directSelfStimulation = true;
-	scheduleMsg(&logger, "self stimulation enabled");
-}
-
 static void stopEngine(void) {
-
-}
-
-static void disableSelfStimulation(void) {
-	engineConfiguration->directSelfStimulation = false;
-	scheduleMsg(&logger, "self stimulation disabled");
+	// todo
 }
 
 #if EFI_WAVE_CHART
