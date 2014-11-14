@@ -70,7 +70,8 @@ typedef Thread thread_t;
  */
 
 #define EXTERN_ENGINE extern Engine *engine; \
-		extern engine_configuration_s *engineConfiguration;
+		extern engine_configuration_s *engineConfiguration; \
+		extern board_configuration_s *boardConfiguration;
 
 #define DECLARE_ENGINE_PARAMETER_F void
 #define DECLARE_ENGINE_PARAMETER_S

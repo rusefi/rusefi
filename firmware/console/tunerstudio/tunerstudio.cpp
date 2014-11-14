@@ -46,11 +46,11 @@ extern SerialUSBDriver SDU1;
 #define CONSOLE_DEVICE &SDU1
 
 #define TS_SERIAL_UART_DEVICE &SD3
-//#define TS_SERIAL_SPEED 115200
-#define TS_SERIAL_SPEED 38400
 
-static SerialConfig tsSerialConfig = { TS_SERIAL_SPEED, 0, USART_CR2_STOP1_BITS | USART_CR2_LINEN, 0 };
+static SerialConfig tsSerialConfig = { 0, 0, USART_CR2_STOP1_BITS | USART_CR2_LINEN, 0 };
 #endif /* EFI_PROD_CODE */
+
+EXTERN_ENGINE;
 
 #define MAX_PAGE_ID 0
 
@@ -104,15 +104,11 @@ extern TunerStudioOutputChannels tsOutputChannels;
 
 extern TunerStudioState tsState;
 
-extern engine_configuration_s *engineConfiguration;
-extern board_configuration_s *boardConfiguration;
-
-
 static void printStats(void) {
 #if EFI_PROD_CODE
 	if (!isSerialOverUart()) {
 		scheduleMsg(&logger, "TS RX on %s%d/TX on %s%d @%d", portname(TS_SERIAL_RX_PORT), TS_SERIAL_RX_PIN,
-				portname(TS_SERIAL_TX_PORT), TS_SERIAL_TX_PIN, TS_SERIAL_SPEED);
+				portname(TS_SERIAL_TX_PORT), TS_SERIAL_TX_PIN, boardConfiguration->tunerStudioSerialSpeed);
 	}
 #endif /* EFI_PROD_CODE */
 	scheduleMsg(&logger, "TunerStudio total/error counter=%d/%d H=%d / O counter=%d size=%d / P=%d / B=%d", tsCounter, tsState.errorCounter, tsState.queryCommandCounter, tsState.outputChannelsCommandCounter,
@@ -135,6 +131,11 @@ static void printStats(void) {
 
 	offset = (int) (&engineConfiguration->engineCycle) - (int) engineConfiguration;
 	scheduleMsg(&logger, "engineCycle %d", offset);
+}
+
+static void setTsSpeed(int value) {
+	boardConfiguration->tunerStudioSerialSpeed = value;
+	printStats();
 }
 
 void tunerStudioWriteData(const uint8_t * buffer, int size) {
@@ -476,6 +477,24 @@ void syncTunerStudioCopy(void) {
 	memcpy(&configWorkingCopy, &persistentState.persistentConfiguration, sizeof(persistent_config_s));
 }
 
+/**
+ * Adds size to the beginning of a packet and a crc32 at the end. Then send the packet.
+ */
+void tunerStudioWriteCrcPacket(const uint8_t command, const void *buf, const uint16_t size) {
+	// todo: max size validation
+	*(uint16_t *) crcIoBuffer = SWAP_UINT16(size + 1);   // packet size including command
+	*(uint8_t *) (crcIoBuffer + 2) = command;
+	if (size != 0)
+		memcpy(crcIoBuffer + 3, buf, size);
+	// CRC on whole packet
+	uint32_t crc = crc32((void *) (crcIoBuffer + 2), (uint32_t) (size + 1));
+	*(uint32_t *) (crcIoBuffer + 2 + 1 + size) = SWAP_UINT32(crc);
+
+//	scheduleMsg(&logger, "TunerStudio: CRC command %x size %d", command, size);
+
+	tunerStudioWriteData(crcIoBuffer, size + 2 + 1 + 4);      // with size, command and CRC
+}
+
 void startTunerStudioConnectivity(void) {
 	initLogging(&logger, "tuner studio");
 
@@ -496,32 +515,17 @@ void startTunerStudioConnectivity(void) {
 		mySetPadMode("tunerstudio rx", TS_SERIAL_RX_PORT, TS_SERIAL_RX_PIN, PAL_MODE_ALTERNATE(TS_SERIAL_AF));
 		mySetPadMode("tunerstudio tx", TS_SERIAL_TX_PORT, TS_SERIAL_TX_PIN, PAL_MODE_ALTERNATE(TS_SERIAL_AF));
 
+		tsSerialConfig.speed = boardConfiguration->tunerStudioSerialSpeed;
+
 		sdStart(TS_SERIAL_UART_DEVICE, &tsSerialConfig);
 	}
 #endif /* EFI_PROD_CODE */
 	syncTunerStudioCopy();
 
 	addConsoleAction("tsinfo", printStats);
+	addConsoleActionI("set_ts_speed", setTsSpeed);
 
 	chThdCreateStatic(TS_WORKING_AREA, sizeof(TS_WORKING_AREA), NORMALPRIO, tsThreadEntryPoint, NULL);
-}
-
-/**
- * Adds size to the beginning of a packet and a crc32 at the end. Then send the packet.
- */
-void tunerStudioWriteCrcPacket(const uint8_t command, const void *buf, const uint16_t size) {
-	// todo: max size validation
-	*(uint16_t *) crcIoBuffer = SWAP_UINT16(size + 1);   // packet size including command
-	*(uint8_t *) (crcIoBuffer + 2) = command;
-	if (size != 0)
-		memcpy(crcIoBuffer + 3, buf, size);
-	// CRC on whole packet
-	uint32_t crc = crc32((void *) (crcIoBuffer + 2), (uint32_t) (size + 1));
-	*(uint32_t *) (crcIoBuffer + 2 + 1 + size) = SWAP_UINT32(crc);
-
-//	scheduleMsg(&logger, "TunerStudio: CRC command %x size %d", command, size);
-
-	tunerStudioWriteData(crcIoBuffer, size + 2 + 1 + 4);      // with size, command and CRC
 }
 
 #endif /* EFI_TUNER_STUDIO */

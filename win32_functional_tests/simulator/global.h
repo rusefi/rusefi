@@ -89,7 +89,8 @@ typedef EventListener event_listener_t;
 #define THD_WORKING_AREA WORKING_AREA
 
 #define EXTERN_ENGINE extern Engine *engine; \
-		extern engine_configuration_s *engineConfiguration;
+		extern engine_configuration_s *engineConfiguration; \
+		extern board_configuration_s *boardConfiguration;
 
 #define DECLARE_ENGINE_PARAMETER_F void
 #define DECLARE_ENGINE_PARAMETER_S
