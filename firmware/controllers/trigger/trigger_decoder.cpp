@@ -338,7 +338,7 @@ void TriggerStimulatorHelper::nextStep(TriggerState *state, trigger_shape_s * sh
 static void onFindIndex(TriggerState *state) {
 	for (int i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
 		// todo: that's not the best place for this intermediate data storage, fix it!
-		state->expectedTotalTime[i] = state->totalTime[i];
+		state->expectedTotalTime[i] = state->totalTimeNt[i];
 	}
 }
 

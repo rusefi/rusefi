@@ -14,7 +14,7 @@
 #include "global.h"
 #include "bmw_e34.h"
 
-void setBmwE43(engine_configuration_s *engineConfiguration) {
+void setBmwE34(engine_configuration_s *engineConfiguration) {
 	engineConfiguration->rpmHardLimit = 6000;
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 

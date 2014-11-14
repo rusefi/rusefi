@@ -10,6 +10,6 @@
 
 #include "engine_configuration.h"
 
-void setBmwE43(engine_configuration_s *engineConfiguration);
+void setBmwE34(engine_configuration_s *engineConfiguration);
 
 #endif /* BMW_E34_H_ */

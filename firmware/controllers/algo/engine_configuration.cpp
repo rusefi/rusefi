@@ -546,7 +546,7 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType, Engine *e
 		setSubaru2003Wrx(engineConfiguration, boardConfiguration);
 		break;
 	case BMW_E34:
-		setBmwE43(engineConfiguration);
+		setBmwE34(engineConfiguration);
 		break;
 	default:
 		firmwareError("Unexpected engine type: %d", engineType);

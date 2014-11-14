@@ -141,9 +141,9 @@ void TriggerState::nextRevolution(int triggerEventCount, uint64_t nowNt) {
 	if (cycleCallback != NULL) {
 		cycleCallback(this);
 	}
-	memcpy(prevTotalTime, totalTime, sizeof(prevTotalTime));
-	prevCycleDuration = nowNt - startOfCycle;
-	startOfCycle = nowNt;
+	memcpy(prevTotalTime, totalTimeNt, sizeof(prevTotalTime));
+	prevCycleDuration = nowNt - startOfCycleNt;
+	startOfCycleNt = nowNt;
 	clear();
 	totalRevolutionCounter++;
 	totalEventCountBase += triggerEventCount;
@@ -153,15 +153,15 @@ int TriggerState::getTotalRevolutionCounter() {
 	return totalRevolutionCounter;
 }
 
-void TriggerState::nextTriggerEvent(trigger_wheel_e triggerWheel, uint64_t nowUs) {
-	uint64_t prevTime = timeOfPreviousEvent[triggerWheel];
+void TriggerState::nextTriggerEvent(trigger_wheel_e triggerWheel, uint64_t nowNt) {
+	uint64_t prevTime = timeOfPreviousEventNt[triggerWheel];
 	if (prevTime != 0) {
 		// even event - apply the value
-		totalTime[triggerWheel] += (nowUs - prevTime);
-		timeOfPreviousEvent[triggerWheel] = 0;
+		totalTimeNt[triggerWheel] += (nowNt - prevTime);
+		timeOfPreviousEventNt[triggerWheel] = 0;
 	} else {
 		// odd event - start accumulation
-		timeOfPreviousEvent[triggerWheel] = nowUs;
+		timeOfPreviousEventNt[triggerWheel] = nowNt;
 	}
 
 	current_index++;
@@ -169,8 +169,8 @@ void TriggerState::nextTriggerEvent(trigger_wheel_e triggerWheel, uint64_t nowUs
 
 void TriggerState::clear() {
 	memset(eventCount, 0, sizeof(eventCount));
-	memset(timeOfPreviousEvent, 0, sizeof(timeOfPreviousEvent));
-	memset(totalTime, 0, sizeof(totalTime));
+	memset(timeOfPreviousEventNt, 0, sizeof(timeOfPreviousEventNt));
+	memset(totalTimeNt, 0, sizeof(totalTimeNt));
 	current_index = 0;
 }
 
