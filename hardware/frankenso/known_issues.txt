@@ -27,6 +27,7 @@
 27) RESOLVED IN R0.2 surge suppression diode option for some low-side
 28) RESOLVED IN R0.2 better silkscreen for P602 & P604 - explicit "5v" "12v" "GND"
 29) RESOLVED IN R0.2 Add LED indicators to injector channels. 
+30) RESOLVED IN R0.3 3D for C1001 bulk cap has black mark on wrong side
 
 For honda add-on / rewiring board
 -- Add 2A high side solinoid drive for VTec sol

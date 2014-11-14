@@ -56,7 +56,7 @@ encoding utf-8
 Sheet 1 14
 Title "Frankenso"
 Date "3 nov 2014"
-Rev ".02"
+Rev ".03"
 Comp "rusEFI.com"
 Comment1 ""
 Comment2 ""
