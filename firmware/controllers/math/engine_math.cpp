@@ -177,7 +177,7 @@ void FuelSchedule::registerInjectionEvent(trigger_shape_s *s,
 		io_pin_e pin, float angle, bool_t isSimultanious DECLARE_ENGINE_PARAMETER_S) {
 	ActuatorEventList *list = &events;
 
-	if (!isPinAssigned(pin)) {
+	if (!isSimultanious && !isPinAssigned(pin)) {
 		// todo: extact method for this index math
 		warning(OBD_PCM_Processor_Fault, "no_pin_inj #%d", (int) pin - (int) INJECTOR_1_OUTPUT + 1);
 	}
