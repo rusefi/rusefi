@@ -36,6 +36,8 @@ static Logging logger;
 
 static char LOGGING_BUFFER[1000];
 
+int maxNesting = 0;
+
 /*
  static void printIntArray(int array[], int size) {
  for (int j = 0; j < size; j++) {
@@ -160,7 +162,8 @@ void printConfiguration(engine_configuration_s *engineConfiguration, engine_conf
 
 	printOutputs(engineConfiguration, engineConfiguration2);
 
-	scheduleMsg(&logger, "boardTestModeJumperPin: %s", hwPortname(boardConfiguration->boardTestModeJumperPin));
+	scheduleMsg(&logger, "boardTestModeJumperPin: %s/nesting=%d", hwPortname(boardConfiguration->boardTestModeJumperPin),
+			maxNesting);
 
 	scheduleMsg(&logger, "digitalPotentiometerSpiDevice %d", boardConfiguration->digitalPotentiometerSpiDevice);
 

@@ -156,18 +156,20 @@ void dbg_check_unlock_from_isr(void) {
 
 void firmwareError(const char *fmt, ...);
 
+extern int maxNesting;
+
 /**
  * @brief   Guard code for @p CH_IRQ_PROLOGUE().
  *
  * @notapi
  */
 void dbg_check_enter_isr(void) {
-  if (dbg_isr_cnt >= 2)
-    firmwareError("nesting3");
   port_lock_from_isr();
   if ((dbg_isr_cnt < 0) || (dbg_lock_cnt != 0))
     chDbgPanic("SV#8");
   dbg_isr_cnt++;
+  if (dbg_isr_cnt > maxNesting)
+	  maxNesting = dbg_isr_cnt;
   port_unlock_from_isr();
 }
 
