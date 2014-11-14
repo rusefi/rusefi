@@ -127,7 +127,7 @@ void TriggerCentral::handleShaftSignal(Engine *engine, trigger_event_e signal) {
 	/**
 	 * This invocation changes the state of triggerState
 	 */
-	triggerState.decodeTriggerEvent(triggerShape, &engine->engineConfiguration->triggerConfig, signal, nowUs);
+	triggerState.decodeTriggerEvent(triggerShape, &engine->engineConfiguration->triggerConfig, signal, nowNt);
 
 	if (!triggerState.shaft_is_synchronized) {
 		// we should not propagate event if we do not know where we are

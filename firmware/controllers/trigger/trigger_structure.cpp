@@ -137,13 +137,13 @@ uint64_t TriggerState::getTotalEventCounter() {
 	return totalEventCountBase + current_index;
 }
 
-void TriggerState::nextRevolution(int triggerEventCount, uint64_t nowUs) {
+void TriggerState::nextRevolution(int triggerEventCount, uint64_t nowNt) {
 	if (cycleCallback != NULL) {
 		cycleCallback(this);
 	}
 	memcpy(prevTotalTime, totalTime, sizeof(prevTotalTime));
-	prevCycleDuration = nowUs - startOfCycle;
-	startOfCycle = nowUs;
+	prevCycleDuration = nowNt - startOfCycle;
+	startOfCycle = nowNt;
 	clear();
 	totalRevolutionCounter++;
 	totalEventCountBase += triggerEventCount;

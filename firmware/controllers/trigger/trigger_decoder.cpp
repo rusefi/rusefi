@@ -102,7 +102,7 @@ static trigger_value_e eventType[6] = { TV_LOW, TV_HIGH, TV_LOW, TV_HIGH, TV_LOW
  * This method changes the state of trigger_state_s data structure according to the trigger event
  */
 void TriggerState::decodeTriggerEvent(trigger_shape_s const*triggerShape, trigger_config_s const*triggerConfig,
-		trigger_event_e const signal, uint64_t nowUs) {
+		trigger_event_e const signal, uint64_t nowNt) {
 	(void) triggerConfig; // we might want this for logging?
 	efiAssertVoid(signal <= SHAFT_3RD_UP, "unexpected signal");
 
@@ -117,16 +117,16 @@ void TriggerState::decodeTriggerEvent(trigger_shape_s const*triggerShape, trigge
 		/**
 		 * For less important events we simply increment the index.
 		 */
-		nextTriggerEvent(triggerWheel, nowUs);
+		nextTriggerEvent(triggerWheel, nowNt);
 		if (triggerShape->gapBothDirections) {
-			toothed_previous_duration = getCurrentGapDuration(nowUs);
+			toothed_previous_duration = getCurrentGapDuration(nowNt);
 			isFirstEvent = false;
-			toothed_previous_time = nowUs;
+			toothed_previous_time = nowNt;
 		}
 		return;
 	}
 
-	int64_t currentDuration = getCurrentGapDuration(nowUs);
+	int64_t currentDuration = getCurrentGapDuration(nowNt);
 	isFirstEvent = false;
 	efiAssertVoid(currentDuration >= 0, "decode: negative duration?");
 
@@ -164,15 +164,15 @@ void TriggerState::decodeTriggerEvent(trigger_shape_s const*triggerShape, trigge
 
 		shaft_is_synchronized = true;
 		// this call would update duty cycle values
-		nextTriggerEvent(triggerWheel, nowUs);
+		nextTriggerEvent(triggerWheel, nowNt);
 
-		nextRevolution(triggerShape->shaftPositionEventCount, nowUs);
+		nextRevolution(triggerShape->shaftPositionEventCount, nowNt);
 	} else {
-		nextTriggerEvent(triggerWheel, nowUs);
+		nextTriggerEvent(triggerWheel, nowNt);
 	}
 
 	toothed_previous_duration = currentDuration;
-	toothed_previous_time = nowUs;
+	toothed_previous_time = nowNt;
 }
 
 static void initializeSkippedToothTriggerShape(trigger_shape_s *s, int totalTeethCount, int skippedCount,
