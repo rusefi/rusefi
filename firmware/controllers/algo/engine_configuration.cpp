@@ -52,6 +52,9 @@
 #include "mitsubishi.h"
 #include "subaru.h"
 
+//#define TS_DEFAULT_SPEED 115200
+#define TS_DEFAULT_SPEED 38400
+
 static volatile int globalConfigurationVersion = 0;
 
 int getGlobalConfigurationVersion(void) {
@@ -442,6 +445,8 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	boardConfiguration->isSdCardEnabled = false;
 	boardConfiguration->isFastAdcEnabled = false;
 	boardConfiguration->isEngineControlEnabled = true;
+
+	boardConfiguration->tunerStudioSerialSpeed = TS_DEFAULT_SPEED;
 }
 
 void resetConfigurationExt(Logging * logger, engine_type_e engineType, Engine *engine) {
