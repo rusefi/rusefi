@@ -1,6 +1,7 @@
 package com.rusefi.ui.widgets;
 
 import com.irnems.core.Sensor;
+import com.irnems.core.SensorCategory;
 import com.irnems.core.SensorCentral;
 import eu.hansolo.steelseries.gauges.Radial;
 import eu.hansolo.steelseries.tools.ColorDef;
@@ -77,17 +78,22 @@ public class SensorGauge {
     }
 
     private static void fillGaugeItems(JMenu gauges, final JPanel wrapper, final GaugeChangeListener listener) {
-        for (final Sensor s : Sensor.values()) {
-            JMenuItem mi = new JMenuItem(s.getName());
-            mi.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    createGaugeBody(s, wrapper, listener);
-                    if (listener != null)
-                        listener.onChange(s);
-                }
-            });
-            gauges.add(mi);
+        for (final SensorCategory sc : SensorCategory.values()) {
+            JMenuItem cmi = new JMenu(sc.getName());
+            gauges.add(cmi);
+
+            for (final Sensor s : Sensor.getSensorsForCategory(sc.getName())) {
+                JMenuItem mi = new JMenuItem(s.getName());
+                mi.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        createGaugeBody(s, wrapper, listener);
+                        if (listener != null)
+                            listener.onChange(s);
+                    }
+                });
+                cmi.add(mi);
+            }
         }
     }
 

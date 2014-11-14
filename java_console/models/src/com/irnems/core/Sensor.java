@@ -2,105 +2,121 @@ package com.irnems.core;
 
 import eu.hansolo.steelseries.tools.BackgroundColor;
 
+import java.util.ArrayList;
+
 /**
  * @author Andrey Belomutskiy
  *         2/11/13
  */
 public enum Sensor {
-    RPM("RPM"),
-    MAP("MAP"),
-    MAP_RAW("MAP_RAW"),
-    BARO("Baro"),
-    TIMING("Timing Advance", "deg", -180, 180),
+    RPM("RPM", SensorCategory.SENSOR_INPUTS),
+    MAP("MAP", SensorCategory.SENSOR_INPUTS),
+    MAP_RAW("MAP_RAW", SensorCategory.SENSOR_INPUTS),
+    BARO("Baro", SensorCategory.SENSOR_INPUTS),
+    TIMING("Timing Advance", SensorCategory.OPERATIONS, "deg", -180, 180),
 
     /**
      * Please note that these enum names are used to make 'set_mock_XXX_voltage' commands
      */
-    CLT("Coolant", "temperature, C", -40, 300),
-    IAT("Intake Air", "temperature, C", -40, 150),
-    AFR("A/F ratio", "", 0, 20),
-    MAF("MAF", "Volts", 4),
-    TPS("throttle", "%", 100),
+    CLT("Coolant", SensorCategory.SENSOR_INPUTS, "temperature, C", -40, 300),
+    IAT("Intake Air", SensorCategory.SENSOR_INPUTS, "temperature, C", -40, 150),
+    AFR("A/F ratio", SensorCategory.SENSOR_INPUTS, "", 0, 20),
+    MAF("MAF", SensorCategory.SENSOR_INPUTS, "Volts", 4),
+    TPS("throttle", SensorCategory.SENSOR_INPUTS, "%", 100),
 
-    TRG_0_DUTY("trg0 duty", "%", 100),
-    TRG_1_DUTY("trg1 duty", "%", 100),
+    TRG_0_DUTY("trg0 duty", SensorCategory.SENSOR_INPUTS, "%", 100),
+    TRG_1_DUTY("trg1 duty", SensorCategory.SENSOR_INPUTS, "%", 100),
 
 //    COOLANT_WIDTH("c w", "", 30),
 //    INTAKE_AIR_WIDTH("air w", "", 30),
 
-    TABLE_SPARK("table spark", "ms", -40, 40),
-    VREF("VRef", "Volts", 6),
-    VBATT("VBatt", "Volts", 18),
-    VREF_WIDTH("VRef w", "", 1),
-    DWELL0("Input dwl #1", "ms", 0, 30, BackgroundColor.BEIGE),
-    DWELL1("Input dwl #2", "ms", 0, 30, BackgroundColor.BEIGE),
-    DWELL2("Input dwl #3", "ms", 0, 30, BackgroundColor.BEIGE),
-    DWELL3("Input dwl #4", "ms", 0, 30, BackgroundColor.BEIGE),
-    DWELL0_SD("Input d #1", "std dev", 100),
+    TABLE_SPARK("table spark", SensorCategory.OPERATIONS, "ms", -40, 40),
+    VREF("VRef", SensorCategory.SENSOR_INPUTS, "Volts", 6),
+    VBATT("VBatt", SensorCategory.SENSOR_INPUTS, "Volts", 18),
+    VREF_WIDTH("VRef w", SensorCategory.OTHERS, "", 1),
+    DWELL0("Input dwl #1", SensorCategory.SNIFFING, "ms", 0, 30, BackgroundColor.BEIGE),
+    DWELL1("Input dwl #2", SensorCategory.SNIFFING, "ms", 0, 30, BackgroundColor.BEIGE),
+    DWELL2("Input dwl #3", SensorCategory.SNIFFING, "ms", 0, 30, BackgroundColor.BEIGE),
+    DWELL3("Input dwl #4", SensorCategory.SNIFFING, "ms", 0, 30, BackgroundColor.BEIGE),
+    DWELL0_SD("Input d #1", SensorCategory.SNIFFING, "std dev", 100),
 
 
-    TOTAL_DWELL0("Input tdwl #1", "ms", 0, 30, BackgroundColor.BEIGE),
-    TOTAL_DWELL1("Input tdwl #2", "ms", 0, 30, BackgroundColor.BEIGE),
-    TOTAL_DWELL2("Input tdwl #3", "ms", 0, 30, BackgroundColor.BEIGE),
-    TOTAL_DWELL3("Input tdwl #4", "ms", 0, 30, BackgroundColor.BEIGE),
-    ADVANCE0("Input Adv #1", "deg", -180, 180, BackgroundColor.BROWN),
-    ADVANCE1("Input Adv #2", "deg", -180, 180, BackgroundColor.BROWN),
-    ADVANCE2("Input Adv #3", "deg", -180, 180, BackgroundColor.BROWN),
-    ADVANCE3("Input Adv #4", "deg", -180, 180, BackgroundColor.BROWN),
-    PERIOD0("Period", "dg", 0, 400),
-    DUTY0("Duty0", "%", 0, 100, BackgroundColor.RED),
-    DUTY1("Duty1", "%", 0, 100, BackgroundColor.RED),
-    FUEL("Fuel", "ms", 0, 30),
-    FUEL_BASE("Fuel Base", "ms", 0, 30),
-    FUEL_IAT("F IAT", "", 0, 10),
-    FUEL_CLT("F CLT", "", 0, 10),
-    FUEL_LAG("F Lag", "", 0, 30),
+    TOTAL_DWELL0("Input tdwl #1", SensorCategory.SNIFFING, "ms", 0, 30, BackgroundColor.BEIGE),
+    TOTAL_DWELL1("Input tdwl #2", SensorCategory.SNIFFING, "ms", 0, 30, BackgroundColor.BEIGE),
+    TOTAL_DWELL2("Input tdwl #3", SensorCategory.SNIFFING, "ms", 0, 30, BackgroundColor.BEIGE),
+    TOTAL_DWELL3("Input tdwl #4", SensorCategory.SNIFFING, "ms", 0, 30, BackgroundColor.BEIGE),
+    ADVANCE0("Input Adv #1", SensorCategory.SNIFFING, "deg", -180, 180, BackgroundColor.BROWN),
+    ADVANCE1("Input Adv #2", SensorCategory.SNIFFING, "deg", -180, 180, BackgroundColor.BROWN),
+    ADVANCE2("Input Adv #3", SensorCategory.SNIFFING, "deg", -180, 180, BackgroundColor.BROWN),
+    ADVANCE3("Input Adv #4", SensorCategory.SNIFFING, "deg", -180, 180, BackgroundColor.BROWN),
+    PERIOD0("Period", SensorCategory.SNIFFING, "dg", 0, 400),
+    DUTY0("Duty0", SensorCategory.SNIFFING, "%", 0, 100, BackgroundColor.RED),
+    DUTY1("Duty1", SensorCategory.SNIFFING, "%", 0, 100, BackgroundColor.RED),
+    FUEL("Fuel", SensorCategory.OPERATIONS, "ms", 0, 30),
+    FUEL_BASE("Fuel Base", SensorCategory.OPERATIONS, "ms", 0, 30),
+    FUEL_IAT("F IAT", SensorCategory.OPERATIONS, "", 0, 10),
+    FUEL_CLT("F CLT", SensorCategory.OPERATIONS, "", 0, 10),
+    FUEL_LAG("F Lag", SensorCategory.OPERATIONS, "", 0, 30),
 
-    IDLE_SWITCH("idle switch"),
+    IDLE_SWITCH("idle switch", SensorCategory.OTHERS),
 
-    DEFAULT_FUEL("map fuel", "ms", 0, 40),
-    T_CHARGE("T Charge", "f", 0, 200),
+    DEFAULT_FUEL("map fuel", SensorCategory.OPERATIONS, "ms", 0, 40),
+    T_CHARGE("T Charge", SensorCategory.OPERATIONS, "f", 0, 200),
 
-    CHARTSIZE("CHARTSIZE"),
-    CHART_STATUS("CHART_STATUS"),
-    ADC_STATUS("ADC_STATUS"),
+    CHARTSIZE("CHARTSIZE", SensorCategory.OTHERS),
+    CHART_STATUS("CHART_STATUS", SensorCategory.OTHERS),
+    ADC_STATUS("ADC_STATUS", SensorCategory.OTHERS),
 
-    ADC_FAST("ADC_FAST", "b", 4000),
-    ADC_FAST_AVG("ADC_FAST_AVG", "b", 4000),
-    INJECTOR_1_DWELL("inj #1"),
-    INJECTOR_2_DWELL("inj #2"),
-    INJECTOR_3_DWELL("inj #3"),
-    INJECTOR_4_DWELL("inj #4"),
+    ADC_FAST("ADC_FAST", SensorCategory.OTHERS, "b", 4000),
+    ADC_FAST_AVG("ADC_FAST_AVG", SensorCategory.OTHERS, "b", 4000),
+    INJECTOR_1_DWELL("inj #1", SensorCategory.SNIFFING),
+    INJECTOR_2_DWELL("inj #2", SensorCategory.SNIFFING),
+    INJECTOR_3_DWELL("inj #3", SensorCategory.SNIFFING),
+    INJECTOR_4_DWELL("inj #4", SensorCategory.SNIFFING),
 
 
-    INJ_1_2_DELTA("inj 1-2 delta"),
-    INJ_3_4_DELTA("inj 3-4 delta"),
+    INJ_1_2_DELTA("inj 1-2 delta", SensorCategory.SNIFFING),
+    INJ_3_4_DELTA("inj 3-4 delta", SensorCategory.SNIFFING),
     ;
 
     private final String name;
+    private final SensorCategory category;
     private final String units;
     private final double minValue;
     private final double maxValue;
     private final BackgroundColor color;
 
-    Sensor(String name) {
-        this(name, "", 255);
+    Sensor(String name, SensorCategory category) {
+        this(name, category, "", 255);
     }
 
-    Sensor(String name, String units, double maxValue) {
-        this(name, units, 0, maxValue);
+    Sensor(String name, SensorCategory category, String units, double maxValue) {
+        this(name, category, units, 0, maxValue);
     }
 
-    Sensor(String name, String units, double minValue, double maxValue) {
-        this(name, units, minValue, maxValue, BackgroundColor.LIGHT_GRAY);
+    Sensor(String name, SensorCategory category, String units, double minValue, double maxValue) {
+        this(name, category, units, minValue, maxValue, BackgroundColor.LIGHT_GRAY);
     }
 
-    Sensor(String name, String units, double minValue, double maxValue, BackgroundColor color) {
+    Sensor(String name, SensorCategory category, String units, double minValue, double maxValue, BackgroundColor color) {
         this.name = name;
+        this.category = category;
         this.units = units;
         this.minValue = minValue;
         this.maxValue = maxValue;
         this.color = color;
+    }
+
+    public static ArrayList<Sensor> getSensorsForCategory(String category) {
+        final ArrayList<Sensor> sensors = new ArrayList<Sensor>();
+
+        for (final Sensor sensor : values()) {
+            if (sensor.category.getName().equals(category)) {
+                sensors.add(sensor);
+            }
+        }
+
+        return sensors;
     }
 
     public static double processAdvance(double advance) {
@@ -109,6 +125,10 @@ public enum Sensor {
 
     public String getName() {
         return name;
+    }
+
+    public SensorCategory getCategory() {
+        return category;
     }
 
     public String getUnits() {
