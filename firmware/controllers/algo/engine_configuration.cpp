@@ -426,8 +426,6 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	boardConfiguration->tunerStudioThreadPeriod = 300;
 	boardConfiguration->generalPeriodicThreadPeriod = 50;
 
-	boardConfiguration->tunerStudioSerialSpeed = 38400;
-
 	boardConfiguration->boardTestModeJumperPin = GPIOB_0;
 
 	boardConfiguration->canDeviceMode = CD_USE_CAN2;
