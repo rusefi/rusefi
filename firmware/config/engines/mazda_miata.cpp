@@ -268,14 +268,13 @@ static void setMiata1994_common(engine_configuration_s *engineConfiguration, boa
 
 	boardConfiguration->idleValvePin = GPIOB_9;
 
-	boardConfiguration->ignitionPins[0] = GPIOC_7; // Frankenso high side #3
+	boardConfiguration->ignitionPins[0] = GPIOE_14; // Frankenso high side - pin 1G
 	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPins[2] = GPIOE_14; // Frankenso high side #2
+	boardConfiguration->ignitionPins[2] = GPIOC_7; // Frankenso high side - pin 1H
 	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
 	boardConfiguration->ignitionPinMode = OM_DEFAULT;
 
 	setFrankenso_01_LCD(boardConfiguration);
-
 
 	commonFrankensoAnalogInputs(engineConfiguration);
 
@@ -284,7 +283,6 @@ static void setMiata1994_common(engine_configuration_s *engineConfiguration, boa
 	engineConfiguration->mafAdcChannel = EFI_ADC_0;
 	engineConfiguration->cltAdcChannel = EFI_ADC_12;
 	engineConfiguration->iatAdcChannel = EFI_ADC_11;
-
 }
 
 
