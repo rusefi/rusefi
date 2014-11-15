@@ -59,11 +59,19 @@ void addTriggerEventListener(ShaftPositionListener listener, const char *name, E
 }
 
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
-EXTERN_ENGINE;
+EXTERN_ENGINE
+;
+
+int triggerReentraint = 0;
+int maxTriggerReentraint = 0;
 
 void hwHandleShaftSignal(trigger_event_e signal) {
+	if (triggerReentraint > maxTriggerReentraint)
+		maxTriggerReentraint = triggerReentraint;
+	triggerReentraint++;
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 256, "lowstck#8");
 	triggerCentral.handleShaftSignal(engine, signal);
+	triggerReentraint--;
 }
 #endif /* EFI_PROD_CODE */
 
@@ -207,31 +215,30 @@ static void triggerInfo(Engine *engine) {
 			triggerCentral.getHwEventCounter(1), triggerCentral.getHwEventCounter(2),
 			triggerCentral.getHwEventCounter(3));
 	scheduleMsg(&logger, "expected cycle events %d/%d/%d", engineConfiguration2->triggerShape.expectedEventCount[0],
-			engineConfiguration2->triggerShape.expectedEventCount[1],
-			ts->expectedEventCount[2]);
+			engineConfiguration2->triggerShape.expectedEventCount[1], ts->expectedEventCount[2]);
 
 	scheduleMsg(&logger, "trigger type=%d/need2ndChannel=%s", engineConfiguration->triggerConfig.triggerType,
 			boolToString(engineConfiguration->needSecondTriggerInput));
 	scheduleMsg(&logger, "expected duty #0=%f/#1=%f", engineConfiguration2->triggerShape.dutyCycle[0],
 			engineConfiguration2->triggerShape.dutyCycle[1]);
 
-	scheduleMsg(&logger, "isError %s/total errors=%d/total revolutions=%d/self=%s",
+	scheduleMsg(&logger, "isError %s/total errors=%d %d/total revolutions=%d/self=%s",
 			boolToString(isTriggerDecoderError()),
 			triggerCentral.triggerState.totalTriggerErrorCounter,
+			triggerCentral.triggerState.orderingErrorCounter,
 			triggerCentral.triggerState.getTotalRevolutionCounter(),
 			boolToString(engineConfiguration->directSelfStimulation));
 
 #endif
 
 #if EFI_PROD_CODE
-	scheduleMsg(&logger, "primary trigger simulator: %s %s freq=%d", hwPortname(boardConfiguration->triggerSimulatorPins[0]),
+	scheduleMsg(&logger, "primary trigger simulator: %s %s freq=%d",
+			hwPortname(boardConfiguration->triggerSimulatorPins[0]),
 			pinModeToString(boardConfiguration->triggerSimulatorPinModes[0]),
-			boardConfiguration->triggerSimulatorFrequency
-	);
-	scheduleMsg(&logger, "secondary trigger simulator: %s %s phase=%d", hwPortname(boardConfiguration->triggerSimulatorPins[1]),
-			pinModeToString(boardConfiguration->triggerSimulatorPinModes[1]),
-			triggerSignal.safe.phaseIndex
-	);
+			boardConfiguration->triggerSimulatorFrequency);
+	scheduleMsg(&logger, "secondary trigger simulator: %s %s phase=%d",
+			hwPortname(boardConfiguration->triggerSimulatorPins[1]),
+			pinModeToString(boardConfiguration->triggerSimulatorPinModes[1]), triggerSignal.safe.phaseIndex);
 	scheduleMsg(&logger, "3rd trigger simulator: %s %s", hwPortname(boardConfiguration->triggerSimulatorPins[2]),
 			pinModeToString(boardConfiguration->triggerSimulatorPinModes[2]));
 
@@ -257,8 +264,8 @@ void initTriggerCentral(Engine *engine) {
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	initLogging(&logger, "ShaftPosition");
-	addConsoleActionP("triggerinfo", (VoidPtr)triggerInfo, engine);
-	addConsoleActionP("triggershapeinfo", (VoidPtr)triggerShapeInfo, engine);
+	addConsoleActionP("triggerinfo", (VoidPtr) triggerInfo, engine);
+	addConsoleActionP("triggershapeinfo", (VoidPtr) triggerShapeInfo, engine);
 #endif
 
 #if EFI_HISTOGRAMS

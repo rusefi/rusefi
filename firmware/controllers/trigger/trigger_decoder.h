@@ -52,6 +52,7 @@ public:
 	uint32_t prevTotalTime[PWM_PHASE_MAX_WAVE_PER_PWM];
 	int expectedTotalTime[PWM_PHASE_MAX_WAVE_PER_PWM];
 	uint32_t totalTriggerErrorCounter;
+	uint32_t orderingErrorCounter;
 
 private:
 	void clear();
@@ -64,6 +65,9 @@ private:
 	 * see trigger_shape_s
 	 */
 	uint32_t eventCount[PWM_PHASE_MAX_WAVE_PER_PWM];
+	trigger_event_e curSignal;
+	trigger_event_e prevSignal;
+	uint32_t eventCountExt[2 * PWM_PHASE_MAX_WAVE_PER_PWM];
 	uint64_t timeOfPreviousEventNt[PWM_PHASE_MAX_WAVE_PER_PWM];
 	uint64_t totalEventCountBase;
 	uint32_t totalRevolutionCounter;

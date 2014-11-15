@@ -73,7 +73,8 @@ static ALWAYS_INLINE bool isSynchronizationGap(TriggerState *shaftPositionState,
 			&& currentDuration < shaftPositionState->toothed_previous_duration * triggerShape->syncRatioTo;
 }
 
-static ALWAYS_INLINE bool noSynchronizationResetNeeded(TriggerState *shaftPositionState, trigger_shape_s const *triggerShape) {
+static ALWAYS_INLINE bool noSynchronizationResetNeeded(TriggerState *shaftPositionState,
+		trigger_shape_s const *triggerShape) {
 	if (triggerShape->isSynchronizationNeeded) {
 		return false;
 	}
@@ -109,7 +110,15 @@ void TriggerState::decodeTriggerEvent(trigger_shape_s const*triggerShape, trigge
 
 	trigger_wheel_e triggerWheel = eventIndex[signal];
 
+	if (curSignal == prevSignal) {
+		orderingErrorCounter++;
+	}
+
+	prevSignal = curSignal;
+	curSignal = signal;
+
 	eventCount[triggerWheel]++;
+	eventCountExt[signal]++;
 
 	int isLessImportant = (triggerShape->useRiseEdge && signal != SHAFT_PRIMARY_UP)
 			|| (!triggerShape->useRiseEdge && signal != SHAFT_PRIMARY_DOWN);
