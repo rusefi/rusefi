@@ -27,6 +27,11 @@ bool assertNotInList(T *head, T*element) {
 			return FALSE;
 		}
 		if (current == element) {
+			/**
+			 * for example, this might happen in case of sudden RPM change if event
+			 * was not scheduled by angle but was scheduled by time. In case of scheduling
+			 * by time with slow RPM the whole next fast revolution might be within the wait period
+			 */
 			warning(OBD_PCM_Processor_Fault, "re-adding element into event_queue: [%s]", element->name);
 			return TRUE;
 		}
