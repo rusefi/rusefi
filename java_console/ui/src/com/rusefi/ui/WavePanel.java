@@ -249,7 +249,8 @@ public class WavePanel {
         int rpm = RpmModel.getInstance().getValue();
         double maf = SensorCentral.getInstance().getValue(Sensor.MAF);
         String fileName = FileLog.getDate() + "rpm_" + rpm + "_maf_" + maf + ".png";
-        UiUtils.saveImage(fileName, imagePanel);
+
+        UiUtils.saveImageWithPrompt(fileName, panel, imagePanel);
     }
 
     private UpDownImage createImage(String name) {

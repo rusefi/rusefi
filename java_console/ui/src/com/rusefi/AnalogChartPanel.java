@@ -2,12 +2,12 @@ package com.rusefi;
 
 import com.irnems.FileLog;
 import com.irnems.core.EngineState;
+import com.rusefi.io.LinkManager;
 import com.rusefi.ui.RpmModel;
 import com.rusefi.ui.UiUtils;
 import com.rusefi.ui.WavePanel;
 import com.rusefi.ui.widgets.URLLabel;
 import com.rusefi.ui.widgets.UpDownImage;
-import com.rusefi.io.LinkManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -52,7 +52,7 @@ public class AnalogChartPanel extends JPanel {
                 }
         );
 
-        JPanel upperPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
+        final JPanel upperPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
 
         JButton imageButton = new JButton(WavePanel.SAVE_IMAGE);
         imageButton.setMnemonic('s');
@@ -64,7 +64,8 @@ public class AnalogChartPanel extends JPanel {
                                                   public void actionPerformed(ActionEvent e) {
                                                       int rpm = RpmModel.getInstance().getValue();
                                                       String fileName = FileLog.getDate() + "rpm_" + rpm + "_analog" + ".png";
-                                                      UiUtils.saveImage(fileName, analogChart);
+
+                                                      UiUtils.saveImageWithPrompt(fileName, upperPanel, analogChart);
                                                   }
                                               }
         );

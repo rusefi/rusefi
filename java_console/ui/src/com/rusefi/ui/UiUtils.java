@@ -2,6 +2,8 @@ package com.rusefi.ui;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -12,6 +14,18 @@ import java.io.IOException;
  * (c) Andrey Belomutskiy
  */
 public class UiUtils {
+    public static void saveImageWithPrompt(String fileName, Component parent, Component component) {
+        JFileChooser fc = new JFileChooser();
+        FileFilter filter = new FileNameExtensionFilter("PNG files", "png");
+        fc.setFileFilter(filter);
+        fc.addChoosableFileFilter(filter);
+        fc.setSelectedFile(new File(fileName));
+        if (fc.showSaveDialog(parent) == JFileChooser.APPROVE_OPTION) {
+            fileName = fc.getSelectedFile().getAbsolutePath();
+            UiUtils.saveImage(fileName, component);
+        }
+    }
+
     public static void saveImage(String fileName, Component component) {
         BufferedImage img = getScreenShot(component);
         try {
