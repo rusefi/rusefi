@@ -215,10 +215,11 @@ static void triggerInfo(Engine *engine) {
 	scheduleMsg(&logger, "expected duty #0=%f/#1=%f", engineConfiguration2->triggerShape.dutyCycle[0],
 			engineConfiguration2->triggerShape.dutyCycle[1]);
 
-	scheduleMsg(&logger, "isError %s/total errors=%d/total revolutions=%d",
+	scheduleMsg(&logger, "isError %s/total errors=%d/total revolutions=%d/self=%s",
 			boolToString(isTriggerDecoderError()),
 			triggerCentral.triggerState.totalTriggerErrorCounter,
-			triggerCentral.triggerState.getTotalRevolutionCounter());
+			triggerCentral.triggerState.getTotalRevolutionCounter(),
+			boolToString(engineConfiguration->directSelfStimulation));
 
 #endif
 
