@@ -235,7 +235,8 @@ static ALWAYS_INLINE void handleSparkEvent(uint32_t eventIndex, IgnitionEvent *i
 	}
 }
 
-static ALWAYS_INLINE void handleSpark(uint32_t eventIndex, int rpm, IgnitionEventList *list DECLARE_ENGINE_PARAMETER_S) {
+static ALWAYS_INLINE void handleSpark(uint32_t eventIndex, int rpm,
+		IgnitionEventList *list DECLARE_ENGINE_PARAMETER_S) {
 	if (!isValidRpm(rpm) || !engineConfiguration->isIgnitionEnabled)
 		return; // this might happen for instance in case of a single trigger event after a pause
 
@@ -347,6 +348,18 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex, Eng
 		}
 
 		float dwellAngle = dwellMs / getOneDegreeTimeMs(rpm);
+
+		float maxAllowedDwellAngle = engineConfiguration->engineCycle / 2;
+
+		if (engineConfiguration->ignitionMode == IM_ONE_COIL) {
+			maxAllowedDwellAngle = engineConfiguration->engineCycle / engineConfiguration->cylindersCount / 1.1;
+		}
+
+		if (dwellAngle > maxAllowedDwellAngle) {
+			warning(OBD_PCM_Processor_Fault, "dwell angle too long: %f", dwellAngle);
+		}
+
+		// todo: add some check for dwell overflow? like 4 times 6 ms while engine cycle is less then that
 
 		initializeIgnitionActions(fixAngle(-advance PASS_ENGINE_PARAMETER), dwellAngle, engine->engineConfiguration2,
 				&engine->engineConfiguration2->ignitionEvents[revolutionIndex] PASS_ENGINE_PARAMETER);

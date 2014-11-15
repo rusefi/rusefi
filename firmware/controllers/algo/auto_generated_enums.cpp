@@ -247,6 +247,8 @@ case MAZDA_MIATA_NB:
   return "MAZDA_MIATA_NB";
 case BMW_E34:
   return "BMWe34";
+case TEST_ENGINE:
+  return "TESTENG";
   }
  return NULL;
 }

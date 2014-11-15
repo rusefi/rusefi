@@ -51,6 +51,7 @@
 #include "rover_v8.h"
 #include "mitsubishi.h"
 #include "subaru.h"
+#include "test_engine.h"
 
 //#define TS_DEFAULT_SPEED 115200
 #define TS_DEFAULT_SPEED 38400
@@ -548,9 +549,11 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType, Engine *e
 	case BMW_E34:
 		setBmwE34(engineConfiguration);
 		break;
+	case TEST_ENGINE:
+		setTestEngineConfiguration(engineConfiguration);
+		break;
 	default:
 		firmwareError("Unexpected engine type: %d", engineType);
-
 	}
 	applyNonPersistentConfiguration(logger, engine);
 

@@ -2031,6 +2031,12 @@
       <file>
         <name>$PROJ_DIR$\..\config\engines\subaru.h</name>
       </file>
+      <file>
+        <name>$PROJ_DIR$\..\config\engines\test_engine.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\config\engines\test_engine.h</name>
+      </file>
     </group>
     <group>
       <name>system</name>

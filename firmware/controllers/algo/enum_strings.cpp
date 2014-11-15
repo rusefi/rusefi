@@ -70,6 +70,8 @@ const char* getConfigurationName(engine_type_e engineType) {
 		return "MX596";
 	case BMW_E34:
 		return "BMWe34";
+        case TEST_ENGINE:
+                return "Test";
 	default:
 		firmwareError("Unexpected: engineType %d", engineType);
 		return NULL;
