@@ -77,6 +77,9 @@ void chVTSetI(VirtualTimer *vtp, systime_t time, vtfunc_t vtfunc, void *par) {
   VirtualTimer *p;
 
   chDbgCheckClassI();
+  chDbgCheck(vtp != NULL, "chVTSetI 1");
+  chDbgCheck(vtfunc != NULL, "chVTSetI 2");
+  chDbgCheck(time != TIME_IMMEDIATE, "chVTSetI 3");
   chDbgCheck((vtp != NULL) && (vtfunc != NULL) && (time != TIME_IMMEDIATE),
              "chVTSetI");
 
