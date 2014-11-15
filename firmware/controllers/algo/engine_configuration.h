@@ -223,7 +223,13 @@ typedef struct {
 
 	brain_pin_e joystickPins[JOYSTICK_PIN_COUNT];
 
-	int unusedbs[54];
+	/**
+	 * This pin is used for debugging - snap a logic analyzer on it and see if it's ever high
+	 */
+	brain_pin_e triggerErrorPin;
+	pin_output_mode_e triggerErrorPinMode;
+
+	int unusedbs[52];
 
 	le_formula_t le_formulas[LE_COMMAND_COUNT];
 
