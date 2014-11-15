@@ -106,8 +106,8 @@ extern "C" {
 
 #include "rfi_perftest.h"
 #include "rusefi.h"
-#include "memstreams.h"
 }
+#include "memstreams.h"
 
 #include "eficonsole.h"
 #include "status_loop.h"
@@ -117,7 +117,7 @@ extern "C" {
 #include "lcd_HD44780.h"
 #endif /* EFI_HD44780_LCD */
 
-#if EFI_ENGINE_EMULATOR
+#if EFI_ENGINE_EMULATOR || defined(__DOXYGEN__)
 #include "engine_emulator.h"
 #endif /* EFI_ENGINE_EMULATOR */
 
@@ -175,11 +175,11 @@ void runRusEfi(void) {
 	 */
 	initEngineContoller(engine);
 
-#if EFI_PERF_METRICS
+#if EFI_PERF_METRICS || defined(__DOXYGEN__)
 	initTimePerfActions();
 #endif
 
-#if EFI_ENGINE_EMULATOR
+#if EFI_ENGINE_EMULATOR || defined(__DOXYGEN__)
 	initEngineEmulator(engine);
 #endif
 	startStatusThreads(engine);
@@ -193,7 +193,7 @@ void runRusEfi(void) {
 	while (TRUE) {
 		efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "stack#1");
 
-#if EFI_CLI_SUPPORT && !EFI_UART_ECHO_TEST_MODE
+#if (EFI_CLI_SUPPORT && !EFI_UART_ECHO_TEST_MODE) || defined(__DOXYGEN__)
 		// sensor state + all pending messages for our own dev console
 		updateDevConsoleState(engine);
 #endif /* EFI_CLI_SUPPORT */
@@ -204,6 +204,7 @@ void runRusEfi(void) {
 
 static virtual_timer_t resetTimer;
 
+// todo: move this into a hw-specific file
 static void rebootNow(void) {
 	NVIC_SystemReset();
 }
@@ -252,5 +253,5 @@ void firmwareError(const char *fmt, ...) {
 }
 
 int getRusEfiVersion(void) {
-	return 20141114;
+	return 20141115;
 }

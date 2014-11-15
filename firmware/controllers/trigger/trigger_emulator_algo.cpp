@@ -113,7 +113,7 @@ static void emulatorApplyPinState(PwmConfig *state, int stateIndex) {
 	if (!isEmulating) {
 		return;
 	}
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 	applyPinState(state, stateIndex);
 #endif /* EFI_PROD_CODE */
 	if (engineConfiguration->directSelfStimulation) {
