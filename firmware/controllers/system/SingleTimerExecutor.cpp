@@ -27,9 +27,23 @@ static Executor instance;
 
 extern schfunc_t globalTimerCallback;
 
+static int timerIsLate = 0;
+/**
+ * these fields are global in order to facilitate debugging
+ */
+static uint64_t nextEventTimeNt = 0;
+static uint64_t hwAlarmTime = 0;
+static uint64_t callbackTime = 0;
+
 static void executorCallback(void *arg) {
 	(void)arg;
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 256, "lowstck#2y");
+
+//	callbackTime = getTimeNowNt();
+//	if((callbackTime > nextEventTimeNt) && (callbackTime - nextEventTimeNt > US2NT(5000))) {
+//		timerIsLate++;
+//	}
+
 	instance.onTimerCallback();
 }
 
@@ -113,12 +127,12 @@ void Executor::doExecute() {
 	/**
 	 * Let's set up the timer for the next execution
 	 */
-	uint64_t nextEventTimeNt = queue.getNextEventTime(nowNt);
+	nextEventTimeNt = queue.getNextEventTime(nowNt);
 	efiAssertVoid(nextEventTimeNt > nowNt, "setTimer constraint");
 	if (nextEventTimeNt == EMPTY_QUEUE)
 		return; // no pending events in the queue
-	uint64_t delayUs = NT2US(nextEventTimeNt - nowNt);
-	setHardwareUsTimer(delayUs == 0 ? 1 : delayUs);
+	hwAlarmTime = NT2US(nextEventTimeNt - nowNt);
+	setHardwareUsTimer(hwAlarmTime == 0 ? 1 : hwAlarmTime);
 }
 
 /**

@@ -11,7 +11,12 @@
 #include "test_engine.h"
 
 void setTestEngineConfiguration(engine_configuration_s *engineConfiguration) {
-	engineConfiguration->triggerConfig.triggerType = TT_TOOTHED_WHEEL_60_2;
+//	engineConfiguration->triggerConfig.triggerType = TT_TOOTHED_WHEEL;
+
+	trigger_config_s *triggerConfig = &engineConfiguration->triggerConfig;
+	triggerConfig->customIsSynchronizationNeeded = false;
+	triggerConfig->customTotalToothCount = 60;
+	triggerConfig->customSkippedToothCount = 0;
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 
