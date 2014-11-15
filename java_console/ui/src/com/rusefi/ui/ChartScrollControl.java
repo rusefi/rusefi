@@ -56,16 +56,23 @@ public class ChartScrollControl {
     private void previousPage() {
         if (index.intValue() > 0) {
             index.decrementAndGet();
-            listener.onDigitalChart(ChartRepository.getInstance().getChart(index.get()));
-            setInfoText(index);
+            showChart();
+        } else if (index.intValue() == 0) {
+            // let's go to the last chart
+            index.set(ChartRepository.getInstance().getSize() - 1);
+            showChart();
         }
+    }
+
+    private void showChart() {
+        listener.onDigitalChart(ChartRepository.getInstance().getChart(index.get()));
+        setInfoText(index);
     }
 
     private void nextPage() {
         if (index.intValue() < ChartRepository.getInstance().getSize() - 1) {
             index.incrementAndGet();
-            listener.onDigitalChart(ChartRepository.getInstance().getChart(index.get()));
-            setInfoText(index);
+            showChart();
         }
     }
 
