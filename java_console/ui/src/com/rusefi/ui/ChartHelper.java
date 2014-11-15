@@ -14,7 +14,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import static com.rusefi.io.tcp.TcpConnector.*;
+import static com.rusefi.io.tcp.TcpConnector.parseIntWithReason;
 
 /**
  * Date: 1/22/13
@@ -25,7 +25,7 @@ public class ChartHelper {
     }
 
     public static JPanel create3DControl(final XYData data, SurfaceModel surfaceModel, String title) {
-        JPanel result = new JPanel(new BorderLayout());
+        final JPanel result = new JPanel(new BorderLayout());
         result.setBorder(BorderFactory.createLineBorder(Color.red));
 
         final JSurfacePanel jsp = new JSurfacePanel(surfaceModel);
@@ -40,7 +40,9 @@ public class ChartHelper {
         saveImageButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                UiUtils.saveImage(FileLog.getDate() + "_3d.png", jsp);
+                String fileName = FileLog.getDate() + "_3d.png";
+
+                UiUtils.saveImageWithPrompt(fileName, result, jsp);
             }
         });
 
