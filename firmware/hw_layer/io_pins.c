@@ -141,8 +141,7 @@ void initOutputPins(void) {
 //	outputPinRegister("ext led 2", LED_EXT_2, EXTRA_LED_2_PORT, EXTRA_LED_2_PIN);
 //	outputPinRegister("ext led 3", LED_EXT_3, EXTRA_LED_2_PORT, EXTRA_LED_3_PIN);
 //	outputPinRegister("alive1", LED_DEBUG, GPIOD, 6);
-	outputPinRegister("MalfunctionIndicator", LED_CHECK_ENGINE, getHwPort(boardConfiguration->malfunctionIndicatorPin),
-			getHwPin(boardConfiguration->malfunctionIndicatorPin));
+	outputPinRegisterExt2("MalfunctionIndicator", LED_CHECK_ENGINE, boardConfiguration->malfunctionIndicatorPin, &DEFAULT_OUTPUT);
 
 // todo: are these needed here? todo: make configurable
 //	outputPinRegister("spi CS1", SPI_CS_1, SPI_CS1_PORT, SPI_CS1_PIN);
@@ -152,14 +151,11 @@ void initOutputPins(void) {
 	outputPinRegister("spi CS5", SPI_CS_SD_MODULE, SPI_SD_MODULE_PORT, SPI_SD_MODULE_PIN);
 
 	// todo: should we move this code closer to the fuel pump logic?
-	outputPinRegister("fuel pump relay", FUEL_PUMP_RELAY, getHwPort(boardConfiguration->fuelPumpPin),
-			getHwPin(boardConfiguration->fuelPumpPin));
+	outputPinRegisterExt2("fuel pump relay", FUEL_PUMP_RELAY, boardConfiguration->fuelPumpPin, &DEFAULT_OUTPUT);
 
-	outputPinRegister("fan relay", FAN_RELAY, getHwPort(boardConfiguration->fanPin),
-			getHwPin(boardConfiguration->fanPin));
-
-	outputPinRegister("o2 heater", O2_HEATER, getHwPort(boardConfiguration->o2heaterPin),
-			getHwPin(boardConfiguration->o2heaterPin));
+	outputPinRegisterExt2("fan relay", FAN_RELAY, boardConfiguration->fanPin, &DEFAULT_OUTPUT);
+	outputPinRegisterExt2("o2 heater", O2_HEATER, boardConfiguration->o2heaterPin, &DEFAULT_OUTPUT);
+	outputPinRegisterExt2("trg_err", LED_TRIGGER_ERROR, boardConfiguration->triggerErrorPin, &boardConfiguration->triggerErrorPinMode);
 
 	initialLedsBlink();
 

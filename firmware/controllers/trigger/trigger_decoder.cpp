@@ -29,6 +29,7 @@
 #include "trigger_mitsubishi.h"
 
 #include "trigger_structure.h"
+#include "efiGpio.h"
 
 // todo: better name for this constant
 #define HELPER_PERIOD 100000
@@ -126,7 +127,7 @@ void TriggerState::decodeTriggerEvent(trigger_shape_s const*triggerShape, trigge
 		return;
 	}
 
-	int64_t currentDuration = getCurrentGapDuration(nowNt);
+	currentDuration = getCurrentGapDuration(nowNt);
 	isFirstEvent = false;
 	efiAssertVoid(currentDuration >= 0, "decode: negative duration?");
 
@@ -150,6 +151,7 @@ void TriggerState::decodeTriggerEvent(trigger_shape_s const*triggerShape, trigge
 				|| eventCount[1] != triggerShape->expectedEventCount[1]
 				|| eventCount[2] != triggerShape->expectedEventCount[2];
 
+		setOutputPinValue(LED_TRIGGER_ERROR, isDecodingError);
 		if (isDecodingError) {
 			totalTriggerErrorCounter++;
 		}

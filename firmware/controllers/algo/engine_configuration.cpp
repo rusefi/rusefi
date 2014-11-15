@@ -322,6 +322,8 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	 */
 	boardConfiguration->triggerSimulatorFrequency = 1200;
 
+	boardConfiguration->triggerErrorPin = GPIO_UNASSIGNED;
+
 	boardConfiguration->max31855spiDevice = SPI_NONE;
 	for (int i = 0; i < MAX31855_CS_COUNT; i++) {
 		boardConfiguration->max31855_cs[i] = GPIO_UNASSIGNED;

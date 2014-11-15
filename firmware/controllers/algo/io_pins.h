@@ -27,6 +27,8 @@ typedef enum {
 	LED_DEBUG,
 	LED_EMULATOR,
 
+	LED_TRIGGER_ERROR,
+
 	/**
 	 * see board_configuration_s->idleValvePin
 	 */
