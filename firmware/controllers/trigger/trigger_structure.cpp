@@ -169,6 +169,7 @@ void TriggerState::nextTriggerEvent(trigger_wheel_e triggerWheel, uint64_t nowNt
 
 void TriggerState::clear() {
 	memset(eventCount, 0, sizeof(eventCount));
+	memset(eventCountExt, 0, sizeof(eventCountExt));
 	memset(timeOfPreviousEventNt, 0, sizeof(timeOfPreviousEventNt));
 	memset(totalTimeNt, 0, sizeof(totalTimeNt));
 	current_index = 0;

@@ -108,14 +108,14 @@ void appendFast(Logging *logging, const char *text) {
 
 static void vappendPrintfI(Logging *logging, const char *fmt, va_list arg) {
 	intermediateLoggingBuffer.eos = 0; // reset
-	efiAssertVoid(getRemainingStack(chThdSelf()) > 196, "lowstck#1b");
+	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#1b");
 	chvprintf((BaseSequentialStream *) &intermediateLoggingBuffer, fmt, arg);
 	intermediateLoggingBuffer.buffer[intermediateLoggingBuffer.eos] = 0; // need to terminate explicitly
 	append(logging, (char *) intermediateLoggingBufferData);
 }
 
 void vappendPrintf(Logging *logging, const char *fmt, va_list arg) {
-	efiAssertVoid(getRemainingStack(chThdSelf()) > 256, "lowstck#5b");
+	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#5b");
 	if (!intermediateLoggingBufferInited) {
 		firmwareError("intermediateLoggingBufferInited not inited!");
 		return;
@@ -142,7 +142,7 @@ void vappendPrintf(Logging *logging, const char *fmt, va_list arg) {
 }
 
 void appendPrintf(Logging *logging, const char *fmt, ...) {
-	efiAssertVoid(getRemainingStack(chThdSelf()) > 256, "lowstck#4");
+	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#4");
 	va_list ap;
 	va_start(ap, fmt);
 	vappendPrintf(logging, fmt, ap);
