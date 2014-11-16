@@ -1,6 +1,7 @@
 package com.rusefi.ui.widgets;
 
 import com.irnems.core.Sensor;
+import com.rusefi.SimulatorHelper;
 import com.rusefi.io.CommandQueue;
 
 import javax.swing.*;
@@ -51,7 +52,7 @@ public class DetachedSensor {
 
     public void showMockControl() {
         mockControlPanel.removeAll();
-        boolean isMockable = MOCKABLE.contains(sensor);
+        boolean isMockable = isMockable();
         if (isMockable) {
             Component mockComponent = createMockVoltageSlider(sensor);
             mockControlPanel.add(mockComponent);
@@ -62,6 +63,9 @@ public class DetachedSensor {
         frame.setSize(size, h);
     }
 
+    private boolean isMockable() {
+        return MOCKABLE.contains(sensor) && SimulatorHelper.RUNNING_SIMULATOR;
+    }
 
     private static Component createMockVoltageSlider(final Sensor sensor) {
         /**

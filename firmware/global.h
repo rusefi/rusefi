@@ -38,7 +38,7 @@ typedef unsigned int time_t;
 
 // project-wide default thread stack size
 // see also PORT_INT_REQUIRED_STACK
-#define UTILITY_THREAD_STACK_SIZE 128
+#define UTILITY_THREAD_STACK_SIZE 400
 
 #define EFI_ERROR_CODE 0xffffffff
 
