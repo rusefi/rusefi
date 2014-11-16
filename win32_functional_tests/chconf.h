@@ -30,6 +30,10 @@
 
 #define CHPRINTF_USE_FLOAT          TRUE
 
+  #define ON_LOCK_HOOK
+  #define ON_UNLOCK_HOOK
+
+
 /*===========================================================================*/
 /**
  * @name Kernel parameters and options
