@@ -52,6 +52,20 @@
 
 #define CHPRINTF_USE_FLOAT          	TRUE
 
+#define EFI_CLOCK_LOCKS   TRUE
+
+
+#if EFI_CLOCK_LOCKS
+  void onLockHook(void);
+  void onUnlockHook(void);
+  #define ON_LOCK_HOOK onLockHook()
+  #define ON_UNLOCK_HOOK onUnlockHook()
+#else /* EFI_CLOCK_LOCKS */
+  #define ON_LOCK_HOOK
+  #define ON_UNLOCK_HOOK
+#endif /* EFI_CLOCK_LOCKS */
+
+
 /**
  * number of ticks per second
  *

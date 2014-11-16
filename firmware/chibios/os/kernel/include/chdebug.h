@@ -109,8 +109,8 @@ void chDbgPanic3(const char *msg, const char * file, int line);
 #define chDbgCheckClassI()
 #define chDbgCheckClassS()
 #else
-#define dbg_enter_lock() (dbg_lock_cnt = 1)
-#define dbg_leave_lock() (dbg_lock_cnt = 0)
+#define dbg_enter_lock() {dbg_lock_cnt = 1;ON_LOCK_HOOK;}
+#define dbg_leave_lock() {dbg_lock_cnt = 0;ON_UNLOCK_HOOK;}
 #endif
 
 /*===========================================================================*/

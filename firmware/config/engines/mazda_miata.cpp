@@ -257,6 +257,7 @@ static void setMiata1994_common(engine_configuration_s *engineConfiguration, boa
 	// Frankenso low out #11: PB8
 	// Frankenso low out #12: PB7
 
+	boardConfiguration->fanPin = GPIOE_6;
 
 	boardConfiguration->o2heaterPin = GPIO_UNASSIGNED;
 

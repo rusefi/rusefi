@@ -87,6 +87,20 @@ char *getWarninig(void) {
 	return warningBuffer;
 }
 
+uint64_t lastLockTime;
+uint64_t maxLockTime = 0;
+
+void onLockHook(void) {
+	lastLockTime = getTimeNowNt();
+}
+
+void onUnlockHook(void) {
+	uint64_t t = getTimeNowNt() - lastLockTime;
+	if (t > maxLockTime) {
+		maxLockTime = t;
+	}
+}
+
 void initErrorHandling(void) {
 	initLogging(&logger, "error handling");
 	msObjectInit(&warningStream, (uint8_t *) warningBuffer, WARNING_BUFFER_SIZE, 0);
