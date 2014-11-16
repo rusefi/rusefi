@@ -42,7 +42,16 @@ typedef struct {
 	char SMALL_BUFFER[40];
 	// todo: explicitly default buffer externally so that we do not have default_buffer where we do not need it?
 	char DEFAULT_BUFFER[200];
+	/**
+	 * Zero-terminated buffer of pending debug message
+	 *
+	 * Unless a larger exteran buffer is specified, this is just a pointer to DEFAULT_BUFFER
+	 */
 	char *buffer;
+	/**
+	 * This pointer is always pointing at the position within the buffer into which next
+	 * write operation would append additional data
+	 */
 	char *linePointer;
 	int bufferSize;
 	volatile int isInitialized;
