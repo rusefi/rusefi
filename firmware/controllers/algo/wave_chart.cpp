@@ -182,7 +182,7 @@ void WaveChart::addWaveChartEvent3(const char *name, const char * msg, const cha
 	uint32_t time100 = NT2US(diffNt / 10);
 
 
-	if (remainingSize(&logging) > 30) {
+	if (remainingSize(&logging) > 35) {
 		/**
 		 * printf is a heavy method, append is used here as a performance optimization
 		 */
