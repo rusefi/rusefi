@@ -88,7 +88,7 @@ char *getWarninig(void) {
 }
 
 uint64_t lastLockTime;
-uint64_t maxLockTime = 0;
+uint32_t maxLockTime = 0;
 
 void onLockHook(void) {
 	lastLockTime = getTimeNowNt();
