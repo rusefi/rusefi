@@ -182,8 +182,8 @@ float LECalculator::getValue(Engine *engine) {
 	return stack.pop();
 }
 
-LEElementPool::LEElementPool(int size) {
-	pool = thepool;
+LEElementPool::LEElementPool(LEElement *pool, int size) {
+	this->pool = pool;
 	this->size = size;
 	reset();
 }
@@ -193,7 +193,7 @@ void LEElementPool::reset() {
 }
 
 LEElement *LEElementPool::next() {
-	if (index == LE_ELEMENT_POOL_SIZE - 1) {
+	if (index == size - 1) {
 		firmwareError("LE_ELEMENT_POOL_SIZE overflow");
 		return NULL;
 	}
