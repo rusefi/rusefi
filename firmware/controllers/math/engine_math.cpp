@@ -137,7 +137,7 @@ void initializeIgnitionActions(float advance, float dwellAngle,
 	case IM_ONE_COIL:
 		for (int i = 0; i < engineConfiguration->cylindersCount; i++) {
 			// todo: extract method
-			float localAdvance = advance + 720.0f * i / engineConfiguration->cylindersCount;
+			float localAdvance = advance + (float) engineConfiguration->engineCycle * i / engineConfiguration->cylindersCount;
 
 			registerSparkEvent(&engineConfiguration2->triggerShape, list, SPARKOUT_1_OUTPUT,
 					localAdvance, dwellAngle PASS_ENGINE_PARAMETER);
@@ -145,7 +145,7 @@ void initializeIgnitionActions(float advance, float dwellAngle,
 		break;
 	case IM_WASTED_SPARK:
 		for (int i = 0; i < engineConfiguration->cylindersCount; i++) {
-			float localAdvance = advance + 720.0f * i / engineConfiguration->cylindersCount;
+			float localAdvance = advance + (float) engineConfiguration->engineCycle * i / engineConfiguration->cylindersCount;
 
 			int wastedIndex = i % (engineConfiguration->cylindersCount / 2);
 
@@ -160,7 +160,7 @@ void initializeIgnitionActions(float advance, float dwellAngle,
 		break;
 	case IM_INDIVIDUAL_COILS:
 		for (int i = 0; i < engineConfiguration->cylindersCount; i++) {
-			float localAdvance = advance + 720.0f * i / engineConfiguration->cylindersCount;
+			float localAdvance = advance + (float) engineConfiguration->engineCycle * i / engineConfiguration->cylindersCount;
 
 			io_pin_e pin = (io_pin_e) ((int) SPARKOUT_1_OUTPUT + getCylinderId(engineConfiguration->firingOrder, i) - 1);
 			registerSparkEvent(&engineConfiguration2->triggerShape, list, pin, localAdvance,
@@ -219,13 +219,13 @@ void FuelSchedule::addFuelEvents(trigger_shape_s *s,
 	case IM_SEQUENTIAL:
 		for (int i = 0; i < engineConfiguration->cylindersCount; i++) {
 			io_pin_e pin = INJECTOR_PIN_BY_INDEX(getCylinderId(engineConfiguration->firingOrder, i) - 1);
-			float angle = baseAngle + 1.0 * i * 720 / engineConfiguration->cylindersCount;
+			float angle = baseAngle + (float) engineConfiguration->engineCycle * i / engineConfiguration->cylindersCount;
 			registerInjectionEvent(s, pin, angle, false PASS_ENGINE_PARAMETER);
 		}
 		break;
 	case IM_SIMULTANEOUS:
 		for (int i = 0; i < engineConfiguration->cylindersCount; i++) {
-			float angle = baseAngle + 1.0 * i * 720 / engineConfiguration->cylindersCount;
+			float angle = baseAngle + (float) engineConfiguration->engineCycle * i / engineConfiguration->cylindersCount;
 
 			/**
 			 * We do not need injector pin here because we will control all injectors
@@ -238,7 +238,7 @@ void FuelSchedule::addFuelEvents(trigger_shape_s *s,
 		for (int i = 0; i < engineConfiguration->cylindersCount; i++) {
 			int index = i % (engineConfiguration->cylindersCount / 2);
 			io_pin_e pin = INJECTOR_PIN_BY_INDEX(index);
-			float angle = baseAngle + 1.0 * i * 720 / engineConfiguration->cylindersCount;
+			float angle = baseAngle + i * (float) engineConfiguration->engineCycle / engineConfiguration->cylindersCount;
 			registerInjectionEvent(s, pin, angle, false PASS_ENGINE_PARAMETER);
 
 			/**
