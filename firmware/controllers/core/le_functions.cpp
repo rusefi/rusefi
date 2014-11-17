@@ -9,6 +9,7 @@
 #include "le_functions.h"
 #include "allsensors.h"
 #include "rpm_calculator.h"
+#include "efiGpio.h"
 
 extern LENameOrdinalPair * LE_FIRST;
 
@@ -30,8 +31,8 @@ static LENameOrdinalPair leTimeSinceBoot(LE_METHOD_TIME_SINCE_BOOT, "time_since_
 float getLEValue(Engine *engine, le_action_e action) {
 	efiAssert(engine!=NULL, "getLEValue", NAN);
 	switch (action) {
-//	case LE_METHOD_FAN:
-	//	return ;
+	case LE_METHOD_FAN:
+		return getOutputPinValue(FAN_RELAY);
 	case LE_METHOD_COOLANT:
 		return getCoolantTemperature(engine);
 	case LE_METHOD_INTAKE_AIR:

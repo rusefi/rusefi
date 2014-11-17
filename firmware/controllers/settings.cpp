@@ -21,6 +21,7 @@
 #include "trigger_decoder.h"
 #include "console_io.h"
 #include "engine.h"
+#include "efiGpio.h"
 
 #if EFI_PROD_CODE
 #include "rusefi.h"
@@ -331,6 +332,9 @@ static void printTemperatureInfo(void) {
 	if (!isValidIntakeAirTemperature(getIntakeAirTemperature(engine))) {
 		scheduleMsg(&logger, "IAT sensing error");
 	}
+
+	scheduleMsg(&logger, "fan=%s @ %s", boolToString(getOutputPinValue(FAN_RELAY)),
+			hwPortname(boardConfiguration->fanPin));
 
 #if EFI_ANALOG_INPUTS
 	scheduleMsg(&logger, "base cranking fuel %f", engineConfiguration->crankingSettings.baseCrankingFuel);
