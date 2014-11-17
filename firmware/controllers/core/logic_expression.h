@@ -53,12 +53,9 @@ public:
 	LEElement *next;
 };
 
-#define LE_ELEMENT_POOL_SIZE 256
-
 class LEElementPool {
 public:
-	LEElementPool(int size);
-	LEElement thepool[LE_ELEMENT_POOL_SIZE];
+	LEElementPool(LEElement *pool, int size);
 	LEElement *pool;
 	LEElement *next();
 	void reset();

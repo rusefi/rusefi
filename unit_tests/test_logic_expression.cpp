@@ -14,6 +14,8 @@
 #include "cli_registry.h"
 #include "engine.h"
 
+#define TEST_POOL_SIZE 256
+
 static float mockCoolant;
 static float mockFan;
 static float mockRpm;
@@ -56,7 +58,8 @@ static void testParsing(void) {
 	assertTrue(isNumeric("123"));
 	assertFalse(isNumeric("a123"));
 
-	LEElementPool pool(LE_ELEMENT_POOL_SIZE);
+	LEElement thepool[TEST_POOL_SIZE];
+	LEElementPool pool(thepool, TEST_POOL_SIZE);
 
 	LEElement *element;
 	element = parseExpression(&pool, "1 3 AND not");
@@ -80,7 +83,8 @@ static void testParsing(void) {
 }
 
 static void testExpression(const char *line, float expected) {
-	LEElementPool pool(LE_ELEMENT_POOL_SIZE);
+	LEElement thepool[TEST_POOL_SIZE];
+	LEElementPool pool(thepool, TEST_POOL_SIZE);
 	pool.reset();
 	LEElement * element = parseExpression(&pool, line);
 	print("Parsing [%s]", line);
@@ -119,7 +123,8 @@ void testLogicExpressions(void) {
 
 	c.reset();
 
-	LEElementPool pool(LE_ELEMENT_POOL_SIZE);
+	LEElement thepool[TEST_POOL_SIZE];
+	LEElementPool pool(thepool, TEST_POOL_SIZE);
 	LEElement *e = pool.next();
 	e->init(LE_METHOD_TIME_SINCE_BOOT);
 
