@@ -41,13 +41,13 @@ void testOverflow64Counter(void) {
 	print("*************************************** testOverflow64Counter\r\n");
 
 	Overflow64Counter o;
-	assertEquals(0, o.get(0, true));
-	assertEquals(10, o.get(10, true));
+	assertEquals(0, o.update(0));
+	assertEquals(10, o.update(10));
 
-	assertEquals(20, o.get(20, true));
+	assertEquals(20, o.update(20));
 
 	// overflow
-	assertEquals(4294967296, o.get(0, true));
+	assertEquals(4294967296, o.update(0));
 }
 
 void testCyclicBuffer(void) {

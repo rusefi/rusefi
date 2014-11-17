@@ -159,7 +159,7 @@ uint64_t getTimeNowUs(void) {
 }
 
 uint64_t getTimeNowNt(void) {
-	return halTime.get(hal_lld_get_counter_value(), false);
+	return halTime.get();
 }
 
 //uint64_t getHalTimer(void) {
@@ -218,7 +218,11 @@ static void onEvenyGeneralMilliseconds(Engine *engine) {
 	/**
 	 * We need to push current value into the 64 bit counter often enough so that we do not miss an overflow
 	 */
-	halTime.get(hal_lld_get_counter_value(), true);
+	bool alreadyLocked = lockAnyContext();
+	updateAndSet(&halTime.state, hal_lld_get_counter_value());
+	if (!alreadyLocked) {
+		unlockAnyContext();
+	}
 
 	if (!engine->rpmCalculator.isRunning())
 		writeToFlashIfPending();
@@ -389,7 +393,6 @@ void initEngineContoller(Engine *engine) {
 	 * properly detect un-assigned output pins
 	 */
 	prepareShapes(engine);
-
 
 	initMalfunctionCentral();
 
