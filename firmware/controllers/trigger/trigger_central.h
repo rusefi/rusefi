@@ -28,6 +28,7 @@ public:
 	void handleShaftSignal(Engine *engine, trigger_event_e signal);
 	int getHwEventCounter(int index);
 	TriggerState triggerState;
+	uint64_t nowNt;
 private:
 	IntListenerArray triggerListeneres;
 	int hwEventCounters[HW_EVENT_TYPES];
