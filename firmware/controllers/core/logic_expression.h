@@ -57,12 +57,14 @@ public:
 
 class LEElementPool {
 public:
-	LEElementPool();
-	LEElement pool[LE_ELEMENT_POOL_SIZE];
+	LEElementPool(int size);
+	LEElement thepool[LE_ELEMENT_POOL_SIZE];
+	LEElement *pool;
 	LEElement *next();
 	void reset();
 private:
 	int index;
+	int size;
 };
 
 
@@ -92,8 +94,12 @@ public:
 	const char *name;
 };
 
-
-const char *processToken(const char *line, char *buffer);
+/**
+ * This method extract the first token on the line into the specified buffer
+ *
+ * @return pointer after the token
+ */
+const char *getNextToken(const char *line, char *buffer);
 bool isNumeric(const char* line);
 le_action_e parseAction(const char * line);
 LEElement * parseExpression(LEElementPool *pool, const char * line);

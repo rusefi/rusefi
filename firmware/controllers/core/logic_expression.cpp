@@ -25,9 +25,13 @@ LENameOrdinalPair * LE_FIRST = NULL;
  */
 static LENameOrdinalPair leAnd(LE_OPERATOR_AND, "and");
 static LENameOrdinalPair leOr(LE_OPERATOR_OR, "or");
+static LENameOrdinalPair leNot(LE_OPERATOR_NOT, "not");
+
 static LENameOrdinalPair leMore(LE_OPERATOR_MORE, ">");
 static LENameOrdinalPair leMoreOrEqual(LE_OPERATOR_MORE_OR_EQUAL, ">=");
-static LENameOrdinalPair leNot(LE_OPERATOR_NOT, "not");
+
+static LENameOrdinalPair leLess(LE_OPERATOR_LESS, "<");
+static LENameOrdinalPair leLessOrEquals(LE_OPERATOR_LESS_OR_EQUAL, "<=");
 
 LENameOrdinalPair::LENameOrdinalPair(le_action_e action, const char *name) {
 	this->action = action;
@@ -178,7 +182,9 @@ float LECalculator::getValue(Engine *engine) {
 	return stack.pop();
 }
 
-LEElementPool::LEElementPool() {
+LEElementPool::LEElementPool(int size) {
+	pool = thepool;
+	this->size = size;
 	reset();
 }
 
@@ -198,7 +204,7 @@ bool isNumeric(const char* line) {
 	return line[0] >= '0' && line[0] <= '9';
 }
 
-const char *processToken(const char *line, char *buffer) {
+const char *getNextToken(const char *line, char *buffer) {
 	while (line[0] != 0 && line[0] == ' ') {
 		line++;
 	}
@@ -236,7 +242,7 @@ LEElement * parseExpression(LEElementPool *pool, const char * line) {
 	LEElement *last = NULL;
 
 	while (true) {
-		line = processToken(line, parsingBuffer);
+		line = getNextToken(line, parsingBuffer);
 
 		if (line == NULL) {
 			/**
