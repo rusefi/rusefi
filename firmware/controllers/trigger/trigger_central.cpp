@@ -232,7 +232,7 @@ static void triggerInfo(Engine *engine) {
 #endif
 
 #if EFI_PROD_CODE
-	scheduleMsg(&logger, "maxLockTime=%d", maxLockTime);
+	scheduleMsg(&logger, "maxLockTime=%d / maxTriggerReentraint=%d", maxLockTime, maxTriggerReentraint);
 	scheduleMsg(&logger, "primary trigger simulator: %s %s freq=%d",
 			hwPortname(boardConfiguration->triggerSimulatorPins[0]),
 			pinModeToString(boardConfiguration->triggerSimulatorPinModes[0]),

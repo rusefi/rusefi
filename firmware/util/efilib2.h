@@ -10,18 +10,22 @@
 
 #include <stdint.h>
 
+typedef struct {
+	uint64_t highBits;
+	uint32_t lowBits;
+} State64;
+
+void updateAndSet(State64 *state, uint32_t value);
 
 class Overflow64Counter
 {
   public:
 	Overflow64Counter();
 
-	uint64_t get(uint32_t value, int isPrimaryThread);
+	uint64_t get();
+	uint64_t update(uint32_t value);
 
-  private:
-	uint64_t currentBase;
-	uint32_t currentValue;
+	State64 state;
 };
-
 
 #endif /* EFILIB2_H_ */
