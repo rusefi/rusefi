@@ -106,7 +106,7 @@ static ALWAYS_INLINE void reportEventToWaveChart(trigger_event_e ckpSignalType, 
 void TriggerCentral::handleShaftSignal(Engine *engine, trigger_event_e signal) {
 	efiAssertVoid(engine!=NULL, "configuration");
 
-	uint64_t nowNt = getTimeNowNt();
+	nowNt = getTimeNowNt();
 
 	efiAssertVoid(engine->engineConfiguration!=NULL, "engineConfiguration");
 	efiAssertVoid(engine->engineConfiguration2!=NULL, "engineConfiguration2");
