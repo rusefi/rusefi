@@ -57,7 +57,7 @@
 
 LECalculator calc;
 
-LEElementPool lePool;
+LEElementPool lePool(LE_ELEMENT_POOL_SIZE);
 LEElement * fuelPumpLogic;
 LEElement * radiatorFanLogic;
 

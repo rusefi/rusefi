@@ -42,21 +42,21 @@ static void testParsing(void) {
 	assertFalse(strEqualCaseInsensitive("hello", "HElo2"));
 
 	const char *ptr;
-	ptr = processToken("  hello  ", buffer);
+	ptr = getNextToken("  hello  ", buffer);
 	assertTrue(strEqual("hello", buffer));
 
-	ptr = processToken("hello", buffer);
+	ptr = getNextToken("hello", buffer);
 	assertTrue(strEqual("hello", buffer));
 
-	ptr = processToken("  hello  world ", buffer);
+	ptr = getNextToken("  hello  world ", buffer);
 	assertTrue(strEqual("hello", buffer));
-	ptr = processToken(ptr, buffer);
+	ptr = getNextToken(ptr, buffer);
 	assertTrue(strEqual("world", buffer));
 
 	assertTrue(isNumeric("123"));
 	assertFalse(isNumeric("a123"));
 
-	LEElementPool pool;
+	LEElementPool pool(LE_ELEMENT_POOL_SIZE);
 
 	LEElement *element;
 	element = parseExpression(&pool, "1 3 AND not");
@@ -80,7 +80,7 @@ static void testParsing(void) {
 }
 
 static void testExpression(const char *line, float expected) {
-	LEElementPool pool;
+	LEElementPool pool(LE_ELEMENT_POOL_SIZE);
 	pool.reset();
 	LEElement * element = parseExpression(&pool, line);
 	print("Parsing [%s]", line);
@@ -119,7 +119,7 @@ void testLogicExpressions(void) {
 
 	c.reset();
 
-	LEElementPool pool;
+	LEElementPool pool(LE_ELEMENT_POOL_SIZE);
 	LEElement *e = pool.next();
 	e->init(LE_METHOD_TIME_SINCE_BOOT);
 

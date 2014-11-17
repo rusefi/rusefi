@@ -11,12 +11,11 @@
 #include "rpm_calculator.h"
 #include "efiGpio.h"
 
-extern LENameOrdinalPair * LE_FIRST;
+//extern LENameOrdinalPair * LE_FIRST;
 
-static LENameOrdinalPair leLess(LE_OPERATOR_LESS, "<");
-static LENameOrdinalPair leLessEquals(LE_OPERATOR_LESS_OR_EQUAL, "<=");
-static LENameOrdinalPair leMore(LE_OPERATOR_MORE, ">");
-static LENameOrdinalPair leMoreEquals(LE_OPERATOR_MORE_OR_EQUAL, ">=");
+/**
+ * Here we define all rusEfi-specific methods
+ */
 static LENameOrdinalPair leRpm(LE_METHOD_RPM, "rpm");
 static LENameOrdinalPair leTps(LE_METHOD_TPS, "tps");
 static LENameOrdinalPair leMaf(LE_METHOD_MAF, "maf");
