@@ -27,13 +27,13 @@ static Executor instance;
 
 extern schfunc_t globalTimerCallback;
 
-static int timerIsLate = 0;
+//static int timerIsLate = 0;
+//static uint64_t callbackTime = 0;
 /**
  * these fields are global in order to facilitate debugging
  */
 static uint64_t nextEventTimeNt = 0;
 static uint64_t hwAlarmTime = 0;
-static uint64_t callbackTime = 0;
 
 static void executorCallback(void *arg) {
 	(void)arg;
@@ -60,7 +60,7 @@ void Executor::unlock(void) {
 	unlockAnyContext();
 }
 
-void Executor::schedule2(const char *prefix, scheduling_s *scheduling, uint64_t timeUs, schfunc_t callback,
+void Executor::schedule2(scheduling_s *scheduling, uint64_t timeUs, schfunc_t callback,
 		void *param) {
 //	if (delayUs < 0) {
 //		firmwareError("Negative delayUs %s: %d", prefix, delayUs);
@@ -81,9 +81,9 @@ void Executor::schedule2(const char *prefix, scheduling_s *scheduling, uint64_t 
 	}
 }
 
-void Executor::schedule(const char *prefix, scheduling_s *scheduling, uint64_t nowUs, int delayUs, schfunc_t callback,
+void Executor::schedule(scheduling_s *scheduling, uint64_t nowUs, int delayUs, schfunc_t callback,
 		void *param) {
-	schedule2(prefix, scheduling, nowUs + delayUs, callback, param);
+	schedule2(scheduling, nowUs + delayUs, callback, param);
 }
 
 void Executor::onTimerCallback() {
@@ -145,11 +145,13 @@ void Executor::doExecute() {
  * @param [in] dwell the number of ticks of output duration.
  */
 void scheduleTask(const char *prefix, scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) {
-	instance.schedule(prefix, scheduling, getTimeNowUs(), delayUs, callback, param);
+	scheduling->name = prefix;
+	instance.schedule(scheduling, getTimeNowUs(), delayUs, callback, param);
 }
 
 void scheduleTask2(const char *prefix, scheduling_s *scheduling, uint64_t time, schfunc_t callback, void *param) {
-	instance.schedule2(prefix, scheduling, time, callback, param);
+	scheduling->name = prefix;
+	instance.schedule2(scheduling, time, callback, param);
 }
 
 void initSignalExecutorImpl(void) {
