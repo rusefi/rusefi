@@ -35,6 +35,10 @@ static LENameOrdinalPair leLessOrEquals(LE_OPERATOR_LESS_OR_EQUAL, "<=");
 
 #define LE_EVAL_POOL_SIZE 32
 
+#if EFI_PROD_CODE || EFI_SIMULATOR
+static Logging logger;
+#endif
+
 static LECalculator evalCalc;
 static LEElement evalPoolElements[LE_EVAL_POOL_SIZE];
 static LEElementPool evalPool(evalPoolElements, LE_EVAL_POOL_SIZE);
@@ -288,14 +292,20 @@ LEElement *LEElementPool::parseExpression(const char * line) {
 #if (EFI_PROD_CODE || EFI_SIMULATOR)
 
 static void eval(char *line, Engine *engine) {
+	scheduleMsg(&logger, "Parsing [%s]", line);
 	evalPool.reset();
-	evalPool.parseExpression(line);
-
-
+	LEElement * e = evalPool.parseExpression(line);
+	if (e == NULL) {
+		scheduleMsg(&logger, "parsing failed");
+	} else {
+		float result = evalCalc.getValue2(e, engine);
+		scheduleMsg(&logger, "Eval result: %f", result);
+	}
 }
 
 void initEval(Engine *engine) {
-	addConsoleActionSP("eval", (VoidCharPtrVoidPtr)eval, engine);
+	initLogging(&logger, "le");
+	addConsoleActionSP("eval", (VoidCharPtrVoidPtr) eval, engine);
 }
 
 #endif
