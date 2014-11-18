@@ -62,7 +62,7 @@ static void testParsing(void) {
 	LEElementPool pool(thepool, TEST_POOL_SIZE);
 
 	LEElement *element;
-	element = parseExpression(&pool, "1 3 AND not");
+	element = pool.parseExpression("1 3 AND not");
 	assertTrue(element != NULL);
 
 	assertEquals(element->action, LE_NUMERIC_VALUE);
@@ -86,7 +86,7 @@ static void testExpression(const char *line, float expected) {
 	LEElement thepool[TEST_POOL_SIZE];
 	LEElementPool pool(thepool, TEST_POOL_SIZE);
 	pool.reset();
-	LEElement * element = parseExpression(&pool, line);
+	LEElement * element = pool.parseExpression(line);
 	print("Parsing [%s]", line);
 	assertTrueM("Not NULL expected", element != NULL);
 	LECalculator c;
@@ -148,7 +148,7 @@ void testLogicExpressions(void) {
 
 	pool.reset();
 	LEElement *element;
-	element = parseExpression(&pool, "fan no_such_method");
+	element = pool.parseExpression("fan no_such_method");
 	assertTrueM("NULL expected", element == NULL);
 
 

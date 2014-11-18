@@ -243,7 +243,7 @@ le_action_e parseAction(const char * line) {
 
 static char parsingBuffer[64];
 
-LEElement * parseExpression(LEElementPool *pool, const char * line) {
+LEElement *LEElementPool::parseExpression(const char * line) {
 
 	LEElement *first = NULL;
 	LEElement *last = NULL;
@@ -258,7 +258,7 @@ LEElement * parseExpression(LEElementPool *pool, const char * line) {
 			return first;
 		}
 
-		LEElement *n = pool->next();
+		LEElement *n = next();
 
 		if (isNumeric(parsingBuffer)) {
 			n->init(LE_NUMERIC_VALUE, atoff(parsingBuffer));
@@ -288,11 +288,14 @@ LEElement * parseExpression(LEElementPool *pool, const char * line) {
 #if (EFI_PROD_CODE || EFI_SIMULATOR)
 
 static void eval(char *line, Engine *engine) {
+	evalPool.reset();
+	evalPool.parseExpression(line);
+
 
 }
 
 void initEval(Engine *engine) {
-	addConsoleActionSP("evan", (VoidCharPtrVoidPtr)eval, engine);
+	addConsoleActionSP("eval", (VoidCharPtrVoidPtr)eval, engine);
 }
 
 #endif

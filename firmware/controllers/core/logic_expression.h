@@ -59,6 +59,7 @@ public:
 	LEElement *pool;
 	LEElement *next();
 	void reset();
+	LEElement * parseExpression(const char * line);
 private:
 	int index;
 	int size;
@@ -99,7 +100,6 @@ public:
 const char *getNextToken(const char *line, char *buffer);
 bool isNumeric(const char* line);
 le_action_e parseAction(const char * line);
-LEElement * parseExpression(LEElementPool *pool, const char * line);
 void initEval(Engine *engine);
 
 #endif /* LOGIC_EXPRESSION_H_ */
