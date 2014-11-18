@@ -55,15 +55,14 @@
 #include "logic_expression.h"
 #include "le_functions.h"
 
-LECalculator calc;
-
 #define LE_ELEMENT_POOL_SIZE 256
 
+static LECalculator calc;
 static LEElement mainPool[LE_ELEMENT_POOL_SIZE];
-LEElementPool lePool(mainPool, LE_ELEMENT_POOL_SIZE);
+static LEElementPool lePool(mainPool, LE_ELEMENT_POOL_SIZE);
 
-LEElement * fuelPumpLogic;
-LEElement * radiatorFanLogic;
+static LEElement * fuelPumpLogic;
+static LEElement * radiatorFanLogic;
 
 persistent_config_container_s persistentState CCM_OPTIONAL
 ;
