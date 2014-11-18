@@ -89,6 +89,10 @@ void addConsoleActionS(const char *token, VoidCharPtr callback) {
 	doAddAction(token, STRING_PARAMETER, (Void) callback, NULL);
 }
 
+void addConsoleActionSP(const char *token, VoidCharPtrVoidPtr callback, void *param) {
+	doAddAction(token, STRING_PARAMETER_P, (Void) callback, NULL);
+}
+
 void addConsoleActionSS(const char *token, VoidCharPtrCharPtr callback) {
 	doAddAction(token, STRING2_PARAMETER, (Void) callback, NULL);
 }
@@ -201,6 +205,12 @@ void handleActionWithParameter(TokenCallback *current, char *parameter) {
 	if (current->parameterType == STRING_PARAMETER) {
 		VoidCharPtr callbackS = (VoidCharPtr) current->callback;
 		(*callbackS)(parameter);
+		return;
+	}
+
+	if (current->parameterType == STRING_PARAMETER_P) {
+		VoidCharPtrVoidPtr callbackS = (VoidCharPtrVoidPtr) current->callback;
+		(*callbackS)(parameter, current->param);
 		return;
 	}
 

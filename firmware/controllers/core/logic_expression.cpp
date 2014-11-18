@@ -200,6 +200,7 @@ void LEElementPool::reset() {
 
 LEElement *LEElementPool::next() {
 	if (index == size - 1) {
+		// todo: this should not be a fatal error, just an error
 		firmwareError("LE_ELEMENT_POOL_SIZE overflow");
 		return NULL;
 	}
@@ -283,3 +284,15 @@ LEElement * parseExpression(LEElementPool *pool, const char * line) {
 	}
 	return first;
 }
+
+#if (EFI_PROD_CODE || EFI_SIMULATOR)
+
+static void eval(char *line, Engine *engine) {
+
+}
+
+void initEval(Engine *engine) {
+	addConsoleActionSP("evan", (VoidCharPtrVoidPtr)eval, engine);
+}
+
+#endif
