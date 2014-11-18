@@ -33,6 +33,12 @@ static LENameOrdinalPair leMoreOrEqual(LE_OPERATOR_MORE_OR_EQUAL, ">=");
 static LENameOrdinalPair leLess(LE_OPERATOR_LESS, "<");
 static LENameOrdinalPair leLessOrEquals(LE_OPERATOR_LESS_OR_EQUAL, "<=");
 
+#define LE_EVAL_POOL_SIZE 32
+
+static LECalculator evalCalc;
+static LEElement evalPoolElements[LE_EVAL_POOL_SIZE];
+static LEElementPool evalPool(evalPoolElements, LE_EVAL_POOL_SIZE);
+
 LENameOrdinalPair::LENameOrdinalPair(le_action_e action, const char *name) {
 	this->action = action;
 	this->name = name;
