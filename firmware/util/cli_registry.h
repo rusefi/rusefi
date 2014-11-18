@@ -24,6 +24,7 @@ typedef enum {
 	FLOAT_PARAMETER,
 	FLOAT_PARAMETER_P,
 	STRING_PARAMETER,
+	STRING_PARAMETER_P,
 	STRING2_PARAMETER,
 	STRING2_PARAMETER_P,
 	STRING3_PARAMETER,
@@ -89,7 +90,7 @@ void addConsoleActionFF(const char *token, VoidFloatFloat callback);
 void addConsoleActionFFP(const char *token, VoidFloatFloatVoidPtr callback, void *param);
 
 void addConsoleActionS(const char *token, VoidCharPtr callback);
-void addConsoleActionSP(const char *token, VoidCharPtrVoidPtr callback);
+void addConsoleActionSP(const char *token, VoidCharPtrVoidPtr callback, void *param);
 
 void addConsoleActionSS(const char *token, VoidCharPtrCharPtr callback);
 void addConsoleActionSSP(const char *token, VoidCharPtrCharPtrVoidPtr callback, void *param);
