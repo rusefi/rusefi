@@ -19,6 +19,8 @@ int getOutputPinValue(io_pin_e pin) {
 
 /**
  * @brief Sets the value according to current electrical settings
+ *
+ * This method costs about 85 ticks
  */
 void setOutputPinValue(io_pin_e pin, int logicValue) {
 #if EFI_PROD_CODE
