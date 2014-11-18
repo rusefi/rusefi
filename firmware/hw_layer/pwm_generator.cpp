@@ -23,10 +23,10 @@ static Logging logger;
  * This method controls the actual hardware pins
  */
 void applyPinState(PwmConfig *state, int stateIndex) {
+	efiAssertVoid(stateIndex < PWM_PHASE_MAX_COUNT, "invalid stateIndex");
 	efiAssertVoid(state->multiWave.waveCount <= PWM_PHASE_MAX_WAVE_PER_PWM, "invalid waveCount");
 	for (int waveIndex = 0; waveIndex < state->multiWave.waveCount; waveIndex++) {
 		io_pin_e ioPin = state->outputPins[waveIndex];
-		efiAssertVoid(stateIndex < PWM_PHASE_MAX_COUNT, "invalid stateIndex");
 		int value = state->multiWave.waves[waveIndex].pinStates[stateIndex];
 		setOutputPinValue(ioPin, value);
 	}
