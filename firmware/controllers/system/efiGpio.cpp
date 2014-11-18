@@ -18,15 +18,6 @@ int getOutputPinValue(io_pin_e pin) {
 }
 
 /**
- * This is used from fatal error handler so it's a macro to be sure that stack is not used
- */
-int getElectricalValue(int logicalValue, pin_output_mode_e mode) {
-	efiAssert(mode <= OM_OPENDRAIN_INVERTED, "invalid pin_output_mode_e", -1);
-
-	return logicalValue ? getElectricalValue1(mode) : getElectricalValue0(mode);
-}
-
-/**
  * @brief Sets the value according to current electrical settings
  */
 void setOutputPinValue(io_pin_e pin, int logicValue) {
@@ -35,10 +26,13 @@ void setOutputPinValue(io_pin_e pin, int logicValue) {
 		return;
 	efiAssertVoid(pinDefaultState[pin]!=NULL, "pin mode not initialized");
 	pin_output_mode_e mode = *pinDefaultState[pin];
+	efiAssert(mode <= OM_OPENDRAIN_INVERTED, "invalid pin_output_mode_e", -1);
 #else
 	pin_output_mode_e mode = OM_DEFAULT;
 #endif
-	setPinValue(&outputs[pin], getElectricalValue(logicValue, mode), logicValue);
+	OutputPin *output = &outputs[pin];
+	int eValue = getElectricalValue(logicValue, mode);
+	setPinValue(output, eValue, logicValue);
 }
 
 bool isPinAssigned(io_pin_e pin) {

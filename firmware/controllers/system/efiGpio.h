@@ -66,13 +66,15 @@ typedef struct {
 #define turnOutputPinOn(pin) setOutputPinValue((pin), true)
 #define turnOutputPinOff(pin) setOutputPinValue((pin), false)
 
+#define getElectricalValue(logicalValue, mode) \
+	(logicalValue ? getElectricalValue1(mode) : getElectricalValue0(mode))
+
 #ifdef __cplusplus
 extern "C"
 {
 #endif /* __cplusplus */
 
 int getOutputPinValue(io_pin_e pin);
-int getElectricalValue(int logicalValue, pin_output_mode_e mode);
 void setOutputPinValue(io_pin_e pin, int logicValue);
 bool isPinAssigned(io_pin_e pin);
 

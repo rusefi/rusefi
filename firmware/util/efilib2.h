@@ -28,4 +28,11 @@ class Overflow64Counter
 	State64 state;
 };
 
+#include "main.h"
+#if (EFI_PROD_CODE || EFI_SIMULATOR)
+ #define GET_TIMESTAMP() hal_lld_get_counter_value()
+#else
+ #define GET_TIMESTAMP() 0
+#endif
+
 #endif /* EFILIB2_H_ */
