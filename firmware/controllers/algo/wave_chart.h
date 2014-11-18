@@ -26,7 +26,7 @@ public:
 	bool_t isWaveChartFull();
 	bool_t isStartedTooLongAgo();
 	void publishChartIfFull();
-	void addWaveChartEvent3(const char *name, const char *msg, const char *msg2);
+	void addWaveChartEvent3(const char *name, const char *msg);
 private:
 #if EFI_WAVE_CHART
 	Logging logging;

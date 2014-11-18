@@ -143,7 +143,7 @@ static char timeBuffer[10];
 /**
  * @brief	Register an event for digital sniffer
  */
-void WaveChart::addWaveChartEvent3(const char *name, const char * msg, const char * msg2) {
+void WaveChart::addWaveChartEvent3(const char *name, const char * msg) {
 	if(!isChartActive) {
 		return;
 	}
@@ -194,7 +194,6 @@ void WaveChart::addWaveChartEvent3(const char *name, const char * msg, const cha
 
 		itoa10(timeBuffer, time100);
 		appendFast(&logging, timeBuffer);
-		appendFast(&logging, msg2);
 		appendFast(&logging, CHART_DELIMETER);
 	}
 	if (!alreadyLocked) {

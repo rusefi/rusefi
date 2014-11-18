@@ -56,7 +56,7 @@ static void waAnaWidthCallback(WaveReader *reader) {
 	uint64_t nowUs = getTimeNowUs();
 	reader->eventCounter++;
 	reader->lastActivityTimeUs = nowUs;
-	addWaveChartEvent(reader->name, WC_UP, "");
+	addWaveChartEvent(reader->name, WC_UP);
 
 	uint32_t width = nowUs - reader->periodEventTimeUs;
 	reader->last_wave_low_widthUs = width;
@@ -69,7 +69,7 @@ void WaveReader::onFallEvent() {
 	uint64_t nowUs = getTimeNowUs();
 	eventCounter++;
 	lastActivityTimeUs = nowUs;
-	addWaveChartEvent(name, WC_DOWN, "");
+	addWaveChartEvent(name, WC_DOWN);
 
 	uint64_t width = nowUs - widthEventTimeUs;
 	last_wave_high_widthUs = width;

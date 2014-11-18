@@ -79,7 +79,7 @@ bool isCranking(void);
 int getRevolutionCounter(void);
 
 #define isValidRpm(rpm) ((rpm) > 0 && (rpm) < UNREALISTIC_RPM)
-void addWaveChartEvent(const char *name, const char *msg, const char *msg2);
+void addWaveChartEvent(const char *name, const char *msg);
 
 #ifdef __cplusplus
 }
