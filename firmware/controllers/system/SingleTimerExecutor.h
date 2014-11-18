@@ -14,8 +14,8 @@
 class Executor {
 public:
 	Executor();
-	void schedule(const char *prefix, scheduling_s *scheduling, uint64_t nowUs, int delayUs, schfunc_t callback, void *param);
-	void schedule2(const char *prefix, scheduling_s *scheduling, uint64_t timeUs, schfunc_t callback, void *param);
+	void schedule(scheduling_s *scheduling, uint64_t nowUs, int delayUs, schfunc_t callback, void *param);
+	void schedule2(scheduling_s *scheduling, uint64_t timeUs, schfunc_t callback, void *param);
 	void onTimerCallback();
 private:
 	EventQueue queue;
