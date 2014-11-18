@@ -22,7 +22,7 @@ public class WaveChartParser {
 
         String[] array = value.split(DELI);
 
-        Map<String, StringBuilder> map = new HashMap<String, StringBuilder>();
+        Map<String, StringBuilder> map = new HashMap<>();
 
         int index = 0;
         while (index + 2 < array.length) {

@@ -21,6 +21,8 @@ static Logging logger;
 
 /**
  * This method controls the actual hardware pins
+ *
+ * This method takes ~350 ticks.
  */
 void applyPinState(PwmConfig *state, int stateIndex) {
 	efiAssertVoid(stateIndex < PWM_PHASE_MAX_COUNT, "invalid stateIndex");
@@ -32,8 +34,7 @@ void applyPinState(PwmConfig *state, int stateIndex) {
 	}
 }
 
-void startSimplePwm(PwmConfig *state, const char *msg, io_pin_e ioPin,
-		float frequency, float dutyCycle) {
+void startSimplePwm(PwmConfig *state, const char *msg, io_pin_e ioPin, float frequency, float dutyCycle) {
 	efiAssertVoid(dutyCycle >= 0 && dutyCycle <= 1, "dutyCycle");
 
 	float switchTimes[] = { dutyCycle, 1 };
@@ -47,8 +48,8 @@ void startSimplePwm(PwmConfig *state, const char *msg, io_pin_e ioPin,
 	weComplexInit(msg, state, 2, switchTimes, 1, pinStates, NULL, applyPinState);
 }
 
-void startSimplePwmExt(PwmConfig *state, const char *msg, brain_pin_e brainPin, io_pin_e ioPin,
-		float frequency, float dutyCycle) {
+void startSimplePwmExt(PwmConfig *state, const char *msg, brain_pin_e brainPin, io_pin_e ioPin, float frequency,
+		float dutyCycle) {
 
 	GPIO_TypeDef * port = getHwPort(brainPin);
 	int pin = getHwPin(brainPin);
