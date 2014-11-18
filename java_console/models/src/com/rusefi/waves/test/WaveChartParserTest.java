@@ -21,20 +21,20 @@ public class WaveChartParserTest {
         WaveChart result = WaveChartParser.unpackToMap("");
         assertTrue(result.map.isEmpty());
 
-        result = WaveChartParser.unpackToMap("wave_chart,input1 A8!u!185080!r!0!2670996!crank!u!2670996_2!crank2!u!2674512!Injector 4!u!2674512!Spark 1!u!2674512!Injector 4!d!2674665!Spark 1!d!2674912!crank2!d!2680055!crank2!u!2687963!Injector 2!u!2687963!Spark 1!u!2687963!Injector 2!d!2688116!Spark 1!d!2688363!crank2!d!2693093!crank!d!2697428!crank2!u!2700454!Injector 1!u!2700454!Spark 1!u!2700454!Injector 1!d!2700607!Spark 1!d!2700854!crank2!d!2705329!crank2!u!2712449!Injector 3!u!2712449!Spark 1!u!2712449!Injector 3!d!2712681!Spark 1!d!2712849!crank2!d!2717385!r!0!2721629!crank!u!2721629!crank2!u!2724641!Injector 1!u!2724641!Injector 2!u!2724641!Injector 3!u!2724641!Injector 4!u!2724641!Spark 1!u!2724641!Injector 4!d!2726241!Injector 3!d!2726241!Injector 2!d!2726241!Injector 1!d!2726241!crank2!d!2729677!Spark 1!d!2730008!crank2!u!2736851!Injector 1!u!2736851!Injector 2!u!2736851!Injector 3!u!2736851!Injector 4!u!2736851!Spark 1!u!2736851!Injector 4!d!2738451!Injector 3!d!2738451!Injector 2!d!2738451!Injector 1!d!2738451!crank2!d!2741922!Spark 1!d!2742218!crank!d!2746104!crank2!u!2749010!Injector 1!u!2749010!Injector 2!u!2749010!Injector 3!u!2749010!Injector 4!u!2749010!Spark 1!u!2749010!Injector 4!d!2750601!Injector 3!d!2750601!Injector 2!d!2750601!Injector 1!d!2750601!crank2!d!2753919!Spark 1!d!2754377!crank2!u!2760922!Injector 1!u!2760922!Injector 2!u!2760922!Injector 3!u!2760922!Injector 4!u!2760922!Spark 1!u!2760922!Injector 4!d!2762522!Injector 3!d!2762522!Injector 2!d!2762522!Injector 1!d!2762522!crank2!d!2765882!Spark 1!d!2766289!r!236!2769990!crank!u!2769990!crank2!u!2773003!Injector 1!u!2773003!Injector 2!u!2773003!Injector 3!u!2773003!Injector 4!u!2773003!Spark 1!u!2773003!Injector 4!d!2774603!Injector 3!d!2774603!Injector 2!d!2774603!Injector 1!d!2774603!Spark 1!d!2778110!crank2!d!2778143!crank2!u!2785215!Injector 1!u!2785215!Injector 2!u!2785215!Injector 3!u!2785215!Injector 4!u!2785215!Spark 1!u!2785215!Injector 4!d!2786815!,");
-        assertEquals(9, result.map.size());
+        result = WaveChartParser.unpackToMap("wave_chart,c1!u_154!0!c1!d_155!11!c1!u_156!24!spa5!u!36!c1!d_157!39!c1!u_158!49!c1!d_159!61!c1!u_160!74!c1!d_161!86!c1!u_162!99!c1!d_163!111!c1!u_164!124!");
+        assertEquals(3, result.map.size());
 
-        String crankReport = result.get("crank").toString();
+        String crankReport = result.get("c1").toString();
 
         List<WaveReport.UpDown> list = WaveReport.parse(crankReport);
-        assertEquals(2, list.size());
+        assertEquals(4, list.size());
 
         WaveReport.UpDown upDown = list.get(0);
-        assertEquals(2670996, upDown.upTime);
-        assertEquals(2, upDown.upIndex);
+        assertEquals(24, upDown.upTime);
+        assertEquals(156, upDown.upIndex);
 
-        assertEquals(2697428, upDown.downTime);
-        assertEquals(-1, upDown.downIndex);
+        assertEquals(39, upDown.downTime);
+        assertEquals(157, upDown.downIndex);
     }
 
     @Test

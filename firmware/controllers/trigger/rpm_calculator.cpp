@@ -184,7 +184,7 @@ static char rpmBuffer[10];
  */
 static void onTdcCallback(void) {
 	itoa10(rpmBuffer, getRpm());
-	addWaveChartEvent(TOP_DEAD_CENTER_MESSAGE, (char*) rpmBuffer, "");
+	addWaveChartEvent(TOP_DEAD_CENTER_MESSAGE, (char*) rpmBuffer);
 }
 
 /**
@@ -260,11 +260,11 @@ void scheduleByAngle(int rpm, scheduling_s *timer, float angle, schfunc_t callba
 
 #endif /* EFI_SHAFT_POSITION_INPUT */
 
-void addWaveChartEvent(const char *name, const char * msg, const char *msg2) {
+void addWaveChartEvent(const char *name, const char * msg) {
 #if EFI_PROD_CODE
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 32, "lowstck#2c");
 #endif
 #if EFI_WAVE_CHART
-	waveChart.addWaveChartEvent3(name, msg, msg2);
+	waveChart.addWaveChartEvent3(name, msg);
 #endif /* EFI_WAVE_CHART */
 }

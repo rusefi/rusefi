@@ -452,7 +452,6 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 
 void resetConfigurationExt(Logging * logger, engine_type_e engineType, Engine *engine) {
 	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
-	engine_configuration2_s *engineConfiguration2 = engine->engineConfiguration2;
 	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 	/**
 	 * Let's apply global defaults first
@@ -587,7 +586,6 @@ void applyNonPersistentConfiguration(Logging * logger, Engine *engine) {
 
 void prepareShapes(Engine *engine) {
 	prepareOutputSignals(engine);
-	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
 	engine_configuration2_s *engineConfiguration2 = engine->engineConfiguration2;
 
 	// todo: looks like this is here only for unit tests. todo: remove

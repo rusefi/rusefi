@@ -5,6 +5,7 @@ import com.irnems.waves.ZoomProvider;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -73,35 +74,35 @@ public class WaveReport implements TimeAxisTranslator {
 //        if (array.length % 4 != 0)
 //            throw new IllegalArgumentException("Unexpected length " + array.length);
 
-        List<UpDown> times = new ArrayList<UpDown>();
+        List<UpDown> times = new ArrayList<>();
 
         int index = 0;
         if (array[0].equals(WC_DOWN))
             index += 2;
 
         while (index + 3 < array.length) {
-            if (!array[index].equals(WC_UP)) {
+            if (!array[index].startsWith(WC_UP)) {
                 index += 2;
                 continue;
             }
-            if (!array[index + 2].equals(WC_DOWN)) {
+            if (!array[index + 2].startsWith(WC_DOWN)) {
                 index += 2;
                 continue;
             }
 
-            String upString[] = array[index + 1].split("_");
-            String downString[] = array[index + 3].split("_");
+            String upString[] = array[index].split("_");
+            String downString[] = array[index + 2].split("_");
             try {
-                int upTime = Integer.parseInt(upString[0]);
-                int downTime = Integer.parseInt(downString[0]);
+                int upTime = Integer.parseInt(array[index + 1]);
+                int downTime = Integer.parseInt(array[index + 3]);
 
-                int upIndex = upString.length > 1 ? Integer.parseInt(upString[1]) : -1;
-                int downIndex = downString.length > 1 ? Integer.parseInt(downString[1]) : -1;
+                int upEventIndex = upString.length > 1 ? Integer.parseInt(upString[1]) : -1;
+                int downEventIndex = downString.length > 1 ? Integer.parseInt(downString[1]) : -1;
 
 
-                times.add(new UpDown(upTime, upIndex, downTime, downIndex));
+                times.add(new UpDown(upTime, upEventIndex, downTime, downEventIndex));
             } catch (NumberFormatException e) {
-                System.err.println("Invalid? [" + upString + "][" + downString + "]");
+                System.err.println("Invalid? [" + Arrays.toString(upString) + "][" + Arrays.toString(downString) + "]");
             }
 
             index += 4;

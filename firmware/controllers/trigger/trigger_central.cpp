@@ -87,19 +87,25 @@ int TriggerCentral::getHwEventCounter(int index) {
 static char shaft_signal_msg_index[15];
 
 static ALWAYS_INLINE void reportEventToWaveChart(trigger_event_e ckpSignalType, int index) {
-	itoa10(&shaft_signal_msg_index[1], index);
+	itoa10(&shaft_signal_msg_index[2], index);
 	if (ckpSignalType == SHAFT_PRIMARY_UP) {
-		addWaveChartEvent(WC_CRANK1, WC_UP, (char*) shaft_signal_msg_index);
+		shaft_signal_msg_index[0] = 'u';
+		addWaveChartEvent(WC_CRANK1, (char*) shaft_signal_msg_index);
 	} else if (ckpSignalType == SHAFT_PRIMARY_DOWN) {
-		addWaveChartEvent(WC_CRANK1, WC_DOWN, (char*) shaft_signal_msg_index);
+		shaft_signal_msg_index[0] = 'd';
+		addWaveChartEvent(WC_CRANK1, (char*) shaft_signal_msg_index);
 	} else if (ckpSignalType == SHAFT_SECONDARY_UP) {
-		addWaveChartEvent(WC_CRANK2, WC_UP, (char*) shaft_signal_msg_index);
+		shaft_signal_msg_index[0] = 'u';
+		addWaveChartEvent(WC_CRANK2, (char*) shaft_signal_msg_index);
 	} else if (ckpSignalType == SHAFT_SECONDARY_DOWN) {
-		addWaveChartEvent(WC_CRANK2, WC_DOWN, (char*) shaft_signal_msg_index);
+		shaft_signal_msg_index[0] = 'd';
+		addWaveChartEvent(WC_CRANK2, (char*) shaft_signal_msg_index);
 	} else if (ckpSignalType == SHAFT_3RD_UP) {
-		addWaveChartEvent(WC_CRANK3, WC_UP, (char*) shaft_signal_msg_index);
+		shaft_signal_msg_index[0] = 'u';
+		addWaveChartEvent(WC_CRANK3, (char*) shaft_signal_msg_index);
 	} else if (ckpSignalType == SHAFT_3RD_DOWN) {
-		addWaveChartEvent(WC_CRANK3, WC_DOWN, (char*) shaft_signal_msg_index);
+		shaft_signal_msg_index[0] = 'd';
+		addWaveChartEvent(WC_CRANK3, (char*) shaft_signal_msg_index);
 	}
 }
 
@@ -256,8 +262,7 @@ float getTriggerDutyCycle(int index) {
 }
 
 void initTriggerCentral(Engine *engine) {
-	// todo: use 'engine' parameter and eliminate 'extern'
-	strcpy((char*) shaft_signal_msg_index, "_");
+	strcpy((char*) shaft_signal_msg_index, "x_");
 
 #if EFI_WAVE_CHART
 	initWaveChart(&waveChart);
