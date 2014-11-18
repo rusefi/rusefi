@@ -26,7 +26,7 @@ void setOutputPinValue(io_pin_e pin, int logicValue) {
 		return;
 	efiAssertVoid(pinDefaultState[pin]!=NULL, "pin mode not initialized");
 	pin_output_mode_e mode = *pinDefaultState[pin];
-	efiAssert(mode <= OM_OPENDRAIN_INVERTED, "invalid pin_output_mode_e", -1);
+	efiAssertVoid(mode <= OM_OPENDRAIN_INVERTED, "invalid pin_output_mode_e");
 #else
 	pin_output_mode_e mode = OM_DEFAULT;
 #endif
