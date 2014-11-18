@@ -59,4 +59,9 @@ void setBmwE34(engine_configuration_s *engineConfiguration) {
 	engineConfiguration->hasCltSensor = false;
 	engineConfiguration->hasIatSensor = false;
 
+	/**
+	 * This saves a couple of ticks in trigger emulation methods
+	 */
+	bc->triggerSimulatorPins[1] = GPIOD_2;
+	bc->triggerSimulatorPins[2] = GPIOD_3;
 }
