@@ -41,7 +41,7 @@ bool printGapRatio = false;
 #endif /* ! EFI_PROD_CODE */
 
 #if (EFI_PROD_CODE || EFI_SIMULATOR)
-Logging logger;
+static Logging logger;
 #endif
 
 /**
