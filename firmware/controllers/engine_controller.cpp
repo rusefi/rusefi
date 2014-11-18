@@ -400,7 +400,7 @@ void initEngineContoller(Engine *engine) {
 #endif
 
 #if EFI_FUEL_PUMP
-	fuelPumpLogic = parseExpression(&lePool, FUEL_PUMP_LOGIC);
+	fuelPumpLogic = lePool.parseExpression(FUEL_PUMP_LOGIC);
 #endif
 
 	addConsoleAction("analoginfo", printAnalogInfo);
