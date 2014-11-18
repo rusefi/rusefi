@@ -1,10 +1,8 @@
 package com.rusefi.waves;
 
-import com.rusefi.io.tcp.TcpConnector;
-
 import java.util.*;
 
-import static com.rusefi.io.tcp.TcpConnector.*;
+import static com.rusefi.io.tcp.TcpConnector.parseIntWithReason;
 
 /**
  * 1/11/14.
@@ -19,7 +17,7 @@ public class RevolutionLog {
     }
 
     public static RevolutionLog parseRevolutions(CharSequence revolutions) {
-        TreeMap<Integer, Integer> time2rpm = new TreeMap<Integer, Integer>();
+        TreeMap<Integer, Integer> time2rpm = new TreeMap<>();
         if (revolutions == null)
             return new RevolutionLog(time2rpm);
 
@@ -46,7 +44,7 @@ public class RevolutionLog {
         if (entry == null) {
             if (tryNextRevolution && time2rpm.size() >= 2) {
                 // we are here if the value is below the first revolution point
-                List<Map.Entry<Integer, Integer>> element = new ArrayList<Map.Entry<Integer, Integer>>(time2rpm.entrySet());
+                List<Map.Entry<Integer, Integer>> element = new ArrayList<>(time2rpm.entrySet());
                 Map.Entry<Integer, Integer> first = element.get(0);
                 Map.Entry<Integer, Integer> second = element.get(1);
 

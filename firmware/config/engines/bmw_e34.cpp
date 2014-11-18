@@ -61,7 +61,9 @@ void setBmwE34(engine_configuration_s *engineConfiguration) {
 
 	/**
 	 * This saves a couple of ticks in trigger emulation methods
+	 * TODO: add some smart logic to detect unneeded trigger simulation pins?
+	 * TODO: but probably not worth it
 	 */
-	bc->triggerSimulatorPins[1] = GPIOD_2;
-	bc->triggerSimulatorPins[2] = GPIOD_3;
+	bc->triggerSimulatorPins[1] = GPIO_UNASSIGNED;
+	bc->triggerSimulatorPins[2] = GPIO_UNASSIGNED;
 }
