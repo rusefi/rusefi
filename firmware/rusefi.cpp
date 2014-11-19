@@ -131,10 +131,11 @@ static bool hasFirmwareErrorFlag = FALSE;
 extern engine_configuration_s *engineConfiguration;
 extern board_configuration_s *boardConfiguration;
 extern engine_configuration2_s *engineConfiguration2;
-EXTERN_ENGINE;
+EXTERN_ENGINE
+;
 
 char *getFirmwareError(void) {
-	return (char*)errorMessageBuffer;
+	return (char*) errorMessageBuffer;
 }
 
 void runRusEfi(void) {
@@ -144,7 +145,6 @@ void runRusEfi(void) {
 	engine->engineConfiguration = engineConfiguration;
 	engine->engineConfiguration2 = engineConfiguration2;
 	engineConfiguration2->engineConfiguration = engineConfiguration;
-
 
 	initErrorHandling();
 
@@ -243,13 +243,22 @@ void firmwareError(const char *fmt, ...) {
 	setOutputPinValue(LED_ERROR, 1);
 	turnAllPinsOff();
 	hasFirmwareErrorFlag = TRUE;
-	firmwareErrorMessageStream.eos = 0; // reset
-	va_list ap;
-	va_start(ap, fmt);
-	chvprintf((BaseSequentialStream *) &firmwareErrorMessageStream, fmt, ap);
-	va_end(ap);
+	if (indexOf(fmt, '%') == -1) {
+		/**
+		 * in case of simple error message let's reduce stack usage
+		 * because chvprintf might be causing an error
+		 */
+		strcpy((char*)errorMessageBuffer, fmt);
 
-	firmwareErrorMessageStream.buffer[firmwareErrorMessageStream.eos] = 0; // need to terminate explicitly
+	} else {
+		firmwareErrorMessageStream.eos = 0; // reset
+		va_list ap;
+		va_start(ap, fmt);
+		chvprintf((BaseSequentialStream *) &firmwareErrorMessageStream, fmt, ap);
+		va_end(ap);
+
+		firmwareErrorMessageStream.buffer[firmwareErrorMessageStream.eos] = 0; // need to terminate explicitly
+	}
 }
 
 int getRusEfiVersion(void) {

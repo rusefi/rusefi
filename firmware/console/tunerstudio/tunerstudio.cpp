@@ -93,7 +93,8 @@ static int ts_serail_ready(void) {
 #endif
 }
 
-static THD_WORKING_AREA(TS_WORKING_AREA, UTILITY_THREAD_STACK_SIZE);
+// this thread wants a bit extra stack
+static THD_WORKING_AREA(TS_WORKING_AREA, UTILITY_THREAD_STACK_SIZE + 200);
 
 static int tsCounter = 0;
 
