@@ -33,7 +33,7 @@
 #include "eficonsole.h"
 #include "status_loop.h"
 
-#define CHART_DELIMETER	"!"
+#define CHART_DELIMETER	'!'
 
 #if EFI_HISTOGRAMS || defined(__DOXYGEN__)
 #include "rfiutil.h"
@@ -187,14 +187,15 @@ void WaveChart::addWaveChartEvent3(const char *name, const char * msg) {
 		 * printf is a heavy method, append is used here as a performance optimization
 		 */
 		appendFast(&logging, name);
-		appendFast(&logging, CHART_DELIMETER);
+		appendChar(&logging, CHART_DELIMETER);
 		appendFast(&logging, msg);
-		appendFast(&logging, CHART_DELIMETER);
+		appendChar(&logging, CHART_DELIMETER);
 //		time100 -= startTime100;
 
 		itoa10(timeBuffer, time100);
 		appendFast(&logging, timeBuffer);
-		appendFast(&logging, CHART_DELIMETER);
+		appendChar(&logging, CHART_DELIMETER);
+		logging.linePointer[0] = 0;
 	}
 	if (!alreadyLocked) {
 		unlockOutputBuffer();

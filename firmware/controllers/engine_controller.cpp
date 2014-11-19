@@ -416,4 +416,5 @@ void initEngineContoller(Engine *engine) {
 	}
 
 	addConsoleActionSSP("set_user_out", (VoidCharPtrCharPtrVoidPtr) setUserOutput, engine);
+	initEval(engine);
 }
