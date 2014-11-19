@@ -50,7 +50,10 @@ float maxF(float i1, float i2) {
 }
 
 uint32_t efiStrlen(const char *param) {
-	return strlen(param);
+	register const char *s;
+	for (s = param; *s; ++s)
+		;
+	return (s - param);
 }
 
 bool startsWith(const char *line, const char *prefix) {

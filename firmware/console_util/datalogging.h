@@ -96,11 +96,16 @@ void appendPrintf(Logging *logging, const char *fmt, ...);
 void vappendPrintf(Logging *logging, const char *fmt, va_list arg);
 void append(Logging *logging, const char *text);
 void appendFast(Logging *logging, const char *text);
+
+/**
+ * This macro breaks the normal zero=termination constraint, please take care of this outside of this macro
+ */
+#define appendChar(logging, symbol) {(logging)->linePointer[0] = (symbol);(logging)->linePointer++;}
+
 /**
  * this method copies the line into the intermediate buffer for later output by
  * the main thread
  */
- 
 void scheduleLogging(Logging *logging);
 
 void scheduleIntValue(Logging *logging, const char *msg, int value);

@@ -27,6 +27,11 @@ static LENameOrdinalPair leAnd(LE_OPERATOR_AND, "and");
 static LENameOrdinalPair leOr(LE_OPERATOR_OR, "or");
 static LENameOrdinalPair leNot(LE_OPERATOR_NOT, "not");
 
+static LENameOrdinalPair leAdd(LE_OPERATOR_ADDITION, "+");
+static LENameOrdinalPair leSub(LE_OPERATOR_SUBSTRACTION, "-");
+static LENameOrdinalPair leMul(LE_OPERATOR_MULTIPLICATION, "*");
+static LENameOrdinalPair leDiv(LE_OPERATOR_DIVISION, "/");
+
 static LENameOrdinalPair leMore(LE_OPERATOR_MORE, ">");
 static LENameOrdinalPair leMoreOrEqual(LE_OPERATOR_MORE_OR_EQUAL, ">=");
 
@@ -147,6 +152,38 @@ void LECalculator::doJob(Engine *engine, LEElement *element) {
 		float v1 = pop(LE_OPERATOR_MORE);
 
 		stack.push(v1 > v2);
+	}
+	break;
+	case LE_OPERATOR_ADDITION: {
+		// elements on stack are in reverse order
+		float v2 = pop(LE_OPERATOR_MORE);
+		float v1 = pop(LE_OPERATOR_MORE);
+
+		stack.push(v1 + v2);
+	}
+	break;
+	case LE_OPERATOR_SUBSTRACTION: {
+		// elements on stack are in reverse order
+		float v2 = pop(LE_OPERATOR_MORE);
+		float v1 = pop(LE_OPERATOR_MORE);
+
+		stack.push(v1 - v2);
+	}
+	break;
+	case LE_OPERATOR_MULTIPLICATION: {
+		// elements on stack are in reverse order
+		float v2 = pop(LE_OPERATOR_MORE);
+		float v1 = pop(LE_OPERATOR_MORE);
+
+		stack.push(v1 * v2);
+	}
+	break;
+	case LE_OPERATOR_DIVISION: {
+		// elements on stack are in reverse order
+		float v2 = pop(LE_OPERATOR_MORE);
+		float v1 = pop(LE_OPERATOR_MORE);
+
+		stack.push(v1 / v2);
 	}
 		break;
 	case LE_OPERATOR_LESS_OR_EQUAL: {
@@ -292,6 +329,7 @@ LEElement *LEElementPool::parseExpression(const char * line) {
 #if (EFI_PROD_CODE || EFI_SIMULATOR)
 
 static void eval(char *line, Engine *engine) {
+	line = unquote(line);
 	scheduleMsg(&logger, "Parsing [%s]", line);
 	evalPool.reset();
 	LEElement * e = evalPool.parseExpression(line);

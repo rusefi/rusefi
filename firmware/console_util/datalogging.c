@@ -56,8 +56,7 @@ typedef char log_buf_t[DL_OUTPUT_BUFFER];
 
 static log_buf_t pendingBuffers0 CCM_OPTIONAL
 ;
-static log_buf_t pendingBuffers1
-;
+static log_buf_t pendingBuffers1;
 
 /**
  * This is the buffer into which all the data providers write
@@ -104,7 +103,7 @@ void append(Logging *logging, const char *text) {
 		return;
 	}
 	strcpy(logging->linePointer, text);
-    /**
+	/**
 	 * And now we are pointing at the zero char at the end of the buffer again
 	 */
 	logging->linePointer += extraLen;
@@ -121,8 +120,16 @@ void appendFast(Logging *logging, const char *text) {
 //		c = *s++;
 //		*logging->linePointer++ = c;
 //	} while (c != '\0');
-	int extraLen = efiStrlen(text);
-	strcpy(logging->linePointer, text);
+	register char *s;
+	for (s = (char *) text; *s; ++s)
+		;
+	int extraLen = (s - text);
+
+	s = logging->linePointer;
+	while ((*s++ = *text++) != 0)
+		;
+
+//	strcpy(logging->linePointer, text);
 	logging->linePointer += extraLen;
 }
 
@@ -195,28 +202,28 @@ char* getCaption(LoggingPoints loggingPoint) {
 }
 
 /*
-// todo: this method does not really belong to this file
-static char* get2ndCaption(int loggingPoint) {
-	switch (loggingPoint) {
-	case LP_RPM:
-		return "RPM";
-	case LP_THROTTLE:
-		return "%";
-	case LP_IAT:
-		return "°F";
-	case LP_ECT:
-		return "°F";
-	case LP_SECONDS:
-		return "s";
-	case LP_MAP:
-		return "MAP";
-	case LP_MAF:
-		return "MAF";
-	}
-	firmwareError("No such loggingPoint");
-	return NULL;
-}
-*/
+ // todo: this method does not really belong to this file
+ static char* get2ndCaption(int loggingPoint) {
+ switch (loggingPoint) {
+ case LP_RPM:
+ return "RPM";
+ case LP_THROTTLE:
+ return "%";
+ case LP_IAT:
+ return "°F";
+ case LP_ECT:
+ return "°F";
+ case LP_SECONDS:
+ return "s";
+ case LP_MAP:
+ return "MAP";
+ case LP_MAF:
+ return "MAF";
+ }
+ firmwareError("No such loggingPoint");
+ return NULL;
+ }
+ */
 
 void initLoggingExt(Logging *logging, const char *name, char *buffer, int bufferSize) {
 	print("Init logging %s\r\n", name);
@@ -341,7 +348,7 @@ void resetLogging(Logging *logging) {
  * This method should only be invoked on main thread because only the main thread can write to the console
  */
 void printMsg(Logging *logger, const char *fmt, ...) {
-  efiAssertVoid(getRemainingStack(chThdSelf()) > 256, "lowstck#5o");
+	efiAssertVoid(getRemainingStack(chThdSelf()) > 256, "lowstck#5o");
 //	resetLogging(logging); // I guess 'reset' is not needed here?
 	appendMsgPrefix(logger);
 
@@ -396,7 +403,7 @@ void scheduleLogging(Logging *logging) {
 		return;
 	}
 	strcpy(accumulationBuffer + accumulatedSize, logging->buffer);
-    accumulatedSize += newLength;
+	accumulatedSize += newLength;
 	if (!alreadyLocked) {
 		unlockOutputBuffer();
 	}
