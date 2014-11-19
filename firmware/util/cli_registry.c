@@ -90,7 +90,7 @@ void addConsoleActionS(const char *token, VoidCharPtr callback) {
 }
 
 void addConsoleActionSP(const char *token, VoidCharPtrVoidPtr callback, void *param) {
-	doAddAction(token, STRING_PARAMETER_P, (Void) callback, NULL);
+	doAddAction(token, STRING_PARAMETER_P, (Void) callback, param);
 }
 
 void addConsoleActionSS(const char *token, VoidCharPtrCharPtr callback) {
