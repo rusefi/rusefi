@@ -289,6 +289,7 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	engineConfiguration->hasAfrSensor = true;
 	engineConfiguration->hasCltSensor = true;
 	engineConfiguration->hasBaroSensor = false;
+	engineConfiguration->isDigitalChartEnabled = true;
 
 	boardConfiguration->idleSolenoidFrequency = 200;
 //	engineConfiguration->idleMode = IM_AUTO;

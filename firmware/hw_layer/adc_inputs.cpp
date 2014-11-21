@@ -53,8 +53,6 @@ AdcConfiguration::AdcConfiguration(ADCConversionGroup* hwConfig) {
 
 #define ADC_FAST_DEVICE ADCD2
 
-#define ADC_DEBUG_KEY "adcDebug"
-
 static char LOGGING_BUFFER[500];
 static Logging logger;
 static int adcCallbackCounter_slow = 0;
@@ -434,7 +432,7 @@ static void printFullAdcReport(void) {
 }
 
 static void printStatus(void) {
-	scheduleIntValue(&logger, ADC_DEBUG_KEY, adcDebugReporting);
+	scheduleMsg(&logger, "adcDebug=%d", adcDebugReporting);
 }
 
 static void setAdcDebugReporting(int value) {
@@ -485,7 +483,7 @@ void initAdcInputs(bool boardTestMode) {
 
 	printStatus();
 
-	addConsoleActionI(ADC_DEBUG_KEY, &setAdcDebugReporting);
+	addConsoleActionI("adcDebug", &setAdcDebugReporting);
 
 #if EFI_INTERNAL_ADC
 	/*
