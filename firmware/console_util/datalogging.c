@@ -402,7 +402,8 @@ void scheduleLogging(Logging *logging) {
 		resetLogging(logging);
 		return;
 	}
-	strcpy(accumulationBuffer + accumulatedSize, logging->buffer);
+	// memcpy is faster then strcpy because it is not looking for line terminator
+	memcpy(accumulationBuffer + accumulatedSize, logging->buffer, newLength + 1);
 	accumulatedSize += newLength;
 	if (!alreadyLocked) {
 		unlockOutputBuffer();
