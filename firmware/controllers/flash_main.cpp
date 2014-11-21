@@ -61,6 +61,8 @@ void writeToFlashIfPending() {
 	writeToFlash();
 }
 
+extern uint32_t maxLockTime;
+
 void writeToFlash(void) {
 #if EFI_INTERNAL_FLASH
 	scheduleMsg(&logger, " !!!!!!!!!!!!!!!!!!!! BE SURE NOT WRITE WITH IGNITION ON !!!!!!!!!!!!!!!!!!!!");
@@ -77,6 +79,7 @@ void writeToFlash(void) {
 	scheduleMsg(&logger, "Flash programmed in (ms): %d", currentTimeMillis() - nowMs);
 	scheduleMsg(&logger, "Flashing result: %d", result);
 #endif /* EFI_INTERNAL_FLASH */
+	maxLockTime = 0;
 }
 
 static bool isValidCrc(persistent_config_container_s *state) {

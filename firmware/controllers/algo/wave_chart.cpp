@@ -42,6 +42,7 @@ static histogram_s waveChartHisto;
 #endif
 
 EXTERN_ENGINE;
+extern uint32_t maxLockTime;
 
 /**
  * This is the number of events in the digital chart which would be displayed
@@ -54,9 +55,6 @@ EXTERN_ENGINE;
 #endif
 
 int waveChartUsedSize;
-
-static int isChartActive = true;
-//static int isChartActive = false;
 
 //#define DEBUG_WAVE 1
 
@@ -95,13 +93,14 @@ bool_t WaveChart::isWaveChartFull() {
 }
 
 static void printStatus(void) {
-	scheduleIntValue(&logger, "chart", isChartActive);
-	scheduleIntValue(&logger, "chartsize", engineConfiguration->digitalChartSize);
+	scheduleMsg(&logger, "digital chart: %s", boolToString(engineConfiguration->isDigitalChartEnabled));
+	scheduleMsg(&logger, "chartsize=%d", engineConfiguration->digitalChartSize);
 }
 
 static void setChartActive(int value) {
-	isChartActive = value;
+	engineConfiguration->isDigitalChartEnabled = value;
 	printStatus();
+	maxLockTime = 0;
 }
 
 void setChartSize(int newSize) {
@@ -133,7 +132,7 @@ void WaveChart::publishChart() {
 	scheduleSimpleMsg(&debugLogging, "IT'S TIME", strlen(l->buffer));
 #endif
 	bool isFullLog = getFullLog();
-	if (isChartActive && isFullLog) {
+	if (engineConfiguration->isDigitalChartEnabled && isFullLog) {
 		scheduleLogging(&logging);
 	}
 }
@@ -144,7 +143,7 @@ static char timeBuffer[10];
  * @brief	Register an event for digital sniffer
  */
 void WaveChart::addWaveChartEvent3(const char *name, const char * msg) {
-	if(!isChartActive) {
+	if(!engineConfiguration->isDigitalChartEnabled) {
 		return;
 	}
 
@@ -219,7 +218,7 @@ void showWaveChartHistogram(void) {
 void initWaveChart(WaveChart *chart) {
 	initLogging(&logger, "wave info");
 
-	if (!isChartActive) {
+	if (!engineConfiguration->isDigitalChartEnabled) {
 		printMsg(&logger, "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! chart disabled");
 	}
 

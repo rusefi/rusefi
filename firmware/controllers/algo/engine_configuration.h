@@ -447,6 +447,7 @@ typedef struct {
 	bool_t hasBaroSensor : 1; // bit 1
 	bool_t hasAfrSensor : 1; // bit 2
 	bool_t useConstantDwellDuringCranking : 1; // bit 3
+	bool_t isDigitalChartEnabled : 1; // bit 4
 	// that's the next 32 bit field
 	int hasCltSensor;
 
