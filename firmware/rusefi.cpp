@@ -248,7 +248,7 @@ void firmwareError(const char *fmt, ...) {
 		 * in case of simple error message let's reduce stack usage
 		 * because chvprintf might be causing an error
 		 */
-		strcpy((char*)errorMessageBuffer, fmt);
+		strcpy((char*) errorMessageBuffer, fmt);
 
 	} else {
 		firmwareErrorMessageStream.eos = 0; // reset
@@ -261,6 +261,14 @@ void firmwareError(const char *fmt, ...) {
 	}
 }
 
+static char UNUSED_RAM_SIZE[20000];
+
+static char UNUSED_CCM_SIZE[5000] CCM_OPTIONAL;
+
 int getRusEfiVersion(void) {
-	return 20141121;
+	if (UNUSED_RAM_SIZE == 0)
+		return 1; // this is here to make the compiler happy about the unused array
+	if (UNUSED_CCM_SIZE == 0)
+		return 1; // this is here to make the compiler happy about the unused array
+	return 20141122;
 }
