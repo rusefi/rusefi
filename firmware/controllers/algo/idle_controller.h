@@ -5,14 +5,13 @@
  * @author Andrey Belomutskiy, (c) 2012-2014
  */
 
+#include "engine.h"
+
 #ifndef IDLE_CONTROLLER_H_
 #define IDLE_CONTROLLER_H_
 
-// 700‰ duty cycle by default
+// 600‰ duty cycle by default
 #define DEFAULT_IDLE_DUTY 600
-
-#define DEFAULT_TARGET_RPM 1000
-//#define DEFAULT_TARGET_RPM 2000
 
 #define IDLE_PERIOD 1
 
@@ -32,7 +31,7 @@ public:
 	int timeOfLastIdleChange;
 };
 
-void idleInit(IdleValveState *idle);
+void idleInit(IdleValveState *idle DECLARE_ENGINE_PARAMETER_S);
 int getIdle(IdleValveState *idle, int currentRpm, int time);
 void setIdleRpm(IdleValveState *idle, int targetRpm);
 

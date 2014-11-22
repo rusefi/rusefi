@@ -495,7 +495,9 @@ typedef struct {
 
 	float ignitionDwellForCrankingMs;
 
-	int unused3[93];
+	int targetIdleRpm;
+
+	int unused3[92];
 
 } engine_configuration_s;
 
