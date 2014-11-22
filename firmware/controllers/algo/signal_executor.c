@@ -78,11 +78,11 @@ void turnPinHigh(io_pin_e pin) {
 #if EFI_WAVE_CHART
 	// this is a performance optimization - array index is cheaper then invoking a method with 'switch'
 	const char *pinName = namedPinsArray[pin];
-	dbgDurr = hal_lld_get_counter_value() - dbgStart;
+//	dbgDurr = hal_lld_get_counter_value() - dbgStart;
 
 	addWaveChartEvent(pinName, WC_UP);
 #endif /* EFI_WAVE_ANALYZER */
-	dbgDurr = hal_lld_get_counter_value() - dbgStart;
+//	dbgDurr = hal_lld_get_counter_value() - dbgStart;
 }
 
 void turnPinLow(io_pin_e pin) {

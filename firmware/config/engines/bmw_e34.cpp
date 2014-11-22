@@ -50,8 +50,21 @@ void setBmwE34(engine_configuration_s *engineConfiguration) {
 
 	bc->injectionPinMode = OM_INVERTED;
 
-	// emulating this 60-0 takes some resources, let's keep it slow by default
-	// rpm 200
+	bc->injectionPins[0] = GPIOB_9; // #1
+	bc->injectionPins[1] = GPIOB_8; // #2
+	/**
+	 * this is a relatively dirty performance hack: with unassigned pin we
+	 * have less stuff to put into wave chart
+	 */
+	bc->injectionPins[2] = GPIO_UNASSIGNED; // #3
+	bc->injectionPins[3] = GPIO_UNASSIGNED; // #4
+	bc->injectionPins[4] = GPIO_UNASSIGNED; // #5
+	bc->injectionPins[5] = GPIO_UNASSIGNED; // #6
+
+	/**
+	 * emulating the 60-0 trigger takes some resources, let's keep it slow by default
+	 * rpm 200
+	 */
 	bc->triggerSimulatorFrequency = 200;
 
 	engineConfiguration->map.sensor.sensorType = MT_MPX4250;

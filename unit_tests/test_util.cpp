@@ -20,6 +20,7 @@
 #include "crc.h"
 #include "fl_stack.h"
 #include "io_pins.h"
+#include "efiGpio.h"
 
 void testCrc(void) {
 	assertEquals(4, efiRound(4.4, 1));
