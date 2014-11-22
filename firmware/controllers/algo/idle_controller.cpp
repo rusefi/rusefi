@@ -20,9 +20,11 @@
 
 static int lastGoodValue = DEFAULT_IDLE_DUTY;
 
-void idleInit(IdleValveState *idle) {
+EXTERN_ENGINE;
+
+void idleInit(IdleValveState *idle DECLARE_ENGINE_PARAMETER_S) {
 	idle->value = DEFAULT_IDLE_DUTY;
-	setIdleRpm(idle, DEFAULT_TARGET_RPM);
+	setIdleRpm(idle, engineConfiguration->targetIdleRpm);
 	idle->timeOfLastIdleChange = 0;
 }
 
