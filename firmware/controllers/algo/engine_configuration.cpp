@@ -292,6 +292,7 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	engineConfiguration->isDigitalChartEnabled = true;
 
 	boardConfiguration->idleSolenoidFrequency = 200;
+	boardConfiguration->idleSolenoidPwm = 0.5;
 //	engineConfiguration->idleMode = IM_AUTO;
 	engineConfiguration->idleMode = IM_MANUAL;
 

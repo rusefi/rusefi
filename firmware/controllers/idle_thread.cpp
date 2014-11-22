@@ -61,17 +61,23 @@ void idleDebug(const char *msg, int value) {
 	scheduleLogging(&logger);
 }
 
+static void showIdleInfo(void) {
+	scheduleMsg(&logger, "isIdleControlActive=%d", engineConfiguration->idleMode);
+	scheduleMsg(&logger, "idle valve freq=%d on %s", boardConfiguration->idleSolenoidFrequency,
+			hwPortname(boardConfiguration->idleValvePin));
+}
+
 static void setIdleControlEnabled(int value, Engine *engine) {
 	engineConfiguration->idleMode = value ? IM_MANUAL : IM_AUTO;
-	scheduleMsg(&logger, "isIdleControlActive=%d", engineConfiguration->idleMode);
+	showIdleInfo();
 }
 
 static void setIdleValvePwm(int value) {
 	// todo: change parameter type, maybe change parameter validation?
 	if (value < 1 || value > 999)
 		return;
-	scheduleMsg(&logger, "setting idle valve PWM %d @%d on %s", value, boardConfiguration->idleSolenoidFrequency,
-			hwPortname(boardConfiguration->idleValvePin));
+	scheduleMsg(&logger, "setting idle valve PWM %d", value);
+	showIdleInfo();
 	/**
 	 * currently idle level is an integer per mil (0-1000 range), and PWM takes a float in the 0..1 range
 	 * todo: unify?
@@ -134,6 +140,7 @@ void startIdleThread(Engine *engine) {
 	// this switch is not used yet
 	mySetPadMode2("idle switch", boardConfiguration->idleSwitchPin, PAL_MODE_INPUT);
 
+	addConsoleAction("idleinfo", showIdleInfo);
 	addConsoleActionI("set_idle_rpm", setIdleRpmAction);
 	addConsoleActionI("set_idle_pwm", setIdleValvePwm);
 	addConsoleActionIP("set_idle_enabled", (VoidIntVoidPtr)setIdleControlEnabled, engine);
