@@ -52,6 +52,11 @@ void initOutputSignal(OutputSignal *signal, io_pin_e ioPin) {
 	signal->io_pin = ioPin;
 }
 
+uint32_t dbgStart;
+uint32_t dbgDurr;
+
+extern const char *namedPinsArray[NAMED_PIN_COUNT];
+
 void turnPinHigh(io_pin_e pin) {
 #if EFI_DEFAILED_LOGGING
 //	signal->hi_time = hTimeNow();
@@ -71,8 +76,13 @@ void turnPinHigh(io_pin_e pin) {
 #endif
 
 #if EFI_WAVE_CHART
-	addWaveChartEvent(getPinName(pin), WC_UP);
+	// this is a performance optimization - array index is cheaper then invoking a method with 'switch'
+	const char *pinName = namedPinsArray[pin];
+	dbgDurr = hal_lld_get_counter_value() - dbgStart;
+
+	addWaveChartEvent(pinName, WC_UP);
 #endif /* EFI_WAVE_ANALYZER */
+	dbgDurr = hal_lld_get_counter_value() - dbgStart;
 }
 
 void turnPinLow(io_pin_e pin) {
@@ -87,7 +97,10 @@ void turnPinLow(io_pin_e pin) {
 #endif /* EFI_DEFAILED_LOGGING */
 
 #if EFI_WAVE_CHART
-	addWaveChartEvent(getPinName(pin), WC_DOWN);
+	// this is a performance optimization - array index is cheaper then invoking a method with 'switch'
+	const char *pinName = namedPinsArray[pin];
+
+	addWaveChartEvent(pinName, WC_DOWN);
 #endif /* EFI_WAVE_ANALYZER */
 }
 
@@ -115,104 +128,14 @@ void scheduleOutput(OutputSignal *signal, float delayMs, float durationMs) {
 	scheduling_s * sUp = &signal->signalTimerUp[index];
 	scheduling_s * sDown = &signal->signalTimerDown[index];
 
-	scheduleTask("out up", sUp, (int)MS2US(delayMs), (schfunc_t) &turnPinHigh, (void *) signal->io_pin);
-	scheduleTask("out down", sDown, (int)MS2US(delayMs + durationMs), (schfunc_t) &turnPinLow, (void*) signal->io_pin);
+	scheduleTask("out up", sUp, (int) MS2US(delayMs), (schfunc_t) &turnPinHigh, (void *) signal->io_pin);
+	scheduleTask("out down", sDown, (int) MS2US(delayMs + durationMs), (schfunc_t) &turnPinLow, (void*) signal->io_pin);
 }
 
 io_pin_e getPinByName(const char *name) {
-	if(startsWith(name, "spa")) {
+	if (startsWith(name, "spa")) {
 		int index = atoi(name + 3);
-		return (io_pin_e)((int)SPARKOUT_1_OUTPUT - 1 + index);
+		return (io_pin_e) ((int) SPARKOUT_1_OUTPUT - 1 + index);
 	}
 	return IO_INVALID;
-}
-
-const char *getPinName(io_pin_e io_pin) {
-	switch (io_pin) {
-	// todo: refactor this hell - introduce arrays & checks?
-	case SPARKOUT_1_OUTPUT:
-		return "spa1";
-	case SPARKOUT_2_OUTPUT:
-		return "spa2";
-	case SPARKOUT_3_OUTPUT:
-		return "spa3";
-	case SPARKOUT_4_OUTPUT:
-		return "spa4";
-	case SPARKOUT_5_OUTPUT:
-		return "spa5";
-	case SPARKOUT_6_OUTPUT:
-		return "spa6";
-	case SPARKOUT_7_OUTPUT:
-		return "spa7";
-	case SPARKOUT_8_OUTPUT:
-		return "spa8";
-	case SPARKOUT_9_OUTPUT:
-		return "spa9";
-	case SPARKOUT_10_OUTPUT:
-		return "spa10";
-	case SPARKOUT_11_OUTPUT:
-		return "spa11";
-	case SPARKOUT_12_OUTPUT:
-		return "spa12";
-
-	case INJECTOR_1_OUTPUT:
-		return "inj1";
-	case INJECTOR_2_OUTPUT:
-		return "inj2";
-	case INJECTOR_3_OUTPUT:
-		return "inj3";
-	case INJECTOR_4_OUTPUT:
-		return "inj4";
-	case INJECTOR_5_OUTPUT:
-		return "inj5";
-	case INJECTOR_6_OUTPUT:
-		return "inj6";
-	case INJECTOR_7_OUTPUT:
-		return "inj7";
-	case INJECTOR_8_OUTPUT:
-		return "inj8";
-	case INJECTOR_9_OUTPUT:
-		return "inj9";
-	case INJECTOR_10_OUTPUT:
-		return "inj10";
-	case INJECTOR_11_OUTPUT:
-		return "inj11";
-	case INJECTOR_12_OUTPUT:
-		return "inj12";
-
-	case GPIO_0:
-		return "gpio0";
-	case GPIO_1:
-		return "gpio1";
-	case GPIO_2:
-		return "gpio2";
-	case GPIO_3:
-		return "gpio3";
-	case GPIO_4:
-		return "gpio4";
-	case GPIO_5:
-		return "gpio5";
-	case GPIO_6:
-		return "gpio6";
-	case GPIO_7:
-		return "gpio7";
-	case GPIO_8:
-		return "gpio8";
-	case GPIO_9:
-		return "gpio9";
-	case GPIO_10:
-		return "gpio10";
-	case GPIO_11:
-		return "gpio11";
-	case GPIO_12:
-		return "gpio12";
-	case GPIO_13:
-		return "gpio13";
-	case GPIO_14:
-		return "gpio14";
-	case GPIO_15:
-		return "gpio15";
-	default:
-		return "Pin needs name";
-	}
 }

@@ -77,6 +77,7 @@ extern "C"
 int getOutputPinValue(io_pin_e pin);
 void setOutputPinValue(io_pin_e pin, int logicValue);
 bool isPinAssigned(io_pin_e pin);
+const char *getPinName(io_pin_e io_pin);
 
 #ifdef __cplusplus
 }
