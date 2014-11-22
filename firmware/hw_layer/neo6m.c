@@ -31,7 +31,7 @@ extern board_configuration_s *boardConfiguration;
 static Logging logging;
 
 static SerialConfig GPSserialConfig = { GPS_SERIAL_SPEED, 0, USART_CR2_STOP1_BITS | USART_CR2_LINEN, 0 };
-static THD_WORKING_AREA(GPS_WORKING_AREA, UTILITY_THREAD_STACK_SIZE);
+static THD_WORKING_AREA(gpsThreadStack, UTILITY_THREAD_STACK_SIZE);
 
 // this field holds our current state
 static loc_t GPSdata;
@@ -118,7 +118,7 @@ void initGps(void) {
 	mySetPadMode2("GPS rx", boardConfiguration->gps_rx_pin, PAL_MODE_ALTERNATE(7));
 
 // todo: add a thread which would save location. If the GPS 5Hz - we should save the location each 200 ms
-	chThdCreateStatic(GPS_WORKING_AREA, sizeof(GPS_WORKING_AREA), LOWPRIO, GpsThreadEntryPoint, NULL);
+	chThdCreateStatic(gpsThreadStack, sizeof(gpsThreadStack), LOWPRIO, GpsThreadEntryPoint, NULL);
 
 	addConsoleAction("gpsinfo", &printGpsInfo);
 }

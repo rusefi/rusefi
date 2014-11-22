@@ -69,7 +69,7 @@ void hwHandleShaftSignal(trigger_event_e signal) {
 	if (triggerReentraint > maxTriggerReentraint)
 		maxTriggerReentraint = triggerReentraint;
 	triggerReentraint++;
-	efiAssertVoid(getRemainingStack(chThdSelf()) > 256, "lowstck#8");
+	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#8");
 	triggerCentral.handleShaftSignal(engine, signal);
 	triggerReentraint--;
 }

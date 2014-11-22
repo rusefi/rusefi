@@ -77,7 +77,7 @@ ADCDriver ADCD3;
  */
 static void adc_lld_serve_rx_interrupt(ADCDriver *adcp, uint32_t flags) {
 
-	efiAssertVoid(getRemainingStack(chThdSelf()) > 256, "sys_adc");
+	efiAssertVoid(getRemainingStack(chThdSelf()) > 64, "sys_adc");
 
   /* DMA errors handling.*/
   if ((flags & (STM32_DMA_ISR_TEIF | STM32_DMA_ISR_DMEIF)) != 0) {

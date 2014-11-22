@@ -134,7 +134,7 @@ void chvprintf(BaseSequentialStream *chp, const char *fmt, va_list ap) {
   char tmpbuf[MAX_FILLER + 1];
 #endif
 
-  efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#1c");
+  efiAssertVoid(getRemainingStack(chThdSelf()) > 64, "lowstck#1c");
 
 
   while (TRUE) {
