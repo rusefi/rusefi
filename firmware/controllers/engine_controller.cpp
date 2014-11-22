@@ -64,8 +64,7 @@ static LEElementPool lePool(mainPool, LE_ELEMENT_POOL_SIZE);
 static LEElement * fuelPumpLogic;
 static LEElement * radiatorFanLogic;
 
-persistent_config_container_s persistentState CCM_OPTIONAL
-;
+persistent_config_container_s persistentState CCM_OPTIONAL;
 
 /**
  * todo: it really looks like these fields should become 'static', i.e. private
@@ -83,8 +82,7 @@ static VirtualTimer everyMsTimer;
 
 static Logging logger;
 
-static engine_configuration2_s ec2 CCM_OPTIONAL
-;
+static engine_configuration2_s ec2 CCM_OPTIONAL;
 engine_configuration2_s * engineConfiguration2 = &ec2;
 
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)

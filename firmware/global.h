@@ -43,7 +43,7 @@ typedef unsigned int time_t;
 #define EFI_ERROR_CODE 0xffffffff
 
 #if EFI_USE_CCM && defined __GNUC__
-#define CCM_OPTIONAL __attribute__((section(".ccm")));
+#define CCM_OPTIONAL __attribute__((section(".ccm")))
 #else
 #define CCM_OPTIONAL @ ".ccm"
 #endif
