@@ -346,12 +346,12 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	boardConfiguration->electronicThrottlePin1 = GPIOC_9;
 	boardConfiguration->o2heaterPin = GPIO_UNASSIGNED;
 
-	boardConfiguration->injectionPins[0] = GPIOB_9;
-	boardConfiguration->injectionPins[1] = GPIOB_8;
-	boardConfiguration->injectionPins[2] = GPIOE_3;
-	boardConfiguration->injectionPins[3] = GPIOE_5;
-	boardConfiguration->injectionPins[4] = GPIOE_6;
-	boardConfiguration->injectionPins[5] = GPIOC_12;
+	boardConfiguration->injectionPins[0] = GPIOB_9; // #1
+	boardConfiguration->injectionPins[1] = GPIOB_8; // #2
+	boardConfiguration->injectionPins[2] = GPIOE_3; // #3
+	boardConfiguration->injectionPins[3] = GPIOE_5; // #4
+	boardConfiguration->injectionPins[4] = GPIOE_6; // #5
+	boardConfiguration->injectionPins[5] = GPIOC_12; // #6
 	boardConfiguration->injectionPins[6] = GPIO_UNASSIGNED;
 	boardConfiguration->injectionPins[7] = GPIO_UNASSIGNED;
 	boardConfiguration->injectionPins[8] = GPIO_UNASSIGNED;
