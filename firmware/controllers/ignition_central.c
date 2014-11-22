@@ -25,6 +25,7 @@
 #include "signal_executor.h"
 #include "main_trigger_callback.h"
 #include "engine_configuration.h"
+#include "efiGpio.h"
 
 extern engine_configuration_s *engineConfiguration;
 extern board_configuration_s *boardConfiguration;

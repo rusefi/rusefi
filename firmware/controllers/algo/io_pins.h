@@ -12,31 +12,12 @@
 
 #define GPIO_NULL NULL
 
+#define NAMED_PIN_COUNT 24
+
 /**
  * Logical pins. See brain_pin_e for physical pins.
  */
 typedef enum {
-	IO_INVALID,
-	LED_WARNING, // Orange on-board LED
-	LED_RUNNING, // Green on-board LED
-	LED_ERROR, // Red on-board LED
-	LED_COMMUNICATION_1, // Blue on-board LED
-	LED_EXT_1, // external board LED
-	LED_EXT_2, // external board LED
-	LED_EXT_3, // external board LED
-	LED_DEBUG,
-	LED_EMULATOR,
-
-	LED_TRIGGER_ERROR,
-
-	/**
-	 * see board_configuration_s->idleValvePin
-	 */
-	IDLE_VALVE,
-	TRIGGER_EMULATOR_PRIMARY,
-	TRIGGER_EMULATOR_SECONDARY,
-	TRIGGER_EMULATOR_3RD,
-
 	SPARKOUT_1_OUTPUT,
 	SPARKOUT_2_OUTPUT,
 	SPARKOUT_3_OUTPUT,
@@ -62,6 +43,45 @@ typedef enum {
 	INJECTOR_10_OUTPUT,
 	INJECTOR_11_OUTPUT,
 	INJECTOR_12_OUTPUT,
+
+	GPIO_0,
+	GPIO_1,
+	GPIO_2,
+	GPIO_3,
+	GPIO_4,
+	GPIO_5,
+	GPIO_6,
+	GPIO_7,
+	GPIO_8,
+	GPIO_9,
+	GPIO_10,
+	GPIO_11,
+	GPIO_12,
+	GPIO_13,
+	GPIO_14,
+	GPIO_15,
+
+	IO_INVALID,
+	LED_WARNING, // Orange on-board LED
+	LED_RUNNING, // Green on-board LED
+	LED_ERROR, // Red on-board LED
+	LED_COMMUNICATION_1, // Blue on-board LED
+	LED_EXT_1, // external board LED
+	LED_EXT_2, // external board LED
+	LED_EXT_3, // external board LED
+	LED_DEBUG,
+	LED_EMULATOR,
+
+	LED_TRIGGER_ERROR,
+
+	/**
+	 * see board_configuration_s->idleValvePin
+	 */
+	IDLE_VALVE,
+	TRIGGER_EMULATOR_PRIMARY,
+	TRIGGER_EMULATOR_SECONDARY,
+	TRIGGER_EMULATOR_3RD,
+
 
 	ELECTRONIC_THROTTLE_CONTROL_1,
 	ELECTRONIC_THROTTLE_CONTROL_2,
@@ -113,22 +133,6 @@ typedef enum {
 
 	MAIN_RELAY,
 
-	GPIO_0,
-	GPIO_1,
-	GPIO_2,
-	GPIO_3,
-	GPIO_4,
-	GPIO_5,
-	GPIO_6,
-	GPIO_7,
-	GPIO_8,
-	GPIO_9,
-	GPIO_10,
-	GPIO_11,
-	GPIO_12,
-	GPIO_13,
-	GPIO_14,
-	GPIO_15,
 
 
 	/**
@@ -148,7 +152,6 @@ extern "C"
 {
 #endif /* __cplusplus */
 
-const char *getPinName(io_pin_e io_pin);
 io_pin_e getPinByName(const char *name);
 
 void setDefaultPinState(io_pin_e pin, pin_output_mode_e *defaultState);

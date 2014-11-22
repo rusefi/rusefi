@@ -62,13 +62,13 @@ void idleDebug(const char *msg, int value) {
 }
 
 static void showIdleInfo(void) {
-	scheduleMsg(&logger, "isIdleControlActive=%d", engineConfiguration->idleMode);
+	scheduleMsg(&logger, "idleMode=%s", getIdle_mode_e(engineConfiguration->idleMode));
 	scheduleMsg(&logger, "idle valve freq=%d on %s", boardConfiguration->idleSolenoidFrequency,
 			hwPortname(boardConfiguration->idleValvePin));
 }
 
 static void setIdleControlEnabled(int value, Engine *engine) {
-	engineConfiguration->idleMode = value ? IM_MANUAL : IM_AUTO;
+	engineConfiguration->idleMode = value ? IM_AUTO : IM_MANUAL;
 	showIdleInfo();
 }
 
@@ -90,7 +90,7 @@ static msg_t ivThread(int param) {
 	chRegSetThreadName("IdleValve");
 
 	int currentIdleValve = -1;
-	while (TRUE) {
+	while (true) {
 		chThdSleepMilliseconds(boardConfiguration->idleThreadPeriod);
 
 		// this value is not used yet
@@ -129,7 +129,7 @@ void startIdleThread(Engine *engine) {
 			boardConfiguration->idleValvePin,
 			IDLE_VALVE,
 			boardConfiguration->idleSolenoidFrequency,
-			0.5);
+			boardConfiguration->idleSolenoidPwm);
 
 	idleInit(&idle);
 	scheduleMsg(&logger, "initial idle %d", idle.value);
