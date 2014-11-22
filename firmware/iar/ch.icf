@@ -39,5 +39,6 @@ place in ROM_region                           {readonly};
 place at start of RAM_region                  {block IRQSTACK};
 place in RAM_region                           {block DATABSS, block HEAP};
 place in RAM_region                           {block SYSHEAP};
+/* todo place in RAM_region                           {section .ram}; */
 place at end of RAM_region                    {block CSTACK};
 place in CCMRAM_region                        {section .ccm};
