@@ -228,7 +228,12 @@ typedef struct {
 	brain_pin_e triggerErrorPin;
 	pin_output_mode_e triggerErrorPinMode;
 
-	int unusedbs[52];
+	/**
+	 * value between 0 and 1
+	 */
+	float idleSolenoidPwm;
+
+	int unusedbs[51];
 
 	le_formula_t le_formulas[LE_COMMAND_COUNT];
 

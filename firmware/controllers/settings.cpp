@@ -206,10 +206,6 @@ static void setTimingMode(int value) {
 	incrementGlobalConfigurationVersion();
 }
 
-static void setIdleMode(int mode) {
-	engineConfiguration->idleMode = (idle_mode_e) mode;
-}
-
 void setEngineType(int value) {
 	engineConfiguration->engineType = (engine_type_e) value;
 	resetConfigurationExt(&logger, (engine_type_e) value, engine);
@@ -766,7 +762,6 @@ void initSettings(engine_configuration_s *engineConfiguration) {
 	addConsoleActionI("set_fixed_mode_timing", setFixedModeTiming);
 	addConsoleActionI("set_timing_mode", setTimingMode);
 	addConsoleActionI("set_engine_type", setEngineType);
-	addConsoleActionI("set_idle_mode", setIdleMode);
 
 	addConsoleActionI("set_injection_pin_mode", setInjectionPinMode);
 	addConsoleActionI("set_ignition_pin_mode", setIgnitionPinMode);
