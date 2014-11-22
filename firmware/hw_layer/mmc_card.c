@@ -26,7 +26,7 @@ extern board_configuration_s *boardConfiguration;
 
 #define PUSHPULLDELAY 500
 
-static THD_WORKING_AREA(tp_MMC_Monitor,UTILITY_THREAD_STACK_SIZE);		// MMC monitor thread
+static THD_WORKING_AREA(mmcThreadStack,UTILITY_THREAD_STACK_SIZE);		// MMC monitor thread
 
 /**
  * MMC driver instance.
@@ -260,7 +260,7 @@ void initMmcCard(void) {
 	mmcObjectInit(&MMCD1);
 	mmcStart(&MMCD1, &mmccfg);
 
-	chThdCreateStatic(tp_MMC_Monitor, sizeof(tp_MMC_Monitor), LOWPRIO, (tfunc_t) MMCmonThread, NULL);
+	chThdCreateStatic(mmcThreadStack, sizeof(mmcThreadStack), LOWPRIO, (tfunc_t) MMCmonThread, NULL);
 
 	addConsoleAction("sdstat", sdStatistics);
 	addConsoleAction("mountsd", MMCmount);
