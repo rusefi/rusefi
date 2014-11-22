@@ -94,7 +94,7 @@ static int ts_serail_ready(void) {
 }
 
 // this thread wants a bit extra stack
-static THD_WORKING_AREA(TS_WORKING_AREA, UTILITY_THREAD_STACK_SIZE + 200);
+static THD_WORKING_AREA(tsThreadStack, UTILITY_THREAD_STACK_SIZE + 200);
 
 static int tsCounter = 0;
 
@@ -526,7 +526,7 @@ void startTunerStudioConnectivity(void) {
 	addConsoleAction("tsinfo", printStats);
 	addConsoleActionI("set_ts_speed", setTsSpeed);
 
-	chThdCreateStatic(TS_WORKING_AREA, sizeof(TS_WORKING_AREA), NORMALPRIO, tsThreadEntryPoint, NULL);
+	chThdCreateStatic(tsThreadStack, sizeof(tsThreadStack), NORMALPRIO, tsThreadEntryPoint, NULL);
 }
 
 #endif /* EFI_TUNER_STUDIO */

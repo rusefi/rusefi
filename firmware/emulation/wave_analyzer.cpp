@@ -27,10 +27,9 @@
 EXTERN_ENGINE;
 
 #define CHART_RESET_DELAY 1
+#define MAX_ICU_COUNT 5
 
-extern board_configuration_s *boardConfiguration;
-
-extern engine_configuration_s *engineConfiguration;
+extern WaveChart waveChart;
 
 /**
  * Difference between current 1st trigger event and previous 1st trigger event.
@@ -38,12 +37,10 @@ extern engine_configuration_s *engineConfiguration;
 static volatile uint32_t engineCycleDurationUs;
 static volatile uint64_t previousEngineCycleTimeUs = 0;
 
-#define MAX_ICU_COUNT 5
-
 static int waveReaderCount = 0;
 static WaveReader readers[MAX_ICU_COUNT];
-extern WaveChart waveChart;
 
+static THD_WORKING_AREA(waThreadStack, UTILITY_THREAD_STACK_SIZE);
 static Logging logger;
 
 static void ensureInitialized(WaveReader *reader) {
@@ -147,10 +144,6 @@ static void waTriggerEventListener(trigger_event_e ckpSignalType, uint32_t index
 	engineCycleDurationUs = nowUs - previousEngineCycleTimeUs;
 	previousEngineCycleTimeUs = nowUs;
 }
-
-static THD_WORKING_AREA(waThreadStack, UTILITY_THREAD_STACK_SIZE);
-
-//static Logging logger;
 
 static msg_t waThread(void *arg) {
 	(void)arg;
