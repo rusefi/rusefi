@@ -293,7 +293,7 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex, Eng
 
 	(void) ckpSignalType;
 	efiAssertVoid(eventIndex < 2 * engine->engineConfiguration2->triggerShape.shaftPositionEventCount, "event index");
-	efiAssertVoid(getRemainingStack(chThdSelf()) > 256, "lowstck#2");
+	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#2");
 
 	// todo: remove these local variables soon?
 	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
