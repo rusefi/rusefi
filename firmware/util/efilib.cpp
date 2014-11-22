@@ -13,13 +13,6 @@
 
 #define _MAX_FILLER 11
 
-/**
- * there is some BS related to isnan in MinGW, so let's have all the issues in one place
- */
-bool cisnan(float f) {
-	return *(((int*) (&f))) == 0x7FC00000;
-}
-
 const char * boolToString(bool value) {
 	return value ? "Yes" : "No";
 }

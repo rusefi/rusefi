@@ -38,7 +38,12 @@ bool startsWith(const char *line, const char *prefix);
 int indexOf(const char *string, char ch);
 float atoff(const char *string);
 int atoi(const char *string);
-bool cisnan(float f);
+
+/**
+ * there is some BS related to isnan in MinGW, so let's have all the issues in one place
+ */
+#define cisnan(f) (*(((int*) (&f))) == 0x7FC00000)
+
 
 int absI(int32_t value);
 float absF(float value);

@@ -74,8 +74,7 @@ void WaveChart::resetWaveChart() {
 	appendPrintf(&logging, "wave_chart%s", DELIMETER);
 }
 
-static char WAVE_LOGGING_BUFFER[WAVE_LOGGING_SIZE] CCM_OPTIONAL
-;
+static char WAVE_LOGGING_BUFFER[WAVE_LOGGING_SIZE] CCM_OPTIONAL;
 
 bool_t WaveChart::isStartedTooLongAgo() {
 	/**

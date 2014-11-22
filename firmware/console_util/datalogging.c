@@ -54,8 +54,7 @@ typedef char log_buf_t[DL_OUTPUT_BUFFER];
  */
 #define MAX_DL_CAPACITY (DL_OUTPUT_BUFFER - 5)
 
-static log_buf_t pendingBuffers0 CCM_OPTIONAL
-;
+static log_buf_t pendingBuffers0 CCM_OPTIONAL;
 static log_buf_t pendingBuffers1;
 
 /**
@@ -74,8 +73,7 @@ static uint32_t accumulatedSize;
 static char * outputBuffer;
 
 static MemoryStream intermediateLoggingBuffer;
-static uint8_t intermediateLoggingBufferData[INTERMEDIATE_LOGGING_BUFFER_SIZE] CCM_OPTIONAL
-;
+static uint8_t intermediateLoggingBufferData[INTERMEDIATE_LOGGING_BUFFER_SIZE] CCM_OPTIONAL;
 //todo define max-printf-buffer
 static bool intermediateLoggingBufferInited = FALSE;
 
