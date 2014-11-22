@@ -108,8 +108,6 @@ void appendFast(Logging *logging, const char *text);
  */
 void scheduleLogging(Logging *logging);
 
-void scheduleIntValue(Logging *logging, const char *msg, int value);
-
 /**
  * this should only be invoked by the 'main' thread in order to keep the console safe
  */

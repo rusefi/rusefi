@@ -34,6 +34,8 @@ Engine *engine = &_engine;
 
 extern WaveChart waveChart;
 
+uint32_t maxLockTime = 0;
+
 persistent_config_container_s persistentState;
 static engine_configuration2_s ec2;
 

@@ -374,18 +374,6 @@ void scheduleMsg(Logging *logging, const char *fmt, ...) {
 	scheduleLogging(logging);
 }
 
-// todo: remove this method, replace with 'scheduleMsg'
-void scheduleIntValue(Logging *logging, const char *msg, int value) {
-	resetLogging(logging);
-
-	append(logging, msg);
-	append(logging, DELIMETER);
-	appendPrintf(logging, "%d", value);
-	append(logging, DELIMETER);
-
-	scheduleLogging(logging);
-}
-
 void scheduleLogging(Logging *logging) {
 	// this could be done without locking
 	int newLength = efiStrlen(logging->buffer);
