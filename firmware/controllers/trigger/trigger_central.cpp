@@ -205,8 +205,9 @@ static void triggerShapeInfo(Engine *engine) {
 
 #if EFI_PROD_CODE
 extern PwmConfig triggerSignal;
-extern uint32_t maxLockTime;
 #endif /* #if EFI_PROD_CODE */
+
+extern uint32_t maxLockTime;
 
 static void triggerInfo(Engine *engine) {
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
