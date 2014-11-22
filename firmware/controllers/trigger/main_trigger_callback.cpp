@@ -78,6 +78,13 @@ static cyclic_buffer ignitionErrorDetection;
 
 static Logging logger;
 
+// todo: figure out if this even helps?
+//#if defined __GNUC__
+//#define RAM_METHOD_PREFIX __attribute__((section(".ram")))
+//#else
+//#define RAM_METHOD_PREFIX
+//#endif
+
 static void startSimultaniousInjection(Engine *engine) {
 	for (int i = 0; i < engine->engineConfiguration->cylindersCount; i++) {
 		turnPinHigh(INJECTOR_PIN_BY_INDEX(i));
