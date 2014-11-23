@@ -297,6 +297,9 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 //	engineConfiguration->idleMode = IM_AUTO;
 	engineConfiguration->idleMode = IM_MANUAL;
 
+	boardConfiguration->acRelayPin = GPIO_UNASSIGNED;
+	boardConfiguration->acRelayPinMode = OM_DEFAULT;
+
 #if EFI_PROD_CODE
 	engineConfiguration->digitalChartSize = 300;
 #else

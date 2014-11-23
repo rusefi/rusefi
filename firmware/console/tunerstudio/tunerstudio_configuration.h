@@ -69,6 +69,7 @@ typedef struct {
 	unsigned int isCltError : 1; // bit 1
 	unsigned int isMapError : 1; // bit 2
 	unsigned int isIatError : 1; // bit 3
+	unsigned int isAcSwitchEngaged : 1; // bit 4
 	int tsConfigVersion;
 	egt_values_s egtValues;
 	int unused3[3];

@@ -124,6 +124,7 @@ typedef enum {
 	FUEL_PUMP_RELAY,
 	FAN_RELAY,
 	O2_HEATER,
+	AC_RElAY,
 
 	SPI_CS_1,
 	SPI_CS_2,

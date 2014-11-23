@@ -332,6 +332,10 @@ static void printTemperatureInfo(void) {
 	scheduleMsg(&logger, "fan=%s @ %s", boolToString(getOutputPinValue(FAN_RELAY)),
 			hwPortname(boardConfiguration->fanPin));
 
+	scheduleMsg(&logger, "A/C relay=%s @ %s", boolToString(getOutputPinValue(AC_RElAY)),
+			hwPortname(boardConfiguration->acRelayPin));
+
+
 #if EFI_ANALOG_INPUTS
 	scheduleMsg(&logger, "base cranking fuel %f", engineConfiguration->crankingSettings.baseCrankingFuel);
 #endif
