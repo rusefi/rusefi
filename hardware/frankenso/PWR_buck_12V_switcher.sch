@@ -55,7 +55,7 @@ $Descr A 11000 8500
 encoding utf-8
 Sheet 9 14
 Title "Frankenso"
-Date "3 nov 2014"
+Date "23 nov 2014"
 Rev ".02"
 Comp "rusEFI.com"
 Comment1 ""
@@ -398,6 +398,8 @@ F 0 "P901" H 4080 6250 40  0000 L CNN
 F 1 "CONN_1" H 4000 6305 30  0001 C CNN
 F 2 "SIL-1" H 4000 6250 60  0001 C CNN
 F 3 "" H 4000 6250 60  0000 C CNN
+F 4 "dnp,dnp" H 4000 6250 60  0001 C CNN "Field4"
+F 5 "dnp,dnp" H 4000 6250 60  0001 C CNN "Field5"
 	1    4000 6250
 	-1   0    0    1   
 $EndComp
@@ -409,6 +411,8 @@ F 0 "P902" H 5330 6250 40  0000 L CNN
 F 1 "CONN_1" H 5250 6305 30  0001 C CNN
 F 2 "SIL-1" H 5250 6250 60  0001 C CNN
 F 3 "" H 5250 6250 60  0000 C CNN
+F 4 "dnp,dnp" H 5250 6250 60  0001 C CNN "Field4"
+F 5 "dnp,dnp" H 5250 6250 60  0001 C CNN "Field5"
 	1    5250 6250
 	0    -1   -1   0   
 $EndComp

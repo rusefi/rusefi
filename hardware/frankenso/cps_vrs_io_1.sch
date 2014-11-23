@@ -55,7 +55,7 @@ $Descr B 17000 11000
 encoding utf-8
 Sheet 8 14
 Title "Frankenso"
-Date "3 nov 2014"
+Date "23 nov 2014"
 Rev ".02"
 Comp "rusEFI.com"
 Comment1 ""
@@ -491,8 +491,8 @@ F 0 "R801" V 11755 1125 50  0000 C CNN
 F 1 "0R" V 11675 1125 50  0000 C CNN
 F 2 "SM0805" V 1130 2500 60  0001 C CNN
 F 3 "" H 11675 1125 60  0001 C CNN
-F 4 "-,-" V 1130 2500 60  0001 C CNN "mfg,mfg#"
-F 5 "-,-" V 1130 2500 60  0001 C CNN "vend1,vend1#"
+F 4 "DNP,DNP" V 1130 2500 60  0001 C CNN "mfg,mfg#"
+F 5 "DNP,DNP" V 1130 2500 60  0001 C CNN "vend1,vend1#"
 	1    11675 1125
 	0    1    -1   0   
 $EndComp
@@ -515,8 +515,8 @@ F 0 "R802" V 11755 2625 50  0000 C CNN
 F 1 "0R" V 11675 2625 50  0000 C CNN
 F 2 "SM0805" V 1130 4000 60  0001 C CNN
 F 3 "" H 11675 2625 60  0001 C CNN
-F 4 "-,-" V 1130 4000 60  0001 C CNN "mfg,mfg#"
-F 5 "-,-" V 1130 4000 60  0001 C CNN "vend1,vend1#"
+F 4 "DNP,DNP" V 1130 4000 60  0001 C CNN "mfg,mfg#"
+F 5 "DNP,DNP" V 1130 4000 60  0001 C CNN "vend1,vend1#"
 	1    11675 2625
 	0    1    -1   0   
 $EndComp
