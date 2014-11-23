@@ -44,9 +44,7 @@
     chDbgPanic3(__QUOTE_THIS(func)"()", __FILE__, __LINE__);                \
 }
 
-#define COMMON_IRQ_PRIORITY 6
-
-#define CORTEX_PRIORITY_SYSTICK COMMON_IRQ_PRIORITY
+#define CORTEX_PRIORITY_SYSTICK 6
 
 #define PORT_IDLE_THREAD_STACK_SIZE     1024
 

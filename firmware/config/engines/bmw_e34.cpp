@@ -61,6 +61,8 @@ void setBmwE34(engine_configuration_s *engineConfiguration) {
 	bc->injectionPins[4] = GPIO_UNASSIGNED; // #5
 	bc->injectionPins[5] = GPIO_UNASSIGNED; // #6
 
+	bc->triggerErrorPin = GPIOE_3;
+
 	/**
 	 * emulating the 60-0 trigger takes some resources, let's keep it slow by default
 	 * rpm 200
