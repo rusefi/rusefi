@@ -230,7 +230,7 @@ static void triggerInfo(Engine *engine) {
 	scheduleMsg(&logger, "expected duty #0=%f/#1=%f", engineConfiguration2->triggerShape.dutyCycle[0],
 			engineConfiguration2->triggerShape.dutyCycle[1]);
 
-	scheduleMsg(&logger, "isError %s/total errors=%d %d/total revolutions=%d/self=%s",
+	scheduleMsg(&logger, "isError %s/total errors=%d ord_err=%d/total revolutions=%d/self=%s",
 			boolToString(isTriggerDecoderError()),
 			triggerCentral.triggerState.totalTriggerErrorCounter,
 			triggerCentral.triggerState.orderingErrorCounter,
@@ -249,6 +249,9 @@ static void triggerInfo(Engine *engine) {
 			pinModeToString(boardConfiguration->triggerSimulatorPinModes[1]), triggerSignal.safe.phaseIndex);
 	scheduleMsg(&logger, "3rd trigger simulator: %s %s", hwPortname(boardConfiguration->triggerSimulatorPins[2]),
 			pinModeToString(boardConfiguration->triggerSimulatorPinModes[2]));
+
+	scheduleMsg(&logger, "trigger error extra LED: %s %s", hwPortname(boardConfiguration->triggerErrorPin),
+			pinModeToString(boardConfiguration->triggerErrorPinMode));
 
 	scheduleMsg(&logger, "primary trigger input: %s", hwPortname(boardConfiguration->triggerInputPins[0]));
 	scheduleMsg(&logger, "secondary trigger input: %s", hwPortname(boardConfiguration->triggerInputPins[1]));
