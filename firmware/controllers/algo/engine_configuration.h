@@ -240,7 +240,7 @@ typedef struct {
 	pin_output_mode_e acRelayPinMode;
 
 
-	int unusedbs[39];
+	int unusedbs[49];
 
 	le_formula_t le_formulas[LE_COMMAND_COUNT];
 
