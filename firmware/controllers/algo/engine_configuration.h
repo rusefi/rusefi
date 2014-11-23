@@ -144,6 +144,9 @@ typedef struct {
 	brain_pin_e electronicThrottlePin1;
 	pin_output_mode_e electronicThrottlePin1Mode;
 
+	/**
+	 * Idle switch input signal
+	 */
 	brain_pin_e idleSwitchPin;
 	pin_input_mode_e idleSwitchPinMode;
 
@@ -233,7 +236,11 @@ typedef struct {
 	 */
 	float idleSolenoidPwm;
 
-	int unusedbs[51];
+	brain_pin_e acRelayPin;
+	pin_output_mode_e acRelayPinMode;
+
+
+	int unusedbs[39];
 
 	le_formula_t le_formulas[LE_COMMAND_COUNT];
 
@@ -497,7 +504,12 @@ typedef struct {
 
 	int targetIdleRpm;
 
-	int unused3[92];
+	/**
+	 * A/C button input handled as analog input
+	 */
+	adc_channel_e acSwitchAdc;
+
+	int unused3[91];
 
 } engine_configuration_s;
 
