@@ -9,6 +9,7 @@
 
 #include <math.h>
 #include "error_handling.h"
+#include "interpolation.h"
 
 // 'random' value to be sure we are not treating any non-zero trash as TRUE
 #define MAGIC_TRUE_VALUE 153351512
@@ -22,6 +23,15 @@ public:
 private:
 	float *pointers[LOAD_BIN_SIZE];
 	int initialized;
+};
+
+class Table2D {
+public:
+	void init(int size, float *aTable, float *bTable);
+	void preCalc(float *bin, float *values);
+	int size;
+	float *aTable;
+	float *bTable;
 };
 
 template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE>
