@@ -59,7 +59,8 @@ private:
 /**
  * @brief   Current RPM
  */
-int getRpmE(Engine *engine);
+#define getRpmE(engine) (engine)->rpmCalculator.rpm()
+
 bool isCrankingE(Engine *engine);
 void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index, Engine *engine);
 /**

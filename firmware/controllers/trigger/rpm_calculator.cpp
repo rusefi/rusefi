@@ -36,15 +36,6 @@ extern WaveChart waveChart;
 
 #define TOP_DEAD_CENTER_MESSAGE "r"
 
-/**
- * WARNING: this is a heavy method because 'getRpm()' is relatively heavy
- *
- * @return -1 in case of isNoisySignal(), current RPM otherwise
- */
-int getRpmE(Engine *engine) {
-	return engine->rpmCalculator.rpm();
-}
-
 EXTERN_ENGINE;
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
@@ -96,6 +87,11 @@ uint32_t RpmCalculator::getRevolutionCounterSinceStart(void) {
 	return revolutionCounterSinceStart;
 }
 
+/**
+ * WARNING: this is a heavy method because 'getRpm()' is relatively heavy
+ *
+ * @return -1 in case of isNoisySignal(), current RPM otherwise
+ */
 // todo: migrate to float return result or add a float verion? this would have with calculations
 // todo: add a version which does not check time & saves time? need to profile
 int RpmCalculator::rpm(void) {
