@@ -28,12 +28,11 @@
 28) RESOLVED IN R0.2 better silkscreen for P602 & P604 - explicit "5v" "12v" "GND"
 29) RESOLVED IN R0.2 Add LED indicators to injector channels. 
 30) RESOLVED IN R0.3 3D for C1001 bulk cap has black mark on wrong side
-31)                  We've moved the upper mounting hole too far - we need to move it half way back http://rusefi.com/forum/viewtopic.php?f=4&t=735#p12500
-32)                  C1001 should be 1mm lower to improve clearance with the case
-32)                  Q411 should be 1.5mm lower to improve clearance with the case
-33)                  Q412 should be moved 3mm to the left, this would probably affect W63 which would affect the whole corner. Maybe move Q412 to the back of the board?
-34)                  rename the recently added low-side diodes and LEDs/resistors into 400 range
-
+31) RESOLVED IN R0.3 R0.3 We've moved the upper mounting hole too far - we need to move it half way back http://rusefi.com/forum/viewtopic.php?f=4&t=735#p12500
+32) RESOLVED IN R0.3 R0.3 C1001 should be 1mm lower to improve clearance with the case
+32)                  R0.3 Q411 should be 1.5mm lower to improve clearance with the case
+33)                  R0.3 Q412 should be moved 3mm to the left, this would probably affect W63 which would affect the whole corner. Maybe move Q412 to the back of the board?
+34) RESOLVED IN R0.3 R0.3 rename the recently added low-side diodes and LEDs/resistors into 400 range
 
 For honda add-on / rewiring board
 -- Add 2A high side solinoid drive for VTec sol
