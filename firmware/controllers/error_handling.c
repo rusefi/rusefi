@@ -99,7 +99,7 @@ void onUnlockHook(void) {
 	if (t > maxLockTime) {
 		maxLockTime = t;
 	}
-//	if (t > 10000) {
+//	if (t > 2800) {
 //		// uncomment this if you want a nice stop for a breakpoint
 //		maxLockTime = t + 1;
 //	}

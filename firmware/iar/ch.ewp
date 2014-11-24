@@ -2215,7 +2215,7 @@
         <name>$PROJ_DIR$\..\controllers\algo\rusefi_enums.h</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\controllers\algo\signal_executor.c</name>
+        <name>$PROJ_DIR$\..\controllers\algo\signal_executor.cpp</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\controllers\algo\signal_executor.h</name>
