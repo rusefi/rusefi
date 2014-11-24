@@ -97,17 +97,17 @@ extern uint32_t dbgDurr;
 
 void setOutputPinValue(io_pin_e pin, int logicValue) {
 #if EFI_PROD_CODE
-	if (outputs[pin].port == GPIO_NULL)
-		return;
-	efiAssertVoid(pinDefaultState[pin]!=NULL, "pin mode not initialized");
-	pin_output_mode_e mode = *pinDefaultState[pin];
-	efiAssertVoid(mode <= OM_OPENDRAIN_INVERTED, "invalid pin_output_mode_e");
+	if (outputs[pin].port != GPIO_NULL) {
+		efiAssertVoid(pinDefaultState[pin]!=NULL, "pin mode not initialized");
+		pin_output_mode_e mode = *pinDefaultState[pin];
+		efiAssertVoid(mode <= OM_OPENDRAIN_INVERTED, "invalid pin_output_mode_e");
 #else
-	pin_output_mode_e mode = OM_DEFAULT;
+		pin_output_mode_e mode = OM_DEFAULT;
 #endif
-	OutputPin *output = &outputs[pin];
-	int eValue = getElectricalValue(logicValue, mode);
-	setPinValue(output, eValue, logicValue);
+		OutputPin *output = &outputs[pin];
+		int eValue = getElectricalValue(logicValue, mode);
+		setPinValue(output, eValue, logicValue);
+	}
 }
 
 bool isPinAssigned(io_pin_e pin) {

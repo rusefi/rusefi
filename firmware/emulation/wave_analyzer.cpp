@@ -23,6 +23,7 @@
 #include "engine_math.h"
 #include "engine.h"
 #include "rpm_calculator.h"
+#include "wave_chart.h"
 
 EXTERN_ENGINE;
 
