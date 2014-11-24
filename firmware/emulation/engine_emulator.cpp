@@ -22,6 +22,8 @@ extern "C" {
 }
 #include "trigger_emulator.h"
 
+extern bool hasFirmwareErrorFlag;
+
 static THD_WORKING_AREA(eeThreadStack, UTILITY_THREAD_STACK_SIZE);
 
 #define DIAG_PORT GPIOD

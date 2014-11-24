@@ -144,9 +144,7 @@ int warning(obd_code_e code, const char *fmt, ...) {
 	printf("Warning: %s\r\n", fmt);
 }
 
-bool hasFirmwareError(void) {
-	return false;
-}
+bool hasFirmwareErrorFlag = false;
 
 void firmwareError(const char *fmt, ...) {
 	  printf(fmt);

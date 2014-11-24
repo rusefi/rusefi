@@ -41,6 +41,7 @@
 #include "ec2.h"
 
 extern engine_configuration2_s * engineConfiguration2;
+extern bool hasFirmwareErrorFlag;
 
 static bool isSpiInitialized[5] = { false, false, false, false, false };
 

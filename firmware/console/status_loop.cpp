@@ -73,6 +73,7 @@ int warningEnabled = TRUE;
 //int warningEnabled = FALSE;
 
 extern board_configuration_s *boardConfiguration;
+extern bool hasFirmwareErrorFlag;
 #define FULL_LOGGING_KEY "fl"
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
