@@ -27,6 +27,7 @@ void Table2D::init(int size, float *aTable, float *bTable) {
 }
 
 void Table2D::preCalc(float *bin, float *values) {
+	this->bin = bin;
 	for (int i = 0; i < size - 1; i++) {
 		float x1 = bin[i];
 		float x2 = bin[i + 1];

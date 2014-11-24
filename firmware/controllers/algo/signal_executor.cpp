@@ -127,7 +127,7 @@ void scheduleOutput(OutputSignal *signal, float delayMs, float durationMs) {
 	scheduling_s * sDown = &signal->signalTimerDown[index];
 
 	scheduleTask("out up", sUp, (int) MS2US(delayMs), (schfunc_t) &turnPinHigh, (void *) signal->io_pin);
-	scheduleTask("out down", sDown, (int) MS2US(delayMs + durationMs), (schfunc_t) &turnPinLow, (void*) signal->io_pin);
+	scheduleTask("out down", sDown, (int) MS2US(delayMs) + MS2US(durationMs), (schfunc_t) &turnPinLow, (void*) signal->io_pin);
 }
 
 io_pin_e getPinByName(const char *name) {

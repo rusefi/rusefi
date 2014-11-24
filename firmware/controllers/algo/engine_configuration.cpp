@@ -573,9 +573,8 @@ engine_configuration2_s::engine_configuration2_s() {
 }
 
 void engine_configuration2_s::precalc() {
-	//sparkTable.init()
-	//engineConfiguration->sparkDwellBins, engineConfiguration->sparkDwell, DWELL_CURVE_SIZE);
-
+	sparkTable.init(DWELL_CURVE_SIZE, sparkAtable, sparkBtable);
+	sparkTable.preCalc(engineConfiguration->sparkDwellBins, engineConfiguration->sparkDwell);
 }
 
 void applyNonPersistentConfiguration(Logging * logger, Engine *engine) {

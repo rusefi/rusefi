@@ -34,15 +34,10 @@ extern "C"
 float fixAngle(float angle DECLARE_ENGINE_PARAMETER_S);
 
 /**
- * So that's how 'inline' syntax for both GCC and IAR
- * It is interesting to mention that GCC compiler chooses not to inline this function.
- *
  * @return time needed to rotate crankshaft by one degree, in milliseconds.
- * @deprecated use at least Us, maybe event Nt
+ * @deprecated use at least Us, maybe even Nt
  */
-inline float getOneDegreeTimeMs(int rpm) {
-	return 1000.0f * 60 / 360 / rpm;
-}
+#define getOneDegreeTimeMs(rpm) (1000.0f * 60 / 360 / (rpm))
 
 /**
  * @return time needed to rotate crankshaft by one degree, in microseconds.
