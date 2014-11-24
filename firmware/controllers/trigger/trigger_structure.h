@@ -85,7 +85,7 @@ public:
 
 	int getTriggerShapeSynchPointIndex();
 
-	void calculateTriggerSynchPoint(engine_configuration_s *engineConfiguration, trigger_config_s const*triggerConfig, Engine *engine);
+	void calculateTriggerSynchPoint(engine_configuration_s *engineConfiguration, Engine *engine);
 
 	void setTriggerShapeSynchPointIndex(engine_configuration_s *engineConfiguration, int triggerShapeSynchPointIndex, Engine *engine);
 	/**

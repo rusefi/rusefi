@@ -44,7 +44,7 @@ int getTheAngle(engine_type_e engineType) {
 	engine_configuration_s *ec = eth.ec;
 	initDataStructures(ec);
 
-	trigger_shape_s * shape = &eth.ec2.triggerShape;
+	trigger_shape_s * shape = &eth.engine.triggerShape;
 	return findTriggerZeroEventIndex(shape, &ec->triggerConfig);
 }
 
@@ -57,7 +57,7 @@ static void testDodgeNeonDecoder(void) {
 	EngineTestHelper eth(DODGE_NEON_1995);
 
 	engine_configuration_s *ec = eth.ec;
-	trigger_shape_s * shape = &eth.ec2.triggerShape;
+	trigger_shape_s * shape = &eth.engine.triggerShape;
 	assertEquals(8, shape->getTriggerShapeSynchPointIndex());
 
 	TriggerState state;
@@ -116,7 +116,7 @@ static void test1995FordInline6TriggerDecoder(void) {
 	engine_configuration_s *engineConfiguration = eth.engine.engineConfiguration;
 	Engine *engine = &eth.engine;
 
-	trigger_shape_s * shape = &eth.ec2.triggerShape;
+	trigger_shape_s * shape = &eth.engine.triggerShape;
 
 	assertEqualsM("triggerShapeSynchPointIndex", 0, shape->getTriggerShapeSynchPointIndex());
 
@@ -180,7 +180,7 @@ void testFordAspire(void) {
 
 	Engine *engine = &eth.engine;
 	engine_configuration_s *engineConfiguration = eth.ec;
-	assertEquals(4, eth.ec2.triggerShape.getTriggerShapeSynchPointIndex());
+	assertEquals(4, eth.engine.triggerShape.getTriggerShapeSynchPointIndex());
 
 	assertEquals(800, engineConfiguration->fuelRpmBins[0]);
 	assertEquals(7000, engineConfiguration->fuelRpmBins[15]);
@@ -198,7 +198,7 @@ void testMazda323(void) {
 	printf("*************************************************** testMazda323\r\n");
 
 	EngineTestHelper eth(MAZDA_323);
-	assertEquals(0, eth.ec2.triggerShape.getTriggerShapeSynchPointIndex());
+	assertEquals(0, eth.engine.triggerShape.getTriggerShapeSynchPointIndex());
 }
 
 void testMazdaMianaNbDecoder(void) {
@@ -208,7 +208,7 @@ void testMazdaMianaNbDecoder(void) {
 	engine_configuration_s *ec = eth.ec;
 	Engine *engine = &eth.engine;
 	engine_configuration_s *engineConfiguration = ec;
-	trigger_shape_s * shape = &eth.ec2.triggerShape;
+	trigger_shape_s * shape = &eth.engine.triggerShape;
 	assertEquals(11, shape->getTriggerShapeSynchPointIndex());
 
 	TriggerState state;
@@ -294,7 +294,7 @@ static void testTriggerDecoder2(const char *msg, engine_type_e type, int synchPo
 
 	initSpeedDensity(ec);
 
-	trigger_shape_s *t = &eth.ec2.triggerShape;
+	trigger_shape_s *t = &eth.engine.triggerShape;
 
 	assertEqualsM("synchPointIndex", synchPointIndex, t->getTriggerShapeSynchPointIndex());
 
@@ -311,7 +311,7 @@ void testGY6_139QMB(void) {
 	TriggerState state;
 	assertFalseM("shaft_is_synchronized", state.shaft_is_synchronized);
 
-	trigger_shape_s * shape = &eth.ec2.triggerShape;
+	trigger_shape_s * shape = &eth.engine.triggerShape;
 
 	assertFalseM("shaft_is_synchronized", state.shaft_is_synchronized);
 	assertEquals(0, state.getCurrentIndex());
@@ -484,8 +484,8 @@ static void testRpmCalculator(void) {
 void testTriggerDecoder(void) {
 	printf("*************************************************** testTriggerDecoder\r\n");
 
-	engine_configuration2_s ec2;
-	trigger_shape_s * s = &ec2.triggerShape;
+	Engine engine;
+	trigger_shape_s * s = &engine.triggerShape;
 
 
 	initializeSkippedToothTriggerShapeExt(s, 2, 0, FOUR_STROKE_CAM_SENSOR);

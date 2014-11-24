@@ -585,12 +585,12 @@ void applyNonPersistentConfiguration(Logging * logger, Engine *engine) {
 #if EFI_PROD_CODE
 	scheduleMsg(logger, "applyNonPersistentConfiguration()");
 #endif
-	initializeTriggerShape(logger, engineConfiguration, engineConfiguration2, engine);
-	if (engineConfiguration2->triggerShape.getSize() == 0) {
+	initializeTriggerShape(logger, engineConfiguration, engine);
+	if (engine->triggerShape.getSize() == 0) {
 		firmwareError("triggerShape size is zero");
 		return;
 	}
-	if (engineConfiguration2->triggerShape.shaftPositionEventCount == 0) {
+	if (engine->triggerShape.shaftPositionEventCount == 0) {
 		firmwareError("shaftPositionEventCount is zero");
 		return;
 	}
@@ -602,8 +602,7 @@ void prepareShapes(Engine *engine) {
 	engine_configuration2_s *engineConfiguration2 = engine->engineConfiguration2;
 
 	// todo: looks like this is here only for unit tests. todo: remove
-	initializeIgnitionActions(0, 0, engineConfiguration2,
-			&engineConfiguration2->ignitionEvents[0] PASS_ENGINE_PARAMETER);
+	initializeIgnitionActions(0, 0, &engineConfiguration2->ignitionEvents[0] PASS_ENGINE_PARAMETER);
 }
 
 void setOperationMode(engine_configuration_s *engineConfiguration, operation_mode_e mode) {

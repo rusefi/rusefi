@@ -149,7 +149,7 @@ static ALWAYS_INLINE void handleFuel(uint32_t eventIndex, int rpm DECLARE_ENGINE
 	if (!isInjectionEnabled(engine->engineConfiguration))
 		return;
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#3");
-	efiAssertVoid(eventIndex < engine->engineConfiguration2->triggerShape.getLength(), "event index");
+	efiAssertVoid(eventIndex < engine->triggerShape.getLength(), "event index");
 
 	/**
 	 * Ignition events are defined by addFuelEvents() according to selected
@@ -218,7 +218,7 @@ static ALWAYS_INLINE void handleSparkEvent(uint32_t eventIndex, IgnitionEvent *i
 	 * TODO: improve precision
 	 */
 
-	findTriggerPosition(&engineConfiguration2->triggerShape, &iEvent->sparkPosition,
+	findTriggerPosition(&engine->triggerShape, &iEvent->sparkPosition,
 			iEvent->advance PASS_ENGINE_PARAMETER);
 
 	if (iEvent->sparkPosition.eventIndex == eventIndex) {
@@ -297,7 +297,7 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex, Eng
 	}
 
 	(void) ckpSignalType;
-	efiAssertVoid(eventIndex < 2 * engine->engineConfiguration2->triggerShape.shaftPositionEventCount, "event index");
+	efiAssertVoid(eventIndex < 2 * engine->triggerShape.shaftPositionEventCount, "event index");
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#2");
 
 	// todo: remove these local variables soon?
@@ -366,7 +366,7 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex, Eng
 
 		// todo: add some check for dwell overflow? like 4 times 6 ms while engine cycle is less then that
 
-		initializeIgnitionActions(fixAngle(-advance PASS_ENGINE_PARAMETER), dwellAngle, engine->engineConfiguration2,
+		initializeIgnitionActions(fixAngle(-advance PASS_ENGINE_PARAMETER), dwellAngle,
 				&engine->engineConfiguration2->ignitionEvents[revolutionIndex] PASS_ENGINE_PARAMETER);
 	}
 

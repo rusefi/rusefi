@@ -403,7 +403,7 @@ static void setTriggerType(int value) {
 }
 
 static void setToothedWheel(int total, int skipped) {
-	setToothedWheelConfiguration(&engineConfiguration2->triggerShape, total, skipped, engineConfiguration);
+	setToothedWheelConfiguration(&engine->triggerShape, total, skipped, engineConfiguration);
 //	initializeTriggerShape(&logger, engineConfiguration, engineConfiguration2);
 	incrementGlobalConfigurationVersion();
 	doPrintConfiguration(engine);
