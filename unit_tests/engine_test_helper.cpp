@@ -40,7 +40,7 @@ void EngineTestHelper::fireTriggerEvents() {
 }
 
 void EngineTestHelper::initTriggerShapeAndRpmCalculator() {
-	initializeTriggerShape(NULL, ec, &ec2);
+	initializeTriggerShape(NULL, ec, &ec2, &engine);
 	incrementGlobalConfigurationVersion();
 
 	triggerCentral.addEventListener((ShaftPositionListener) &rpmShaftPositionCallback, "rpm reporter", &engine);

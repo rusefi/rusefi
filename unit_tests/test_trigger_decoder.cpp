@@ -57,9 +57,9 @@ static void testDodgeNeonDecoder(void) {
 	EngineTestHelper eth(DODGE_NEON_1995);
 
 	engine_configuration_s *ec = eth.ec;
-	assertEquals(8, eth.ec2.triggerShape.getTriggerShapeSynchPointIndex());
-
 	trigger_shape_s * shape = &eth.ec2.triggerShape;
+	assertEquals(8, shape->getTriggerShapeSynchPointIndex());
+
 	TriggerState state;
 
 	assertFalseM("1 shaft_is_synchronized", state.shaft_is_synchronized);
@@ -116,9 +116,10 @@ static void test1995FordInline6TriggerDecoder(void) {
 	engine_configuration_s *engineConfiguration = eth.engine.engineConfiguration;
 	Engine *engine = &eth.engine;
 
-	assertEqualsM("triggerShapeSynchPointIndex", 0, eth.ec2.triggerShape.getTriggerShapeSynchPointIndex());
-
 	trigger_shape_s * shape = &eth.ec2.triggerShape;
+
+	assertEqualsM("triggerShapeSynchPointIndex", 0, shape->getTriggerShapeSynchPointIndex());
+
 	event_trigger_position_s position;
 	assertEqualsM("globalTriggerAngleOffset", 0, engineConfiguration->globalTriggerAngleOffset);
 	findTriggerPosition(shape, &position, 0 PASS_ENGINE_PARAMETER);
@@ -207,10 +208,10 @@ void testMazdaMianaNbDecoder(void) {
 	engine_configuration_s *ec = eth.ec;
 	Engine *engine = &eth.engine;
 	engine_configuration_s *engineConfiguration = ec;
-	assertEquals(11, eth.ec2.triggerShape.getTriggerShapeSynchPointIndex());
+	trigger_shape_s * shape = &eth.ec2.triggerShape;
+	assertEquals(11, shape->getTriggerShapeSynchPointIndex());
 
 	TriggerState state;
-	trigger_shape_s * shape = &eth.ec2.triggerShape;
 
 	int a = 0;
 	state.decodeTriggerEvent(shape, &ec->triggerConfig, SHAFT_PRIMARY_DOWN, a + 20);
@@ -293,10 +294,12 @@ static void testTriggerDecoder2(const char *msg, engine_type_e type, int synchPo
 
 	initSpeedDensity(ec);
 
-	assertEqualsM("synchPointIndex", synchPointIndex, eth.ec2.triggerShape.getTriggerShapeSynchPointIndex());
+	trigger_shape_s *t = &eth.ec2.triggerShape;
 
-	assertEqualsM("channel1duty", channel1duty, eth.ec2.triggerShape.dutyCycle[0]);
-	assertEqualsM("channel2duty", channel2duty, eth.ec2.triggerShape.dutyCycle[1]);
+	assertEqualsM("synchPointIndex", synchPointIndex, t->getTriggerShapeSynchPointIndex());
+
+	assertEqualsM("channel1duty", channel1duty, t->dutyCycle[0]);
+	assertEqualsM("channel2duty", channel2duty, t->dutyCycle[1]);
 }
 
 void testGY6_139QMB(void) {
@@ -482,13 +485,15 @@ void testTriggerDecoder(void) {
 	printf("*************************************************** testTriggerDecoder\r\n");
 
 	engine_configuration2_s ec2;
+	trigger_shape_s * s = &ec2.triggerShape;
 
-	initializeSkippedToothTriggerShapeExt(&ec2.triggerShape, 2, 0, FOUR_STROKE_CAM_SENSOR);
-	assertEqualsM("shape size", ec2.triggerShape.getSize(), 4);
-	assertEquals(ec2.triggerShape.wave.switchTimes[0], 0.25);
-	assertEquals(ec2.triggerShape.wave.switchTimes[1], 0.5);
-	assertEquals(ec2.triggerShape.wave.switchTimes[2], 0.75);
-	assertEquals(ec2.triggerShape.wave.switchTimes[3], 1);
+
+	initializeSkippedToothTriggerShapeExt(s, 2, 0, FOUR_STROKE_CAM_SENSOR);
+	assertEqualsM("shape size", s->getSize(), 4);
+	assertEquals(s->wave.switchTimes[0], 0.25);
+	assertEquals(s->wave.switchTimes[1], 0.5);
+	assertEquals(s->wave.switchTimes[2], 0.75);
+	assertEquals(s->wave.switchTimes[3], 1);
 
 	testDodgeNeonDecoder();
 	testTriggerDecoder2("dodge neon", DODGE_NEON_1995, 8, 0.4931, 0.2070);
