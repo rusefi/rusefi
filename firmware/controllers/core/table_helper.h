@@ -32,6 +32,7 @@ public:
 	int size;
 	float *aTable;
 	float *bTable;
+	float *bin;
 };
 
 template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE>
