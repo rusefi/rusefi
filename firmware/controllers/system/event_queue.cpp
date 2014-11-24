@@ -76,6 +76,7 @@ uint64_t EventQueue::getNextEventTime(uint64_t nowX) {
 }
 
 // static scheduling_s * longScheduling;
+// static uint32_t cost;
 
 /**
  * Invoke all pending actions prior to specified timestamp
@@ -111,7 +112,7 @@ bool EventQueue::executeAll(uint64_t now) {
 //		uint32_t before = hal_lld_get_counter_value();
 		current->callback(current->param);
 		// even with overflow it's safe to substract here
-//		uint32_t cost = hal_lld_get_counter_value() - before;
+//		cost = hal_lld_get_counter_value() - before;
 //		if (cost > 2000) {
 //			longScheduling = current;
 //			cost++;
