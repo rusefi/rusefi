@@ -45,8 +45,6 @@ public:
 	// todo: this should go, too
 	engine_configuration_s *engineConfiguration;
 
-	trigger_shape_s triggerShape;
-
 	FuelSchedule crankingInjectionEvents;
 	FuelSchedule injectionEvents;
 
@@ -64,7 +62,7 @@ public:
 };
 
 void initializeIgnitionActions(float advance, float dwellAngle,
-		engine_configuration2_s *engineConfiguration2, IgnitionEventList *list DECLARE_ENGINE_PARAMETER_S);
+		IgnitionEventList *list DECLARE_ENGINE_PARAMETER_S);
 
 void setDefaultNonPersistentConfiguration(engine_configuration2_s *engineConfiguration2);
 void printConfiguration(engine_configuration_s *engineConfiguration, engine_configuration2_s *engineConfiguration2);

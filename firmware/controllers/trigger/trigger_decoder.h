@@ -91,7 +91,7 @@ uint32_t findTriggerZeroEventIndex(trigger_shape_s * shape, trigger_config_s con
 
 class Engine;
 
-void initializeTriggerShape(Logging *logger, engine_configuration_s const *engineConfiguration, engine_configuration2_s *engineConfiguration2, Engine *engine);
+void initializeTriggerShape(Logging *logger, engine_configuration_s const *engineConfiguration, Engine *engine);
 void initTriggerDecoder(void);
 
 bool_t isTriggerDecoderError(void);

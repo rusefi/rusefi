@@ -92,9 +92,6 @@ void chDbgAssert(int c, char *msg, void *arg) {
 	}
 }
 
-static engine_configuration2_s ec2;
-engine_configuration2_s *engineConfiguration2 = &ec2;
-
 int getRevolutionCounter(void) {
 	return 0;
 }

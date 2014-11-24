@@ -121,7 +121,7 @@ static void registerSparkEvent(trigger_shape_s * s, IgnitionEventList *list, io_
 	findTriggerPosition(s, &event->dwellPosition, localAdvance - dwell PASS_ENGINE_PARAMETER);
 }
 
-void initializeIgnitionActions(float advance, float dwellAngle, engine_configuration2_s *engineConfiguration2,
+void initializeIgnitionActions(float advance, float dwellAngle,
 		IgnitionEventList *list DECLARE_ENGINE_PARAMETER_S) {
 
 	efiAssertVoid(engineConfiguration->cylindersCount > 0, "cylindersCount");
@@ -135,7 +135,7 @@ void initializeIgnitionActions(float advance, float dwellAngle, engine_configura
 			float localAdvance = advance
 					+ (float) engineConfiguration->engineCycle * i / engineConfiguration->cylindersCount;
 
-			registerSparkEvent(&engineConfiguration2->triggerShape, list, SPARKOUT_1_OUTPUT, localAdvance,
+			registerSparkEvent(&engine->triggerShape, list, SPARKOUT_1_OUTPUT, localAdvance,
 					dwellAngle PASS_ENGINE_PARAMETER);
 		}
 		break;
@@ -149,7 +149,7 @@ void initializeIgnitionActions(float advance, float dwellAngle, engine_configura
 			int id = getCylinderId(engineConfiguration->firingOrder, wastedIndex) - 1;
 			io_pin_e ioPin = (io_pin_e) (SPARKOUT_1_OUTPUT + id);
 
-			registerSparkEvent(&engineConfiguration2->triggerShape, list, ioPin, localAdvance,
+			registerSparkEvent(&engine->triggerShape, list, ioPin, localAdvance,
 					dwellAngle PASS_ENGINE_PARAMETER);
 
 		}
@@ -161,7 +161,7 @@ void initializeIgnitionActions(float advance, float dwellAngle, engine_configura
 					+ (float) engineConfiguration->engineCycle * i / engineConfiguration->cylindersCount;
 
 			io_pin_e pin = (io_pin_e) ((int) SPARKOUT_1_OUTPUT + getCylinderId(engineConfiguration->firingOrder, i) - 1);
-			registerSparkEvent(&engineConfiguration2->triggerShape, list, pin, localAdvance,
+			registerSparkEvent(&engine->triggerShape, list, pin, localAdvance,
 					dwellAngle PASS_ENGINE_PARAMETER);
 		}
 		break;
@@ -359,10 +359,9 @@ void prepareOutputSignals(Engine *engine) {
 	engine_configuration2_s *engineConfiguration2 = engine->engineConfiguration2;
 
 	// todo: move this reset into decoder
-	engineConfiguration2->triggerShape.calculateTriggerSynchPoint(engineConfiguration,
-			&engineConfiguration->triggerConfig, engine);
+	engine->triggerShape.calculateTriggerSynchPoint(engineConfiguration, engine);
 
-	trigger_shape_s * ts = &engineConfiguration2->triggerShape;
+	trigger_shape_s * ts = &engine->triggerShape;
 
 	injectonSignals.clear();
 	engineConfiguration2->crankingInjectionEvents.addFuelEvents(ts,

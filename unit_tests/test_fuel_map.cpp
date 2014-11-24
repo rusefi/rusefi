@@ -159,18 +159,19 @@ void testAngleResolver(void) {
 	engine_configuration_s *engineConfiguration = eth.engine.engineConfiguration;
 
 	engineConfiguration->globalTriggerAngleOffset = 175;
-	trigger_shape_s * ts = &engineConfiguration2->triggerShape;
+	assertTrue(engine->engineConfiguration2!=NULL);
+	trigger_shape_s * ts = &engine->triggerShape;
 
 	confgiureFordAspireTriggerShape(ts);
 
-	ts->calculateTriggerSynchPoint(engineConfiguration, &engineConfiguration->triggerConfig, engine);
+	ts->calculateTriggerSynchPoint(engineConfiguration, engine);
 
-	assertEqualsM("index 2", 232.76, ts->eventAngles[3]); // this angle is relation to synch point
+	assertEqualsM("index 2", 228.0450, ts->eventAngles[3]); // this angle is relation to synch point
 	assertEqualsM("time 2", 0.3233, ts->wave.getSwitchTime(2));
-	assertEqualsM("index 5", 409.8412, ts->eventAngles[6]);
+	assertEqualsM("index 5", 413.7470, ts->eventAngles[6]);
 	assertEqualsM("time 5", 0.5692, ts->wave.getSwitchTime(5));
 
-	assertEquals(9, ts->getTriggerShapeSynchPointIndex());
+	assertEquals(4, ts->getTriggerShapeSynchPointIndex());
 
 	assertEqualsM("shape size", 10, ts->getSize());
 
@@ -180,14 +181,14 @@ void testAngleResolver(void) {
 	printf("*************************************************** testAngleResolver 0\r\n");
 	findTriggerPosition(ts, &ae.getNextActuatorEvent()->position, 53 - 175 PASS_ENGINE_PARAMETER);
 	assertEqualsM("size", 1, ae.size);
-	assertEquals(0, ae.events[0].position.eventIndex);
-	assertEquals(53, ae.events[0].position.angleOffset);
+	assertEquals(1, ae.events[0].position.eventIndex);
+	assertEquals(3.1588, ae.events[0].position.angleOffset);
 
 	printf("*************************************************** testAngleResolver 2\r\n");
 	ae.resetEventList();
 	findTriggerPosition(ts, &ae.getNextActuatorEvent()->position, 51 + 180 - 175 PASS_ENGINE_PARAMETER);
-	assertEquals(2, ae.events[0].position.eventIndex);
-	assertEquals(109.1, ae.events[0].position.angleOffset);
+	assertEquals(3, ae.events[0].position.eventIndex);
+	assertEquals(2.955, ae.events[0].position.angleOffset);
 }
 
 void testPinHelper(void) {

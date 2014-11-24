@@ -55,7 +55,8 @@ int trigger_shape_s::getTriggerShapeSynchPointIndex() {
 // todo: clean-up!
 int getEngineCycleEventCount2(operation_mode_e mode, trigger_shape_s * s);
 
-void trigger_shape_s::calculateTriggerSynchPoint(engine_configuration_s *engineConfiguration, trigger_config_s const*triggerConfig, Engine *engine) {
+void trigger_shape_s::calculateTriggerSynchPoint(engine_configuration_s *engineConfiguration, Engine *engine) {
+	trigger_config_s const*triggerConfig = &engineConfiguration->triggerConfig;
 	setTriggerShapeSynchPointIndex(engineConfiguration, findTriggerZeroEventIndex(this, triggerConfig), engine);
 }
 

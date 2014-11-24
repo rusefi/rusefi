@@ -36,6 +36,8 @@ public:
 	Thermistor iat;
 	Thermistor clt;
 
+	trigger_shape_s triggerShape;
+
 	void onTriggerEvent(uint64_t nowNt);
 	EngineState engineState;
 	uint64_t lastTriggerEventTimeNt;

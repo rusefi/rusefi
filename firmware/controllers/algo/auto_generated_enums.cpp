@@ -440,6 +440,8 @@ case Force_4b_firing_order:
   return "Force_4b_firing_order";
 case FO_1_THEN_2_THEN_4_THEN3:
   return "FO_1_THEN_2_THEN_4_THEN3";
+case FO_1_2_4_5_3:
+  return "FO_1_2_4_5_3";
   }
  return NULL;
 }
