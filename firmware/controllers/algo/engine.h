@@ -54,6 +54,8 @@ public:
 	 */
 	bool isCylinderCleanupMode;
 
+	uint32_t ignitionMathTime;
+
 
 	void updateSlowSensors();
 	void watchdog();
