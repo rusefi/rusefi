@@ -31,9 +31,8 @@
  */
 #include "rpm_calculator.h"
 
-#if EFI_WAVE_ANALYZER
-
-#endif /* EFI_WAVE_ANALYZER */
+#include "wave_chart.h"
+extern WaveChart waveChart;
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
 static Logging logger;

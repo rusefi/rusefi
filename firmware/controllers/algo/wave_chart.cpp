@@ -146,6 +146,10 @@ void WaveChart::addWaveChartEvent3(const char *name, const char * msg) {
 		return;
 	}
 
+#if EFI_PROD_CODE
+	efiAssertVoid(getRemainingStack(chThdSelf()) > 32, "lowstck#2c");
+#endif
+
 	efiAssertVoid(isInitialized, "chart not initialized");
 #if DEBUG_WAVE
 	scheduleSimpleMsg(&debugLogging, "current", chart->counter);
