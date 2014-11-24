@@ -88,7 +88,10 @@ private:
 
 void initializeSkippedToothTriggerShapeExt(trigger_shape_s *s, int totalTeethCount, int skippedCount, operation_mode_e operationMode);
 uint32_t findTriggerZeroEventIndex(trigger_shape_s * shape, trigger_config_s const*triggerConfig);
-void initializeTriggerShape(Logging *logger, engine_configuration_s const *engineConfiguration, engine_configuration2_s *engineConfiguration2);
+
+class Engine;
+
+void initializeTriggerShape(Logging *logger, engine_configuration_s const *engineConfiguration, engine_configuration2_s *engineConfiguration2, Engine *engine);
 void initTriggerDecoder(void);
 
 bool_t isTriggerDecoderError(void);

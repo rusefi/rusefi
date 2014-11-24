@@ -585,7 +585,7 @@ void applyNonPersistentConfiguration(Logging * logger, Engine *engine) {
 #if EFI_PROD_CODE
 	scheduleMsg(logger, "applyNonPersistentConfiguration()");
 #endif
-	initializeTriggerShape(logger, engineConfiguration, engineConfiguration2);
+	initializeTriggerShape(logger, engineConfiguration, engineConfiguration2, engine);
 	if (engineConfiguration2->triggerShape.getSize() == 0) {
 		firmwareError("triggerShape size is zero");
 		return;
