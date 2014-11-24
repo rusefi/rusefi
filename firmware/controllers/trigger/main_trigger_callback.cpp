@@ -56,6 +56,7 @@
 
 EXTERN_ENGINE
 ;
+extern bool hasFirmwareErrorFlag;
 
 static LocalVersionHolder localVersion;
 

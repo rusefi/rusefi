@@ -19,6 +19,8 @@
 
 EXTERN_ENGINE;
 
+extern bool hasFirmwareErrorFlag;
+
 #define LCD_WIDTH 20
 // this value should be even
 #define NUMBER_OF_DIFFERENT_LINES 4

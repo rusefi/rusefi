@@ -53,8 +53,7 @@ inline float getOneDegreeTimeMs(int rpm) {
 
 float getCrankshaftRevolutionTimeMs(int rpm);
 
-int isCrankingRT(engine_configuration_s *engineConfiguration, int rpm);
-#define isCrankingR(rpm) isCrankingRT(engineConfiguration, rpm)
+#define isCrankingR(rpm) ((rpm) > 0 && (rpm) < engineConfiguration->crankingSettings.crankingRpm)
 
 float getEngineLoadT(Engine *engine);
 #define getEngineLoad() getEngineLoadT(engine)

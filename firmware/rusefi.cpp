@@ -127,7 +127,7 @@ int main_loop_started = FALSE;
 
 static MemoryStream firmwareErrorMessageStream;
 uint8_t errorMessageBuffer[200];
-static bool hasFirmwareErrorFlag = FALSE;
+bool hasFirmwareErrorFlag = false;
 extern engine_configuration_s *engineConfiguration;
 extern board_configuration_s *boardConfiguration;
 extern engine_configuration2_s *engineConfiguration2;
@@ -229,11 +229,6 @@ void chDbgStackOverflowPanic(Thread *otp) {
 	strcat(panicMessage, otp->p_name);
 #endif
 	chDbgPanic3(panicMessage, __FILE__, __LINE__);
-}
-
-// todo: make this a macro, noone can trust these compilers
-bool hasFirmwareError(void) {
-	return hasFirmwareErrorFlag;
 }
 
 // todo: why is this method here and not in error_handling.c ?

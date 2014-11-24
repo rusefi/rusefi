@@ -31,6 +31,7 @@ EXTERN_ENGINE;
 #define MAX_ICU_COUNT 5
 
 extern WaveChart waveChart;
+extern bool hasFirmwareErrorFlag;
 
 /**
  * Difference between current 1st trigger event and previous 1st trigger event.
