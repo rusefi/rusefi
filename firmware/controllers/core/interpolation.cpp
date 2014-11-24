@@ -15,10 +15,7 @@
 #include "main.h"
 #include "interpolation.h"
 
-#define INTERPOLATION_A(x1, y1, x2, y2) ((y1 - y2) / (x1 - x2))
-
 int needInterpolationLogging = TRUE;
-
 
 FastInterpolation::FastInterpolation(float x1, float y1, float x2, float y2) {
 	init(x1, y1, x2, y2);

@@ -16,6 +16,7 @@
 #include "engine_configuration.h"
 #include "event_registry.h"
 #include "trigger_structure.h"
+#include "table_helper.h"
 
 class FuelSchedule {
 public:
@@ -48,6 +49,12 @@ public:
 
 	FuelSchedule crankingInjectionEvents;
 	FuelSchedule injectionEvents;
+
+	float sparkAtable[DWELL_CURVE_SIZE];
+	float sparkBtable[DWELL_CURVE_SIZE];
+
+	Table2D sparkTable;
+	void precalc();
 
 	/**
 	 * We are alternating two event lists in order to avoid a potential issue around revolution boundary
