@@ -90,9 +90,13 @@ typedef EventListener event_listener_t;
 
 #define EXTERN_ENGINE extern Engine *engine; \
 		extern engine_configuration_s *engineConfiguration; \
-		extern board_configuration_s *boardConfiguration;
+		extern board_configuration_s *boardConfiguration; \
+		extern persistent_config_container_s persistentState
 
 #define DECLARE_ENGINE_PARAMETER_F void
 #define DECLARE_ENGINE_PARAMETER_S
 #define PASS_ENGINE_PARAMETER_F
 #define PASS_ENGINE_PARAMETER
+
+#define CONFIG(x) persistentState.persistentConfiguration.engineConfiguration.x
+

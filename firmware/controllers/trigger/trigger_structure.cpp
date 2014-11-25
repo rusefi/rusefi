@@ -72,7 +72,9 @@ void trigger_shape_s::setTriggerShapeSynchPointIndex(engine_configuration_s *eng
 			// explicit check for zero to avoid issues where logical zero is not exactly zero due to float nature
 			eventAngles[i] = 0;
 		} else {
-			eventAngles[i] = fixAngle(getAngle((triggerShapeSynchPointIndex + i) % engineCycleEventCount) - firstAngle PASS_ENGINE_PARAMETER);
+			float angle = getAngle((triggerShapeSynchPointIndex + i) % engineCycleEventCount) - firstAngle;
+			angle = fixAngle(angle PASS_ENGINE_PARAMETER);
+			eventAngles[i] = angle;
 		}
 	}
 }

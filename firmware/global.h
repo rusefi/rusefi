@@ -71,11 +71,19 @@ typedef Thread thread_t;
 
 #define EXTERN_ENGINE extern Engine *engine; \
 		extern engine_configuration_s *engineConfiguration; \
-		extern board_configuration_s *boardConfiguration;
+		extern board_configuration_s *boardConfiguration; \
+		extern persistent_config_container_s persistentState
 
 #define DECLARE_ENGINE_PARAMETER_F void
 #define DECLARE_ENGINE_PARAMETER_S
 #define PASS_ENGINE_PARAMETER_F
 #define PASS_ENGINE_PARAMETER
+
+/**
+ * this macro allows the compiled to figure out the complete static address, that's a performance
+ * optimization
+ */
+#define CONFIG(x) persistentState.persistentConfiguration.engineConfiguration.x
+
 
 #endif /* GLOBAL_H_ */

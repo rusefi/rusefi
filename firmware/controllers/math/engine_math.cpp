@@ -56,9 +56,9 @@ float fixAngle(float angle DECLARE_ENGINE_PARAMETER_S) {
 	efiAssert(engineConfiguration->engineCycle != 0, "engine cycle", NAN);
 	// I guess this implementation would be faster than 'angle % 720'
 	while (angle < 0)
-		angle += engineConfiguration->engineCycle;
-	while (angle >= engineConfiguration->engineCycle)
-		angle -= engineConfiguration->engineCycle;
+		angle += CONFIG(engineCycle);
+	while (angle >= CONFIG(engineCycle))
+		angle -= CONFIG(engineCycle);
 	return angle;
 }
 
@@ -281,7 +281,8 @@ int getEngineCycleEventCount2(operation_mode_e mode, trigger_shape_s * s) {
 void findTriggerPosition(trigger_shape_s * s, event_trigger_position_s *position,
 		float angleOffset DECLARE_ENGINE_PARAMETER_S) {
 
-	angleOffset = fixAngle(angleOffset + engineConfiguration->globalTriggerAngleOffset PASS_ENGINE_PARAMETER);
+	angleOffset += engineConfiguration->globalTriggerAngleOffset;
+	angleOffset = fixAngle(angleOffset PASS_ENGINE_PARAMETER);
 
 	int engineCycleEventCount = getEngineCycleEventCount2(getOperationMode(engineConfiguration), s);
 
