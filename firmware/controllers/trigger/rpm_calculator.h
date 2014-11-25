@@ -10,6 +10,7 @@
 #define RPM_REPORTER_H_
 
 #include <global.h>
+#include "engine_configuration.h"
 
 #define WC_DOWN "d"
 #define WC_UP "u"
@@ -62,7 +63,7 @@ private:
 #define getRpmE(engine) (engine)->rpmCalculator.rpm()
 
 bool isCrankingE(Engine *engine);
-void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index, Engine *engine);
+void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index DECLARE_ENGINE_PARAMETER_S);
 /**
  * @brief   Initialize RPM calculator
  */

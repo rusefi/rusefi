@@ -169,8 +169,8 @@ void printState(Engine *engine, int currentCkpEventCounter) {
 
 //	debugFloat(&logger, "table_spark", getAdvance(rpm, getMaf()), 2);
 
-	float engineLoad = getEngineLoadT(engine);
-	float baseFuel = getBaseFuel(engine, rpm);
+	float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER);
+	float baseFuel = getBaseFuel(rpm PASS_ENGINE_PARAMETER);
 	debugFloat(&logger, "fuel_base", baseFuel, 2);
 //	debugFloat(&logger, "fuel_iat", getIatCorrection(getIntakeAirTemperature()), 2);
 //	debugFloat(&logger, "fuel_clt", getCltCorrection(getCoolantTemperature()), 2);
@@ -333,7 +333,7 @@ static void showFuelInfo2(float rpm, float engineLoad, Engine *engine) {
 }
 
 static void showFuelInfo(Engine *engine) {
-	showFuelInfo2((float) getRpmE(engine), getEngineLoadT(engine), engine);
+	showFuelInfo2((float) getRpmE(engine), getEngineLoadT(PASS_ENGINE_PARAMETER), engine);
 }
 
 #endif /* EFI_PROD_CODE */
@@ -420,7 +420,7 @@ void updateTunerStudioState(Engine *engine, TunerStudioOutputChannels *tsOutputC
 	float coolant = getCoolantTemperature(engine);
 	float intake = getIntakeAirTemperature(engine);
 
-	float engineLoad = getEngineLoadT(engine);
+	float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER);
 	float baseFuelMs = getBaseTableFuel(engineConfiguration, (int) rpm, engineLoad);
 
 	tsOutputChannels->rpm = rpm;

@@ -12,7 +12,7 @@
 
 void prepareFuelMap(engine_configuration_s *engineConfiguration);
 
-float getBaseFuel(Engine *engine, int rpm);
+float getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_S);
 float getBaseTableFuel(engine_configuration_s *engineConfiguration, int rpm, float engineLoad);
 float getIatCorrection(float iat DECLARE_ENGINE_PARAMETER_S);
 float getInjectorLag(float vBatt DECLARE_ENGINE_PARAMETER_S);

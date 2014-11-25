@@ -13,7 +13,7 @@
 #include "trigger_decoder.h"
 
 class Engine;
-typedef void (*ShaftPositionListener)(trigger_event_e signal, uint32_t index, Engine *engine);
+typedef void (*ShaftPositionListener)(trigger_event_e signal, uint32_t index DECLARE_ENGINE_PARAMETER_S);
 
 #ifdef __cplusplus
 #include "ec2.h"
@@ -25,7 +25,7 @@ class TriggerCentral {
 public:
 	TriggerCentral();
 	void addEventListener(ShaftPositionListener handler, const char *name, Engine *engine);
-	void handleShaftSignal(Engine *engine, trigger_event_e signal);
+	void handleShaftSignal(trigger_event_e signal, Engine *engine, engine_configuration_s *engineConfiguration);
 	int getHwEventCounter(int index);
 	TriggerState triggerState;
 	uint64_t nowNt;

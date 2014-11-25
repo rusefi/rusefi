@@ -50,8 +50,8 @@ float getCrankshaftRevolutionTimeMs(int rpm);
 
 #define isCrankingR(rpm) ((rpm) > 0 && (rpm) < engineConfiguration->crankingSettings.crankingRpm)
 
-float getEngineLoadT(Engine *engine);
-#define getEngineLoad() getEngineLoadT(engine)
+float getEngineLoadT(DECLARE_ENGINE_PARAMETER_F);
+
 
 float getSparkDwellMsT(int rpm DECLARE_ENGINE_PARAMETER_S);
 

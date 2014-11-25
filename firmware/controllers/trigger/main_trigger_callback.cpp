@@ -288,7 +288,7 @@ void showMainHistogram(void) {
  * This is the main trigger event handler.
  * Both injection and ignition are controlled from this method.
  */
-void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex, Engine *engine) {
+void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECLARE_ENGINE_PARAMETER_S) {
 	if (hasFirmwareError()) {
 		/**
 		 * In case on a major error we should not process any more events.
@@ -300,9 +300,6 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex, Eng
 	(void) ckpSignalType;
 	efiAssertVoid(eventIndex < 2 * engine->triggerShape.shaftPositionEventCount, "event index");
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#2");
-
-	// todo: remove these local variables soon?
-	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
 
 	int rpm = getRpmE(engine);
 	if (rpm == 0) {
@@ -348,7 +345,8 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex, Eng
 			firmwareError("invalid dwell: %f at %d", dwellMs, rpm);
 			return;
 		}
-		float advance = getAdvance(rpm, getEngineLoadT(engine) PASS_ENGINE_PARAMETER);
+		float el = getEngineLoadT(PASS_ENGINE_PARAMETER_F);
+		float advance = getAdvance(rpm, el PASS_ENGINE_PARAMETER);
 
 		if (cisnan(advance)) {
 			// error should already be reported
@@ -402,8 +400,8 @@ void MainTriggerCallback::init(Engine *engine, engine_configuration2_s *engineCo
 
 static void showMainInfo(Engine *engine) {
 	int rpm = engine->rpmCalculator.rpm();
-	float el = getEngineLoadT(mainTriggerCallbackInstance.engine);
 #if EFI_PROD_CODE
+	float el = getEngineLoadT(PASS_ENGINE_PARAMETER);
 	scheduleMsg(&logger, "rpm %d engine_load %f", rpm, el);
 	scheduleMsg(&logger, "fuel %fms timing %f", getFuelMs(rpm PASS_ENGINE_PARAMETER),
 			getAdvance(rpm, el PASS_ENGINE_PARAMETER));
