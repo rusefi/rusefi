@@ -336,6 +336,7 @@ static void testStartupFuelPumping(void) {
 	StartupFuelPumping sf;
 
 	Engine * engine = &eth.engine;
+	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
 
 	engine->rpmCalculator.mockRpm = 0;
 
@@ -343,31 +344,31 @@ static void testStartupFuelPumping(void) {
 	engine->engineConfiguration->tpsMax = 10;
 
 	mockTps = 6;
-	sf.update(engine);
+	sf.update(PASS_ENGINE_PARAMETER_F);
 	assertEqualsM("pc#1", 1, sf.pumpsCounter);
 
 	mockTps = 3;
-	sf.update(engine);
+	sf.update(PASS_ENGINE_PARAMETER_F);
 	assertEqualsM("pc#2", 1, sf.pumpsCounter);
 
-	sf.update(engine);
+	sf.update(PASS_ENGINE_PARAMETER_F);
 	assertEqualsM("pc#3", 1, sf.pumpsCounter);
 
 	engine->rpmCalculator.mockRpm = 10;
-	sf.update(engine);
+	sf.update(PASS_ENGINE_PARAMETER_F);
 	assertEqualsM("pc#4", 0, sf.pumpsCounter);
 
 	mockTps = 7;
 	engine->rpmCalculator.mockRpm = 0;
-	sf.update(engine);
+	sf.update(PASS_ENGINE_PARAMETER_F);
 	assertEqualsM("pc#5", 1, sf.pumpsCounter);
 
 	mockTps = 3;
-	sf.update(engine);
+	sf.update(PASS_ENGINE_PARAMETER_F);
 	assertEqualsM("pc#6", 1, sf.pumpsCounter);
 
 	mockTps = 7;
-	sf.update(engine);
+	sf.update(PASS_ENGINE_PARAMETER_F);
 	assertEqualsM("pc#7", 2, sf.pumpsCounter);
 }
 

@@ -66,7 +66,7 @@ float getSpeedDensityFuel(Engine *engine, int rpm) {
 
 	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
 
-	float tps = getTPS(engineConfiguration);
+	float tps = getTPS(PASS_ENGINE_PARAMETER_F);
 	float coolantC = getCoolantTemperature(engine);
 	float intakeC = getIntakeAirTemperature(engine);
 	float tChargeK = convertCelsiusToKelvin(getTCharge(rpm, tps, coolantC, intakeC));

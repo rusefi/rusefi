@@ -94,4 +94,5 @@ typedef EventListener event_listener_t;
 
 #define DECLARE_ENGINE_PARAMETER_F void
 #define DECLARE_ENGINE_PARAMETER_S
+#define PASS_ENGINE_PARAMETER_F
 #define PASS_ENGINE_PARAMETER

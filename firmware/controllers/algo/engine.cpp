@@ -24,6 +24,8 @@
 static Logging logger;
 #endif
 
+EXTERN_ENGINE;
+
 /**
  * We are executing these heavy (logarithm) methods from outside the trigger callbacks for performance reasons.
  */
@@ -119,10 +121,9 @@ void StartupFuelPumping::setPumpsCounter(engine_configuration_s *engineConfigura
 	}
 }
 
-void StartupFuelPumping::update(Engine *engine) {
-	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
+void StartupFuelPumping::update(DECLARE_ENGINE_PARAMETER_F) {
 	if (engine->rpmCalculator.rpm() == 0) {
-		bool isTpsAbove50 = getTPS(engineConfiguration) >= 50;
+		bool isTpsAbove50 = getTPS(PASS_ENGINE_PARAMETER_F) >= 50;
 
 		if (this->isTpsAbove50 != isTpsAbove50) {
 			setPumpsCounter(engineConfiguration, pumpsCounter + 1);
