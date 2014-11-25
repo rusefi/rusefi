@@ -177,7 +177,7 @@ void TriggerState::clear() {
 }
 
 uint32_t trigger_shape_s::getLength() const {
-	return operationMode == FOUR_STROKE_CAM_SENSOR ? shaftPositionEventCount : 2 * shaftPositionEventCount;
+	return operationMode == FOUR_STROKE_CAM_SENSOR ? getSize() : 2 * getSize();
 }
 
 float trigger_shape_s::getAngle(int index) const {

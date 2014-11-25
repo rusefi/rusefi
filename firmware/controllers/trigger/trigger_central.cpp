@@ -162,7 +162,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, Engine *engine, e
 	}
 	reportEventToWaveChart(signal, triggerIndexForListeners);
 
-	if (triggerState.getCurrentIndex() >= engine->triggerShape.shaftPositionEventCount) {
+	if (triggerState.getCurrentIndex() >= engine->triggerShape.getSize()) {
 		warning(OBD_PCM_Processor_Fault, "unexpected eventIndex=%d", triggerState.getCurrentIndex());
 	} else {
 
