@@ -33,6 +33,8 @@
 EXTERN_ENGINE
 ;
 
+extern OutputPin outputs[IO_PIN_COUNT];
+
 /*
  * default Volumetric Efficiency
  */
@@ -88,7 +90,7 @@ void setSingleCoilDwell(engine_configuration_s *engineConfiguration) {
 
 OutputSignalList injectonSignals CCM_OPTIONAL;
 
-static void registerSparkEvent(trigger_shape_s * s, IgnitionEventList *list, io_pin_e pin, float localAdvance,
+static void registerSparkEvent(IgnitionEventList *list, io_pin_e pin, float localAdvance,
 		float dwell DECLARE_ENGINE_PARAMETER_S) {
 
 	IgnitionEvent *event = list->getNextActuatorEvent();
@@ -103,7 +105,7 @@ static void registerSparkEvent(trigger_shape_s * s, IgnitionEventList *list, io_
 
 	event->advance = localAdvance;
 
-	findTriggerPosition(s, &event->dwellPosition, localAdvance - dwell PASS_ENGINE_PARAMETER);
+	findTriggerPosition(&event->dwellPosition, localAdvance - dwell PASS_ENGINE_PARAMETER);
 }
 
 void initializeIgnitionActions(float advance, float dwellAngle,
@@ -113,40 +115,38 @@ void initializeIgnitionActions(float advance, float dwellAngle,
 
 	list->resetEventList();
 
-	switch (engineConfiguration->ignitionMode) {
+	switch (CONFIG(ignitionMode)) {
 	case IM_ONE_COIL:
-		for (int i = 0; i < engineConfiguration->cylindersCount; i++) {
+		for (int i = 0; i < CONFIG(cylindersCount); i++) {
 			// todo: extract method
 			float localAdvance = advance
-					+ (float) engineConfiguration->engineCycle * i / engineConfiguration->cylindersCount;
+					+ (float) CONFIG(engineCycle) * i / CONFIG(cylindersCount);
 
-			registerSparkEvent(&engine->triggerShape, list, SPARKOUT_1_OUTPUT, localAdvance,
+			registerSparkEvent(list, SPARKOUT_1_OUTPUT, localAdvance,
 					dwellAngle PASS_ENGINE_PARAMETER);
 		}
 		break;
 	case IM_WASTED_SPARK:
-		for (int i = 0; i < engineConfiguration->cylindersCount; i++) {
+		for (int i = 0; i < CONFIG(cylindersCount); i++) {
 			float localAdvance = advance
-					+ (float) engineConfiguration->engineCycle * i / engineConfiguration->cylindersCount;
+					+ (float) CONFIG(engineCycle) * i / CONFIG(cylindersCount);
 
-			int wastedIndex = i % (engineConfiguration->cylindersCount / 2);
+			int wastedIndex = i % (CONFIG(cylindersCount) / 2);
 
-			int id = getCylinderId(engineConfiguration->firingOrder, wastedIndex) - 1;
+			int id = getCylinderId(CONFIG(firingOrder), wastedIndex) - 1;
 			io_pin_e ioPin = (io_pin_e) (SPARKOUT_1_OUTPUT + id);
 
-			registerSparkEvent(&engine->triggerShape, list, ioPin, localAdvance,
-					dwellAngle PASS_ENGINE_PARAMETER);
-
+			registerSparkEvent(list, ioPin, localAdvance, dwellAngle PASS_ENGINE_PARAMETER);
 		}
 
 		break;
 	case IM_INDIVIDUAL_COILS:
-		for (int i = 0; i < engineConfiguration->cylindersCount; i++) {
+		for (int i = 0; i < CONFIG(cylindersCount); i++) {
 			float localAdvance = advance
-					+ (float) engineConfiguration->engineCycle * i / engineConfiguration->cylindersCount;
+					+ (float) CONFIG(engineCycle) * i / CONFIG(cylindersCount);
 
-			io_pin_e pin = (io_pin_e) ((int) SPARKOUT_1_OUTPUT + getCylinderId(engineConfiguration->firingOrder, i) - 1);
-			registerSparkEvent(&engine->triggerShape, list, pin, localAdvance,
+			io_pin_e pin = (io_pin_e) ((int) SPARKOUT_1_OUTPUT + getCylinderId(CONFIG(firingOrder), i) - 1);
+			registerSparkEvent(list, pin, localAdvance,
 					dwellAngle PASS_ENGINE_PARAMETER);
 		}
 		break;
@@ -156,7 +156,7 @@ void initializeIgnitionActions(float advance, float dwellAngle,
 	}
 }
 
-void FuelSchedule::registerInjectionEvent(trigger_shape_s *s, io_pin_e pin, float angle,
+void FuelSchedule::registerInjectionEvent(io_pin_e pin, float angle,
 		bool_t isSimultanious DECLARE_ENGINE_PARAMETER_S) {
 	ActuatorEventList *list = &events;
 
@@ -170,7 +170,7 @@ void FuelSchedule::registerInjectionEvent(trigger_shape_s *s, io_pin_e pin, floa
 
 	ev->isSimultanious = isSimultanious;
 
-	efiAssertVoid(s->getSize() > 0, "uninitialized trigger_shape_s");
+	efiAssertVoid(TRIGGER_SHAPE(getSize()) > 0, "uninitialized trigger_shape_s");
 
 	if (ev == NULL) {
 		// error already reported
@@ -178,7 +178,7 @@ void FuelSchedule::registerInjectionEvent(trigger_shape_s *s, io_pin_e pin, floa
 	}
 	ev->actuator = actuator;
 
-	findTriggerPosition(s, &ev->position, angle PASS_ENGINE_PARAMETER);
+	findTriggerPosition(&ev->position, angle PASS_ENGINE_PARAMETER);
 	hasEvents[ev->position.eventIndex] = true;
 }
 
@@ -203,7 +203,7 @@ void FuelSchedule::addFuelEvents(trigger_shape_s *s, injection_mode_e mode DECLA
 			io_pin_e pin = INJECTOR_PIN_BY_INDEX(getCylinderId(engineConfiguration->firingOrder, i) - 1);
 			float angle = baseAngle
 					+ (float) engineConfiguration->engineCycle * i / engineConfiguration->cylindersCount;
-			registerInjectionEvent(s, pin, angle, false PASS_ENGINE_PARAMETER);
+			registerInjectionEvent(pin, angle, false PASS_ENGINE_PARAMETER);
 		}
 		break;
 	case IM_SIMULTANEOUS:
@@ -215,7 +215,7 @@ void FuelSchedule::addFuelEvents(trigger_shape_s *s, injection_mode_e mode DECLA
 			 * We do not need injector pin here because we will control all injectors
 			 * simultaniously
 			 */
-			registerInjectionEvent(s, IO_INVALID, angle, true PASS_ENGINE_PARAMETER);
+			registerInjectionEvent(IO_INVALID, angle, true PASS_ENGINE_PARAMETER);
 		}
 		break;
 	case IM_BATCH:
@@ -224,13 +224,13 @@ void FuelSchedule::addFuelEvents(trigger_shape_s *s, injection_mode_e mode DECLA
 			io_pin_e pin = INJECTOR_PIN_BY_INDEX(index);
 			float angle = baseAngle
 					+ i * (float) engineConfiguration->engineCycle / engineConfiguration->cylindersCount;
-			registerInjectionEvent(s, pin, angle, false PASS_ENGINE_PARAMETER);
+			registerInjectionEvent(pin, angle, false PASS_ENGINE_PARAMETER);
 
 			/**
 			 * also fire the 2nd half of the injectors so that we can implement a batch mode on individual wires
 			 */
 			pin = INJECTOR_PIN_BY_INDEX(index + (engineConfiguration->cylindersCount / 2));
-			registerInjectionEvent(s, pin, angle, false PASS_ENGINE_PARAMETER);
+			registerInjectionEvent(pin, angle, false PASS_ENGINE_PARAMETER);
 		}
 		break;
 	default:
@@ -256,21 +256,16 @@ float getSparkDwellMsT(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	return interpolate2d(rpm, engineConfiguration->sparkDwellBins, engineConfiguration->sparkDwell, DWELL_CURVE_SIZE);
 }
 
-/**
- * Trigger event count equals engine cycle event count if we have a cam sensor.
- * Two trigger cycles make one engine cycle in case of a four stroke engine If we only have a cranksensor.
- */
-int getEngineCycleEventCount2(operation_mode_e mode, trigger_shape_s * s) {
-	return mode == FOUR_STROKE_CAM_SENSOR ? s->getSize() : 2 * s->getSize();
-}
-
-void findTriggerPosition(trigger_shape_s * s, event_trigger_position_s *position,
+void findTriggerPosition(event_trigger_position_s *position,
 		float angleOffset DECLARE_ENGINE_PARAMETER_S) {
 
-	angleOffset += engineConfiguration->globalTriggerAngleOffset;
+	angleOffset += CONFIG(globalTriggerAngleOffset);
 	fixAngle(angleOffset);
 
-	int engineCycleEventCount = getEngineCycleEventCount2(getOperationMode(engineConfiguration), s);
+	/**
+	 * Here we rely on this to be pre-calculated, that's a performance optimization
+	 */
+	int engineCycleEventCount = engine->engineCycleEventCount;
 
 	efiAssertVoid(engineCycleEventCount > 0, "engineCycleEventCount");
 
@@ -282,24 +277,22 @@ void findTriggerPosition(trigger_shape_s * s, event_trigger_position_s *position
 	 * Let's find the last trigger angle which is less or equal to the desired angle
 	 * todo: extract binary search as template method?
 	 */
+	float eventAngle;
 	while (true) {
 		middle = (left + right) / 2;
+		eventAngle = TRIGGER_SHAPE(eventAngles[middle]);
 
 		if (middle == left) {
 			break;
 		}
-
-		if (angleOffset < s->eventAngles[middle]) {
+		if (angleOffset < eventAngle) {
 			right = middle;
-		} else if (angleOffset > s->eventAngles[middle]) {
+		} else if (angleOffset > eventAngle) {
 			left = middle;
 		} else {
 			break;
 		}
-
 	}
-
-	float eventAngle = s->eventAngles[middle];
 
 	if (angleOffset < eventAngle) {
 		firmwareError("angle constraint violation in registerActuatorEventExt(): %f/%f", angleOffset, eventAngle);

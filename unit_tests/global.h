@@ -46,5 +46,6 @@ class Engine;
 #define PASS_ENGINE_PARAMETER , engine, engineConfiguration
 
 #define CONFIG(x) engineConfiguration->x
+#define TRIGGER_SHAPE(x) engine->triggerShape.x
 
 #endif /* GLOBAL_H_ */

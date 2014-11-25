@@ -19,7 +19,7 @@
 
 #define INJECTOR_PIN_BY_INDEX(index) (io_pin_e) ((int) INJECTOR_1_OUTPUT + (index))
 
-void findTriggerPosition(trigger_shape_s * s,
+void findTriggerPosition(
 		event_trigger_position_s *position, float angleOffset DECLARE_ENGINE_PARAMETER_S);
 
 int isInjectionEnabled(engine_configuration_s *engineConfiguration);

@@ -123,13 +123,13 @@ static void test1995FordInline6TriggerDecoder(void) {
 
 	event_trigger_position_s position;
 	assertEqualsM("globalTriggerAngleOffset", 0, engineConfiguration->globalTriggerAngleOffset);
-	findTriggerPosition(shape, &position, 0 PASS_ENGINE_PARAMETER);
+	findTriggerPosition(&position, 0 PASS_ENGINE_PARAMETER);
 	assertTriggerPosition(&position, 0, 0);
 
-	findTriggerPosition(shape, &position, 200 PASS_ENGINE_PARAMETER);
+	findTriggerPosition(&position, 200 PASS_ENGINE_PARAMETER);
 	assertTriggerPosition(&position, 3, 20);
 
-	findTriggerPosition(shape, &position, 360 PASS_ENGINE_PARAMETER);
+	findTriggerPosition(&position, 360 PASS_ENGINE_PARAMETER);
 	assertTriggerPosition(&position, 6, 0);
 
 
@@ -251,39 +251,39 @@ void testMazdaMianaNbDecoder(void) {
 
 	event_trigger_position_s position;
 	assertEqualsM("globalTriggerAngleOffset", 276, ec->globalTriggerAngleOffset);
-	findTriggerPosition(shape, &position, 0 PASS_ENGINE_PARAMETER);
+	findTriggerPosition(&position, 0 PASS_ENGINE_PARAMETER);
 	assertTriggerPosition(&position, 7, 46);
 
-	findTriggerPosition(shape, &position, 180 PASS_ENGINE_PARAMETER);
+	findTriggerPosition(&position, 180 PASS_ENGINE_PARAMETER);
 	assertTriggerPosition(&position, 13, 46);
 
-	findTriggerPosition(shape, &position, 360 PASS_ENGINE_PARAMETER);
+	findTriggerPosition(&position, 360 PASS_ENGINE_PARAMETER);
 	assertTriggerPosition(&position, 17, 46);
 
-	findTriggerPosition(shape, &position, 444 PASS_ENGINE_PARAMETER);
+	findTriggerPosition(&position, 444 PASS_ENGINE_PARAMETER);
 	assertTriggerPosition(&position, 0, 0);
 
-	findTriggerPosition(shape, &position, 444.1 PASS_ENGINE_PARAMETER);
+	findTriggerPosition(&position, 444.1 PASS_ENGINE_PARAMETER);
 	assertTriggerPosition(&position, 0, 0.1);
 
-	findTriggerPosition(shape, &position, 445 PASS_ENGINE_PARAMETER);
+	findTriggerPosition(&position, 445 PASS_ENGINE_PARAMETER);
 	assertTriggerPosition(&position, 0, 1);
 
-	findTriggerPosition(shape, &position, 494 PASS_ENGINE_PARAMETER);
+	findTriggerPosition(&position, 494 PASS_ENGINE_PARAMETER);
 	assertTriggerPosition(&position, 3, 0);
 
-	findTriggerPosition(shape, &position, 719 PASS_ENGINE_PARAMETER);
+	findTriggerPosition(&position, 719 PASS_ENGINE_PARAMETER);
 	assertTriggerPosition(&position, 7, 45);
 
 	ec->globalTriggerAngleOffset = 0;
-	findTriggerPosition(shape, &position, 0 PASS_ENGINE_PARAMETER);
+	findTriggerPosition(&position, 0 PASS_ENGINE_PARAMETER);
 	assertTriggerPosition(&position, 0, 0);
 
 	ec->globalTriggerAngleOffset = 10;
-	findTriggerPosition(shape, &position, 0 PASS_ENGINE_PARAMETER);
+	findTriggerPosition(&position, 0 PASS_ENGINE_PARAMETER);
 	assertTriggerPosition(&position, 0, 10);
 
-	findTriggerPosition(shape, &position, -10 PASS_ENGINE_PARAMETER);
+	findTriggerPosition(&position, -10 PASS_ENGINE_PARAMETER);
 	assertTriggerPosition(&position, 0, 0);
 }
 

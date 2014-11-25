@@ -99,11 +99,3 @@ void setOutputPinValue(io_pin_e pin, int logicValue) {
 	doSetOutputPinValue(pin, logicValue);
 }
 
-bool isPinAssigned(io_pin_e pin) {
-#if EFI_PROD_CODE
-	return outputs[pin].port != GPIO_NULL;
-#else
-	return true;
-#endif
-}
-

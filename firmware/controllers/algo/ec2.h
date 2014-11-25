@@ -26,7 +26,7 @@ public:
 
 	void addFuelEvents(trigger_shape_s *s,
 			injection_mode_e mode DECLARE_ENGINE_PARAMETER_S);
-	void registerInjectionEvent(trigger_shape_s *s,
+	void registerInjectionEvent(
 			io_pin_e pin, float angle, bool_t isSimultanious DECLARE_ENGINE_PARAMETER_S);
 
 	uint8_t hasEvents[PWM_PHASE_MAX_COUNT];
