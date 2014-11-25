@@ -74,7 +74,7 @@ static IgnitionEvent *iHead = NULL;
  *
  * This queue is using global trigger event index as 'time'
  */
-static EventQueue triggerEventsQueue;
+//static EventQueue triggerEventsQueue;
 
 static cyclic_buffer ignitionErrorDetection;
 
@@ -179,7 +179,6 @@ static ALWAYS_INLINE void handleFuel(uint32_t eventIndex, int rpm DECLARE_ENGINE
 
 static ALWAYS_INLINE void handleSparkEvent(uint32_t eventIndex, IgnitionEvent *iEvent,
 		int rpm DECLARE_ENGINE_PARAMETER_S) {
-	engine_configuration2_s *engineConfiguration2 = engine->engineConfiguration2;
 
 	float dwellMs = getSparkDwellMsT(rpm PASS_ENGINE_PARAMETER);
 	if (cisnan(dwellMs) || dwellMs < 0) {
@@ -375,7 +374,7 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECL
 		engine->ignitionSchTime = GET_TIMESTAMP() - engine->beforeIgnitionSch;
 	}
 
-	triggerEventsQueue.executeAll(getCrankEventCounter());
+//	triggerEventsQueue.executeAll(getCrankEventCounter());
 
 	handleFuel(eventIndex, rpm PASS_ENGINE_PARAMETER);
 	handleSpark(eventIndex, rpm, &engine->engineConfiguration2->ignitionEvents[revolutionIndex] PASS_ENGINE_PARAMETER);
