@@ -36,6 +36,9 @@ public:
 	Thermistor iat;
 	Thermistor clt;
 
+	float dwellAngle;
+	float advance;
+
 	trigger_shape_s triggerShape;
 
 	void onTriggerEvent(uint64_t nowNt);
@@ -61,6 +64,9 @@ public:
 
 	uint32_t beforeIgnitionMath;
 	uint32_t ignitionMathTime;
+
+	uint32_t beforeIgnitionSch;
+	uint32_t ignitionSchTime;
 
 	uint32_t time2;
 	uint32_t time3;
@@ -104,6 +110,6 @@ void prepareShapes(Engine *engine);
 void resetConfigurationExt(Logging * logger, engine_type_e engineType,
 		Engine *engine);
 void applyNonPersistentConfiguration(Logging * logger, Engine *engine);
-void prepareOutputSignals(Engine *engine);
+void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_F);
 
 #endif /* ENGINE_H_ */
