@@ -13,7 +13,7 @@
 #include "global.h"
 #include "engine_configuration.h"
 
-float getTPS(engine_configuration_s *engineConfiguration);
+float getTPS(DECLARE_ENGINE_PARAMETER_F);
 int convertVoltageTo10bitADC(float voltage);
 int getTPS10bitAdc(void);
 float getTPSVoltage(void);

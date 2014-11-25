@@ -315,7 +315,7 @@ static void printTPSInfo(void) {
 	scheduleMsg(&logger, "tps min %d/max %d v=%f @%s%d", engineConfiguration->tpsMin, engineConfiguration->tpsMax,
 			getTPSVoltage(), portname(port), pin);
 #endif
-	scheduleMsg(&logger, "current 10bit=%d value=%f rate=%f", getTPS10bitAdc(), getTPS(engineConfiguration),
+	scheduleMsg(&logger, "current 10bit=%d value=%f rate=%f", getTPS10bitAdc(), getTPS(PASS_ENGINE_PARAMETER_F),
 			getTpsRateOfChange());
 }
 

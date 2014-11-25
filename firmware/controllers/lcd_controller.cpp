@@ -51,7 +51,7 @@ static char * prepareCltIatTpsLine(Engine *engine, char *buffer) {
 	ptr = ftoa(ptr, getIntakeAirTemperature(engine), 10.0f);
 
 	ptr = appendStr(ptr, " TP");
-	ptr = itoa10(ptr, (int) getTPS(engine->engineConfiguration));
+	ptr = itoa10(ptr, (int) getTPS(PASS_ENGINE_PARAMETER_F));
 	return ptr;
 }
 
