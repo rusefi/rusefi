@@ -179,14 +179,14 @@ void testAngleResolver(void) {
 
 	ae.resetEventList();
 	printf("*************************************************** testAngleResolver 0\r\n");
-	findTriggerPosition(ts, &ae.getNextActuatorEvent()->position, 53 - 175 PASS_ENGINE_PARAMETER);
+	findTriggerPosition(&ae.getNextActuatorEvent()->position, 53 - 175 PASS_ENGINE_PARAMETER);
 	assertEqualsM("size", 1, ae.size);
 	assertEquals(1, ae.events[0].position.eventIndex);
 	assertEquals(3.1588, ae.events[0].position.angleOffset);
 
 	printf("*************************************************** testAngleResolver 2\r\n");
 	ae.resetEventList();
-	findTriggerPosition(ts, &ae.getNextActuatorEvent()->position, 51 + 180 - 175 PASS_ENGINE_PARAMETER);
+	findTriggerPosition(&ae.getNextActuatorEvent()->position, 51 + 180 - 175 PASS_ENGINE_PARAMETER);
 	assertEquals(3, ae.events[0].position.eventIndex);
 	assertEquals(2.955, ae.events[0].position.angleOffset);
 }

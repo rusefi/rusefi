@@ -99,4 +99,4 @@ typedef EventListener event_listener_t;
 #define PASS_ENGINE_PARAMETER
 
 #define CONFIG(x) persistentState.persistentConfiguration.engineConfiguration.x
-
+#define TRIGGER_SHAPE(x) engine->triggerShape.x

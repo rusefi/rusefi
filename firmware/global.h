@@ -72,7 +72,8 @@ typedef Thread thread_t;
 #define EXTERN_ENGINE extern Engine *engine; \
 		extern engine_configuration_s *engineConfiguration; \
 		extern board_configuration_s *boardConfiguration; \
-		extern persistent_config_container_s persistentState
+		extern persistent_config_container_s persistentState; \
+		extern Engine _engine
 
 #define DECLARE_ENGINE_PARAMETER_F void
 #define DECLARE_ENGINE_PARAMETER_S
@@ -84,6 +85,6 @@ typedef Thread thread_t;
  * optimization
  */
 #define CONFIG(x) persistentState.persistentConfiguration.engineConfiguration.x
-
+#define TRIGGER_SHAPE(x) _engine.triggerShape.x
 
 #endif /* GLOBAL_H_ */
