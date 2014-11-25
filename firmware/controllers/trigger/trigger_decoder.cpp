@@ -85,7 +85,7 @@ static ALWAYS_INLINE bool noSynchronizationResetNeeded(TriggerState *shaftPositi
 	/**
 	 * in case of noise the counter could be above the expected number of events
 	 */
-	return shaftPositionState->getCurrentIndex() >= triggerShape->shaftPositionEventCount - 1;
+	return shaftPositionState->getCurrentIndex() >= triggerShape->getSize() - 1;
 }
 
 float TriggerState::getTriggerDutyCycle(int index) {
@@ -178,7 +178,7 @@ void TriggerState::decodeTriggerEvent(trigger_shape_s const*triggerShape, trigge
 		// this call would update duty cycle values
 		nextTriggerEvent(triggerWheel, nowNt);
 
-		nextRevolution(triggerShape->shaftPositionEventCount, nowNt);
+		nextRevolution(triggerShape->getSize(), nowNt);
 	} else {
 		nextTriggerEvent(triggerWheel, nowNt);
 	}

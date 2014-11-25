@@ -54,8 +54,22 @@ public:
 	 */
 	bool isCylinderCleanupMode;
 
+	/**
+	 * pre-calculating this value is a performance optimization
+	 */
+	int engineCycleEventCount;
+
 	uint32_t beforeIgnitionMath;
 	uint32_t ignitionMathTime;
+
+	uint32_t time2;
+	uint32_t time3;
+	uint32_t time4;
+
+	uint32_t before2;
+	uint32_t before3;
+	uint32_t before4;
+
 
 
 	void updateSlowSensors();

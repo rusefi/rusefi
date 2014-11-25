@@ -590,10 +590,11 @@ void applyNonPersistentConfiguration(Logging * logger, Engine *engine) {
 		firmwareError("triggerShape size is zero");
 		return;
 	}
-	if (engine->triggerShape.shaftPositionEventCount == 0) {
+	if (engine->triggerShape.getSize() == 0) {
 		firmwareError("shaftPositionEventCount is zero");
 		return;
 	}
+	engine->engineCycleEventCount = engine->triggerShape.getLength();
 }
 
 void prepareShapes(Engine *engine) {
