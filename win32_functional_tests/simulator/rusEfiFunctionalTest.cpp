@@ -67,7 +67,7 @@ void rusEfiFunctionalTest(void) {
 	initFakeBoard();
 
 	initStatusLoop(engine);
-	initDataStructures(engineConfiguration);
+	initDataStructures(PASS_ENGINE_PARAMETER_F);
 
 	engine->engineConfiguration = engineConfiguration;
 	engine->engineConfiguration2 = engineConfiguration2;

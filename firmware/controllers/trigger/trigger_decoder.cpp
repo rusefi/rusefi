@@ -213,8 +213,6 @@ void initializeSkippedToothTriggerShapeExt(trigger_shape_s *s, int totalTeethCou
 	s->totalToothCount = totalTeethCount;
 	s->skippedToothCount = skippedCount;
 	initializeSkippedToothTriggerShape(s, totalTeethCount, skippedCount, operationMode);
-
-	s->assignSize();
 }
 
 /**
@@ -305,7 +303,6 @@ void initializeTriggerShape(Logging *logger, engine_configuration_s const *engin
 		;
 		return;
 	}
-	triggerShape->assignSize();
 	triggerShape->wave.checkSwitchTimes(triggerShape->getSize());
 }
 

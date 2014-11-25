@@ -15,7 +15,7 @@ extern "C"
 {
 #endif /* __cplusplus */
 
-void initDataStructures(engine_configuration_s *engineConfiguration);
+void initDataStructures(DECLARE_ENGINE_PARAMETER_F);
 void initAlgo(engine_configuration_s *engineConfiguration);
 
 #ifdef __cplusplus

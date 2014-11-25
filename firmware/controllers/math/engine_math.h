@@ -31,7 +31,15 @@ extern "C"
 {
 #endif /* __cplusplus */
 
-float fixAngle(float angle DECLARE_ENGINE_PARAMETER_S);
+/**
+ * @brief Shifts angle into the [0..720) range for four stroke and [0..360) for two stroke
+ * I guess this implementation would be faster than 'angle % engineCycle'
+ */
+#define fixAngle(angle)                     \
+	while (angle < 0)                       \
+		angle += CONFIG(engineCycle);       \
+	while (angle >= CONFIG(engineCycle))    \
+		angle -= CONFIG(engineCycle);
 
 /**
  * @return time needed to rotate crankshaft by one degree, in milliseconds.

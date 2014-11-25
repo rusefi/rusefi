@@ -49,20 +49,6 @@ float getCrankshaftRevolutionTimeMs(int rpm) {
 }
 
 /**
- * @brief Shifts angle into the [0..720) range
- * TODO: should be 'crankAngleRange' range?
- */
-float fixAngle(float angle DECLARE_ENGINE_PARAMETER_S) {
-	efiAssert(engineConfiguration->engineCycle != 0, "engine cycle", NAN);
-	// I guess this implementation would be faster than 'angle % 720'
-	while (angle < 0)
-		angle += CONFIG(engineCycle);
-	while (angle >= CONFIG(engineCycle))
-		angle -= CONFIG(engineCycle);
-	return angle;
-}
-
-/**
  * @brief Returns engine load according to selected engine_load_mode
  *
  */
@@ -282,7 +268,7 @@ void findTriggerPosition(trigger_shape_s * s, event_trigger_position_s *position
 		float angleOffset DECLARE_ENGINE_PARAMETER_S) {
 
 	angleOffset += engineConfiguration->globalTriggerAngleOffset;
-	angleOffset = fixAngle(angleOffset PASS_ENGINE_PARAMETER);
+	fixAngle(angleOffset);
 
 	int engineCycleEventCount = getEngineCycleEventCount2(getOperationMode(engineConfiguration), s);
 

@@ -41,11 +41,12 @@ void sendOutConfirmation(char *value, int i) {
 int getTheAngle(engine_type_e engineType) {
 	EngineTestHelper eth(engineType);
 
-	engine_configuration_s *ec = eth.ec;
-	initDataStructures(ec);
+	Engine *engine = &eth.engine;
+	engine_configuration_s *engineConfiguration = eth.ec;
+	initDataStructures(PASS_ENGINE_PARAMETER_F);
 
 	trigger_shape_s * shape = &eth.engine.triggerShape;
-	return findTriggerZeroEventIndex(shape, &ec->triggerConfig);
+	return findTriggerZeroEventIndex(shape, &engineConfiguration->triggerConfig);
 }
 
 static void testDodgeNeonDecoder(void) {
@@ -384,12 +385,13 @@ static void testRpmCalculator(void) {
 
 	initThermistors(&eth.engine);
 
-	engine_configuration_s *ec = &eth.persistentConfig.engineConfiguration;
+	Engine *engine = &eth.engine;
+	engine_configuration_s *engineConfiguration = &eth.persistentConfig.engineConfiguration;
 
 	engine_configuration2_s *ec2 = &eth.ec2;
 
-	ec->triggerConfig.customTotalToothCount = 8;
-	ec->globalFuelCorrection = 3;
+	engineConfiguration->triggerConfig.customTotalToothCount = 8;
+	engineConfiguration->globalFuelCorrection = 3;
 	eth.initTriggerShapeAndRpmCalculator();
 
 	// this is a very dirty and sad hack.  todo: eliminate
@@ -408,7 +410,7 @@ static void testRpmCalculator(void) {
 	eth.triggerCentral.addEventListener(mainTriggerCallback, "main loop", &eth.engine);
 
 //	engine.rpmCalculator = &eth.rpmState;
-	prepareTimingMap();
+	prepareTimingMap(PASS_ENGINE_PARAMETER_F);
 
 	timeNow += 5000; // 5ms
 	eth.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_UP, &eth.engine, eth.ec);

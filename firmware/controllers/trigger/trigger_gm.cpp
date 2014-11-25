@@ -33,7 +33,5 @@ void configureGmTriggerShape(trigger_shape_s *s) {
 
 	s->addEvent(720 - w, T_PRIMARY, TV_HIGH);
 	s->addEvent(720.0, T_PRIMARY, TV_LOW);
-
-	s->assignSize();
 }
 
