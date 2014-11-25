@@ -27,9 +27,11 @@
 #include "signal_executor.h"
 #include "speed_density.h"
 
-void initDataStructures(engine_configuration_s *engineConfiguration) {
+EXTERN_ENGINE;
+
+void initDataStructures(DECLARE_ENGINE_PARAMETER_F) {
 	prepareFuelMap(engineConfiguration);
-	prepareTimingMap();
+	prepareTimingMap(PASS_ENGINE_PARAMETER_F);
 	initSpeedDensity(engineConfiguration);
 }
 

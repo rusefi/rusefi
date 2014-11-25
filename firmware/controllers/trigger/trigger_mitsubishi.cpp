@@ -26,8 +26,6 @@ void configureFordAspireTriggerShape(trigger_shape_s * s) {
 	s->addEvent(x + 360 + y, T_SECONDARY, TV_HIGH);
 	s->addEvent(x + 540, T_SECONDARY, TV_LOW);
 	s->addEvent(720, T_PRIMARY, TV_LOW);
-
-	s->assignSize();
 }
 
 void initializeMitsubishi4g18(trigger_shape_s *s) {
@@ -53,6 +51,4 @@ void initializeMitsubishi4g18(trigger_shape_s *s) {
 
 	s->addEvent(720.0 - secondaryWidth, T_SECONDARY, TV_HIGH);
 	s->addEvent(720.0, T_SECONDARY, TV_LOW);
-
-	s->assignSize();
 }

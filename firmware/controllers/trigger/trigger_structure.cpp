@@ -24,6 +24,8 @@
 #include "trigger_decoder.h"
 #include "engine_math.h"
 
+EXTERN_ENGINE;
+
 trigger_shape_helper::trigger_shape_helper() {
 	for (int i = 0; i < TRIGGER_CHANNEL_COUNT; i++) {
 		waves[i].init(pinStates[i]);
@@ -38,10 +40,6 @@ trigger_shape_s::trigger_shape_s() :
 	gapBothDirections = false;
 	isSynchronizationNeeded = false;
 	invertOnAdd = false;
-}
-
-void trigger_shape_s::assignSize() {
-	shaftPositionEventCount = getSize();
 }
 
 int trigger_shape_s::getSize() const {
@@ -73,7 +71,7 @@ void trigger_shape_s::setTriggerShapeSynchPointIndex(engine_configuration_s *eng
 			eventAngles[i] = 0;
 		} else {
 			float angle = getAngle((triggerShapeSynchPointIndex + i) % engineCycleEventCount) - firstAngle;
-			angle = fixAngle(angle PASS_ENGINE_PARAMETER);
+			fixAngle(angle);
 			eventAngles[i] = angle;
 		}
 	}
@@ -82,7 +80,6 @@ void trigger_shape_s::setTriggerShapeSynchPointIndex(engine_configuration_s *eng
 void trigger_shape_s::reset(operation_mode_e operationMode) {
 	this->operationMode = operationMode;
 	size = 0;
-	shaftPositionEventCount = 0;
 	triggerShapeSynchPointIndex = 0;
 	memset(initialState, 0, sizeof(initialState));
 	memset(switchTimesBuffer, 0, sizeof(switchTimesBuffer));
@@ -395,8 +392,6 @@ void configureHondaAccordCDDip(trigger_shape_s *s) {
 	s->addEvent(720.0f, T_SECONDARY, TV_HIGH);
 
 	s->isSynchronizationNeeded = false;
-
-	s->assignSize();
 }
 
 void configureHondaAccordCD(trigger_shape_s *s, bool with3rdSignal) {
@@ -444,6 +439,4 @@ void configureHondaAccordCD(trigger_shape_s *s, bool with3rdSignal) {
 		sb = addAccordPair(s, sb);
 		s->addEvent(i * 180.0f, T_PRIMARY, TV_LOW);
 	}
-
-	s->assignSize();
 }

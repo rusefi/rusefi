@@ -175,7 +175,7 @@ void initHardware(Logging *logger, Engine *engine) {
 		return;
 	}
 
-	initDataStructures(engineConfiguration);
+	initDataStructures(PASS_ENGINE_PARAMETER_F);
 
 #if EFI_INTERNAL_FLASH
 

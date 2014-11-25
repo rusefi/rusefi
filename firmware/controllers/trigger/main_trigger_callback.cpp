@@ -298,7 +298,7 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECL
 	}
 
 	(void) ckpSignalType;
-	efiAssertVoid(eventIndex < 2 * engine->triggerShape.shaftPositionEventCount, "event index");
+	efiAssertVoid(eventIndex < 2 * engine->triggerShape.getSize(), "event index");
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#2");
 
 	int rpm = getRpmE(engine);

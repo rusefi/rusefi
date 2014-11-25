@@ -42,8 +42,6 @@ void initializeMazdaMiataNaShape(trigger_shape_s *s) {
 	s->addEvent(590.39625, T_SECONDARY, TV_HIGH);
 	s->addEvent(656.5125, T_SECONDARY, TV_LOW);
 	s->addEvent(720.0f, T_PRIMARY, TV_LOW);
-
-	s->assignSize();
 }
 
 void initializeMazdaMiataNbShape(trigger_shape_s *s) {
@@ -82,8 +80,6 @@ void initializeMazdaMiataNbShape(trigger_shape_s *s) {
 	s->addEvent(680.0f, T_SECONDARY, TV_HIGH);
 
 	s->addEvent(720.0f, T_PRIMARY, TV_LOW);
-
-	s->assignSize();
 }
 
 void configureMazdaProtegeLx(trigger_shape_s *s) {
@@ -126,7 +122,5 @@ void configureMazdaProtegeLx(trigger_shape_s *s) {
 	s->addEvent(a - z * 720, T_PRIMARY, TV_HIGH);
 	s->addEvent(a, T_PRIMARY, TV_LOW);
 
-
-	s->assignSize();
 	s->isSynchronizationNeeded = false;
 }

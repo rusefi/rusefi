@@ -62,17 +62,7 @@ public:
 	void addEvent(float angle, trigger_wheel_e const waveIndex, trigger_value_e const state);
 	void reset(operation_mode_e operationMode);
 	int getSize() const;
-	void assignSize();
 	multi_wave_s wave;
-
-	/**
-	 * Total count of shaft events per CAM or CRANK shaft revolution.
-	 * TODO this should be migrated to CRANKshaft revolution, this would go together
-	 * TODO with eliminating RPM_MULT magic constant
-	 *
-	 * todo: somehow changing the type of this to uint32_t breaks unit tests? WHY?
-	 */
-	int shaftPositionEventCount;
 
 	/**
 	 * this one is per CRANKshaft revolution
@@ -98,6 +88,12 @@ public:
 private:
 
 	trigger_shape_helper h;
+
+	/**
+	 * Total count of shaft events per CAM or CRANK shaft revolution.
+	 * TODO this should be migrated to CRANKshaft revolution, this would go together
+	 * TODO with eliminating RPM_MULT magic constant
+	 */
 	int size;
 	/**
 	 * index of synchronization event within trigger_shape_s
