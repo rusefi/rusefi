@@ -24,8 +24,7 @@ public:
 	void clear();
 	ActuatorEventList events;
 
-	void addFuelEvents(trigger_shape_s *s,
-			injection_mode_e mode DECLARE_ENGINE_PARAMETER_S);
+	void addFuelEvents(injection_mode_e mode DECLARE_ENGINE_PARAMETER_S);
 	void registerInjectionEvent(
 			io_pin_e pin, float angle, bool_t isSimultanious DECLARE_ENGINE_PARAMETER_S);
 

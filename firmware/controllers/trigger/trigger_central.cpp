@@ -221,7 +221,10 @@ static void triggerInfo(Engine *engine) {
 	scheduleMsg(&logger, "Template %s/%d trigger %d", getConfigurationName(engineConfiguration->engineType),
 			engineConfiguration->engineType, engineConfiguration->triggerConfig.triggerType);
 
-	scheduleMsg(&logger, "sn=%d ignitionMathTime=%d", ts->isSynchronizationNeeded, engine->ignitionMathTime);
+	scheduleMsg(&logger, "sn=%d ignitionMathTime=%d schTime=%d",
+			ts->isSynchronizationNeeded,
+			engine->ignitionMathTime,
+			engine->ignitionSchTime);
 
 	scheduleMsg(&logger, "trigger event counters %d/%d/%d/%d", triggerCentral.getHwEventCounter(0),
 			triggerCentral.getHwEventCounter(1), triggerCentral.getHwEventCounter(2),

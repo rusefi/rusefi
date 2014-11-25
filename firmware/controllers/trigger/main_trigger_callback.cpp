@@ -283,6 +283,23 @@ void showMainHistogram(void) {
 #endif
 }
 
+static void doSomeCalc(int rpm DECLARE_ENGINE_PARAMETER_S) {
+	/**
+	 * Within one engine cycle all cylinders are fired with same timing advance.
+	 * todo: one day we can control cylinders individually
+	 */
+	float dwellMs = getSparkDwellMsT(rpm PASS_ENGINE_PARAMETER);
+
+	if (cisnan(dwellMs) || dwellMs < 0) {
+		firmwareError("invalid dwell: %f at %d", dwellMs, rpm);
+		return;
+	}
+	float el = getEngineLoadT(PASS_ENGINE_PARAMETER_F);
+	engine->advance = -getAdvance(rpm, el PASS_ENGINE_PARAMETER);
+
+	engine->dwellAngle = dwellMs / getOneDegreeTimeMs(rpm);
+}
+
 /**
  * This is the main trigger event handler.
  * Both injection and ignition are controlled from this method.
@@ -323,9 +340,13 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECL
 
 	if (eventIndex == 0) {
 		if (localVersion.isOld())
-			prepareOutputSignals(engine);
-		engine->beforeIgnitionMath = GET_TIMESTAMP();
+			prepareOutputSignals(PASS_ENGINE_PARAMETER_F);
 
+		engine->beforeIgnitionMath = GET_TIMESTAMP();
+		doSomeCalc(rpm PASS_ENGINE_PARAMETER);
+		engine->ignitionMathTime = GET_TIMESTAMP() - engine->beforeIgnitionMath;
+
+		engine->beforeIgnitionSch = GET_TIMESTAMP();
 		/**
 		 * TODO: warning. there is a bit of a hack here, todo: improve.
 		 * currently output signals/times signalTimerUp from the previous revolutions could be
@@ -333,42 +354,25 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECL
 		 * but we are already repurposing the output signals, but everything works because we
 		 * are not affecting that space in memory. todo: use two instances of 'ignitionSignals'
 		 */
-
-		/**
-		 * Within one engine cycle all cylinders are fired with same timing advance.
-		 * todo: one day we can control cylinders individually
-		 */
-		float dwellMs = getSparkDwellMsT(rpm PASS_ENGINE_PARAMETER);
-
-		if (cisnan(dwellMs) || dwellMs < 0) {
-			firmwareError("invalid dwell: %f at %d", dwellMs, rpm);
-			return;
-		}
-		float el = getEngineLoadT(PASS_ENGINE_PARAMETER_F);
-		float advance = getAdvance(rpm, el PASS_ENGINE_PARAMETER);
-
-		if (cisnan(advance)) {
-			// error should already be reported
-			return;
-		}
-
-		float dwellAngle = dwellMs / getOneDegreeTimeMs(rpm);
-
 		float maxAllowedDwellAngle = engineConfiguration->engineCycle / 2;
 
 		if (engineConfiguration->ignitionMode == IM_ONE_COIL) {
 			maxAllowedDwellAngle = engineConfiguration->engineCycle / engineConfiguration->cylindersCount / 1.1;
 		}
 
-		if (dwellAngle > maxAllowedDwellAngle) {
-			warning(OBD_PCM_Processor_Fault, "dwell angle too long: %f", dwellAngle);
+		if (engine->dwellAngle > maxAllowedDwellAngle) {
+			warning(OBD_PCM_Processor_Fault, "dwell angle too long: %f", engine->dwellAngle);
 		}
 
 		// todo: add some check for dwell overflow? like 4 times 6 ms while engine cycle is less then that
 
-		initializeIgnitionActions(-advance, dwellAngle,
+		if (cisnan(engine->advance)) {
+			// error should already be reported
+			return;
+		}
+		initializeIgnitionActions(engine->advance, engine->dwellAngle,
 				&engine->engineConfiguration2->ignitionEvents[revolutionIndex] PASS_ENGINE_PARAMETER);
-		engine->ignitionMathTime = GET_TIMESTAMP() - engine->beforeIgnitionMath;
+		engine->ignitionSchTime = GET_TIMESTAMP() - engine->beforeIgnitionSch;
 	}
 
 	triggerEventsQueue.executeAll(getCrankEventCounter());
