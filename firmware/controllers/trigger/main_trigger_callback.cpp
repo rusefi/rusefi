@@ -328,7 +328,7 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex, Eng
 	if (eventIndex == 0) {
 		if (localVersion.isOld())
 			prepareOutputSignals(engine);
-		uint32_t beforeIgnitionMath = GET_TIMESTAMP();
+		engine->beforeIgnitionMath = GET_TIMESTAMP();
 
 		/**
 		 * TODO: warning. there is a bit of a hack here, todo: improve.
@@ -343,6 +343,7 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex, Eng
 		 * todo: one day we can control cylinders individually
 		 */
 		float dwellMs = getSparkDwellMsT(rpm PASS_ENGINE_PARAMETER);
+
 		if (cisnan(dwellMs) || dwellMs < 0) {
 			firmwareError("invalid dwell: %f at %d", dwellMs, rpm);
 			return;
@@ -370,7 +371,7 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex, Eng
 
 		initializeIgnitionActions(-advance, dwellAngle,
 				&engine->engineConfiguration2->ignitionEvents[revolutionIndex] PASS_ENGINE_PARAMETER);
-		engine->ignitionMathTime = GET_TIMESTAMP() - beforeIgnitionMath;
+		engine->ignitionMathTime = GET_TIMESTAMP() - engine->beforeIgnitionMath;
 	}
 
 	triggerEventsQueue.executeAll(getCrankEventCounter());

@@ -54,6 +54,7 @@ public:
 	 */
 	bool isCylinderCleanupMode;
 
+	uint32_t beforeIgnitionMath;
 	uint32_t ignitionMathTime;
 
 
