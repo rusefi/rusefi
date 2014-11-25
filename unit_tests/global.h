@@ -45,4 +45,6 @@ class Engine;
 #define PASS_ENGINE_PARAMETER_F engine, engineConfiguration
 #define PASS_ENGINE_PARAMETER , engine, engineConfiguration
 
+#define CONFIG(x) engineConfiguration->x
+
 #endif /* GLOBAL_H_ */
