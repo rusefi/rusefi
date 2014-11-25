@@ -127,7 +127,7 @@ bool isCranking(void) {
  * updated here.
  * This callback is invoked on interrupt thread.
  */
-void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index, Engine *engine) {
+void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index DECLARE_ENGINE_PARAMETER_S) {
 	RpmCalculator *rpmState = &engine->rpmCalculator;
 	uint64_t nowNt = getTimeNowNt();
 #if EFI_PROD_CODE
@@ -186,7 +186,7 @@ static void onTdcCallback(void) {
 /**
  * This trigger callback schedules the actual physical TDC callback in relation to trigger synchronization point.
  */
-static void tdcMarkCallback(trigger_event_e ckpSignalType, uint32_t index0, Engine *engine) {
+static void tdcMarkCallback(trigger_event_e ckpSignalType, uint32_t index0 DECLARE_ENGINE_PARAMETER_S) {
 	(void) ckpSignalType;
 	bool isTriggerSynchronizationPoint = index0 == 0;
 	if (isTriggerSynchronizationPoint) {

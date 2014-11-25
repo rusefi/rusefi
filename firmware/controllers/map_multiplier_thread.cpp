@@ -65,7 +65,7 @@ static void maThread(int param) {
 
 		// ideally this should be atomic, but hopefully it's good enough
 		int rpm = getRpm();
-		float load = getEngineLoad();
+		float load = getEngineLoadT(PASS_ENGINE_PARAMETER);
 		float afr = getAfr();
 
 		addAfr(rpm, load, afr);

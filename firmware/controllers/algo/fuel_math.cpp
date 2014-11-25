@@ -43,11 +43,11 @@
 
 EXTERN_ENGINE;
 
-float getBaseFuel(Engine *engine, int rpm) {
+float getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	if (engine->engineConfiguration->algorithm == LM_SPEED_DENSITY) {
 		return getSpeedDensityFuel(engine, rpm);
 	} else {
-		float engineLoad = getEngineLoadT(engine);
+		float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_F);
 		return getBaseTableFuel(engine->engineConfiguration, rpm, engineLoad);
 	}
 }
@@ -78,7 +78,7 @@ float getFuelMs(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	if (isCrankingR(rpm)) {
 		theoreticalInjectionLength = getCrankingFuel(engine) / getNumberOfInjections(engineConfiguration, engineConfiguration->crankingInjectionMode);
 	} else {
-		float baseFuel = getBaseFuel(engine, rpm);
+		float baseFuel = getBaseFuel(rpm PASS_ENGINE_PARAMETER);
 		float fuelPerCycle = getRunningFuel(baseFuel, rpm PASS_ENGINE_PARAMETER);
 		theoreticalInjectionLength = fuelPerCycle / getNumberOfInjections(engineConfiguration, engine->engineConfiguration->injectionMode);
 	}

@@ -33,9 +33,9 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType) {
 void EngineTestHelper::fireTriggerEvents() {
 	for (int i = 0; i < 24; i++) {
 		timeNow += 5000; // 5ms
-		triggerCentral.handleShaftSignal(&engine, SHAFT_PRIMARY_UP);
+		triggerCentral.handleShaftSignal(SHAFT_PRIMARY_UP, &engine, engine.engineConfiguration);
 		timeNow += 5000;
-		triggerCentral.handleShaftSignal(&engine, SHAFT_PRIMARY_DOWN);
+		triggerCentral.handleShaftSignal(SHAFT_PRIMARY_DOWN, &engine, engine.engineConfiguration);
 	}
 }
 
@@ -43,6 +43,6 @@ void EngineTestHelper::initTriggerShapeAndRpmCalculator() {
 	initializeTriggerShape(NULL, ec, &engine);
 	incrementGlobalConfigurationVersion();
 
-	triggerCentral.addEventListener((ShaftPositionListener) &rpmShaftPositionCallback, "rpm reporter", &engine);
+	triggerCentral.addEventListener(rpmShaftPositionCallback, "rpm reporter", &engine);
 
 }
