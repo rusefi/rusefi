@@ -212,6 +212,7 @@ extern PwmConfig triggerSignal;
 #endif /* #if EFI_PROD_CODE */
 
 extern uint32_t maxLockTime;
+extern uint32_t maxEventQueueTime;
 
 static void triggerInfo(Engine *engine) {
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
@@ -220,11 +221,6 @@ static void triggerInfo(Engine *engine) {
 
 	scheduleMsg(&logger, "Template %s/%d trigger %d", getConfigurationName(engineConfiguration->engineType),
 			engineConfiguration->engineType, engineConfiguration->triggerConfig.triggerType);
-
-	scheduleMsg(&logger, "sn=%d ignitionMathTime=%d schTime=%d",
-			ts->isSynchronizationNeeded,
-			engine->ignitionMathTime,
-			engine->ignitionSchTime);
 
 	scheduleMsg(&logger, "trigger event counters %d/%d/%d/%d", triggerCentral.getHwEventCounter(0),
 			triggerCentral.getHwEventCounter(1), triggerCentral.getHwEventCounter(2),
@@ -245,7 +241,13 @@ static void triggerInfo(Engine *engine) {
 #endif
 
 #if EFI_PROD_CODE
+	scheduleMsg(&logger, "sn=%s ignitionMathTime=%d schTime=%d",
+			boolToString(ts->isSynchronizationNeeded),
+			engine->ignitionMathTime,
+			engine->ignitionSchTime);
 	scheduleMsg(&logger, "maxLockTime=%d / maxTriggerReentraint=%d", maxLockTime, maxTriggerReentraint);
+	scheduleMsg(&logger, "maxEventQueueTime=%d", maxEventQueueTime);
+
 	scheduleMsg(&logger, "primary trigger simulator: %s %s freq=%d",
 			hwPortname(boardConfiguration->triggerSimulatorPins[0]),
 			pinModeToString(boardConfiguration->triggerSimulatorPinModes[0]),

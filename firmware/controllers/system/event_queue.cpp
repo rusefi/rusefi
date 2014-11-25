@@ -14,6 +14,7 @@
 #include "main.h"
 #include "event_queue.h"
 #include "efitime.h"
+#include "efilib2.h"
 
 EventQueue::EventQueue() {
 	head = NULL;
@@ -76,7 +77,8 @@ uint64_t EventQueue::getNextEventTime(uint64_t nowX) {
 }
 
 // static scheduling_s * longScheduling;
-// static uint32_t cost;
+uint32_t maxEventQueueTime = 0;
+uint32_t lastEventQueueTime;
 
 /**
  * Invoke all pending actions prior to specified timestamp
@@ -109,10 +111,12 @@ bool EventQueue::executeAll(uint64_t now) {
 	bool result = (executionList != NULL);
 	LL_FOREACH_SAFE(executionList, current, tmp)
 	{
-//		uint32_t before = hal_lld_get_counter_value();
+		uint32_t before = GET_TIMESTAMP();
 		current->callback(current->param);
 		// even with overflow it's safe to substract here
-//		cost = hal_lld_get_counter_value() - before;
+		lastEventQueueTime = GET_TIMESTAMP() - before;
+		if (lastEventQueueTime > maxEventQueueTime)
+			maxEventQueueTime = lastEventQueueTime;
 //		if (cost > 2000) {
 //			longScheduling = current;
 //			cost++;

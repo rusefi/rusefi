@@ -19,10 +19,8 @@ public:
 	void onTimerCallback();
 private:
 	EventQueue queue;
-	bool reentrantLock;
+	bool reentrantFlag;
 	void doExecute();
-	void lock(void);
-	void unlock(void);
 };
 
 #ifdef __cplusplus

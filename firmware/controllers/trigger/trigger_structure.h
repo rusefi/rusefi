@@ -31,11 +31,7 @@ class Engine;
 class trigger_shape_s {
 public:
 	trigger_shape_s();
-	/**
-	 * todo: something really weird - unit test fail on Linux build server
-	 * if I change this type to bool_t? WAT?
-	 */
-	int isSynchronizationNeeded;
+	bool_t isSynchronizationNeeded;
 
 	int totalToothCount;
 	int skippedToothCount;
