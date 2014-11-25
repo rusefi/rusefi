@@ -54,7 +54,7 @@ char hexChar(int v) {
 	return 'A' - 10 + v;
 }
 
-// todo: why does it not compile if I make this function 'inline'?
+// todo: make this a macro?
 int isIsrContext(void) {
 	/**
 	 * Unfortunately ChibiOS has two versions of methods for different
@@ -63,6 +63,7 @@ int isIsrContext(void) {
 	return dbg_isr_cnt > 0;
 }
 
+// todo: make this a macro?
 int isLocked(void) {
 	return dbg_lock_cnt > 0;
 }

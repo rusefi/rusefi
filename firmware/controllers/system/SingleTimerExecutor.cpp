@@ -48,17 +48,12 @@ static void executorCallback(void *arg) {
 }
 
 Executor::Executor() {
-	reentrantLock = false;
+	reentrantFlag = false;
 	queue.setLateDelay(US2NT(100));
 }
 
-void Executor::lock(void) {
-	lockAnyContext();
-}
-
-void Executor::unlock(void) {
-	unlockAnyContext();
-}
+#define lock() lockAnyContext()
+#define unlock() unlockAnyContext()
 
 void Executor::schedule2(scheduling_s *scheduling, uint64_t timeUs, schfunc_t callback,
 		void *param) {
@@ -70,12 +65,12 @@ void Executor::schedule2(scheduling_s *scheduling, uint64_t timeUs, schfunc_t ca
 //		callback(param);
 //		return;
 //	}
-	if (!reentrantLock) {
+	if (!reentrantFlag) {
 		// this would guard the queue and disable interrupts
 		lock();
 	}
 	queue.insertTask(scheduling, US2NT(timeUs), callback, param);
-	if (!reentrantLock) {
+	if (!reentrantFlag) {
 		doExecute();
 		unlock();
 	}
@@ -98,10 +93,10 @@ void Executor::onTimerCallback() {
 void Executor::doExecute() {
 	/**
 	 * Let's execute actions we should execute at this point.
-	 * reentrantLock takes care of the use case where the actions we are executing are scheduling
+	 * reentrantFlag takes care of the use case where the actions we are executing are scheduling
 	 * further invocations
 	 */
-	reentrantLock = TRUE;
+	reentrantFlag = true;
 	bool shouldExecute = true;
 	/**
 	 * in real life it could be that while we executing listeners time passes and it's already time to execute
@@ -120,7 +115,7 @@ void Executor::doExecute() {
 		return;
 	}
 	uint64_t nowNt = getTimeNowNt();
-	reentrantLock = false;
+	reentrantFlag = false;
 	/**
 	 * 'executeAll' is potentially invoking heavy callbacks, let's grab fresh time value?
 	 */
