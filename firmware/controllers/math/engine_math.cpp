@@ -93,9 +93,8 @@ OutputSignalList injectonSignals CCM_OPTIONAL;
 static void registerSparkEvent(IgnitionEventList *list, io_pin_e pin, float localAdvance,
 		float dwell DECLARE_ENGINE_PARAMETER_S) {
 
-	IgnitionEvent *event = list->getNextActuatorEvent();
-	if (event == NULL)
-		return; // error already reported
+	// todo efiAssertVoid(list->size)
+	IgnitionEvent *event = &list->events[list->size++];
 
 	if (!isPinAssigned(pin)) {
 		// todo: extact method for this index math
