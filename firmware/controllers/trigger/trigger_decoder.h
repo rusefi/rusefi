@@ -23,7 +23,7 @@ public:
 	int getTotalRevolutionCounter();
 	uint64_t getTotalEventCounter();
 	uint64_t getStartOfRevolutionIndex();
-	void decodeTriggerEvent(trigger_config_s const*triggerConfig, trigger_event_e const signal, uint64_t nowUs DECLARE_ENGINE_PARAMETER_S);
+	void decodeTriggerEvent(trigger_event_e const signal, uint64_t nowUs DECLARE_ENGINE_PARAMETER_S);
 
 	float getTriggerDutyCycle(int index);
 	TriggerStateCallback cycleCallback;
@@ -52,12 +52,12 @@ public:
 	uint32_t totalTriggerErrorCounter;
 	uint32_t orderingErrorCounter;
 
-private:
-	void clear();
 	/**
 	 * index within trigger revolution, from 0 to trigger event count
 	 */
 	uint32_t current_index;
+private:
+	void clear();
 	/**
 	 * Number of actual events within current trigger cycle
 	 * see trigger_shape_s
