@@ -340,10 +340,15 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECL
 	if (eventIndex == 0) {
 		if (localVersion.isOld())
 			prepareOutputSignals(PASS_ENGINE_PARAMETER_F);
+	}
 
+	if (eventIndex == engineConfiguration->ignMathCalculateAtIndex) {
 		engine->beforeIgnitionMath = GET_TIMESTAMP();
 		doSomeCalc(rpm PASS_ENGINE_PARAMETER);
 		engine->ignitionMathTime = GET_TIMESTAMP() - engine->beforeIgnitionMath;
+	}
+
+	if (eventIndex == 0) {
 
 		engine->beforeIgnitionSch = GET_TIMESTAMP();
 		/**

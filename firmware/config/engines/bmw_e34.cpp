@@ -24,6 +24,8 @@ void setBmwE34(engine_configuration_s *engineConfiguration) {
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 
+	engineConfiguration->ignMathCalculateAtIndex = 15;
+
 	setConstantDwell(engineConfiguration, 3); // a bit shorter dwell
 	engineConfiguration->useConstantDwellDuringCranking = true;
 	engineConfiguration->ignitionDwellForCrankingMs = 5;
