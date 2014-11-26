@@ -23,9 +23,7 @@ public:
 	int getTotalRevolutionCounter();
 	uint64_t getTotalEventCounter();
 	uint64_t getStartOfRevolutionIndex();
-	void nextRevolution(int triggerEventCount, uint64_t nowUs);
-	void nextTriggerEvent(trigger_wheel_e triggerWheel, uint64_t nowNt);
-	void decodeTriggerEvent(trigger_shape_s const*triggerShape, trigger_config_s const*triggerConfig, trigger_event_e const signal, uint64_t nowUs);
+	void decodeTriggerEvent(trigger_config_s const*triggerConfig, trigger_event_e const signal, uint64_t nowUs DECLARE_ENGINE_PARAMETER_S);
 
 	float getTriggerDutyCycle(int index);
 	TriggerStateCallback cycleCallback;
@@ -79,7 +77,7 @@ private:
 class TriggerStimulatorHelper {
 public:
 	TriggerStimulatorHelper();
-	void nextStep(TriggerState *state, trigger_shape_s * shape, int i, trigger_config_s const*triggerConfig);
+	void nextStep(TriggerState *state, trigger_shape_s * shape, int i, trigger_config_s const*triggerConfig DECLARE_ENGINE_PARAMETER_S);
 private:
 	bool primaryWheelState;
 	bool secondaryWheelState;
@@ -87,7 +85,7 @@ private:
 };
 
 void initializeSkippedToothTriggerShapeExt(trigger_shape_s *s, int totalTeethCount, int skippedCount, operation_mode_e operationMode);
-uint32_t findTriggerZeroEventIndex(trigger_shape_s * shape, trigger_config_s const*triggerConfig);
+uint32_t findTriggerZeroEventIndex(trigger_shape_s * shape, trigger_config_s const*triggerConfig DECLARE_ENGINE_PARAMETER_S);
 
 class Engine;
 
