@@ -79,7 +79,7 @@ void hwHandleShaftSignal(trigger_event_e signal) {
 		maxTriggerReentraint = triggerReentraint;
 	triggerReentraint++;
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#8");
-	triggerCentral.handleShaftSignal(signal, engine, engine->engineConfiguration);
+	triggerCentral.handleShaftSignal(signal PASS_ENGINE_PARAMETER);
 	triggerReentraint--;
 	triggerDuration = GET_TIMESTAMP() - triggerHanlderEntryTime;
 	isInsideTriggerHandler = false;
@@ -122,8 +122,7 @@ static ALWAYS_INLINE void reportEventToWaveChart(trigger_event_e ckpSignalType, 
 	}
 }
 
-void TriggerCentral::handleShaftSignal(trigger_event_e signal, Engine *engine,
-		engine_configuration_s *engineConfiguration) {
+void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PARAMETER_S) {
 	efiAssertVoid(engine!=NULL, "configuration");
 
 	nowNt = getTimeNowNt();
@@ -149,12 +148,10 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, Engine *engine,
 	}
 	previousShaftEventTimeNt = nowNt;
 
-	trigger_shape_s * triggerShape = &engine->triggerShape;
-
 	/**
 	 * This invocation changes the state of triggerState
 	 */
-	triggerState.decodeTriggerEvent(&engineConfiguration->triggerConfig, signal, nowNt PASS_ENGINE_PARAMETER);
+	triggerState.decodeTriggerEvent(signal, nowNt PASS_ENGINE_PARAMETER);
 
 	if (!triggerState.shaft_is_synchronized) {
 		// we should not propagate event if we do not know where we are
@@ -172,12 +169,12 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, Engine *engine,
 	} else {
 		bool isEven = triggerState.getTotalRevolutionCounter() & 1;
 
-		triggerIndexForListeners = triggerState.getCurrentIndex() + (isEven ? 0 : triggerShape->getSize());
+		triggerIndexForListeners = triggerState.getCurrentIndex() + (isEven ? 0 : TRIGGER_SHAPE(size));
 	}
 	reportEventToWaveChart(signal, triggerIndexForListeners);
 
-	if (triggerState.getCurrentIndex() >= engine->triggerShape.getSize()) {
-		warning(OBD_PCM_Processor_Fault, "unexpected eventIndex=%d", triggerState.getCurrentIndex());
+	if (triggerState.current_index >= TRIGGER_SHAPE(size)) {
+		warning(OBD_PCM_Processor_Fault, "unexpected eventIndex=%d", triggerState.current_index);
 	} else {
 
 		/**

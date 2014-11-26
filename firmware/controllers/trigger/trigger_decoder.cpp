@@ -97,9 +97,8 @@ static trigger_value_e eventType[6] = { TV_LOW, TV_HIGH, TV_LOW, TV_HIGH, TV_LOW
  * @brief Trigger decoding happens here
  * This method changes the state of trigger_state_s data structure according to the trigger event
  */
-void TriggerState::decodeTriggerEvent(trigger_config_s const*triggerConfig,
+void TriggerState::decodeTriggerEvent(
 		trigger_event_e const signal, uint64_t nowNt DECLARE_ENGINE_PARAMETER_S) {
-	(void) triggerConfig; // we might want this for logging?
 	efiAssertVoid(signal <= SHAFT_3RD_UP, "unexpected signal");
 
 	trigger_wheel_e triggerWheel = eventIndex[signal];
@@ -117,20 +116,27 @@ void TriggerState::decodeTriggerEvent(trigger_config_s const*triggerConfig,
 	int isLessImportant = (TRIGGER_SHAPE(useRiseEdge) && signal != SHAFT_PRIMARY_UP)
 			|| (!TRIGGER_SHAPE(useRiseEdge) && signal != SHAFT_PRIMARY_DOWN);
 
+	uint64_t currentDurationLong = getCurrentGapDuration(nowNt);
+
+	/**
+	 * For performance reasons, we want to work with 32 bit values. If there has been more then
+	 * 10 seconds since previous trigger event we do not really care.
+	 */
+	currentDuration = currentDurationLong > 10 * US2NT(US_PER_SECOND_LL) ? 10 * US2NT(US_PER_SECOND_LL) : currentDurationLong;
+
 	if (isLessImportant) {
 		/**
 		 * For less important events we simply increment the index.
 		 */
 		nextTriggerEvent();
 		if (TRIGGER_SHAPE(gapBothDirections)) {
-			toothed_previous_duration = getCurrentGapDuration(nowNt);
+			toothed_previous_duration = currentDuration;
 			isFirstEvent = false;
 			toothed_previous_time = nowNt;
 		}
 		return;
 	}
 
-	currentDuration = getCurrentGapDuration(nowNt);
 	isFirstEvent = false;
 	efiAssertVoid(currentDuration >= 0, "decode: negative duration?");
 
@@ -344,19 +350,19 @@ void TriggerStimulatorHelper::nextStep(TriggerState *state, trigger_shape_s * sh
 	if (primaryWheelState != newPrimaryWheelState) {
 		primaryWheelState = newPrimaryWheelState;
 		trigger_event_e s = primaryWheelState ? SHAFT_PRIMARY_UP : SHAFT_PRIMARY_DOWN;
-		state->decodeTriggerEvent(triggerConfig, s, time PASS_ENGINE_PARAMETER);
+		state->decodeTriggerEvent(s, time PASS_ENGINE_PARAMETER);
 	}
 
 	if (secondaryWheelState != newSecondaryWheelState) {
 		secondaryWheelState = newSecondaryWheelState;
 		trigger_event_e s = secondaryWheelState ? SHAFT_SECONDARY_UP : SHAFT_SECONDARY_DOWN;
-		state->decodeTriggerEvent(triggerConfig, s, time PASS_ENGINE_PARAMETER);
+		state->decodeTriggerEvent(s, time PASS_ENGINE_PARAMETER);
 	}
 
 	if (thirdWheelState != new3rdWheelState) {
 		thirdWheelState = new3rdWheelState;
 		trigger_event_e s = thirdWheelState ? SHAFT_3RD_UP : SHAFT_3RD_DOWN;
-		state->decodeTriggerEvent(triggerConfig, s, time PASS_ENGINE_PARAMETER);
+		state->decodeTriggerEvent(s, time PASS_ENGINE_PARAMETER);
 	}
 }
 
