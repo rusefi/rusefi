@@ -36,6 +36,9 @@ extern WaveChart waveChart;
 
 uint32_t maxLockTime = 0;
 
+// todo: move this field to trigger_central
+bool isInsideTriggerHandler;
+
 persistent_config_container_s persistentState;
 static engine_configuration2_s ec2;
 

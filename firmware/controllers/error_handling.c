@@ -90,6 +90,8 @@ char *getWarninig(void) {
 uint64_t lastLockTime;
 uint32_t maxLockTime = 0;
 
+bool isInsideTriggerHandler = false;
+
 void onLockHook(void) {
 	lastLockTime = getTimeNowNt();
 }
@@ -100,7 +102,7 @@ void onUnlockHook(void) {
 		maxLockTime = t;
 	}
 //	if (t > 2800) {
-//		// uncomment this if you want a nice stop for a breakpoint
+//		// un-comment this if you want a nice stop for a breakpoint
 //		maxLockTime = t + 1;
 //	}
 }

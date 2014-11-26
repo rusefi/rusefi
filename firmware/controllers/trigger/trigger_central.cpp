@@ -69,8 +69,11 @@ uint32_t triggerBegin;
 uint32_t triggerDuration;
 uint32_t triggerMaxDuration = 0;
 
+extern bool isInsideTriggerHandler;
+
 void hwHandleShaftSignal(trigger_event_e signal) {
 	triggerBegin = GET_TIMESTAMP();
+	isInsideTriggerHandler = true;
 	if (triggerReentraint > maxTriggerReentraint)
 		maxTriggerReentraint = triggerReentraint;
 	triggerReentraint++;
@@ -78,7 +81,8 @@ void hwHandleShaftSignal(trigger_event_e signal) {
 	triggerCentral.handleShaftSignal(signal, engine, engine->engineConfiguration);
 	triggerReentraint--;
 	triggerDuration = GET_TIMESTAMP() - triggerBegin;
-	if(triggerDuration > triggerMaxDuration)
+	isInsideTriggerHandler = false;
+	if (triggerDuration > triggerMaxDuration)
 		triggerMaxDuration = triggerDuration;
 }
 #endif /* EFI_PROD_CODE */
@@ -98,26 +102,27 @@ static ALWAYS_INLINE void reportEventToWaveChart(trigger_event_e ckpSignalType, 
 	itoa10(&shaft_signal_msg_index[2], index);
 	if (ckpSignalType == SHAFT_PRIMARY_UP) {
 		shaft_signal_msg_index[0] = 'u';
-		addWaveChartEvent(WC_CRANK1, (char*) shaft_signal_msg_index);
+		addWaveChartEvent(WC_CRANK1, (char* ) shaft_signal_msg_index);
 	} else if (ckpSignalType == SHAFT_PRIMARY_DOWN) {
 		shaft_signal_msg_index[0] = 'd';
-		addWaveChartEvent(WC_CRANK1, (char*) shaft_signal_msg_index);
+		addWaveChartEvent(WC_CRANK1, (char* ) shaft_signal_msg_index);
 	} else if (ckpSignalType == SHAFT_SECONDARY_UP) {
 		shaft_signal_msg_index[0] = 'u';
-		addWaveChartEvent(WC_CRANK2, (char*) shaft_signal_msg_index);
+		addWaveChartEvent(WC_CRANK2, (char* ) shaft_signal_msg_index);
 	} else if (ckpSignalType == SHAFT_SECONDARY_DOWN) {
 		shaft_signal_msg_index[0] = 'd';
-		addWaveChartEvent(WC_CRANK2, (char*) shaft_signal_msg_index);
+		addWaveChartEvent(WC_CRANK2, (char* ) shaft_signal_msg_index);
 	} else if (ckpSignalType == SHAFT_3RD_UP) {
 		shaft_signal_msg_index[0] = 'u';
-		addWaveChartEvent(WC_CRANK3, (char*) shaft_signal_msg_index);
+		addWaveChartEvent(WC_CRANK3, (char* ) shaft_signal_msg_index);
 	} else if (ckpSignalType == SHAFT_3RD_DOWN) {
 		shaft_signal_msg_index[0] = 'd';
-		addWaveChartEvent(WC_CRANK3, (char*) shaft_signal_msg_index);
+		addWaveChartEvent(WC_CRANK3, (char* ) shaft_signal_msg_index);
 	}
 }
 
-void TriggerCentral::handleShaftSignal(trigger_event_e signal, Engine *engine, engine_configuration_s *engineConfiguration) {
+void TriggerCentral::handleShaftSignal(trigger_event_e signal, Engine *engine,
+		engine_configuration_s *engineConfiguration) {
 	efiAssertVoid(engine!=NULL, "configuration");
 
 	nowNt = getTimeNowNt();
@@ -178,7 +183,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, Engine *engine, e
 		 * Here we invoke all the listeners - the main engine control logic is inside these listeners
 		 */
 		for (int i = 0; i < triggerListeneres.currentListenersCount; i++) {
-			ShaftPositionListener listener = (ShaftPositionListener)triggerListeneres.callbacks[i];
+			ShaftPositionListener listener = (ShaftPositionListener) triggerListeneres.callbacks[i];
 			(listener)(signal, triggerIndexForListeners PASS_ENGINE_PARAMETER);
 		}
 
@@ -241,18 +246,14 @@ static void triggerInfo(Engine *engine) {
 	scheduleMsg(&logger, "expected duty #0=%f/#1=%f", ts->dutyCycle[0], ts->dutyCycle[1]);
 
 	scheduleMsg(&logger, "isError %s/total errors=%d ord_err=%d/total revolutions=%d/self=%s",
-			boolToString(isTriggerDecoderError()),
-			triggerCentral.triggerState.totalTriggerErrorCounter,
-			triggerCentral.triggerState.orderingErrorCounter,
-			triggerCentral.triggerState.getTotalRevolutionCounter(),
+			boolToString(isTriggerDecoderError()), triggerCentral.triggerState.totalTriggerErrorCounter,
+			triggerCentral.triggerState.orderingErrorCounter, triggerCentral.triggerState.getTotalRevolutionCounter(),
 			boolToString(engineConfiguration->directSelfStimulation));
 #endif
 
 #if EFI_PROD_CODE
 	scheduleMsg(&logger, "sn=%s ignitionMathTime=%d schTime=%d triggerMaxDuration=%d",
-			boolToString(ts->isSynchronizationNeeded),
-			engine->ignitionMathTime,
-			engine->ignitionSchTime,
+			boolToString(ts->isSynchronizationNeeded), engine->ignitionMathTime, engine->ignitionSchTime,
 			triggerMaxDuration);
 
 	triggerMaxDuration = 0;
