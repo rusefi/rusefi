@@ -33,11 +33,11 @@ public:
 	 */
 	bool shaft_is_synchronized;
 
-	uint64_t toothed_previous_duration;
+	uint32_t toothed_previous_duration;
 	/**
 	 * this could be a local variable, but it's better for debugging to have it as a field
 	 */
-	int64_t currentDuration;
+	uint32_t currentDuration;
 	uint64_t toothed_previous_time;
 
 	/**
