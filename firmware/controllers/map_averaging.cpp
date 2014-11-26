@@ -180,7 +180,7 @@ void initMapAveraging(void) {
 	endTimer[0].name = "map end0";
 	endTimer[1].name = "map end1";
 
-	addTriggerEventListener(&shaftPositionCallback, "rpm reporter", NULL);
+//	addTriggerEventListener(&shaftPositionCallback, "rpm reporter", NULL);
 	addConsoleAction("faststat", showMapStats);
 }
 
