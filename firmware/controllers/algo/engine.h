@@ -41,6 +41,9 @@ public:
 
 	trigger_shape_s triggerShape;
 
+	float angleExtra[IGNITION_PIN_COUNT];
+	io_pin_e ignitionPin[IGNITION_PIN_COUNT];
+
 	void onTriggerEvent(uint64_t nowNt);
 	EngineState engineState;
 	uint64_t lastTriggerEventTimeNt;

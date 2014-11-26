@@ -85,6 +85,7 @@ typedef Thread thread_t;
  * optimization
  */
 #define CONFIG(x) persistentState.persistentConfiguration.engineConfiguration.x
+#define ENGINE(x) _engine.x
 #define TRIGGER_SHAPE(x) _engine.triggerShape.x
 
 #endif /* GLOBAL_H_ */
