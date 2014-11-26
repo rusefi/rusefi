@@ -32,6 +32,8 @@
 #include "efiGpio.h"
 #include "engine.h"
 
+EXTERN_ENGINE;
+
 // todo: better name for this constant
 #define HELPER_PERIOD 100000
 
@@ -52,42 +54,6 @@ bool_t isTriggerDecoderError(void) {
 	return errorDetection.sum(6) > 4;
 }
 
-static ALWAYS_INLINE bool isSynchronizationGap(TriggerState *shaftPositionState, trigger_shape_s const *triggerShape,
-		const int currentDuration) {
-	if (!triggerShape->isSynchronizationNeeded) {
-		return false;
-	}
-
-#if ! EFI_PROD_CODE
-	if (printGapRatio) {
-
-		float gap = 1.0 * currentDuration / shaftPositionState->toothed_previous_duration;
-		print("current gap %f\r\n", gap);
-	}
-#else
-//	float gap = 1.0 * currentDuration / shaftPositionState->toothed_previous_duration;
-//	scheduleMsg(&logger, "gap=%f @ %d", gap, shaftPositionState->getCurrentIndex());
-
-#endif /* ! EFI_PROD_CODE */
-
-	return currentDuration > shaftPositionState->toothed_previous_duration * triggerShape->syncRatioFrom
-			&& currentDuration < shaftPositionState->toothed_previous_duration * triggerShape->syncRatioTo;
-}
-
-static ALWAYS_INLINE bool noSynchronizationResetNeeded(TriggerState *shaftPositionState,
-		trigger_shape_s const *triggerShape) {
-	if (triggerShape->isSynchronizationNeeded) {
-		return false;
-	}
-	if (!shaftPositionState->shaft_is_synchronized) {
-		return true;
-	}
-	/**
-	 * in case of noise the counter could be above the expected number of events
-	 */
-	return shaftPositionState->getCurrentIndex() >= triggerShape->getSize() - 1;
-}
-
 float TriggerState::getTriggerDutyCycle(int index) {
 	float time = prevTotalTime[index];
 
@@ -97,15 +63,42 @@ float TriggerState::getTriggerDutyCycle(int index) {
 static trigger_wheel_e eventIndex[6] = { T_PRIMARY, T_PRIMARY, T_SECONDARY, T_SECONDARY, T_CHANNEL_3, T_CHANNEL_3 };
 static trigger_value_e eventType[6] = { TV_LOW, TV_HIGH, TV_LOW, TV_HIGH, TV_LOW, TV_HIGH };
 
-#define getCurrentGapDuration(nowUs) \
-	(isFirstEvent ? 0 : (nowUs) - toothed_previous_time)
+#define getCurrentGapDuration(nowNt) \
+	(isFirstEvent ? 0 : (nowNt) - toothed_previous_time)
+
+#define nextTriggerEvent() \
+ { \
+	uint64_t prevTime = timeOfPreviousEventNt[triggerWheel]; \
+	if (prevTime != 0) { \
+		/* even event - apply the value*/ \
+		totalTimeNt[triggerWheel] += (nowNt - prevTime); \
+		timeOfPreviousEventNt[triggerWheel] = 0; \
+	} else { \
+		/* odd event - start accumulation */ \
+		timeOfPreviousEventNt[triggerWheel] = nowNt; \
+	} \
+	current_index++; \
+}
+
+#define nextRevolution() { \
+	if (cycleCallback != NULL) { \
+		cycleCallback(this); \
+	} \
+	memcpy(prevTotalTime, totalTimeNt, sizeof(prevTotalTime)); \
+	prevCycleDuration = nowNt - startOfCycleNt; \
+	startOfCycleNt = nowNt; \
+	clear(); \
+	totalRevolutionCounter++; \
+	totalEventCountBase += TRIGGER_SHAPE(size); \
+}
+
 
 /**
  * @brief Trigger decoding happens here
  * This method changes the state of trigger_state_s data structure according to the trigger event
  */
-void TriggerState::decodeTriggerEvent(trigger_shape_s const*triggerShape, trigger_config_s const*triggerConfig,
-		trigger_event_e const signal, uint64_t nowNt) {
+void TriggerState::decodeTriggerEvent(trigger_config_s const*triggerConfig,
+		trigger_event_e const signal, uint64_t nowNt DECLARE_ENGINE_PARAMETER_S) {
 	(void) triggerConfig; // we might want this for logging?
 	efiAssertVoid(signal <= SHAFT_3RD_UP, "unexpected signal");
 
@@ -121,15 +114,15 @@ void TriggerState::decodeTriggerEvent(trigger_shape_s const*triggerShape, trigge
 	eventCount[triggerWheel]++;
 	eventCountExt[signal]++;
 
-	int isLessImportant = (triggerShape->useRiseEdge && signal != SHAFT_PRIMARY_UP)
-			|| (!triggerShape->useRiseEdge && signal != SHAFT_PRIMARY_DOWN);
+	int isLessImportant = (TRIGGER_SHAPE(useRiseEdge) && signal != SHAFT_PRIMARY_UP)
+			|| (!TRIGGER_SHAPE(useRiseEdge) && signal != SHAFT_PRIMARY_DOWN);
 
 	if (isLessImportant) {
 		/**
 		 * For less important events we simply increment the index.
 		 */
-		nextTriggerEvent(triggerWheel, nowNt);
-		if (triggerShape->gapBothDirections) {
+		nextTriggerEvent();
+		if (TRIGGER_SHAPE(gapBothDirections)) {
 			toothed_previous_duration = getCurrentGapDuration(nowNt);
 			isFirstEvent = false;
 			toothed_previous_time = nowNt;
@@ -153,13 +146,39 @@ void TriggerState::decodeTriggerEvent(trigger_shape_s const*triggerShape, trigge
 	}
 #endif
 
-	if (noSynchronizationResetNeeded(this, triggerShape) || isSynchronizationGap(this, triggerShape, currentDuration)) {
+	bool_t isSynchronizationPoint;
+
+	if (TRIGGER_SHAPE(isSynchronizationNeeded)) {
+#if ! EFI_PROD_CODE
+		if (printGapRatio) {
+
+			float gap = 1.0 * currentDuration / toothed_previous_duration;
+			print("current gap %f\r\n", gap);
+		}
+#else
+//	float gap = 1.0 * currentDuration / shaftPositionState->toothed_previous_duration;
+//	scheduleMsg(&logger, "gap=%f @ %d", gap, shaftPositionState->getCurrentIndex());
+
+#endif /* ! EFI_PROD_CODE */
+
+		isSynchronizationPoint = currentDuration > toothed_previous_duration * TRIGGER_SHAPE(syncRatioFrom)
+				&& currentDuration < toothed_previous_duration * TRIGGER_SHAPE(syncRatioTo);
+
+	} else {
+		/**
+		 * in case of noise the counter could be above the expected number of events
+		 */
+		isSynchronizationPoint = !shaft_is_synchronized || (current_index >= TRIGGER_SHAPE(size) - 1);
+
+	}
+
+	if (isSynchronizationPoint) {
 		/**
 		 * We can check if things are fine by comparing the number of events in a cycle with the expected number of event.
 		 */
-		bool isDecodingError = eventCount[0] != triggerShape->expectedEventCount[0]
-				|| eventCount[1] != triggerShape->expectedEventCount[1]
-				|| eventCount[2] != triggerShape->expectedEventCount[2];
+		bool isDecodingError = eventCount[0] != TRIGGER_SHAPE(expectedEventCount[0])
+				|| eventCount[1] != TRIGGER_SHAPE(expectedEventCount[1])
+				|| eventCount[2] != TRIGGER_SHAPE(expectedEventCount[2]);
 
 		setOutputPinValue(LED_TRIGGER_ERROR, isDecodingError);
 		if (isDecodingError) {
@@ -170,17 +189,17 @@ void TriggerState::decodeTriggerEvent(trigger_shape_s const*triggerShape, trigge
 
 		if (isTriggerDecoderError()) {
 			warning(OBD_PCM_Processor_Fault, "trigger decoding issue. expected %d/%d/%d got %d/%d/%d",
-					triggerShape->expectedEventCount[0], triggerShape->expectedEventCount[1],
-					triggerShape->expectedEventCount[2], eventCount[0], eventCount[1], eventCount[2]);
+					TRIGGER_SHAPE(expectedEventCount[0]), TRIGGER_SHAPE(expectedEventCount[1]),
+					TRIGGER_SHAPE(expectedEventCount[2]), eventCount[0], eventCount[1], eventCount[2]);
 		}
 
 		shaft_is_synchronized = true;
 		// this call would update duty cycle values
-		nextTriggerEvent(triggerWheel, nowNt);
+		nextTriggerEvent();
 
-		nextRevolution(triggerShape->getSize(), nowNt);
+		nextRevolution();
 	} else {
-		nextTriggerEvent(triggerWheel, nowNt);
+		nextTriggerEvent();
 	}
 
 	toothed_previous_duration = currentDuration;
@@ -218,8 +237,7 @@ void initializeSkippedToothTriggerShapeExt(trigger_shape_s *s, int totalTeethCou
 /**
  * External logger is needed because at this point our logger is not yet initialized
  */
-void initializeTriggerShape(Logging *logger, engine_configuration_s const *engineConfiguration,
-		Engine *engine) {
+void initializeTriggerShape(Logging *logger, engine_configuration_s const *engineConfiguration, Engine *engine) {
 #if EFI_PROD_CODE
 	scheduleMsg(logger, "initializeTriggerShape()");
 #endif
@@ -234,8 +252,7 @@ void initializeTriggerShape(Logging *logger, engine_configuration_s const *engin
 	case TT_TOOTHED_WHEEL:
 		// todo: move to into configuration definition		engineConfiguration2->triggerShape.needSecondTriggerInput = false;
 
-		triggerShape->isSynchronizationNeeded =
-				engineConfiguration->triggerConfig.customIsSynchronizationNeeded;
+		triggerShape->isSynchronizationNeeded = engineConfiguration->triggerConfig.customIsSynchronizationNeeded;
 
 		initializeSkippedToothTriggerShapeExt(triggerShape, triggerConfig->customTotalToothCount,
 				triggerConfig->customSkippedToothCount, getOperationMode(engineConfiguration));
@@ -313,7 +330,7 @@ TriggerStimulatorHelper::TriggerStimulatorHelper() {
 }
 
 void TriggerStimulatorHelper::nextStep(TriggerState *state, trigger_shape_s * shape, int i,
-		trigger_config_s const*triggerConfig) {
+		trigger_config_s const*triggerConfig DECLARE_ENGINE_PARAMETER_S) {
 	int stateIndex = i % shape->getSize();
 
 	int loopIndex = i / shape->getSize();
@@ -327,19 +344,19 @@ void TriggerStimulatorHelper::nextStep(TriggerState *state, trigger_shape_s * sh
 	if (primaryWheelState != newPrimaryWheelState) {
 		primaryWheelState = newPrimaryWheelState;
 		trigger_event_e s = primaryWheelState ? SHAFT_PRIMARY_UP : SHAFT_PRIMARY_DOWN;
-		state->decodeTriggerEvent(shape, triggerConfig, s, time);
+		state->decodeTriggerEvent(triggerConfig, s, time PASS_ENGINE_PARAMETER);
 	}
 
 	if (secondaryWheelState != newSecondaryWheelState) {
 		secondaryWheelState = newSecondaryWheelState;
 		trigger_event_e s = secondaryWheelState ? SHAFT_SECONDARY_UP : SHAFT_SECONDARY_DOWN;
-		state->decodeTriggerEvent(shape, triggerConfig, s, time);
+		state->decodeTriggerEvent(triggerConfig, s, time PASS_ENGINE_PARAMETER);
 	}
 
 	if (thirdWheelState != new3rdWheelState) {
 		thirdWheelState = new3rdWheelState;
 		trigger_event_e s = thirdWheelState ? SHAFT_3RD_UP : SHAFT_3RD_DOWN;
-		state->decodeTriggerEvent(shape, triggerConfig, s, time);
+		state->decodeTriggerEvent(triggerConfig, s, time PASS_ENGINE_PARAMETER);
 	}
 }
 
@@ -351,9 +368,9 @@ static void onFindIndex(TriggerState *state) {
 }
 
 static uint32_t doFindTrigger(TriggerStimulatorHelper *helper, trigger_shape_s * shape,
-		trigger_config_s const*triggerConfig, TriggerState *state) {
+		trigger_config_s const*triggerConfig, TriggerState *state DECLARE_ENGINE_PARAMETER_S) {
 	for (int i = 0; i < 4 * PWM_PHASE_MAX_COUNT; i++) {
-		helper->nextStep(state, shape, i, triggerConfig);
+		helper->nextStep(state, shape, i, triggerConfig PASS_ENGINE_PARAMETER);
 
 		if (state->shaft_is_synchronized)
 			return i;
@@ -368,14 +385,14 @@ static uint32_t doFindTrigger(TriggerStimulatorHelper *helper, trigger_shape_s *
  *
  * This function finds the index of synchronization event within trigger_shape_s
  */
-uint32_t findTriggerZeroEventIndex(trigger_shape_s * shape, trigger_config_s const*triggerConfig) {
+uint32_t findTriggerZeroEventIndex(trigger_shape_s * shape, trigger_config_s const*triggerConfig DECLARE_ENGINE_PARAMETER_S) {
 
 	TriggerState state;
 	errorDetection.clear();
 
 	TriggerStimulatorHelper helper;
 
-	uint32_t index = doFindTrigger(&helper, shape, triggerConfig, &state);
+	uint32_t index = doFindTrigger(&helper, shape, triggerConfig, &state PASS_ENGINE_PARAMETER);
 	if (index == EFI_ERROR_CODE) {
 		return index;
 	}
@@ -389,7 +406,7 @@ uint32_t findTriggerZeroEventIndex(trigger_shape_s * shape, trigger_config_s con
 	 */
 	state.cycleCallback = onFindIndex;
 	for (uint32_t i = index + 1; i <= index + 2 * shape->getSize(); i++) {
-		helper.nextStep(&state, shape, i, triggerConfig);
+		helper.nextStep(&state, shape, i, triggerConfig PASS_ENGINE_PARAMETER);
 	}
 	efiAssert(state.getTotalRevolutionCounter() == 3, "totalRevolutionCounter2", EFI_ERROR_CODE);
 

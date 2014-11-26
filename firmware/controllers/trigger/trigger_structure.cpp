@@ -52,7 +52,7 @@ int trigger_shape_s::getTriggerShapeSynchPointIndex() {
 
 void trigger_shape_s::calculateTriggerSynchPoint(engine_configuration_s *engineConfiguration, Engine *engine) {
 	trigger_config_s const*triggerConfig = &engineConfiguration->triggerConfig;
-	setTriggerShapeSynchPointIndex(engineConfiguration, findTriggerZeroEventIndex(this, triggerConfig), engine);
+	setTriggerShapeSynchPointIndex(engineConfiguration, findTriggerZeroEventIndex(this, triggerConfig PASS_ENGINE_PARAMETER), engine);
 }
 
 void trigger_shape_s::setTriggerShapeSynchPointIndex(engine_configuration_s *engineConfiguration, int triggerShapeSynchPointIndex, Engine *engine) {
@@ -134,34 +134,8 @@ uint64_t TriggerState::getTotalEventCounter() {
 	return totalEventCountBase + current_index;
 }
 
-void TriggerState::nextRevolution(int triggerEventCount, uint64_t nowNt) {
-	if (cycleCallback != NULL) {
-		cycleCallback(this);
-	}
-	memcpy(prevTotalTime, totalTimeNt, sizeof(prevTotalTime));
-	prevCycleDuration = nowNt - startOfCycleNt;
-	startOfCycleNt = nowNt;
-	clear();
-	totalRevolutionCounter++;
-	totalEventCountBase += triggerEventCount;
-}
-
 int TriggerState::getTotalRevolutionCounter() {
 	return totalRevolutionCounter;
-}
-
-void TriggerState::nextTriggerEvent(trigger_wheel_e triggerWheel, uint64_t nowNt) {
-	uint64_t prevTime = timeOfPreviousEventNt[triggerWheel];
-	if (prevTime != 0) {
-		// even event - apply the value
-		totalTimeNt[triggerWheel] += (nowNt - prevTime);
-		timeOfPreviousEventNt[triggerWheel] = 0;
-	} else {
-		// odd event - start accumulation
-		timeOfPreviousEventNt[triggerWheel] = nowNt;
-	}
-
-	current_index++;
 }
 
 void TriggerState::clear() {

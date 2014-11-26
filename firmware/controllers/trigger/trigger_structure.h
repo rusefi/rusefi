@@ -81,16 +81,16 @@ public:
 	float eventAngles[PWM_PHASE_MAX_COUNT];
 
 	bool_t invertOnAdd;
-private:
-
-	trigger_shape_helper h;
-
 	/**
 	 * Total count of shaft events per CAM or CRANK shaft revolution.
 	 * TODO this should be migrated to CRANKshaft revolution, this would go together
 	 * TODO with eliminating RPM_MULT magic constant
 	 */
 	int size;
+private:
+
+	trigger_shape_helper h;
+
 	/**
 	 * index of synchronization event within trigger_shape_s
 	 * See findTriggerZeroEventIndex()

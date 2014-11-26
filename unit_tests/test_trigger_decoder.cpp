@@ -46,7 +46,7 @@ int getTheAngle(engine_type_e engineType) {
 	initDataStructures(PASS_ENGINE_PARAMETER_F);
 
 	trigger_shape_s * shape = &eth.engine.triggerShape;
-	return findTriggerZeroEventIndex(shape, &engineConfiguration->triggerConfig);
+	return findTriggerZeroEventIndex(shape, &engineConfiguration->triggerConfig PASS_ENGINE_PARAMETER);
 }
 
 static void testDodgeNeonDecoder(void) {
@@ -145,28 +145,28 @@ static void test1995FordInline6TriggerDecoder(void) {
 
 	assertFalseM("shaft_is_synchronized", state.shaft_is_synchronized);
 	int r = 10;
-	state.decodeTriggerEvent(shape, &engineConfiguration->triggerConfig, SHAFT_PRIMARY_DOWN, r);
+	state.decodeTriggerEvent(&engineConfiguration->triggerConfig, SHAFT_PRIMARY_DOWN, r PASS_ENGINE_PARAMETER);
 	assertFalseM("shaft_is_synchronized", state.shaft_is_synchronized); // still no synchronization
-	state.decodeTriggerEvent(shape, &engineConfiguration->triggerConfig, SHAFT_PRIMARY_UP, ++r);
+	state.decodeTriggerEvent(&engineConfiguration->triggerConfig, SHAFT_PRIMARY_UP, ++r PASS_ENGINE_PARAMETER);
 	assertTrue(state.shaft_is_synchronized); // first signal rise synchronize
 	assertEquals(0, state.getCurrentIndex());
-	state.decodeTriggerEvent(shape, &engineConfiguration->triggerConfig, SHAFT_PRIMARY_DOWN, r++);
+	state.decodeTriggerEvent(&engineConfiguration->triggerConfig, SHAFT_PRIMARY_DOWN, r++ PASS_ENGINE_PARAMETER);
 	assertEquals(1, state.getCurrentIndex());
 
 	for (int i = 2; i < 10;) {
-		state.decodeTriggerEvent(shape, &engineConfiguration->triggerConfig, SHAFT_PRIMARY_UP, r++);
+		state.decodeTriggerEvent(&engineConfiguration->triggerConfig, SHAFT_PRIMARY_UP, r++ PASS_ENGINE_PARAMETER);
 		assertEqualsM("even", i++, state.getCurrentIndex());
-		state.decodeTriggerEvent(shape, &engineConfiguration->triggerConfig, SHAFT_PRIMARY_DOWN, r++);
+		state.decodeTriggerEvent(&engineConfiguration->triggerConfig, SHAFT_PRIMARY_DOWN, r++ PASS_ENGINE_PARAMETER);
 		assertEqualsM("odd", i++, state.getCurrentIndex());
 	}
 
-	state.decodeTriggerEvent(shape, &engineConfiguration->triggerConfig, SHAFT_PRIMARY_UP, r++);
+	state.decodeTriggerEvent(&engineConfiguration->triggerConfig, SHAFT_PRIMARY_UP, r++ PASS_ENGINE_PARAMETER);
 	assertEquals(10, state.getCurrentIndex());
 
-	state.decodeTriggerEvent(shape, &engineConfiguration->triggerConfig, SHAFT_PRIMARY_DOWN, r++);
+	state.decodeTriggerEvent(&engineConfiguration->triggerConfig, SHAFT_PRIMARY_DOWN, r++ PASS_ENGINE_PARAMETER);
 	assertEquals(11, state.getCurrentIndex());
 
-	state.decodeTriggerEvent(shape, &engineConfiguration->triggerConfig, SHAFT_PRIMARY_UP, r++);
+	state.decodeTriggerEvent(&engineConfiguration->triggerConfig, SHAFT_PRIMARY_UP, r++ PASS_ENGINE_PARAMETER);
 	assertEquals(0, state.getCurrentIndex()); // new revolution
 
 	assertEqualsM("running dwell", 0.5, getSparkDwellMsT(2000 PASS_ENGINE_PARAMETER));
@@ -215,38 +215,38 @@ void testMazdaMianaNbDecoder(void) {
 	TriggerState state;
 
 	int a = 0;
-	state.decodeTriggerEvent(shape, &ec->triggerConfig, SHAFT_PRIMARY_DOWN, a + 20);
+	state.decodeTriggerEvent(&ec->triggerConfig, SHAFT_PRIMARY_DOWN, a + 20 PASS_ENGINE_PARAMETER);
 	assertFalseM("0a shaft_is_synchronized", state.shaft_is_synchronized);
-	state.decodeTriggerEvent(shape, &ec->triggerConfig, SHAFT_PRIMARY_UP, a + 340);
+	state.decodeTriggerEvent(&ec->triggerConfig, SHAFT_PRIMARY_UP, a + 340 PASS_ENGINE_PARAMETER);
 	assertFalseM("0b shaft_is_synchronized", state.shaft_is_synchronized);
 
-	state.decodeTriggerEvent(shape, &ec->triggerConfig, SHAFT_PRIMARY_DOWN, a + 360);
+	state.decodeTriggerEvent(&ec->triggerConfig, SHAFT_PRIMARY_DOWN, a + 360 PASS_ENGINE_PARAMETER);
 	assertFalseM("0c shaft_is_synchronized", state.shaft_is_synchronized);
-	state.decodeTriggerEvent(shape, &ec->triggerConfig, SHAFT_PRIMARY_UP, a + 380);
+	state.decodeTriggerEvent(&ec->triggerConfig, SHAFT_PRIMARY_UP, a + 380 PASS_ENGINE_PARAMETER);
 	assertFalseM("0d shaft_is_synchronized", state.shaft_is_synchronized);
-	state.decodeTriggerEvent(shape, &ec->triggerConfig, SHAFT_PRIMARY_DOWN, a + 400);
+	state.decodeTriggerEvent(&ec->triggerConfig, SHAFT_PRIMARY_DOWN, a + 400 PASS_ENGINE_PARAMETER);
 	assertTrueM("0e shaft_is_synchronized", state.shaft_is_synchronized);
 
-	state.decodeTriggerEvent(shape, &ec->triggerConfig, SHAFT_PRIMARY_UP, a + 720);
+	state.decodeTriggerEvent(&ec->triggerConfig, SHAFT_PRIMARY_UP, a + 720 PASS_ENGINE_PARAMETER);
 	assertTrueM("0f shaft_is_synchronized", state.shaft_is_synchronized);
 
 	a = 720;
-	state.decodeTriggerEvent(shape, &ec->triggerConfig, SHAFT_PRIMARY_DOWN, a + 20);
+	state.decodeTriggerEvent(&ec->triggerConfig, SHAFT_PRIMARY_DOWN, a + 20 PASS_ENGINE_PARAMETER);
 	assertTrueM("1a shaft_is_synchronized", state.shaft_is_synchronized);
-	state.decodeTriggerEvent(shape, &ec->triggerConfig, SHAFT_PRIMARY_UP, a + 340);
+	state.decodeTriggerEvent(&ec->triggerConfig, SHAFT_PRIMARY_UP, a + 340 PASS_ENGINE_PARAMETER);
 	assertTrueM("1b shaft_is_synchronized", state.shaft_is_synchronized);
 
-	state.decodeTriggerEvent(shape, &ec->triggerConfig, SHAFT_PRIMARY_DOWN, a + 360);
+	state.decodeTriggerEvent(&ec->triggerConfig, SHAFT_PRIMARY_DOWN, a + 360 PASS_ENGINE_PARAMETER);
 	assertTrueM("1c shaft_is_synchronized", state.shaft_is_synchronized);
-	state.decodeTriggerEvent(shape, &ec->triggerConfig, SHAFT_PRIMARY_UP, a + 380);
+	state.decodeTriggerEvent(&ec->triggerConfig, SHAFT_PRIMARY_UP, a + 380 PASS_ENGINE_PARAMETER);
 	assertTrueM("1d shaft_is_synchronized", state.shaft_is_synchronized);
 	assertEquals(5, state.getCurrentIndex());
 
-	state.decodeTriggerEvent(shape, &ec->triggerConfig, SHAFT_PRIMARY_DOWN, a + 400);
+	state.decodeTriggerEvent(&ec->triggerConfig, SHAFT_PRIMARY_DOWN, a + 400 PASS_ENGINE_PARAMETER);
 	assertTrueM("1e shaft_is_synchronized", state.shaft_is_synchronized);
 	assertEquals(0, state.getCurrentIndex());
 
-	state.decodeTriggerEvent(shape, &ec->triggerConfig, SHAFT_PRIMARY_UP, a + 720);
+	state.decodeTriggerEvent(&ec->triggerConfig, SHAFT_PRIMARY_UP, a + 720 PASS_ENGINE_PARAMETER);
 	assertTrueM("1f shaft_is_synchronized", state.shaft_is_synchronized);
 
 	event_trigger_position_s position;
@@ -308,6 +308,8 @@ void testGY6_139QMB(void) {
 
 	EngineTestHelper eth(GY6_139QMB);
 	engine_configuration_s *ec = eth.ec;
+	Engine *engine = &eth.engine;
+	engine_configuration_s *engineConfiguration = ec;
 
 	TriggerState state;
 	assertFalseM("shaft_is_synchronized", state.shaft_is_synchronized);
@@ -318,11 +320,11 @@ void testGY6_139QMB(void) {
 	assertEquals(0, state.getCurrentIndex());
 
 	int now = 0;
-	state.decodeTriggerEvent(shape, &ec->triggerConfig, SHAFT_PRIMARY_UP, now++);
+	state.decodeTriggerEvent(&ec->triggerConfig, SHAFT_PRIMARY_UP, now++ PASS_ENGINE_PARAMETER);
 	assertTrueM("shaft_is_synchronized", state.shaft_is_synchronized);
 	assertEquals(0, state.getCurrentIndex());
 
-	state.decodeTriggerEvent(shape, &ec->triggerConfig, SHAFT_PRIMARY_DOWN, now++);
+	state.decodeTriggerEvent(&ec->triggerConfig, SHAFT_PRIMARY_DOWN, now++ PASS_ENGINE_PARAMETER);
 	assertTrueM("shaft_is_synchronized", state.shaft_is_synchronized);
 	assertEquals(1, state.getCurrentIndex());
 }
