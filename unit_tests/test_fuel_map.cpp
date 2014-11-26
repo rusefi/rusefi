@@ -187,8 +187,8 @@ void testAngleResolver(void) {
 	printf("*************************************************** testAngleResolver 2\r\n");
 	ae.resetEventList();
 	findTriggerPosition(&ae.getNextActuatorEvent()->position, 51 + 180 - 175 PASS_ENGINE_PARAMETER);
-	assertEquals(3, ae.events[0].position.eventIndex);
-	assertEquals(2.955, ae.events[0].position.angleOffset);
+	assertEquals(2, ae.events[0].position.eventIndex);
+	assertEquals(112.3495, ae.events[0].position.angleOffset);
 }
 
 void testPinHelper(void) {

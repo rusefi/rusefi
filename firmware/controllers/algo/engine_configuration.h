@@ -509,7 +509,9 @@ typedef struct {
 	 */
 	adc_channel_e acSwitchAdc;
 
-	int unused3[91];
+	int ignMathCalculateAtIndex;
+
+	int unused3[90];
 
 } engine_configuration_s;
 

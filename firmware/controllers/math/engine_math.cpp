@@ -35,6 +35,12 @@ EXTERN_ENGINE
 
 extern OutputPin outputs[IO_PIN_COUNT];
 
+/**
+ * this cache allows us to find a close-enough (with one degree precision) trigger wheel index by
+ * given angle with fast constant speed
+ */
+static int triggerIndexByAngle[720];
+
 /*
  * default Volumetric Efficiency
  */
@@ -110,8 +116,7 @@ void initializeIgnitionActions(float advance, float dwellAngle, IgnitionEventLis
 		event->io_pin = pin;
 		event->advance = localAdvance;
 
-		findTriggerPosition(&event->dwellPosition, localAdvance - dwellAngle
-		PASS_ENGINE_PARAMETER);
+		findTriggerPosition(&event->dwellPosition, localAdvance - dwellAngle PASS_ENGINE_PARAMETER);
 	}
 }
 
@@ -252,7 +257,7 @@ void findTriggerPosition(event_trigger_position_s *position, float angleOffset D
 	angleOffset += CONFIG(globalTriggerAngleOffset);
 	fixAngle(angleOffset);
 
-	int index = findAngleIndex(angleOffset PASS_ENGINE_PARAMETER);
+	int index = triggerIndexByAngle[(int)angleOffset];
 	float eventAngle = TRIGGER_SHAPE(eventAngles[index]);
 	if (angleOffset < eventAngle) {
 		firmwareError("angle constraint violation in registerActuatorEventExt(): %f/%f", angleOffset, eventAngle);
@@ -328,9 +333,13 @@ void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_F) {
 
 	}
 
+	for (int angle = 0; angle < CONFIG(engineCycle); angle++) {
+		triggerIndexByAngle[angle] = findAngleIndex(angle PASS_ENGINE_PARAMETER);
+	}
+
 	injectonSignals.clear();
-	engineConfiguration2->crankingInjectionEvents.addFuelEvents(engineConfiguration->crankingInjectionMode
-			PASS_ENGINE_PARAMETER);
+	engineConfiguration2->crankingInjectionEvents.addFuelEvents(
+			engineConfiguration->crankingInjectionMode PASS_ENGINE_PARAMETER);
 	engineConfiguration2->injectionEvents.addFuelEvents(engineConfiguration->injectionMode PASS_ENGINE_PARAMETER);
 }
 
