@@ -71,10 +71,14 @@ public:
 	uint32_t time2;
 	uint32_t time3;
 	uint32_t time4;
+	uint32_t time5;
+	uint32_t time6;
 
 	uint32_t before2;
 	uint32_t before3;
 	uint32_t before4;
+	uint32_t before5;
+	uint32_t before6;
 
 
 
