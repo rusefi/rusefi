@@ -15,6 +15,7 @@
 #include "histogram.h"
 #include "wave_chart.h"
 #include "pwm_generator_logic.h"
+#include "efilib2.h"
 
 #include "rpm_calculator.h"
 #if EFI_PROD_CODE
@@ -64,14 +65,21 @@ EXTERN_ENGINE
 
 int triggerReentraint = 0;
 int maxTriggerReentraint = 0;
+uint32_t triggerBegin;
+uint32_t triggerDuration;
+uint32_t triggerMaxDuration = 0;
 
 void hwHandleShaftSignal(trigger_event_e signal) {
+	triggerBegin = GET_TIMESTAMP();
 	if (triggerReentraint > maxTriggerReentraint)
 		maxTriggerReentraint = triggerReentraint;
 	triggerReentraint++;
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#8");
 	triggerCentral.handleShaftSignal(signal, engine, engine->engineConfiguration);
 	triggerReentraint--;
+	triggerDuration = GET_TIMESTAMP() - triggerBegin;
+	if(triggerDuration > triggerMaxDuration)
+		triggerMaxDuration = triggerDuration;
 }
 #endif /* EFI_PROD_CODE */
 
@@ -241,10 +249,14 @@ static void triggerInfo(Engine *engine) {
 #endif
 
 #if EFI_PROD_CODE
-	scheduleMsg(&logger, "sn=%s ignitionMathTime=%d schTime=%d",
+	scheduleMsg(&logger, "sn=%s ignitionMathTime=%d schTime=%d triggerMaxDuration=%d",
 			boolToString(ts->isSynchronizationNeeded),
 			engine->ignitionMathTime,
-			engine->ignitionSchTime);
+			engine->ignitionSchTime,
+			triggerMaxDuration);
+
+	triggerMaxDuration = 0;
+
 	scheduleMsg(&logger, "maxLockTime=%d / maxTriggerReentraint=%d", maxLockTime, maxTriggerReentraint);
 	scheduleMsg(&logger, "maxEventQueueTime=%d", maxEventQueueTime);
 
