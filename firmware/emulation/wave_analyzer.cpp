@@ -247,7 +247,7 @@ void initWaveAnalyzer(void) {
 	initWave(WA_CHANNEL_1, 0);
 	initWave(WA_CHANNEL_2, 1);
 
-	addTriggerEventListener(waTriggerEventListener, "wave analyzer", NULL);
+//	addTriggerEventListener(waTriggerEventListener, "wave analyzer", NULL);
 
 	addConsoleActionII("set_logic_input_mode", setWaveModeSilent);
 

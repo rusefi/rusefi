@@ -34,6 +34,8 @@ extern WaveChart waveChart;
 #include "analog_chart.h"
 #endif /* EFI_PROD_CODE */
 
+#include "efilib2.h"
+
 #define TOP_DEAD_CENTER_MESSAGE "r"
 
 EXTERN_ENGINE;
@@ -119,6 +121,8 @@ bool isCranking(void) {
 	return isCrankingE(engine);
 }
 #endif
+
+extern uint32_t triggerHanlderEntryTime;
 
 /**
  * @brief Shaft position callback used by RPM calculation logic.
