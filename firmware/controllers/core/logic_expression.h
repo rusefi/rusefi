@@ -38,6 +38,7 @@ typedef enum {
 	LE_METHOD_MAF = 107,
 	LE_METHOD_INTAKE_AIR = 108,
 	LE_METHOD_VBATT = 109,
+	LE_METHOD_AC_TOGGLE = 110,
 
 	Force_4b_le_action = ENUM_SIZE_HACK,
 

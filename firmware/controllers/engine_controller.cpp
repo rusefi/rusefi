@@ -277,7 +277,9 @@ static void printAnalogChannelInfoExt(const char *name, adc_channel_e hwChannel,
 }
 
 static void printAnalogChannelInfo(const char *name, adc_channel_e hwChannel) {
-	printAnalogChannelInfoExt(name, hwChannel, getVoltage(hwChannel));
+	if (hwChannel != EFI_ADC_NONE) {
+		printAnalogChannelInfoExt(name, hwChannel, getVoltage(hwChannel));
+	}
 }
 
 static void printAnalogInfo(void) {
@@ -292,6 +294,7 @@ static void printAnalogInfo(void) {
 	if (engineConfiguration->hasBaroSensor) {
 		printAnalogChannelInfo("BARO", engineConfiguration->baroSensor.hwChannel);
 	}
+	printAnalogChannelInfo("A/C sw", engineConfiguration->acSwitchAdc);
 	printAnalogChannelInfoExt("Vbatt", engineConfiguration->vbattAdcChannel, getVBatt(engineConfiguration));
 }
 
