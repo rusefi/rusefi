@@ -27,4 +27,6 @@
 
 void initSensors(Engine *engine);
 
+bool getAcToggle(Engine *engine);
+
 #endif /*SENSORS_H_*/
