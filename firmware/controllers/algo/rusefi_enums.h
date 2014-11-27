@@ -333,6 +333,8 @@ typedef enum {
 	EFI_ADC_14 = 14,
 	EFI_ADC_15 = 15,
 
+
+	EFI_ADC_NONE = 888,
 	EFI_ADC_ERROR = 999,
 
 	Force_4b_cranking_adc_channel = ENUM_SIZE_HACK,
