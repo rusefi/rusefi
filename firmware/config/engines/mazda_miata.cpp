@@ -312,6 +312,8 @@ void setMiata1994_s(engine_configuration_s *engineConfiguration, board_configura
 
 	boardConfiguration->triggerSimulatorPins[2] = GPIO_UNASSIGNED;
 
+	engineConfiguration->acSwitchAdc = EFI_ADC_1; // PA1, W50 on Frankenso
+
 	/**
 	 * This board has PE0 & PE1 mosfets rewires to PD3 and PD5
 	 */

@@ -33,6 +33,8 @@
 32)                  R0.3 Q411 should be 1.5mm lower to improve clearance with the case
 33)                  R0.3 Q412 should be moved 3mm to the left, this would probably affect W63 which would affect the whole corner. Maybe move Q412 to the back of the board?
 34) RESOLVED IN R0.3 R0.3 rename the recently added low-side diodes and LEDs/resistors into 400 range
+35)                  test pads explicit silkscreen
+36)                  test pads on the back of the board
 
 For honda add-on / rewiring board
 -- Add 2A high side solinoid drive for VTec sol

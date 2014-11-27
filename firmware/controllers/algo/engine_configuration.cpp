@@ -300,6 +300,8 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	boardConfiguration->acRelayPin = GPIO_UNASSIGNED;
 	boardConfiguration->acRelayPinMode = OM_DEFAULT;
 
+	engineConfiguration->acSwitchAdc = EFI_ADC_NONE;
+
 #if EFI_PROD_CODE
 	engineConfiguration->digitalChartSize = 300;
 #else

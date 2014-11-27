@@ -525,6 +525,8 @@ case IE_NO_ERROR:
 }
 const char *getAdc_channel_e(adc_channel_e value){
 switch(value) {
+case EFI_ADC_NONE:
+	return "EFI_ADC_NONE";
 case EFI_ADC_14:
   return "EFI_ADC_14";
 case EFI_ADC_13:
