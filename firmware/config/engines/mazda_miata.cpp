@@ -318,9 +318,9 @@ void setMiata1994_s(engine_configuration_s *engineConfiguration, board_configura
 	 * This board has PE0 & PE1 mosfets rewires to PD3 and PD5
 	 */
 	boardConfiguration->injectionPins[0] = GPIOD_3; // avoiding PE1
-	boardConfiguration->injectionPins[1] = GPIOE_2;
-	boardConfiguration->injectionPins[2] = GPIOB_8;
-	boardConfiguration->injectionPins[3] = GPIOB_7;
+	boardConfiguration->injectionPins[1] = GPIOE_2; // injector #2
+	boardConfiguration->injectionPins[2] = GPIOB_8; // injector #3
+	boardConfiguration->injectionPins[3] = GPIOB_7; // injector #4
 }
 
 /**
