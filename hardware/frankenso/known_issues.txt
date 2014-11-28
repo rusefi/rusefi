@@ -35,6 +35,12 @@
 34) RESOLVED IN R0.3 R0.3 rename the recently added low-side diodes and LEDs/resistors into 400 range
 35)                  test pads explicit silkscreen
 36)                  test pads on the back of the board
+37)                  U601/2/3: hard to see pad #1 label on the silkscreen
+38)                  cap values format inconsistency: C165 is ".1u", C24 C355 C471 C701 are ".1uF" and C104 C211 C291 etc are "0.1uF"
+ 
+
+
+
 
 For honda add-on / rewiring board
 -- Add 2A high side solinoid drive for VTec sol
