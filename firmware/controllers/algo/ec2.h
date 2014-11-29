@@ -58,6 +58,9 @@ public:
 	 * when an event is scheduled within the next revolution.
 	 */
 	IgnitionEventList ignitionEvents[2];
+
+	uint64_t stopEngineRequestTime;
+	bool_t isStopEngineRequestPending;
 };
 
 void initializeIgnitionActions(float advance, float dwellAngle,

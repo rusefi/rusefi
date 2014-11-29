@@ -481,6 +481,7 @@ static void setIgnitionPin(const char *indexStr, const char *pinName) {
 	boardConfiguration->ignitionPins[index] = pin;
 }
 
+// set_idle_pin none
 static void setIdlePin(const char *pinName) {
 	brain_pin_e pin = parseBrainPin(pinName);
 	// todo: extract method - code duplication with other 'set_xxx_pin' methods?
@@ -726,8 +727,9 @@ static void disableIgnition(void) {
 	scheduleMsg(&logger, "ignition disabled");
 }
 
-static void stopEngine(void) {
-	// todo
+static void stopEngine(Engine *engine) {
+	engine->engineConfiguration2->stopEngineRequestTime = getTimeNowUs();
+	engine->engineConfiguration2->isStopEngineRequestPending = true;
 }
 
 #if EFI_WAVE_CHART
@@ -795,7 +797,7 @@ void initSettings(engine_configuration_s *engineConfiguration) {
 	addConsoleActionI("set_rpm_hard_limit", setRpmHardLimit);
 	addConsoleActionI("set_firing_order", setFiringOrder);
 	addConsoleActionI("set_algorithm", setAlgorithm);
-	addConsoleAction("stopengine", stopEngine);
+	addConsoleActionP("stopengine", (VoidPtr)stopEngine, engine);
 
 	// todo: refactor this - looks like all boolean flags should be controlled with less code duplication
 	addConsoleAction("enable_injection", enableInjection);
