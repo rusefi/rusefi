@@ -61,6 +61,7 @@ static LECalculator calc;
 static LEElement mainPool[LE_ELEMENT_POOL_SIZE];
 static LEElementPool lePool(mainPool, LE_ELEMENT_POOL_SIZE);
 
+static LEElement * acRelayLogic;
 static LEElement * fuelPumpLogic;
 static LEElement * radiatorFanLogic;
 
@@ -242,6 +243,10 @@ static void onEvenyGeneralMilliseconds(Engine *engine) {
 	}
 #endif
 
+	if (boardConfiguration->acRelayPin != GPIO_UNASSIGNED) {
+		setPinState(AC_RELAY, acRelayLogic, engine);
+	}
+
 	updateErrorCodes();
 
 	// todo: migrate this to flex logic
@@ -407,6 +412,8 @@ void initEngineContoller(Engine *engine) {
 #if EFI_FUEL_PUMP
 	fuelPumpLogic = lePool.parseExpression(FUEL_PUMP_LOGIC);
 #endif
+
+	acRelayLogic = lePool.parseExpression(AC_RELAY_LOGIC);
 
 	addConsoleAction("analoginfo", printAnalogInfo);
 

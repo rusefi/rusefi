@@ -332,7 +332,7 @@ static void printTemperatureInfo(void) {
 	scheduleMsg(&logger, "fan=%s @ %s", boolToString(getOutputPinValue(FAN_RELAY)),
 			hwPortname(boardConfiguration->fanPin));
 
-	scheduleMsg(&logger, "A/C relay=%s @ %s", boolToString(getOutputPinValue(AC_RElAY)),
+	scheduleMsg(&logger, "A/C relay=%s @ %s", boolToString(getOutputPinValue(AC_RELAY)),
 			hwPortname(boardConfiguration->acRelayPin));
 
 
