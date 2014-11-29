@@ -125,6 +125,7 @@ static void pinbench(const char *delayStr, const char *onTimeStr, const char *of
 	needToRunBench = true;
 }
 
+// fuelbench2 0 2 5 1000 2
 static void fuelbench2(const char *delayStr, const char *indexStr, const char * onTimeStr, const char *offTimeStr,
 		const char *countStr) {
 	int index = atoi(indexStr);
@@ -157,6 +158,7 @@ static void fuelpumpbench(void) {
 	needToRunBench = true;
 }
 
+// fuelbench 5 1000 2
 static void fuelbench(const char * onTimeStr, const char *offTimeStr, const char *countStr) {
 	fuelbench2("0", "1", onTimeStr, offTimeStr, countStr);
 }
