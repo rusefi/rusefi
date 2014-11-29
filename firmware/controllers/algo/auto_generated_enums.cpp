@@ -37,8 +37,8 @@ case GPIO_7:
   return "GPIO_7";
 case FAN_RELAY:
   return "FAN_RELAY";
-case AC_RElAY:
-	return "AC_RElAY";
+case AC_RELAY:
+	return "AC_RELAY";
 case INJECTOR_8_OUTPUT:
   return "INJECTOR_8_OUTPUT";
 case GPIO_6:

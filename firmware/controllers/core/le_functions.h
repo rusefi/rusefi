@@ -18,6 +18,8 @@
 // todo: the delay should probably be configurable?
 #define FUEL_PUMP_LOGIC "time_since_boot 4 < rpm 0 > OR"
 
+#define AC_RELAY_LOGIC "ac_on_switch"
+
 /**
  * In human language that's
  * (fan and (coolant > fan_off_setting)) OR (coolant > fan_on_setting)
