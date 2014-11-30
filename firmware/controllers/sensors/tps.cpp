@@ -6,8 +6,6 @@
 #include "adc_inputs.h"
 #include "allsensors.h"
 
-extern engine_configuration_s *engineConfiguration;
-
 #if !EFI_PROD_CODE
 	int mockTps;
 #endif
@@ -54,7 +52,7 @@ float getTpsRateOfChange(void) {
  * Return current TPS position based on configured ADC levels, and adc
  *
  * */
-static float getTpsValue(engine_configuration_s *engineConfiguration, int adc) {
+static float getTpsValue(int adc DECLARE_ENGINE_PARAMETER_S) {
 	if (adc < engineConfiguration->tpsMin) {
 		return 0.0f;
 	}
@@ -72,7 +70,7 @@ static float getTpsValue(engine_configuration_s *engineConfiguration, int adc) {
 /*
  * Return voltage on TPS AND channel
  * */
-float getTPSVoltage(void) {
+float getTPSVoltage(DECLARE_ENGINE_PARAMETER_F) {
 	return getVoltageDivided(engineConfiguration->tpsAdcChannel);
 }
 
@@ -94,9 +92,7 @@ int getTPS10bitAdc(void) {
  * @brief Position on physical primary TPS
  */
 static float getPrimatyRawTPS(DECLARE_ENGINE_PARAMETER_F) {
-	// blue, 1st board
-	/* PA7 - blue TP */
-	float tpsValue = getTpsValue(engineConfiguration, getTPS10bitAdc());
+	float tpsValue = getTpsValue(getTPS10bitAdc() PASS_ENGINE_PARAMETER);
 	return tpsValue;
 }
 
