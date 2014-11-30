@@ -203,6 +203,9 @@ static void pwmpcb_fast(PWMDriver *pwmp) {
 int getInternalAdcValue(adc_channel_e hwChannel) {
 	if (boardConfiguration->adcHwChannelEnabled[hwChannel] == ADC_FAST)
 		return fastAdcValue;
+	if (boardConfiguration->adcHwChannelEnabled[hwChannel] != ADC_SLOW) {
+		warning(OBD_PCM_Processor_Fault, "ADC is off %d", hwChannel);
+	}
 
 	int internalIndex = slowAdc.internalAdcIndexByHardwareIndex[hwChannel];
 	return slowAdc.getAdcValueByIndex(internalIndex);

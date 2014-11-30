@@ -16,7 +16,7 @@
 float getTPS(DECLARE_ENGINE_PARAMETER_F);
 int convertVoltageTo10bitADC(float voltage);
 int getTPS10bitAdc(void);
-float getTPSVoltage(void);
+float getTPSVoltage(DECLARE_ENGINE_PARAMETER_F);
 
 typedef struct {
 	// time in systicks

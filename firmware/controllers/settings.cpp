@@ -313,7 +313,7 @@ static void printTPSInfo(void) {
 	int pin = getAdcChannelPin(engineConfiguration->tpsAdcChannel);
 
 	scheduleMsg(&logger, "tps min %d/max %d v=%f @%s%d", engineConfiguration->tpsMin, engineConfiguration->tpsMax,
-			getTPSVoltage(), portname(port), pin);
+			getTPSVoltage(PASS_ENGINE_PARAMETER_F), portname(port), pin);
 #endif
 	scheduleMsg(&logger, "current 10bit=%d value=%f rate=%f", getTPS10bitAdc(), getTPS(PASS_ENGINE_PARAMETER_F),
 			getTpsRateOfChange());
