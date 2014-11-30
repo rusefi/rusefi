@@ -34,7 +34,7 @@ void applyPinState(PwmConfig *state, int stateIndex) {
 	}
 }
 
-void startSimplePwm(PwmConfig *state, const char *msg, io_pin_e ioPin, float frequency, float dutyCycle) {
+void startSimplePwm(PwmConfig *state, const char *msg, io_pin_e ioPin, float frequency, float dutyCycle, pwm_gen_callback *stateChangeCallback) {
 	efiAssertVoid(dutyCycle >= 0 && dutyCycle <= 1, "dutyCycle");
 
 	float switchTimes[] = { dutyCycle, 1 };
@@ -45,17 +45,17 @@ void startSimplePwm(PwmConfig *state, const char *msg, io_pin_e ioPin, float fre
 	state->outputPins[0] = ioPin;
 
 	state->periodNt = US2NT(frequency2periodUs(frequency));
-	weComplexInit(msg, state, 2, switchTimes, 1, pinStates, NULL, applyPinState);
+	weComplexInit(msg, state, 2, switchTimes, 1, pinStates, NULL, stateChangeCallback);
 }
 
 void startSimplePwmExt(PwmConfig *state, const char *msg, brain_pin_e brainPin, io_pin_e ioPin, float frequency,
-		float dutyCycle) {
+		float dutyCycle, pwm_gen_callback *stateChangeCallback) {
 
 	GPIO_TypeDef * port = getHwPort(brainPin);
 	int pin = getHwPin(brainPin);
 	outputPinRegister(msg, ioPin, port, pin);
 
-	startSimplePwm(state, msg, ioPin, frequency, dutyCycle);
+	startSimplePwm(state, msg, ioPin, frequency, dutyCycle, stateChangeCallback);
 }
 
 void initPwmGenerator(void) {
