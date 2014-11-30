@@ -34,16 +34,14 @@
 
 static THD_WORKING_AREA(ivThreadStack, UTILITY_THREAD_STACK_SIZE);
 
-extern board_configuration_s *boardConfiguration;
-extern engine_configuration_s *engineConfiguration;
-
 /**
  * here we keep the value we got from IDLE SWITCH input
  */
 static volatile int idleSwitchState;
 
 static Logging logger;
-EXTERN_ENGINE;
+EXTERN_ENGINE
+;
 
 static SimplePwm idleValvePwm;
 
@@ -62,7 +60,7 @@ void idleDebug(const char *msg, int value) {
 }
 
 static void showIdleInfo(void) {
-	scheduleMsg(&logger, "idleMode=%s", getIdle_mode_e(engineConfiguration->idleMode));
+	scheduleMsg(&logger, "idleMode=%s duty=%f", getIdle_mode_e(engineConfiguration->idleMode), boardConfiguration->idleSolenoidPwm);
 	scheduleMsg(&logger, "idle valve freq=%d on %s", boardConfiguration->idleSolenoidFrequency,
 			hwPortname(boardConfiguration->idleValvePin));
 }
@@ -77,16 +75,18 @@ static void setIdleValvePwm(int value) {
 	if (value < 1 || value > 999)
 		return;
 	scheduleMsg(&logger, "setting idle valve PWM %d", value);
+	float f = 0.001 * value;
+	boardConfiguration->idleSolenoidPwm = f;
 	showIdleInfo();
 	/**
 	 * currently idle level is an integer per mil (0-1000 range), and PWM takes a float in the 0..1 range
 	 * todo: unify?
 	 */
-	idleValvePwm.setSimplePwmDutyCycle(0.001 * value);
+	idleValvePwm.setSimplePwmDutyCycle(f);
 }
 
 static msg_t ivThread(int param) {
-	(void)param;
+	(void) param;
 	chRegSetThreadName("IdleValve");
 
 	int currentIdleValve = -1;
@@ -94,7 +94,8 @@ static msg_t ivThread(int param) {
 		chThdSleepMilliseconds(boardConfiguration->idleThreadPeriod);
 
 		// this value is not used yet
-		idleSwitchState = palReadPad(getHwPort(boardConfiguration->idleSwitchPin), getHwPin(boardConfiguration->idleSwitchPin));
+		idleSwitchState = palReadPad(getHwPort(boardConfiguration->idleSwitchPin),
+				getHwPin(boardConfiguration->idleSwitchPin));
 
 		if (engineConfiguration->idleMode != IM_AUTO)
 			continue;
@@ -119,22 +120,28 @@ static void setIdleRpmAction(int value) {
 	scheduleMsg(&logger, "target idle RPM %d", value);
 }
 
+static void applyIdleSolenoidPinState(PwmConfig *state, int stateIndex) {
+	efiAssertVoid(stateIndex < PWM_PHASE_MAX_COUNT, "invalid stateIndex");
+	efiAssertVoid(state->multiWave.waveCount == 1, "invalid idle waveCount");
+	io_pin_e ioPin = state->outputPins[0];
+	int value = state->multiWave.waves[0].pinStates[stateIndex];
+	if (!value || engine->rpmCalculator.rpmValue != 0)
+		setOutputPinValue(ioPin, value);
+}
+
 void startIdleThread(Engine *engine) {
 	initLogging(&logger, "Idle Valve Control");
 
 	/**
 	 * Start PWM for IDLE_VALVE logical / idleValvePin physical
 	 */
-	startSimplePwmExt(&idleValvePwm, "Idle Valve",
-			boardConfiguration->idleValvePin,
-			IDLE_VALVE,
-			boardConfiguration->idleSolenoidFrequency,
-			boardConfiguration->idleSolenoidPwm);
+	startSimplePwmExt(&idleValvePwm, "Idle Valve", boardConfiguration->idleValvePin, IDLE_VALVE,
+			boardConfiguration->idleSolenoidFrequency, boardConfiguration->idleSolenoidPwm, applyIdleSolenoidPinState);
 
 	idleInit(&idle);
 	scheduleMsg(&logger, "initial idle %d", idle.value);
 
-	chThdCreateStatic(ivThreadStack, sizeof(ivThreadStack), NORMALPRIO, (tfunc_t)ivThread, NULL);
+	chThdCreateStatic(ivThreadStack, sizeof(ivThreadStack), NORMALPRIO, (tfunc_t) ivThread, NULL);
 
 	// this is idle switch INPUT - sometimes there is a switch on the throttle pedal
 	// this switch is not used yet
@@ -143,5 +150,5 @@ void startIdleThread(Engine *engine) {
 	addConsoleAction("idleinfo", showIdleInfo);
 	addConsoleActionI("set_idle_rpm", setIdleRpmAction);
 	addConsoleActionI("set_idle_pwm", setIdleValvePwm);
-	addConsoleActionIP("set_idle_enabled", (VoidIntVoidPtr)setIdleControlEnabled, engine);
+	addConsoleActionIP("set_idle_enabled", (VoidIntVoidPtr) setIdleControlEnabled, engine);
 }
