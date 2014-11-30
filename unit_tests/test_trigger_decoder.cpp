@@ -432,7 +432,7 @@ static void testRpmCalculator(void) {
 	assertEqualsM("queue size 3", 6, schedulingQueue.size());
 	assertEqualsM("ev 3", 259777, schedulingQueue.getForUnitText(0)->momentX);
 	assertEquals(259277, schedulingQueue.getForUnitText(1)->momentX);
-	assertEqualsM("ev 5", 261333, schedulingQueue.getForUnitText(2)->momentX);
+	assertEqualsM2("ev 5", 261362, schedulingQueue.getForUnitText(2)->momentX, 2);
 	assertEqualsM("3/3", 258333, schedulingQueue.getForUnitText(3)->momentX);
 	schedulingQueue.clear();
 
@@ -458,7 +458,7 @@ static void testRpmCalculator(void) {
 	assertEqualsM("queue size 6", 6, schedulingQueue.size());
 	assertEqualsM("6/0", 286444, schedulingQueue.getForUnitText(0)->momentX);
 	assertEqualsM("6/1", 285944, schedulingQueue.getForUnitText(1)->momentX);
-	assertEqualsM("6/2", 288000, schedulingQueue.getForUnitText(2)->momentX);
+	assertEqualsM2("6/2", 288029, schedulingQueue.getForUnitText(2)->momentX, 1);
 	schedulingQueue.clear();
 
 	timeNow += 5000;
@@ -471,7 +471,7 @@ static void testRpmCalculator(void) {
 	assertEqualsM("queue size 8", 6, schedulingQueue.size());
 	assertEqualsM("8/0", 299777, schedulingQueue.getForUnitText(0)->momentX);
 	assertEqualsM("8/1", 299277, schedulingQueue.getForUnitText(1)->momentX);
-	assertEqualsM("8/2", 301333, schedulingQueue.getForUnitText(2)->momentX);
+	assertEqualsM2("8/2", 301362, schedulingQueue.getForUnitText(2)->momentX, 1);
 	assertEqualsM("8/3", 298333, schedulingQueue.getForUnitText(3)->momentX);
 	schedulingQueue.clear();
 

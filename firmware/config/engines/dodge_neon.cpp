@@ -198,8 +198,8 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 	engineConfiguration->vbattDividerCoeff = ((float) (8.2 + 33)) / 8.2 * 2;
 
 	// Frankenso low out #1: PE6
-	// Frankenso low out #2: PE5 coolant fan relay
-	// Frankenso low out #3: PD7
+	// Frankenso low out #2: PE5
+	// Frankenso low out #3: PD7 coolant fan relay
 	// Frankenso low out #4: PC13 idle valve solenoid
 	// Frankenso low out #5: PE3 fuel pump relay
 	// Frankenso low out #6: PE4
@@ -210,7 +210,7 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 	// Frankenso low out #11: PB8 injector #1
 	// Frankenso low out #12: PB7 injector #4
 
-	boardConfiguration->fanPin = GPIOE_6;
+	boardConfiguration->fanPin = GPIOD_7;
 
 	boardConfiguration->injectionPins[0] = GPIOB_8;
 	boardConfiguration->injectionPins[1] = GPIOB_9;
@@ -246,12 +246,13 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_0;
 
 	boardConfiguration->adcHwChannelEnabled[0] = ADC_FAST; // ADC0 - PA0 - MAP
-	boardConfiguration->adcHwChannelEnabled[1] = ADC_SLOW; // TPS
+	boardConfiguration->adcHwChannelEnabled[1] = ADC_SLOW;
 	boardConfiguration->adcHwChannelEnabled[4] = ADC_SLOW;
 	boardConfiguration->adcHwChannelEnabled[11] = ADC_SLOW; // IAT
 	boardConfiguration->adcHwChannelEnabled[12] = ADC_SLOW; // CLT
 	boardConfiguration->adcHwChannelEnabled[13] = ADC_SLOW; // AFR
 	boardConfiguration->adcHwChannelEnabled[14] = ADC_SLOW; // VBatt
+	boardConfiguration->adcHwChannelEnabled[15] = ADC_SLOW; // TPS
 
 
 

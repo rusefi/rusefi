@@ -33,7 +33,6 @@
 static Logging logger;
 
 EXTERN_ENGINE;
-extern board_configuration_s *boardConfiguration;
 
 static bool_t isRunningBench = false;
 
@@ -49,13 +48,9 @@ void assertCylinderId(int cylinderId, const char *msg) {
 		// we are here only in case of a fatal issue - at this point it is fine to make some blocking i-o
 		//scheduleSimpleMsg(&logger, "cid=", cylinderId);
 		print("ERROR [%s] cid=%d\r\n", msg, cylinderId);
-		efiAssertVoid(FALSE, "Cylinder ID");
+		efiAssertVoid(false, "Cylinder ID");
 	}
 }
-
-///**
-// * This method schedules asynchronous fuel squirt
-// */
 
 /**
  * @param cylinderId - from 1 to NUMBER_OF_CYLINDERS
@@ -138,7 +133,7 @@ static void fanbench(Engine *engine) {
 	brainPin = boardConfiguration->fanPin;
 	pinX = FAN_RELAY;
 
-	delayMs = 1000;
+	delayMs = 0;
 	onTime = 3000;
 	offTime = 0;
 	count = 1;
@@ -150,7 +145,7 @@ static void fuelpumpbench(void) {
 	brainPin = boardConfiguration->fuelPumpPin;
 	pinX = FUEL_PUMP_RELAY;
 
-	delayMs = 1000;
+	delayMs = 0;
 	onTime = 3000;
 	offTime = 0;
 	count = 1;

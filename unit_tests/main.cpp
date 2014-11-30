@@ -50,19 +50,24 @@ uint64_t getTimeNowNt(void) {
 	return getTimeNowUs() * US_TO_NT_MULTIPLIER;
 }
 
-void assertEqualsM(const char *msg, float expected, float actual) {
+void assertEqualsM2(const char *msg, float expected, float actual, float EPS) {
 	if (cisnan(actual) && !cisnan(expected)) {
 		printf("Assert failed: %s %.4f while expected %.4f\r\n", msg, actual, expected);
 		exit(-1);
 	}
 
 	float delta = absF(actual - expected);
-	if (delta > 0.0001) {
+	if (delta > EPS) {
 		printf("delta: %.7f\r\n", delta);
 		printf("Unexpected: %s %.4f while expected %.4f\r\n", msg, actual, expected);
 		exit(-1);
 	}
 	printf("Validated %s: %f\r\n", msg, expected);
+}
+
+
+void assertEqualsM(const char *msg, float expected, float actual) {
+	assertEqualsM2(msg, expected, actual, 0.0001);
 }
 
 void assertEquals(float expected, float actual) {

@@ -153,6 +153,8 @@ static void fanRelayControl(void) {
 	}
 
 	if (isCurrentlyOn != newValue) {
+		if (isRunningBenchTest())
+			return; // let's not mess with bench testing
 		scheduleMsg(&logger, "FAN relay: %s", newValue ? "ON" : "OFF");
 		setOutputPinValue(FAN_RELAY, newValue);
 	}
@@ -209,6 +211,8 @@ static void setPinState(io_pin_e ioPin, LEElement *element, Engine *engine) {
 	} else {
 		int value = calc.getValue2(element, engine);
 		if (value != getOutputPinValue(ioPin)) {
+			if (isRunningBenchTest())
+				return; // let's not mess with bench testing
 			scheduleMsg(&logger, "setting %s %s", getIo_pin_e(ioPin), boolToString(value));
 			setOutputPinValue(ioPin, value);
 		}
