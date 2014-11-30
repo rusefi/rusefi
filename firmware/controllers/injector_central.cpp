@@ -171,6 +171,7 @@ static void sparkbench2(const char *delayStr, const char *indexStr, const char *
 	pinbench(delayStr, onTimeStr, offTimeStr, countStr, p, b);
 }
 
+// sparkbench 5 400 4
 static void sparkbench(const char * onTimeStr, const char *offTimeStr, const char *countStr) {
 	sparkbench2("0", "1", onTimeStr, offTimeStr, countStr);
 }

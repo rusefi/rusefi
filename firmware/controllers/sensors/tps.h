@@ -15,7 +15,7 @@
 
 float getTPS(DECLARE_ENGINE_PARAMETER_F);
 int convertVoltageTo10bitADC(float voltage);
-int getTPS10bitAdc(void);
+int getTPS10bitAdc(DECLARE_ENGINE_PARAMETER_F);
 float getTPSVoltage(DECLARE_ENGINE_PARAMETER_F);
 
 typedef struct {
