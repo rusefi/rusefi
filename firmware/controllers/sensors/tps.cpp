@@ -79,7 +79,7 @@ float getTPSVoltage(DECLARE_ENGINE_PARAMETER_F) {
  * We need ADC value because TunerStudio has a nice TPS configuration wizard, and this wizard
  * wants a TPS value.
  */
-int getTPS10bitAdc(void) {
+int getTPS10bitAdc(DECLARE_ENGINE_PARAMETER_F) {
 #if !EFI_PROD_CODE
 	if (mockTps != MOCK_UNDEFINED)
 		return mockTps;
@@ -92,7 +92,7 @@ int getTPS10bitAdc(void) {
  * @brief Position on physical primary TPS
  */
 static float getPrimatyRawTPS(DECLARE_ENGINE_PARAMETER_F) {
-	float tpsValue = getTpsValue(getTPS10bitAdc() PASS_ENGINE_PARAMETER);
+	float tpsValue = getTpsValue(getTPS10bitAdc(PASS_ENGINE_PARAMETER_F) PASS_ENGINE_PARAMETER);
 	return tpsValue;
 }
 

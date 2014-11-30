@@ -431,7 +431,7 @@ void updateTunerStudioState(Engine *engine, TunerStudioOutputChannels *tsOutputC
 	tsOutputChannels->air_fuel_ratio = getAfr();
 	tsOutputChannels->v_batt = getVBatt(engineConfiguration);
 	tsOutputChannels->tsConfigVersion = TS_FILE_VERSION;
-	tsOutputChannels->tpsADC = getTPS10bitAdc();
+	tsOutputChannels->tpsADC = getTPS10bitAdc(PASS_ENGINE_PARAMETER_F);
 	tsOutputChannels->atmospherePressure = getBaroPressure();
 	tsOutputChannels->manifold_air_pressure = getMap();
 	tsOutputChannels->checkEngine = hasErrorCodes();

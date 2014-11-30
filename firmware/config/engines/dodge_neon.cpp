@@ -256,9 +256,9 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 
 
 	/**
-	 * TPS D11/W11
+	 * TPS
 	 */
-	engineConfiguration->tpsAdcChannel = EFI_ADC_1;
+	engineConfiguration->tpsAdcChannel = EFI_ADC_15;
 	engineConfiguration->tpsMin = 125; // convert 12to10 bit (ADC/4)
 	engineConfiguration->tpsMax = 625; // convert 12to10 bit (ADC/4)
 
