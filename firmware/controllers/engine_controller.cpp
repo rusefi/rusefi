@@ -64,6 +64,7 @@ static LEElementPool lePool(mainPool, LE_ELEMENT_POOL_SIZE);
 static LEElement * acRelayLogic;
 static LEElement * fuelPumpLogic;
 static LEElement * radiatorFanLogic;
+static LEElement * alternatorLogic;
 
 extern OutputPin outputs[IO_PIN_COUNT];
 extern pin_output_mode_e *pinDefaultState[IO_PIN_COUNT];
@@ -251,6 +252,10 @@ static void onEvenyGeneralMilliseconds(Engine *engine) {
 		setPinState(AC_RELAY, acRelayLogic, engine);
 	}
 
+	if (boardConfiguration->alternatorControlPin != GPIO_UNASSIGNED) {
+		setPinState(ALTERNATOR_SWITCH, alternatorLogic, engine);
+	}
+
 	updateErrorCodes();
 
 	// todo: migrate this to flex logic
@@ -418,6 +423,8 @@ void initEngineContoller(Engine *engine) {
 #endif
 
 	acRelayLogic = lePool.parseExpression(AC_RELAY_LOGIC);
+
+	alternatorLogic = lePool.parseExpression(ALTERNATOR_LOGIC);
 
 	addConsoleAction("analoginfo", printAnalogInfo);
 

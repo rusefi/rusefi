@@ -20,6 +20,8 @@
 
 #define AC_RELAY_LOGIC "ac_on_switch"
 
+#define ALTERNATOR_LOGIC "vbatt 14.5 <"
+
 /**
  * In human language that's
  * (fan and (coolant > fan_off_setting)) OR (coolant > fan_on_setting)
