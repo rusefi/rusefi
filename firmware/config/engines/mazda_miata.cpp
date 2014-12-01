@@ -19,7 +19,7 @@
 // setFrankenso_01_LCD
 #include "honda_accord.h"
 
-static float miata_maf_fuel_table[16][16] = {
+static const fuel_table_t miata_maf_fuel_table = {
 {/*0 engineLoad=1.2*//*0 800.0*/1.53, /*1 1213.0*/0.92, /*2 1626.0*/0.74, /*3 2040.0*/0.69, /*4 2453.0*/0.69, /*5 2866.0*/0.67, /*6 3280.0*/0.67, /*7 3693.0*/0.67, /*8 4106.0*/0.67, /*9 4520.0*/1.02, /*10 4933.0*/0.98, /*11 5346.0*/0.98, /*12 5760.0*/0.92, /*13 6173.0*/0.89, /*14 6586.0*/0.82, /*15 7000.0*/0.87},
 {/*1 engineLoad=1.413333*//*0 800.0*/2.98, /*1 1213.0*/2.07, /*2 1626.0*/1.74, /*3 2040.0*/1.55, /*4 2453.0*/1.43, /*5 2866.0*/1.18, /*6 3280.0*/0.0, /*7 3693.0*/0.0, /*8 4106.0*/0.0, /*9 4520.0*/0.0, /*10 4933.0*/0.0, /*11 5346.0*/0.0, /*12 5760.0*/0.0, /*13 6173.0*/0.0, /*14 6586.0*/0.0, /*15 7000.0*/0.0},
 {/*2 engineLoad=1.626666*//*0 800.0*/4.9, /*1 1213.0*/3.45, /*2 1626.0*/2.76, /*3 2040.0*/2.35, /*4 2453.0*/2.08, /*5 2866.0*/1.84, /*6 3280.0*/0.0, /*7 3693.0*/0.0, /*8 4106.0*/0.0, /*9 4520.0*/0.0, /*10 4933.0*/0.0, /*11 5346.0*/0.0, /*12 5760.0*/0.0, /*13 6173.0*/0.0, /*14 6586.0*/0.0, /*15 7000.0*/0.0},
@@ -38,7 +38,7 @@ static float miata_maf_fuel_table[16][16] = {
 {/*15 engineLoad=4.399995*//*0 800.0*/12.08, /*1 1213.0*/12.17, /*2 1626.0*/12.34, /*3 2040.0*/12.43, /*4 2453.0*/12.74, /*5 2866.0*/12.91, /*6 3280.0*/12.71, /*7 3693.0*/12.54, /*8 4106.0*/12.97, /*9 4520.0*/13.53, /*10 4933.0*/14.87, /*11 5346.0*/15.48, /*12 5760.0*/16.1, /*13 6173.0*/16.18, /*14 6586.0*/15.93, /*15 7000.0*/0.0}
 };
 
-static float miata_maf_advance_table[16][16] = {
+static ignition_table_t miata_maf_advance_table = {
 {/*0  engineLoad=1.200*/    /*0 800.0*/+4.498, 	/*1 1213.0*/+11.905, /*2 1626.0*/+23.418, /*3 2040.0*/+25.357, /*4 2453.0*/+25.441, /*5 2866.0*/+25.468, /*6 3280.0*/+29.425, /*7 3693.0*/+32.713, /*8 4106.0*/+35.556, /*9 4520.0*/+37.594, /*10 4933.0*/+36.165, /*11 5346.0*/+30.578, /*12 5760.0*/+29.145, /*13 6173.0*/+29.065, /*14 6586.0*/+27.071, /*15 7000.0*/+28.282},
 {/*1  engineLoad=1.413*/	/*0 800.0*/+4.87,  	/*1 1213.0*/+12.138, /*2 1626.0*/+23.389, /*3 2040.0*/+25.501, /*4 2453.0*/+25.441, /*5 2866.0*/+25.468, /*6 3280.0*/+29.125, /*7 3693.0*/+33.074, /*8 4106.0*/+34.203, /*9 4520.0*/+37.769, /*10 4933.0*/+35.899, /*11 5346.0*/+30.519, /*12 5760.0*/+28.88,  /*13 6173.0*/+28.74,  /*14 6586.0*/+27.189, /*15 7000.0*/+27.826},
 {/*2  engineLoad=1.626*/	/*0 800.0*/+4.817, 	/*1 1213.0*/+12.262, /*2 1626.0*/+23.925, /*3 2040.0*/+25.501, /*4 2453.0*/+25.5, 	/*5 2866.0*/+25.468, /*6 3280.0*/+29.364, /*7 3693.0*/+33.489, /*8 4106.0*/+34.839, /*9 4520.0*/+37.545, /*10 4933.0*/+35.875, /*11 5346.0*/+30.353, /*12 5760.0*/+29.052, /*13 6173.0*/+28.37,  /*14 6586.0*/+27.072, /*15 7000.0*/+26.828},
@@ -214,19 +214,9 @@ static void setMiata1994_common(engine_configuration_s *engineConfiguration, boa
 	engineConfiguration->crankingChargeAngle = 70;
 
 
-	// todo: extract an array16x16 type? extract a method?
-	for (int k = 0; k < FUEL_LOAD_COUNT; k++) {
-		for (int r = 0; r < FUEL_RPM_COUNT; r++) {
-			engineConfiguration->fuelTable[k][r] = miata_maf_fuel_table[k][r];
-		}
-	}
+	copyFuelTable(miata_maf_fuel_table, engineConfiguration->fuelTable);
 
-	// todo: extract an array16x16 type? extract a method?
-	for (int k = 0; k < AD_LOAD_COUNT; k++) {
-		for (int r = 0; r < AD_RPM_COUNT; r++) {
-			engineConfiguration->ignitionTable[k][r] = miata_maf_advance_table[k][r];
-		}
-	}
+	copyTimingTable(miata_maf_advance_table, engineConfiguration->ignitionTable);
 
 
 //	boardConfiguration->triggerSimulatorPins[0] = GPIOD_2; // 2G - YEL/BLU
@@ -330,18 +320,8 @@ void setMiata1996(engine_configuration_s *engineConfiguration, board_configurati
 	commonMiataNa(engineConfiguration, boardConfiguration);
 	engineConfiguration->displacement = 1.839;
 
-	for (int k = 0; k < FUEL_LOAD_COUNT; k++) {
-		for (int r = 0; r < FUEL_RPM_COUNT; r++) {
-			engineConfiguration->fuelTable[k][r] = miata_maf_fuel_table[k][r];
-		}
-	}
-
-	// todo: extract an array16x16 type? extract a method?
-	for (int k = 0; k < AD_LOAD_COUNT; k++) {
-		for (int r = 0; r < AD_RPM_COUNT; r++) {
-			engineConfiguration->ignitionTable[k][r] = miata_maf_advance_table[k][r];
-		}
-	}
+	copyFuelTable(miata_maf_fuel_table, engineConfiguration->fuelTable);
+	copyTimingTable(miata_maf_advance_table, engineConfiguration->ignitionTable);
 
 	// upside down
 	boardConfiguration->triggerInputPins[0] = GPIOA_5;

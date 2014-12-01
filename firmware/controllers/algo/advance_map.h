@@ -8,9 +8,6 @@
 #ifndef ADVANCE_H_
 #define ADVANCE_H_
 
-#define AD_LOAD_COUNT 16
-#define AD_RPM_COUNT 16
-
 #include "engine.h"
 
 float getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_S);
