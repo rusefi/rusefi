@@ -513,7 +513,10 @@ typedef struct {
 	short int acCutoffLowRpm;
 	short int acCutoffHighRpm;
 
-	int unused3[89];
+	short int acIdleRpmBump;
+	short int unusedShort;
+
+	int unused3[88];
 
 } engine_configuration_s;
 
