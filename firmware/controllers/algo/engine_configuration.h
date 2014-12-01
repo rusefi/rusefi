@@ -511,7 +511,10 @@ typedef struct {
 
 	int ignMathCalculateAtIndex;
 
-	int unused3[90];
+	short int acCutoffLowRpm;
+	short int acCutoffHighRpm;
+
+	int unused3[89];
 
 } engine_configuration_s;
 
