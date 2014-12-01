@@ -116,6 +116,10 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 
 	engineConfiguration->injectorLag = 1.0;
 
+	engineConfiguration->acCutoffLowRpm = 700;
+	engineConfiguration->acCutoffHighRpm = 5000;
+
+
 	for (int i = 0; i < IAT_CURVE_SIZE; i++) {
 		engineConfiguration->iatFuelCorrBins[i] = -40 + i * 10;
 		engineConfiguration->iatFuelCorr[i] = 1; // this correction is a multiplier
