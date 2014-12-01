@@ -37,10 +37,6 @@ typedef struct {
 
 #define FUEL_RPM_COUNT 16
 #define FUEL_LOAD_COUNT 16
-#define VE_RPM_COUNT 16
-#define VE_LOAD_COUNT 16
-#define AFR_RPM_COUNT 16
-#define AFR_LOAD_COUNT 16
 
 #define LE_COMMAND_LENGTH 200
 #define LE_COMMAND_COUNT 16
@@ -53,6 +49,9 @@ typedef char le_formula_t[LE_COMMAND_LENGTH];
 
 #define IGN_LOAD_COUNT 16
 #define IGN_RPM_COUNT 16
+
+typedef float fuel_table_t[FUEL_LOAD_COUNT][FUEL_RPM_COUNT];
+typedef float ignition_table_t[IGN_LOAD_COUNT][IGN_RPM_COUNT];
 
 #define DWELL_CURVE_SIZE 8
 
@@ -440,17 +439,17 @@ typedef struct {
 
 	air_pressure_sensor_config_s baroSensor;
 
-	float veLoadBins[VE_LOAD_COUNT];
-	float veRpmBins[VE_RPM_COUNT];
-	float afrLoadBins[AFR_LOAD_COUNT];
-	float afrRpmBins[AFR_RPM_COUNT];
+	float veLoadBins[FUEL_LOAD_COUNT];
+	float veRpmBins[FUEL_RPM_COUNT];
+	float afrLoadBins[FUEL_LOAD_COUNT];
+	float afrRpmBins[FUEL_RPM_COUNT];
 
 	// the large tables are always in the end - that's related to TunerStudio paging implementation
-	float fuelTable[FUEL_LOAD_COUNT][FUEL_RPM_COUNT]; // size 1024
-	float ignitionTable[IGN_LOAD_COUNT][IGN_RPM_COUNT]; // size 1024
+	fuel_table_t fuelTable; // size 1024
+	ignition_table_t ignitionTable; // size 1024
 
-	float veTable[VE_LOAD_COUNT][VE_RPM_COUNT]; // size 1024
-	float afrTable[AFR_LOAD_COUNT][AFR_RPM_COUNT]; // size 1024
+	fuel_table_t veTable; // size 1024
+	fuel_table_t afrTable; // size 1024
 
 	board_configuration_s bc;
 
@@ -550,5 +549,8 @@ void commonFrankensoAnalogInputs(engine_configuration_s *engineConfiguration);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
+
+void copyFuelTable(fuel_table_t const source, fuel_table_t destination);
+void copyTimingTable(ignition_table_t const source, ignition_table_t destination);
 
 #endif /* ENGINE_CONFIGURATION_H_ */

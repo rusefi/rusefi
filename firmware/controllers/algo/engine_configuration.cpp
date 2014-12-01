@@ -636,3 +636,19 @@ void commonFrankensoAnalogInputs(engine_configuration_s *engineConfiguration) {
 	engineConfiguration->vbattAdcChannel = EFI_ADC_14;
 }
 
+void copyFuelTable(fuel_table_t const source, fuel_table_t destination) {
+	for (int k = 0; k < FUEL_LOAD_COUNT; k++) {
+		for (int r = 0; r < FUEL_RPM_COUNT; r++) {
+			destination[k][r] = source[k][r];
+		}
+	}
+}
+
+void copyTimingTable(ignition_table_t const source, ignition_table_t destination) {
+	for (int k = 0; k < IGN_LOAD_COUNT; k++) {
+		for (int r = 0; r < IGN_RPM_COUNT; r++) {
+			destination[k][r] = source[k][r];
+		}
+	}
+}
+
