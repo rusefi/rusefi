@@ -29,7 +29,7 @@ extern "C"
 {
 #endif /* __cplusplus */
 
-#define ERROR_CODE -11223344
+#define ERROR_CODE 311223344
 
 const char * boolToString(bool value);
 
