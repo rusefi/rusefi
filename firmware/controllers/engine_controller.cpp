@@ -330,6 +330,10 @@ static void setUserOutput(const char *indexStr, const char *quotedLine, Engine *
 	strcpy(engine->engineConfiguration->bc.le_formulas[index], l);
 }
 
+static void setFloat(const char *offsetStr, const char *valueStr) {
+
+}
+
 static pin_output_mode_e d = OM_DEFAULT;
 
 void initEngineContoller(Engine *engine) {
@@ -439,5 +443,6 @@ void initEngineContoller(Engine *engine) {
 	}
 
 	addConsoleActionSSP("set_user_out", (VoidCharPtrCharPtrVoidPtr) setUserOutput, engine);
+	addConsoleActionSS("set_float", (VoidCharPtrCharPtr)setFloat);
 	initEval(engine);
 }
