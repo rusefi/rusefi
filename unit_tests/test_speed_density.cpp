@@ -13,12 +13,14 @@
 void testSpeedDensity(void) {
 	printf("*************************************************** testSpeedDensity\r\n");
 	EngineTestHelper eth(FORD_INLINE_6_1995);
+	Engine *engine = &eth.engine;
+	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
 
 	eth.ec->triggerConfig.customTotalToothCount = 8;
 	eth.initTriggerShapeAndRpmCalculator();
 
 	eth.fireTriggerEvents();
-	assertEqualsM("RPM", 1500, eth.engine.rpmCalculator.rpm());
+	assertEqualsM("RPM", 1500, eth.engine.rpmCalculator.rpm(PASS_ENGINE_PARAMETER_F));
 
 	// 427 cubic inches, that's a LOT of engine
 	eth.ec->displacement = 6.99728;

@@ -62,7 +62,7 @@ RpmCalculator::RpmCalculator() {
 /**
  * @return true if there was a full shaft revolution within the last second
  */
-bool RpmCalculator::isRunning(void) {
+bool RpmCalculator::isRunning(DECLARE_ENGINE_PARAMETER_F) {
 	uint64_t nowNt = getTimeNowNt();
 	return nowNt - lastRpmEventTimeNt < US2NT(US_PER_SECOND);
 }
@@ -96,12 +96,12 @@ uint32_t RpmCalculator::getRevolutionCounterSinceStart(void) {
  */
 // todo: migrate to float return result or add a float verion? this would have with calculations
 // todo: add a version which does not check time & saves time? need to profile
-int RpmCalculator::rpm(void) {
+int RpmCalculator::rpm(DECLARE_ENGINE_PARAMETER_F) {
 #if !EFI_PROD_CODE
 	if (mockRpm != MOCK_UNDEFINED)
 	return mockRpm;
 #endif
-	if (!isRunning()) {
+	if (!isRunning(PASS_ENGINE_PARAMETER_F)) {
 		revolutionCounterSinceStart = 0;
 		return 0;
 	}
@@ -141,12 +141,12 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index DECL
 	if (index != 0) {
 #if EFI_ANALOG_CHART || defined(__DOXYGEN__)
 		if (engineConfiguration->analogChartMode == AC_TRIGGER)
-			acAddData(getCrankshaftAngleNt(engine, nowNt), 1000 * ckpSignalType + index);
+			acAddData(getCrankshaftAngleNt(nowNt PASS_ENGINE_PARAMETER), 1000 * ckpSignalType + index);
 #endif
 		return;
 	}
 
-	bool hadRpmRecently = rpmState->isRunning();
+	bool hadRpmRecently = rpmState->isRunning(PASS_ENGINE_PARAMETER_F);
 
 	if (hadRpmRecently) {
 		uint64_t diffNt = nowNt - rpmState->lastRpmEventTimeNt;
@@ -169,7 +169,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index DECL
 	rpmState->lastRpmEventTimeNt = nowNt;
 #if EFI_ANALOG_CHART || defined(__DOXYGEN__)
 	if (engineConfiguration->analogChartMode == AC_TRIGGER)
-		acAddData(getCrankshaftAngleNt(engine, nowNt), index);
+		acAddData(getCrankshaftAngleNt(nowNt PASS_ENGINE_PARAMETER), index);
 #endif
 }
 
@@ -212,7 +212,7 @@ int getRevolutionCounter() {
 /**
  * @return Current crankshaft angle, 0 to 720 for four-stroke
  */
-float getCrankshaftAngleNt(Engine *engine, uint64_t timeNt) {
+float getCrankshaftAngleNt(uint64_t timeNt DECLARE_ENGINE_PARAMETER_S) {
 	uint64_t timeSinceZeroAngleNt = timeNt - engine->rpmCalculator.lastRpmEventTimeNt;
 
 	/**
@@ -220,7 +220,7 @@ float getCrankshaftAngleNt(Engine *engine, uint64_t timeNt) {
 	 * compiler is not smart enough to figure out that "A / ( B / C)" could be optimized into
 	 * "A * C / B" in order to replace a slower division with a faster multiplication.
 	 */
-	return timeSinceZeroAngleNt / getOneDegreeTimeNt(engine->rpmCalculator.rpm());
+	return timeSinceZeroAngleNt / getOneDegreeTimeNt(engine->rpmCalculator.rpm(PASS_ENGINE_PARAMETER_F));
 }
 
 void initRpmCalculator(Engine *engine) {

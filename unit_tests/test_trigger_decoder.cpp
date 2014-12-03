@@ -401,10 +401,10 @@ static void testRpmCalculator(void) {
 	eth.engine.engineConfiguration->injectorLag = 0.0;
 
 	timeNow = 0;
-	assertEquals(0, eth.engine.rpmCalculator.rpm());
+	assertEquals(0, eth.engine.rpmCalculator.rpm(PASS_ENGINE_PARAMETER_F));
 
 	eth.fireTriggerEvents();
-	assertEqualsM("RPM", 1500, eth.engine.rpmCalculator.rpm());
+	assertEqualsM("RPM", 1500, eth.engine.rpmCalculator.rpm(PASS_ENGINE_PARAMETER_F));
 	assertEqualsM("index #1", 15, eth.triggerCentral.triggerState.getCurrentIndex());
 
 	static MainTriggerCallback triggerCallbackInstance;
