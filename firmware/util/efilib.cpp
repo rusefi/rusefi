@@ -147,7 +147,11 @@ bool isSameF(float v1, float v2) {
 	return absF(v1 - v2) < EPS;
 }
 
-// string to float
+/**
+ * string to float
+ * @return NAN in case of invalid string
+ * todo: explicit value for error code?
+ */
 float atoff(const char *param) {
 	uint32_t totallen = strlen(param);
 	if (totallen > sizeof(todofixthismesswithcopy) - 1)
@@ -161,14 +165,20 @@ float atoff(const char *param) {
 	if (dotIndex == -1) {
 		// just an integer
 		int result = atoi(string);
+		if (absI(result) == ERROR_CODE)
+			return (float) NAN;
 		return (float) result;
 	}
 	// todo: this needs to be fixed
 	string[dotIndex] = 0;
 	int integerPart = atoi(string);
+	if (absI(integerPart) == ERROR_CODE)
+		return (float) NAN;
 	string += (dotIndex + 1);
 	int decimalLen = strlen(string);
 	int decimal = atoi(string);
+	if (absI(decimal) == ERROR_CODE)
+		return (float) NAN;
 	float divider = 1.0;
 	// todo: reuse 'pow10' function which we have anyway
 	for (int i = 0; i < decimalLen; i++) {

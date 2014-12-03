@@ -304,7 +304,7 @@ void handleActionWithParameter(TokenCallback *current, char *parameter) {
 			return;
 		parameter[spaceIndex] = 0;
 		int value1 = atoi(parameter);
-		if (absI(value1) == absI(ERROR_CODE)) {
+		if (absI(value1) == ERROR_CODE) {
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
 			scheduleMsg(&logging, "not an integer [%s]", parameter);
 #endif
@@ -312,7 +312,7 @@ void handleActionWithParameter(TokenCallback *current, char *parameter) {
 		}
 		parameter += spaceIndex + 1;
 		int value2 = atoi(parameter);
-		if (absI(value2) == absI(ERROR_CODE)) {
+		if (absI(value2) == ERROR_CODE) {
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
 			scheduleMsg(&logging, "not an integer [%s]", parameter);
 #endif
@@ -351,7 +351,7 @@ void handleActionWithParameter(TokenCallback *current, char *parameter) {
 	}
 
 	int value = atoi(parameter);
-	if (value == ERROR_CODE) {
+	if (absI(value) == ERROR_CODE) {
 		print("invalid integer [%s]\r\n", parameter);
 		return;
 	}
