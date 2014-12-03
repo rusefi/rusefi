@@ -406,8 +406,8 @@ void MainTriggerCallback::init(Engine *engine, engine_configuration2_s *engineCo
 }
 
 static void showMainInfo(Engine *engine) {
-	int rpm = engine->rpmCalculator.rpm();
 #if EFI_PROD_CODE
+	int rpm = engine->rpmCalculator.rpm(PASS_ENGINE_PARAMETER_F);
 	float el = getEngineLoadT(PASS_ENGINE_PARAMETER);
 	scheduleMsg(&logger, "rpm %d engine_load %f", rpm, el);
 	scheduleMsg(&logger, "fuel %fms timing %f", getFuelMs(rpm PASS_ENGINE_PARAMETER),

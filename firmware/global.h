@@ -73,7 +73,8 @@ typedef Thread thread_t;
 		extern engine_configuration_s *engineConfiguration; \
 		extern board_configuration_s *boardConfiguration; \
 		extern persistent_config_container_s persistentState; \
-		extern Engine _engine
+		extern Engine _engine; \
+		extern engine_configuration2_s * engineConfiguration2
 
 #define DECLARE_ENGINE_PARAMETER_F void
 #define DECLARE_ENGINE_PARAMETER_S

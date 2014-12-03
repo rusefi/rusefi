@@ -31,8 +31,8 @@ public:
 	int mockRpm;
 #endif
 	RpmCalculator();
-	bool isRunning(void);
-	int rpm(void);
+	bool isRunning(DECLARE_ENGINE_PARAMETER_F);
+	int rpm(DECLARE_ENGINE_PARAMETER_F);
 	void onNewEngineCycle();
 	uint32_t getRevolutionCounter(void);
 	void setRpmValue(int value);
@@ -60,7 +60,7 @@ private:
 /**
  * @brief   Current RPM
  */
-#define getRpmE(engine) (engine)->rpmCalculator.rpm()
+#define getRpmE(engine) (engine)->rpmCalculator.rpm(PASS_ENGINE_PARAMETER_F)
 
 bool isCrankingE(Engine *engine);
 void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index DECLARE_ENGINE_PARAMETER_S);
@@ -69,7 +69,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index DECL
  */
 void initRpmCalculator(Engine *engine);
 
-float getCrankshaftAngleNt(Engine *engine, uint64_t timeNt);
+float getCrankshaftAngleNt(uint64_t timeNt DECLARE_ENGINE_PARAMETER_S);
 #endif
 
 #ifdef __cplusplus
