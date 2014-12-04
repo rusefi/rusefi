@@ -245,6 +245,7 @@ typedef struct {
 
 } board_configuration_s;
 
+// 19010105 decimal
 #define HEADER_MAGIC_NUMBER 0x1221239
 
 /**

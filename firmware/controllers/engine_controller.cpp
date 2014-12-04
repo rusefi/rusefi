@@ -334,8 +334,14 @@ static void setInt(const char *offsetStr, const char *valueStr) {
 
 }
 
+static void getInt(int offset) {
+	int *ptr = (int *)(&((char *) engine->engineConfiguration)[offset]);
+	int value = *ptr;
+	scheduleMsg(&logger, "int @%d is %d", offset, value);
+}
+
 static void getFloat(int offset) {
-	float *ptr = (float *)(((char *) engine->engineConfiguration)[offset]);
+	float *ptr = (float *)(&((char *) engine->engineConfiguration)[offset]);
 	float value = *ptr;
 	scheduleMsg(&logger, "float @%d is %f", offset, value);
 }
@@ -351,7 +357,7 @@ static void setFloat(const char *offsetStr, const char *valueStr) {
 		scheduleMsg(&logger, "invalid value [%s]", valueStr);
 		return;
 	}
-	float *ptr = (float *)(((char *) engine->engineConfiguration)[offset]);
+	float *ptr = (float *)(&((char *) engine->engineConfiguration)[offset]);
 	*ptr = value;
 	scheduleMsg(&logger, "setting float @%d to %f", offset, value);
 }
@@ -468,5 +474,6 @@ void initEngineContoller(Engine *engine) {
 	addConsoleActionSS("set_float", (VoidCharPtrCharPtr) setFloat);
 	addConsoleActionSS("set_int", (VoidCharPtrCharPtr) setInt);
 	addConsoleActionI("get_float", getFloat);
+	addConsoleActionI("get_int", getInt);
 	initEval(engine);
 }

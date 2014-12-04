@@ -241,9 +241,9 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 	engineConfiguration->iatThermistorConf.bias_resistor = 10000;
 
 	/**
-	 * MAP D17/W5
+	 * MAP PA6
 	 */
-	engineConfiguration->map.sensor.hwChannel = EFI_ADC_0;
+	engineConfiguration->map.sensor.hwChannel = EFI_ADC_6;
 
 	boardConfiguration->adcHwChannelEnabled[0] = ADC_FAST; // ADC0 - PA0 - MAP
 	boardConfiguration->adcHwChannelEnabled[1] = ADC_SLOW;
