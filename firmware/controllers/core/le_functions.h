@@ -26,7 +26,7 @@
  * In human language that's
  * (fan and (coolant > fan_off_setting)) OR (coolant > fan_on_setting)
  */
-#define FAN_CONTROL_LOGIC "todo"
+#define FAN_CONTROL_LOGIC "fan coolant fan_off_setting > & coolant fan_on_setting > OR"
 
 float getLEValue(Engine *engine, le_action_e action);
 
