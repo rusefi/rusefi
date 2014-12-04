@@ -728,8 +728,7 @@ static void disableIgnition(void) {
 }
 
 static void stopEngine(Engine *engine) {
-	engine->engineConfiguration2->stopEngineRequestTime = getTimeNowUs();
-	engine->engineConfiguration2->isStopEngineRequestPending = true;
+	engine->engineConfiguration2->stopEngineRequestTimeNt = getTimeNowNt();
 }
 
 #if EFI_WAVE_CHART

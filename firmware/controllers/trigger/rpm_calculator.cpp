@@ -38,11 +38,13 @@ extern WaveChart waveChart;
 
 #define TOP_DEAD_CENTER_MESSAGE "r"
 
-EXTERN_ENGINE;
+EXTERN_ENGINE
+;
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
 static Logging logger;
-EXTERN_ENGINE;
+EXTERN_ENGINE
+;
 #endif
 
 RpmCalculator::RpmCalculator() {
@@ -63,8 +65,15 @@ RpmCalculator::RpmCalculator() {
  * @return true if there was a full shaft revolution within the last second
  */
 bool RpmCalculator::isRunning(DECLARE_ENGINE_PARAMETER_F) {
+	engine_configuration2_s *engineConfiguration2 = engine->engineConfiguration2;
 	uint64_t nowNt = getTimeNowNt();
-	return nowNt - lastRpmEventTimeNt < US2NT(US_PER_SECOND);
+	if (engineConfiguration2->stopEngineRequestTimeNt != 0) {
+		if (nowNt - lastRpmEventTimeNt < 3 * US2NT(US_PER_SECOND_LL)) {
+			return false;
+		}
+	}
+
+	return nowNt - lastRpmEventTimeNt < US2NT(US_PER_SECOND_LL);
 }
 
 void RpmCalculator::setRpmValue(int value) {
@@ -184,7 +193,7 @@ static char rpmBuffer[10];
  */
 static void onTdcCallback(void) {
 	itoa10(rpmBuffer, getRpm());
-	addWaveChartEvent(TOP_DEAD_CENTER_MESSAGE, (char*) rpmBuffer);
+	addWaveChartEvent(TOP_DEAD_CENTER_MESSAGE, (char* ) rpmBuffer);
 }
 
 /**

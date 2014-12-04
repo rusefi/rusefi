@@ -59,8 +59,7 @@ public:
 	 */
 	IgnitionEventList ignitionEvents[2];
 
-	uint64_t stopEngineRequestTime;
-	bool_t isStopEngineRequestPending;
+	uint64_t stopEngineRequestTimeNt;
 };
 
 void initializeIgnitionActions(float advance, float dwellAngle,
