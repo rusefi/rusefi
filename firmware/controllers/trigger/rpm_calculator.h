@@ -31,12 +31,18 @@ public:
 	int mockRpm;
 #endif
 	RpmCalculator();
+	/**
+	 * Please note that this is a relatively heavy method due to getTimeNowNt() usage
+	 */
 	bool isRunning(DECLARE_ENGINE_PARAMETER_F);
 	int rpm(DECLARE_ENGINE_PARAMETER_F);
 	void onNewEngineCycle();
 	uint32_t getRevolutionCounter(void);
 	void setRpmValue(int value);
 	uint32_t getRevolutionCounterSinceStart(void);
+	/**
+	 * This is public because sometimes we cannot afford to call isRunning() and the value is good enough
+	 */
 	volatile int rpmValue;
 	/**
 	 * This is a performance optimization: let's pre-calulate this each time RPM changes
