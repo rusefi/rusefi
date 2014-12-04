@@ -634,6 +634,7 @@ void commonFrankensoAnalogInputs(engine_configuration_s *engineConfiguration) {
 	 * VBatt
 	 */
 	engineConfiguration->vbattAdcChannel = EFI_ADC_14;
+	engineConfiguration->bc.adcHwChannelEnabled[14] = ADC_SLOW;
 }
 
 void copyFuelTable(fuel_table_t const source, fuel_table_t destination) {
