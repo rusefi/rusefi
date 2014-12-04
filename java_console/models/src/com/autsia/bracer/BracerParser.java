@@ -31,7 +31,8 @@ import java.util.*;
  */
 public class BracerParser {
     /* list of available operators */
-    private final String OPERATORS = "<>=+-*/&|!";
+    private final String PLAIN_OPERATORS = "<>=+-*/&|!";
+    private final Set<String> OPERATORS = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
     /* separator of arguments */
     private final String SEPARATOR = ",";
     /* temporary stack that holds operators, functions and brackets */
@@ -47,6 +48,8 @@ public class BracerParser {
      * @since 2.0
      */
     public BracerParser() {
+        OPERATORS.add("add");
+        OPERATORS.add("or");
     }
 
     /**
@@ -75,7 +78,7 @@ public class BracerParser {
         }
         /* splitting input string into tokens */
         StringTokenizer stringTokenizer = new StringTokenizer(expression,
-                OPERATORS + SEPARATOR + "()", true);
+                PLAIN_OPERATORS + SEPARATOR + "()", true);
 
         String pendingToken = null;
 
@@ -126,7 +129,7 @@ public class BracerParser {
                 }
                 stackOperations.push(token);
             } else if (isFunction(token)) {
-                stackOperations.push(token);
+                stackRPN.push(token);
             } else {
                 throw new ParseException("Unrecognized token: " + token, 0);
             }
@@ -343,7 +346,7 @@ public class BracerParser {
      * @since 1.0
      */
     private boolean isOperator(String token) {
-        return OPERATORS.contains(token);
+        return PLAIN_OPERATORS.contains(token) || OPERATORS.contains(token);
     }
 
     /**
@@ -364,10 +367,13 @@ public class BracerParser {
         List<String> list = new ArrayList<>(getStackRPN());
         ListIterator<String> li = list.listIterator(list.size());
         List<String> reverse = new ArrayList<>();
+        StringBuilder sb = new StringBuilder();
         while (li.hasPrevious()) {
-            reverse.add(li.previous());
+            if (sb.length() > 0)
+                sb.append(" ");
+            sb.append(li.previous());
         }
         String result = reverse.toString();
-        return result.substring(1, result.length() - 1);
+        return sb.toString();
     }
 }
