@@ -204,6 +204,7 @@ typedef struct {
 	unsigned int isSdCardEnabled : 1; // bit 3
 	unsigned int isFastAdcEnabled : 1; // bit 4
 	unsigned int isEngineControlEnabled : 1; // bit 5
+	unsigned int isHip9011Enabled : 1; // bit 6
 
 	brain_pin_e logicAnalyzerPins[LOGIC_ANALYZER_CHANNEL_COUNT];
 	/**
@@ -240,7 +241,9 @@ typedef struct {
 
 	short int fsioFrequency[LE_COMMAND_COUNT];
 
-	int unusedbs[41];
+	brain_pin_e hip9011CsPin;
+	brain_pin_e hip9011IntHoldPin;
+	int unusedbs[39];
 
 	le_formula_t le_formulas[LE_COMMAND_COUNT];
 
@@ -518,7 +521,9 @@ typedef struct {
 	short int acIdleRpmBump;
 	short int unusedShort;
 
-	int unused3[88];
+	adc_channel_e vRefAdcChannel;
+
+	int unused3[87];
 
 } engine_configuration_s;
 

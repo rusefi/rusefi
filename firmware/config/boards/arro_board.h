@@ -50,7 +50,7 @@
 #define STM32_PWM_USE_TIM9                  FALSE
 
 #define STM32_SPI_USE_SPI1                  TRUE
-#define STM32_SPI_USE_SPI2                  FALSE // external ADC
+#define STM32_SPI_USE_SPI2                  TRUE // external ADC
 #define STM32_SPI_USE_SPI3                  TRUE // potentiometer
 
 #define STM32_CAN_USE_CAN1                  TRUE
@@ -130,24 +130,7 @@
  */
 #define EFI_CUSTOM_PANIC_METHOD TRUE
 
-/*
- * 10 channel board is (from left to right):
- * ADC 15	PC5		TPS
- * ADC 14	PC4		MAP
- * ADC 7 	PA7		IAT
- * ADC 6	PA6		CLT
- * ADC 5	PA5		TIM2_CH1
- * ADC 4	PA4
- * ADC 3	PA3
- * ADC 2	PA2
- * ADC 1	PA1		vBatt
- * ADC 0	PA0		MAF
- */
-
-#define ADC_LOGIC_TPS_2 ADC_CHANNEL_IN0
-
 #define ADC_CHANNEL_VREF ADC_CHANNEL_IN14
-
 
 /**
  * currently ChibiOS uses only first and second channels of each timer for input capture

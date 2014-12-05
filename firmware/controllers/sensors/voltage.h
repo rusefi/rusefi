@@ -13,16 +13,7 @@
 #include "main.h"
 #include "engine_configuration.h"
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
-
-float getVRef(void);
+float getVRef(engine_configuration_s *engineConfiguration);
 float getVBatt(engine_configuration_s *engineConfiguration);
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
 
 #endif

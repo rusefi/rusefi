@@ -15,9 +15,8 @@
 
 extern engine_configuration_s *engineConfiguration;
 
-float getVRef(void) {
-//	return getAdcValue(ADC_CHANNEL_VREF);
-	return getVoltageDivided((adc_channel_e)ADC_CHANNEL_VREF);
+float getVRef(engine_configuration_s *engineConfiguration) {
+	return getVoltageDivided(engineConfiguration->vRefAdcChannel);
 }
 
 float getVBatt(engine_configuration_s *engineConfiguration) {

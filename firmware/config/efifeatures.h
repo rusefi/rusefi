@@ -75,7 +75,7 @@
 
 #define EFI_MAX_31855 TRUE
 
-#define EFI_HIP_9011 FALSE
+#define EFI_HIP_9011 TRUE
 
 #define EFI_INTERNAL_ADC TRUE
 

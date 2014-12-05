@@ -105,6 +105,10 @@ case INJECTOR_10_OUTPUT:
   return "INJECTOR_10_OUTPUT";
 case INJECTOR_6_OUTPUT:
   return "INJECTOR_6_OUTPUT";
+case SPI_CS_HIP9011:
+	return "SPI_CS_HIP9011";
+case HIP9011_INT_HOLD:
+	return "HIP9011_INT_HOLD";
 case SPI_CS_1:
   return "SPI_CS_1";
 case SPI_CS_3:
