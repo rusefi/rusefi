@@ -168,6 +168,9 @@ void testLogicExpressions(void) {
 	testExpression("fan not coolant 90 > and", 1);
 
 
+	testExpression("10 99 max", 99);
+
+
 	testExpression("fan NOT coolant 90 > AND fan coolant 85 > AND OR", 1);
 
 	mockRpm = 900;

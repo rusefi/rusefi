@@ -38,6 +38,9 @@ static LENameOrdinalPair leMoreOrEqual(LE_OPERATOR_MORE_OR_EQUAL, ">=");
 static LENameOrdinalPair leLess(LE_OPERATOR_LESS, "<");
 static LENameOrdinalPair leLessOrEquals(LE_OPERATOR_LESS_OR_EQUAL, "<=");
 
+static LENameOrdinalPair leMax(LE_METHOD_MAX, "max");
+static LENameOrdinalPair leMin(LE_METHOD_MIN, "min");
+
 #define LE_EVAL_POOL_SIZE 32
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
@@ -202,6 +205,19 @@ void LECalculator::doJob(Engine *engine, LEElement *element) {
 		stack.push(v1 >= v2);
 	}
 		break;
+	case LE_METHOD_MAX: {
+		float v2 = pop(LE_METHOD_MAX);
+		float v1 = pop(LE_METHOD_MAX);
+		stack.push(maxF(v1, v2));
+	}
+	break;
+	case LE_METHOD_MIN: {
+		float v2 = pop(LE_METHOD_MIN);
+		float v1 = pop(LE_METHOD_MIN);
+		stack.push(minF(v1, v2));
+	}
+	break;
+
 	case LE_UNDEFINED:
 		firmwareError("Undefined not expected here");
 		break;
