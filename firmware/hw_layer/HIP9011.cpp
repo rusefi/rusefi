@@ -86,6 +86,38 @@ static msg_t ivThread(int param) {
 EXTERN_ENGINE
 ;
 
+#define INT_TIME_COUNT 32
+
+/**
+ * These are HIP9011 magic values - integrator time constants in uS
+ */
+static const int integratorValues[INT_TIME_COUNT] = { 40, 45, 50, 55, 60, 65, 70, 75, 80, 90, 100, 110, 120, 130, 140,
+		150, 160, 180, 200, 220, 240, 260, 280, 300, 320, 360, 400, 440, 480, 520, 560, 600 };
+
+#define PIF 3.14159f
+
+static float rpmLookup[INT_TIME_COUNT];
+
+/**
+ * 'TC is typically TINT/(2*Pi*VOUT)'
+ * Knock Sensor Training TPIC8101, page 24
+ *
+ * We know the set of possible integration times, we know the knock detection window width
+ *
+ * 2.2 volts should
+ *
+ */
+#define DESIRED_OUTPUT_VALUE 2.2f
+static void prepareRpmLookup(engine_configuration_s *engineConfiguration) {
+	for (int i = 0; i < INT_TIME_COUNT; i++) {
+		float windowWidthMult = (engineConfiguration->knockDetectionWindowEnd
+				- engineConfiguration->knockDetectionWindowStart) / 360.0f;
+		// '60000000' because revolutions per MINUTE in uS conversion
+
+		rpmLookup[i] = 60000000.0f / (integratorValues[i] * 2 * PIF * DESIRED_OUTPUT_VALUE * windowWidthMult);
+	}
+}
+
 void initHip9011(void) {
 	if (!boardConfiguration->isHip9011Enabled)
 		return;
