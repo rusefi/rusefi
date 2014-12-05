@@ -47,6 +47,8 @@ public:
 	FuelSchedule crankingInjectionEvents;
 	FuelSchedule injectionEvents;
 
+	float fsioLastValue[LE_COMMAND_COUNT];
+
 	float sparkAtable[DWELL_CURVE_SIZE];
 	float sparkBtable[DWELL_CURVE_SIZE];
 
