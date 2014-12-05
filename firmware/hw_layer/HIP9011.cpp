@@ -33,7 +33,7 @@ static int callbackc = 0;
 static void spiCallback(SPIDriver *spip) {
 	spiUnselectI(spip);
 
-	scheduleSimpleMsg(&logger, "spiCallback HIP=", callbackc++);
+	scheduleMsg(&logger, "spiCallback HIP=%d", callbackc++);
 
 }
 
@@ -69,7 +69,7 @@ static msg_t ivThread(int param) {
 	while (TRUE) {
 		chThdSleepMilliseconds(10);
 
-		scheduleSimpleMsg(&logger, "poking HIP=", counter++);
+		scheduleMsg(&logger, "poking HIP=%d", counter++);
 
 		spiSelect(driver);
 
