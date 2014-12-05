@@ -524,7 +524,10 @@ typedef struct {
 
 	adc_channel_e vRefAdcChannel;
 
-	int unused3[87];
+	float knockDetectionWindowStart;
+	float knockDetectionWindowEnd;
+
+	int unused3[85];
 
 } engine_configuration_s;
 

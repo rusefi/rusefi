@@ -331,6 +331,12 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	engineConfiguration->isWaveAnalyzerEnabled = true;
 	engineConfiguration->isIdleThreadEnabled = true;
 
+	engineConfiguration->acIdleRpmBump = 200;
+	engineConfiguration->knockDetectionWindowStart = 35;
+	engineConfiguration->knockDetectionWindowEnd = 135;
+
+
+
 	/**
 	 * this is RPM. 10000 rpm is only 166Hz, 800 rpm is 13Hz
 	 */
