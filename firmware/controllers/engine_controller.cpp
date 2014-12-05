@@ -54,6 +54,8 @@
 #include "engine.h"
 #include "logic_expression.h"
 #include "le_functions.h"
+#include "pin_repository.h"
+#include "pwm_generator.h"
 
 #define LE_ELEMENT_POOL_SIZE 256
 
@@ -69,6 +71,9 @@ static LEElement * alternatorLogic;
 extern OutputPin outputs[IO_PIN_COUNT];
 extern pin_output_mode_e *pinDefaultState[IO_PIN_COUNT];
 extern bool hasFirmwareErrorFlag;
+
+static LEElement * fsioLogics[LE_COMMAND_COUNT];
+static SimplePwm fsioPwm[LE_COMMAND_COUNT];
 
 persistent_config_container_s persistentState CCM_OPTIONAL;
 
@@ -110,7 +115,7 @@ Engine * engine = &_engine;
 static msg_t csThread(void) {
 	chRegSetThreadName("status");
 #if EFI_SHAFT_POSITION_INPUT
-	while (TRUE) {
+	while (true) {
 		int rpm = getRpm();
 		int is_cranking = isCrankingR(rpm);
 		int is_running = rpm > 0 && !is_cranking;
@@ -197,12 +202,21 @@ static void handleGpio(Engine *engine, int index) {
 	if (boardConfiguration->gpioPins[index] == GPIO_UNASSIGNED)
 		return;
 
+	bool_t isPwmMode = boardConfiguration->fsioFrequency[index] != 0;
+
 	io_pin_e pin = (io_pin_e) ((int) GPIO_0 + index);
 
-	int value = calc.getValue2(fuelPumpLogic, engine);
-	if (value != getOutputPinValue(pin)) {
-//		scheduleMsg(&logger, "setting %s %s", getIo_pin_e(pin), boolToString(value));
-		setOutputPinValue(pin, value);
+	float fvalue = calc.getValue2(fsioLogics[index], engine);
+	engine->engineConfiguration2->fsioLastValue[index] = fvalue;
+
+	if (isPwmMode) {
+		fsioPwm[index].setSimplePwmDutyCycle(fvalue);
+	} else {
+		int value = (int) fvalue;
+		if (value != getOutputPinValue(pin)) {
+			//		scheduleMsg(&logger, "setting %s %s", getIo_pin_e(pin), boolToString(value));
+			setOutputPinValue(pin, value);
+		}
 	}
 }
 
@@ -237,9 +251,7 @@ static void onEvenyGeneralMilliseconds(Engine *engine) {
 	engine->updateSlowSensors();
 
 	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
-		if (boardConfiguration->gpioPins[i] != GPIO_UNASSIGNED) {
-			handleGpio(engine, i);
-		}
+		handleGpio(engine, i);
 	}
 
 #if EFI_FUEL_PUMP
@@ -314,8 +326,34 @@ static void printAnalogInfo(void) {
 
 static THD_WORKING_AREA(csThreadStack, UTILITY_THREAD_STACK_SIZE);	// declare thread stack
 
+static void setFsioFrequency(int index, int frequency) {
+	index--;
+	if (index < 0 || index > LE_COMMAND_COUNT) {
+		scheduleMsg(&logger, "invalid index %d", index);
+		return;
+	}
+	boardConfiguration->fsioFrequency[index] = frequency;
+	scheduleMsg(&logger, "Setting FSIO frequency %d on #%d", frequency, index + 1);
+}
+
+static void setFsioPin(const char *indexStr, const char *pinName) {
+	int index = atoi(indexStr) - 1;
+	if (index < 0 || index > LE_COMMAND_COUNT) {
+		scheduleMsg(&logger, "invalid index %d", index);
+		return;
+	}
+	brain_pin_e pin = parseBrainPin(pinName);
+	// todo: extract method - code duplication with other 'set_xxx_pin' methods?
+	if (pin == GPIO_INVALID) {
+		scheduleMsg(&logger, "invalid pin name [%s]", pinName);
+		return;
+	}
+	boardConfiguration->gpioPins[index] = pin;
+	scheduleMsg(&logger, "FSIO pin #%d [%s]", (index + 1), hwPortname(pin));
+}
+
 static void setUserOutput(const char *indexStr, const char *quotedLine, Engine *engine) {
-	int index = atoi(indexStr);
+	int index = atoi(indexStr) - 1;
 	if (index < 0 || index > LE_COMMAND_COUNT) {
 		scheduleMsg(&logger, "invalid index %d", index);
 		return;
@@ -326,7 +364,7 @@ static void setUserOutput(const char *indexStr, const char *quotedLine, Engine *
 		return;
 	}
 
-	scheduleMsg(&logger, "setting user out %d to [%s]", index, l);
+	scheduleMsg(&logger, "setting user out #%d to [%s]", index + 1, l);
 	strcpy(engine->engineConfiguration->bc.le_formulas[index], l);
 }
 
@@ -335,13 +373,13 @@ static void setInt(const char *offsetStr, const char *valueStr) {
 }
 
 static void getInt(int offset) {
-	int *ptr = (int *)(&((char *) engine->engineConfiguration)[offset]);
+	int *ptr = (int *) (&((char *) engine->engineConfiguration)[offset]);
 	int value = *ptr;
 	scheduleMsg(&logger, "int @%d is %d", offset, value);
 }
 
 static void getFloat(int offset) {
-	float *ptr = (float *)(&((char *) engine->engineConfiguration)[offset]);
+	float *ptr = (float *) (&((char *) engine->engineConfiguration)[offset]);
 	float value = *ptr;
 	scheduleMsg(&logger, "float @%d is %f", offset, value);
 }
@@ -357,7 +395,7 @@ static void setFloat(const char *offsetStr, const char *valueStr) {
 		scheduleMsg(&logger, "invalid value [%s]", valueStr);
 		return;
 	}
-	float *ptr = (float *)(&((char *) engine->engineConfiguration)[offset]);
+	float *ptr = (float *) (&((char *) engine->engineConfiguration)[offset]);
 	*ptr = value;
 	scheduleMsg(&logger, "setting float @%d to %f", offset, value);
 }
@@ -461,16 +499,35 @@ void initEngineContoller(Engine *engine) {
 	addConsoleAction("analoginfo", printAnalogInfo);
 
 	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
-		if (boardConfiguration->gpioPins[i] != GPIO_UNASSIGNED) {
+		brain_pin_e brainPin = boardConfiguration->gpioPins[i];
+
+		if (brainPin != GPIO_UNASSIGNED) {
+
+			const char *formula = boardConfiguration->le_formulas[i];
+			LEElement *logic = lePool.parseExpression(formula);
+			if (logic == NULL) {
+				warning(OBD_PCM_Processor_Fault, "parsing [%s]", formula);
+			}
+
+			fsioLogics[i] = logic;
 
 			//mySetPadMode2("user-defined", boardConfiguration->gpioPins[i], PAL_STM32_MODE_OUTPUT);
 
 			io_pin_e pin = (io_pin_e) ((int) GPIO_0 + i);
-			outputPinRegisterExt2(getPinName(pin), pin, boardConfiguration->gpioPins[i], &d);
+
+			int frequency = boardConfiguration->fsioFrequency[i];
+			if (frequency == 0) {
+				outputPinRegisterExt2(getPinName(pin), pin, boardConfiguration->gpioPins[i], &d);
+			} else {
+				startSimplePwmExt(&fsioPwm[i], "FSIO", brainPin, pin, frequency, 0.5f, applyPinState);
+			}
 		}
 	}
 
 	addConsoleActionSSP("set_fsio", (VoidCharPtrCharPtrVoidPtr) setUserOutput, engine);
+	addConsoleActionSS("set_fsio_pin", (VoidCharPtrCharPtr) setFsioPin);
+	addConsoleActionII("set_fsio_frequency", (VoidIntInt) setFsioFrequency);
+
 	addConsoleActionSS("set_float", (VoidCharPtrCharPtr) setFloat);
 	addConsoleActionSS("set_int", (VoidCharPtrCharPtr) setInt);
 	addConsoleActionI("get_float", getFloat);

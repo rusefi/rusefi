@@ -238,8 +238,9 @@ typedef struct {
 	brain_pin_e acRelayPin;
 	pin_output_mode_e acRelayPinMode;
 
+	short int fsioFrequency[LE_COMMAND_COUNT];
 
-	int unusedbs[49];
+	int unusedbs[41];
 
 	le_formula_t le_formulas[LE_COMMAND_COUNT];
 
