@@ -40,6 +40,7 @@ static LENameOrdinalPair leLessOrEquals(LE_OPERATOR_LESS_OR_EQUAL, "<=");
 
 static LENameOrdinalPair leMax(LE_METHOD_MAX, "max");
 static LENameOrdinalPair leMin(LE_METHOD_MIN, "min");
+static LENameOrdinalPair leIf(LE_METHOD_IF, "if");
 
 #define LE_EVAL_POOL_SIZE 32
 
@@ -205,6 +206,14 @@ void LECalculator::doJob(Engine *engine, LEElement *element) {
 		stack.push(v1 >= v2);
 	}
 		break;
+	case LE_METHOD_IF: {
+		// elements on stack are in reverse order
+		float vFalse = pop(LE_METHOD_IF);
+		float vTrue = pop(LE_METHOD_IF);
+		float vCond = pop(LE_METHOD_IF);
+		stack.push(vCond != 0 ? vTrue : vFalse);
+	}
+	break;
 	case LE_METHOD_MAX: {
 		float v2 = pop(LE_METHOD_MAX);
 		float v1 = pop(LE_METHOD_MAX);
