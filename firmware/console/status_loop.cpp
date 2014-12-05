@@ -134,7 +134,7 @@ void printSensors(Engine *engine) {
 	reportSensorF("baro", getBaroPressure(), 2);
 
 	reportSensorF("afr", getAfr(), 2);
-	reportSensorF("vref", getVRef(), 2);
+	reportSensorF("vref", getVRef(engineConfiguration), 2);
 	reportSensorF("vbatt", getVBatt(engineConfiguration), 2);
 
 	reportSensorF("TRG_0_DUTY", getTriggerDutyCycle(0), 2);

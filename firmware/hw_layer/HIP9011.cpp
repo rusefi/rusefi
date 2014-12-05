@@ -18,6 +18,7 @@
  */
 
 #include "main.h"
+#include "engine.h"
 
 #if EFI_HIP_9011
 
@@ -64,7 +65,7 @@ static msg_t ivThread(int param) {
 
 	tx_buff[0] = HIP_ADVANCED_MODE;
 
-	tx_buff[4] = 0xF8;// 0b11111000;
+	tx_buff[4] = 0xF8; // 0b11111000;
 
 	while (TRUE) {
 		chThdSleepMilliseconds(10);
@@ -82,7 +83,12 @@ static msg_t ivThread(int param) {
 #endif
 }
 
+EXTERN_ENGINE
+;
+
 void initHip9011(void) {
+	if (!boardConfiguration->isHip9011Enabled)
+		return;
 	initLogging(&logger, "HIP driver");
 
 	print("Starting HIP9011/TPIC8101 driver\r\n");

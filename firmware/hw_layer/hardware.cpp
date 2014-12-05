@@ -292,7 +292,7 @@ SPIDriver * getSpiDevice(spi_device_e spiDevice) {
 	}
 #endif
 #if STM32_SPI_USE_SPI2 || defined(__DOXYGEN__)
-	if (spiDevic e== SPI_DEVICE_2) {
+	if (spiDevice == SPI_DEVICE_2) {
 		return &SPID2;
 	}
 #endif
