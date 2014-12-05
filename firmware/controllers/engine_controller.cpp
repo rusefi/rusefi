@@ -470,7 +470,7 @@ void initEngineContoller(Engine *engine) {
 		}
 	}
 
-	addConsoleActionSSP("set_user_out", (VoidCharPtrCharPtrVoidPtr) setUserOutput, engine);
+	addConsoleActionSSP("set_fsio", (VoidCharPtrCharPtrVoidPtr) setUserOutput, engine);
 	addConsoleActionSS("set_float", (VoidCharPtrCharPtr) setFloat);
 	addConsoleActionSS("set_int", (VoidCharPtrCharPtr) setInt);
 	addConsoleActionI("get_float", getFloat);
