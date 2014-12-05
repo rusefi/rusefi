@@ -167,9 +167,8 @@ void testLogicExpressions(void) {
 	testExpression("coolant 90 >", 1);
 	testExpression("fan not coolant 90 > and", 1);
 
-
+	testExpression("100 200 1 if", 200);
 	testExpression("10 99 max", 99);
-
 
 	testExpression("fan NOT coolant 90 > AND fan coolant 85 > AND OR", 1);
 
