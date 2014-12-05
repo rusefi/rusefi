@@ -243,7 +243,8 @@ typedef struct {
 
 	brain_pin_e hip9011CsPin;
 	brain_pin_e hip9011IntHoldPin;
-	int unusedbs[39];
+	brain_pin_e hip9011OutPin;
+	int unusedbs[38];
 
 	le_formula_t le_formulas[LE_COMMAND_COUNT];
 
