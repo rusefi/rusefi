@@ -157,7 +157,7 @@ void LECalculator::doJob(Engine *engine, LEElement *element) {
 
 		stack.push(v1 > v2);
 	}
-	break;
+		break;
 	case LE_OPERATOR_ADDITION: {
 		// elements on stack are in reverse order
 		float v2 = pop(LE_OPERATOR_MORE);
@@ -165,7 +165,7 @@ void LECalculator::doJob(Engine *engine, LEElement *element) {
 
 		stack.push(v1 + v2);
 	}
-	break;
+		break;
 	case LE_OPERATOR_SUBSTRACTION: {
 		// elements on stack are in reverse order
 		float v2 = pop(LE_OPERATOR_MORE);
@@ -173,7 +173,7 @@ void LECalculator::doJob(Engine *engine, LEElement *element) {
 
 		stack.push(v1 - v2);
 	}
-	break;
+		break;
 	case LE_OPERATOR_MULTIPLICATION: {
 		// elements on stack are in reverse order
 		float v2 = pop(LE_OPERATOR_MORE);
@@ -181,7 +181,7 @@ void LECalculator::doJob(Engine *engine, LEElement *element) {
 
 		stack.push(v1 * v2);
 	}
-	break;
+		break;
 	case LE_OPERATOR_DIVISION: {
 		// elements on stack are in reverse order
 		float v2 = pop(LE_OPERATOR_MORE);
@@ -213,25 +213,34 @@ void LECalculator::doJob(Engine *engine, LEElement *element) {
 		float vCond = pop(LE_METHOD_IF);
 		stack.push(vCond != 0 ? vTrue : vFalse);
 	}
-	break;
+		break;
 	case LE_METHOD_MAX: {
 		float v2 = pop(LE_METHOD_MAX);
 		float v1 = pop(LE_METHOD_MAX);
 		stack.push(maxF(v1, v2));
 	}
-	break;
+		break;
 	case LE_METHOD_MIN: {
 		float v2 = pop(LE_METHOD_MIN);
 		float v1 = pop(LE_METHOD_MIN);
 		stack.push(minF(v1, v2));
 	}
-	break;
-
+		break;
+	case LE_METHOD_FSIO_SETTING: {
+		float i = pop(LE_METHOD_FSIO_SETTING);
+		int index = (int) i;
+		if (index >= 0 && index < LE_COMMAND_COUNT) {
+			stack.push(engine->engineConfiguration->bc.fsio_setting[index]);
+		} else {
+			stack.push(NAN);
+		}
+	}
+		break;
 	case LE_UNDEFINED:
 		firmwareError("Undefined not expected here");
 		break;
 	default:
-		stack.push(getLEValue(engine, element->action));
+		stack.push(getLEValue(engine, &stack, element->action));
 	}
 }
 

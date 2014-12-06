@@ -26,9 +26,10 @@ static LENameOrdinalPair leAcToggle(LE_METHOD_AC_TOGGLE, "ac_on_switch");
 static LENameOrdinalPair leFanOnSetting(LE_METHOD_FAN_ON_SETTING, "fan_on_setting");
 static LENameOrdinalPair leFanOffSetting(LE_METHOD_FAN_OFF_SETTING, "fan_off_setting");
 static LENameOrdinalPair leTimeSinceBoot(LE_METHOD_TIME_SINCE_BOOT, "time_since_boot");
+static LENameOrdinalPair leFsioSsetting(LE_METHOD_FSIO_SETTING, "fsio_setting");
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
-float getLEValue(Engine *engine, le_action_e action) {
+float getLEValue(Engine *engine, calc_stack_t *s, le_action_e action) {
 	efiAssert(engine!=NULL, "getLEValue", NAN);
 	switch (action) {
 	case LE_METHOD_FAN:

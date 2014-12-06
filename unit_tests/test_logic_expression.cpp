@@ -21,7 +21,7 @@ static float mockFan;
 static float mockRpm;
 static float mockTimeSinceBoot;
 
-float getLEValue(Engine *engine, le_action_e action) {
+float getLEValue(Engine *engine, calc_stack_t *s, le_action_e action) {
 	switch(action) {
 	case LE_METHOD_FAN:
 		return mockFan;
