@@ -9,6 +9,7 @@
 
 #include "engine_configuration.h"
 
+void setFrankenstein_01_LCD(board_configuration_s *boardConfiguration);
 void setRoverv8(engine_configuration_s *engineConfiguration,
 		board_configuration_s *boardConfiguration);
 
