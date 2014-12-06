@@ -572,7 +572,6 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType, Engine *e
 		firmwareError("Unexpected engine type: %d", engineType);
 	}
 	applyNonPersistentConfiguration(logger, engine);
-	parseUserFsio(PASS_ENGINE_PARAMETER_F);
 
 #if EFI_TUNER_STUDIO
 	syncTunerStudioCopy();
@@ -607,6 +606,7 @@ void applyNonPersistentConfiguration(Logging * logger, Engine *engine) {
 		return;
 	}
 	engine->engineCycleEventCount = engine->triggerShape.getLength();
+	parseUserFsio(PASS_ENGINE_PARAMETER_F);
 }
 
 void prepareShapes(Engine *engine) {
