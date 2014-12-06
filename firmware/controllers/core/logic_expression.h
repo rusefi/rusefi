@@ -42,6 +42,7 @@ typedef enum {
 	LE_METHOD_INTAKE_AIR = 108,
 	LE_METHOD_VBATT = 109,
 	LE_METHOD_AC_TOGGLE = 110,
+	LE_METHOD_FSIO_SETTING = 111,
 
 	Force_4b_le_action = ENUM_SIZE_HACK,
 
@@ -76,6 +77,8 @@ private:
 
 #define MAX_STACK_DEPTH 32
 
+typedef FLStack<float, MAX_STACK_DEPTH> calc_stack_t;
+
 class LECalculator {
 public:
 	LECalculator();
@@ -89,7 +92,7 @@ private:
 	void doJob(Engine *engine, LEElement *element);
 	float pop(le_action_e action);
 	LEElement *first;
-	FLStack<float, MAX_STACK_DEPTH> stack;
+	calc_stack_t stack;
 };
 
 class LENameOrdinalPair {

@@ -28,6 +28,6 @@
  */
 #define FAN_CONTROL_LOGIC "fan coolant fan_off_setting > & coolant fan_on_setting > OR"
 
-float getLEValue(Engine *engine, le_action_e action);
+float getLEValue(Engine *engine, calc_stack_t *s, le_action_e action);
 
 #endif /* LE_FUNCTIONS_H_ */
