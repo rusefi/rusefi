@@ -29,5 +29,6 @@
 #define FAN_CONTROL_LOGIC "fan coolant fan_off_setting > & coolant fan_on_setting > OR"
 
 float getLEValue(Engine *engine, calc_stack_t *s, le_action_e action);
+void setFsio(engine_configuration_s *engineConfiguration, int index, brain_pin_e pin, const char * exp);
 
 #endif /* LE_FUNCTIONS_H_ */

@@ -15,6 +15,7 @@
 #include "engine_math.h"
 #include "advance_map.h"
 #include "allsensors.h"
+#include "le_functions.h"
 
 // setFrankenso_01_LCD
 #include "honda_accord.h"
@@ -368,8 +369,7 @@ void setMiata1994_s(engine_configuration_s *engineConfiguration, board_configura
 	boardConfiguration->injectionPins[2] = GPIOB_8; // injector #3
 	boardConfiguration->injectionPins[3] = GPIOB_7; // injector #4
 
-	boardConfiguration->fsioPins[0] = GPIOD_11;
-	strcpy(boardConfiguration->le_formulas[0], "coolant 80 >");
+	setFsio(engineConfiguration, 0, GPIOD_11, "coolant 80 >");
 }
 
 /**

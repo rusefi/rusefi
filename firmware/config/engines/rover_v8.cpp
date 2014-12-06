@@ -14,6 +14,15 @@
 #include "main.h"
 #include "rover_v8.h"
 
+void setFrankenstein_01_LCD(board_configuration_s *boardConfiguration) {
+	boardConfiguration->HD44780_rs = GPIOE_9;
+	boardConfiguration->HD44780_e = GPIOE_11;
+	boardConfiguration->HD44780_db4 = GPIOE_13;
+	boardConfiguration->HD44780_db5 = GPIOE_15;
+	boardConfiguration->HD44780_db6 = GPIOB_11;
+	boardConfiguration->HD44780_db7 = GPIOB_13;
+}
+
 void setRoverv8(engine_configuration_s *engineConfiguration,
 		board_configuration_s *boardConfiguration) {
 
