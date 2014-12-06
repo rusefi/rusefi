@@ -51,7 +51,7 @@ float getLEValue(Engine *engine, calc_stack_t *s, le_action_e action) {
 	case LE_METHOD_VBATT:
 		return getVBatt(engine->engineConfiguration);
 	default:
-		firmwareError("No value for %d", action);
+		firmwareError("FSIO unexpected %d", action);
 		return NAN;
 	}
 }

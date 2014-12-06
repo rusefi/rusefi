@@ -52,6 +52,16 @@ static LECalculator evalCalc;
 static LEElement evalPoolElements[LE_EVAL_POOL_SIZE];
 static LEElementPool evalPool(evalPoolElements, LE_EVAL_POOL_SIZE);
 
+#define SYS_ELEMENT_POOL_SIZE 128
+#define UD_ELEMENT_POOL_SIZE 128
+
+static LEElement sysElements[SYS_ELEMENT_POOL_SIZE];
+LEElementPool sysPool(sysElements, SYS_ELEMENT_POOL_SIZE);
+
+static LEElement userElements[UD_ELEMENT_POOL_SIZE];
+LEElementPool userPool(userElements, UD_ELEMENT_POOL_SIZE);
+LEElement * fsioLogics[LE_COMMAND_COUNT] CCM_OPTIONAL;
+
 LENameOrdinalPair::LENameOrdinalPair(le_action_e action, const char *name) {
 	this->action = action;
 	this->name = name;
@@ -237,7 +247,7 @@ void LECalculator::doJob(Engine *engine, LEElement *element) {
 	}
 		break;
 	case LE_UNDEFINED:
-		firmwareError("Undefined not expected here");
+		firmwareError("FSIO undefined action");
 		break;
 	default:
 		stack.push(getLEValue(engine, &stack, element->action));
@@ -250,6 +260,10 @@ float LECalculator::getValue2(LEElement *element, Engine *engine) {
 }
 
 float LECalculator::getValue(Engine *engine) {
+	if (first == NULL) {
+		warning(OBD_PCM_Processor_Fault, "no FSIO code");
+		return NAN;
+	}
 	LEElement *element = first;
 
 	stack.reset();
@@ -258,14 +272,16 @@ float LECalculator::getValue(Engine *engine) {
 		doJob(engine, element);
 		element = element->next;
 	}
-	efiAssert(stack.size() == 1, "One value expected on stack", NAN);
-
+	if (stack.size() != 1) {
+		warning(OBD_PCM_Processor_Fault, "unexpected FSIO stack size: %d", stack.size());
+		return NAN;
+	}
 	return stack.pop();
 }
 
 LEElementPool::LEElementPool(LEElement *pool, int size) {
 	this->pool = pool;
-	this->size = size;
+	this->capacity = capacity;
 	reset();
 }
 
@@ -273,8 +289,12 @@ void LEElementPool::reset() {
 	index = 0;
 }
 
+int LEElementPool::getSize() {
+	return index;
+}
+
 LEElement *LEElementPool::next() {
-	if (index == size - 1) {
+	if (index == capacity - 1) {
 		// todo: this should not be a fatal error, just an error
 		firmwareError("LE_ELEMENT_POOL_SIZE overflow");
 		return NULL;
@@ -375,9 +395,27 @@ static void eval(char *line, Engine *engine) {
 	}
 }
 
+EXTERN_ENGINE;
+
 void initEval(Engine *engine) {
 	initLogging(&logger, "le");
 	addConsoleActionSP("eval", (VoidCharPtrVoidPtr) eval, engine);
 }
 
 #endif
+
+void parseUserFsio(DECLARE_ENGINE_PARAMETER_F) {
+	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
+		brain_pin_e brainPin = boardConfiguration->fsioPins[i];
+
+		if (brainPin != GPIO_UNASSIGNED) {
+			const char *formula = boardConfiguration->le_formulas[i];
+			LEElement *logic = userPool.parseExpression(formula);
+			if (logic == NULL) {
+				warning(OBD_PCM_Processor_Fault, "parsing [%s]", formula);
+			}
+
+			fsioLogics[i] = logic;
+		}
+	}
+}

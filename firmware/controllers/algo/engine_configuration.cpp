@@ -27,6 +27,7 @@
 #include "trigger_decoder.h"
 #include "engine_math.h"
 #include "speed_density.h"
+#include "logic_expression.h"
 
 #if EFI_TUNER_STUDIO
 #include "tunerstudio.h"
@@ -571,6 +572,7 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType, Engine *e
 		firmwareError("Unexpected engine type: %d", engineType);
 	}
 	applyNonPersistentConfiguration(logger, engine);
+	parseUserFsio(PASS_ENGINE_PARAMETER_F);
 
 #if EFI_TUNER_STUDIO
 	syncTunerStudioCopy();
