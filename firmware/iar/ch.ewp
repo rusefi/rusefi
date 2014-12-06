@@ -2693,7 +2693,7 @@
       <name>$PROJ_DIR$\..\hw_layer\hardware.h</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\hw_layer\HIP9011.c</name>
+      <name>$PROJ_DIR$\..\hw_layer\HIP9011.cpp</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\hw_layer\HIP9011.h</name>
