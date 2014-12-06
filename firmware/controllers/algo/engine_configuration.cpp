@@ -349,7 +349,7 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 		boardConfiguration->max31855_cs[i] = GPIO_UNASSIGNED;
 	}
 	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
-		boardConfiguration->gpioPins[i] = GPIO_UNASSIGNED;
+		boardConfiguration->fsioPins[i] = GPIO_UNASSIGNED;
 		boardConfiguration->le_formulas[i][0] = 0;
 	}
 	for (int i = 0; i < JOYSTICK_PIN_COUNT; i++) {
