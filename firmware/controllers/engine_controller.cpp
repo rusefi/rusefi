@@ -340,6 +340,16 @@ static void showFsioInfo(void) {
 	showFsio("ac", acRelayLogic);
 	showFsio("fuel", fuelPumpLogic);
 
+	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
+		char * exp = boardConfiguration->le_formulas[i];
+		if (exp[0] != 0) {
+			scheduleMsg(&logger, "FSIO #%d [%s] at %s@%dHz = %f", (i + 1), exp, hwPortname(boardConfiguration->fsioPins[i]),
+					boardConfiguration->fsioFrequency[i],
+					engineConfiguration2->fsioLastValue[i]);
+			showFsio("user-defined", fsioLogics[i]);
+		}
+	}
+
 }
 
 static void setFsioFrequency(int index, int frequency) {

@@ -405,6 +405,7 @@ void initEval(Engine *engine) {
 #endif
 
 void parseUserFsio(DECLARE_ENGINE_PARAMETER_F) {
+	board_configuration_s * boardConfiguration = &engineConfiguration->bc;
 	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
 		brain_pin_e brainPin = boardConfiguration->fsioPins[i];
 
