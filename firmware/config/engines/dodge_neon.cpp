@@ -272,6 +272,8 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 	 * CLT D13/W9
 	 */
 	engineConfiguration->cltAdcChannel = EFI_ADC_12;
+
+	//setFsio(engineConfiguration, 0, GPIO)
 }
 
 #endif /* EFI_SUPPORT_DODGE_NEON */
