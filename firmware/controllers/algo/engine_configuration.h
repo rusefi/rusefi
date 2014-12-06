@@ -220,7 +220,7 @@ typedef struct {
 
 	spi_device_e max31855spiDevice;
 
-	brain_pin_e gpioPins[LE_COMMAND_COUNT];
+	brain_pin_e fsioPins[LE_COMMAND_COUNT];
 	pin_output_mode_e gpioPinModes[LE_COMMAND_COUNT];
 
 	brain_pin_e joystickPins[JOYSTICK_PIN_COUNT];
@@ -244,7 +244,9 @@ typedef struct {
 	brain_pin_e hip9011CsPin;
 	brain_pin_e hip9011IntHoldPin;
 	brain_pin_e hip9011OutPin;
-	int unusedbs[38];
+
+	float fsio_setting[LE_COMMAND_COUNT];
+	int unusedbs[22];
 
 	le_formula_t le_formulas[LE_COMMAND_COUNT];
 

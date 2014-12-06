@@ -199,7 +199,7 @@ static void cylinderCleanupControl(Engine *engine) {
 }
 
 static void handleGpio(Engine *engine, int index) {
-	if (boardConfiguration->gpioPins[index] == GPIO_UNASSIGNED)
+	if (boardConfiguration->fsioPins[index] == GPIO_UNASSIGNED)
 		return;
 
 	bool_t isPwmMode = boardConfiguration->fsioFrequency[index] != 0;
@@ -348,7 +348,7 @@ static void setFsioPin(const char *indexStr, const char *pinName) {
 		scheduleMsg(&logger, "invalid pin name [%s]", pinName);
 		return;
 	}
-	boardConfiguration->gpioPins[index] = pin;
+	boardConfiguration->fsioPins[index] = pin;
 	scheduleMsg(&logger, "FSIO pin #%d [%s]", (index + 1), hwPortname(pin));
 }
 
@@ -499,7 +499,7 @@ void initEngineContoller(Engine *engine) {
 	addConsoleAction("analoginfo", printAnalogInfo);
 
 	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
-		brain_pin_e brainPin = boardConfiguration->gpioPins[i];
+		brain_pin_e brainPin = boardConfiguration->fsioPins[i];
 
 		if (brainPin != GPIO_UNASSIGNED) {
 
@@ -517,7 +517,7 @@ void initEngineContoller(Engine *engine) {
 
 			int frequency = boardConfiguration->fsioFrequency[i];
 			if (frequency == 0) {
-				outputPinRegisterExt2(getPinName(pin), pin, boardConfiguration->gpioPins[i], &d);
+				outputPinRegisterExt2(getPinName(pin), pin, boardConfiguration->fsioPins[i], &d);
 			} else {
 				startSimplePwmExt(&fsioPwm[i], "FSIO", brainPin, pin, frequency, 0.5f, applyPinState);
 			}

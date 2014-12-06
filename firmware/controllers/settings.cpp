@@ -180,7 +180,7 @@ void printConfiguration(engine_configuration_s *engineConfiguration, engine_conf
 	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
 		char * exp = boardConfiguration->le_formulas[i];
 		if (exp[0] != 0) {
-			scheduleMsg(&logger, "FSIO #%d [%s] at %s@%dHz = %f", (i + 1), exp, hwPortname(boardConfiguration->gpioPins[i]),
+			scheduleMsg(&logger, "FSIO #%d [%s] at %s@%dHz = %f", (i + 1), exp, hwPortname(boardConfiguration->fsioPins[i]),
 					boardConfiguration->fsioFrequency[i],
 					engineConfiguration2->fsioLastValue[i]);
 		}
