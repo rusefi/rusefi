@@ -425,6 +425,7 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	boardConfiguration->adcHwChannelEnabled[11] = ADC_SLOW;
 	boardConfiguration->adcHwChannelEnabled[12] = ADC_SLOW;
 	boardConfiguration->adcHwChannelEnabled[13] = ADC_SLOW;
+	boardConfiguration->adcHwChannelEnabled[14] = ADC_SLOW;
 
 	boardConfiguration->triggerInputPins[0] = GPIOC_6;
 	boardConfiguration->triggerInputPins[1] = GPIOA_5;
