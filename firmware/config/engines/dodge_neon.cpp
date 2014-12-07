@@ -19,6 +19,7 @@
 #include "engine_configuration.h"
 #include "thermistors.h"
 #include "engine_math.h"
+#include "le_functions.h"
 
 // setFrankenso_01_LCD
 #include "honda_accord.h"
@@ -273,7 +274,8 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 	 */
 	engineConfiguration->cltAdcChannel = EFI_ADC_12;
 
-	//setFsio(engineConfiguration, 0, GPIO)
+	setFsioExt(engineConfiguration, 0, GPIOE_10, "0.6", 400);
+
 }
 
 #endif /* EFI_SUPPORT_DODGE_NEON */

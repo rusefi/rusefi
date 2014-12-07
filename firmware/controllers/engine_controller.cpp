@@ -394,6 +394,9 @@ static void setUserOutput(const char *indexStr, const char *quotedLine, Engine *
 
 	scheduleMsg(&logger, "setting user out #%d to [%s]", index + 1, l);
 	strcpy(engine->engineConfiguration->bc.le_formulas[index], l);
+	// this would apply the changes
+	parseUserFsio(PASS_ENGINE_PARAMETER_F);
+	showFsioInfo();
 }
 
 static void setInt(const char *offsetStr, const char *valueStr) {

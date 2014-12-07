@@ -57,9 +57,14 @@ float getLEValue(Engine *engine, calc_stack_t *s, le_action_e action) {
 }
 #endif
 
-void setFsio(engine_configuration_s *engineConfiguration, int index, brain_pin_e pin, const char * exp) {
+void setFsioExt(engine_configuration_s *engineConfiguration, int index, brain_pin_e pin, const char * exp, int freq) {
 	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 
 	boardConfiguration->fsioPins[index] = pin;
 	strcpy(boardConfiguration->le_formulas[index], exp);
+	boardConfiguration->fsioFrequency[index] = freq;
+}
+
+void setFsio(engine_configuration_s *engineConfiguration, int index, brain_pin_e pin, const char * exp) {
+	setFsioExt(engineConfiguration, index, pin, exp, 0);
 }
