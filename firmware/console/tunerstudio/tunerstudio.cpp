@@ -79,17 +79,17 @@ extern persistent_config_container_s persistentState;
 
 static efitimems_t previousWriteReportMs = 0;
 
-static int ts_serail_ready(void) {
+static int ts_serial_ready(void) {
 #if EFI_PROD_CODE
 	if (isSerialOverUart()) {
 		// TS uses USB when console uses serial
 		return is_usb_serial_ready();
 	} else {
 		// TS uses serial when console uses USB
-		return TRUE;
+		return true;
 	}
 #else
-	return TRUE;
+	return true;
 #endif
 }
 
@@ -381,7 +381,7 @@ static msg_t tsThreadEntryPoint(void *arg) {
 
 	int wasReady = false;
 	while (true) {
-		int isReady = ts_serail_ready();
+		int isReady = ts_serial_ready();
 		if (!isReady) {
 			chThdSleepMilliseconds(10);
 			wasReady = false;
@@ -389,7 +389,7 @@ static msg_t tsThreadEntryPoint(void *arg) {
 		}
 
 		if (!wasReady) {
-			wasReady = TRUE;
+			wasReady = true;
 //			scheduleSimpleMsg(&logger, "ts channel is now ready ", hTimeNow());
 		}
 
