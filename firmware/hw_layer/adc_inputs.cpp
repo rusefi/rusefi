@@ -154,6 +154,7 @@ static void pwmpcb_slow(PWMDriver *pwmp) {
 	/* Starts an asynchronous ADC conversion operation, the conversion
 	 will be executed in parallel to the current PWM cycle and will
 	 terminate before the next PWM cycle.*/
+	slowAdc.conversionCount++;
 	chSysLockFromIsr()
 	;
 	if (ADC_SLOW_DEVICE.state != ADC_READY &&
@@ -165,11 +166,9 @@ static void pwmpcb_slow(PWMDriver *pwmp) {
 		;
 		return;
 	}
-	slowAdc.errorsCount++;
 	adcStartConversionI(&ADC_SLOW_DEVICE, &adcgrpcfgSlow, slowAdcState.samples, ADC_GRP1_BUF_DEPTH_SLOW);
 	chSysUnlockFromIsr()
 	;
-	slowAdc.conversionCount++;
 #endif
 }
 
