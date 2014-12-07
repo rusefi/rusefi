@@ -327,6 +327,7 @@ static void printAnalogInfo(void) {
 static THD_WORKING_AREA(csThreadStack, UTILITY_THREAD_STACK_SIZE);	// declare thread stack
 
 static void showFsio(const char *msg, LEElement *element) {
+	if(msg!=NULL)
 	scheduleMsg(&logger, "%s:", msg);
 	while (element != NULL) {
 		scheduleMsg(&logger, "action %d: fValue=%f iValue=%d", element->action, element->fValue, element->iValue);
@@ -346,7 +347,8 @@ static void showFsioInfo(void) {
 			scheduleMsg(&logger, "FSIO #%d [%s] at %s@%dHz = %f", (i + 1), exp, hwPortname(boardConfiguration->fsioPins[i]),
 					boardConfiguration->fsioFrequency[i],
 					engineConfiguration2->fsioLastValue[i]);
-			showFsio("user-defined", fsioLogics[i]);
+			scheduleMsg(&logger, "user-defined #%d value=%f", (i + 1), engine->engineConfiguration2->fsioLastValue[i]);
+			showFsio(NULL, fsioLogics[i]);
 		}
 	}
 

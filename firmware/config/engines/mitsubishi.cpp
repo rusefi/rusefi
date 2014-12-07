@@ -3,12 +3,15 @@
  *
  * MITSU_4G93 16
  *
+ * set_engine_type 16
+ *
  * @date Aug 5, 2014
  * @author Andrey Belomutskiy, (c) 2012-2014
  */
 
 #include "mitsubishi.h"
 #include "allsensors.h"
+#include "le_functions.h"
 
 void setMitsubishiConfiguration(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
 	engineConfiguration->engineType = MITSU_4G93;
@@ -81,6 +84,7 @@ void setMitsubishiConfiguration(engine_configuration_s *engineConfiguration, boa
 	engineConfiguration->HD44780height = 4;
 
 	initEgoSensor(&engineConfiguration->afrSensor, ES_Innovate_MTX_L);
+	setFsio(engineConfiguration, 0, GPIOD_11, "rpm 5500 >");
 }
 
 
