@@ -30,5 +30,6 @@
 
 float getLEValue(Engine *engine, calc_stack_t *s, le_action_e action);
 void setFsio(engine_configuration_s *engineConfiguration, int index, brain_pin_e pin, const char * exp);
+void setFsioExt(engine_configuration_s *engineConfiguration, int index, brain_pin_e pin, const char * exp, int freq);
 
 #endif /* LE_FUNCTIONS_H_ */
