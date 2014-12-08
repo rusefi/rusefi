@@ -463,7 +463,7 @@ static void setPotSpi(int spi) {
 
 static void setIgnitionPin(const char *indexStr, const char *pinName) {
 	int index = atoi(indexStr) - 1; // convert from human index into software index
-	if (index < 0 || index > IGNITION_PIN_COUNT)
+	if (index < 0 || index >= IGNITION_PIN_COUNT)
 		return;
 	brain_pin_e pin = parseBrainPin(pinName);
 	// todo: extract method - code duplication with other 'set_xxx_pin' methods?
@@ -500,7 +500,7 @@ static void setFuelPumpPin(const char *pinName) {
 
 static void setInjectionPin(const char *indexStr, const char *pinName) {
 	int index = atoi(indexStr) - 1; // convert from human index into software index
-	if (index < 0 || index > INJECTION_PIN_COUNT)
+	if (index < 0 || index >= INJECTION_PIN_COUNT)
 		return;
 	brain_pin_e pin = parseBrainPin(pinName);
 	// todo: extract method - code duplication with other 'set_xxx_pin' methods?
@@ -528,7 +528,7 @@ static void setTriggerInputPin(const char *indexStr, const char *pinName) {
 
 static void setTriggerSimulatorMode(const char *indexStr, const char *modeCode) {
 	int index = atoi(indexStr);
-	if (index < 0 || index > TRIGGER_SIMULATOR_PIN_COUNT || absI(index) == ERROR_CODE) {
+	if (index < 0 || index >= TRIGGER_SIMULATOR_PIN_COUNT || absI(index) == ERROR_CODE) {
 		return;
 	}
 	int mode = atoi(modeCode);
@@ -540,7 +540,7 @@ static void setTriggerSimulatorMode(const char *indexStr, const char *modeCode) 
 
 static void setEgtCSPin(const char *indexStr, const char *pinName, board_configuration_s * board_configuration_s) {
 	int index = atoi(indexStr);
-	if (index < 0 || index > MAX31855_CS_COUNT || absI(index) == ERROR_CODE)
+	if (index < 0 || index >= MAX31855_CS_COUNT || absI(index) == ERROR_CODE)
 		return;
 	brain_pin_e pin = parseBrainPin(pinName);
 	if (pin == GPIO_INVALID) {
@@ -553,7 +553,7 @@ static void setEgtCSPin(const char *indexStr, const char *pinName, board_configu
 
 static void setTriggerSimulatorPin(const char *indexStr, const char *pinName) {
 	int index = atoi(indexStr);
-	if (index < 0 || index > TRIGGER_SIMULATOR_PIN_COUNT || absI(index) == ERROR_CODE)
+	if (index < 0 || index >= TRIGGER_SIMULATOR_PIN_COUNT || absI(index) == ERROR_CODE)
 		return;
 	brain_pin_e pin = parseBrainPin(pinName);
 	if (pin == GPIO_INVALID) {
