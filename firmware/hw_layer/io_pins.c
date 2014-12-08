@@ -27,8 +27,6 @@ static Logging logger;
 
 extern pin_output_mode_e *pinDefaultState[IO_PIN_COUNT];
 extern OutputPin outputs[IO_PIN_COUNT];
-static io_pin_e leds[] = { LED_WARNING, LED_RUNNING, LED_ERROR, LED_COMMUNICATION_1, LED_DEBUG, LED_EXT_1,
-		LED_CHECK_ENGINE };
 
 static GPIO_TypeDef *PORTS[] = { GPIOA, GPIOB, GPIOC, GPIOD, GPIOE, GPIOF, GPIOG, GPIOH };
 
@@ -96,20 +94,6 @@ void outputPinRegister(const char *msg, io_pin_e ioPin, GPIO_TypeDef *port, uint
 	outputPinRegisterExt(msg, ioPin, port, pin, &DEFAULT_OUTPUT);
 }
 
-/**
- * This method would blink all the LEDs just to test them
- */
-static void initialLedsBlink(void) {
-	int size = sizeof(leds) / sizeof(leds[0]);
-	for (int i = 0; i < size; i++)
-		setOutputPinValue(leds[i], 1);
-
-	chThdSleepMilliseconds(100);
-
-	for (int i = 0; i < size; i++)
-		setOutputPinValue(leds[i], 0);
-}
-
 void initPrimaryPins(void) {
 	outputPinRegister("LED_ERROR", LED_ERROR, LED_ERROR_PORT, LED_ERROR_PIN);
 }
@@ -157,8 +141,6 @@ void initOutputPins(void) {
 	outputPinRegisterExt2("o2 heater", O2_HEATER, boardConfiguration->o2heaterPin, &DEFAULT_OUTPUT);
 	outputPinRegisterExt2("trg_err", LED_TRIGGER_ERROR, boardConfiguration->triggerErrorPin, &boardConfiguration->triggerErrorPinMode);
 	outputPinRegisterExt2("A/C relay", AC_RELAY, boardConfiguration->acRelayPin, &boardConfiguration->acRelayPinMode);
-
-	initialLedsBlink();
 
 	// digit 1
 	/*

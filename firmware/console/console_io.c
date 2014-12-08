@@ -120,26 +120,6 @@ bool isSerialOverUart(void) {
 	return is_serial_over_uart;
 }
 
-static THD_WORKING_AREA(consoleThreadStack, 2 * UTILITY_THREAD_STACK_SIZE);
-static msg_t consoleThreadThreadEntryPoint(void *arg) {
-	(void) arg;
-	chRegSetThreadName("console thread");
-
-	while (TRUE) {
-		efiAssert(getRemainingStack(chThdSelf()) > 256, "lowstck#9e", 0);
-		bool end = getConsoleLine((BaseSequentialStream*) getConsoleChannel(), consoleInput, sizeof(consoleInput));
-		if (end) {
-			// firmware simulator is the only case when this happens
-			continue;
-		}
-
-		(console_line_callback)(consoleInput);
-	}
-#if defined __GNUC__
-	return false;
-#endif        
-}
-
 #if EFI_PROD_CODE
 
 static SerialConfig serialConfig = { SERIAL_SPEED, 0, USART_CR2_STOP1_BITS | USART_CR2_LINEN, 0 };
@@ -161,6 +141,35 @@ bool isConsoleReady(void) {
 }
 
 #endif /* EFI_PROD_CODE */
+
+static THD_WORKING_AREA(consoleThreadStack, 2 * UTILITY_THREAD_STACK_SIZE);
+static msg_t consoleThreadThreadEntryPoint(void *arg) {
+	(void) arg;
+	chRegSetThreadName("console thread");
+
+#if EFI_PROD_CODE
+	if (!isSerialOverUart()) {
+		/**
+		 * This method contains a long delay, that's the reason why this is not done on the main thread
+		 */
+		usb_serial_start();
+	}
+#endif /* EFI_PROD_CODE */
+
+	while (true) {
+		efiAssert(getRemainingStack(chThdSelf()) > 256, "lowstck#9e", 0);
+		bool end = getConsoleLine((BaseSequentialStream*) getConsoleChannel(), consoleInput, sizeof(consoleInput));
+		if (end) {
+			// firmware simulator is the only case when this happens
+			continue;
+		}
+
+		(console_line_callback)(consoleInput);
+	}
+#if defined __GNUC__
+	return false;
+#endif        
+}
 
 void consolePutChar(int x) {
 	chSequentialStreamPut(getConsoleChannel(), (uint8_t )(x));
@@ -198,17 +207,14 @@ void startConsole(void (*console_line_callback_p)(char *)) {
 		palSetPadMode(EFI_CONSOLE_RX_PORT, EFI_CONSOLE_RX_PIN, PAL_MODE_ALTERNATE(EFI_CONSOLE_AF));
 		palSetPadMode(EFI_CONSOLE_TX_PORT, EFI_CONSOLE_TX_PIN, PAL_MODE_ALTERNATE(EFI_CONSOLE_AF));
 
-		isSerialConsoleStarted = TRUE;
+		isSerialConsoleStarted = true;
 
 		chEvtRegisterMask((EventSource *) chnGetEventSource(EFI_CONSOLE_UART_DEVICE), &consoleEventListener, 1);
-	} else {
-		usb_serial_start();
 	}
 #endif /* EFI_PROD_CODE */
+
 	chThdCreateStatic(consoleThreadStack, sizeof(consoleThreadStack), NORMALPRIO, consoleThreadThreadEntryPoint, NULL);
 }
-
-extern cnt_t dbg_isr_cnt;
 
 /**
  * @return TRUE if already in locked context

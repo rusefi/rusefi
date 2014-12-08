@@ -372,12 +372,28 @@ static uint8_t secondByte;
 
 static uint8_t crcIoBuffer[300];
 
-
-
-
 static msg_t tsThreadEntryPoint(void *arg) {
 	(void) arg;
 	chRegSetThreadName("tunerstudio thread");
+
+#if EFI_PROD_CODE
+	if (isSerialOverUart()) {
+		print("TunerStudio over USB serial");
+		/**
+		 * This method contains a long delay, that's the reason why this is not done on the main thread
+		 */
+		usb_serial_start();
+	} else {
+
+		print("TunerStudio over USART");
+		mySetPadMode("tunerstudio rx", TS_SERIAL_RX_PORT, TS_SERIAL_RX_PIN, PAL_MODE_ALTERNATE(TS_SERIAL_AF));
+		mySetPadMode("tunerstudio tx", TS_SERIAL_TX_PORT, TS_SERIAL_TX_PIN, PAL_MODE_ALTERNATE(TS_SERIAL_AF));
+
+		tsSerialConfig.speed = boardConfiguration->tunerStudioSerialSpeed;
+
+		sdStart(TS_SERIAL_UART_DEVICE, &tsSerialConfig);
+	}
+#endif /* EFI_PROD_CODE */
 
 	int wasReady = false;
 	while (true) {
@@ -506,21 +522,6 @@ void startTunerStudioConnectivity(void) {
 		firmwareError("TS outputs size mismatch: %d/%d", sizeof(TunerStudioOutputChannels), TS_OUTPUT_SIZE);
 
 	memset(&tsState, 0, sizeof(tsState));
-#if EFI_PROD_CODE
-	if (isSerialOverUart()) {
-		print("TunerStudio over USB serial");
-		usb_serial_start();
-	} else {
-
-		print("TunerStudio over USART");
-		mySetPadMode("tunerstudio rx", TS_SERIAL_RX_PORT, TS_SERIAL_RX_PIN, PAL_MODE_ALTERNATE(TS_SERIAL_AF));
-		mySetPadMode("tunerstudio tx", TS_SERIAL_TX_PORT, TS_SERIAL_TX_PIN, PAL_MODE_ALTERNATE(TS_SERIAL_AF));
-
-		tsSerialConfig.speed = boardConfiguration->tunerStudioSerialSpeed;
-
-		sdStart(TS_SERIAL_UART_DEVICE, &tsSerialConfig);
-	}
-#endif /* EFI_PROD_CODE */
 	syncTunerStudioCopy();
 
 	addConsoleAction("tsinfo", printStats);

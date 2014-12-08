@@ -127,7 +127,7 @@ void initPinRepository(void) {
 
 	for (int i = 0; i < PIN_REPO_SIZE; i++)
 		PIN_USED[i] = 0;
-	initialized = TRUE;
+	initialized = true;
 	addConsoleAction("pins", reportPins);
 }
 
