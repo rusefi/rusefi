@@ -345,6 +345,23 @@ static THD_WORKING_AREA(lcdThreadStack, UTILITY_THREAD_STACK_SIZE);
  */
 static THD_WORKING_AREA(comBlinkingStack, UTILITY_THREAD_STACK_SIZE);
 
+static io_pin_e leds[] = { LED_WARNING, LED_RUNNING, LED_ERROR, LED_COMMUNICATION_1, LED_DEBUG, LED_EXT_1,
+		LED_CHECK_ENGINE };
+
+/**
+ * This method would blink all the LEDs just to test them
+ */
+static void initialLedsBlink(void) {
+	int size = sizeof(leds) / sizeof(leds[0]);
+	for (int i = 0; i < size; i++)
+		setOutputPinValue(leds[i], 1);
+
+	chThdSleepMilliseconds(100);
+
+	for (int i = 0; i < size; i++)
+		setOutputPinValue(leds[i], 0);
+}
+
 /**
  * error thread to show error condition (blinking LED means non-fatal error)
  */
@@ -354,7 +371,10 @@ static THD_WORKING_AREA(errBlinkingStack, UTILITY_THREAD_STACK_SIZE);
 static void comBlinkingThread(void *arg) {
 	(void) arg;
 	chRegSetThreadName("communication blinking");
-	while (TRUE) {
+
+	initialLedsBlink();
+
+	while (true) {
 		int delay;
 
 		if (getNeedToWriteConfiguration()) {
