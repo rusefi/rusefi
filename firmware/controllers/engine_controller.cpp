@@ -356,7 +356,7 @@ static void showFsioInfo(void) {
 
 static void setFsioFrequency(int index, int frequency) {
 	index--;
-	if (index < 0 || index > LE_COMMAND_COUNT) {
+	if (index < 0 || index >= LE_COMMAND_COUNT) {
 		scheduleMsg(&logger, "invalid index %d", index);
 		return;
 	}
@@ -366,7 +366,7 @@ static void setFsioFrequency(int index, int frequency) {
 
 static void setFsioPin(const char *indexStr, const char *pinName) {
 	int index = atoi(indexStr) - 1;
-	if (index < 0 || index > LE_COMMAND_COUNT) {
+	if (index < 0 || index >= LE_COMMAND_COUNT) {
 		scheduleMsg(&logger, "invalid index %d", index);
 		return;
 	}
@@ -382,7 +382,7 @@ static void setFsioPin(const char *indexStr, const char *pinName) {
 
 static void setUserOutput(const char *indexStr, const char *quotedLine, Engine *engine) {
 	int index = atoi(indexStr) - 1;
-	if (index < 0 || index > LE_COMMAND_COUNT) {
+	if (index < 0 || index >= LE_COMMAND_COUNT) {
 		scheduleMsg(&logger, "invalid index %d", index);
 		return;
 	}
