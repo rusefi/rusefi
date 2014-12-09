@@ -41,6 +41,7 @@
 40)                  JP211 silkscreen not visible on rev 0.2 (was visible on rev 0.1 before the JP211 move)
 41)                  (pedantism) eliminate the 4 unused middle pins on the LCD screen connector
 42)                  Wxx silkscreen on the back where it's possible - this would help while troubleshooting analog inputs
+43)                  D7 & R11 - 5v status LED close to stm32 is duplicating LED on the power supply
  
 
 
