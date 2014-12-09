@@ -42,6 +42,8 @@
 41)                  (pedantism) eliminate the 4 unused middle pins on the LCD screen connector
 42)                  Wxx silkscreen on the back where it's possible - this would help while troubleshooting analog inputs
 43)                  D7 & R11 - 5v status LED close to stm32 is duplicating LED on the power supply
+44)                  vertical USB socket - the connector does not go in. the 5 signal through-holes are too small?
+45)                  arm chip +5v not connected to main PCB +5?
  
 
 
