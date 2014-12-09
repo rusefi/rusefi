@@ -69,7 +69,6 @@ extern bool hasFirmwareErrorFlag;
 extern LEElementPool sysPool;
 extern LEElementPool userPool;
 
-
 static SimplePwm fsioPwm[LE_COMMAND_COUNT] CCM_OPTIONAL;
 
 persistent_config_container_s persistentState CCM_OPTIONAL;
@@ -327,8 +326,8 @@ static void printAnalogInfo(void) {
 static THD_WORKING_AREA(csThreadStack, UTILITY_THREAD_STACK_SIZE);	// declare thread stack
 
 static void showFsio(const char *msg, LEElement *element) {
-	if(msg!=NULL)
-	scheduleMsg(&logger, "%s:", msg);
+	if (msg != NULL)
+		scheduleMsg(&logger, "%s:", msg);
 	while (element != NULL) {
 		scheduleMsg(&logger, "action %d: fValue=%f iValue=%d", element->action, element->fValue, element->iValue);
 		element = element->next;
@@ -344,14 +343,29 @@ static void showFsioInfo(void) {
 	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
 		char * exp = boardConfiguration->le_formulas[i];
 		if (exp[0] != 0) {
-			scheduleMsg(&logger, "FSIO #%d [%s] at %s@%dHz = %f", (i + 1), exp, hwPortname(boardConfiguration->fsioPins[i]),
-					boardConfiguration->fsioFrequency[i],
+			scheduleMsg(&logger, "FSIO #%d [%s] at %s@%dHz = %f", (i + 1), exp,
+					hwPortname(boardConfiguration->fsioPins[i]), boardConfiguration->fsioFrequency[i],
 					engineConfiguration2->fsioLastValue[i]);
 			scheduleMsg(&logger, "user-defined #%d value=%f", (i + 1), engine->engineConfiguration2->fsioLastValue[i]);
 			showFsio(NULL, fsioLogics[i]);
 		}
 	}
+	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
+		float v = boardConfiguration->fsio_setting[i];
+		if (!cisnan(v)) {
+			scheduleMsg(&logger, "user property #%d: %f", i + 1, v);
+		}
+	}
 
+}
+
+static void setFsioSetting(float indexF, float value) {
+	int index = indexF;
+	if (index < 0 || index >= LE_COMMAND_COUNT) {
+		scheduleMsg(&logger, "invalid index %d", index);
+		return;
+	}
+	engineConfiguration->bc.fsio_setting[index] = value;
 }
 
 static void setFsioFrequency(int index, int frequency) {
