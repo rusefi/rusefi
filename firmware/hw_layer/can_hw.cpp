@@ -19,6 +19,8 @@
 
 #if EFI_CAN_SUPPORT || defined(__DOXYGEN__)
 
+EXTERN_ENGINE;
+
 static int canReadCounter = 0;
 static Logging logger;
 static THD_WORKING_AREA(canTreadStack, UTILITY_THREAD_STACK_SIZE);
@@ -49,6 +51,10 @@ static CANTxFrame txmsg;
 // todo: we would need a data structure here
 static int engine_rpm = 0;
 static float engine_clt = 0;
+
+//static CANDriver *getCanDevice() {
+//	if(board)
+//}
 
 static void printPacket(CANRxFrame *rx) {
 //	scheduleMsg(&logger, "CAN FMI %x", rx->FMI);
@@ -142,18 +148,16 @@ static void canRead(void) {
 	printPacket(&rxBuffer);
 }
 
-
 static void writeStateToCan(void) {
 	engine_rpm = getRpm();
-	engine_clt = getCoolantTemperature();
+	engine_clt = getCoolantTemperature(engine);
 
 	canInfoNBCBroadcast(engineConfiguration->can_nbc_type);
-
 }
 
 static msg_t canThread(void *arg) {
 	chRegSetThreadName("CAN");
-	while (TRUE) {
+	while (true) {
 		if(engineConfiguration->canWriteEnabled)
 			writeStateToCan();
 
@@ -169,15 +173,11 @@ static msg_t canThread(void *arg) {
 }
 
 static void canInfo(void) {
-	scheduleMsg(&logger, "CAN TX %s:%d", portname(EFI_CAN_TX_PORT), EFI_CAN_TX_PIN);
-	scheduleMsg(&logger, "CAN RX %s:%d", portname(EFI_CAN_RX_PORT), EFI_CAN_RX_PIN);
+	scheduleMsg(&logger, "CAN TX %s", hwPortname(boardConfiguration->canTxPin));
+	scheduleMsg(&logger, "CAN RX %s", hwPortname(boardConfiguration->canRxPin));
 	scheduleMsg(&logger, "canReadEnabled=%d canWriteEnabled=%d", engineConfiguration->canReadEnabled, engineConfiguration->canWriteEnabled);
 
 	scheduleMsg(&logger, "CAN rx count %d", canReadCounter);
-}
-
-static CANDriver *getCanDevice() {
-	if(board)
 }
 
 void initCan(void) {
@@ -194,8 +194,8 @@ void initCan(void) {
 	canStart(&EFI_CAN_DEVICE, &canConfig);
 	chThdCreateStatic(canTreadStack, sizeof(canTreadStack), NORMALPRIO, (tfunc_t) canThread, NULL );
 
-	mySetPadMode("CAN TX", EFI_CAN_TX_PORT, EFI_CAN_TX_PIN, PAL_MODE_ALTERNATE(EFI_CAN_TX_AF));
-	mySetPadMode("CAN RX", EFI_CAN_RX_PORT, EFI_CAN_RX_PIN, PAL_MODE_ALTERNATE(EFI_CAN_RX_AF));
+	mySetPadMode2("CAN TX", boardConfiguration->canTxPin, PAL_MODE_ALTERNATE(EFI_CAN_TX_AF));
+	mySetPadMode2("CAN RX", boardConfiguration->canRxPin, PAL_MODE_ALTERNATE(EFI_CAN_RX_AF));
 
 	addConsoleActionI("enable_can_read", enableCanRead);
 
