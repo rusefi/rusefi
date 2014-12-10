@@ -24,7 +24,9 @@ LENameOrdinalPair * LE_FIRST = NULL;
  * them in the magic list of operator name/ordinal pairs
  */
 static LENameOrdinalPair leAnd(LE_OPERATOR_AND, "and");
+static LENameOrdinalPair leAnd2(LE_OPERATOR_AND, "&");
 static LENameOrdinalPair leOr(LE_OPERATOR_OR, "or");
+static LENameOrdinalPair leOr2(LE_OPERATOR_OR, "|");
 static LENameOrdinalPair leNot(LE_OPERATOR_NOT, "not");
 
 static LENameOrdinalPair leAdd(LE_OPERATOR_ADDITION, "+");
