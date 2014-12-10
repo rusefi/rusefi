@@ -443,6 +443,10 @@ void updateTunerStudioState(Engine *engine, TunerStudioOutputChannels *tsOutputC
 	float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER);
 	float baseFuelMs = getBaseTableFuel(engineConfiguration, (int) rpm, engineLoad);
 
+	// header
+	tsOutputChannels->tsConfigVersion = TS_FILE_VERSION;
+
+	// engine state
 	tsOutputChannels->rpm = rpm;
 	tsOutputChannels->coolant_temperature = coolant;
 	tsOutputChannels->intake_air_temperature = intake;
@@ -450,10 +454,11 @@ void updateTunerStudioState(Engine *engine, TunerStudioOutputChannels *tsOutputC
 	tsOutputChannels->mass_air_flow = getMaf();
 	tsOutputChannels->air_fuel_ratio = getAfr();
 	tsOutputChannels->v_batt = getVBatt(engineConfiguration);
-	tsOutputChannels->tsConfigVersion = TS_FILE_VERSION;
 	tsOutputChannels->tpsADC = getTPS10bitAdc(PASS_ENGINE_PARAMETER_F);
 	tsOutputChannels->atmospherePressure = getBaroPressure();
 	tsOutputChannels->manifold_air_pressure = getMap();
+	tsOutputChannels->engineLoad = engineLoad;
+
 	tsOutputChannels->checkEngine = hasErrorCodes();
 #if EFI_PROD_CODE
 	tsOutputChannels->egtValues.values[0] = getEgtValue(boardConfiguration, 0);
@@ -476,6 +481,7 @@ void updateTunerStudioState(Engine *engine, TunerStudioOutputChannels *tsOutputC
 	float timing = getAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER);
 	tsOutputChannels->inj_adv = timing > 360 ? timing - 720 : timing;
 	tsOutputChannels->sparkDwell = getSparkDwellMsT(rpm PASS_ENGINE_PARAMETER);
+	tsOutputChannels->baseFuel = baseFuelMs;
 	tsOutputChannels->pulseWidthMs = getRunningFuel(baseFuelMs, rpm PASS_ENGINE_PARAMETER);
 	tsOutputChannels->crankingFuelMs = getCrankingFuel(engine);
 }
