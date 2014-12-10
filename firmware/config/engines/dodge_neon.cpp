@@ -4,6 +4,7 @@
  * DODGE_NEON_1995 = 2
  *
  * DODGE_NEON_2003 = 23
+ * set_engine_type 23
  *
  * This config overrides some values of the default configuration which is set by setDefaultConfiguration() method
  *
@@ -274,8 +275,8 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 	 */
 	engineConfiguration->cltAdcChannel = EFI_ADC_12;
 
-	setFsioExt(engineConfiguration, 0, GPIOE_10, "0.6", 400);
-
+	boardConfiguration->fsio_setting[0] = 0.55;
+	setFsioExt(engineConfiguration, 0, GPIOE_10, "0 fsio_setting", 400);
 }
 
 #endif /* EFI_SUPPORT_DODGE_NEON */

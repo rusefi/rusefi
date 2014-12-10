@@ -36,22 +36,28 @@ typedef struct {
 	float throttle_positon; // size 4, offset 12
 	float mass_air_flow; // size 4, offset 16
 	float air_fuel_ratio; // size 4, offset 20
-	float fuel_load; // size 4, offset 24
+	float engineLoad; // size 4, offset 24
 	float v_batt; // size 4, offset 28
 	short int tpsADC; // size 2, offset 32
 	short int alignment; // size 2, offset 34
 	float atmospherePressure; // size 4, offset 36
 	float manifold_air_pressure; // size 4, offset 40
 	float crankingFuelMs;
-	int unused;
+	/**
+	 * This is the raw value we take from the fuel map or base fuel algorithm, before the corrections
+	 */
+	float baseFuel;
 	float tCharge; // 52
 	float inj_adv; // 56
 	float sparkDwell; // 60
+	/**
+	 * this one contains fuel with all corrections. See also baseFuel
+	 */
 	float pulseWidthMs; // 64
 	float warmUpEnrich;	// 68
 	/**
 	 * Yes, I do not really enjoy packing bits into integers but we simply have too many boolean flags and I cannot
-	 * water 4 bytes per trafic - I want gauges to work as fast as possible
+	 * water 4 bytes per traffic - I want gauges to work as fast as possible
 	 */
 	unsigned int hasSdCard : 1; // bit 0
 	unsigned int ignition_enabled : 1; // bit 1
