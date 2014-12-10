@@ -8,16 +8,9 @@
 #ifndef ADC_AVERAGING_H_
 #define ADC_AVERAGING_H_
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
+#include "engine.h"
 
 void mapAveragingCallback(adcsample_t newValue);
-void initMapAveraging(void);
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+void initMapAveraging(Engine *engine);
 
 #endif /* ADC_AVERAGING_H_ */

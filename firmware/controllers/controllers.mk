@@ -1,7 +1,6 @@
 
 CONTROLLERSSRC = \
 	controllers/ignition_central.c \
-	$(PROJECT_DIR)/controllers/malfunction_indicator.c \
 	$(PROJECT_DIR)/controllers/error_handling.c
 	
 CONTROLLERS_SRC_CPP = $(PROJECT_DIR)/controllers/settings.cpp \
@@ -12,6 +11,7 @@ CONTROLLERS_SRC_CPP = $(PROJECT_DIR)/controllers/settings.cpp \
 	controllers/injector_central.cpp \
 	controllers/idle_thread.cpp \
 	controllers/PwmTester.cpp \
+	$(PROJECT_DIR)/controllers/malfunction_indicator.cpp \
 	$(PROJECT_DIR)/controllers/alternatorController.cpp \
 	$(PROJECT_DIR)/controllers/lcd_controller.cpp \
  	$(PROJECT_DIR)/controllers/engine_controller.cpp
