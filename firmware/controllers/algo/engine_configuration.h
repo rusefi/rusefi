@@ -552,6 +552,7 @@ extern "C" {
 #endif /* __cplusplus */
 
 void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration);
+void setMap(fuel_table_t table, float value);
 void setWholeFuelMap(engine_configuration_s *engineConfiguration, float value);
 void setWholeTimingTable(engine_configuration_s *engineConfiguration, float value);
 void setConstantDwell(engine_configuration_s *engineConfiguration, float dwellMs);
