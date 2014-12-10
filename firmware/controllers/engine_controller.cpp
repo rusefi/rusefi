@@ -267,6 +267,10 @@ static void onEvenyGeneralMilliseconds(Engine *engine) {
 		setPinState(ALTERNATOR_SWITCH, alternatorLogic, engine);
 	}
 
+	if (boardConfiguration->fanPin != GPIO_UNASSIGNED) {
+//		setPinState(FAN_RELAY, radiatorFanLogic, engine);
+	}
+
 	updateErrorCodes();
 
 	// todo: migrate this to flex logic
@@ -337,8 +341,10 @@ static void showFsio(const char *msg, LEElement *element) {
 
 static void showFsioInfo(void) {
 	scheduleMsg(&logger, "sys used %d/user used %d", sysPool.getSize(), userPool.getSize());
-	showFsio("ac", acRelayLogic);
+	showFsio("a/c", acRelayLogic);
 	showFsio("fuel", fuelPumpLogic);
+	showFsio("fan", radiatorFanLogic);
+	showFsio("alt", alternatorLogic);
 
 	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
 		char * exp = boardConfiguration->le_formulas[i];
@@ -366,6 +372,7 @@ static void setFsioSetting(float indexF, float value) {
 		return;
 	}
 	engineConfiguration->bc.fsio_setting[index] = value;
+	showFsioInfo();
 }
 
 static void setFsioFrequency(int index, int frequency) {
@@ -538,6 +545,7 @@ void initEngineContoller(Engine *engine) {
 #endif
 
 	acRelayLogic = sysPool.parseExpression(AC_RELAY_LOGIC);
+	radiatorFanLogic = sysPool.parseExpression(FAN_CONTROL_LOGIC);
 
 	alternatorLogic = sysPool.parseExpression(ALTERNATOR_LOGIC);
 
@@ -569,6 +577,7 @@ void initEngineContoller(Engine *engine) {
 	addConsoleActionI("get_float", getFloat);
 	addConsoleActionI("get_int", getInt);
 
+	addConsoleActionFF("set_fsio_setting", setFsioSetting);
 	addConsoleAction("fsioinfo", showFsioInfo);
 	initEval(engine);
 }
