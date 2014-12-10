@@ -1,6 +1,7 @@
 package com.rusefi;
 
 import com.irnems.Launcher;
+import com.rusefi.io.LinkManager;
 import com.rusefi.io.tcp.TcpConnector;
 
 import javax.swing.*;
@@ -12,14 +13,13 @@ import java.io.IOException;
 public class SimulatorHelper {
     public static final String BINARY = "rusefi_simulator.exe";
     private static Process process;
-    public static boolean RUNNING_SIMULATOR;
 
     public static boolean isBinaryHere() {
         return new File(BINARY).exists();
     }
 
     private static void startSimulator() {
-        RUNNING_SIMULATOR = true;
+        LinkManager.isStimulationMode = true;
         try {
             process = Runtime.getRuntime().exec(BINARY);
         } catch (IOException e) {
