@@ -19,7 +19,7 @@ import javax.swing.*;
  * @see WavePanel
  */
 public class Launcher extends FrameHelper {
-    public static final int CONSOLE_VERSION = 20141204;
+    public static final int CONSOLE_VERSION = 20141210;
     public static final boolean SHOW_STIMULATOR = true;
     private final String port;
 
@@ -45,7 +45,7 @@ public class Launcher extends FrameHelper {
         tabbedPane.addTab("LE controls", new FlexibleControls().getPanel());
 
 //        tabbedPane.addTab("ADC", new AdcPanel(new BooleanInputsModel()).createAdcPanel());
-        if (SHOW_STIMULATOR && !SimulatorHelper.RUNNING_SIMULATOR) {
+        if (SHOW_STIMULATOR && !LinkManager.isStimulationMode) {
             EcuStimulator stimulator = EcuStimulator.getInstance();
             tabbedPane.add("ECU stimulation", stimulator.getPanel());
         }
