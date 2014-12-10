@@ -98,7 +98,7 @@ static msg_t mfiThread(void)
 	}
 }
 
-void initMalfunctionIndicator(void) {
+void initMalfunctionIndicator(Engine *engine) {
 	// create static thread
 	chThdCreateStatic(mfiThreadStack, sizeof(mfiThreadStack), LOWPRIO, (tfunc_t) mfiThread, NULL);
 	// only for debug

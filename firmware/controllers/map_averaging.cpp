@@ -124,7 +124,7 @@ static void endAveraging(void *arg) {
 /**
  * Shaft Position callback used to schedule start and end of MAP averaging
  */
-static void shaftPositionCallback(trigger_event_e ckpEventType, uint32_t index DECLARE_ENGINE_PARAMETER_S) {
+static void mapAveragingCallback(trigger_event_e ckpEventType, uint32_t index DECLARE_ENGINE_PARAMETER_S) {
 	// this callback is invoked on interrupt thread
 
 	if (index != 0)
@@ -170,7 +170,7 @@ float getMap(void) {
 	return getMapByVoltage(v_averagedMapValue);
 }
 
-void initMapAveraging(void) {
+void initMapAveraging(Engine *engine) {
 	initLogging(&logger, "Map Averaging");
 
 	startTimer[0].name = "map start0";
@@ -178,7 +178,7 @@ void initMapAveraging(void) {
 	endTimer[0].name = "map end0";
 	endTimer[1].name = "map end1";
 
-//	addTriggerEventListener(&shaftPositionCallback, "rpm reporter", NULL);
+	addTriggerEventListener(&mapAveragingCallback, "MAP averaging", engine);
 	addConsoleAction("faststat", showMapStats);
 }
 

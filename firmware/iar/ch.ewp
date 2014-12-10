@@ -2185,7 +2185,7 @@
         <name>$PROJ_DIR$\..\controllers\algo\main_trigger_callback.h</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\controllers\algo\malfunction_central.c</name>
+        <name>$PROJ_DIR$\..\controllers\algo\malfunction_central.cpp</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\controllers\algo\malfunction_central.h</name>

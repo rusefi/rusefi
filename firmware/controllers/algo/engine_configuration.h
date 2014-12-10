@@ -311,6 +311,10 @@ typedef struct {
 
 	cranking_parameters_s crankingSettings;
 
+	/**
+	 * @see hasMapSensor
+	 * @see isMapAveragingEnabled
+	 */
 	MAP_sensor_config_s map;
 
 	// todo: merge with channel settings, use full-scale Thermistor here!
@@ -437,6 +441,9 @@ typedef struct {
 	adc_channel_e iatAdcChannel;
 	adc_channel_e mafAdcChannel;
 
+	/**
+	 * @see hasAfrSensor
+	 */
 	afr_sensor_s afrSensor;
 
 	float injectionOffset;
@@ -445,6 +452,9 @@ typedef struct {
 
 	float diffLoadEnrichmentCoef;
 
+	/**
+	 * @see hasBaroSensor
+	 */
 	air_pressure_sensor_config_s baroSensor;
 
 	float veLoadBins[FUEL_LOAD_COUNT];
@@ -461,6 +471,9 @@ typedef struct {
 
 	board_configuration_s bc;
 
+	/**
+	 * @see isMapAveragingEnabled
+	 */
 	bool_t hasMapSensor : 1; // bit 0
 	bool_t hasIatSensor : 1; // bit 1
 	bool_t hasBaroSensor : 1; // bit 1

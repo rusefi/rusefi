@@ -131,9 +131,13 @@ void printSensors(Engine *engine) {
 		reportSensorF(getCaption(LP_MAP), getMap(), 2);
 		reportSensorF("map_r", getRawMap(), 2);
 	}
-	reportSensorF("baro", getBaroPressure(), 2);
+	if (engineConfiguration->hasBaroSensor) {
+		reportSensorF("baro", getBaroPressure(), 2);
+	}
+	if (engineConfiguration->hasAfrSensor) {
+		reportSensorF("afr", getAfr(), 2);
+	}
 
-	reportSensorF("afr", getAfr(), 2);
 	reportSensorF("vref", getVRef(engineConfiguration), 2);
 	reportSensorF("vbatt", getVBatt(engineConfiguration), 2);
 

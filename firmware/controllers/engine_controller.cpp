@@ -513,13 +513,13 @@ void initEngineContoller(Engine *engine) {
 
 #if EFI_MALFUNCTION_INDICATOR
 	if (engineConfiguration->isMilEnabled) {
-		initMalfunctionIndicator();
+		initMalfunctionIndicator(engine);
 	}
 #endif /* EFI_MALFUNCTION_INDICATOR */
 
 #if EFI_MAP_AVERAGING
 	if (engineConfiguration->isMapAveragingEnabled) {
-		initMapAveraging();
+		initMapAveraging(engine);
 	}
 #endif /* EFI_MAP_AVERAGING */
 
