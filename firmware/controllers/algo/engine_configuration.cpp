@@ -77,22 +77,20 @@ void setConstantDwell(engine_configuration_s *engineConfiguration, float dwellMs
 	}
 }
 
-void setWholeVEMap(engine_configuration_s *engineConfiguration, float value) {
-	// todo: table helper?
-//	for (int l = 0; l < VE_LOAD_COUNT; l++) {
-//		for (int r = 0; r < VE_RPM_COUNT; r++) {
-//			engineConfiguration->veTable[l][r] = value;
-//		}
-//	}
+void setMap(fuel_table_t table, float value) {
+	for (int l = 0; l < FUEL_LOAD_COUNT; l++) {
+		for (int r = 0; r < FUEL_RPM_COUNT; r++) {
+			table[l][r] = value;
+		}
+	}
+}
+
+static void setWholeVEMap(engine_configuration_s *engineConfiguration, float value) {
+	setMap(engineConfiguration->veTable, value);
 }
 
 void setWholeFuelMap(engine_configuration_s *engineConfiguration, float value) {
-	// todo: table helper?
-	for (int l = 0; l < FUEL_LOAD_COUNT; l++) {
-		for (int r = 0; r < FUEL_RPM_COUNT; r++) {
-			engineConfiguration->fuelTable[l][r] = value;
-		}
-	}
+	setMap(engineConfiguration->fuelTable, value);
 }
 
 void setWholeTimingTable(engine_configuration_s *engineConfiguration, float value) {
@@ -164,6 +162,8 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 
 	// set_whole_timing_map 3
 	setWholeFuelMap(engineConfiguration, 3);
+	setWholeVEMap(engineConfiguration, 0.8);
+	setMap(engineConfiguration->afrTable, 14.7);
 
 	setThermistorConfiguration(&engineConfiguration->cltThermistorConf, 0, 9500, 23.8889, 2100, 48.8889, 1000);
 	engineConfiguration->cltThermistorConf.bias_resistor = 1500;
