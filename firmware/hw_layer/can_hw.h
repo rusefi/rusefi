@@ -11,6 +11,8 @@
 // CAN Bus ID for broadcast
 /**
  * e46 data is from http://forums.bimmerforums.com/forum/showthread.php?1887229
+ *
+ * Same for Mini Cooper? http://vehicle-reverse-engineering.wikia.com/wiki/MINI
  */
 #define CAN_BMW_E46_SPEED 0x153
 #define CAN_BMW_E46_RPM 0x316
