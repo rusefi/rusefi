@@ -268,9 +268,10 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 	 */
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_6;
 
-	boardConfiguration->adcHwChannelEnabled[0] = ADC_FAST; // ADC0 - PA0 - MAP
+	boardConfiguration->adcHwChannelEnabled[0] = ADC_SLOW; // ADC0 - PA0
 	boardConfiguration->adcHwChannelEnabled[1] = ADC_SLOW;
 	boardConfiguration->adcHwChannelEnabled[4] = ADC_SLOW;
+	boardConfiguration->adcHwChannelEnabled[6] = ADC_FAST;
 	boardConfiguration->adcHwChannelEnabled[11] = ADC_SLOW; // IAT
 	boardConfiguration->adcHwChannelEnabled[12] = ADC_SLOW; // CLT
 	boardConfiguration->adcHwChannelEnabled[13] = ADC_SLOW; // AFR
@@ -298,6 +299,10 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 
 	boardConfiguration->fsio_setting[0] = 0.55;
 	setFsioExt(engineConfiguration, 0, GPIOE_10, "0 fsio_setting", 400);
+
+	engineConfiguration->analogChartMode = AC_MAP;
+	boardConfiguration->isFastAdcEnabled = true;
+//	engineConfiguration->map.sensor.sensorType = MT_DENSO183;
 }
 
 #endif /* EFI_SUPPORT_DODGE_NEON */
