@@ -26,6 +26,8 @@ static FastInterpolation honda3bar(0.5, 91.422, 3.0, 0);
 
 static FastInterpolation mpx4250(0, 8, 5, 260);
 
+static FastInterpolation dodgeNeon2003(0.5, 0, 4.5, 100);
+
 float decodePressure(float voltage, air_pressure_sensor_config_s * config) {
 	switch (config->sensorType) {
 	case MT_CUSTOM:
@@ -37,6 +39,8 @@ float decodePressure(float voltage, air_pressure_sensor_config_s * config) {
 		return mpx4250.getValue(voltage);
 	case MT_HONDA3BAR:
 		return honda3bar.getValue(voltage);
+	case MT_DODGE_NEON_2003:
+		return dodgeNeon2003.getValue(voltage);
 	default:
 		firmwareError("Unknown MAP type: %d", config->sensorType);
 		return NAN;

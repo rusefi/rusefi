@@ -451,6 +451,7 @@ typedef enum {
 	MT_DENSO183 = 1,
 	MT_MPX4250 = 2,
 	MT_HONDA3BAR = 3,
+	MT_DODGE_NEON_2003 = 4,
 
 	Force_4b_cranking_map_type = ENUM_SIZE_HACK,
 } air_pressure_sensor_type_e;
