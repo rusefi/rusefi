@@ -63,7 +63,7 @@ static int DigitLength(int digit) {
 static void DisplayErrorCode(int length, int code) {
 	// todo: I suggest we use 'itoa' method to simplify this logic
 	for (int iter = length - 1; iter >= 0; iter--) {
-		int ourDigit = (int)pow(10, iter);		// 10^0 = 1, 10^1 = 10, 10^2=100, 10^3 = 1000, ....
+		int ourDigit = (int)efiPow10(iter);		// 10^0 = 1, 10^1 = 10, 10^2=100, 10^3 = 1000, ....
 		int digit = 1;						// as we remember "0" we show as one blink
 		while (code >= ourDigit) {
 			code = code - ourDigit;
