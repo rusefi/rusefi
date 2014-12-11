@@ -302,7 +302,14 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 
 	engineConfiguration->analogChartMode = AC_MAP;
 	boardConfiguration->isFastAdcEnabled = true;
-//	engineConfiguration->map.sensor.sensorType = MT_DENSO183;
+	engineConfiguration->map.sensor.sensorType = MT_DODGE_NEON_2003;
+
+
+//	boardConfiguration->canTxPin = GPIOB_6;
+//	boardConfiguration->canRxPin = GPIOB_12;
+//	engineConfiguration->canWriteEnabled = true;
+//	engineConfiguration->canReadEnabled = false;
+//	engineConfiguration->can_nbc_type = CAN_BUS_NBC_BMW;
 }
 
 #endif /* EFI_SUPPORT_DODGE_NEON */

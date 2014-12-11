@@ -2185,7 +2185,7 @@
         <name>$PROJ_DIR$\..\controllers\algo\main_trigger_callback.h</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\controllers\algo\malfunction_central.cpp</name>
+        <name>$PROJ_DIR$\..\controllers\algo\malfunction_central.c</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\controllers\algo\malfunction_central.h</name>
@@ -2498,7 +2498,7 @@
       <name>$PROJ_DIR$\..\controllers\lcd_controller.h</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\controllers\malfunction_indicator.c</name>
+      <name>$PROJ_DIR$\..\controllers\malfunction_indicator.cpp</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\controllers\malfunction_indicator.h</name>
