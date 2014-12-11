@@ -762,6 +762,8 @@ case MT_DENSO183:
   return "MT_DENSO183";
 case MT_HONDA3BAR:
   return "MT_HONDA3BAR";
+case MT_DODGE_NEON_2003:
+  return "MT_DODGE_NEON_2003";
 case Force_4b_cranking_map_type:
   return "Force_4b_cranking_map_type";
 case MT_CUSTOM:

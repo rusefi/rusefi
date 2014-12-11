@@ -14,7 +14,7 @@ extern "C"
 {
 #endif /* __cplusplus */
 
-#define CONSOLE_MAX_ACTIONS 128
+#define CONSOLE_MAX_ACTIONS 196
 
 typedef enum {
 	NO_PARAMETER,
