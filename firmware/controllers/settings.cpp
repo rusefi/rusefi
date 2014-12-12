@@ -420,6 +420,15 @@ static void setCltBias(float value) {
 	engineConfiguration->cltThermistorConf.bias_resistor = value;
 }
 
+static void setFanSetting(float onTempC, float offTempC) {
+	if(onTempC <= offTempC) {
+		scheduleMsg(&logger, "ON temp [%f] should be above OFF temp [%f]", onTempC, offTempC);
+		return;
+	}
+	engineConfiguration->fanOnTemperature = onTempC;
+	engineConfiguration->fanOffTemperature = offTempC;
+}
+
 static void setIatBias(float value) {
 	engineConfiguration->iatThermistorConf.bias_resistor = value;
 }
@@ -814,6 +823,8 @@ void initSettings(engine_configuration_s *engineConfiguration) {
 	addConsoleActionF("set_clt_bias", setCltBias);
 	addConsoleActionF("set_iat_bias", setIatBias);
 	addConsoleActionI("set_idle_solenoid_freq", setIdleSolenoidFrequency);
+
+	addConsoleActionFF("set_fan", setFanSetting);
 
 #if EFI_PROD_CODE
 	addConsoleActionSS("set_injection_pin", setInjectionPin);
