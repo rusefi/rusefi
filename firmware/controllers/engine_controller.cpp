@@ -349,10 +349,14 @@ static void showFsioInfo(void) {
 	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
 		char * exp = boardConfiguration->le_formulas[i];
 		if (exp[0] != 0) {
-			scheduleMsg(&logger, "FSIO #%d [%s] at %s@%dHz = %f", (i + 1), exp,
+			/**
+			 * in case of FSIO user interface indexes are starting with 0, the argument for that
+			 * is the fact that the target audience is more software developers
+			 */
+			scheduleMsg(&logger, "FSIO #%d [%s] at %s@%dHz value=%f", i, exp,
 					hwPortname(boardConfiguration->fsioPins[i]), boardConfiguration->fsioFrequency[i],
 					engineConfiguration2->fsioLastValue[i]);
-			scheduleMsg(&logger, "user-defined #%d value=%f", (i + 1), engine->engineConfiguration2->fsioLastValue[i]);
+//			scheduleMsg(&logger, "user-defined #%d value=%f", i, engine->engineConfiguration2->fsioLastValue[i]);
 			showFsio(NULL, fsioLogics[i]);
 		}
 	}

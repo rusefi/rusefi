@@ -175,9 +175,14 @@ void testLogicExpressions(void) {
 	testExpression("10 99 max", 99);
 
 	testExpression("fan NOT coolant 90 > AND fan coolant 85 > AND OR", 1);
+	testExpression("coolant", 100);
+	testExpression("fan_off_setting", 0);
+	testExpression("coolant fan_off_setting >", 1);
 
 	testExpression("0 1 &", 0);
 	testExpression("0 1 |", 1);
+
+	testExpression("0 1 >", 0);
 
 	testExpression(FAN_CONTROL_LOGIC, 1);
 
