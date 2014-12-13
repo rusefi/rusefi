@@ -55,7 +55,7 @@ $Descr A4 11693 8268
 encoding utf-8
 Sheet 4 14
 Title "Frankenso"
-Date "23 nov 2014"
+Date "13 dec 2014"
 Rev ".02"
 Comp "rusEFI.com"
 Comment1 ""
@@ -92,7 +92,7 @@ L C C471
 U 1 1 52CAD8F7
 P 3550 2700
 F 0 "C471" H 3600 2800 50  0000 L CNN
-F 1 ".1uF" H 3600 2600 50  0000 L CNN
+F 1 "0.1uF" H 3600 2600 50  0000 L CNN
 F 2 "SM0805" V 1130 2600 60  0001 C CNN
 F 3 "" H 3550 2700 60  0001 C CNN
 F 4 "AVX,08055C104KAT2A" V 1130 2600 60  0001 C CNN "mfg,mfg#"

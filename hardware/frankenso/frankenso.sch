@@ -55,7 +55,7 @@ $Descr B 17000 11000
 encoding utf-8
 Sheet 1 14
 Title "Frankenso"
-Date "23 nov 2014"
+Date "13 dec 2014"
 Rev ".03"
 Comp "rusEFI.com"
 Comment1 ""
@@ -1412,8 +1412,6 @@ NoConn ~ 4850 2150
 Wire Wire Line
 	4850 1550 4850 1750
 Wire Wire Line
-	4950 550  4950 1650
-Wire Wire Line
 	5050 1550 5050 1750
 Wire Wire Line
 	5150 1450 5150 1650
@@ -1934,7 +1932,7 @@ L C C24
 U 1 1 53BB23E4
 P 6800 6900
 F 0 "C24" H 6800 7000 40  0000 L CNN
-F 1 ".1uF" H 6806 6815 40  0000 L CNN
+F 1 "0.1uF" H 6806 6815 40  0000 L CNN
 F 2 "SM0805" V 1130 2600 60  0001 C CNN
 F 3 "" H 6800 6900 60  0001 C CNN
 F 4 "AVX,08055C104KAT2A" V 1130 2600 60  0001 C CNN "mfg,mfg#"
@@ -2785,7 +2783,7 @@ Connection ~ 8900 1450
 Wire Wire Line
 	8800 1050 8800 1750
 Wire Wire Line
-	4950 550  12100 550 
+	4900 550  12100 550 
 Connection ~ 11700 550 
 Connection ~ 11900 550 
 Connection ~ 11500 550 
@@ -2812,4 +2810,8 @@ Wire Wire Line
 Connection ~ 12000 550 
 Text Label 9600 5050 2    60   ~ 0
 5V
+Wire Wire Line
+	4950 2050 4900 2050
+Wire Wire Line
+	4900 2050 4900 550 
 $EndSCHEMATC
