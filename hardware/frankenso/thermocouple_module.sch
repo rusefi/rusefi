@@ -55,7 +55,7 @@ $Descr A4 11693 8268
 encoding utf-8
 Sheet 14 14
 Title "Electronic Industrial Temperature Interface (EITI)"
-Date "13 dec 2014"
+Date "14 dec 2014"
 Rev ".02"
 Comp "Mrk Industries"
 Comment1 ""
