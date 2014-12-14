@@ -424,8 +424,10 @@ static void setUserOutput(const char *indexStr, const char *quotedLine, Engine *
 	showFsioInfo();
 }
 
-static void setInt(const char *offsetStr, const char *valueStr) {
-
+static void setInt(const int offset, const int value) {
+	int *ptr = (int *) (&((char *) engine->engineConfiguration)[offset]);
+	*ptr = value;
+	scheduleMsg(&logger, "setting int @%d to %d", offset, value);
 }
 
 static void getInt(int offset) {
@@ -577,7 +579,7 @@ void initEngineContoller(Engine *engine) {
 	addConsoleActionII("set_fsio_frequency", (VoidIntInt) setFsioFrequency);
 
 	addConsoleActionSS("set_float", (VoidCharPtrCharPtr) setFloat);
-	addConsoleActionSS("set_int", (VoidCharPtrCharPtr) setInt);
+	addConsoleActionII("set_int", (VoidIntInt) setInt);
 	addConsoleActionI("get_float", getFloat);
 	addConsoleActionI("get_int", getInt);
 

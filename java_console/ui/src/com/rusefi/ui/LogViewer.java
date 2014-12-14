@@ -15,6 +15,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileFilter;
+import java.util.Arrays;
 
 /**
  * 7/27/13
@@ -106,6 +107,8 @@ public class LogViewer extends JPanel {
             throw new IllegalStateException("Not directory: " + folder);
 
         File[] files = folder.listFiles(FILE_FILTER);
+	Arrays.sort(files);
+	
         fileListModel.removeAllElements();
         for (File file : files)
             fileListModel.addElement(getFileDesc(file));

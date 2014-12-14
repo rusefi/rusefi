@@ -95,8 +95,9 @@ static void printOutputs(engine_configuration_s *engineConfiguration, engine_con
  */
 void printConfiguration(engine_configuration_s *engineConfiguration, engine_configuration2_s *engineConfiguration2) {
 
-	scheduleMsg(&logger, "Template %s/%d trigger %s", getConfigurationName(engineConfiguration->engineType),
-			engineConfiguration->engineType, getTrigger_type_e(engineConfiguration->triggerConfig.triggerType));
+	scheduleMsg(&logger, "Template %s/%d trigger %s/%s", getConfigurationName(engineConfiguration->engineType),
+			engineConfiguration->engineType, getTrigger_type_e(engineConfiguration->triggerConfig.triggerType),
+			getEngine_load_mode_e(engineConfiguration->algorithm));
 
 	scheduleMsg(&logger, "configurationVersion=%d", getGlobalConfigurationVersion());
 

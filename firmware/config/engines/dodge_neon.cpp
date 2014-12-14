@@ -208,6 +208,7 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 
 	// I want to start with a simple Alpha-N
 	engineConfiguration->algorithm = LM_ALPHA_N;
+//	engineConfiguration->algorithm = LM_SPEED_DENSITY;
 	setFuelLoadBin(engineConfiguration, 0, 100);
 	setTimingLoadBin(engineConfiguration, 0, 100);
 
