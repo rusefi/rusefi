@@ -38,7 +38,7 @@ $Descr A 11000 8500
 encoding utf-8
 Sheet 1 1
 Title "Breakout TLE6244"
-Date "13 dec 2014"
+Date "14 dec 2014"
 Rev "R0.1"
 Comp "rusEFI"
 Comment1 ""
