@@ -1,4 +1,4 @@
-update=12/8/2014 5:30:16 AM
+update=12/13/2014 1:27:32 PM
 version=1
 last_client=pcbnew
 [cvpcb]
@@ -51,8 +51,8 @@ LibName31=TLE6244
 LibName32=art-electro-ic
 [pcbnew]
 version=1
-LastNetListRead=
-UseCmpFile=1
+LastNetListRead=Breakout_TLE6244.net
+UseCmpFile=0
 PadDrill=5.020000000000
 PadDrillOvalY=5.020000000000
 PadSizeH=6.000000000000
