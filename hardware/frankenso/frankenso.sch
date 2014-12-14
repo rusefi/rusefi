@@ -2788,7 +2788,6 @@ Connection ~ 11700 550
 Connection ~ 11900 550 
 Connection ~ 11500 550 
 Connection ~ 9100 550 
-Connection ~ 4950 1450
 Connection ~ 8900 550 
 Wire Wire Line
 	8800 650  8800 550 
@@ -2814,4 +2813,6 @@ Wire Wire Line
 	4950 2050 4900 2050
 Wire Wire Line
 	4900 2050 4900 550 
+Wire Wire Line
+	4950 1450 4950 1650
 $EndSCHEMATC
