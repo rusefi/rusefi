@@ -32,7 +32,8 @@
 #include "efiGpio.h"
 #include "engine.h"
 
-EXTERN_ENGINE;
+EXTERN_ENGINE
+;
 
 // todo: better name for this constant
 #define HELPER_PERIOD 100000
@@ -92,13 +93,11 @@ static trigger_value_e eventType[6] = { TV_LOW, TV_HIGH, TV_LOW, TV_HIGH, TV_LOW
 	totalEventCountBase += TRIGGER_SHAPE(size); \
 }
 
-
 /**
  * @brief Trigger decoding happens here
  * This method changes the state of trigger_state_s data structure according to the trigger event
  */
-void TriggerState::decodeTriggerEvent(
-		trigger_event_e const signal, uint64_t nowNt DECLARE_ENGINE_PARAMETER_S) {
+void TriggerState::decodeTriggerEvent(trigger_event_e const signal, uint64_t nowNt DECLARE_ENGINE_PARAMETER_S) {
 	efiAssertVoid(signal <= SHAFT_3RD_UP, "unexpected signal");
 
 	trigger_wheel_e triggerWheel = eventIndex[signal];
@@ -122,13 +121,15 @@ void TriggerState::decodeTriggerEvent(
 	 * For performance reasons, we want to work with 32 bit values. If there has been more then
 	 * 10 seconds since previous trigger event we do not really care.
 	 */
-	currentDuration = currentDurationLong > 10 * US2NT(US_PER_SECOND_LL) ? 10 * US2NT(US_PER_SECOND_LL) : currentDurationLong;
+	currentDuration =
+			currentDurationLong > 10 * US2NT(US_PER_SECOND_LL) ? 10 * US2NT(US_PER_SECOND_LL) : currentDurationLong;
 
 	if (isLessImportant) {
 		/**
 		 * For less important events we simply increment the index.
 		 */
-		nextTriggerEvent();
+		nextTriggerEvent()
+		;
 		if (TRIGGER_SHAPE(gapBothDirections)) {
 			toothed_previous_duration = currentDuration;
 			isFirstEvent = false;
@@ -154,14 +155,18 @@ void TriggerState::decodeTriggerEvent(
 
 	if (TRIGGER_SHAPE(isSynchronizationNeeded)) {
 #if ! EFI_PROD_CODE
+		// todo: replace printGapRatio with engineConfiguration->isPrintTriggerSynchDetails
+		// and merge these two sections
 		if (printGapRatio) {
 
 			float gap = 1.0 * currentDuration / toothed_previous_duration;
 			print("current gap %f\r\n", gap);
 		}
 #else
-//	float gap = 1.0 * currentDuration / shaftPositionState->toothed_previous_duration;
-//	scheduleMsg(&logger, "gap=%f @ %d", gap, shaftPositionState->getCurrentIndex());
+		if (engineConfiguration->isPrintTriggerSynchDetails) {
+			float gap = 1.0 * currentDuration / toothed_previous_duration;
+			scheduleMsg(&logger, "gap=%f @ %d", gap, current_index);
+		}
 
 #endif /* ! EFI_PROD_CODE */
 
@@ -187,6 +192,13 @@ void TriggerState::decodeTriggerEvent(
 		setOutputPinValue(LED_TRIGGER_ERROR, isDecodingError);
 		if (isDecodingError) {
 			totalTriggerErrorCounter++;
+			if (engineConfiguration->isPrintTriggerSynchDetails) {
+#if EFI_PROD_CODE
+				scheduleMsg(&logger, "error: synchronizationPoint @ index %d expected %d/%d/%d got %d/%d/%d", current_index,
+						TRIGGER_SHAPE(expectedEventCount[0]), TRIGGER_SHAPE(expectedEventCount[1]),
+											TRIGGER_SHAPE(expectedEventCount[2]), eventCount[0], eventCount[1], eventCount[2]);
+#endif /* EFI_PROD_CODE */
+			}
 		}
 
 		errorDetection.add(isDecodingError);
@@ -199,11 +211,13 @@ void TriggerState::decodeTriggerEvent(
 
 		shaft_is_synchronized = true;
 		// this call would update duty cycle values
-		nextTriggerEvent();
+		nextTriggerEvent()
+		;
 
 		nextRevolution();
 	} else {
-		nextTriggerEvent();
+		nextTriggerEvent()
+		;
 	}
 
 	toothed_previous_duration = currentDuration;
@@ -389,7 +403,8 @@ static uint32_t doFindTrigger(TriggerStimulatorHelper *helper, trigger_shape_s *
  *
  * This function finds the index of synchronization event within trigger_shape_s
  */
-uint32_t findTriggerZeroEventIndex(trigger_shape_s * shape, trigger_config_s const*triggerConfig DECLARE_ENGINE_PARAMETER_S) {
+uint32_t findTriggerZeroEventIndex(trigger_shape_s * shape,
+		trigger_config_s const*triggerConfig DECLARE_ENGINE_PARAMETER_S) {
 
 	TriggerState state;
 	errorDetection.clear();
