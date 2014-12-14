@@ -666,6 +666,8 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		boardConfiguration->isFastAdcEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "injection")) {
 		engineConfiguration->isInjectionEnabled = isEnabled;
+	} else if (strEqualCaseInsensitive(param, "trigger_details")) {
+		engineConfiguration->isPrintTriggerSynchDetails = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "ignition")) {
 		engineConfiguration->isIgnitionEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "self_stimulation")) {

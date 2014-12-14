@@ -497,6 +497,7 @@ typedef struct {
 	bool isTunerStudioEnabled : 1; // bit 8
 	bool isWaveAnalyzerEnabled : 1; // bit 9
 	bool isIdleThreadEnabled : 1; // bit 10
+	bool isPrintTriggerSynchDetails : 1; // bit 11
 	/**
 	 * Usually if we have no trigger events that means engine is stopped
 	 * Unless we are troubleshooting and spinning the engine by hand - this case a longer
