@@ -6,6 +6,7 @@
  * MIATA_1994_DEVIATOR = 20
  * MIATA_1996 = 21
  * MIATA_1994_SPAGS = 24
+ * set_engine_type 24
  *
  * @date Apr 11, 2014
  * @author Andrey Belomutskiy, (c) 2012-2014

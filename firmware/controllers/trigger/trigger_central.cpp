@@ -247,6 +247,11 @@ static void triggerInfo(Engine *engine) {
 			boolToString(isTriggerDecoderError()), triggerCentral.triggerState.totalTriggerErrorCounter,
 			triggerCentral.triggerState.orderingErrorCounter, triggerCentral.triggerState.getTotalRevolutionCounter(),
 			boolToString(engineConfiguration->directSelfStimulation));
+
+	if (ts->isSynchronizationNeeded) {
+		scheduleMsg(&logger, "gap from %f to %f", ts->syncRatioFrom, ts->syncRatioTo);
+	}
+
 #endif
 
 #if EFI_PROD_CODE
