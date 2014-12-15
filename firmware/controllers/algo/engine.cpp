@@ -13,6 +13,7 @@
 #include "engine.h"
 #include "engine_state.h"
 #include "efiGpio.h"
+#include "trigger_central.h"
 
 #if EFI_PROD_CODE
 #include "injector_central.h"
@@ -24,7 +25,8 @@
 static Logging logger;
 #endif
 
-EXTERN_ENGINE;
+EXTERN_ENGINE
+;
 
 /**
  * We are executing these heavy (logarithm) methods from outside the trigger callbacks for performance reasons.
@@ -94,6 +96,9 @@ void Engine::watchdog() {
 	isSpinning = false;
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	scheduleMsg(&logger, "engine has STOPPED");
+	if (engineConfiguration->isPrintTriggerSynchDetails) {
+		triggerInfo(engine);
+	}
 #endif
 
 	stopPins();

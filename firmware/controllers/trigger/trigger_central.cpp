@@ -225,7 +225,7 @@ extern PwmConfig triggerSignal;
 extern uint32_t maxLockTime;
 extern uint32_t maxEventQueueTime;
 
-static void triggerInfo(Engine *engine) {
+void triggerInfo(Engine *engine) {
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
 
 	trigger_shape_s *ts = &engine->triggerShape;
