@@ -21,6 +21,9 @@
 #include "thermistors.h"
 #include "engine_math.h"
 #include "le_functions.h"
+#if EFI_PROD_CODE
+#include "HIP9011.h"
+#endif
 
 // setFrankenso_01_LCD
 #include "honda_accord.h"
@@ -306,12 +309,18 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 	boardConfiguration->isFastAdcEnabled = true;
 	engineConfiguration->map.sensor.sensorType = MT_DODGE_NEON_2003;
 
+#if EFI_PROD_CODE
+	setHip9011FrankensoPinout();
+#endif
+	engineConfiguration->cylinderBore = 87.5;
 
+//	engineConfiguration->isCanEnabled = true;
 //	boardConfiguration->canTxPin = GPIOB_6;
 //	boardConfiguration->canRxPin = GPIOB_12;
 //	engineConfiguration->canWriteEnabled = true;
 //	engineConfiguration->canReadEnabled = false;
-//	engineConfiguration->can_nbc_type = CAN_BUS_NBC_BMW;
+////	engineConfiguration->can_nbc_type = CAN_BUS_NBC_BMW;
+//	engineConfiguration->can_nbc_type = CAN_BUS_MAZDA_RX8;
 }
 
 #endif /* EFI_SUPPORT_DODGE_NEON */
