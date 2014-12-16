@@ -10,5 +10,6 @@
 #define HIP9011_H_
 
 void initHip9011(void);
+void setHip9011FrankensoPinout(void);
 
 #endif /* HIP9011_H_ */

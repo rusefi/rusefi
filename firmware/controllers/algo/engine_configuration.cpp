@@ -298,6 +298,8 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	engineConfiguration->mafAdcChannel = EFI_ADC_0;
 	engineConfiguration->afrSensor.afrAdcChannel = EFI_ADC_14;
 
+	engineConfiguration->cylinderBore = 87.5;
+
 	initEgoSensor(&engineConfiguration->afrSensor, ES_BPSX_D1);
 
 	engineConfiguration->globalFuelCorrection = 1;
