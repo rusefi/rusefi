@@ -50,6 +50,8 @@ static CANTxFrame txmsg;
 static int engine_rpm = 0;
 static float engine_clt = 0;
 
+static int rand = 1212321311;
+
 //static CANDriver *getCanDevice() {
 //	if(board)
 //}
@@ -83,13 +85,18 @@ static void commonTxInit(int eid) {
 	txmsg.DLC = 8;
 }
 
-static void sendMessage(void) {
+static void sendMessage2(int size) {
+	txmsg.DLC = size;
 	msg_t result = canTransmit(&EFI_CAN_DEVICE, CAN_ANY_MAILBOX, &txmsg, TIME_INFINITE);
 	if(result==RDY_OK) {
 		can_write_ok++;
 	} else {
 		can_write_not_ok++;
 	}
+}
+
+static void sendMessage() {
+	sendMessage2(8);
 }
 
 static void canDashboardBMW(void) {
@@ -108,6 +115,12 @@ static void canDashboardBMW(void) {
 }
 
 static void canMazdaRX8(void) {
+	rand = rand * 17;
+
+	commonTxInit(0x300);
+	sendMessage2(0);
+
+
 	commonTxInit(CAN_MAZDA_RX_RPM_SPEED);
 
 	setShortValue(&txmsg, engine_rpm * 4, 1);
@@ -115,6 +128,21 @@ static void canMazdaRX8(void) {
 	setShortValue(&txmsg, 123+10000, 5);
 	setShortValue(&txmsg, 0, 7);
 	sendMessage();
+
+	commonTxInit(CAN_MAZDA_RX_STATUS_1);
+	setShortValue(&txmsg, engine_rpm * 4, 1);
+	setShortValue(&txmsg, 0xFFFF, 3);
+	setShortValue(&txmsg, 123+10000, 5);
+	setShortValue(&txmsg, 0, 7);
+	sendMessage2(7);
+
+	commonTxInit(CAN_MAZDA_RX_STATUS_1);
+	setShortValue(&txmsg, engine_rpm * 4, 1);
+	setShortValue(&txmsg, 0xFFFF, 3);
+	setShortValue(&txmsg, 123+10000, 5);
+	setShortValue(&txmsg, 0, 7);
+	sendMessage2(7);
+
 
 //	my_data[0] = (RPM * 4) / 256; // rpm
 //		   my_data[1] = (RPM * 4) % 256; // rpm
