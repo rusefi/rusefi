@@ -28,10 +28,6 @@ static int can_write_not_ok = 0;
 static Logging logger;
 static THD_WORKING_AREA(canTreadStack, UTILITY_THREAD_STACK_SIZE);
 
-extern engine_configuration_s *engineConfiguration;
-extern engine_configuration2_s *engineConfiguration2;
-extern board_configuration_s *board_configuration;
-
 /*
  * 500KBaud
  * automatic wakeup
@@ -203,10 +199,10 @@ static msg_t canThread(void *arg) {
 static void canInfo(void) {
 	scheduleMsg(&logger, "CAN TX %s", hwPortname(boardConfiguration->canTxPin));
 	scheduleMsg(&logger, "CAN RX %s", hwPortname(boardConfiguration->canRxPin));
-	scheduleMsg(&logger, "type=%d canReadEnabled=%d canWriteEnabled=%d",
+	scheduleMsg(&logger, "type=%d canReadEnabled=%s canWriteEnabled=%s",
 			engineConfiguration->can_nbc_type,
-			engineConfiguration->canReadEnabled,
-			engineConfiguration->canWriteEnabled);
+			boolToString(engineConfiguration->canReadEnabled),
+			boolToString(engineConfiguration->canWriteEnabled));
 
 	scheduleMsg(&logger, "CAN rx count %d/tx ok %d/tx not ok %d", canReadCounter,
 			can_write_ok, can_write_not_ok);
