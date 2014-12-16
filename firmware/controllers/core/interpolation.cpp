@@ -69,7 +69,7 @@ float interpolate(float x1, float y1, float x2, float y2, float x) {
  * @returns	the highest index within sorted array such that array[i] is greater than or equal to the parameter
  * @note If the parameter is smaller than the first element of the array, -1 is returned.
  */
-int findIndex(float array[], int size, float value) {
+int findIndex(const float array[], int size, float value) {
 	efiAssert(!cisnan(value), "NaN in findIndex", 0);
 
 	if (value < array[0])

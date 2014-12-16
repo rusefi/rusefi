@@ -17,6 +17,7 @@ typedef enum {
 	CAN_BUS_NBC_BMW = 0,
 	CAN_BUS_NBC_FIAT = 1,
 	CAN_BUS_NBC_VAG = 2,
+	CAN_BUS_MAZDA_RX8 = 3,
 
 	Internal_ForceMyEnumIntSize_can_nbc = ENUM_SIZE_HACK,
 } can_nbc_e;

@@ -399,6 +399,7 @@ typedef struct {
 
 	int canReadEnabled;
 	int canWriteEnabled;
+	// offset 968
 	can_nbc_e can_nbc_type;
 	int can_sleep_period;
 
@@ -544,7 +545,12 @@ typedef struct {
 	float knockDetectionWindowStart;
 	float knockDetectionWindowEnd;
 
-	int unused3[85];
+	/**
+	 * Cylinder diameter, in mm.
+	 */
+	float cylinderBore;
+
+	int unused3[84];
 
 } engine_configuration_s;
 

@@ -23,6 +23,8 @@ EXTERN_ENGINE
 ;
 
 static int canReadCounter = 0;
+static int can_write_ok = 0;
+static int can_write_not_ok = 0;
 static Logging logger;
 static THD_WORKING_AREA(canTreadStack, UTILITY_THREAD_STACK_SIZE);
 
@@ -85,19 +87,48 @@ static void commonTxInit(int eid) {
 	txmsg.DLC = 8;
 }
 
+static void sendMessage(void) {
+	msg_t result = canTransmit(&EFI_CAN_DEVICE, CAN_ANY_MAILBOX, &txmsg, TIME_INFINITE);
+	if(result==RDY_OK) {
+		can_write_ok++;
+	} else {
+		can_write_not_ok++;
+	}
+}
+
 static void canDashboardBMW(void) {
 	//BMW Dashboard
 	commonTxInit(CAN_BMW_E46_SPEED);
 	setShortValue(&txmsg, 10 * 8, 1);
-	canTransmit(&EFI_CAN_DEVICE, CAN_ANY_MAILBOX, &txmsg, TIME_INFINITE);
+	sendMessage();
 
 	commonTxInit(CAN_BMW_E46_RPM);
 	setShortValue(&txmsg, (int) (engine_rpm * 6.4), 2);
-	canTransmit(&EFI_CAN_DEVICE, CAN_ANY_MAILBOX, &txmsg, TIME_INFINITE);
+	sendMessage();
 
 	commonTxInit(CAN_BMW_E46_DME2);
 	setShortValue(&txmsg, (int) ((engine_clt + 48.373) / 0.75), 1);
-	canTransmit(&EFI_CAN_DEVICE, CAN_ANY_MAILBOX, &txmsg, TIME_INFINITE);
+	sendMessage();
+}
+
+static void canMazdaRX8(void) {
+	commonTxInit(CAN_MAZDA_RX_RPM_SPEED);
+
+	setShortValue(&txmsg, engine_rpm * 4, 1);
+	setShortValue(&txmsg, 0xFFFF, 3);
+	setShortValue(&txmsg, 123+10000, 5);
+	setShortValue(&txmsg, 0, 7);
+	sendMessage();
+
+//	my_data[0] = (RPM * 4) / 256; // rpm
+//		   my_data[1] = (RPM * 4) % 256; // rpm
+//		   my_data[2] = 0xFF; // Unknown, 0xFF from 'live'.
+//		   my_data[3] = 0xFF; // Unknown, 0xFF from 'live'.
+//		   my_data[4] = (kmhspeed+10000) / 256; //speed
+//		   my_data[5] = (kmhspeed+10000) % 256; //speed
+//		   my_data[6] = 0x00; // Unknown possible accelerator pedel if Madox is correc
+//		   my_data[7] = 0x00; //Unknown
+
 }
 
 static void canDashboardFiat(void) {
@@ -105,18 +136,18 @@ static void canDashboardFiat(void) {
 	commonTxInit(CAN_FIAT_MOTOR_INFO);
 	setShortValue(&txmsg, (int) (engine_clt - 40), 3); //Coolant Temp
 	setShortValue(&txmsg, engine_rpm / 32, 6); //RPM
-	canTransmit(&EFI_CAN_DEVICE, CAN_ANY_MAILBOX, &txmsg, TIME_INFINITE);
+	sendMessage();
 }
 
 static void canDashboardVAG(void) {
 	//VAG Dashboard
 	commonTxInit(CAN_VAG_RPM);
 	setShortValue(&txmsg, engine_rpm * 4, 2); //RPM
-	canTransmit(&EFI_CAN_DEVICE, CAN_ANY_MAILBOX, &txmsg, TIME_INFINITE);
+	sendMessage();
 
 	commonTxInit(CAN_VAG_CLT);
 	setShortValue(&txmsg, (int) ((engine_clt + 48.373) / 0.75), 1); //Coolant Temp
-	canTransmit(&EFI_CAN_DEVICE, CAN_ANY_MAILBOX, &txmsg, TIME_INFINITE);
+	sendMessage();
 }
 
 static void canInfoNBCBroadcast(can_nbc_e typeOfNBC) {
@@ -130,13 +161,12 @@ static void canInfoNBCBroadcast(can_nbc_e typeOfNBC) {
 	case CAN_BUS_NBC_VAG:
 		canDashboardVAG();
 		break;
+	case CAN_BUS_MAZDA_RX8:
+		canMazdaRX8();
+		break;
 	default:
 		break;
 	}
-}
-
-static void enableCanRead(int value) {
-	engineConfiguration->canReadEnabled = value;
 }
 
 static void canRead(void) {
@@ -149,7 +179,7 @@ static void canRead(void) {
 
 static void writeStateToCan(void) {
 	engine_rpm = getRpm();
-	engine_clt = getCoolantTemperature(engine);
+	engine_clt = 123;//getCoolantTemperature(engine);
 
 	canInfoNBCBroadcast(engineConfiguration->can_nbc_type);
 }
@@ -173,10 +203,13 @@ static msg_t canThread(void *arg) {
 static void canInfo(void) {
 	scheduleMsg(&logger, "CAN TX %s", hwPortname(boardConfiguration->canTxPin));
 	scheduleMsg(&logger, "CAN RX %s", hwPortname(boardConfiguration->canRxPin));
-	scheduleMsg(&logger, "canReadEnabled=%d canWriteEnabled=%d", engineConfiguration->canReadEnabled,
+	scheduleMsg(&logger, "type=%d canReadEnabled=%d canWriteEnabled=%d",
+			engineConfiguration->can_nbc_type,
+			engineConfiguration->canReadEnabled,
 			engineConfiguration->canWriteEnabled);
 
-	scheduleMsg(&logger, "CAN rx count %d", canReadCounter);
+	scheduleMsg(&logger, "CAN rx count %d/tx ok %d/tx not ok %d", canReadCounter,
+			can_write_ok, can_write_not_ok);
 }
 
 void initCan(void) {
@@ -197,8 +230,6 @@ void initCan(void) {
 
 	mySetPadMode2("CAN TX", boardConfiguration->canTxPin, PAL_MODE_ALTERNATE(EFI_CAN_TX_AF));
 	mySetPadMode2("CAN RX", boardConfiguration->canRxPin, PAL_MODE_ALTERNATE(EFI_CAN_RX_AF));
-
-	addConsoleActionI("enable_can_read", enableCanRead);
 
 	addConsoleAction("caninfo", canInfo);
 }

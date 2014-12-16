@@ -664,6 +664,10 @@ static void setSpiMode(int index, bool mode) {
 static void enableOrDisable(const char *param, bool isEnabled) {
 	if (strEqualCaseInsensitive(param, "fastadc")) {
 		boardConfiguration->isFastAdcEnabled = isEnabled;
+	} else if (strEqualCaseInsensitive(param, "can_read")) {
+		engineConfiguration->canReadEnabled = isEnabled;
+	} else if (strEqualCaseInsensitive(param, "can_write")) {
+		engineConfiguration->canWriteEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "injection")) {
 		engineConfiguration->isInjectionEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "trigger_details")) {
