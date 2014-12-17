@@ -31,8 +31,8 @@
 #include "efiGpio.h"
 
 static Logging logger;
-
-EXTERN_ENGINE;
+EXTERN_ENGINE
+;
 
 static bool_t isRunningBench = false;
 
@@ -120,10 +120,17 @@ static void pinbench(const char *delayStr, const char *onTimeStr, const char *of
 	needToRunBench = true;
 }
 
-// fuelbench2 0 2 5 1000 2
+/**
+ * delay 100, cylinder #2, 5ms ON, 1000ms OFF, repeat 2 times
+ * fuelbench2 100 2 5 1000 2
+ */
 static void fuelbench2(const char *delayStr, const char *indexStr, const char * onTimeStr, const char *offTimeStr,
 		const char *countStr) {
 	int index = atoi(indexStr);
+	if (index < 1 || index > engineConfiguration->cylindersCount) {
+		scheduleMsg(&logger, "Invalid index: %d", index);
+		return;
+	}
 	brain_pin_e b = boardConfiguration->injectionPins[index - 1];
 	io_pin_e p = (io_pin_e) ((int) INJECTOR_1_OUTPUT - 1 + index);
 	pinbench(delayStr, onTimeStr, offTimeStr, countStr, p, b);
@@ -158,9 +165,16 @@ static void fuelbench(const char * onTimeStr, const char *offTimeStr, const char
 	fuelbench2("0", "1", onTimeStr, offTimeStr, countStr);
 }
 
+/**
+ * sparkbench2 0 1 5 1000 2
+ */
 static void sparkbench2(const char *delayStr, const char *indexStr, const char * onTimeStr, const char *offTimeStr,
 		const char *countStr) {
 	int index = atoi(indexStr);
+	if (index < 1 || index > engineConfiguration->cylindersCount) {
+		scheduleMsg(&logger, "Invalid index: %d", index);
+		return;
+	}
 	brain_pin_e b = boardConfiguration->ignitionPins[index - 1];
 	io_pin_e p = (io_pin_e) ((int) SPARKOUT_1_OUTPUT - 1 + index);
 	pinbench(delayStr, onTimeStr, offTimeStr, countStr, p, b);
