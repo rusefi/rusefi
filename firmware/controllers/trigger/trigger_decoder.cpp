@@ -42,6 +42,7 @@ static cyclic_buffer errorDetection;
 
 #if ! EFI_PROD_CODE
 bool printGapRatio = false;
+float actualSynchGap;
 #endif /* ! EFI_PROD_CODE */
 
 #if (EFI_PROD_CODE || EFI_SIMULATOR)
@@ -154,24 +155,22 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, uint64_t now
 	bool_t isSynchronizationPoint;
 
 	if (TRIGGER_SHAPE(isSynchronizationNeeded)) {
-#if ! EFI_PROD_CODE
-		// todo: replace printGapRatio with engineConfiguration->isPrintTriggerSynchDetails
-		// and merge these two sections
-		if (printGapRatio) {
-
-			float gap = 1.0 * currentDuration / toothed_previous_duration;
-			print("current gap %f\r\n", gap);
-		}
-#else
-		if (engineConfiguration->isPrintTriggerSynchDetails) {
-			float gap = 1.0 * currentDuration / toothed_previous_duration;
-			scheduleMsg(&logger, "gap=%f @ %d", gap, current_index);
-		}
-
-#endif /* ! EFI_PROD_CODE */
-
 		isSynchronizationPoint = currentDuration > toothed_previous_duration * TRIGGER_SHAPE(syncRatioFrom)
 				&& currentDuration < toothed_previous_duration * TRIGGER_SHAPE(syncRatioTo);
+
+#if EFI_PROD_CODE
+		if (engineConfiguration->isPrintTriggerSynchDetails) {
+#else
+		if (printGapRatio) {
+#endif /* EFI_PROD_CODE */
+			float gap = 1.0 * currentDuration / toothed_previous_duration;
+#if EFI_PROD_CODE
+			scheduleMsg(&logger, "gap=%f @ %d", gap, current_index);
+#else
+			actualSynchGap = gap;
+			print("current gap %f\r\n", gap);
+#endif /* EFI_PROD_CODE */
+		}
 
 	} else {
 		/**
@@ -196,7 +195,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, uint64_t now
 #if EFI_PROD_CODE
 				scheduleMsg(&logger, "error: synchronizationPoint @ index %d expected %d/%d/%d got %d/%d/%d", current_index,
 						TRIGGER_SHAPE(expectedEventCount[0]), TRIGGER_SHAPE(expectedEventCount[1]),
-											TRIGGER_SHAPE(expectedEventCount[2]), eventCount[0], eventCount[1], eventCount[2]);
+						TRIGGER_SHAPE(expectedEventCount[2]), eventCount[0], eventCount[1], eventCount[2]);
 #endif /* EFI_PROD_CODE */
 			}
 		}
@@ -403,8 +402,8 @@ static uint32_t doFindTrigger(TriggerStimulatorHelper *helper, trigger_shape_s *
  *
  * This function finds the index of synchronization event within trigger_shape_s
  */
-uint32_t findTriggerZeroEventIndex(trigger_shape_s * shape,
-		trigger_config_s const*triggerConfig DECLARE_ENGINE_PARAMETER_S) {
+uint32_t findTriggerZeroEventIndex(trigger_shape_s * shape, trigger_config_s const*triggerConfig
+		DECLARE_ENGINE_PARAMETER_S) {
 
 	TriggerState state;
 	errorDetection.clear();
