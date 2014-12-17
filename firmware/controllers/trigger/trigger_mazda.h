@@ -12,6 +12,8 @@
 #include "engine_configuration.h"
 #include "ec2.h"
 
+#define MIATA_NA_GAP 1.4930f
+
 void initializeMazdaMiataNaShape(trigger_shape_s *s);
 void initializeMazdaMiataNbShape(trigger_shape_s *s);
 void configureMazdaProtegeLx(trigger_shape_s *s);

@@ -10,6 +10,8 @@
 
 #include "trigger_structure.h"
 
+#define CHRYSLER_NGC_GAP 2.9135
+
 void configureNeon1995TriggerShape(trigger_shape_s *s);
 void configureNeon2003TriggerShape(trigger_shape_s *s);
 
