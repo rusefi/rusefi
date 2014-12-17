@@ -48,11 +48,14 @@ extern "C"
 #define getOneDegreeTimeMs(rpm) (1000.0f * 60 / 360 / (rpm))
 
 /**
- * @return time needed to rotate crankshaft by one degree, in microseconds.
+ * @return float, time needed to rotate crankshaft by one degree, in microseconds.
  */
 #define getOneDegreeTimeUs(rpm) (1000000.0f * 60 / 360 / (rpm))
 
-#define getOneDegreeTimeNt(rpm) (US2NT(1000000.0f) * 60 / 360 / (rpm))
+/**
+ * @return float, time needed to rotate crankshaft by one degree, in native clicks.
+ */
+#define getOneDegreeTimeNt(rpm) (US2NT(1000000) * 60.0f / 360 / (rpm))
 
 float getCrankshaftRevolutionTimeMs(int rpm);
 
