@@ -18,6 +18,8 @@
 #include "rpm_calculator.h"
 #include "event_queue.h"
 #include "algo.h"
+#include "trigger_mazda.h"
+#include "trigger_chrysler.h"
 
 #include "trigger_central.h"
 #include "main_trigger_callback.h"
@@ -528,10 +530,10 @@ void testTriggerDecoder(void) {
 
 	testTriggerDecoder2("testMitsu", MITSU_4G93, 3, 0.3750, 0.3889);
 //	testTriggerDecoder2("miata 1990", MIATA_1990, 0, 0.6280, 0.0);
-	testTriggerDecoder3("miata 1994", MIATA_1994_DEVIATOR, 11, 0.2917, 0.3716, 1.5757);
-	testTriggerDecoder2("citroen", CITROEN_TU3JP, 0, 0.4833, 0.0);
+	testTriggerDecoder3("miata 1994", MIATA_1994_DEVIATOR, 11, 0.2985, 0.3890, MIATA_NA_GAP);
+	testTriggerDecoder3("citroen", CITROEN_TU3JP, 0, 0.4833, 0.0, 2.9994);
 
-	testTriggerDecoder3("neon NGC", DODGE_NEON_2003, 5, 0.4861, 0.0, 2.9134);
+	testTriggerDecoder3("neon NGC", DODGE_NEON_2003, 5, 0.4861, 0.0, CHRYSLER_NGC_GAP);
 
 	testMazda323();
 

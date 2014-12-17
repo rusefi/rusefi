@@ -22,25 +22,28 @@
 
 void initializeMazdaMiataNaShape(trigger_shape_s *s) {
 	s->reset(FOUR_STROKE_CAM_SENSOR);
-	setTriggerSynchronizationGap(s, 1.68f);
+	setTriggerSynchronizationGap(s, MIATA_NA_GAP);
 	s->useRiseEdge = false;
 
 	s->isSynchronizationNeeded = true;
 
-	s->addEvent(49.15363636, T_SECONDARY, TV_HIGH);
-	s->addEvent(114.1581818, T_SECONDARY, TV_LOW);
+	/**
+	 * http://rusefi.com/forum/viewtopic.php?f=3&t=729&p=12983#p12983
+	 */
+	s->addEvent(52.960405, T_SECONDARY, TV_HIGH);
+	s->addEvent(122.635956, T_SECONDARY, TV_LOW);
 
-	s->addEvent(213.0222222, T_PRIMARY, TV_HIGH);
-	s->addEvent(225.759, T_SECONDARY, TV_HIGH);
-	s->addEvent(279.54375, T_PRIMARY, TV_LOW);
-	s->addEvent(294.786, T_SECONDARY, TV_LOW);
+	s->addEvent(216.897031, T_PRIMARY, TV_HIGH);
+	s->addEvent(232.640068, T_SECONDARY, TV_HIGH);
+	s->addEvent(288.819688, T_PRIMARY, TV_LOW);
+	s->addEvent(302.646323, T_SECONDARY, TV_LOW);
 
-	s->addEvent(410.318, T_SECONDARY, TV_HIGH);
-	s->addEvent(477.6911111, T_SECONDARY, TV_LOW);
+	s->addEvent(412.448056, T_SECONDARY, TV_HIGH);
+	s->addEvent(482.816719, T_SECONDARY, TV_LOW);
 
-	s->addEvent(576.4975, T_PRIMARY, TV_HIGH);
-	s->addEvent(590.39625, T_SECONDARY, TV_HIGH);
-	s->addEvent(656.5125, T_SECONDARY, TV_LOW);
+	s->addEvent(577.035495, T_PRIMARY, TV_HIGH);
+	s->addEvent(592.878113, T_SECONDARY, TV_HIGH);
+	s->addEvent(662.899708, T_SECONDARY, TV_LOW);
 	s->addEvent(720.0f, T_PRIMARY, TV_LOW);
 }
 
