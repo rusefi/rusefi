@@ -112,7 +112,7 @@ int RpmCalculator::rpm(DECLARE_ENGINE_PARAMETER_F) {
 #endif
 	if (!isRunning(PASS_ENGINE_PARAMETER_F)) {
 		revolutionCounterSinceStart = 0;
-		return 0;
+		rpmValue = 0;
 	}
 	return rpmValue;
 }
