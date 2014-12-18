@@ -45,6 +45,7 @@
 44) RESOLVED IN R0.3 Move 12V injector flyback diodes to other side of W2
 45) RESOLVED IN R0.3 Short out D10.
 46) RESOLVED IN R0.3 add vias around ST processor. Orginal board design was a 2 layer, not it's 4 layer. It's better design practice to have GND via's closer to the GND pins.
+47)                  HIP9011 CS line needs to be pulled down, not pulled up
 
 For honda add-on / rewiring board
 -- Add 2A high side solinoid drive for VTec sol
