@@ -24,11 +24,16 @@
 #include "engine.h"
 #include "settings.h"
 #include "pin_repository.h"
+#include "hardware.h"
+#include "rpm_calculator.h"
+#include "trigger_central.h"
 
 #if EFI_HIP_9011
 
-#define HIP9011_CS_PORT GPIOE
-#define HIP9011_CS_PIN 11
+static scheduling_s startTimer[2];
+static scheduling_s endTimer[2];
+
+extern pin_output_mode_e DEFAULT_OUTPUT;
 
 // 0b01000000
 #define SET_PRESCALER_CMD 0x40
@@ -50,16 +55,16 @@ static int callbackc = 0;
 static void spiCallback(SPIDriver *spip) {
 	spiUnselectI(spip);
 
-	scheduleMsg(&logger, "spiCallback HIP=%d", callbackc++);
+//	scheduleMsg(&logger, "spiCallback HIP=%d", callbackc++);
 
 }
 
 // SPI_CR1_BR_1 // 5MHz
 
-static const SPIConfig spicfg = { spiCallback,
+static SPIConfig spicfg = { spiCallback,
 /* HW dependent part.*/
-HIP9011_CS_PORT,
-HIP9011_CS_PIN,
+NULL,
+0,
 //SPI_CR1_MSTR |
 //SPI_CR1_BR_1 // 5MHz
 		SPI_CR1_BR_0 | SPI_CR1_BR_1 | SPI_CR1_BR_2 };
@@ -81,15 +86,19 @@ static msg_t ivThread(int param) {
 	// channel #1
 	tx_buff[4] = SET_CHANNEL_CMD;
 
-	while (TRUE) {
+	while (true) {
 		chThdSleepMilliseconds(10);
 
-		scheduleMsg(&logger, "poking HIP=%d", counter++);
+//		scheduleMsg(&logger, "poking HIP=%d", counter++);
 
+		// todo: make sure spiCallback has been invoked?
 		spiSelect(driver);
 
-		spiStartExchange(driver, 2, tx_buff, rx_buff);
-		spiUnselect(driver);
+		spiStartExchange(driver, 8, tx_buff, rx_buff);
+		/**
+		 * spiUnselectI takes place in spiCallback
+		 */
+
 
 	}
 #if defined __GNUC__
@@ -158,11 +167,30 @@ static void showHipInfo(void) {
 void setHip9011FrankensoPinout(void) {
 	/**
 	 * SPI on PB13/14/15
-	 * ChipSelect is hard-wired
 	 */
 	boardConfiguration->isHip9011Enabled = true;
-	//boardConfiguration->hip9011CsPin =
+	boardConfiguration->hip9011CsPin = GPIOE_15; // ChipSelect is hard-wired, setting a crazy value to make the driver happy
 	boardConfiguration->hip9011IntHoldPin = GPIOB_11;
+	boardConfiguration->is_enabled_spi_2 = true;
+}
+
+/**
+ * Shaft Position callback used to start or finish HIP integration
+ */
+static void intHoldCallback(trigger_event_e ckpEventType, uint32_t index DECLARE_ENGINE_PARAMETER_S) {
+	// this callback is invoked on interrupt thread
+
+	if (index != 0)
+		return;
+
+	int rpm = engine->rpmCalculator.rpmValue;
+	if (!isValidRpm(rpm))
+		return;
+
+	int structIndex = getRevolutionCounter() % 2;
+	// todo: schedule this based on closest trigger event, same as ignition works
+	scheduleByAngle(rpm, &startTimer[structIndex], engineConfiguration->knockDetectionWindowStart, (schfunc_t)&turnPinHigh, (void*)HIP9011_INT_HOLD);
+	scheduleByAngle(rpm, &endTimer[structIndex], engineConfiguration->knockDetectionWindowEnd, (schfunc_t)&turnPinLow,(void*) HIP9011_INT_HOLD);
 }
 
 void initHip9011(void) {
@@ -170,12 +198,22 @@ void initHip9011(void) {
 		return;
 	initLogging(&logger, "HIP driver");
 
-	print("Starting HIP9011/TPIC8101 driver\r\n");
+//	driver = getSpiDevice(boardConfiguration->digitalPotentiometerSpiDevice);
+
+
+	spicfg.ssport = getHwPort(boardConfiguration->hip9011CsPin);
+	spicfg.sspad = getHwPin(boardConfiguration->hip9011CsPin);
+
+	scheduleMsg(&logger, "Starting HIP9011/TPIC8101 driver");
 	spiStart(driver, &spicfg);
 
-//	chThdCreateStatic(htThreadStack, sizeof(htThreadStack), NORMALPRIO, (tfunc_t) ivThread, NULL);
+	outputPinRegisterExt2("hip int/hold", HIP9011_INT_HOLD, boardConfiguration->hip9011IntHoldPin, &DEFAULT_OUTPUT);
+
+	chThdCreateStatic(htThreadStack, sizeof(htThreadStack), NORMALPRIO, (tfunc_t) ivThread, NULL);
 
 	bandIndex = findIndex(bandFreqLookup, BAND_LOOKUP_SIZE, BAND(engineConfiguration->cylinderBore));
+
+	addTriggerEventListener(&intHoldCallback, "DD int/hold", engine);
 
 
 	addConsoleAction("hipinfo", showHipInfo);
