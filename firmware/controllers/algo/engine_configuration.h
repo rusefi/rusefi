@@ -432,7 +432,7 @@ typedef struct {
 
 	trigger_config_s triggerConfig;
 
-	int space;
+	spi_device_e hip9011SpiDevice;
 	adc_channel_e vbattAdcChannel;
 
 	float globalFuelCorrection;

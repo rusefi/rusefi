@@ -433,6 +433,8 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 
 	setFrankenstein_01_LCD(boardConfiguration);
 
+	engineConfiguration->hip9011SpiDevice = SPI_DEVICE_2;
+
 	boardConfiguration->gps_rx_pin = GPIOB_7;
 	boardConfiguration->gps_tx_pin = GPIOB_6;
 
