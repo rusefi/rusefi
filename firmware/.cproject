@@ -165,7 +165,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="chibios/boards/simulator|chibios/os/ports/GCC/SIMIA32|chibios/os/hal/platforms/Win32|chibios/boards/OLIMEX_STM32_E407" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="chibios/boards/ST_STM32F0_DISCOVERY|chibios/os/ports/GCC/ARMCMx/STM32F0xx|chibios/os/hal/platforms/STM32F0xx|chibios/boards/simulator|chibios/os/ports/GCC/SIMIA32|chibios/os/hal/platforms/Win32|chibios/boards/OLIMEX_STM32_E407" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -330,7 +330,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="chibios/boards/simulator|chibios/os/ports/GCC/SIMIA32|chibios/os/hal/platforms/Win32|chibios/boards/OLIMEX_STM32_E407" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="chibios/boards/ST_STM32F0_DISCOVERY|chibios/os/ports/GCC/ARMCMx/STM32F0xx|chibios/os/hal/platforms/STM32F0xx|chibios/boards/simulator|chibios/os/ports/GCC/SIMIA32|chibios/os/hal/platforms/Win32|chibios/boards/OLIMEX_STM32_E407" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
