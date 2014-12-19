@@ -30,10 +30,12 @@
 
 #if EFI_HIP_9011
 
+extern pin_output_mode_e DEFAULT_OUTPUT;
+
+static int bandIndex;
+
 static scheduling_s startTimer[2];
 static scheduling_s endTimer[2];
-
-extern pin_output_mode_e DEFAULT_OUTPUT;
 
 // 0b01000000
 #define SET_PRESCALER_CMD 0x40
@@ -42,8 +44,11 @@ extern pin_output_mode_e DEFAULT_OUTPUT;
 // 0b00000000
 #define SET_BAND_PASS_CMD 0x0
 
+// 0b10000000
+#define SET_GAIN_CMD 0x80
+
 // 0b01110001
-//#define HIP_ADVANCED_MODE 0x71
+#define SET_ADVANCED_MODE 0x71
 
 
 static Logging logger;
@@ -69,22 +74,28 @@ NULL,
 //SPI_CR1_BR_1 // 5MHz
 		SPI_CR1_BR_0 | SPI_CR1_BR_1 | SPI_CR1_BR_2 };
 
-static unsigned char tx_buff[8];
-static unsigned char rx_buff[8];
+static unsigned char tx_buff[16];
+static unsigned char rx_buff[16];
 
 static SPIDriver *driver = &SPID2;
 
 static msg_t ivThread(int param) {
 	chRegSetThreadName("HIP");
 
-	int counter = 0;
+	// '0' for 4MHz
+	tx_buff[0] = SET_PRESCALER_CMD + 0 + 2;
 
+	// '0' for channel #1
+	tx_buff[2] = SET_CHANNEL_CMD + 0;
 
-	// 4MHz
-	tx_buff[0] = SET_PRESCALER_CMD;
+	// band index depends on cylinder bore
+	tx_buff[4] = SET_BAND_PASS_CMD + bandIndex;
 
-	// channel #1
-	tx_buff[4] = SET_CHANNEL_CMD;
+	// todo
+	tx_buff[8] = SET_GAIN_CMD + 41;
+
+	tx_buff[10] = SET_ADVANCED_MODE;
+	tx_buff[11] = SET_ADVANCED_MODE;
 
 	while (true) {
 		chThdSleepMilliseconds(10);
@@ -94,7 +105,7 @@ static msg_t ivThread(int param) {
 		// todo: make sure spiCallback has been invoked?
 		spiSelect(driver);
 
-		spiStartExchange(driver, 8, tx_buff, rx_buff);
+		spiStartExchange(driver, 16, tx_buff, rx_buff);
 		/**
 		 * spiUnselectI takes place in spiCallback
 		 */
@@ -151,8 +162,6 @@ static void prepareRpmLookup(engine_configuration_s *engineConfiguration) {
 }
 
 #define BAND(bore) (900 / (PIF * (bore) / 2))
-
-static int bandIndex;
 
 static void showHipInfo(void) {
 	printSpiState(&logger, boardConfiguration);
