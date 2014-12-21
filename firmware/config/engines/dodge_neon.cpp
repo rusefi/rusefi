@@ -319,7 +319,7 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 	boardConfiguration->canRxPin = GPIOB_12;
 	engineConfiguration->canWriteEnabled = true;
 	engineConfiguration->canReadEnabled = false;
-	engineConfiguration->can_nbc_type = CAN_BUS_NBC_BMW;
+	engineConfiguration->canNbcType = CAN_BUS_NBC_BMW;
 //	engineConfiguration->can_nbc_type = CAN_BUS_MAZDA_RX8;
 }
 

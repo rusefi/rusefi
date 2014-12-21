@@ -400,8 +400,9 @@ typedef struct {
 	int canReadEnabled;
 	int canWriteEnabled;
 	// offset 968
-	can_nbc_e can_nbc_type;
-	int can_sleep_period;
+	can_nbc_e canNbcType;
+	// offset 972
+	int canSleepPeriod;
 
 	int cylindersCount;
 
