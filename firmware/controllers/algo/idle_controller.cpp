@@ -17,10 +17,12 @@
 #include "idle_controller.h"
 #include "efilib.h"
 #include "rpm_calculator.h"
+#include "tps.h"
 
 static int lastGoodValue = DEFAULT_IDLE_DUTY;
 
-EXTERN_ENGINE;
+EXTERN_ENGINE
+;
 
 void idleInit(IdleValveState *idle DECLARE_ENGINE_PARAMETER_S) {
 	idle->value = DEFAULT_IDLE_DUTY;
@@ -29,8 +31,8 @@ void idleInit(IdleValveState *idle DECLARE_ENGINE_PARAMETER_S) {
 }
 
 void setIdleRpm(IdleValveState *idle, int targetRpm) {
-	idle->targetRpmRangeLeft = (int)(targetRpm * 0.93);
-	idle->targetRpmRangeRight = (int)(targetRpm * 1.07);
+	idle->targetRpmRangeLeft = (int) (targetRpm * 0.93);
+	idle->targetRpmRangeRight = (int) (targetRpm * 1.07);
 }
 
 /**
@@ -49,7 +51,12 @@ static int setNewValue(IdleValveState *idle, int currentRpm, int now, const char
 	return newValue;
 }
 
-static int changeValue(IdleValveState *idle, int currentRpm, int now, const char * msg, int delta) {
+static int changeValue(IdleValveState *idle, int currentRpm, int now, const char * msg, int delta DECLARE_ENGINE_PARAMETER_S) {
+	if (getTPS(PASS_ENGINE_PARAMETER_F) > 5.0) {
+		// We are not supposed to be in idle mode. Don't touch anything
+		idleDebug("TPS Lockout, TPS=", getTPS(PASS_ENGINE_PARAMETER_F));
+		return idle->value;
+	}
 	int newValue = idle->value + delta;
 	return setNewValue(idle, currentRpm, now, msg, newValue);
 }
@@ -57,7 +64,7 @@ static int changeValue(IdleValveState *idle, int currentRpm, int now, const char
 /**
  * now - current time in seconds
  */
-int getIdle(IdleValveState *idle, int currentRpm, int now) {
+int getIdle(IdleValveState *idle, int currentRpm, int now DECLARE_ENGINE_PARAMETER_S) {
 	if (currentRpm == 0 || isCranking()) {
 		return setNewValue(idle, currentRpm, now, "cranking value: ", DEFAULT_IDLE_DUTY);
 	}
@@ -79,10 +86,10 @@ int getIdle(IdleValveState *idle, int currentRpm, int now) {
 	}
 
 	if (currentRpm >= idle->targetRpmRangeRight + 100)
-		return changeValue(idle, currentRpm, now, "idle control: rpm is too high: ", -IDLE_DECREASE_STEP);
+		return changeValue(idle, currentRpm, now, "idle control: rpm is too high: ", -IDLE_DECREASE_STEP PASS_ENGINE_PARAMETER);
 
 	if (currentRpm >= idle->targetRpmRangeRight)
-		return changeValue(idle, currentRpm, now, "idle control: rpm is a bit too high: ", -1);
+		return changeValue(idle, currentRpm, now, "idle control: rpm is a bit too high: ", -1 PASS_ENGINE_PARAMETER);
 
 	// we are here if RPM is low, let's see how low
 //	if (currentRpm < 0.7 * idle->targetRpmRangeLeft) {
@@ -90,7 +97,7 @@ int getIdle(IdleValveState *idle, int currentRpm, int now) {
 //		return setNewValue(idle, currentRpm, now, "RPMs are seriously low: ", 15 * IDLE_INCREASE_STEP);
 //	} else
 	if (currentRpm < idle->targetRpmRangeLeft - 100) {
-		return changeValue(idle, currentRpm, now, "idle control: RPMs are low: ", IDLE_INCREASE_STEP);
+		return changeValue(idle, currentRpm, now, "idle control: RPMs are low: ", IDLE_INCREASE_STEP PASS_ENGINE_PARAMETER);
 	}
-	return changeValue(idle, currentRpm, now, "idle control: RPMs are a bit low: ", 1);
+	return changeValue(idle, currentRpm, now, "idle control: RPMs are a bit low: ", 1 PASS_ENGINE_PARAMETER);
 }

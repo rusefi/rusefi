@@ -370,7 +370,21 @@ void setMiata1994_s(engine_configuration_s *engineConfiguration, board_configura
 	boardConfiguration->injectionPins[2] = GPIOB_8; // injector #3
 	boardConfiguration->injectionPins[3] = GPIOB_7; // injector #4
 
-	setFsio(engineConfiguration, 0, GPIOD_11, "coolant 80 >");
+	//	setFsio(engineConfiguration, 0, GPIOD_11, "coolant 80 >");
+	boardConfiguration->idleSolenoidFrequency = 500;
+
+	engineConfiguration->acCutoffLowRpm = 400;
+	engineConfiguration->acCutoffHighRpm = 4500;
+	engineConfiguration->acIdleRpmBump = 200;
+
+	//engineConfiguration->idleMode != IM_AUTO;
+	engineConfiguration->targetIdleRpm = 800;
+
+	engineConfiguration->fanOffTemperature = 90;
+	engineConfiguration->fanOnTemperature = 95;
+
+	engineConfiguration->tpsMin = 86;
+	engineConfiguration->tpsMax = 596;
 }
 
 /**
