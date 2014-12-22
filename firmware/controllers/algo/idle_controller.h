@@ -32,7 +32,7 @@ public:
 };
 
 void idleInit(IdleValveState *idle DECLARE_ENGINE_PARAMETER_S);
-int getIdle(IdleValveState *idle, int currentRpm, int time);
+int getIdle(IdleValveState *idle, int currentRpm, int time DECLARE_ENGINE_PARAMETER_S);
 void setIdleRpm(IdleValveState *idle, int targetRpm);
 
 void idleDebug(const char *msg, int value);

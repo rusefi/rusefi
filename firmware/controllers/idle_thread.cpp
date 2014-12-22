@@ -102,7 +102,7 @@ static msg_t ivThread(int param) {
 
 		int nowSec = getTimeNowSeconds();
 
-		int newValue = getIdle(&idle, getRpm(), nowSec);
+		int newValue = getIdle(&idle, getRpm(), nowSec PASS_ENGINE_PARAMETER);
 
 		if (currentIdleValve != newValue) {
 			currentIdleValve = newValue;
