@@ -1,5 +1,5 @@
-update=10/23/2014 8:38:37 PM
-last_client=cvpcb
+update=12/22/2014 5:52:52 AM
+last_client=pcbnew
 [eeschema]
 version=1
 LibDir=../rusefi_lib
@@ -40,6 +40,11 @@ LibName28=atmel
 LibName29=contrib
 LibName30=valves
 LibName31=project_specific_libs
+[cvpcb]
+version=1
+NetIExt=net
+[cvpcb/libraries]
+EquName1=devcms
 [pcbnew]
 version=1
 LastNetListRead=
@@ -60,6 +65,7 @@ DrawSegmentWidth=0.200000000000
 BoardOutlineThickness=0.100000000000
 ModuleOutlineThickness=0.150000000000
 [pcbnew/libraries]
+LibDir=../rusefi_lib
 LibName1=sockets
 LibName2=connect
 LibName3=discret
@@ -76,11 +82,4 @@ LibName13=led
 LibName14=dip_sockets
 LibName15=pga_sockets
 LibName16=valves
-LibName17=project_specific_modules
-LibName18=SM0805-Jumper
-LibDir=../rusefi_lib
-[cvpcb]
-version=1
-NetIExt=net
-[cvpcb/libraries]
-EquName1=devcms
+LibName17=SM0805-Jumper
