@@ -11,6 +11,13 @@
 #include <stdint.h>
 #include "global.h"
 
+// http://en.wikipedia.org/wiki/Endianness
+
+#define SWAP_UINT16(x) ((x) << 8) | ((x) >> 8)
+
+#define SWAP_UINT32(x) (((x) >> 24) & 0xff) | (((x) << 8) & 0xff0000) | (((x) >> 8) & 0xff00) | (((x) << 24) & 0xff000000)
+
+
 // number of milliseconds in one period of given frequency (per second)
 #define frequency2periodMs(freq) ((1000.0f) / (freq))
 
