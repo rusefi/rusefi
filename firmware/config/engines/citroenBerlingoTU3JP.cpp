@@ -160,18 +160,18 @@ void setCitroenBerlingoTU3JPConfiguration(engine_configuration_s *engineConfigur
 	 */
 	engineConfiguration->iatAdcChannel = EFI_ADC_13;
 	setThermistorConfiguration(&engineConfiguration->iatThermistorConf, -20.0, 15600.0, 23.0, 2250.0, 92.0, 240.0);
-	engineConfiguration->iatThermistorConf.bias_resistor = 2700;
+	engineConfiguration->iatThermistorConf.bias_resistor = 2660;
 	/**
 	* CLT <LADA Samara>
 	*/
 	engineConfiguration->cltAdcChannel = EFI_ADC_11;
 	setThermistorConfiguration(&engineConfiguration->cltThermistorConf, -20.0, 28680.0, 25.0, 2796.0, 100.0, 177.0);
-	engineConfiguration->cltThermistorConf.bias_resistor = 2700;
+	engineConfiguration->cltThermistorConf.bias_resistor = 2660;
 	/**
 	 * vBatt
 	 */
 	engineConfiguration->vbattAdcChannel = EFI_ADC_0;
-	engineConfiguration->vbattDividerCoeff = ((float) (2.7 + 10)) / 2.7 * 2;
+	engineConfiguration->vbattDividerCoeff = ((float) (2.6 + 11)) / 2.6 * 2;
 	/**
 	* WBO Innovate LC-1
 	*/
