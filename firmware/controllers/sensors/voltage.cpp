@@ -8,7 +8,6 @@
  */
 
 #include "main.h"
-#include "boards.h"
 #include "engine_configuration.h"
 #include "adc_inputs.h"
 #include "voltage.h"
