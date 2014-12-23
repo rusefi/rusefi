@@ -117,40 +117,40 @@ static void canDashboardBMW(void) {
 static void canMazdaRX8(void) {
 	rand = rand * 17;
 
-	commonTxInit(0x300);
-	sendMessage2(0);
+//	commonTxInit(0x300);
+//	sendMessage2(0);
 
 	commonTxInit(CAN_MAZDA_RX_RPM_SPEED);
 
-	setShortValue(&txmsg, engine_rpm * 4, 1);
-	setShortValue(&txmsg, 0xFFFF, 3);
-	setShortValue(&txmsg, 123 + 10000, 5);
-	setShortValue(&txmsg, 0, 7);
+	float mph = 123;
+	float kph = mph * 1.60934;
+
+	setShortValue(&txmsg, SWAP_UINT16(engine_rpm * 4), 0);
+	setShortValue(&txmsg, 0xFFFF, 2);
+	setShortValue(&txmsg, SWAP_UINT16((int )(100 * kph + 10000)), 4);
+	setShortValue(&txmsg, 0, 6);
 	sendMessage();
 
-	commonTxInit(CAN_MAZDA_RX_STATUS_1);
-	setShortValue(&txmsg, engine_rpm * 4, 1);
-	setShortValue(&txmsg, 0xFFFF, 3);
-	setShortValue(&txmsg, 123 + 10000, 5);
-	setShortValue(&txmsg, 0, 7);
-	sendMessage2(7);
+	commonTxInit(CAN_MAZDA_RX_STATUS_2);
+	txmsg.data8[0] = 0xFE; //Unknown
+	txmsg.data8[1] = 0xFE; //Unknown
+	txmsg.data8[2] = 0xFE; //Unknown
+	txmsg.data8[3] = 0x34; //DSC OFF in combo with byte 5 Live data only seen 0x34
+	txmsg.data8[4] = 0x00; // B01000000; // Brake warning B00001000;  //ABS warning
+	txmsg.data8[5] = 0x40; // TCS in combo with byte 3
+	txmsg.data8[6] = 0x00; // Unknown
+	txmsg.data8[7] = 0x00; // Unused
 
-	commonTxInit(CAN_MAZDA_RX_STATUS_1);
-	setShortValue(&txmsg, engine_rpm * 4, 1);
-	setShortValue(&txmsg, 0xFFFF, 3);
-	setShortValue(&txmsg, 123 + 10000, 5);
-	setShortValue(&txmsg, 0, 7);
-	sendMessage2(7);
-
-//	my_data[0] = (RPM * 4) / 256; // rpm
-//		   my_data[1] = (RPM * 4) % 256; // rpm
-//		   my_data[2] = 0xFF; // Unknown, 0xFF from 'live'.
-//		   my_data[3] = 0xFF; // Unknown, 0xFF from 'live'.
-//		   my_data[4] = (kmhspeed+10000) / 256; //speed
-//		   my_data[5] = (kmhspeed+10000) % 256; //speed
-//		   my_data[6] = 0x00; // Unknown possible accelerator pedel if Madox is correc
-//		   my_data[7] = 0x00; //Unknown
-
+	commonTxInit(CAN_MAZDA_RX_STATUS_2);
+	txmsg.data8[0] = 0x98; //temp gauge //~170 is red, ~165 last bar, 152 centre, 90 first bar, 92 second bar
+	txmsg.data8[1] = 0x00; // something to do with trip meter 0x10, 0x11, 0x17 increments by 0.1 miles
+	txmsg.data8[2] = 0x00; // unknown
+	txmsg.data8[3] = 0x00; //unknown
+	txmsg.data8[4] = 0x01; //Oil Pressure (not really a gauge)
+	txmsg.data8[5] = 0x00; //check engine light
+	txmsg.data8[6] = 0x00; //Coolant, oil and battery
+	txmsg.data8[7] = 0x00; //unused
+	sendMessage();
 }
 
 static void canDashboardFiat(void) {
