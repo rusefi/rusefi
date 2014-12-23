@@ -30,7 +30,6 @@
 
 #define STM32F4xx_MCUCONF
 
-#include "boards.h"
 #include "efifeatures.h"
 #include "rusefi_enums.h"
 
@@ -97,6 +96,8 @@
 /*
  * CAN driver system settings.
  */
+#define STM32_CAN_USE_CAN1                  TRUE
+#define STM32_CAN_USE_CAN2                  TRUE
 #define STM32_CAN_CAN1_IRQ_PRIORITY         11
 #define STM32_CAN_CAN2_IRQ_PRIORITY         11
 
@@ -152,6 +153,8 @@
 #define STM32_I2C_USE_I2C1                  TRUE
 #define STM32_I2C_USE_I2C2                  FALSE
 #define STM32_I2C_USE_I2C3                  FALSE
+#define STM32_I2C_I2C1_RX_DMA_STREAM        STM32_DMA_STREAM_ID(1, 5)
+#define STM32_I2C_I2C1_TX_DMA_STREAM        STM32_DMA_STREAM_ID(1, 6)
 #define STM32_I2C_I2C2_RX_DMA_STREAM        STM32_DMA_STREAM_ID(1, 2)
 #define STM32_I2C_I2C2_TX_DMA_STREAM        STM32_DMA_STREAM_ID(1, 7)
 #define STM32_I2C_I2C3_RX_DMA_STREAM        STM32_DMA_STREAM_ID(1, 2)
@@ -169,6 +172,14 @@
 /*
  * ICU driver system settings.
  */
+#define STM32_ICU_USE_TIM1                  TRUE // wave input
+#define STM32_ICU_USE_TIM2                  TRUE // primary position sensor
+#define STM32_ICU_USE_TIM3                  TRUE // secondary position sensor
+#define STM32_ICU_USE_TIM4                  FALSE
+#define STM32_ICU_USE_TIM5                  FALSE
+#define STM32_ICU_USE_TIM8                  FALSE
+#define STM32_ICU_USE_TIM9                  TRUE // wave input
+
 #define STM32_ICU_TIM1_IRQ_PRIORITY         3
 #define STM32_ICU_TIM2_IRQ_PRIORITY         3
 #define STM32_ICU_TIM3_IRQ_PRIORITY         3
@@ -187,6 +198,14 @@
 #define STM32_MAC_ETH1_CHANGE_PHY_STATE     TRUE
 #define STM32_MAC_ETH1_IRQ_PRIORITY         13
 #define STM32_MAC_IP_CHECKSUM_OFFLOAD       0
+
+#define STM32_PWM_USE_TIM1                  FALSE
+#define STM32_PWM_USE_TIM2                  FALSE
+#define STM32_PWM_USE_TIM3                  FALSE
+#define STM32_PWM_USE_TIM4                  TRUE // fast adc
+#define STM32_PWM_USE_TIM5                  FALSE
+#define STM32_PWM_USE_TIM8                  TRUE // slow adc
+#define STM32_PWM_USE_TIM9                  FALSE
 
 /*
  * PWM driver system settings.
@@ -219,6 +238,9 @@
 /*
  * SPI driver system settings.
  */
+#define STM32_SPI_USE_SPI1                  TRUE
+#define STM32_SPI_USE_SPI2                  TRUE // external ADC
+#define STM32_SPI_USE_SPI3                  TRUE // potentiometer
 #define STM32_SPI_SPI1_RX_DMA_STREAM        STM32_DMA_STREAM_ID(2, 0)
 #define STM32_SPI_SPI1_TX_DMA_STREAM        STM32_DMA_STREAM_ID(2, 3)
 #define STM32_SPI_SPI2_RX_DMA_STREAM        STM32_DMA_STREAM_ID(1, 3)

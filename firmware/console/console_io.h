@@ -19,7 +19,6 @@
 #endif
 
 #include "efifeatures.h"
-#include "boards.h"
 
 #define GET_CONSOLE_MODE_VALUE() palReadPad(CONSOLE_MODE_SWITCH_PORT, CONSOLE_MODE_SWITCH_PIN)
 #define SHOULD_INGORE_FLASH() (palReadPad(CONFIG_RESET_SWITCH_PORT, CONFIG_RESET_SWITCH_PIN) == 0)

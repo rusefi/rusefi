@@ -106,8 +106,7 @@ include $(PROJECT_DIR)/console_util/console_util.mk
 
 
 # Define linker script file here
-LDSCRIPT= config/system/STM32F407xG_CCM.ld
-#LDSCRIPT= $(PORTLD)/STM32F407xG_CCM.ld
+LDSCRIPT= config/stm32f4ems/STM32F407xG_CCM.ld
 
 # C sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
@@ -183,9 +182,7 @@ INCDIR = $(PORTINC) $(KERNINC) $(TESTINC) \
          $(CHCPPINC) \
          $(CHIBIOS)/os/various \
 	config/stm32f4ems \
-	config/system \
 	config/engines \
-	config/boards \
 	config \
 	chibios/os/various \
 	ext \

@@ -152,7 +152,7 @@
 							<tool id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.c.linker.debug.369587711" name="ARM Sourcery Windows GCC C Linker" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.c.linker.debug"/>
 							<tool id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.cpp.linker.debug.790854990" name="ARM Sourcery Windows GCC C++ Linker" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.cpp.linker.debug">
 								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.link.option.gcsections.1692062869" name="Remove unused sections (-Xlinker --gc-sections)" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.link.option.gcsections" value="true" valueType="boolean"/>
-								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.link.option.scriptfile.1659638949" name="Script file (-T)" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.link.option.scriptfile" value="${workspace_loc}\\${ProjName}\config\system\STM32F407xG_CCM.ld" valueType="string"/>
+								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.link.option.scriptfile.1659638949" name="Script file (-T)" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.link.option.scriptfile" value="${workspace_loc}\\${ProjName}\config\stm32f4ems\STM32F407xG_CCM.ld" valueType="string"/>
 								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.link.option.libs.266038076" name="Libraries (-l)" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.link.option.libs"/>
 								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.link.option.paths.1546594065" name="Library search path (-L)" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.link.option.paths"/>
 								<inputType id="org.eclipse.cdt.cross.arm.gnu.cpp.linker.input.214430349" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.linker.input">

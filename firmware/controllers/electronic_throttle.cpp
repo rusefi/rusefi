@@ -23,7 +23,6 @@
 
 #include "main.h"
 #include "electronic_throttle.h"
-#include "boards.h"
 #include "pin_repository.h"
 #include "idle_controller.h"
 #include "tps.h"

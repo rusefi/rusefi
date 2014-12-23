@@ -1,7 +1,6 @@
 #include "main.h"
 #include "engine_configuration.h"
 #include "interpolation.h"
-#include "boards.h"
 #include "adc_inputs.h"
 #include "engine.h"
 
