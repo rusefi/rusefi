@@ -182,6 +182,7 @@ INCDIR = $(PORTINC) $(KERNINC) $(TESTINC) \
          $(HALINC) $(PLATFORMINC) $(BOARDINC) \
          $(CHCPPINC) \
          $(CHIBIOS)/os/various \
+	config/stm32f4ems \
 	config/system \
 	config/engines \
 	config/boards \
