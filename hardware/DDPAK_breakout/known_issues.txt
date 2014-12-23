@@ -1,0 +1,4 @@
+1)               support both DPAK and DDPAk
+2)               larger diameter vias
+3)               remove screw-in terminal              
+4)               breakboard approach
