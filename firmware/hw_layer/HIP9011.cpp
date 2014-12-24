@@ -65,6 +65,8 @@ static void spiCallback(SPIDriver *spip) {
 }
 
 // SPI_CR1_BR_1 // 5MHz
+// SPI_CR1_CPOL Clock Polarity
+// todo: nicer method which would mention SPI speed explicitly?
 
 static SPIConfig spicfg = { spiCallback,
 /* HW dependent part.*/
@@ -72,7 +74,7 @@ NULL,
 0,
 //SPI_CR1_MSTR |
 //SPI_CR1_BR_1 // 5MHz
-		SPI_CR1_BR_0 | SPI_CR1_BR_1 | SPI_CR1_BR_2 };
+SPI_CR1_CPOL | SPI_CR1_BR_0 | SPI_CR1_BR_1 | SPI_CR1_BR_2 };
 
 static unsigned char tx_buff[16];
 static unsigned char rx_buff[16];
