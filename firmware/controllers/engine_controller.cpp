@@ -292,23 +292,31 @@ static void initPeriodicEvents(Engine *engine) {
 }
 
 char * getPinNameByAdcChannel(adc_channel_e hwChannel, char *buffer) {
+#if HAL_USE_ADC || defined(__DOXYGEN__)
 	strcpy((char*) buffer, portname(getAdcChannelPort(hwChannel)));
 	itoa10(&buffer[2], getAdcChannelPin(hwChannel));
+#else
+	strcpy(buffer, "NONE");
+#endif
 	return (char*) buffer;
 }
 
 static char pinNameBuffer[16];
 
 static void printAnalogChannelInfoExt(const char *name, adc_channel_e hwChannel, float adcVoltage) {
+#if HAL_USE_ADC || defined(__DOXYGEN__)
 	float voltage = adcVoltage * engineConfiguration->analogInputDividerCoefficient;
 	scheduleMsg(&logger, "%s ADC%d %s %s rawValue=%f/divided=%fv", name, hwChannel, getAdcMode(hwChannel),
 			getPinNameByAdcChannel(hwChannel, pinNameBuffer), adcVoltage, voltage);
+#endif
 }
 
 static void printAnalogChannelInfo(const char *name, adc_channel_e hwChannel) {
+#if HAL_USE_ADC || defined(__DOXYGEN__)
 	if (hwChannel != EFI_ADC_NONE) {
 		printAnalogChannelInfoExt(name, hwChannel, getVoltage(hwChannel));
 	}
+#endif
 }
 
 static void printAnalogInfo(void) {

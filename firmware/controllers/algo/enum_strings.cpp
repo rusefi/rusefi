@@ -16,6 +16,8 @@
  */
 const char* getConfigurationName(engine_type_e engineType) {
 	switch (engineType) {
+        case DEFAULT_ENGINE:
+          return "DEFAULT";
 #if EFI_SUPPORT_DODGE_NEON
 	case DODGE_NEON_1995:
 		return "Neon95";
