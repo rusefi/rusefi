@@ -28,6 +28,9 @@
 #ifndef _CHCONF_H_
 #define _CHCONF_H_
 
+  #define ON_LOCK_HOOK
+  #define ON_UNLOCK_HOOK
+
 /*===========================================================================*/
 /**
  * @name Kernel parameters and options
@@ -357,7 +360,7 @@
  * @note    The default is @p FALSE.
  */
 #if !defined(CH_DBG_SYSTEM_STATE_CHECK) || defined(__DOXYGEN__)
-#define CH_DBG_SYSTEM_STATE_CHECK       FALSE
+#define CH_DBG_SYSTEM_STATE_CHECK       TRUE
 #endif
 
 /**

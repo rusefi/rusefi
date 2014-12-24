@@ -231,8 +231,10 @@ static void printInfo(Engine *engine, systime_t nowSeconds) {
 #if EFI_PROD_CODE
 	printOutPin(WC_CRANK1, boardConfiguration->triggerInputPins[0]);
 	printOutPin(WC_CRANK2, boardConfiguration->triggerInputPins[1]);
+#if EFI_WAVE_ANALYZER || defined(__DOXYGEN__)
 	printOutPin(WA_CHANNEL_1, boardConfiguration->logicAnalyzerPins[0]);
 	printOutPin(WA_CHANNEL_2, boardConfiguration->logicAnalyzerPins[1]);
+#endif
 
 	for (int i = 0; i < engineConfiguration->cylindersCount; i++) {
 		// todo: extract method?
@@ -272,7 +274,7 @@ void updateDevConsoleState(Engine *engine) {
 	}
 #endif
 
-#if EFI_PROD_CODE
+#if (EFI_PROD_CODE && HAL_USE_ADC) || defined(__DOXYGEN__)
 	pokeAdcInputs();
 #endif
 

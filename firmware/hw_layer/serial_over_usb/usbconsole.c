@@ -8,7 +8,7 @@
 
 #include "main.h"
 
-#if EFI_PROD_CODE
+#if (EFI_PROD_CODE && EFI_USB_SERIAL) || defined(__DOXYGEN__)
 
 #include "usbconsole.h"
 #include "usbcfg.h"
@@ -43,6 +43,11 @@ void usb_serial_start(void) {
 
 bool is_usb_serial_ready(void) {
 	return SDU1.config->usbp->state == USB_ACTIVE;
+}
+
+#else
+bool is_usb_serial_ready(void) {
+	return false;
 }
 
 #endif

@@ -19,7 +19,6 @@
 #include "trigger_input.h"
 #include "eficonsole.h"
 #include "board_test.h"
-
 #include "mcp3208.h"
 #include "HIP9011.h"
 #include "max31855.h"
@@ -43,6 +42,9 @@
 extern engine_configuration2_s * engineConfiguration2;
 extern bool hasFirmwareErrorFlag;
 
+static Mutex spiMtx;
+
+#if HAL_USE_SPI || defined(__DOXYGEN__)
 static bool isSpiInitialized[5] = { false, false, false, false, false };
 
 static void initSpiModule(SPIDriver *driver, ioportid_t sckPort, ioportmask_t sckPin, ioportid_t misoPort,
@@ -52,8 +54,6 @@ static void initSpiModule(SPIDriver *driver, ioportid_t sckPort, ioportmask_t sc
 	mySetPadMode("SPI master out", mosiPort, mosiPin, PAL_MODE_ALTERNATE(af));
 	mySetPadMode("SPI master in ", misoPort, misoPin, PAL_MODE_ALTERNATE(af));
 }
-
-static Mutex spiMtx;
 
 /**
  * Only one consumer can use SPI bus at a given time
@@ -112,6 +112,40 @@ static void initSpiModules(board_configuration_s *boardConfiguration) {
 	}
 }
 
+SPIDriver * getSpiDevice(spi_device_e spiDevice) {
+	if (spiDevice == SPI_NONE) {
+		return NULL;
+	}
+#if STM32_SPI_USE_SPI1 || defined(__DOXYGEN__)
+	if (spiDevice == SPI_DEVICE_1) {
+		return &SPID1;
+	}
+#endif
+#if STM32_SPI_USE_SPI2 || defined(__DOXYGEN__)
+	if (spiDevice == SPI_DEVICE_2) {
+		return &SPID2;
+	}
+#endif
+#if STM32_SPI_USE_SPI3 || defined(__DOXYGEN__)
+	if (spiDevice == SPI_DEVICE_3) {
+		return &SPID3;
+	}
+#endif
+	firmwareError("Unexpected SPI device: %d", spiDevice);
+	return NULL;
+}
+
+void initSpiCs(SPIConfig *spiConfig, brain_pin_e csPin) {
+	spiConfig->end_cb = NULL;
+	ioportid_t port = getHwPort(csPin);
+	ioportmask_t pin = getHwPin(csPin);
+	spiConfig->ssport = port;
+	spiConfig->sspad = pin;
+	mySetPadMode("chip select", port, pin, PAL_STM32_MODE_OUTPUT);
+}
+#endif
+
+#if HAL_USE_I2C || defined(__DOXYGEN__)
 static I2CConfig i2cfg = { OPMODE_I2C, 100000, STD_DUTY_CYCLE, };
 
 void initI2Cmodule(void) {
@@ -133,6 +167,9 @@ static void sendI2Cbyte(int addr, int data) {
 //	i2cMasterTransmit(&I2CD1, addr, txbuf, 1, NULL, 0);
 //	i2cReleaseBus(&I2CD1);
 }
+
+#endif
+
 
 // this is all very lame code, just playing with EXTI for now. TODO: refactor it competely!
 static int joyTotal = 0;
@@ -194,8 +231,8 @@ void initHardware(Logging *logger, Engine *engine) {
 		readFromFlash();
 	}
 #else
-	engineConfiguration->engineType = FORD_ASPIRE_1996;
-	resetConfigurationExt(logger, engineConfiguration->engineType, engineConfiguration, engineConfiguration2, boardConfiguration);
+	engineConfiguration->engineType = DEFAULT_ENGINE;
+	resetConfigurationExt(logger, engineConfiguration->engineType, engine);
 #endif /* EFI_INTERNAL_FLASH */
 
 	if (hasFirmwareError()) {
@@ -205,7 +242,9 @@ void initHardware(Logging *logger, Engine *engine) {
 	mySetPadMode2("board test", boardConfiguration->boardTestModeJumperPin, PAL_MODE_INPUT_PULLUP);
 	bool isBoardTestMode_b = GET_BOARD_TEST_MODE_VALUE();
 
+#if HAL_USE_ADC || defined(__DOXYGEN__)
 	initAdcInputs(isBoardTestMode_b);
+#endif
 
 	if (isBoardTestMode_b) {
 		// this method never returns
@@ -238,7 +277,9 @@ void initHardware(Logging *logger, Engine *engine) {
 	initShaftPositionInputCapture();
 #endif /* EFI_SHAFT_POSITION_INPUT */
 
+#if HAL_USE_SPI || defined(__DOXYGEN__)
 	initSpiModules(boardConfiguration);
+#endif
 
 #if EFI_FILE_LOGGING
 	initMmcCard();
@@ -266,7 +307,9 @@ void initHardware(Logging *logger, Engine *engine) {
 
 #endif /* EFI_HD44780_LCD */
 
+#if HAL_USE_I2C || defined(__DOXYGEN__)
 	addConsoleActionII("i2c", sendI2Cbyte);
+#endif
 
 //	while (true) {
 //		for (int addr = 0x20; addr < 0x28; addr++) {
@@ -282,37 +325,8 @@ void initHardware(Logging *logger, Engine *engine) {
 	printMsg(logger, "initHardware() OK!");
 }
 
-SPIDriver * getSpiDevice(spi_device_e spiDevice) {
-	if (spiDevice == SPI_NONE) {
-		return NULL;
-	}
-#if STM32_SPI_USE_SPI1 || defined(__DOXYGEN__)
-	if (spiDevice == SPI_DEVICE_1) {
-		return &SPID1;
-	}
-#endif
-#if STM32_SPI_USE_SPI2 || defined(__DOXYGEN__)
-	if (spiDevice == SPI_DEVICE_2) {
-		return &SPID2;
-	}
-#endif
-#if STM32_SPI_USE_SPI3 || defined(__DOXYGEN__)
-	if (spiDevice == SPI_DEVICE_3) {
-		return &SPID3;
-	}
-#endif
-	firmwareError("Unexpected SPI device: %d", spiDevice);
-	return NULL;
-}
 
-void initSpiCs(SPIConfig *spiConfig, brain_pin_e csPin) {
-	spiConfig->end_cb = NULL;
-	ioportid_t port = getHwPort(csPin);
-	ioportmask_t pin = getHwPin(csPin);
-	spiConfig->ssport = port;
-	spiConfig->sspad = pin;
-	mySetPadMode("chip select", port, pin, PAL_STM32_MODE_OUTPUT);
-}
+#if HAL_USE_EXT || defined(__DOXYGEN__)
 
 //     {EXT_CH_MODE_BOTH_EDGES | EXT_CH_MODE_AUTOSTART | EXT_MODE_GPIOA, extcb1},
 
@@ -364,4 +378,6 @@ void initExt(void) {
 	mySetPadMode("joy A", GPIOD, 10, PAL_MODE_INPUT_PULLUP);
 	mySetPadMode("joy A", GPIOD, 11, PAL_MODE_INPUT_PULLUP);
 }
+
+#endif
 

@@ -44,6 +44,8 @@ typedef unsigned int time_t;
 
 #if EFI_USE_CCM && defined __GNUC__
 #define CCM_OPTIONAL __attribute__((section(".ccm")))
+#elif defined __GNUC__
+#define CCM_OPTIONAL
 #else
 #define CCM_OPTIONAL @ ".ccm"
 #endif

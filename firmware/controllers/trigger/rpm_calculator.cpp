@@ -267,5 +267,10 @@ void scheduleByAngle(int rpm, scheduling_s *timer, float angle, schfunc_t callba
 }
 #endif
 
+#else
+RpmCalculator::RpmCalculator() {
+
+}
+
 #endif /* EFI_SHAFT_POSITION_INPUT */
 
