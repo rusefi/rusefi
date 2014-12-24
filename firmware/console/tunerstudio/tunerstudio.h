@@ -8,6 +8,9 @@
 #ifndef TUNERSTUDIO_H_
 #define TUNERSTUDIO_H_
 
+#include "main.h"
+
+#if EFI_TUNER_STUDIO
 #include "tunerstudio_configuration.h"
 #include "engine.h"
 
@@ -54,5 +57,7 @@ typedef pre_packed struct
 				short int offset;
 				unsigned char value;
 			} TunerStudioWriteValueRequest;
+
+#endif /* EFI_TUNER_STUDIO */
 
 #endif /* TUNERSTUDIO_H_ */

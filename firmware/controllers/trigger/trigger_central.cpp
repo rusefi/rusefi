@@ -6,6 +6,9 @@
  */
 
 #include "main.h"
+
+#if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
+
 #include "trigger_central.h"
 #include "trigger_decoder.h"
 #include "main_trigger_callback.h"
@@ -306,3 +309,5 @@ void initTriggerCentral(Engine *engine) {
 	initHistogram(&triggerCallback, "all callbacks");
 #endif /* EFI_HISTOGRAMS */
 }
+
+#endif

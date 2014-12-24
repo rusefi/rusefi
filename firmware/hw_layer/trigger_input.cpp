@@ -8,7 +8,7 @@
 
 #include "main.h"
 
-#if EFI_SHAFT_POSITION_INPUT
+#if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
 
 #include "trigger_input.h"
 #include "wave_analyzer_hw.h"

@@ -58,6 +58,8 @@
 #define TRUE (!FALSE)
 #endif
 
+#if EFI_TUNER_STUDIO
+
 TunerStudioState tsState;
 TunerStudioOutputChannels tsOutputChannels;
 /**
@@ -158,3 +160,5 @@ void handleTestCommand(void) {
 	 */
 	tunerStudioWriteData((const uint8_t *) " ts_p_alive\r\n", 8);
 }
+
+#endif

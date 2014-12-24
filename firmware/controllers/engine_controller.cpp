@@ -110,7 +110,7 @@ Engine * engine = &_engine;
 
 static msg_t csThread(void) {
 	chRegSetThreadName("status");
-#if EFI_SHAFT_POSITION_INPUT
+#if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
 	while (true) {
 		int rpm = getRpm();
 		int is_cranking = isCrankingR(rpm);
@@ -194,6 +194,7 @@ static void cylinderCleanupControl(Engine *engine) {
 	}
 }
 
+#if EFI_FSIO
 static LECalculator calc;
 extern LEElement * fsioLogics[LE_COMMAND_COUNT];
 
@@ -233,6 +234,102 @@ static void setPinState(io_pin_e ioPin, LEElement *element, Engine *engine) {
 	}
 }
 
+static void showFsio(const char *msg, LEElement *element) {
+	if (msg != NULL)
+		scheduleMsg(&logger, "%s:", msg);
+	while (element != NULL) {
+		scheduleMsg(&logger, "action %d: fValue=%f iValue=%d", element->action, element->fValue, element->iValue);
+		element = element->next;
+	}
+	scheduleMsg(&logger, "<end>");
+}
+
+static void showFsioInfo(void) {
+	scheduleMsg(&logger, "sys used %d/user used %d", sysPool.getSize(), userPool.getSize());
+	showFsio("a/c", acRelayLogic);
+	showFsio("fuel", fuelPumpLogic);
+	showFsio("fan", radiatorFanLogic);
+	showFsio("alt", alternatorLogic);
+
+	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
+		char * exp = boardConfiguration->le_formulas[i];
+		if (exp[0] != 0) {
+			/**
+			 * in case of FSIO user interface indexes are starting with 0, the argument for that
+			 * is the fact that the target audience is more software developers
+			 */
+			scheduleMsg(&logger, "FSIO #%d [%s] at %s@%dHz value=%f", i, exp,
+					hwPortname(boardConfiguration->fsioPins[i]), boardConfiguration->fsioFrequency[i],
+					engineConfiguration2->fsioLastValue[i]);
+//			scheduleMsg(&logger, "user-defined #%d value=%f", i, engine->engineConfiguration2->fsioLastValue[i]);
+			showFsio(NULL, fsioLogics[i]);
+		}
+	}
+	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
+		float v = boardConfiguration->fsio_setting[i];
+		if (!cisnan(v)) {
+			scheduleMsg(&logger, "user property #%d: %f", i + 1, v);
+		}
+	}
+}
+
+static void setFsioSetting(float indexF, float value) {
+	int index = indexF;
+	if (index < 0 || index >= LE_COMMAND_COUNT) {
+		scheduleMsg(&logger, "invalid index %d", index);
+		return;
+	}
+	engineConfiguration->bc.fsio_setting[index] = value;
+	showFsioInfo();
+}
+
+static void setFsioFrequency(int index, int frequency) {
+	index--;
+	if (index < 0 || index >= LE_COMMAND_COUNT) {
+		scheduleMsg(&logger, "invalid index %d", index);
+		return;
+	}
+	boardConfiguration->fsioFrequency[index] = frequency;
+	scheduleMsg(&logger, "Setting FSIO frequency %d on #%d", frequency, index + 1);
+}
+
+static void setFsioPin(const char *indexStr, const char *pinName) {
+	int index = atoi(indexStr) - 1;
+	if (index < 0 || index >= LE_COMMAND_COUNT) {
+		scheduleMsg(&logger, "invalid index %d", index);
+		return;
+	}
+	brain_pin_e pin = parseBrainPin(pinName);
+	// todo: extract method - code duplication with other 'set_xxx_pin' methods?
+	if (pin == GPIO_INVALID) {
+		scheduleMsg(&logger, "invalid pin name [%s]", pinName);
+		return;
+	}
+	boardConfiguration->fsioPins[index] = pin;
+	scheduleMsg(&logger, "FSIO pin #%d [%s]", (index + 1), hwPortname(pin));
+}
+
+static void setUserOutput(const char *indexStr, const char *quotedLine, Engine *engine) {
+	int index = atoi(indexStr) - 1;
+	if (index < 0 || index >= LE_COMMAND_COUNT) {
+		scheduleMsg(&logger, "invalid index %d", index);
+		return;
+	}
+	char * l = unquote((char*) quotedLine);
+	if (strlen(l) > LE_COMMAND_LENGTH - 1) {
+		scheduleMsg(&logger, "Too long %d", strlen(l));
+		return;
+	}
+
+	scheduleMsg(&logger, "setting user out #%d to [%s]", index + 1, l);
+	strcpy(engine->engineConfiguration->bc.le_formulas[index], l);
+	// this would apply the changes
+	parseUserFsio(PASS_ENGINE_PARAMETER_F);
+	showFsioInfo();
+}
+
+#endif /* EFI_FSIO */
+
 static void onEvenyGeneralMilliseconds(Engine *engine) {
 	/**
 	 * We need to push current value into the 64 bit counter often enough so that we do not miss an overflow
@@ -248,6 +345,8 @@ static void onEvenyGeneralMilliseconds(Engine *engine) {
 
 	engine->watchdog();
 	engine->updateSlowSensors();
+
+#if EFI_FSIO
 
 	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
 		handleFsio(engine, i);
@@ -270,6 +369,7 @@ static void onEvenyGeneralMilliseconds(Engine *engine) {
 	if (boardConfiguration->fanPin != GPIO_UNASSIGNED) {
 //		setPinState(FAN_RELAY, radiatorFanLogic, engine);
 	}
+#endif
 
 	updateErrorCodes();
 
@@ -337,100 +437,6 @@ static void printAnalogInfo(void) {
 
 static THD_WORKING_AREA(csThreadStack, UTILITY_THREAD_STACK_SIZE);	// declare thread stack
 
-static void showFsio(const char *msg, LEElement *element) {
-	if (msg != NULL)
-		scheduleMsg(&logger, "%s:", msg);
-	while (element != NULL) {
-		scheduleMsg(&logger, "action %d: fValue=%f iValue=%d", element->action, element->fValue, element->iValue);
-		element = element->next;
-	}
-	scheduleMsg(&logger, "<end>");
-}
-
-static void showFsioInfo(void) {
-	scheduleMsg(&logger, "sys used %d/user used %d", sysPool.getSize(), userPool.getSize());
-	showFsio("a/c", acRelayLogic);
-	showFsio("fuel", fuelPumpLogic);
-	showFsio("fan", radiatorFanLogic);
-	showFsio("alt", alternatorLogic);
-
-	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
-		char * exp = boardConfiguration->le_formulas[i];
-		if (exp[0] != 0) {
-			/**
-			 * in case of FSIO user interface indexes are starting with 0, the argument for that
-			 * is the fact that the target audience is more software developers
-			 */
-			scheduleMsg(&logger, "FSIO #%d [%s] at %s@%dHz value=%f", i, exp,
-					hwPortname(boardConfiguration->fsioPins[i]), boardConfiguration->fsioFrequency[i],
-					engineConfiguration2->fsioLastValue[i]);
-//			scheduleMsg(&logger, "user-defined #%d value=%f", i, engine->engineConfiguration2->fsioLastValue[i]);
-			showFsio(NULL, fsioLogics[i]);
-		}
-	}
-	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
-		float v = boardConfiguration->fsio_setting[i];
-		if (!cisnan(v)) {
-			scheduleMsg(&logger, "user property #%d: %f", i + 1, v);
-		}
-	}
-
-}
-
-static void setFsioSetting(float indexF, float value) {
-	int index = indexF;
-	if (index < 0 || index >= LE_COMMAND_COUNT) {
-		scheduleMsg(&logger, "invalid index %d", index);
-		return;
-	}
-	engineConfiguration->bc.fsio_setting[index] = value;
-	showFsioInfo();
-}
-
-static void setFsioFrequency(int index, int frequency) {
-	index--;
-	if (index < 0 || index >= LE_COMMAND_COUNT) {
-		scheduleMsg(&logger, "invalid index %d", index);
-		return;
-	}
-	boardConfiguration->fsioFrequency[index] = frequency;
-	scheduleMsg(&logger, "Setting FSIO frequency %d on #%d", frequency, index + 1);
-}
-
-static void setFsioPin(const char *indexStr, const char *pinName) {
-	int index = atoi(indexStr) - 1;
-	if (index < 0 || index >= LE_COMMAND_COUNT) {
-		scheduleMsg(&logger, "invalid index %d", index);
-		return;
-	}
-	brain_pin_e pin = parseBrainPin(pinName);
-	// todo: extract method - code duplication with other 'set_xxx_pin' methods?
-	if (pin == GPIO_INVALID) {
-		scheduleMsg(&logger, "invalid pin name [%s]", pinName);
-		return;
-	}
-	boardConfiguration->fsioPins[index] = pin;
-	scheduleMsg(&logger, "FSIO pin #%d [%s]", (index + 1), hwPortname(pin));
-}
-
-static void setUserOutput(const char *indexStr, const char *quotedLine, Engine *engine) {
-	int index = atoi(indexStr) - 1;
-	if (index < 0 || index >= LE_COMMAND_COUNT) {
-		scheduleMsg(&logger, "invalid index %d", index);
-		return;
-	}
-	char * l = unquote((char*) quotedLine);
-	if (strlen(l) > LE_COMMAND_LENGTH - 1) {
-		scheduleMsg(&logger, "Too long %d", strlen(l));
-		return;
-	}
-
-	scheduleMsg(&logger, "setting user out #%d to [%s]", index + 1, l);
-	strcpy(engine->engineConfiguration->bc.le_formulas[index], l);
-	// this would apply the changes
-	parseUserFsio(PASS_ENGINE_PARAMETER_F);
-	showFsioInfo();
-}
 
 static void setInt(const int offset, const int value) {
 	int *ptr = (int *) (&((char *) engine->engineConfiguration)[offset]);
@@ -490,7 +496,7 @@ void initEngineContoller(Engine *engine) {
 	}
 #endif /* EFI_WAVE_ANALYZER */
 
-#if EFI_SHAFT_POSITION_INPUT
+#if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
 	/**
 	 * there is an implicit dependency on the fact that 'tachometer' listener is the 1st listener - this case
 	 * other listeners can access current RPM value
@@ -585,16 +591,18 @@ void initEngineContoller(Engine *engine) {
 		}
 	}
 
+#if EFI_FSIO
 	addConsoleActionSSP("set_fsio", (VoidCharPtrCharPtrVoidPtr) setUserOutput, engine);
 	addConsoleActionSS("set_fsio_pin", (VoidCharPtrCharPtr) setFsioPin);
 	addConsoleActionII("set_fsio_frequency", (VoidIntInt) setFsioFrequency);
+	addConsoleActionFF("set_fsio_setting", setFsioSetting);
+	addConsoleAction("fsioinfo", showFsioInfo);
+#endif
 
 	addConsoleActionSS("set_float", (VoidCharPtrCharPtr) setFloat);
 	addConsoleActionII("set_int", (VoidIntInt) setInt);
 	addConsoleActionI("get_float", getFloat);
 	addConsoleActionI("get_int", getInt);
 
-	addConsoleActionFF("set_fsio_setting", setFsioSetting);
-	addConsoleAction("fsioinfo", showFsioInfo);
 	initEval(engine);
 }

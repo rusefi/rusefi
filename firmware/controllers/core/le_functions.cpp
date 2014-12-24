@@ -6,6 +6,9 @@
  */
 
 #include "main.h"
+
+#if EFI_FSIO
+
 #include "le_functions.h"
 #include "allsensors.h"
 #include "rpm_calculator.h"
@@ -68,3 +71,5 @@ void setFsioExt(engine_configuration_s *engineConfiguration, int index, brain_pi
 void setFsio(engine_configuration_s *engineConfiguration, int index, brain_pin_e pin, const char * exp) {
 	setFsioExt(engineConfiguration, index, pin, exp, 0);
 }
+
+#endif /* EFI_FSIO */

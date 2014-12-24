@@ -6,6 +6,8 @@
 #include "error_handling.h"
 #include "map.h"
 
+#if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
+
 extern engine_configuration_s * engineConfiguration;
 
 /**
@@ -67,3 +69,5 @@ float getBaroPressure(void) {
 	float voltage = getVoltageDivided(engineConfiguration->baroSensor.hwChannel);
 	return decodePressure(voltage, &engineConfiguration->baroSensor);
 }
+
+#endif
