@@ -287,6 +287,7 @@ static void printThermistor(const char *msg, Thermistor *thermistor) {
 
 #if EFI_PROD_CODE
 static void printMAPInfo(void) {
+#if EFI_ANALOG_INPUTS
 	scheduleMsg(&logger, "map type=%d raw=%f MAP=%f", engineConfiguration->map.sensor.sensorType, getRawMap(),
 			getMap());
 	if (engineConfiguration->map.sensor.sensorType == MT_CUSTOM) {
@@ -299,8 +300,9 @@ static void printMAPInfo(void) {
 		scheduleMsg(&logger, "min=%f max=%f", engineConfiguration->baroSensor.customValueAt0,
 				engineConfiguration->baroSensor.customValueAt5);
 	}
-}
 #endif
+}
+#endif /* EFI_PROD_CODE */
 
 static void printTPSInfo(void) {
 #if (EFI_PROD_CODE && HAL_USE_ADC) || defined(__DOXYGEN__)
@@ -314,7 +316,9 @@ static void printTPSInfo(void) {
 			getTpsRateOfChange());
 }
 
+
 static void printTemperatureInfo(void) {
+#if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
 	printThermistor("CLT", &engine->clt);
 	if (!isValidCoolantTemperature(getCoolantTemperature(engine))) {
 		scheduleMsg(&logger, "CLT sensing error");
@@ -333,6 +337,7 @@ static void printTemperatureInfo(void) {
 
 #if EFI_ANALOG_INPUTS
 	scheduleMsg(&logger, "base cranking fuel %f", engineConfiguration->crankingSettings.baseCrankingFuel);
+#endif /* EFI_ANALOG_INPUTS */
 #endif
 }
 

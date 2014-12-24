@@ -64,11 +64,13 @@ void turnPinHigh(io_pin_e pin) {
 #if EFI_DEFAILED_LOGGING
 //	signal->hi_time = hTimeNow();
 #endif /* EFI_DEFAILED_LOGGING */
+
+#if EFI_GPIO
 	// turn the output level ACTIVE
 	// todo: this XOR should go inside the setOutputPinValue method
 	doSetOutputPinValue(pin, true);
 	// sleep for the needed duration
-
+#endif
 #if EFI_WAVE_CHART
 	// explicit check here is a performance optimization to speed up no-chart mode
 	if (CONFIG(isDigitalChartEnabled)) {
@@ -83,8 +85,10 @@ void turnPinHigh(io_pin_e pin) {
 }
 
 void turnPinLow(io_pin_e pin) {
+#if EFI_GPIO
 	// turn off the output
 	doSetOutputPinValue(pin, false);
+#endif
 
 #if EFI_DEFAILED_LOGGING
 	systime_t after = hTimeNow();
@@ -112,6 +116,7 @@ int getRevolutionCounter(void);
  *
  */
 void scheduleOutput(OutputSignal *signal, float delayMs, float durationMs) {
+#if EFI_GPIO
 	if (durationMs < 0) {
 		firmwareError("duration cannot be negative: %d", durationMs);
 		return;
@@ -128,6 +133,7 @@ void scheduleOutput(OutputSignal *signal, float delayMs, float durationMs) {
 
 	scheduleTask("out up", sUp, (int) MS2US(delayMs), (schfunc_t) &turnPinHigh, (void *) signal->io_pin);
 	scheduleTask("out down", sDown, (int) MS2US(delayMs) + MS2US(durationMs), (schfunc_t) &turnPinLow, (void*) signal->io_pin);
+#endif
 }
 
 io_pin_e getPinByName(const char *name) {

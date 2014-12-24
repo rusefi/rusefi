@@ -7,13 +7,15 @@
  * @author Andrey Belomutskiy, (c) 2012-2014
  */
 
-#include <ch.h>
-#include <hal.h>
-#include <string.h>
+#include <main.h>
+
 #include "flash_main.h"
 #include "eficonsole.h"
 #include "flash.h"
 #include "rusefi.h"
+
+#if EFI_INTERNAL_FLASH
+
 
 #include "engine_controller.h"
 
@@ -64,7 +66,6 @@ void writeToFlashIfPending() {
 extern uint32_t maxLockTime;
 
 void writeToFlash(void) {
-#if EFI_INTERNAL_FLASH
 	scheduleMsg(&logger, " !!!!!!!!!!!!!!!!!!!! BE SURE NOT WRITE WITH IGNITION ON !!!!!!!!!!!!!!!!!!!!");
 	persistentState.size = PERSISTENT_SIZE;
 	persistentState.version = FLASH_DATA_VERSION;
@@ -78,7 +79,6 @@ void writeToFlash(void) {
 	result = flashWrite(FLASH_ADDR, (const char *) &persistentState, PERSISTENT_SIZE);
 	scheduleMsg(&logger, "Flash programmed in (ms): %d", currentTimeMillis() - nowMs);
 	scheduleMsg(&logger, "Flashing result: %d", result);
-#endif /* EFI_INTERNAL_FLASH */
 	maxLockTime = 0;
 }
 
@@ -134,3 +134,5 @@ void initFlash(Engine *engine) {
 	addConsoleAction("resetconfig", doResetConfiguration);
 	addConsoleActionP("rewriteconfig", (VoidPtr)rewriteConfig, engine);
 }
+
+#endif /* EFI_INTERNAL_FLASH */
