@@ -7,6 +7,8 @@
 #ifndef ADCCONFIGURATION_H_
 #define ADCCONFIGURATION_H_
 
+#if HAL_USE_ADC || defined(__DOXYGEN__)
+
 class AdcConfiguration {
 public:
 	AdcConfiguration(ADCConversionGroup* hwConfig);
@@ -31,5 +33,6 @@ private:
 	adc_channel_e hardwareIndexByIndernalAdcIndex[20];
 };
 
+#endif /* HAL_USE_ADC */
 
 #endif /* ADCCONFIGURATION_H_ */

@@ -16,6 +16,10 @@
 #ifndef MCP3208_H_
 #define MCP3208_H_
 
+#include "main.h"
+
+#if EFI_MCP_3208 || defined(__DOXYGEN__)
+
 #define MCP3208_CS_PORT GPIOD
 #define MCP3208_CS_PIN 11
 
@@ -36,5 +40,7 @@ void requestAdcValueI(McpAdcState *state, int channel);
 void adc_in_out(McpAdcState *state);
 
 int getMcp3208adc(int channel);
+
+#endif /* EFI_MCP_3208 */
 
 #endif /* MCP3208_H_ */

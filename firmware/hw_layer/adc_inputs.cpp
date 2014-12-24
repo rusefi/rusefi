@@ -7,6 +7,9 @@
  */
 
 #include "main.h"
+
+#if HAL_USE_ADC || defined(__DOXYGEN__)
+
 #include "engine_configuration.h"
 #include "adc_inputs.h"
 #include "AdcConfiguration.h"
@@ -546,3 +549,4 @@ void pokeAdcInputs() {
 	printFullAdcReport();
 }
 
+#endif /* HAL_USE_ADC */

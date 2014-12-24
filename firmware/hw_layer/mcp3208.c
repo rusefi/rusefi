@@ -6,11 +6,10 @@
  * @author Andrey Belomutskiy, (c) 2012-2014
  */
 
-#include <ch.h>
-#include <hal.h>
-
-#include "mcp3208.h"
 #include "main.h"
+
+#if EFI_MCP_3208 || defined(__DOXYGEN__)
+#include "mcp3208.h"
 #include "pin_repository.h"
 
 McpAdcState *hack;
@@ -138,3 +137,4 @@ void init_adc_mcp3208(McpAdcState *state, SPIDriver *driver) {
 	spiStart(driver, &spicfg);
 }
 
+#endif /* EFI_MCP_3208 */

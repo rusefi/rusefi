@@ -35,12 +35,14 @@ char *portname(GPIO_TypeDef* GPIOx) {
 		return "PC";
 	if (GPIOx == GPIOD)
 		return "PD";
+#if defined(STM32F4XX)
 	if (GPIOx == GPIOE)
 		return "PE";
-	if (GPIOx == GPIOF)
-		return "PF";
 	if (GPIOx == GPIOH)
 		return "PH";
+#endif
+	if (GPIOx == GPIOF)
+		return "PF";
 	return "unknown";
 }
 
@@ -53,12 +55,14 @@ static int getPortIndex(GPIO_TypeDef* port) {
 		return 2;
 	if (port == GPIOD)
 		return 3;
+#if defined(STM32F4XX)
 	if (port == GPIOE)
 		return 4;
-	if (port == GPIOF)
-		return 5;
 	if (port == GPIOH)
 		return 6;
+#endif
+	if (port == GPIOF)
+		return 5;
 	firmwareError("portindex");
 	return -1;
 }
