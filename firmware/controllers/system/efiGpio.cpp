@@ -6,8 +6,10 @@
  */
 
 #include "main.h"
+#if EFI_GPIO
 #include "efiGpio.h"
 #include "io_pins.h"
+
 
 // todo: clean this mess, this should become 'static'/private
 OutputPin outputs[IO_PIN_COUNT];
@@ -99,3 +101,4 @@ void setOutputPinValue(io_pin_e pin, int logicValue) {
 	doSetOutputPinValue(pin, logicValue);
 }
 
+#endif /* EFI_GPIO */

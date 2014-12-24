@@ -13,9 +13,9 @@
 #include "chrtclib.h"
 #include "rtc_helper.h"
 
+#if EFI_RTC
 static Logging logger;
 
-#if EFI_RTC
 static void date_help(void) {
 	scheduleMsg(&logger, "Usage: date_help");
 	scheduleMsg(&logger, "       date_get");
@@ -130,8 +130,8 @@ static void date_set(char *strDate) {
 #endif /* EFI_RTC */
 
 void initRtc(void) {
-	initLogging(&logger, "rtc");
 #if EFI_RTC
+	initLogging(&logger, "rtc");
 	printMsg(&logger, "initRtc()");
 
 	// yes, it's my begin time  and we always start from this one 1391894433 - 2014-02-08 21:20:03

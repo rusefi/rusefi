@@ -509,9 +509,14 @@ void initEngineContoller(Engine *engine) {
 
 	chThdCreateStatic(csThreadStack, sizeof(csThreadStack), LOWPRIO, (tfunc_t) csThread, NULL);
 
+#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 	initInjectorCentral(engine);
-	initPwmTester();
 	initIgnitionCentral();
+#endif
+
+#if EFI_PWM_TESTER
+	initPwmTester();
+#endif
 
 	/**
 	 * This has to go after 'initInjectorCentral' and 'initInjectorCentral' in order to
@@ -525,19 +530,19 @@ void initEngineContoller(Engine *engine) {
 	initElectronicThrottle();
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 
-#if EFI_MALFUNCTION_INDICATOR
+#if EFI_MALFUNCTION_INDICATOR || defined(__DOXYGEN__)
 	if (engineConfiguration->isMilEnabled) {
 		initMalfunctionIndicator(engine);
 	}
 #endif /* EFI_MALFUNCTION_INDICATOR */
 
-#if EFI_MAP_AVERAGING
+#if EFI_MAP_AVERAGING || defined(__DOXYGEN__)
 	if (engineConfiguration->isMapAveragingEnabled) {
 		initMapAveraging(engine);
 	}
 #endif /* EFI_MAP_AVERAGING */
 
-#if EFI_ENGINE_CONTROL
+#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 	if (boardConfiguration->isEngineControlEnabled) {
 		/**
 		 * This method initialized the main listener which actually runs injectors & ignition
@@ -546,12 +551,10 @@ void initEngineContoller(Engine *engine) {
 	}
 #endif /* EFI_ENGINE_CONTROL */
 
-#if EFI_IDLE_CONTROL
+#if EFI_IDLE_CONTROL || defined(__DOXYGEN__)
 	if (engineConfiguration->isIdleThreadEnabled) {
 		startIdleThread(engine);
 	}
-#else
-	scheduleMsg(&logger, "no idle control");
 #endif
 
 #if EFI_FUEL_PUMP

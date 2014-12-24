@@ -159,7 +159,11 @@ extern "C"
 io_pin_e getPinByName(const char *name);
 
 void setDefaultPinState(io_pin_e pin, pin_output_mode_e *defaultState);
-void turnAllPinsOff(void);
+#if EFI_GPIO
+ void turnAllPinsOff(void);
+#else
+ #define turnAllPinsOff() {}
+#endif
 void outputPinRegisterExt2(const char *msg, io_pin_e ioPin, brain_pin_e brainPin, pin_output_mode_e *outputMode);
 #ifdef __cplusplus
 }

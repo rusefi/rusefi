@@ -10,6 +10,10 @@
 #ifndef EFIFEATURES_H_
 #define EFIFEATURES_H_
 
+#define EFI_GPIO TRUE
+
+#define EFI_FSIO TRUE
+
 #define EFI_USE_CCM TRUE
 
 #ifndef EFI_ENABLE_ASSERTS
