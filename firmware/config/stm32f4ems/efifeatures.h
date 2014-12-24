@@ -95,6 +95,8 @@
 
 #define EFI_IDLE_CONTROL TRUE
 
+#define EFI_PWM TRUE
+
 #define EFI_FUEL_PUMP TRUE
 
 #define EFI_ENGINE_EMULATOR TRUE

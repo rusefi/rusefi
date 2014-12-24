@@ -44,8 +44,10 @@ public:
 	// todo: this should go, too
 	engine_configuration_s *engineConfiguration;
 
+#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 	FuelSchedule crankingInjectionEvents;
 	FuelSchedule injectionEvents;
+#endif
 
 	float fsioLastValue[LE_COMMAND_COUNT];
 

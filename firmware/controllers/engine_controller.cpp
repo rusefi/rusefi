@@ -69,8 +69,6 @@ extern bool hasFirmwareErrorFlag;
 extern LEElementPool sysPool;
 extern LEElementPool userPool;
 
-static SimplePwm fsioPwm[LE_COMMAND_COUNT] CCM_OPTIONAL;
-
 persistent_config_container_s persistentState CCM_OPTIONAL;
 
 /**
@@ -89,8 +87,10 @@ static VirtualTimer everyMsTimer;
 
 static Logging logger;
 
+#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 static engine_configuration2_s ec2 CCM_OPTIONAL;
 engine_configuration2_s * engineConfiguration2 = &ec2;
+#endif
 
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
 
@@ -195,6 +195,8 @@ static void cylinderCleanupControl(Engine *engine) {
 }
 
 #if EFI_FSIO
+static SimplePwm fsioPwm[LE_COMMAND_COUNT] CCM_OPTIONAL;
+
 static LECalculator calc;
 extern LEElement * fsioLogics[LE_COMMAND_COUNT];
 
@@ -574,6 +576,7 @@ void initEngineContoller(Engine *engine) {
 
 	addConsoleAction("analoginfo", printAnalogInfo);
 
+#if EFI_FSIO
 	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
 		brain_pin_e brainPin = boardConfiguration->fsioPins[i];
 
@@ -591,7 +594,6 @@ void initEngineContoller(Engine *engine) {
 		}
 	}
 
-#if EFI_FSIO
 	addConsoleActionSSP("set_fsio", (VoidCharPtrCharPtrVoidPtr) setUserOutput, engine);
 	addConsoleActionSS("set_fsio_pin", (VoidCharPtrCharPtr) setFsioPin);
 	addConsoleActionII("set_fsio_frequency", (VoidIntInt) setFsioFrequency);

@@ -42,14 +42,17 @@ inline static void assertOMode(pin_output_mode_e mode) {
 }
 
 void setDefaultPinState(io_pin_e pin, pin_output_mode_e *outputMode) {
+#if EFI_GPIO
 	pin_output_mode_e mode = *outputMode;
 	assertOMode(mode);
 	pinDefaultState[pin] = outputMode;
 	setOutputPinValue(pin, FALSE); // initial state
+#endif
 }
 
 static void outputPinRegisterExt(const char *msg, io_pin_e ioPin, GPIO_TypeDef *port, uint32_t pin,
 		pin_output_mode_e *outputMode) {
+#if EFI_GPIO
 	efiAssertVoid((int)ioPin < IO_PIN_COUNT, "io pin out of range");
 	if (port == GPIO_NULL) {
 		// that's for GRIO_NONE
@@ -65,6 +68,7 @@ static void outputPinRegisterExt(const char *msg, io_pin_e ioPin, GPIO_TypeDef *
 	initOutputPinExt(msg, &outputs[ioPin], port, pin, mode);
 
 	setDefaultPinState(ioPin, outputMode);
+#endif
 }
 
 GPIO_TypeDef * getHwPort(brain_pin_e brainPin) {

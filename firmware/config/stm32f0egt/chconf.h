@@ -302,7 +302,7 @@
  * @note    Mutexes are recommended.
  */
 #if !defined(CH_USE_HEAP) || defined(__DOXYGEN__)
-#define CH_USE_HEAP                     TRUE
+#define CH_USE_HEAP                     FALSE
 #endif
 
 /**
