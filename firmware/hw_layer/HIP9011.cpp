@@ -28,7 +28,7 @@
 #include "rpm_calculator.h"
 #include "trigger_central.h"
 
-#if EFI_HIP_9011
+#if EFI_HIP_9011 || defined(__DOXYGEN__)
 
 extern pin_output_mode_e DEFAULT_OUTPUT;
 

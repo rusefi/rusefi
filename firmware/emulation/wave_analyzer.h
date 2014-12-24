@@ -10,6 +10,9 @@
 #define WAVE_ANALYZER_H_
 
 #include "main.h"
+
+#if EFI_WAVE_ANALYZER || defined(__DOXYGEN__)
+
 #include "datalogging.h"
 
 #include "wave_analyzer_hw.h"
@@ -56,6 +59,8 @@ public:
 
 void initWaveAnalyzer(void);
 void printWave(Logging *logging);
+
+#endif
 
 #endif /* WAVE_ANALYZER_H_ */
 

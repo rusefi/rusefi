@@ -7,6 +7,9 @@
  */
 
 #include "wave_analyzer_hw.h"
+
+#if EFI_WAVE_ANALYZER || defined(__DOXYGEN__)
+
 #include "eficonsole.h"
 #include "pin_repository.h"
 
@@ -169,3 +172,5 @@ void setWaveReaderMode(WaveReaderHw *hw, bool mode) {
 	}
 	hw->started = TRUE;
 }
+
+#endif

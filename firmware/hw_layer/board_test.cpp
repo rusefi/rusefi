@@ -32,12 +32,14 @@
 static volatile int stepCoutner = 0;
 static volatile brain_pin_e currentPin = GPIO_UNASSIGNED;
 
-extern AdcConfiguration slowAdc;
-extern AdcConfiguration fastAdc;
-
 static bool isTimeForNextStep(int copy) {
 	return copy != stepCoutner;
 }
+
+
+#if HAL_USE_ADC || defined(__DOXYGEN__)
+extern AdcConfiguration slowAdc;
+extern AdcConfiguration fastAdc;
 
 static void processAdcPin(AdcConfiguration *adc, int index, const char *prefix) {
 	adc_channel_e hwIndex = adc->getAdcHardwareIndexByInternalIndex(index);
@@ -60,7 +62,7 @@ static void processAdcPin(AdcConfiguration *adc, int index, const char *prefix) 
 
 	}
 }
-
+#endif
 static volatile int currentIndex = 0;
 
 static void waitForKey(void) {
@@ -134,7 +136,9 @@ bool isBoardTestMode(void) {
 void printBoardTestState(void) {
 	print("Current index=%d\r\n", currentIndex);
 	print("'n' for next step and 'set X' to return to step X\r\n");
+#if HAL_USE_ADC || defined(__DOXYGEN__)
 	print("ADC count: slow %d/fast %d\r\n", slowAdc.size(), fastAdc.size());
+#endif
 
 	if (currentPin != GPIO_UNASSIGNED) {
 		print("Blinking %s\r\n", hwPortname(currentPin));
@@ -150,11 +154,13 @@ void initBoardTest(void) {
 
 	// this code is ugly as hell, I had no time to think. Todo: refactor
 
+#if HAL_USE_ADC || defined(__DOXYGEN__)
 	processAdcPin(&fastAdc, 0, "fast");
 	while (currentIndex < slowAdc.size()) {
 		processAdcPin(&slowAdc, currentIndex, "slow");
 		currentIndex++;
 	}
+#endif
 
 	currentIndex = 0;
 

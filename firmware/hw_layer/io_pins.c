@@ -28,7 +28,11 @@ static Logging logger;
 extern pin_output_mode_e *pinDefaultState[IO_PIN_COUNT];
 extern OutputPin outputs[IO_PIN_COUNT];
 
+#if defined(STM32F4XX)
 static GPIO_TypeDef *PORTS[] = { GPIOA, GPIOB, GPIOC, GPIOD, GPIOE, GPIOF, GPIOG, GPIOH };
+#else
+static GPIO_TypeDef *PORTS[] = { GPIOA, GPIOB, GPIOC, GPIOD, GPIOF};
+#endif
 
 pin_output_mode_e DEFAULT_OUTPUT = OM_DEFAULT;
 
@@ -111,8 +115,11 @@ static void getPinValue(const char *name) {
 void initOutputPins(void) {
 	initLogging(&logger, "io_pins");
 
+#if EFI_WARNING_LED
 	outputPinRegister("warning", LED_WARNING, LED_WARNING_PORT, LED_WARNING_PIN);
 	outputPinRegister("is running status", LED_RUNNING, LED_RUNNING_STATUS_PORT, LED_RUNNING_STATUS_PIN);
+#endif /* EFI_WARNING_LED */
+
 	outputPinRegister("communication status 1", LED_COMMUNICATION_1, LED_COMMUNICATION_PORT, LED_COMMUNICATION_PIN);
 
 	/**
@@ -132,7 +139,9 @@ void initOutputPins(void) {
 //	outputPinRegister("spi CS2", SPI_CS_2, SPI_CS2_PORT, SPI_CS2_PIN);
 //	outputPinRegister("spi CS3", SPI_CS_3, SPI_CS3_PORT, SPI_CS3_PIN);
 //	outputPinRegister("spi CS4", SPI_CS_4, SPI_CS4_PORT, SPI_CS4_PIN);
+#if HAL_USE_SPI || defined(__DOXYGEN__)
 	outputPinRegister("spi CS5", SPI_CS_SD_MODULE, SPI_SD_MODULE_PORT, SPI_SD_MODULE_PIN);
+#endif
 
 	// todo: should we move this code closer to the fuel pump logic?
 	outputPinRegisterExt2("fuel pump relay", FUEL_PUMP_RELAY, boardConfiguration->fuelPumpPin, &DEFAULT_OUTPUT);

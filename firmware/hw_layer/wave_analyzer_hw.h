@@ -9,6 +9,9 @@
 #define WAVE_ANALYZER_HW_H_
 
 #include "main.h"
+
+#if HAL_USE_ICU || defined(__DOXYGEN__)
+
 #include "listener_array.h"
 
 typedef struct {
@@ -35,5 +38,7 @@ ICUDriver * getInputCaptureDriver(brain_pin_e hwPin);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
+
+#endif
 
 #endif /* WAVE_ANALYZER_HW_H_ */
