@@ -1,1 +1,1 @@
-arm-none-eabi-objdump -S debug/rusefi.elf > debug.dump
+arm-none-eabi-objdump -S debug_EMS/rusefi.elf > debug.dump

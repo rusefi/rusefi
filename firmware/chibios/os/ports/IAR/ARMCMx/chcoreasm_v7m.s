@@ -34,7 +34,7 @@
  * Imports the Cortex-Mx configuration headers.
  */
 #define _FROM_ASM_
-#include "config\system\chconf.h"
+#include "config\stm32f4ems\chconf.h"
 #include "chcore.h"
 
 CONTEXT_OFFSET  SET 12

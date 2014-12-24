@@ -327,8 +327,7 @@
           <state>$PROJ_DIR$\..\console</state>
           <state>$PROJ_DIR$\..\config</state>
           <state>$PROJ_DIR$\..\config\engines</state>
-          <state>$PROJ_DIR$\..\config\boards</state>
-          <state>$PROJ_DIR$\..\config\system</state>
+          <state>$PROJ_DIR$\..\config\stm32f4ems</state>
           <state>$PROJ_DIR$\..\console\tunerstudio</state>
           <state>$PROJ_DIR$\..\console_util</state>
           <state>$PROJ_DIR$\..\emulation</state>
@@ -1904,15 +1903,6 @@
   <group>
     <name>config</name>
     <group>
-      <name>boards</name>
-      <file>
-        <name>$PROJ_DIR$\..\config\boards\arro_board.h</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\config\boards\boards.h</name>
-      </file>
-    </group>
-    <group>
       <name>engines</name>
       <file>
         <name>$PROJ_DIR$\..\config\engines\audi_aan.cpp</name>
@@ -2039,20 +2029,20 @@
       </file>
     </group>
     <group>
-      <name>system</name>
+      <name>stm32f4ems</name>
       <file>
-        <name>$PROJ_DIR$\..\config\system\chconf.h</name>
+        <name>$PROJ_DIR$\..\config\stm32f4ems\chconf.h</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\config\system\halconf.h</name>
+        <name>$PROJ_DIR$\..\config\stm32f4ems\halconf.h</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\config\system\mcuconf.h</name>
+       <name>$PROJ_DIR$\..\config\stm32f4ems\mcuconf.h</name>
+      </file>
+      <file>
+       <name>$PROJ_DIR$\..\config\stm32f4ems\efifeatures.h</name>
       </file>
     </group>
-    <file>
-      <name>$PROJ_DIR$\..\config\efifeatures.h</name>
-    </file>
   </group>
   <group>
     <name>console</name>

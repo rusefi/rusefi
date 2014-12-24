@@ -21,7 +21,7 @@
 
 #include "engine.h"
 
-#define DEFAULT_ENGINE_TYPE FORD_ASPIRE_1996
+#define DEFAULT_ENGINE_TYPE DEFAULT_ENGINE
 
 static bool needToWriteConfiguration = false;
 
