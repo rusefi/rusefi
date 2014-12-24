@@ -77,6 +77,8 @@ static void sayHello(void) {
 	printMsg(&logger, "STM32_ADCCLK=%d", STM32_ADCCLK);
 	printMsg(&logger, "STM32_TIMCLK1=%d", STM32_TIMCLK1);
 	printMsg(&logger, "STM32_TIMCLK2=%d", STM32_TIMCLK2);
+#endif
+#ifdef STM32_PCLK1
 	printMsg(&logger, "STM32_PCLK1=%d", STM32_PCLK1);
 	printMsg(&logger, "STM32_PCLK2=%d", STM32_PCLK2);
 #endif
@@ -106,8 +108,12 @@ static void sayHello(void) {
 	printMsg(&logger, "EFI_SIGNAL_EXECUTOR_HW_TIMER=%d", EFI_SIGNAL_EXECUTOR_HW_TIMER);
 #endif
 
+#ifdef EFI_SHAFT_POSITION_INPUT
 	printMsg(&logger, "EFI_SHAFT_POSITION_INPUT=%d", EFI_SHAFT_POSITION_INPUT);
+#endif
+#ifdef EFI_INTERNAL_ADC
 	printMsg(&logger, "EFI_INTERNAL_ADC=%d", EFI_INTERNAL_ADC);
+#endif
 
 //	printSimpleMsg(&logger, "", );
 //	printSimpleMsg(&logger, "", );

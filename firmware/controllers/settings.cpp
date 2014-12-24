@@ -303,7 +303,7 @@ static void printMAPInfo(void) {
 #endif
 
 static void printTPSInfo(void) {
-#if EFI_PROD_CODE
+#if (EFI_PROD_CODE && HAL_USE_ADC) || defined(__DOXYGEN__)
 	GPIO_TypeDef* port = getAdcChannelPort(engineConfiguration->tpsAdcChannel);
 	int pin = getAdcChannelPin(engineConfiguration->tpsAdcChannel);
 
@@ -574,6 +574,7 @@ static void setTriggerSimulatorPin(const char *indexStr, const char *pinName) {
 	boardConfiguration->triggerSimulatorPins[index] = pin;
 }
 
+#if HAL_USE_ADC || defined(__DOXYGEN__)
 static void setAnalogInputPin(const char *sensorStr, const char *pinName) {
 	brain_pin_e pin = parseBrainPin(pinName);
 	if (pin == GPIO_INVALID) {
@@ -599,6 +600,7 @@ static void setAnalogInputPin(const char *sensorStr, const char *pinName) {
 		scheduleMsg(&logger, "setting TPS to %s/%d", pinName, channel);
 	}
 }
+#endif
 
 static void setLogicInputPin(const char *indexStr, const char *pinName) {
 	int index = atoi(indexStr);
@@ -847,7 +849,9 @@ void initSettings(engine_configuration_s *engineConfiguration) {
 	addConsoleActionS("set_idle_pin", setIdlePin);
 
 	addConsoleAction("mapinfo", printMAPInfo);
+#if HAL_USE_ADC || defined(__DOXYGEN__)
 	addConsoleActionSS("set_analog_input_pin", setAnalogInputPin);
+#endif
 	addConsoleActionSS("set_logic_input_pin", setLogicInputPin);
 	addConsoleActionI("set_pot_spi", setPotSpi);
 #endif /* EFI_PROD_CODE */

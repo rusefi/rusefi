@@ -5,10 +5,11 @@
 /* disk I/O modules and attach it to FatFs module with common interface. */
 /*-----------------------------------------------------------------------*/
 
-#include "ch.h"
-#include "hal.h"
+#include "main.h"
 #include "ffconf.h"
 #include "diskio.h"
+
+#if EFI_FILE_LOGGING || defined(__DOXYGEN__)
 
 #if HAL_USE_MMC_SPI && HAL_USE_SDC
 #error "cannot specify both MMC_SPI and SDC drivers"
@@ -250,5 +251,5 @@ DWORD get_fattime(void) {
 #endif
 }
 
-
+#endif
 

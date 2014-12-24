@@ -1,6 +1,12 @@
 
 #include "main.h"
 
+int main_loop_started;
+
+void firmwareError(const char *fmt, ...) {
+
+}
+
 
 /*
  * Blue LED blinker thread, times are in milliseconds.

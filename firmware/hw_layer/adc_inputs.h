@@ -10,10 +10,10 @@
 #define ADC_INPUTS_H_
 
 #include "main.h"
+#include "adc_math.h"
 
 #if HAL_USE_ADC || defined(__DOXYGEN__)
 
-#include "adc_math.h"
 
 const char * getAdcMode(adc_channel_e hwChannel);
 int getAdcChannelPin(adc_channel_e hwChannel);
@@ -58,6 +58,8 @@ typedef struct {
 // todo: migrate to adcToVoltageInputDividerCoefficient
 #define adcToVoltsDivided(adc) (adcToVolts(adc) * engineConfiguration->analogInputDividerCoefficient)
 
+#else
+#define getAdcValue(channel) 0
 #endif /* HAL_USE_ADC */
 
 #endif /* ADC_INPUTS_H_ */

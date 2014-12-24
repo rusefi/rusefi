@@ -24,6 +24,7 @@
 #define LOGIC_ANALYZER_CHANNEL_COUNT 4
 
 typedef enum {
+	DEFAULT_ENGINE = 0,
 	AUDI_AAN = 1,
 #if EFI_SUPPORT_DODGE_NEON
 	/**

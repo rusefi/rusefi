@@ -10,7 +10,11 @@
 
 #include "engine.h"
 
+#if HAL_USE_ADC || defined(__DOXYGEN__)
+
 void mapAveragingCallback(adcsample_t newValue);
 void initMapAveraging(Engine *engine);
+
+#endif
 
 #endif /* ADC_AVERAGING_H_ */

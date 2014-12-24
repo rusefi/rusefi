@@ -25,6 +25,8 @@
 #include "rpm_calculator.h"
 #include "wave_chart.h"
 
+#if EFI_WAVE_ANALYZER || defined(__DOXYGEN__)
+
 EXTERN_ENGINE;
 
 #define CHART_RESET_DELAY 1
@@ -257,3 +259,5 @@ void initWaveAnalyzer(void) {
 	print("wave disabled\r\n");
 #endif
 }
+
+#endif

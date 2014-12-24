@@ -270,6 +270,8 @@ struct context {
  */
 #define PORT_FAST_IRQ_HANDLER(id) void id(void)
 
+int getRemainingStack(Thread *otp);
+
 /**
  * @brief   Port-related initialization code.
  */

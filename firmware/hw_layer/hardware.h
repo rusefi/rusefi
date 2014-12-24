@@ -10,6 +10,8 @@
 
 #include "main.h"
 
+#if HAL_USE_SPI || defined(__DOXYGEN__)
+
 // Peripherial Clock 42MHz SPI2 SPI3
 // Peripherial Clock 84MHz SPI1                                SPI1        SPI2/3
 //  42 MHz      21 MHZ
@@ -44,6 +46,8 @@ void unlockSpi(void);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
+
+#endif /* HAL_USE_SPI */
 
 #define GET_BOARD_TEST_MODE_VALUE() (!palReadPad(getHwPort(boardConfiguration->boardTestModeJumperPin), getHwPin(boardConfiguration->boardTestModeJumperPin)))
 

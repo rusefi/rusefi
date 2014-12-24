@@ -123,7 +123,6 @@ static void emulatorApplyPinState(PwmConfig *state, int stateIndex) {
 		helper.handleEmulatorCallback(state, stateIndex);
 	}
 }
-#endif /* EFI_EMULATE_POSITION_SENSORS */
 
 static void setEmulatorAtIndex(int index, Engine *engine) {
 	stopEmulationAtIndex = index;
@@ -147,5 +146,5 @@ void initTriggerEmulatorLogic(Engine *engine) {
 	addConsoleActionIP("rpm", (VoidIntVoidPtr)setTriggerEmulatorRPM, engine);
 	addConsoleActionIP("stop_stimulator_at_index", (VoidIntVoidPtr)setEmulatorAtIndex, engine);
 	addConsoleActionP("resume_stimulator", (VoidPtr) resumeStimulator, engine);
-
 }
+#endif

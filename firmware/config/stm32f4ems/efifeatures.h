@@ -75,6 +75,8 @@
 
 #define EFI_MAX_31855 TRUE
 
+#define EFI_MCP_3208 FALSE
+
 #define EFI_HIP_9011 TRUE
 
 #define EFI_INTERNAL_ADC TRUE
@@ -106,6 +108,8 @@
  * Do we need file logging (like SD card) logic?
  */
 #define EFI_FILE_LOGGING TRUE
+
+#define EFI_USB_SERIAL TRUE
 
 /**
  * While we embed multiple PnP configurations into the same firmware binary, these marcoses give us control
@@ -292,6 +296,8 @@
 #define LED_COMMUNICATION_PORT GPIOD
 #define LED_COMMUNICATION_PIN GPIOD_LED6
 
+#define EFI_WARNING_LED TRUE
+
 // USART1 -> check defined STM32_SERIAL_USE_USART1
 // For GPS we have USART1. We can start with PB7 USART1_RX and PB6 USART1_TX
 #define GPS_SERIAL_DEVICE &SD1
@@ -302,7 +308,5 @@
 
 #define CONFIG_RESET_SWITCH_PORT GPIOD
 #define CONFIG_RESET_SWITCH_PIN 6
-
-
 
 #endif /* EFIFEATURES_H_ */

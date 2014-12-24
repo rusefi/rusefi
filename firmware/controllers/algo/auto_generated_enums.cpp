@@ -201,11 +201,15 @@ case GPIO_10:
 #include "rusefi_enums.h"
 const char *getEngine_type_e(engine_type_e value){
 switch(value) {
+case DEFAULT_ENGINE:
+  return "DEFAULT_ENGINE";
 case SATURN_ION_2004:
   return "SATURN_ION_2004";
 case CITROEN_TU3JP:
   return "CITROEN_TU3JP";
-case FORD_FIESTA:
+#if EFI_SUPPORT_FORD_FIESTA
+  case FORD_FIESTA:
+#endif
   return "FORD_FIESTA";
 case ET_UNUSED:
   return "ET_UNUSED";
@@ -213,8 +217,10 @@ case SUBARU_2003_WRX:
   return "SUBARU_2003_WRX";
 case HONDA_ACCORD_CD_DIP:
   return "HONDA_ACCORD_CD_DIP";
+#if EFI_SUPPORT_NISSAN_PRIMERA
 case NISSAN_PRIMERA:
   return "NISSAN_PRIMERA";
+#endif
 case FORD_ESCORT_GT:
   return "FORD_ESCORT_GT";
 case MAZDA_323:
@@ -227,12 +233,16 @@ case DODGE_NEON_2003:
   return "DODGE_NEON_2003";
 case HONDA_ACCORD_CD:
   return "HONDA_ACCORD_CD";
-case DODGE_NEON_1995:
+#if EFI_SUPPORT_DODGE_NEON
+  case DODGE_NEON_1995:
+#endif
   return "DODGE_NEON_1995";
 case HONDA_ACCORD_CD_TWO_WIRES:
   return "HONDA_ACCORD_CD_TWO_WIRES";
+#if EFI_SUPPORT_FORD_ASPIRE
 case FORD_ASPIRE_1996:
   return "FORD_ASPIRE_1996";
+#endif
 case MINI_COOPER_R50:
   return "MINI_COOPER_R50";
 case AUDI_AAN:
