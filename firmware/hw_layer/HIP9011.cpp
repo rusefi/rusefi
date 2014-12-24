@@ -172,7 +172,8 @@ static void showHipInfo(void) {
 	scheduleMsg(&logger, "band index=%d", bandIndex);
 
 
-	scheduleMsg(&logger, "spi= CS=%s", hwPortname(boardConfiguration->hip9011CsPin));
+	scheduleMsg(&logger, "spi= int=%s CS=%s", hwPortname(boardConfiguration->hip9011IntHoldPin),
+			hwPortname(boardConfiguration->hip9011CsPin));
 }
 
 void setHip9011FrankensoPinout(void) {
@@ -219,6 +220,7 @@ void initHip9011(void) {
 	spiStart(driver, &spicfg);
 
 	outputPinRegisterExt2("hip int/hold", HIP9011_INT_HOLD, boardConfiguration->hip9011IntHoldPin, &DEFAULT_OUTPUT);
+	outputPinRegisterExt2("hip CS", SPI_CS_HIP9011, boardConfiguration->hip9011CsPin, &DEFAULT_OUTPUT);
 
 	chThdCreateStatic(htThreadStack, sizeof(htThreadStack), NORMALPRIO, (tfunc_t) ivThread, NULL);
 
