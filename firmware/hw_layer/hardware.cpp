@@ -273,7 +273,7 @@ void initHardware(Logging *logger, Engine *engine) {
 	// todo: figure out better startup logic
 	initTriggerCentral(engine);
 
-#if EFI_SHAFT_POSITION_INPUT
+#if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
 	initShaftPositionInputCapture();
 #endif /* EFI_SHAFT_POSITION_INPUT */
 

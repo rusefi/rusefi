@@ -20,6 +20,9 @@
  */
 
 #include "main.h"
+
+#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
+
 #include "ignition_central.h"
 #include "io_pins.h"
 #include "signal_executor.h"
@@ -37,3 +40,5 @@ void initIgnitionCentral(void) {
 		outputPinRegisterExt2(getPinName(pin), pin, boardConfiguration->ignitionPins[i], &boardConfiguration->ignitionPinMode);
 	}
 }
+
+#endif

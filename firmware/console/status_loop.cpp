@@ -43,10 +43,7 @@
 #include "speed_density.h"
 
 #include "advance_map.h"
-#if EFI_TUNER_STUDIO
 #include "tunerstudio.h"
-#endif /* EFI_TUNER_STUDIO */
-
 #include "fuel_math.h"
 #include "main_trigger_callback.h"
 #include "engine_math.h"
@@ -161,7 +158,7 @@ void printSensors(Engine *engine) {
 }
 
 void printState(Engine *engine, int currentCkpEventCounter) {
-#if EFI_SHAFT_POSITION_INPUT
+#if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
 	printSensors(engine);
 
 	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
@@ -434,7 +431,7 @@ static THD_WORKING_AREA(tsThreadStack, UTILITY_THREAD_STACK_SIZE);
 #if EFI_TUNER_STUDIO
 
 void updateTunerStudioState(Engine *engine, TunerStudioOutputChannels *tsOutputChannels) {
-#if EFI_SHAFT_POSITION_INPUT
+#if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
 	int rpm = getRpmE(engine);
 #else
 	int rpm = 0;

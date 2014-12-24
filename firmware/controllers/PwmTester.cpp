@@ -7,6 +7,9 @@
  */
 
 #include "main.h"
+
+#if EFI_PWM_TESTER
+
 #include "PwmTester.h"
 #include "EfiWave.h"
 #include "pwm_generator_logic.h"
@@ -39,3 +42,5 @@ void initPwmTester(void) {
 	addConsoleActionI("pwmtest", startPwmTest);
 // un-comment this to start pwm test on start up 	startPwmTest(1000);
 }
+
+#endif

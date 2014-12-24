@@ -14,6 +14,9 @@
  */
 
 #include "main.h"
+
+#if EFI_FSIO
+
 #include "logic_expression.h"
 #include "le_functions.h"
 
@@ -422,3 +425,5 @@ void parseUserFsio(DECLARE_ENGINE_PARAMETER_F) {
 		}
 	}
 }
+
+#endif /* EFI_FSIO */

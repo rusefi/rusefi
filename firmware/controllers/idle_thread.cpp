@@ -32,6 +32,8 @@
 #include "engine_configuration.h"
 #include "engine.h"
 
+#if EFI_IDLE_CONTROL || defined(__DOXYGEN__)
+
 static THD_WORKING_AREA(ivThreadStack, UTILITY_THREAD_STACK_SIZE);
 
 /**
@@ -152,3 +154,5 @@ void startIdleThread(Engine *engine) {
 	addConsoleActionI("set_idle_pwm", setIdleValvePwm);
 	addConsoleActionIP("set_idle_enabled", (VoidIntVoidPtr) setIdleControlEnabled, engine);
 }
+
+#endif

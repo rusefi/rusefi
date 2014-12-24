@@ -20,6 +20,8 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
+// todo: merge with ignition_central and rename this file?
+
 #include "main.h"
 
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)

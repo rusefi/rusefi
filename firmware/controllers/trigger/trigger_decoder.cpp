@@ -19,6 +19,9 @@
  */
 
 #include "main.h"
+
+#if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
+
 #include "obd_error_codes.h"
 #include "trigger_decoder.h"
 #include "cyclic_buffer.h"
@@ -445,3 +448,4 @@ void initTriggerDecoder(void) {
 #endif
 }
 
+#endif
