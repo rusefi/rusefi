@@ -36,6 +36,8 @@ rem Generate human-readable version of the .map memory usage report
 java -jar ../../java_tools/gcc_map_reader.jar > ../rusefi_ram_report.txt
 cd ..
 
+arm-none-eabi-size  --format=berkeley "build\rusefi.elf"
+
 rem file, let's program the board right away
 flash.bat
 exit

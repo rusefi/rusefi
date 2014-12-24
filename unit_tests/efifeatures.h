@@ -10,6 +10,10 @@
 
 #define EFI_ENABLE_ASSERTS TRUE
 
+#define EFI_GPIO TRUE
+
+#define EFI_FSIO TRUE
+
 #define EFI_HISTOGRAMS TRUE
 
 #define EFI_CLI_SUPPORT FALSE

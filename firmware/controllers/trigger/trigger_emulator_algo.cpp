@@ -5,6 +5,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2014
  */
 #include "main.h"
+
+#if EFI_EMULATE_POSITION_SENSORS || defined(__DOXYGEN__)
+
 #include "trigger_emulator_algo.h"
 #include "engine_configuration.h"
 #include "LocalVersionHolder.h"
@@ -103,8 +106,6 @@ static void updateTriggerShapeIfNeeded(PwmConfig *state) {
 }
 
 static TriggerEmulatorHelper helper;
-
-#if EFI_EMULATE_POSITION_SENSORS || defined(__DOXYGEN__)
 
 static void emulatorApplyPinState(PwmConfig *state, int stateIndex) {
 	if (stopEmulationAtIndex == stateIndex) {

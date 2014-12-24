@@ -20,8 +20,11 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "injector_central.h"
 #include "main.h"
+
+#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
+
+#include "injector_central.h"
 #include "io_pins.h"
 #include "signal_executor.h"
 #include "main_trigger_callback.h"
@@ -231,3 +234,5 @@ void initInjectorCentral(Engine *engine) {
 	addConsoleActionSSSSS("fuelbench2", fuelbench2);
 	addConsoleActionSSSSS("sparkbench2", sparkbench2);
 }
+
+#endif

@@ -1,0 +1,1 @@
+arm-none-eabi-objdump -S debug_EGT2CAN/rusefi.elf > debug.dump
