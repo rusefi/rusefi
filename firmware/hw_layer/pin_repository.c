@@ -163,7 +163,7 @@ void mySetPadMode(const char *msg, ioportid_t port, ioportmask_t pin, iomode_t m
 
 	if (PIN_USED[index] != NULL) {
 		/**
-		 * todo: the problem is that this warning happends before the console is even
+		 * todo: the problem is that this warning happens before the console is even
 		 * connected, so the warning is never displayed on the console and that's quite a problem!
 		 */
 //		warning(OBD_PCM_Processor_Fault, "%s%d req by %s used by %s", portname(port), pin, msg, PIN_USED[index]);
