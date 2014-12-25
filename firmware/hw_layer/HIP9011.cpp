@@ -11,6 +11,7 @@
  *	pin13	SPI clock - SCLK
  *
  * http://www.ti.com/lit/ds/symlink/tpic8101.pdf
+ * http://www.intersil.com/content/dam/Intersil/documents/hip9/hip9011.pdf
  * http://www.intersil.com/content/dam/Intersil/documents/an97/an9770.pdf
  * http://e2e.ti.com/cfs-file/__key/telligent-evolution-components-attachments/00-26-01-00-00-42-36-40/TPIC8101-Training.pdf
  *
@@ -65,7 +66,7 @@ static void spiCallback(SPIDriver *spip) {
 }
 
 // SPI_CR1_BR_1 // 5MHz
-// SPI_CR1_CPOL Clock Polarity
+// SPI_CR1_CPHA Clock Phase
 // todo: nicer method which would mention SPI speed explicitly?
 
 static SPIConfig spicfg = { spiCallback,
@@ -74,7 +75,7 @@ NULL,
 0,
 //SPI_CR1_MSTR |
 //SPI_CR1_BR_1 // 5MHz
-SPI_CR1_CPOL | SPI_CR1_BR_0 | SPI_CR1_BR_1 | SPI_CR1_BR_2 };
+SPI_CR1_CPHA | SPI_CR1_BR_0 | SPI_CR1_BR_1 | SPI_CR1_BR_2 };
 
 static unsigned char tx_buff[16];
 static unsigned char rx_buff[16];
@@ -181,7 +182,7 @@ void setHip9011FrankensoPinout(void) {
 	 * SPI on PB13/14/15
 	 */
 	boardConfiguration->isHip9011Enabled = true;
-	boardConfiguration->hip9011CsPin = GPIOE_15; // ChipSelect is hard-wired, setting a crazy value to make the driver happy
+	boardConfiguration->hip9011CsPin = GPIOD_11;
 	boardConfiguration->hip9011IntHoldPin = GPIOB_11;
 	boardConfiguration->is_enabled_spi_2 = true;
 }

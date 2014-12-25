@@ -15,6 +15,7 @@
 #include "console_io.h"
 
 #include "adc_inputs.h"
+#include "stepper.h"
 
 #include "trigger_input.h"
 #include "eficonsole.h"
@@ -41,6 +42,8 @@
 
 extern engine_configuration2_s * engineConfiguration2;
 extern bool hasFirmwareErrorFlag;
+
+static StepperMotor iacMotor;
 
 static Mutex spiMtx;
 
@@ -262,6 +265,9 @@ void initHardware(Logging *logger, Engine *engine) {
 #if EFI_MAX_31855
 	initMax31855(boardConfiguration);
 #endif /* EFI_MAX_31855 */
+
+
+//	iacMotor.initialize(GPIOD_11, GPIOD_10);
 
 #if EFI_CAN_SUPPORT
 	initCan();
