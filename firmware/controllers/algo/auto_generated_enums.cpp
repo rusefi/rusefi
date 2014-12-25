@@ -201,8 +201,8 @@ case GPIO_10:
 #include "rusefi_enums.h"
 const char *getEngine_type_e(engine_type_e value){
 switch(value) {
-case DEFAULT_ENGINE:
-  return "DEFAULT_ENGINE";
+case CUSTOM_ENGINE:
+  return "CUSTOM_ENGINE";
 case SATURN_ION_2004:
   return "SATURN_ION_2004";
 case CITROEN_TU3JP:

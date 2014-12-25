@@ -492,6 +492,10 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	boardConfiguration->tunerStudioSerialSpeed = TS_DEFAULT_SPEED;
 }
 
+static void setCustomEngineConfiguration(engine_configuration_s *engineConfiguration) {
+
+}
+
 void resetConfigurationExt(Logging * logger, engine_type_e engineType, Engine *engine) {
 	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
 	engine_configuration2_s *engineConfiguration2 = engine->engineConfiguration2;
@@ -509,6 +513,9 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType, Engine *e
 	 * And override them with engine-specific defaults
 	 */
 	switch (engineType) {
+	case CUSTOM_ENGINE:
+		setCustomEngineConfiguration(engineConfiguration);
+		break;
 #if EFI_SUPPORT_DODGE_NEON || defined(__DOXYGEN__)
 	case DODGE_NEON_1995:
 		setDodgeNeon1995EngineConfiguration(engineConfiguration, boardConfiguration);
