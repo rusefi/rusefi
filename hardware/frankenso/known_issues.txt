@@ -48,7 +48,7 @@
 47)                  Per 32) and 33) change W64,63 change to single hole, which allows U chips to move away from enclosre metal wall
 48)                  Make hidden text for component values align such that a picture can be caputured that displays the component values. 
 49)                  check VR against 1996 Miata's. 
-50)                  HIP9011 CS line needs to be pulled down, not pulled up
+50)                  HIP9011 CS should be connected some GPIO pin, PD11 would work
 51)                  CAN_RX line should be connected to PB12, not PD12
 
 For honda add-on / rewiring board
