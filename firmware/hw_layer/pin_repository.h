@@ -1,13 +1,11 @@
-/*
- * pin_repository.h
- *
- * @date Jan 15, 2013
- * @author Andrey Belomutskiy, (c) 2012-2014
- */
-
 /**
  * @file    pin_repository.h
  * @brief   I/O pin registry header
+ *
+ *
+ *
+ * @date Jan 15, 2013
+ * @author Andrey Belomutskiy, (c) 2012-2014
  */
 
 #ifndef PIN_REPOSITORY_H_
