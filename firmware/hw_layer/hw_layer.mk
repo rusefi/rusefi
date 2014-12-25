@@ -21,5 +21,6 @@ HW_LAYER_SRC_CPP = $(PROJECT_DIR)/hw_layer/hardware.cpp \
 	$(PROJECT_DIR)/hw_layer/pwm_generator.cpp \
 	$(PROJECT_DIR)/hw_layer/trigger_input.cpp \
 	$(PROJECT_DIR)/hw_layer/HIP9011.cpp \
+	$(PROJECT_DIR)/hw_layer/stepper.cpp \
 	$(PROJECT_DIR)/hw_layer/stm32f4/mpu_util.cpp
 	

@@ -2034,13 +2034,13 @@
         <name>$PROJ_DIR$\..\config\stm32f4ems\chconf.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\config\stm32f4ems\efifeatures.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\config\stm32f4ems\halconf.h</name>
       </file>
       <file>
-       <name>$PROJ_DIR$\..\config\stm32f4ems\mcuconf.h</name>
-      </file>
-      <file>
-       <name>$PROJ_DIR$\..\config\stm32f4ems\efifeatures.h</name>
+        <name>$PROJ_DIR$\..\config\stm32f4ems\mcuconf.h</name>
       </file>
     </group>
   </group>
@@ -2738,6 +2738,12 @@
     </file>
     <file>
       <name>$PROJ_DIR$\..\hw_layer\rtc_helper.h</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\hw_layer\stepper.cpp</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\hw_layer\stepper.h</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\hw_layer\stm32f4xx_specific.h</name>
