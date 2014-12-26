@@ -1,4 +1,3 @@
-1)               support both DPAK and DDPAk
-2)               larger diameter vias
-3)               remove screw-in terminal              
-4)               breakboard approach
+1) RESOLVED IN R0.2 DPAK2 is apparently different than D2PAK, now it uses TO-263AB
+2) RESOLVED IN R0.2 Make vias under large GND pad larger to allow more heat form iron during soldering
+3) RESOLVED IN R0.2 move Via's to PCB edge to allow install on proto area of Frankenso

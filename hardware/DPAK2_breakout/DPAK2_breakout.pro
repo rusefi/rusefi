@@ -1,4 +1,4 @@
-update=12/26/2014 6:49:06 AM
+update=12/22/2014 7:07:18 PM
 last_client=eeschema
 [cvpcb]
 version=1
@@ -43,11 +43,10 @@ LibName14=dip_sockets
 LibName15=pga_sockets
 LibName16=valves
 LibName17=SM0805-Jumper
-LibName18=d2pak_TO263AB
 [eeschema]
 version=1
 LibDir=../rusefi_lib
-NetFmtName=PcbnewAdvanced
+NetFmtName=
 RptD_X=0
 RptD_Y=100
 RptLab=1

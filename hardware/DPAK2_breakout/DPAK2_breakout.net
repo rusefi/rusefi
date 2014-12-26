@@ -1,7 +1,7 @@
 (export (version D)
   (design
-    (source C:/Users/LJ/Desktop/Jared/daecu/Hardware/trunk/rusefi.com/DDPAK_breakout/DDPAK_breakout.sch)
-    (date "12/26/2014 5:37:57 AM")
+    (source C:/Users/LJ/Desktop/Jared/daecu/Hardware/trunk/rusefi.com/DPAK2_breakout/DPAK2_breakout.sch)
+    (date "12/26/2014 5:27:54 AM")
     (tool "eeschema (2013-07-07 BZR 4022)-stable"))
   (components
     (comp (ref R2)
@@ -36,7 +36,7 @@
       (tstamp 544A1CD8))
     (comp (ref Q1)
       (value IRGS14C40L)
-      (footprint m-pad-2.1-TO-263AB)
+      (footprint DPAK2)
       (libsource (lib transistors) (part TIP121))
       (sheetpath (names /) (tstamps /))
       (tstamp 5498B4BA)))

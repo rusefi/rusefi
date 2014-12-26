@@ -36,8 +36,8 @@ $Descr A 11000 8500
 encoding utf-8
 Sheet 1 1
 Title "DDPAK breakout"
-Date "26 dec 2014"
-Rev "R0.2"
+Date "23 dec 2014"
+Rev "R0.1"
 Comp "rusEFI"
 Comment1 ""
 Comment2 ""
@@ -126,7 +126,7 @@ U 1 1 5498B4BA
 P 6650 4100
 F 0 "Q1" H 6600 3950 40  0000 R CNN
 F 1 "IRGS14C40L" H 6650 4250 40  0001 R CNN
-F 2 "m-pad-2.1-TO-263AB" H 6530 4205 29  0001 C CNN
+F 2 "DPAK2" H 6530 4205 29  0001 C CNN
 F 3 "~" H 6650 4100 60  0000 C CNN
 	1    6650 4100
 	1    0    0    -1  
