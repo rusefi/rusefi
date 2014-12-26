@@ -22,7 +22,6 @@
 
 #include "engine.h"
 
-#define DEFAULT_ENGINE_TYPE CUSTOM_ENGINE
 
 static bool needToWriteConfiguration = false;
 

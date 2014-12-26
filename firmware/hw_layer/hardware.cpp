@@ -236,7 +236,7 @@ void initHardware(Logging *logger, Engine *engine) {
 		readFromFlash();
 	}
 #else
-	engineConfiguration->engineType = DEFAULT_ENGINE;
+	engineConfiguration->engineType = DEFAULT_ENGINE_TYPE;
 	resetConfigurationExt(logger, engineConfiguration->engineType, engine);
 #endif /* EFI_INTERNAL_FLASH */
 
