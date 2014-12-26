@@ -28,11 +28,11 @@
 28) RESOLVED IN R0.2 better silkscreen for P602 & P604 - explicit "5v" "12v" "GND"
 29) RESOLVED IN R0.2 Add LED indicators to injector channels. 
 30) RESOLVED IN R0.3 3D for C1001 bulk cap has black mark on wrong side
-31) RESOLVED IN R0.3 We've moved the upper mounting hole too far - we need to move it half way back http://rusefi.com/forum/viewtopic.php?f=4&t=735#p12500
+31) RESOLVED IN R0.3 from 1) We've moved the upper mounting hole too far - we need to move it half way back http://rusefi.com/forum/viewtopic.php?f=4&t=735#p12500
 32) RESOLVED IN R0.3 C1001 should be 1mm lower to improve clearance with the case
-32)                  Q411 should be 1.5mm lower to improve clearance with the case (See 47)
-33)                  Q412 should be moved 3mm to the left, this would probably affect W63 which would affect the whole corner. Maybe move Q412 to the back of the board? (See 47)
-34) RESOLVED IN R0.3 R0.3 rename the recently added low-side diodes and LEDs/resistors into 400 range
+32) RESOLVED IN R0.4 Q411 should be 1.5mm lower to improve clearance with the case (See 47)
+33) RESOLVED IN R0.4 Q412 should be moved 3mm to the left, this would probably affect W63 which would affect the whole corner. Maybe move Q412 to the back of the board? (See 47)
+34) RESOLVED IN R0.3 rename the recently added low-side diodes and LEDs/resistors into 400 range
 35) RESOLVED IN R0.3 test pads explicit silkscreen
 36) RESOLVED IN R0.3 test pads on the back of the board
 37) RESOLVED IN R0.3 U601/2/3: hard to see pad #1 label on the silkscreen
@@ -44,12 +44,17 @@
 43) RESOLVED IN R0.3 vertical USB is buggered, vias are to small, ect. 
 44) RESOLVED IN R0.3 Move 12V injector flyback diodes to other side of W2
 45) RESOLVED IN R0.3 Short out D10.
-46) RESOLVED IN R0.3 add vias around ST processor. Orginal board design was a 2 layer, not it's 4 layer. It's better design practice to have GND via's closer to the GND pins.
-47)                  Per 32) and 33) change W64,63 change to single hole, which allows U chips to move away from enclosre metal wall
+46) RESOLVED IN R0.4 add vias around ST processor. Orginal board design was a 2 layer, not it's 4 layer. It's better design practice to have GND via's closer to the GND pins.
+47) RESOLVED IN R0.3 Per 32) and 33) change W64,63 change to single hole, which allows U chips to move away from enclosre metal wall
 48)                  Make hidden text for component values align such that a picture can be caputured that displays the component values. 
 49)                  check VR against 1996 Miata's. 
 50)                  HIP9011 CS should be connected some GPIO pin, PD11 would work
-51)                  CAN_RX line should be connected to PB12, not PD12
+51) RESOLVED IN R0.4 CAN_RX line should be connected to PB12, not PD12
+52) RESOLVED IN R0.4 Add header for CAN bus with 5V and GND. see P401
+53)                  verify D9 is the same BOM item as discovery board. 
+54)                  Add 5V and GND vias to proto area
+55)                  
+
 
 For honda add-on / rewiring board
 -- Add 2A high side solinoid drive for VTec sol
