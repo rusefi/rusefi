@@ -102,6 +102,8 @@ typedef enum {
 	Force_4b_engine_type = ENUM_SIZE_HACK,
 } engine_type_e;
 
+#define DEFAULT_ENGINE_TYPE CUSTOM_ENGINE
+
 typedef enum {
 	TT_TOOTHED_WHEEL = 0,
 	TT_FORD_ASPIRE = 1,
