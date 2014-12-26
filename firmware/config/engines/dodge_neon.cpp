@@ -225,6 +225,9 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 	commonFrankensoAnalogInputs(engineConfiguration);
 	engineConfiguration->vbattDividerCoeff = ((float) (8.2 + 33)) / 8.2 * 2;
 
+	/**
+	 * http://rusefi.com/wiki/index.php?title=Manual:Hardware_Frankenso_board
+	 */
 	// Frankenso low out #1: PE6
 	// Frankenso low out #2: PE5
 	// Frankenso low out #3: PD7 coolant fan relay
@@ -261,6 +264,22 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 
 	boardConfiguration->triggerInputPins[0] = GPIOA_5;
 	boardConfiguration->triggerInputPins[1] = GPIOC_6;
+
+	/**
+	 * Frankenso analog #1 PC2 ADC12 CLT
+	 * Frankenso analog #2 PC1 ADC11 IAT
+	 * Frankenso analog #3
+	 * Frankenso analog #4 PC3 ADC13
+	 * Frankenso analog #5
+	 * Frankenso analog #6
+	 * Frankenso analog #7 PA4 ADC4 WBO AFR
+	 * Frankenso analog #8
+	 * Frankenso analog #9
+	 * Frankenso analog #10 PA6 ADC6 MAP
+	 * Frankenso analog #11 PC5 ADC15 TPS
+	 * Frankenso analog #12 VBatt
+	 */
+
 
 	setThermistorConfiguration(&engineConfiguration->cltThermistorConf, 0, 32500, 30, 7550, 100, 700);
 	engineConfiguration->cltThermistorConf.bias_resistor = 10000;

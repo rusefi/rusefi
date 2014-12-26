@@ -505,6 +505,37 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 }
 
 static void setCustomEngineConfiguration(engine_configuration_s *engineConfiguration) {
+	/**
+	 * Frankenso analog #1 PC2 ADC12
+	 * Frankenso analog #2 PC1 ADC11
+	 * Frankenso analog #3
+	 * Frankenso analog #4 PC3 ADC13
+	 * Frankenso analog #5
+	 * Frankenso analog #6
+	 * Frankenso analog #7 PA4 ADC4
+	 * Frankenso analog #8
+	 * Frankenso analog #9
+	 * Frankenso analog #10 PA6 ADC6
+	 * Frankenso analog #11 PC5 ADC15
+	 * Frankenso analog #12 VBatt
+	 */
+
+
+	/**
+	 * http://rusefi.com/wiki/index.php?title=Manual:Hardware_Frankenso_board
+	 */
+	// Frankenso low out #1: PE6
+	// Frankenso low out #2: PE5
+	// Frankenso low out #3: PD7
+	// Frankenso low out #4: PC13
+	// Frankenso low out #5: PE3
+	// Frankenso low out #6: PE4
+	// Frankenso low out #7: PE1 (do not use with discovery!)
+	// Frankenso low out #8: PE2
+	// Frankenso low out #9: PB9
+	// Frankenso low out #10: PE0 (do not use with discovery!)
+	// Frankenso low out #11: PB8
+	// Frankenso low out #12: PB7
 
 }
 
