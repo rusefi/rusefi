@@ -260,10 +260,6 @@ void initHardware(Logging *logger, Engine *engine) {
 
 	initOutputPins();
 
-#if EFI_HIP_9011
-	initHip9011();
-#endif /* EFI_HIP_9011 */
-
 #if EFI_MAX_31855
 	initMax31855(boardConfiguration);
 #endif /* EFI_MAX_31855 */
@@ -288,6 +284,11 @@ void initHardware(Logging *logger, Engine *engine) {
 #if HAL_USE_SPI || defined(__DOXYGEN__)
 	initSpiModules(boardConfiguration);
 #endif
+
+#if EFI_HIP_9011
+	initHip9011();
+#endif /* EFI_HIP_9011 */
+
 
 #if EFI_FILE_LOGGING
 	initMmcCard();
