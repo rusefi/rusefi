@@ -40,7 +40,7 @@
 #include "engine_configuration.h"
 #include "ec2.h"
 
-extern engine_configuration2_s * engineConfiguration2;
+EXTERN_ENGINE;
 extern bool hasFirmwareErrorFlag;
 
 static StepperMotor iacMotor;
@@ -50,12 +50,14 @@ static Mutex spiMtx;
 #if HAL_USE_SPI || defined(__DOXYGEN__)
 static bool isSpiInitialized[5] = { false, false, false, false, false };
 
-static void initSpiModule(SPIDriver *driver, ioportid_t sckPort, ioportmask_t sckPin, ioportid_t misoPort,
-		ioportmask_t misoPin, ioportid_t mosiPort, ioportmask_t mosiPin, int af) {
-	mySetPadMode("SPI clock", sckPort, sckPin, PAL_MODE_ALTERNATE(af));
+static void initSpiModule(SPIDriver *driver, brain_pin_e sck, brain_pin_e  miso,
+		brain_pin_e mosi, int af) {
 
-	mySetPadMode("SPI master out", mosiPort, mosiPin, PAL_MODE_ALTERNATE(af));
-	mySetPadMode("SPI master in ", misoPort, misoPin, PAL_MODE_ALTERNATE(af));
+
+	mySetPadMode("SPI clock", getHwPort(sck), getHwPin(sck), PAL_MODE_ALTERNATE(af));
+
+	mySetPadMode("SPI master out", getHwPort(mosi), getHwPin(mosi), PAL_MODE_ALTERNATE(af));
+	mySetPadMode("SPI master in ", getHwPort(miso), getHwPin(miso), PAL_MODE_ALTERNATE(af));
 }
 
 /**
@@ -78,9 +80,9 @@ void turnOnSpi(spi_device_e device) {
 #if STM32_SPI_USE_SPI1
 //	scheduleMsg(&logging, "Turning on SPI1 pins");
 		initSpiModule(&SPID1,
-		EFI_SPI1_SCK_PORT, EFI_SPI1_SCK_PIN,
-		EFI_SPI1_MISO_PORT, EFI_SPI1_MISO_PIN,
-		EFI_SPI1_MOSI_PORT, EFI_SPI1_MOSI_PIN,
+				boardConfiguration->spi1sckPin,
+				boardConfiguration->spi1misoPin,
+		boardConfiguration->spi1mosiPin,
 		EFI_SPI1_AF);
 #endif
 	}
@@ -88,9 +90,9 @@ void turnOnSpi(spi_device_e device) {
 #if STM32_SPI_USE_SPI2
 //	scheduleMsg(&logging, "Turning on SPI2 pins");
 		initSpiModule(&SPID2,
-				EFI_SPI2_SCK_PORT, EFI_SPI2_SCK_PIN,
-				EFI_SPI2_MISO_PORT, EFI_SPI2_MISO_PIN,
-				EFI_SPI2_MOSI_PORT, EFI_SPI2_MOSI_PIN,
+				boardConfiguration->spi2sckPin,
+				boardConfiguration->spi2misoPin,
+		boardConfiguration->spi2mosiPin,
 				EFI_SPI2_AF);
 #endif
 	}
@@ -98,9 +100,9 @@ void turnOnSpi(spi_device_e device) {
 #if STM32_SPI_USE_SPI3
 //	scheduleMsg(&logging, "Turning on SPI3 pins");
 		initSpiModule(&SPID3,
-		EFI_SPI3_SCK_PORT, EFI_SPI3_SCK_PIN,
-		EFI_SPI3_MISO_PORT, EFI_SPI3_MISO_PIN,
-		EFI_SPI3_MOSI_PORT, EFI_SPI3_MOSI_PIN,
+				boardConfiguration->spi3sckPin,
+				boardConfiguration->spi3misoPin,
+		boardConfiguration->spi3mosiPin,
 		EFI_SPI3_AF);
 #endif
 	}

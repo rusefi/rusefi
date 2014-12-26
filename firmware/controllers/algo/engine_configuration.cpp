@@ -485,6 +485,18 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	boardConfiguration->is_enabled_spi_2 = false;
 	boardConfiguration->is_enabled_spi_3 = true;
 
+	boardConfiguration->spi1mosiPin = GPIOB_5;
+	boardConfiguration->spi1misoPin = GPIOB_4;
+	boardConfiguration->spi1sckPin = GPIOB_3;
+
+	boardConfiguration->spi2mosiPin = GPIOB_15;
+	boardConfiguration->spi2misoPin = GPIOB_14;
+	boardConfiguration->spi2sckPin = GPIOB_13;
+
+	boardConfiguration->spi3mosiPin = GPIOB_5;
+	boardConfiguration->spi3misoPin = GPIOB_4;
+	boardConfiguration->spi3sckPin = GPIOB_3;
+
 	boardConfiguration->isSdCardEnabled = false;
 	boardConfiguration->isFastAdcEnabled = false;
 	boardConfiguration->isEngineControlEnabled = true;

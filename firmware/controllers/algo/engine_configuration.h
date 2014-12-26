@@ -246,7 +246,17 @@ typedef struct {
 	brain_pin_e hip9011OutPin;
 
 	float fsio_setting[LE_COMMAND_COUNT];
-	int unusedbs[22];
+	brain_pin_e spi1mosiPin;
+	brain_pin_e spi1misoPin;
+	brain_pin_e spi1sckPin;
+	brain_pin_e spi2mosiPin;
+	brain_pin_e spi2misoPin;
+	brain_pin_e spi2sckPin;
+	brain_pin_e spi3mosiPin;
+	brain_pin_e spi3misoPin;
+	brain_pin_e spi3sckPin;
+
+	int unusedbs[13];
 
 	le_formula_t le_formulas[LE_COMMAND_COUNT];
 
@@ -397,8 +407,7 @@ typedef struct {
 	 */
 	float fanOffTemperature;
 
-	int canReadEnabled;
-	int canWriteEnabled;
+	int unusedTwoInts[2];
 	// offset 968
 	can_nbc_e canNbcType;
 	// offset 972
@@ -436,6 +445,7 @@ typedef struct {
 	spi_device_e hip9011SpiDevice;
 	adc_channel_e vbattAdcChannel;
 
+	// offset 1060
 	float globalFuelCorrection;
 
 	// todo: merge with channel settings, use full-scale Thermistor!
@@ -473,6 +483,7 @@ typedef struct {
 
 	board_configuration_s bc;
 
+	// offset 6280
 	/**
 	 * @see isMapAveragingEnabled
 	 */
@@ -483,8 +494,11 @@ typedef struct {
 	bool_t useConstantDwellDuringCranking : 1; // bit 3
 	bool_t isDigitalChartEnabled : 1; // bit 4
 	bool_t isCanEnabled : 1; // bit 5
-	// that's the next 32 bit field
-	int hasCltSensor;
+	bool_t hasCltSensor : 1; // bit 6
+	bool_t canReadEnabled : 1; // bit 7
+	bool_t canWriteEnabled : 1; // bit 8
+
+	int unused6284;
 
 	idle_mode_e idleMode;
 

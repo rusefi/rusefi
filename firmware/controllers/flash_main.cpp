@@ -16,7 +16,6 @@
 
 #if EFI_INTERNAL_FLASH
 
-
 #include "engine_controller.h"
 
 #include "datalogging.h"
