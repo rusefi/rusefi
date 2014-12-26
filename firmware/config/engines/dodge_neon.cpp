@@ -314,7 +314,7 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 #endif
 	engineConfiguration->cylinderBore = 87.5;
 
-	engineConfiguration->isCanEnabled = true;
+//	engineConfiguration->isCanEnabled = true;
 	boardConfiguration->canTxPin = GPIOB_6;
 	boardConfiguration->canRxPin = GPIOB_12;
 	engineConfiguration->canWriteEnabled = true;
