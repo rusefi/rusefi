@@ -51,7 +51,6 @@ static scheduling_s endTimer[2];
 // 0b01110001
 #define SET_ADVANCED_MODE 0x71
 
-
 static Logging logger;
 
 static THD_WORKING_AREA(htThreadStack, UTILITY_THREAD_STACK_SIZE);
@@ -62,11 +61,10 @@ static THD_WORKING_AREA(htThreadStack, UTILITY_THREAD_STACK_SIZE);
 
 static SPIConfig spicfg = { NULL,
 /* HW dependent part.*/
-NULL,
-0,
-//SPI_CR1_MSTR |
+NULL, 0,
+SPI_CR1_MSTR |
 //SPI_CR1_BR_1 // 5MHz
-SPI_CR1_CPHA | SPI_CR1_BR_0 | SPI_CR1_BR_1 | SPI_CR1_BR_2 };
+		SPI_CR1_CPHA | SPI_CR1_BR_0 | SPI_CR1_BR_1 | SPI_CR1_BR_2 };
 
 static unsigned char tx_buff[1];
 static unsigned char rx_buff[1];
@@ -81,31 +79,44 @@ static msg_t ivThread(int param) {
 
 //		scheduleMsg(&logger, "poking HIP=%d", counter++);
 
-		// todo: make sure spiCallback has been invoked?
 		spiSelect(driver);
 
+//		// '0' for 4MHz
+//		tx_buff[0] = SET_PRESCALER_CMD + 0 + 2;
+//		spiExchange(driver, 1, tx_buff, rx_buff);
+//
+//		// '0' for channel #1
+//		tx_buff[0] = SET_CHANNEL_CMD + 0;
+//		spiExchange(driver, 1, tx_buff, rx_buff);
+//
+//		// band index depends on cylinder bore
+//		tx_buff[0] = SET_BAND_PASS_CMD + bandIndex;
+//		spiExchange(driver, 1, tx_buff, rx_buff);
+//
+//		// todo
+//		tx_buff[0] = SET_GAIN_CMD + 41;
+//		spiExchange(driver, 1, tx_buff, rx_buff);
+//
+//		tx_buff[0] = SET_ADVANCED_MODE;
+//		spiExchange(driver, 1, tx_buff, rx_buff);
 
-		// '0' for 4MHz
-		tx_buff[0] = SET_PRESCALER_CMD + 0 + 2;
+        // BAND_PASS_CMD
+		tx_buff[0] = 0b00000000 | (40 & 0x3F);
 		spiExchange(driver, 1, tx_buff, rx_buff);
 
-		// '0' for channel #1
-		tx_buff[0] = SET_CHANNEL_CMD + 0;
+        // Set the gain
+		tx_buff[0] = 0b10000000 | (49 & 0x3F);
 		spiExchange(driver, 1, tx_buff, rx_buff);
 
-		// band index depends on cylinder bore
-		tx_buff[0] = SET_BAND_PASS_CMD + bandIndex;
+        // Set the integration time constant
+		tx_buff[0] = 0b11000000 | (31 & 0x1F);
 		spiExchange(driver, 1, tx_buff, rx_buff);
 
-		// todo
-		tx_buff[0] = SET_GAIN_CMD + 41;
-		spiExchange(driver, 1, tx_buff, rx_buff);
-
-		tx_buff[0] = SET_ADVANCED_MODE;
+        // SET_ADVANCED_MODE
+		tx_buff[0] = 0b01110001;
 		spiExchange(driver, 1, tx_buff, rx_buff);
 
 		spiUnselect(driver);
-
 
 	}
 #if defined __GNUC__
@@ -126,12 +137,10 @@ static const int integratorValues[INT_TIME_COUNT] = { 40, 45, 50, 55, 60, 65, 70
 
 #define BAND_LOOKUP_SIZE 64
 
-static const float bandFreqLookup[BAND_LOOKUP_SIZE] = {1.22, 1.26, 1.31, 1.35, 1.4, 1.45, 1.51, 1.57,
-		1.63, 1.71, 1.78, 1.87, 1.96, 2.07, 2.18, 2.31, 2.46, 2.54, 2.62, 2.71, 2.81, 2.92, 3.03,
-		3.15, 3.28, 3.43, 3.59, 3.76, 3.95, 4.16 , 4.39, 4.66, 4.95, 5.12, 5.29, 5.48, 5.68, 5.9,
-		6.12, 6.37, 6.64, 6.94, 7.27, 7.63, 8.02, 8.46, 8.95, 9.5, 10.12, 10.46, 10.83, 11.22, 11.65,
-		12.1, 12.6, 13.14, 13.72, 14.36, 15.07, 15.84, 16.71, 17.67, 18.76, 19.98};
-
+static const float bandFreqLookup[BAND_LOOKUP_SIZE] = { 1.22, 1.26, 1.31, 1.35, 1.4, 1.45, 1.51, 1.57, 1.63, 1.71, 1.78,
+		1.87, 1.96, 2.07, 2.18, 2.31, 2.46, 2.54, 2.62, 2.71, 2.81, 2.92, 3.03, 3.15, 3.28, 3.43, 3.59, 3.76, 3.95,
+		4.16, 4.39, 4.66, 4.95, 5.12, 5.29, 5.48, 5.68, 5.9, 6.12, 6.37, 6.64, 6.94, 7.27, 7.63, 8.02, 8.46, 8.95, 9.5,
+		10.12, 10.46, 10.83, 11.22, 11.65, 12.1, 12.6, 13.14, 13.72, 14.36, 15.07, 15.84, 16.71, 17.67, 18.76, 19.98 };
 
 #define PIF 3.14159f
 
@@ -165,7 +174,6 @@ static void showHipInfo(void) {
 
 	scheduleMsg(&logger, "band index=%d", bandIndex);
 
-
 	scheduleMsg(&logger, "spi= int=%s CS=%s", hwPortname(boardConfiguration->hip9011IntHoldPin),
 			hwPortname(boardConfiguration->hip9011CsPin));
 }
@@ -195,8 +203,10 @@ static void intHoldCallback(trigger_event_e ckpEventType, uint32_t index DECLARE
 
 	int structIndex = getRevolutionCounter() % 2;
 	// todo: schedule this based on closest trigger event, same as ignition works
-	scheduleByAngle(rpm, &startTimer[structIndex], engineConfiguration->knockDetectionWindowStart, (schfunc_t)&turnPinHigh, (void*)HIP9011_INT_HOLD);
-	scheduleByAngle(rpm, &endTimer[structIndex], engineConfiguration->knockDetectionWindowEnd, (schfunc_t)&turnPinLow,(void*) HIP9011_INT_HOLD);
+	scheduleByAngle(rpm, &startTimer[structIndex], engineConfiguration->knockDetectionWindowStart,
+			(schfunc_t) &turnPinHigh, (void*) HIP9011_INT_HOLD);
+	scheduleByAngle(rpm, &endTimer[structIndex], engineConfiguration->knockDetectionWindowEnd, (schfunc_t) &turnPinLow,
+			(void*) HIP9011_INT_HOLD);
 }
 
 void initHip9011(void) {
@@ -205,7 +215,6 @@ void initHip9011(void) {
 	initLogging(&logger, "HIP driver");
 
 //	driver = getSpiDevice(boardConfiguration->digitalPotentiometerSpiDevice);
-
 
 	spicfg.ssport = getHwPort(boardConfiguration->hip9011CsPin);
 	spicfg.sspad = getHwPin(boardConfiguration->hip9011CsPin);
@@ -222,6 +231,10 @@ void initHip9011(void) {
 
 	addTriggerEventListener(&intHoldCallback, "DD int/hold", engine);
 
+	// MISO PB14
+//	palSetPadMode(GPIOB, 14, PAL_MODE_ALTERNATE(EFI_SPI2_AF) | PAL_STM32_PUDR_PULLUP);
+	// MOSI PB15
+//	palSetPadMode(GPIOB, 15, PAL_MODE_ALTERNATE(EFI_SPI2_AF) | PAL_STM32_OTYPE_OPENDRAIN);
 
 	addConsoleAction("hipinfo", showHipInfo);
 }
