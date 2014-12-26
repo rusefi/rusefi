@@ -56,20 +56,11 @@ static Logging logger;
 
 static THD_WORKING_AREA(htThreadStack, UTILITY_THREAD_STACK_SIZE);
 
-static int callbackc = 0;
-
-static void spiCallback(SPIDriver *spip) {
-	spiUnselectI(spip);
-
-//	scheduleMsg(&logger, "spiCallback HIP=%d", callbackc++);
-
-}
-
 // SPI_CR1_BR_1 // 5MHz
 // SPI_CR1_CPHA Clock Phase
 // todo: nicer method which would mention SPI speed explicitly?
 
-static SPIConfig spicfg = { spiCallback,
+static SPIConfig spicfg = { NULL,
 /* HW dependent part.*/
 NULL,
 0,
@@ -77,28 +68,13 @@ NULL,
 //SPI_CR1_BR_1 // 5MHz
 SPI_CR1_CPHA | SPI_CR1_BR_0 | SPI_CR1_BR_1 | SPI_CR1_BR_2 };
 
-static unsigned char tx_buff[16];
-static unsigned char rx_buff[16];
+static unsigned char tx_buff[1];
+static unsigned char rx_buff[1];
 
 static SPIDriver *driver = &SPID2;
 
 static msg_t ivThread(int param) {
 	chRegSetThreadName("HIP");
-
-	// '0' for 4MHz
-	tx_buff[0] = SET_PRESCALER_CMD + 0 + 2;
-
-	// '0' for channel #1
-	tx_buff[2] = SET_CHANNEL_CMD + 0;
-
-	// band index depends on cylinder bore
-	tx_buff[4] = SET_BAND_PASS_CMD + bandIndex;
-
-	// todo
-	tx_buff[8] = SET_GAIN_CMD + 41;
-
-	tx_buff[10] = SET_ADVANCED_MODE;
-	tx_buff[11] = SET_ADVANCED_MODE;
 
 	while (true) {
 		chThdSleepMilliseconds(10);
@@ -108,10 +84,27 @@ static msg_t ivThread(int param) {
 		// todo: make sure spiCallback has been invoked?
 		spiSelect(driver);
 
-		spiStartExchange(driver, 16, tx_buff, rx_buff);
-		/**
-		 * spiUnselectI takes place in spiCallback
-		 */
+
+		// '0' for 4MHz
+		tx_buff[0] = SET_PRESCALER_CMD + 0 + 2;
+		spiExchange(driver, 1, tx_buff, rx_buff);
+
+		// '0' for channel #1
+		tx_buff[0] = SET_CHANNEL_CMD + 0;
+		spiExchange(driver, 1, tx_buff, rx_buff);
+
+		// band index depends on cylinder bore
+		tx_buff[0] = SET_BAND_PASS_CMD + bandIndex;
+		spiExchange(driver, 1, tx_buff, rx_buff);
+
+		// todo
+		tx_buff[0] = SET_GAIN_CMD + 41;
+		spiExchange(driver, 1, tx_buff, rx_buff);
+
+		tx_buff[0] = SET_ADVANCED_MODE;
+		spiExchange(driver, 1, tx_buff, rx_buff);
+
+		spiUnselect(driver);
 
 
 	}
