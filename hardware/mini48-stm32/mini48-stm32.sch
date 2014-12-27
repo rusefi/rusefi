@@ -17,10 +17,10 @@ $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 1
 Title "Maplemini fork"
-Date "25 dec 2014"
+Date "27 dec 2014"
 Rev ""
 Comp "Art_Electro"
-Comment1 "v1.0"
+Comment1 "v1.2"
 Comment2 "Art_Electro"
 Comment3 ""
 Comment4 ""
@@ -422,7 +422,7 @@ Text Label 4425 2350 0    60   ~ 0
 Text Label 4425 2450 0    60   ~ 0
 15
 Text Label 4425 2650 0    60   ~ 0
-DISK
+35
 Text Label 4425 2850 0    60   ~ 0
 0
 Text Label 4425 2950 0    60   ~ 0
@@ -757,9 +757,9 @@ F 3 "~" H 1100 6250 60  0000 C CNN
 	1    1100 6250
 	1    0    0    -1  
 $EndComp
-Text Label 4925 7300 0    60   ~ 0
+Text Label 4925 6800 0    60   ~ 0
 24_USBDM
-Text Label 4925 7050 0    60   ~ 0
+Text Label 4925 7300 0    60   ~ 0
 23_USBDP
 $Comp
 L GND #PWR020
@@ -882,12 +882,12 @@ $EndComp
 $Comp
 L GND #PWR026
 U 1 1 549BD32C
-P 4775 6800
-F 0 "#PWR026" H 4775 6800 30  0001 C CNN
-F 1 "GND" H 4775 6730 30  0001 C CNN
-F 2 "" H 4775 6800 60  0001 C CNN
-F 3 "" H 4775 6800 60  0001 C CNN
-	1    4775 6800
+P 4925 7050
+F 0 "#PWR026" H 4925 7050 30  0001 C CNN
+F 1 "GND" H 4925 6980 30  0001 C CNN
+F 2 "" H 4925 7050 60  0001 C CNN
+F 3 "" H 4925 7050 60  0001 C CNN
+	1    4925 7050
 	0    -1   -1   0   
 $EndComp
 Wire Wire Line
@@ -911,9 +911,9 @@ F 3 "" H 5450 4800 60  0000 C CNN
 $EndComp
 Text Notes 6675 4650 0    60   ~ 0
 3.3v
-Text Label 3375 7050 2    60   ~ 0
+Text Label 3225 7300 2    60   ~ 0
 D+
-Text Label 3375 7300 2    60   ~ 0
+Text Label 3225 6800 2    60   ~ 0
 D-
 Text Notes 8900 6650 0    60   ~ 0
 diodes schottky 20V 1A SD0805S020S1R0
@@ -964,38 +964,8 @@ Wire Wire Line
 Wire Wire Line
 	5650 4800 5925 4800
 Connection ~ 5750 4800
-$Comp
-L STF202 U2
-U 1 1 549BE1BB
-P 4075 7050
-F 0 "U2" H 4175 7450 70  0000 C CNN
-F 1 "STF202" H 4075 6650 70  0000 C CNN
-F 2 "~" H 4075 7050 60  0000 C CNN
-F 3 "~" H 4075 7050 60  0000 C CNN
-	1    4075 7050
-	1    0    0    -1  
-$EndComp
-$Comp
-L DTA114E Q1
-U 1 1 549BE47C
-P 3125 6600
-F 0 "Q1" H 3070 6440 40  0000 R CNN
-F 1 "DTA114E" H 3125 6750 40  0000 R CNN
-F 2 "" H 3125 6600 60  0000 C CNN
-F 3 "" H 3125 6600 60  0000 C CNN
-	1    3125 6600
-	1    0    0    1   
-$EndComp
 Wire Wire Line
 	3225 6800 3375 6800
-Wire Wire Line
-	3225 6400 3225 6325
-Wire Wire Line
-	2875 6600 2675 6600
-Text Label 3225 6325 0    60   ~ 0
-VCC
-Text Label 2675 6600 2    60   ~ 0
-DISK
 $Comp
 L CONN_20 P1
 U 1 1 549BE7CD
@@ -1137,7 +1107,6 @@ Wire Wire Line
 Wire Wire Line
 	8375 3175 8250 3175
 NoConn ~ 7125 1675
-NoConn ~ 7125 1775
 Text Label 7250 1875 0    60   ~ 0
 Reset
 Text Label 7250 1975 0    60   ~ 0
@@ -1194,4 +1163,27 @@ Wire Wire Line
 	7250 3075 7125 3075
 Wire Wire Line
 	7250 3175 7125 3175
+Text Label 7250 1775 0    60   ~ 0
+35
+Wire Wire Line
+	7125 1775 7250 1775
+Text Label 3225 7050 2    60   ~ 0
++5v
+$Comp
+L NUF2101MT1G U2
+U 1 1 549EE660
+P 4075 7050
+F 0 "U2" H 4175 7450 70  0000 C CNN
+F 1 "NUF2101MT1G" H 4075 6650 70  0000 C CNN
+F 2 "~" H 4075 7050 60  0000 C CNN
+F 3 "~" H 4075 7050 60  0000 C CNN
+	1    4075 7050
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	3375 7050 3225 7050
+Wire Wire Line
+	3375 7300 3225 7300
+Wire Wire Line
+	4775 6800 4925 6800
 $EndSCHEMATC

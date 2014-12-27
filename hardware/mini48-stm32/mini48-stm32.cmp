@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPcb (22-Jun-2014 BZR 4027)-stable date = Чт. 25 дек. 2014 14:44:43
+Cmp-Mod V01 Created by CvPcb (22-Jun-2014 BZR 4027)-stable date = Сб. 27 дек. 2014 20:57:53
 
 BeginCmp
 TimeStamp = /549BD2BA;
@@ -134,13 +134,6 @@ IdModule  = PIN_ARRAY_20X1;
 EndCmp
 
 BeginCmp
-TimeStamp = /549BE47C;
-Reference = Q1;
-ValeurCmp = DTA114E;
-IdModule  = SOT323;
-EndCmp
-
-BeginCmp
 TimeStamp = /549BD29D;
 Reference = R1;
 ValeurCmp = 1k;
@@ -211,9 +204,9 @@ IdModule  = lqfp48;
 EndCmp
 
 BeginCmp
-TimeStamp = /549BE1BB;
+TimeStamp = /549EE660;
 Reference = U2;
-ValeurCmp = STF202;
+ValeurCmp = NUF2101MT1G;
 IdModule  = SOT-457;
 EndCmp
 

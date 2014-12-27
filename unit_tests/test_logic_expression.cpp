@@ -9,10 +9,8 @@
 
 #include "main.h"
 #include "test_logic_expression.h"
-#include "logic_expression.h"
-#include "le_functions.h"
+#include "fsio_impl.h"
 #include "cli_registry.h"
-#include "engine.h"
 
 #define TEST_POOL_SIZE 256
 

@@ -22,17 +22,12 @@
 
 #include "main.h"
 #include "engine_configuration.h"
+#include "fsio_impl.h"
 #include "allsensors.h"
 #include "interpolation.h"
 #include "trigger_decoder.h"
 #include "engine_math.h"
 #include "speed_density.h"
-#include "logic_expression.h"
-
-#if EFI_TUNER_STUDIO
-#include "tunerstudio.h"
-#endif
-
 #include "audi_aan.h"
 #include "bmw_e34.h"
 #include "dodge_neon.h"
@@ -53,6 +48,10 @@
 #include "mitsubishi.h"
 #include "subaru.h"
 #include "test_engine.h"
+
+#if EFI_TUNER_STUDIO
+#include "tunerstudio.h"
+#endif
 
 //#define TS_DEFAULT_SPEED 115200
 #define TS_DEFAULT_SPEED 38400
@@ -683,7 +682,7 @@ void applyNonPersistentConfiguration(Logging * logger, Engine *engine) {
 		return;
 	}
 	engine->engineCycleEventCount = engine->triggerShape.getLength();
-	parseUserFsio(PASS_ENGINE_PARAMETER_F);
+	applyFsioConfiguration(PASS_ENGINE_PARAMETER_F);
 }
 
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)

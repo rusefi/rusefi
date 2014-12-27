@@ -9,6 +9,8 @@
 #ifndef FL_STACK_H_
 #define FL_STACK_H_
 
+#include "error_handling.h"
+
 template<typename T, int MAXSIZE>
 class FLStack {
 public:
