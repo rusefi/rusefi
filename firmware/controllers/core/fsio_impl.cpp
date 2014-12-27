@@ -14,10 +14,6 @@
 #include "allsensors.h"
 #include "rpm_calculator.h"
 #include "efiGpio.h"
-#include "pin_repository.h"
-#include "pwm_generator.h"
-// todo: that's about bench test mode, wrong header for sure!
-#include "injector_central.h"
 
 /**
  * Here we define all rusEfi-specific methods
@@ -35,10 +31,6 @@ static LENameOrdinalPair leTimeSinceBoot(LE_METHOD_TIME_SINCE_BOOT, "time_since_
 static LENameOrdinalPair leFsioSsetting(LE_METHOD_FSIO_SETTING, "fsio_setting");
 
 #define LE_EVAL_POOL_SIZE 32
-
-#if EFI_PROD_CODE || EFI_SIMULATOR
-static Logging logger;
-#endif
 
 static LECalculator evalCalc;
 static LEElement evalPoolElements[LE_EVAL_POOL_SIZE];
@@ -59,6 +51,67 @@ static LEElement * fuelPumpLogic;
 static LEElement * radiatorFanLogic;
 static LEElement * alternatorLogic;
 
+EXTERN_ENGINE;
+
+
+
+#if EFI_PROD_CODE || EFI_SIMULATOR
+static Logging logger;
+
+float getLEValue(Engine *engine, calc_stack_t *s, le_action_e action) {
+	efiAssert(engine!=NULL, "getLEValue", NAN);
+	switch (action) {
+	case LE_METHOD_FAN:
+		return getOutputPinValue(FAN_RELAY);
+	case LE_METHOD_AC_TOGGLE:
+		return getAcToggle(engine);
+	case LE_METHOD_COOLANT:
+		return getCoolantTemperature(engine);
+	case LE_METHOD_INTAKE_AIR:
+		return getIntakeAirTemperature(engine);
+	case LE_METHOD_RPM:
+		return engine->rpmCalculator.rpm();
+	case LE_METHOD_TIME_SINCE_BOOT:
+		return getTimeNowSeconds();
+	case LE_METHOD_FAN_OFF_SETTING:
+		return engine->engineConfiguration->fanOffTemperature;
+	case LE_METHOD_FAN_ON_SETTING:
+		return engine->engineConfiguration->fanOnTemperature;
+	case LE_METHOD_VBATT:
+		return getVBatt(engine->engineConfiguration);
+	default:
+		firmwareError("FSIO unexpected %d", action);
+		return NAN;
+	}
+}
+
+#endif
+
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+
+#include "pin_repository.h"
+#include "pwm_generator.h"
+// todo: that's about bench test mode, wrong header for sure!
+#include "injector_central.h"
+
+static void setFsioPin(const char *indexStr, const char *pinName) {
+	int index = atoi(indexStr) - 1;
+	if (index < 0 || index >= LE_COMMAND_COUNT) {
+		scheduleMsg(&logger, "invalid index %d", index);
+		return;
+	}
+	brain_pin_e pin = parseBrainPin(pinName);
+	// todo: extract method - code duplication with other 'set_xxx_pin' methods?
+	if (pin == GPIO_INVALID) {
+		scheduleMsg(&logger, "invalid pin name [%s]", pinName);
+		return;
+	}
+	boardConfiguration->fsioPins[index] = pin;
+	scheduleMsg(&logger, "FSIO pin #%d [%s]", (index + 1), hwPortname(pin));
+}
+#endif
+
+
 void setFsioExt(engine_configuration_s *engineConfiguration, int index, brain_pin_e pin, const char * exp, int freq) {
 	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 
@@ -70,8 +123,6 @@ void setFsioExt(engine_configuration_s *engineConfiguration, int index, brain_pi
 void setFsio(engine_configuration_s *engineConfiguration, int index, brain_pin_e pin, const char * exp) {
 	setFsioExt(engineConfiguration, index, pin, exp, 0);
 }
-
-EXTERN_ENGINE;
 
 void applyFsioConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	board_configuration_s * boardConfiguration = &engineConfiguration->bc;
@@ -90,7 +141,7 @@ void applyFsioConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	}
 }
 
-#if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 
 static SimplePwm fsioPwm[LE_COMMAND_COUNT] CCM_OPTIONAL;
 
@@ -195,22 +246,6 @@ static void setFsioFrequency(int index, int frequency) {
 	scheduleMsg(&logger, "Setting FSIO frequency %d on #%d", frequency, index + 1);
 }
 
-static void setFsioPin(const char *indexStr, const char *pinName) {
-	int index = atoi(indexStr) - 1;
-	if (index < 0 || index >= LE_COMMAND_COUNT) {
-		scheduleMsg(&logger, "invalid index %d", index);
-		return;
-	}
-	brain_pin_e pin = parseBrainPin(pinName);
-	// todo: extract method - code duplication with other 'set_xxx_pin' methods?
-	if (pin == GPIO_INVALID) {
-		scheduleMsg(&logger, "invalid pin name [%s]", pinName);
-		return;
-	}
-	boardConfiguration->fsioPins[index] = pin;
-	scheduleMsg(&logger, "FSIO pin #%d [%s]", (index + 1), hwPortname(pin));
-}
-
 static void setUserOutput(const char *indexStr, const char *quotedLine, Engine *engine) {
 	int index = atoi(indexStr) - 1;
 	if (index < 0 || index >= LE_COMMAND_COUNT) {
@@ -243,32 +278,6 @@ static void eval(char *line, Engine *engine) {
 	}
 }
 
-float getLEValue(Engine *engine, calc_stack_t *s, le_action_e action) {
-	efiAssert(engine!=NULL, "getLEValue", NAN);
-	switch (action) {
-	case LE_METHOD_FAN:
-		return getOutputPinValue(FAN_RELAY);
-	case LE_METHOD_AC_TOGGLE:
-		return getAcToggle(engine);
-	case LE_METHOD_COOLANT:
-		return getCoolantTemperature(engine);
-	case LE_METHOD_INTAKE_AIR:
-		return getIntakeAirTemperature(engine);
-	case LE_METHOD_RPM:
-		return engine->rpmCalculator.rpm();
-	case LE_METHOD_TIME_SINCE_BOOT:
-		return getTimeNowSeconds();
-	case LE_METHOD_FAN_OFF_SETTING:
-		return engine->engineConfiguration->fanOffTemperature;
-	case LE_METHOD_FAN_ON_SETTING:
-		return engine->engineConfiguration->fanOnTemperature;
-	case LE_METHOD_VBATT:
-		return getVBatt(engine->engineConfiguration);
-	default:
-		firmwareError("FSIO unexpected %d", action);
-		return NAN;
-	}
-}
 
 void runFsio(void) {
 	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
@@ -309,6 +318,7 @@ void initFsioImpl(Engine *engine) {
 
 	alternatorLogic = sysPool.parseExpression(ALTERNATOR_LOGIC);
 
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
 		brain_pin_e brainPin = boardConfiguration->fsioPins[i];
 
@@ -325,6 +335,8 @@ void initFsioImpl(Engine *engine) {
 			}
 		}
 	}
+
+#endif /* EFI_PROD_CODE */
 
 	addConsoleActionSSP("set_fsio", (VoidCharPtrCharPtrVoidPtr) setUserOutput, engine);
 	addConsoleActionSS("set_fsio_pin", (VoidCharPtrCharPtr) setFsioPin);
