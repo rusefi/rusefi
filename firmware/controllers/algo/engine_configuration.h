@@ -407,7 +407,9 @@ typedef struct {
 	 */
 	float fanOffTemperature;
 
-	int unusedTwoInts[2];
+	brain_pin_e vehicleSpeedSensorInputPin;
+
+	int unused964;
 	// offset 968
 	can_nbc_e canNbcType;
 	// offset 972
