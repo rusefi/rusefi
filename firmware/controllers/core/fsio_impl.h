@@ -1,5 +1,6 @@
 /**
- * @file le_functions.h
+ * @file fsio_impl.h
+ * @brief FSIO as it's used for GPIO
  *
  * @date Oct 5, 2014
  * @author Andrey Belomutskiy, (c) 2012-2014
@@ -8,8 +9,8 @@
 #ifndef LE_FUNCTIONS_H_
 #define LE_FUNCTIONS_H_
 
+#include "fsio_core.h"
 #include "engine.h"
-#include "logic_expression.h"
 
 /**
  * In human language that's
@@ -31,5 +32,9 @@
 float getLEValue(Engine *engine, calc_stack_t *s, le_action_e action);
 void setFsio(engine_configuration_s *engineConfiguration, int index, brain_pin_e pin, const char * exp);
 void setFsioExt(engine_configuration_s *engineConfiguration, int index, brain_pin_e pin, const char * exp, int freq);
+
+void initFsioImpl(Engine *engine);
+void runFsio(void);
+void applyFsioConfiguration(DECLARE_ENGINE_PARAMETER_F);
 
 #endif /* LE_FUNCTIONS_H_ */

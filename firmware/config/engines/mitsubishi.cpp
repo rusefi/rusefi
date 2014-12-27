@@ -9,9 +9,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2014
  */
 
+#include "fsio_impl.h"
 #include "mitsubishi.h"
 #include "allsensors.h"
-#include "le_functions.h"
 
 void setMitsubishiConfiguration(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
 	engineConfiguration->engineType = MITSU_4G93;

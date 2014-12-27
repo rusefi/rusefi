@@ -12,13 +12,11 @@
  * @author Andrey Belomutskiy, (c) 2012-2014
  */
 
+#include "fsio_impl.h"
 #include "mazda_miata.h"
 #include "engine_math.h"
 #include "advance_map.h"
 #include "allsensors.h"
-#include "le_functions.h"
-
-// setFrankenso_01_LCD
 #include "honda_accord.h"
 
 static const fuel_table_t miata_maf_fuel_table = { {/*0 engineLoad=1.2*//*0 800.0*/1.53, /*1 1213.0*/0.92, /*2 1626.0*/

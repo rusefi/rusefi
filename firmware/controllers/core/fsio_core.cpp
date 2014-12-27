@@ -1,6 +1,6 @@
 /**
- * @file logic_expression.cpp
- * @brief Logical expressions handling logic
+ * @file fsio_core.cpp
+ * @brief core FSUI handling logic
  *
  * Here we parse and evaluate logical expressions in
  * http://en.wikipedia.org/wiki/Reverse_Polish_notation
@@ -17,8 +17,8 @@
 
 #if EFI_FSIO || defined(__DOXYGEN__)
 
-#include "logic_expression.h"
-#include "le_functions.h"
+#include "fsio_core.h"
+#include "fsio_impl.h"
 
 LENameOrdinalPair * LE_FIRST = NULL;
 
@@ -46,26 +46,6 @@ static LENameOrdinalPair leLessOrEquals(LE_OPERATOR_LESS_OR_EQUAL, "<=");
 static LENameOrdinalPair leMax(LE_METHOD_MAX, "max");
 static LENameOrdinalPair leMin(LE_METHOD_MIN, "min");
 static LENameOrdinalPair leIf(LE_METHOD_IF, "if");
-
-#define LE_EVAL_POOL_SIZE 32
-
-#if EFI_PROD_CODE || EFI_SIMULATOR
-static Logging logger;
-#endif
-
-static LECalculator evalCalc;
-static LEElement evalPoolElements[LE_EVAL_POOL_SIZE];
-static LEElementPool evalPool(evalPoolElements, LE_EVAL_POOL_SIZE);
-
-#define SYS_ELEMENT_POOL_SIZE 128
-#define UD_ELEMENT_POOL_SIZE 128
-
-static LEElement sysElements[SYS_ELEMENT_POOL_SIZE];
-LEElementPool sysPool(sysElements, SYS_ELEMENT_POOL_SIZE);
-
-static LEElement userElements[UD_ELEMENT_POOL_SIZE];
-LEElementPool userPool(userElements, UD_ELEMENT_POOL_SIZE);
-LEElement * fsioLogics[LE_COMMAND_COUNT] CCM_OPTIONAL;
 
 LENameOrdinalPair::LENameOrdinalPair(le_action_e action, const char *name) {
 	this->action = action;
@@ -384,46 +364,5 @@ LEElement *LEElementPool::parseExpression(const char * line) {
 	}
 	return first;
 }
-
-EXTERN_ENGINE;
-
-void parseUserFsio(DECLARE_ENGINE_PARAMETER_F) {
-	board_configuration_s * boardConfiguration = &engineConfiguration->bc;
-	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
-		brain_pin_e brainPin = boardConfiguration->fsioPins[i];
-
-		if (brainPin != GPIO_UNASSIGNED) {
-			const char *formula = boardConfiguration->le_formulas[i];
-			LEElement *logic = userPool.parseExpression(formula);
-			if (logic == NULL) {
-				warning(OBD_PCM_Processor_Fault, "parsing [%s]", formula);
-			}
-
-			fsioLogics[i] = logic;
-		}
-	}
-}
-
-#if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
-
-static void eval(char *line, Engine *engine) {
-	line = unquote(line);
-	scheduleMsg(&logger, "Parsing [%s]", line);
-	evalPool.reset();
-	LEElement * e = evalPool.parseExpression(line);
-	if (e == NULL) {
-		scheduleMsg(&logger, "parsing failed");
-	} else {
-		float result = evalCalc.getValue2(e, engine);
-		scheduleMsg(&logger, "Eval result: %f", result);
-	}
-}
-
-void initEval(Engine *engine) {
-	initLogging(&logger, "le");
-	addConsoleActionSP("eval", (VoidCharPtrVoidPtr) eval, engine);
-}
-
-#endif
 
 #endif /* EFI_FSIO */
