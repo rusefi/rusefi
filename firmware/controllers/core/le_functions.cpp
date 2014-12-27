@@ -7,7 +7,7 @@
 
 #include "main.h"
 
-#if EFI_FSIO
+#if EFI_FSIO || defined(__DOXYGEN__)
 
 #include "le_functions.h"
 #include "allsensors.h"
