@@ -1,5 +1,5 @@
-/*
- * wave_analyzer_hw.h
+/**
+ * @file wave_analyzer_hw.h
  *
  * @date Jun 23, 2013
  * @author Andrey Belomutskiy, (c) 2012-2014
