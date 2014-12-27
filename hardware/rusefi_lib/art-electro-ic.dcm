@@ -1,4 +1,9 @@
-EESchema-DOCLIB  Version 2.0  Date: Пн 16 июн 2014 11:47:13
+EESchema-DOCLIB  Version 2.0  Date: Чт. 25 дек. 2014 13:16:23
+#
+$CMP 74HC244
+D 8-bit buffer/line driver with 3-state outputs
+K 74HC244
+$ENDCMP
 #
 $CMP FDS2734
 D 250V N-Channel MOSFET
@@ -26,6 +31,11 @@ $ENDCMP
 $CMP SN65HVD230
 D Can transceiver
 K SN 65HVD 230
+$ENDCMP
+#
+$CMP STF202
+D USB Filter with ESD Protection
+K USB
 $ENDCMP
 #
 $CMP TJA1051T/3

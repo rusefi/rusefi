@@ -5,9 +5,11 @@ LIBS:conn
 LIBS:linear
 LIBS:regul
 LIBS:stm32
+LIBS:art-electro-stm32
 LIBS:art-electro-ic
 LIBS:art-electro-power
 LIBS:transistors
+LIBS:art-electro-conn
 LIBS:mini48-stm32-cache
 EELAYER 27 0
 EELAYER END
