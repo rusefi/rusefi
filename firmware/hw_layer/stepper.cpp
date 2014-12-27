@@ -10,7 +10,7 @@
 #include "stepper.h"
 #include "pin_repository.h"
 
-#define ST_DELAY_MS 20
+#define ST_DELAY_MS 200
 
 #define ST_COUNT 200
 
@@ -21,7 +21,6 @@ static msg_t stThread(StepperMotor *motor) {
 	for (int i = 0; i < ST_COUNT; i++) {
 		motor->pulse();
 	}
-
 }
 
 void StepperMotor::pulse() {
@@ -30,7 +29,6 @@ void StepperMotor::pulse() {
 	palWritePad(stepPort, stepPin, false);
 	chThdSleepMilliseconds(ST_DELAY_MS);
 }
-
 
 void StepperMotor::initialize(brain_pin_e stepPin, brain_pin_e directionPin) {
 	position = 0;
