@@ -146,7 +146,7 @@ bool flashIsErased(flashaddr_t address, size_t size) {
 		size -= sizeof(flashdata_t);
 	}
 	while (size > 0) {
-		if (*(char*) address != 0xff)
+		if (*(char*) address != 0xFF)
 			return false;
 		++address;
 		--size;
