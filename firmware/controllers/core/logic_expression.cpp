@@ -15,7 +15,7 @@
 
 #include "main.h"
 
-#if EFI_FSIO
+#if EFI_FSIO || defined(__DOXYGEN__)
 
 #include "logic_expression.h"
 #include "le_functions.h"
@@ -385,29 +385,7 @@ LEElement *LEElementPool::parseExpression(const char * line) {
 	return first;
 }
 
-#if (EFI_PROD_CODE || EFI_SIMULATOR)
-
-static void eval(char *line, Engine *engine) {
-	line = unquote(line);
-	scheduleMsg(&logger, "Parsing [%s]", line);
-	evalPool.reset();
-	LEElement * e = evalPool.parseExpression(line);
-	if (e == NULL) {
-		scheduleMsg(&logger, "parsing failed");
-	} else {
-		float result = evalCalc.getValue2(e, engine);
-		scheduleMsg(&logger, "Eval result: %f", result);
-	}
-}
-
 EXTERN_ENGINE;
-
-void initEval(Engine *engine) {
-	initLogging(&logger, "le");
-	addConsoleActionSP("eval", (VoidCharPtrVoidPtr) eval, engine);
-}
-
-#endif
 
 void parseUserFsio(DECLARE_ENGINE_PARAMETER_F) {
 	board_configuration_s * boardConfiguration = &engineConfiguration->bc;
@@ -425,5 +403,27 @@ void parseUserFsio(DECLARE_ENGINE_PARAMETER_F) {
 		}
 	}
 }
+
+#if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
+
+static void eval(char *line, Engine *engine) {
+	line = unquote(line);
+	scheduleMsg(&logger, "Parsing [%s]", line);
+	evalPool.reset();
+	LEElement * e = evalPool.parseExpression(line);
+	if (e == NULL) {
+		scheduleMsg(&logger, "parsing failed");
+	} else {
+		float result = evalCalc.getValue2(e, engine);
+		scheduleMsg(&logger, "Eval result: %f", result);
+	}
+}
+
+void initEval(Engine *engine) {
+	initLogging(&logger, "le");
+	addConsoleActionSP("eval", (VoidCharPtrVoidPtr) eval, engine);
+}
+
+#endif
 
 #endif /* EFI_FSIO */
