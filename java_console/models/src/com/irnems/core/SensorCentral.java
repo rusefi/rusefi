@@ -90,6 +90,7 @@ public class SensorCentral {
         addDoubleSensor("clt", Sensor.CLT, es);
         addDoubleSensor("tp", Sensor.TPS, es);
 
+        addDoubleSensor(Sensor.VSS, es);
         addDoubleSensor(Sensor.DWELL0, es);
         addDoubleSensor(Sensor.DWELL1, es);
         addDoubleSensor(Sensor.DWELL2, es);

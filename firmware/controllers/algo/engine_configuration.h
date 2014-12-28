@@ -407,6 +407,7 @@ typedef struct {
 	 */
 	float fanOffTemperature;
 
+	// offset 960
 	brain_pin_e vehicleSpeedSensorInputPin;
 
 	/**
@@ -504,6 +505,7 @@ typedef struct {
 	bool_t hasCltSensor : 1; // bit 6
 	bool_t canReadEnabled : 1; // bit 7
 	bool_t canWriteEnabled : 1; // bit 8
+	bool_t hasVehicleSpeedSensor : 1; // bit 9
 
 	int unused6284;
 

@@ -16,6 +16,7 @@
 
 #include "adc_inputs.h"
 #include "stepper.h"
+#include "vehicle_speed.h"
 
 #include "trigger_input.h"
 #include "eficonsole.h"
@@ -330,6 +331,8 @@ void initHardware(Logging *logger, Engine *engine) {
 //			chThdSleepMilliseconds(5);
 //		}
 //	}
+
+	initVehicleSpeed(logger);
 
 	printMsg(logger, "initHardware() OK!");
 }

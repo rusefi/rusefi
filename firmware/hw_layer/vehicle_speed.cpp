@@ -6,8 +6,54 @@
  */
 
 #include "vehicle_speed.h"
+#include "engine.h"
+#include "wave_analyzer_hw.h"
+#include "pin_repository.h"
 
-void initVehicleSpeed(void) {
+EXTERN_ENGINE
+;
 
+static Logging *logger;
+
+static WaveReaderHw vehicleSpeedInput;
+
+static uint64_t lastSignalTimeNt = 0;
+static uint64_t vssDiff = 0;
+static int vssCounter = 0;
+
+/**
+ * @return vehicle speed, in kilometers per hour
+ */
+float getVehicleSpeed(void) {
+	uint64_t nowNt = getTimeNowNt();
+	if (nowNt - lastSignalTimeNt > US2NT(US_PER_SECOND_LL))
+		return 0; // previous signal time is too long ago - we are stopped
+
+	return engineConfiguration->vehicleSpeedCoef * US_PER_SECOND_LL / vssDiff;
 }
 
+static void vsAnaWidthCallback(void) {
+	vssCounter++;
+	uint64_t nowNt = getTimeNowNt();
+	vssDiff = nowNt - lastSignalTimeNt;
+	lastSignalTimeNt = nowNt;
+}
+
+static void speedInfo(void) {
+	scheduleMsg(logger, "VSS@%s c=%f eventCounter=%d speed=%f",
+			hwPortname(engineConfiguration->vehicleSpeedSensorInputPin),
+			engineConfiguration->vehicleSpeedCoef,
+			vssCounter,
+			getVehicleSpeed());
+}
+
+void initVehicleSpeed(Logging *l) {
+	logger = l;
+	if (engineConfiguration->vehicleSpeedSensorInputPin == GPIO_UNASSIGNED)
+		return;
+	initWaveAnalyzerDriver(&vehicleSpeedInput, engineConfiguration->vehicleSpeedSensorInputPin);
+	startInputDriver(&vehicleSpeedInput, true);
+
+	registerCallback(&vehicleSpeedInput.widthListeners, (IntListener) vsAnaWidthCallback, NULL);
+	addConsoleAction("speedinfo", speedInfo);
+}
