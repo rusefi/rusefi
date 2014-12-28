@@ -18,7 +18,7 @@ typedef struct {
 	ICUDriver *driver;
 	GPIO_TypeDef *port;
 	int pin;
-	int activeMode; // 0 for ICU_INPUT_ACTIVE_LOW, 1 for ICU_INPUT_ACTIVE_HIGH
+	bool_t isActiveHigh; // false for ICU_INPUT_ACTIVE_LOW, true for ICU_INPUT_ACTIVE_HIGH
 	volatile int started;
 
 	// todo: make this a template & reduce number of listeners?
@@ -33,7 +33,7 @@ extern "C"
 #endif /* __cplusplus */
 
 void initWaveAnalyzerDriver(WaveReaderHw *hw, brain_pin_e brainPin);
-void setWaveReaderMode(WaveReaderHw *hw, bool mode);
+void startInputDriver(WaveReaderHw *hw, bool isActiveHigh);
 ICUDriver * getInputCaptureDriver(brain_pin_e hwPin);
 
 #ifdef __cplusplus
