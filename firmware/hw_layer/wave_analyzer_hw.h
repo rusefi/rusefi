@@ -21,6 +21,8 @@ typedef struct {
 	int activeMode; // 0 for ICU_INPUT_ACTIVE_LOW, 1 for ICU_INPUT_ACTIVE_HIGH
 	volatile int started;
 
+	// todo: make this a template & reduce number of listeners?
+	// todo: would one listener be enough?
 	IntListenerArray widthListeners;
 	IntListenerArray periodListeners;
 } WaveReaderHw;
@@ -30,8 +32,7 @@ extern "C"
 {
 #endif /* __cplusplus */
 
-void initWaveAnalyzerDriver(WaveReaderHw *hw, ICUDriver *driver,
-		ioportid_t port, ioportmask_t pin);
+void initWaveAnalyzerDriver(WaveReaderHw *hw, brain_pin_e brainPin);
 void setWaveReaderMode(WaveReaderHw *hw, bool mode);
 ICUDriver * getInputCaptureDriver(brain_pin_e hwPin);
 

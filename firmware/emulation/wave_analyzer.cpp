@@ -114,10 +114,6 @@ static void setWaveModeSilent(int index, int mode) {
 static void initWave(const char *name, int index) {
 	brain_pin_e brainPin = boardConfiguration->logicAnalyzerPins[index];
 
-	ioportid_t port = getHwPort(brainPin);
-	ioportmask_t pin = getHwPin(brainPin);
-	ICUDriver *driver = getInputCaptureDriver(brainPin);
-
 	bool mode = boardConfiguration->logicAnalyzerMode[index];
 
 	waveReaderCount++;
@@ -131,7 +127,7 @@ static void initWave(const char *name, int index) {
 
 	registerCallback(&hw->periodListeners, (IntListener) waIcuPeriodCallback, (void*) reader);
 
-	initWaveAnalyzerDriver(hw, driver, port, pin);
+	initWaveAnalyzerDriver(hw, brainPin);
 
 	print("wave%d input on %s%d\r\n", index, portname(reader->hw.port), reader->hw.pin);
 	setWaveReaderMode(hw, mode);

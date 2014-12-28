@@ -409,7 +409,12 @@ typedef struct {
 
 	brain_pin_e vehicleSpeedSensorInputPin;
 
-	int unused964;
+	/**
+	 * This coefficient translates vehicle speed input frequency (in Hz) into vehicle speed
+	 * (in km/h)
+	 * offset 964
+	 */
+	float vehicleSpeedCoef;
 	// offset 968
 	can_nbc_e canNbcType;
 	// offset 972
