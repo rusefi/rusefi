@@ -2232,22 +2232,22 @@
         <name>$PROJ_DIR$\..\controllers\core\EfiWave.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\controllers\core\fsio_core.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\controllers\core\fsio_core.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\controllers\core\fsio_impl.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\controllers\core\fsio_impl.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\controllers\core\interpolation.cpp</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\controllers\core\interpolation.h</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\controllers\core\le_functions.cpp</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\controllers\core\le_functions.h</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\controllers\core\logic_expression.cpp</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\controllers\core\logic_expression.h</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\controllers\core\signal_filtering.c</name>
@@ -2753,6 +2753,12 @@
     </file>
     <file>
       <name>$PROJ_DIR$\..\hw_layer\trigger_input.h</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\hw_layer\vehicle_speed.cpp</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\hw_layer\vehicle_speed.h</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\hw_layer\wave_analyzer_hw.c</name>
