@@ -29,7 +29,7 @@ float getVehicleSpeed(void) {
 	if (nowNt - lastSignalTimeNt > US2NT(US_PER_SECOND_LL))
 		return 0; // previous signal time is too long ago - we are stopped
 
-	return engineConfiguration->vehicleSpeedCoef * US_PER_SECOND_LL / vssDiff;
+	return engineConfiguration->vehicleSpeedCoef * US2NT(US_PER_SECOND_LL) / vssDiff;
 }
 
 static void vsAnaWidthCallback(void) {

@@ -400,10 +400,12 @@ typedef struct {
 	float vbattDividerCoeff;
 	/**
 	 * Cooling fan turn-on temperature threshold, in Celsuis
+	 * offset 952
 	 */
 	float fanOnTemperature;
 	/**
 	 * Cooling fan turn-off temperature threshold, in Celsuis
+	 * offset 956
 	 */
 	float fanOffTemperature;
 

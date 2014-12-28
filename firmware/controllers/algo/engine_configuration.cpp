@@ -251,7 +251,7 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	engineConfiguration->globalTriggerAngleOffset = 0;
 	engineConfiguration->injectionOffset = 0;
 	engineConfiguration->ignitionOffset = 0;
-	engineConfiguration->overrideCrankingIgnition = TRUE;
+	engineConfiguration->overrideCrankingIgnition = true;
 	engineConfiguration->analogChartFrequency = 20;
 
 	engineConfiguration->algorithm = LM_MAF;
@@ -268,7 +268,7 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 
 	engineConfiguration->canNbcType = CAN_BUS_NBC_BMW;
 	engineConfiguration->canSleepPeriod = 50;
-	engineConfiguration->canReadEnabled = TRUE;
+	engineConfiguration->canReadEnabled = true;
 	engineConfiguration->canWriteEnabled = false;
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);

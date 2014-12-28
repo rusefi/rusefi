@@ -46,7 +46,7 @@ typedef struct {
 	/**
 	 * This is the raw value we take from the fuel map or base fuel algorithm, before the corrections
 	 */
-	float baseFuel;
+	float baseFuel; // 48
 	float tCharge; // 52
 	float inj_adv; // 56
 	float sparkDwell; // 60
