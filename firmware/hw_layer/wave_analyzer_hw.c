@@ -158,9 +158,9 @@ void initWaveAnalyzerDriver(WaveReaderHw *hw, brain_pin_e brainPin) {
 	}
 }
 
-void setWaveReaderMode(WaveReaderHw *hw, bool mode) {
-	hw->activeMode = mode;
-	if (hw->activeMode) {
+void startInputDriver(WaveReaderHw *hw, bool isActiveHigh) {
+	hw->isActiveHigh = isActiveHigh;
+	if (hw->isActiveHigh) {
 		wave_icucfg.mode = ICU_INPUT_ACTIVE_HIGH;
 	} else {
 		wave_icucfg.mode = ICU_INPUT_ACTIVE_LOW;
