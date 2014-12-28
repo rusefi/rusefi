@@ -16,6 +16,7 @@
 #include "engine_state.h"
 #include "can_header.h"
 #include "engine_configuration.h"
+#include "vehicle_speed.h"
 
 #if EFI_CAN_SUPPORT || defined(__DOXYGEN__)
 
@@ -122,8 +123,7 @@ static void canMazdaRX8(void) {
 
 	commonTxInit(CAN_MAZDA_RX_RPM_SPEED);
 
-	float mph = 123;
-	float kph = mph * 1.60934;
+	float kph = getVehicleSpeed();
 
 	setShortValue(&txmsg, SWAP_UINT16(engine_rpm * 4), 0);
 	setShortValue(&txmsg, 0xFFFF, 2);

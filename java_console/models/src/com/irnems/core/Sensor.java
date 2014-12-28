@@ -23,6 +23,7 @@ public enum Sensor {
     AFR("A/F ratio", SensorCategory.SENSOR_INPUTS, "", 0, 20),
     MAF("MAF", SensorCategory.SENSOR_INPUTS, "Volts", 4),
     TPS("throttle", SensorCategory.SENSOR_INPUTS, "%", 100),
+    VSS("Speed", SensorCategory.SENSOR_INPUTS, "kph", 100),
 
     TRG_0_DUTY("trg0 duty", SensorCategory.SENSOR_INPUTS, "%", 100),
     TRG_1_DUTY("trg1 duty", SensorCategory.SENSOR_INPUTS, "%", 100),

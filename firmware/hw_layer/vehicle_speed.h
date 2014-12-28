@@ -10,6 +10,7 @@
 
 #include "main.h"
 
-void initVehicleSpeed(void);
+float getVehicleSpeed(void);
+void initVehicleSpeed(Logging *logger);
 
 #endif /* HW_LAYER_VEHICLE_SPEED_H_ */
