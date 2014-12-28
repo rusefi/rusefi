@@ -364,6 +364,10 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 	engineConfiguration->vehicleSpeedSensorInputPin = GPIOA_8;
 	engineConfiguration->hasVehicleSpeedSensor = true;
 
+	engineConfiguration->fanOnTemperature = 85;
+	engineConfiguration->fanOffTemperature = 80;
+
+
 //	engineConfiguration->isCanEnabled = true;
 	boardConfiguration->canTxPin = GPIOB_6;
 	boardConfiguration->canRxPin = GPIOB_12;
