@@ -70,7 +70,7 @@ typedef struct {
 	unsigned int checkEngine : 1; // bit 8
 	unsigned int needBurn : 1; // bit 9
 	unsigned int secondTriggerChannelEnabled : 1; // bit 10
-	int unused2;
+	float vehicleSpeedKph;
 	unsigned int isTpsError : 1; // bit 0
 	unsigned int isCltError : 1; // bit 1
 	unsigned int isMapError : 1; // bit 2
