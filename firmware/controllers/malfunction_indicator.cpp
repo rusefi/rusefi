@@ -1,5 +1,5 @@
 /**
- * @file malfunction_indicator.c
+ * @file malfunction_indicator.cpp
  * @brief We can blink out OBD-II error codes using Malfunction Indicator Light (MIL)
  *
  *

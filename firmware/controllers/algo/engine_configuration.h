@@ -468,6 +468,9 @@ typedef struct {
 	 */
 	afr_sensor_s afrSensor;
 
+	/**
+	 * this is about deciding when the injector starts it's squirt
+	 */
 	float injectionOffset;
 
 	float crankingTimingAngle;
