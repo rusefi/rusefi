@@ -14,6 +14,8 @@
 
 #define EFI_FSIO TRUE
 
+#define CONSOLE_MAX_ACTIONS 256
+
 #define EFI_SIMULATOR TRUE
 
 #define EFI_SUPPORT_DODGE_NEON TRUE
@@ -42,5 +44,10 @@
 #define EFI_HISTOGRAMS TRUE
 
 #define EFI_TUNER_STUDIO TRUE
+
+/**
+ * This is the size of the MemoryStream used by chvprintf
+ */
+#define INTERMEDIATE_LOGGING_BUFFER_SIZE 2000
 
 #endif /* EFIFEATURES_H_ */

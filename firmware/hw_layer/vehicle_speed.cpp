@@ -6,6 +6,9 @@
  */
 
 #include "vehicle_speed.h"
+
+#if EFI_VEHICLE_SPEED || defined(__DOXYGEN__)
+
 #include "engine.h"
 #include "wave_analyzer_hw.h"
 #include "pin_repository.h"
@@ -57,3 +60,5 @@ void initVehicleSpeed(Logging *l) {
 	registerCallback(&vehicleSpeedInput.widthListeners, (IntListener) vsAnaWidthCallback, NULL);
 	addConsoleAction("speedinfo", speedInfo);
 }
+
+#endif /* EFI_VEHICLE_SPEED */

@@ -14,7 +14,7 @@ extern "C"
 {
 #endif /* __cplusplus */
 
-#define CONSOLE_MAX_ACTIONS 196
+#include "efifeatures.h"
 
 typedef enum {
 	NO_PARAMETER,
@@ -42,12 +42,9 @@ typedef struct {
 	void *param;
 } TokenCallback;
 
-//void addDefaultConsoleActions(void);
-//void handleActionWithParameter(TokenCallback *current, char *parameter);
 int tokenLength(const char *msgp);
 
 typedef void (*VoidPtr)(void*);
-
 
 typedef void (*Void)(void);
 typedef void (*VoidInt)(int);
