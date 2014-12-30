@@ -184,6 +184,7 @@ typedef struct {
 	int tunerStudioThreadPeriod;
 	int generalPeriodicThreadPeriod;
 
+	// offset 5796
 	uint32_t tunerStudioSerialSpeed;
 
 	brain_pin_e boardTestModeJumperPin;

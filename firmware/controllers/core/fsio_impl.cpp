@@ -290,6 +290,12 @@ void runFsio(void) {
 	}
 #endif
 
+	/**
+	 * main relay is always on if ECU is on, that's a good enough initial implementation
+	 */
+	if (boardConfiguration->mainRelayPin != GPIO_UNASSIGNED)
+		setOutputPinValue(MAIN_RELAY, 1);
+
 	if (boardConfiguration->acRelayPin != GPIO_UNASSIGNED) {
 		setPinState(AC_RELAY, acRelayLogic, engine);
 	}

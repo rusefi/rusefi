@@ -379,6 +379,8 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 		boardConfiguration->joystickPins[i] = GPIO_UNASSIGNED;
 	}
 
+	boardConfiguration->mainRelayPin = GPIO_UNASSIGNED;
+	boardConfiguration->mainRelayPinMode = OM_DEFAULT;
 	boardConfiguration->idleValvePin = GPIOE_2;
 	boardConfiguration->idleValvePinMode = OM_DEFAULT;
 	boardConfiguration->fuelPumpPin = GPIOC_13;

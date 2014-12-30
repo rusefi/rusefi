@@ -367,6 +367,8 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 	engineConfiguration->fanOnTemperature = 85;
 	engineConfiguration->fanOffTemperature = 80;
 
+	boardConfiguration->tunerStudioSerialSpeed = 9600;
+	// todo: ALGO = SD
 
 //	engineConfiguration->isCanEnabled = true;
 	boardConfiguration->canTxPin = GPIOB_6;

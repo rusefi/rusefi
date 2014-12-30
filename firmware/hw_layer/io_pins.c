@@ -92,6 +92,8 @@ ioportmask_t getHwPin(brain_pin_e brainPin) {
 }
 
 void outputPinRegisterExt2(const char *msg, io_pin_e ioPin, brain_pin_e brainPin, pin_output_mode_e *outputMode) {
+	if (brainPin == GPIO_UNASSIGNED)
+		return;
 	GPIO_TypeDef *hwPort = getHwPort(brainPin);
 	int hwPin = getHwPin(brainPin);
 
@@ -149,6 +151,8 @@ void initOutputPins(void) {
 
 	// todo: should we move this code closer to the fuel pump logic?
 	outputPinRegisterExt2("fuel pump relay", FUEL_PUMP_RELAY, boardConfiguration->fuelPumpPin, &DEFAULT_OUTPUT);
+
+	outputPinRegisterExt2("main relay", MAIN_RELAY, boardConfiguration->mainRelayPin, &boardConfiguration->mainRelayPinMode);
 
 	outputPinRegisterExt2("fan relay", FAN_RELAY, boardConfiguration->fanPin, &DEFAULT_OUTPUT);
 	outputPinRegisterExt2("o2 heater", O2_HEATER, boardConfiguration->o2heaterPin, &DEFAULT_OUTPUT);
