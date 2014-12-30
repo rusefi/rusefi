@@ -23,6 +23,8 @@
 
 #define EGT_ERROR_VALUE -1000
 
+static SPIDriver *driver;
+
 static Logging logger;
 
 static SPIConfig spiConfig[MAX31855_CS_COUNT];
@@ -80,9 +82,8 @@ static max_32855_code getResultCode(uint32_t egtPacket) {
 	}
 }
 
-uint32_t readEgtPacket(board_configuration_s *boardConfiguration, int egtChannel) {
+static uint32_t readEgtPacket(int egtChannel) {
 	uint32_t egtPacket;
-	SPIDriver *driver = getSpiDevice(boardConfiguration->max31855spiDevice);
 	if (driver == NULL) {
 		return 0xFFFFFFFF;
 	}
@@ -90,7 +91,7 @@ uint32_t readEgtPacket(board_configuration_s *boardConfiguration, int egtChannel
 	spiStart(driver, &spiConfig[egtChannel]);
 	spiSelect(driver);
 
-	spiReceive(driver, 4, &egtPacket);
+	spiReceive(driver, sizeof(egtPacket), &egtPacket);
 
 	spiUnselect(driver);
 	spiStop(driver);
@@ -100,8 +101,8 @@ uint32_t readEgtPacket(board_configuration_s *boardConfiguration, int egtChannel
 
 #define GET_TEMPERATURE_C(x) (((x) >> 18) / 4)
 
-uint16_t getEgtValue(board_configuration_s *boardConfiguration, int egtChannel) {
-	uint32_t packet = readEgtPacket(boardConfiguration, egtChannel);
+uint16_t getEgtValue(int egtChannel) {
+	uint32_t packet = readEgtPacket(egtChannel);
 	max_32855_code code = getResultCode(packet);
 	if (code != MC_OK) {
 		return EGT_ERROR_VALUE + code;
@@ -110,16 +111,16 @@ uint16_t getEgtValue(board_configuration_s *boardConfiguration, int egtChannel) 
 	}
 }
 
-static void egtRead(board_configuration_s *boardConfiguration) {
+static void egtRead(void) {
 
-	if (boardConfiguration->max31855spiDevice == SPI_NONE) {
+	if (driver == NULL) {
 		scheduleMsg(&logger, "No SPI selected for EGT");
 		return;
 	}
 
 	scheduleMsg(&logger, "Reading egt");
 
-	uint32_t egtPacket = readEgtPacket(boardConfiguration, 0);
+	uint32_t egtPacket = readEgtPacket(0);
 
 	max_32855_code code = getResultCode(egtPacket);
 
@@ -137,9 +138,12 @@ static void egtRead(board_configuration_s *boardConfiguration) {
 void initMax31855(board_configuration_s *boardConfiguration) {
 	initLogging(&logger, "EGT");
 
+	driver = getSpiDevice(boardConfiguration->max31855spiDevice);
+
+
 	addConsoleActionP("egtinfo", (VoidPtr) showEgtInfo, boardConfiguration);
 
-	addConsoleActionP("egtread", (VoidPtr) egtRead, boardConfiguration);
+	addConsoleAction("egtread", (Void) egtRead);
 
 	turnOnSpi(SPI_DEVICE_3);
 

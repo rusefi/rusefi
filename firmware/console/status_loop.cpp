@@ -469,7 +469,7 @@ void updateTunerStudioState(Engine *engine, TunerStudioOutputChannels *tsOutputC
 
 	tsOutputChannels->checkEngine = hasErrorCodes();
 #if EFI_PROD_CODE
-	tsOutputChannels->egtValues.values[0] = getEgtValue(boardConfiguration, 0);
+	tsOutputChannels->egtValues.values[0] = getEgtValue(0);
 
 	tsOutputChannels->needBurn = getNeedToWriteConfiguration();
 	tsOutputChannels->hasSdCard = isSdCardAlive();
