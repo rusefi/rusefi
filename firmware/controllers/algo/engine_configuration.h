@@ -53,6 +53,8 @@ typedef char le_formula_t[LE_COMMAND_LENGTH];
 typedef float fuel_table_t[FUEL_LOAD_COUNT][FUEL_RPM_COUNT];
 typedef float ignition_table_t[IGN_LOAD_COUNT][IGN_RPM_COUNT];
 
+typedef brain_pin_e egt_cs_array_t[MAX31855_CS_COUNT];
+
 #define DWELL_CURVE_SIZE 8
 
 typedef enum {
@@ -217,7 +219,7 @@ typedef struct {
 
 	pin_output_mode_e mainRelayPinMode;
 
-	brain_pin_e max31855_cs[MAX31855_CS_COUNT];
+	egt_cs_array_t max31855_cs;
 
 	spi_device_e max31855spiDevice;
 

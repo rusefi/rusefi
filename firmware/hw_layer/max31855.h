@@ -17,7 +17,7 @@ extern "C"
 #endif /* __cplusplus */
 
 void initMax31855(board_configuration_s *boardConfiguration);
-uint16_t getEgtValue(board_configuration_s *boardConfiguration, int egtChannel);
+uint16_t getEgtValue(int egtChannel);
 
 #ifdef __cplusplus
 }
