@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>rusefi_firmware</name>
+	<name>firmware.newc</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -24,24 +24,4 @@
 		<nature>org.eclipse.cdt.managedbuilder.core.managedBuildNature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
 	</natures>
-	<filteredResources>
-		<filter>
-			<id>1381697360903</id>
-			<name></name>
-			<type>10</type>
-			<matcher>
-				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-iar</arguments>
-			</matcher>
-		</filter>
-		<filter>
-			<id>1381675425786</id>
-			<name>chibios/os/ports</name>
-			<type>10</type>
-			<matcher>
-				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-IAR</arguments>
-			</matcher>
-		</filter>
-	</filteredResources>
 </projectDescription>
