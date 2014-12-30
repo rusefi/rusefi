@@ -97,6 +97,8 @@
 
 #define EFI_PWM TRUE
 
+#define EFI_VEHICLE_SPEED TRUE
+
 #define EFI_FUEL_PUMP TRUE
 
 #define EFI_ENGINE_EMULATOR TRUE
@@ -153,6 +155,8 @@
 
 #define EFI_MALFUNCTION_INDICATOR TRUE
 //#define EFI_MALFUNCTION_INDICATOR FALSE
+
+#define CONSOLE_MAX_ACTIONS 196
 
 #define EFI_MAP_AVERAGING TRUE
 //#define EFI_MAP_AVERAGING FALSE
@@ -297,5 +301,10 @@
 
 #define CONFIG_RESET_SWITCH_PORT GPIOD
 #define CONFIG_RESET_SWITCH_PIN 6
+
+/**
+ * This is the size of the MemoryStream used by chvprintf
+ */
+#define INTERMEDIATE_LOGGING_BUFFER_SIZE 2000
 
 #endif /* EFIFEATURES_H_ */

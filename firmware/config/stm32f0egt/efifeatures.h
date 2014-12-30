@@ -41,7 +41,15 @@
 #define CONSOLE_MODE_SWITCH_PORT GPIOB
 #define CONSOLE_MODE_SWITCH_PIN 1
 
+#define CONSOLE_MAX_ACTIONS 32
+
 #define CONFIG_RESET_SWITCH_PORT GPIOD
 #define CONFIG_RESET_SWITCH_PIN 6
+
+/**
+ * This is the size of the MemoryStream used by chvprintf
+ */
+#define INTERMEDIATE_LOGGING_BUFFER_SIZE 256
+
 
 #endif /* EFIFEATURES_H_ */
