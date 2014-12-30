@@ -1,4 +1,4 @@
-update=12/14/2014 7:07:14 AM
+update=12/28/2014 8:08:31 AM
 version=1
 last_client=eeschema
 [cvpcb]
@@ -12,19 +12,19 @@ version=1
 version=1
 LastNetListRead=frankenso.net
 UseCmpFile=0
-PadDrill=5.020000000000
-PadDrillOvalY=5.020000000000
-PadSizeH=6.000000000000
-PadSizeV=3.810000000000
-PcbTextSizeV=0.508000000000
-PcbTextSizeH=0.508000000000
-PcbTextThickness=0.304800000000
+PadDrill=0.000000000000
+PadDrillOvalY=0.000000000000
+PadSizeH=1.350000000000
+PadSizeV=1.000000000000
+PcbTextSizeV=1.016000000000
+PcbTextSizeH=1.016000000000
+PcbTextThickness=0.127000000000
 ModuleTextSizeV=0.508000000000
 ModuleTextSizeH=0.508000000000
 ModuleTextSizeThickness=0.508000000000
 SolderMaskClearance=0.200000000000
 SolderMaskMinWidth=0.000000000000
-DrawSegmentWidth=0.127000000000
+DrawSegmentWidth=0.508000000000
 BoardOutlineThickness=0.127000000000
 ModuleOutlineThickness=0.254000000000
 [pcbnew/libraries]
@@ -60,6 +60,7 @@ LibName28=TCPL_PCC-SMP
 LibName29=RN-41_42
 LibName30=skqucaa010_joystick
 LibName31=HC-0X_bluetooth
+LibName32=joystick_SKRHAAE010
 [eeschema]
 version=1
 LibDir=../rusefi_lib
@@ -118,3 +119,4 @@ LibName46=mos_p_numbered-pins
 LibName47=rn-41
 LibName48=skqucaa010_joystick
 LibName49=itead_hc-0X_bluetooth
+LibName50=joystick_SKRHAAE010

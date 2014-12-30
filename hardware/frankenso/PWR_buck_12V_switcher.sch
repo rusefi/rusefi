@@ -48,6 +48,7 @@ LIBS:mos_p_numbered-pins
 LIBS:rn-41
 LIBS:skqucaa010_joystick
 LIBS:itead_hc-0X_bluetooth
+LIBS:joystick_SKRHAAE010
 LIBS:frankenso-cache
 EELAYER 27 0
 EELAYER END
@@ -55,7 +56,7 @@ $Descr A 11000 8500
 encoding utf-8
 Sheet 9 14
 Title "Frankenso"
-Date "14 dec 2014"
+Date "28 dec 2014"
 Rev ".02"
 Comp "rusEFI.com"
 Comment1 ""
@@ -217,10 +218,10 @@ FB
 Text Label 8200 6450 0    60   ~ 0
 OUT
 $Comp
-L GND #PWR0102
+L GND #PWR0103
 U 1 1 52C4D1EB
 P 7450 6900
-F 0 "#PWR0102" H 7450 6900 30  0001 C CNN
+F 0 "#PWR0103" H 7450 6900 30  0001 C CNN
 F 1 "GND" H 7450 6830 30  0001 C CNN
 F 2 "" H 7450 6900 60  0000 C CNN
 F 3 "" H 7450 6900 60  0000 C CNN

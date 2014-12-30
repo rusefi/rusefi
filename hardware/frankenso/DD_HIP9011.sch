@@ -48,6 +48,7 @@ LIBS:mos_p_numbered-pins
 LIBS:rn-41
 LIBS:skqucaa010_joystick
 LIBS:itead_hc-0X_bluetooth
+LIBS:joystick_SKRHAAE010
 LIBS:frankenso-cache
 EELAYER 27 0
 EELAYER END
@@ -55,7 +56,7 @@ $Descr A4 11693 8268
 encoding utf-8
 Sheet 5 14
 Title "Frankenso"
-Date "14 dec 2014"
+Date "28 dec 2014"
 Rev ".02"
 Comp "rusEFI.com"
 Comment1 ""
@@ -296,32 +297,16 @@ F 5 "DIGI,CRCW0805100KFKEA" V 1130 2600 60  0001 C CNN "vend1,vend1#"
 	1    7350 3600
 	1    0    0    -1  
 $EndComp
-$Comp
-L R R171
-U 1 1 52A255D0
-P 7500 3600
-F 0 "R171" V 7580 3600 40  0000 C CNN
-F 1 "1K" V 7507 3601 40  0000 C CNN
-F 2 "SM0805" V 1130 2600 60  0001 C CNN
-F 3 "" H 7500 3600 60  0001 C CNN
-F 4 "VISHAY,CRCW0805100KFKEA" V 1130 2600 60  0001 C CNN "mfg,mfg#"
-F 5 "DIGI,CRCW0805100KFKEA" V 1130 2600 60  0001 C CNN "vend1,vend1#"
-	1    7500 3600
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	7350 3350 7950 3350
 Connection ~ 7800 3350
 Connection ~ 7650 3350
-Connection ~ 7500 3350
 Wire Wire Line
 	7350 3350 7350 3000
 Text Label 7350 3100 0    60   ~ 0
 5V
 Text Label 7350 3850 3    60   ~ 0
 INT/HLD
-Text Label 7500 3850 3    60   ~ 0
-CS
 Text Label 7650 3850 3    60   ~ 0
 TEST
 Text Label 7800 3850 3    60   ~ 0

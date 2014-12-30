@@ -48,6 +48,7 @@ LIBS:mos_p_numbered-pins
 LIBS:rn-41
 LIBS:skqucaa010_joystick
 LIBS:itead_hc-0X_bluetooth
+LIBS:joystick_SKRHAAE010
 LIBS:frankenso-cache
 EELAYER 27 0
 EELAYER END
@@ -55,7 +56,7 @@ $Descr A4 11693 8268
 encoding utf-8
 Sheet 4 14
 Title "Frankenso"
-Date "14 dec 2014"
+Date "28 dec 2014"
 Rev ".02"
 Comp "rusEFI.com"
 Comment1 ""
@@ -275,4 +276,36 @@ Text HLabel 2300 1850 2    60   Input ~ 0
 CAN_TX
 Text Label 3250 3000 2    60   ~ 0
 3.3V
+$Comp
+L CONN_4 P401
+U 1 1 54959C46
+P 6700 3150
+F 0 "P401" V 6650 3150 50  0000 C CNN
+F 1 "CONN_4" V 6750 3150 50  0000 C CNN
+F 2 "SIL-4" H 6700 3150 60  0001 C CNN
+F 3 "" H 6700 3150 60  0000 C CNN
+	1    6700 3150
+	1    0    0    -1  
+$EndComp
+Text Label 6350 3200 2    60   ~ 0
+CANL
+Text Label 6350 3100 2    60   ~ 0
+CANH
+$Comp
+L GND #PWR075
+U 1 1 54959C55
+P 6350 3300
+F 0 "#PWR075" H 6350 3300 30  0001 C CNN
+F 1 "GND" H 6350 3230 30  0001 C CNN
+F 2 "" H 6350 3300 60  0001 C CNN
+F 3 "" H 6350 3300 60  0001 C CNN
+	1    6350 3300
+	1    0    0    -1  
+$EndComp
+Text Label 6350 3000 2    60   ~ 0
+5V
+Text HLabel 6050 3000 0    60   Input ~ 0
+5V
+Wire Wire Line
+	6350 3000 6050 3000
 $EndSCHEMATC

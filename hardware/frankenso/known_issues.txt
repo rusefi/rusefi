@@ -18,10 +18,10 @@
 18) RESOLVED IN R0.2 HC-OX needs 3.3V not 5V. 
 19)                  BOM issue: D1001 should be BZT52C7V5-FDICT-ND?
 20)                  BOM issue: C1001 sch says 470uF but part number is 100uF?
-21)                  SKQUCAA010 is End of Life. I've placed and order to get these in October, but we need a better solution
+21) RESOLVED IN R0.4 SKQUCAA010 is End of Life. I've placed and order to get these in October, but we need a better solution
 22) RESOLVED IN R0.2 JP212 should be replaced with JP209 which would be breaking the OUT9 line. That's part of hall-via-op-amp circuirty.  
 23)                  chip select and such for SPI on thermo-couple chips. 
-24)                  Change joy stick to ALPS SKRHAAE010 
+24) RESOLVED IN R0.4 Change joy stick to ALPS SKRHAAE010 
 25) RESOLVED IN R0.2 add a prototype area for future circuits to be tossed in.
 26)                  add a couple more low-side chips
 27) RESOLVED IN R0.2 surge suppression diode option for some low-side
@@ -48,11 +48,11 @@
 47) RESOLVED IN R0.3 Per 32) and 33) change W64,63 change to single hole, which allows U chips to move away from enclosre metal wall
 48)                  Make hidden text for component values align such that a picture can be caputured that displays the component values. 
 49)                  check VR against 1996 Miata's. 
-50)                  HIP9011 CS should be connected some GPIO pin, PD11 would work
+50) RESOLVED IN R0.4 HIP9011 CS should be connected some GPIO pin, PB0 would work
 51) RESOLVED IN R0.4 CAN_RX line should be connected to PB12, not PD12
 52) RESOLVED IN R0.4 Add header for CAN bus with 5V and GND. see P401
 53)                  verify D9 is the same BOM item as discovery board. 
-54)                  Add 5V and GND vias to proto area
+54) RESOLVED IN R0.4 Add 5V and GND vias to proto area
 55)                  
 
 
