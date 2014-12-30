@@ -508,6 +508,8 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 }
 
 static void setCustomEngineConfiguration(engine_configuration_s *engineConfiguration) {
+	board_configuration_s * boardConfiguration = &engineConfiguration->bc;
+
 	/**
 	 * Frankenso analog #1 PC2 ADC12
 	 * Frankenso analog #2 PC1 ADC11
