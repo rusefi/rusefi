@@ -16,7 +16,7 @@ extern "C"
 {
 #endif /* __cplusplus */
 
-void initMax31855(board_configuration_s *boardConfiguration);
+void initMax31855(SPIDriver *drv, egt_cs_array_t max31855_cs);
 uint16_t getEgtValue(int egtChannel);
 
 #ifdef __cplusplus

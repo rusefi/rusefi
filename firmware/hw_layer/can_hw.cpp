@@ -11,12 +11,16 @@
 
 #include "main.h"
 #include "can_hw.h"
-#include "pin_repository.h"
 #include "string.h"
+
+#if EFI_PROD_CODE
+
+#include "pin_repository.h"
 #include "engine_state.h"
 #include "can_header.h"
 #include "engine_configuration.h"
 #include "vehicle_speed.h"
+#endif /* EFI_PROD_CODE */
 
 #if EFI_CAN_SUPPORT || defined(__DOXYGEN__)
 
@@ -99,6 +103,8 @@ static void sendMessage2(int size) {
 static void sendMessage() {
 	sendMessage2(8);
 }
+
+#if EFI_PROD_CODE
 
 static void canDashboardBMW(void) {
 	//BMW Dashboard
@@ -237,9 +243,15 @@ static void canInfo(void) {
 	scheduleMsg(&logger, "CAN rx count %d/tx ok %d/tx not ok %d", canReadCounter, can_write_ok, can_write_not_ok);
 }
 
+#endif /* EFI_PROD_CODE */
+
+
 void initCan(void) {
+#if EFI_PROD_CODE
 	if (!engineConfiguration->isCanEnabled)
 		return;
+#endif /* EFI_PROD_CODE */
+
 	initLogging(&logger, "CAN driver");
 
 #if STM32_CAN_USE_CAN2
@@ -251,12 +263,15 @@ void initCan(void) {
 #endif
 
 	canStart(&EFI_CAN_DEVICE, &canConfig);
+#if EFI_PROD_CODE
+
 	chThdCreateStatic(canTreadStack, sizeof(canTreadStack), NORMALPRIO, (tfunc_t) canThread, NULL);
 
 	mySetPadMode2("CAN TX", boardConfiguration->canTxPin, PAL_MODE_ALTERNATE(EFI_CAN_TX_AF));
 	mySetPadMode2("CAN RX", boardConfiguration->canRxPin, PAL_MODE_ALTERNATE(EFI_CAN_RX_AF));
 
 	addConsoleAction("caninfo", canInfo);
+#endif /* EFI_PROD_CODE */
 }
 
 #endif /* EFI_CAN_SUPPORT */

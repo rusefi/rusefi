@@ -262,7 +262,7 @@ void initHardware(Logging *logger, Engine *engine) {
 	initOutputPins();
 
 #if EFI_MAX_31855
-	initMax31855(boardConfiguration);
+	initMax31855(getSpiDevice(boardConfiguration->max31855spiDevice), boardConfiguration->max31855_cs);
 #endif /* EFI_MAX_31855 */
 
 
