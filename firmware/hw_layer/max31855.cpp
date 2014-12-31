@@ -14,8 +14,9 @@
 
 #include "max31855.h"
 
-#if EFI_PROD_CODE
 #include "hardware.h"
+
+#if EFI_PROD_CODE
 #include "settings.h"
 #include "pin_repository.h"
 #endif /* EFI_PROD_CODE */
@@ -147,7 +148,9 @@ void initMax31855(SPIDriver *drv, egt_cs_array_t max31855_cs) {
 
 	addConsoleAction("egtread", (Void) egtRead);
 
+#if EFI_PROD_CODE
 	turnOnSpi(SPI_DEVICE_3);
+#endif /* EFI_PROD_CODE */
 
 	for (int i = 0; i < MAX31855_CS_COUNT; i++) {
 		if (max31855_cs[i] != GPIO_UNASSIGNED) {

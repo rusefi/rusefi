@@ -52,8 +52,12 @@ void unlockSpi(void);
 #define GET_BOARD_TEST_MODE_VALUE() (!palReadPad(getHwPort(boardConfiguration->boardTestModeJumperPin), getHwPin(boardConfiguration->boardTestModeJumperPin)))
 
 #ifdef __cplusplus
+
+#if EFI_PROD_CODE
 #include "engine.h"
 void initHardware(Logging *logging, Engine *engine);
+#endif /* EFI_PROD_CODE */
+
 #endif /* __cplusplus */
 
 #endif /* HARDWARE_H_ */
