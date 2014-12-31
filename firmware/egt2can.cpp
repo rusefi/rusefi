@@ -1,12 +1,13 @@
 
 #include "main.h"
+#include "engine_configuration.h"
+#include "max31855.h"
+
+egt_cs_array_t max31855_cs;
 
 int main_loop_started;
 
 void firmwareError(const char *fmt, ...) {
-
-}
-
 
 /*
  * Blue LED blinker thread, times are in milliseconds.
@@ -43,6 +44,16 @@ static msg_t Thread2(void *arg) {
 }
 
 
+void initSpiCs(SPIConfig *spiConfig, brain_pin_e csPin) {
+	spiConfig->end_cb = NULL;
+//	ioportid_t port = getHwPort(csPin);
+//	ioportmask_t pin = getHwPin(csPin);
+//	spiConfig->ssport = port;
+//	spiConfig->sspad = pin;
+//	mySetPadMode("chip select", port, pin, PAL_STM32_MODE_OUTPUT);
+}
+
+
 
 void runRusEfi(void) {
 
@@ -60,16 +71,20 @@ void runRusEfi(void) {
   chThdCreateStatic(waThread1, sizeof(waThread1), NORMALPRIO, Thread1, NULL);
   chThdCreateStatic(waThread2, sizeof(waThread2), NORMALPRIO, Thread2, NULL);
 
+  initMax31855(NULL, max31855_cs);
+
   /*
    * Normal main() thread activity, in this demo it does nothing except
    * sleeping in a loop and check the button state, when the button is
    * pressed the test procedure is launched with output on the serial
    * driver 1.
    */
-  while (TRUE) {
+  while (true) {
 //    if (palReadPad(GPIOA, GPIOA_BUTTON))
 //      TestThread(&SD1);
-    chThdSleepMilliseconds(500);
+    chThdSleepMilliseconds(50);
+
+    printPending();
   }
 
 

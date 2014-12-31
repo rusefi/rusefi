@@ -1,7 +1,7 @@
 /**
  * @file efifeatures.h
  *
- * @brief In this header we can configure which firmware modules are used.
+ * @brief In this header we can configure which modules are used for EGT2CAN firmware.
  *
  * @date Dec 23, 2014
  * @author Andrey Belomutskiy, (c) 2012-2014
