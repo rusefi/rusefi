@@ -13,8 +13,6 @@
  */
 
 #include "max31855.h"
-// that's for swap
-#include "tunerstudio_algo.h"
 
 #if EFI_PROD_CODE
 #include "hardware.h"
