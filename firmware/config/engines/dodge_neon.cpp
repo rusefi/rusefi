@@ -249,8 +249,8 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 	/**
 	 * http://rusefi.com/wiki/index.php?title=Manual:Hardware_Frankenso_board
 	 */
-	// Frankenso low out #1: PE6
-	// Frankenso low out #2: PE5
+	// Frankenso low out #1: PE6 main relay
+	// Frankenso low out #2: PE5 alternator field control
 	// Frankenso low out #3: PD7 coolant fan relay
 	// Frankenso low out #4: PC13 idle valve solenoid
 	// Frankenso low out #5: PE3 fuel pump relay
@@ -273,6 +273,8 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
 	boardConfiguration->ignitionPins[2] = GPIOE_8;
 	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
+
+	boardConfiguration->mainRelayPin = GPIOE_6;
 
 	boardConfiguration->idleValvePin = GPIOC_13;
 	boardConfiguration->idleSolenoidFrequency = 300;
@@ -368,7 +370,7 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 	engineConfiguration->fanOffTemperature = 80;
 
 	boardConfiguration->tunerStudioSerialSpeed = 9600;
-	// todo: ALGO = SD
+	engineConfiguration->algorithm = LM_SPEED_DENSITY;
 
 //	engineConfiguration->isCanEnabled = true;
 	boardConfiguration->canTxPin = GPIOB_6;
