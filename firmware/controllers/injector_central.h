@@ -14,6 +14,7 @@
 #include "engine.h"
 
 void initInjectorCentral(Engine *engine);
+void initIgnitionCentral(void);
 bool_t isRunningBenchTest(void);
 int isInjectorEnabled(int cylinderId);
 void assertCylinderId(int cylinderId, const char *msg);

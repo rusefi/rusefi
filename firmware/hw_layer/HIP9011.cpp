@@ -114,19 +114,19 @@ static msg_t ivThread(int param) {
 //		spiExchange(driver, 1, tx_buff, rx_buff);
 
 // BAND_PASS_CMD
-		tx_buff[0] = 0b00000000 | (40 & 0x3F);
+		tx_buff[0] = 0x0 | (40 & 0x3F);
 		spiExchange(driver, 1, tx_buff, rx_buff);
 
-		// Set the gain
-		tx_buff[0] = 0b10000000 | (49 & 0x3F);
+		// Set the gain 0b10000000
+		tx_buff[0] = 0x80 | (49 & 0x3F);
 		spiExchange(driver, 1, tx_buff, rx_buff);
 
-		// Set the integration time constant
-		tx_buff[0] = 0b11000000 | (31 & 0x1F);
+		// Set the integration time constant 0b11000000
+		tx_buff[0] = 0xC0 | (31 & 0x1F);
 		spiExchange(driver, 1, tx_buff, rx_buff);
 
-		// SET_ADVANCED_MODE
-		tx_buff[0] = 0b01110001;
+		// SET_ADVANCED_MODE 0b01110001
+		tx_buff[0] = 0x71;
 		spiExchange(driver, 1, tx_buff, rx_buff);
 
 		spiUnselect(driver);
