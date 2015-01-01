@@ -12,6 +12,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2014
  */
 
+#include "main.h"
 #include "max31855.h"
 
 #include "hardware.h"

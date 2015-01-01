@@ -25,10 +25,10 @@
 #include "board_test.h"
 #endif
 
-#if EFI_PROD_CODE || EFI_SIMULATOR
+#if ! EFI_UNIT_TEST
 #include "eficonsole.h"
 static Logging logging;
-#endif /* EFI_PROD_CODE */
+#endif /* ! EFI_UNIT_TEST */
 
 static int consoleActionCount = 0;
 static TokenCallback consoleActions[CONSOLE_MAX_ACTIONS];

@@ -51,6 +51,7 @@
 							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.1375389811" name="Cross ARM C Compiler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler">
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.include.paths.950368886" name="Include paths (-I)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.include.paths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;..&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../hw_layer/stm32f4&quot;"/>
 									<listOptionValue builtIn="false" value="../chibios/os/kernel/include"/>
 									<listOptionValue builtIn="false" value="&quot;../ext&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../ext_algo&quot;"/>
@@ -111,7 +112,7 @@
 							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.compiler.816044947" name="Cross ARM C++ Compiler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.compiler">
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.cpp.compiler.include.paths.2033499713" name="Include paths (-I)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.cpp.compiler.include.paths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;..&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/hw_layer/stm32f4}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../hw_layer/stm32f4&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../chibios/os/kernel/include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../ext&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../ext_algo&quot;"/>

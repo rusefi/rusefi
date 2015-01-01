@@ -36,7 +36,13 @@
  * This macros is used to hide pieces of the code from unit tests, so it only makes sense in folders exposed to the tests project.
  * This macros is NOT about taking out logging in general.
  */
-#define EFI_PROD_CODE TRUE
+#define EFI_PROD_CODE FALSE
+
+#define CCM_OPTIONAL
+
+#define EFI_EGT TRUE
+
+#define EFI_UNIT_TEST FALSE
 
 #define CONSOLE_MODE_SWITCH_PORT GPIOB
 #define CONSOLE_MODE_SWITCH_PIN 1

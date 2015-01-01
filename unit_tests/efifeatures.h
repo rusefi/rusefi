@@ -12,6 +12,8 @@
 
 #define EFI_GPIO TRUE
 
+#define EFI_UNIT_TEST TRUE
+
 #define EFI_FSIO TRUE
 
 #define EFI_HISTOGRAMS TRUE

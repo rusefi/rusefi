@@ -37,7 +37,7 @@ static Logging logger;
 
 static char LOGGING_BUFFER[1000];
 
-int maxNesting = 0;
+extern int maxNesting;
 
 /*
  static void printIntArray(int array[], int size) {

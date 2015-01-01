@@ -26,8 +26,10 @@ typedef unsigned int time_t;
 
 #include "efifeatures.h"
 #include "rusefi_enums.h"
+#if EFI_PROD_CODE
 #include "io_pins.h"
 #include "auto_generated_enums.h"
+#endif
 #include "obd_error_codes.h"
 #include "error_handling.h"
 
@@ -56,6 +58,8 @@ typedef EventListener event_listener_t;
 typedef Thread thread_t;
 
 #define THD_WORKING_AREA WORKING_AREA
+
+#if EFI_PROD_CODE
 
 /**
  * The following obscurantism is a hack to reduce stack usage, maybe even a questionable performance
@@ -90,5 +94,9 @@ typedef Thread thread_t;
 #define CONFIG(x) persistentState.persistentConfiguration.engineConfiguration.x
 #define ENGINE(x) _engine.x
 #define TRIGGER_SHAPE(x) _engine.triggerShape.x
+
+#else
+#define EXTERN_ENGINE
+#endif
 
 #endif /* GLOBAL_H_ */

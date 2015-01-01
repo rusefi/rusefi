@@ -13,6 +13,7 @@
 #include "engine_configuration.h"
 #include "adc_inputs.h"
 #include "AdcConfiguration.h"
+#include "mpu_util.h"
 
 #include "pin_repository.h"
 #include "engine_math.h"
