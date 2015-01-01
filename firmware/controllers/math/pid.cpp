@@ -41,3 +41,15 @@ float Pid::getValue(float target, float input, float dTime) {
 	return result;
 }
 
+void Pid::updateFactors(float pFactor, float iFactor, float dFactor) {
+  this->pFactor = pFactor;
+  this->iFactor = iFactor;
+  this->dFactor = dFactor;
+  reset();
+}
+
+void Pid::reset(void) {
+  integration = 0;
+  prevError = 0;
+}
+

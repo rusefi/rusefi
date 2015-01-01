@@ -67,7 +67,7 @@ static void showIdleInfo(void) {
 			hwPortname(boardConfiguration->idleValvePin));
 }
 
-static void setIdleControlEnabled(int value, Engine *engine) {
+static void setIdleControlEnabled(int value) {
 	engineConfiguration->idleMode = value ? IM_AUTO : IM_MANUAL;
 	showIdleInfo();
 }
@@ -102,9 +102,9 @@ static msg_t ivThread(int param) {
 		if (engineConfiguration->idleMode != IM_AUTO)
 			continue;
 
-		int nowSec = getTimeNowSeconds();
+		efitimems_t now = currentTimeMillis();
 
-		int newValue = getIdle(&idle, getRpm(), nowSec PASS_ENGINE_PARAMETER);
+		int newValue = getIdle(&idle, getRpm(), now PASS_ENGINE_PARAMETER);
 
 		if (currentIdleValve != newValue) {
 			currentIdleValve = newValue;
@@ -152,7 +152,7 @@ void startIdleThread(Engine *engine) {
 	addConsoleAction("idleinfo", showIdleInfo);
 	addConsoleActionI("set_idle_rpm", setIdleRpmAction);
 	addConsoleActionI("set_idle_pwm", setIdleValvePwm);
-	addConsoleActionIP("set_idle_enabled", (VoidIntVoidPtr) setIdleControlEnabled, engine);
+	addConsoleActionI("set_idle_enabled", (VoidInt) setIdleControlEnabled);
 }
 
 #endif
