@@ -15,6 +15,11 @@
 #include "table_helper.h"
 #include "engine.h"
 
+// todo: this value is too low for 6 cyl engine, get it back to 60
+#define OUTPUT_SIGNAL_MAX_SIZE 90
+
+typedef ArrayList<OutputSignal, OUTPUT_SIGNAL_MAX_SIZE> OutputSignalList;
+
 #define INJECTOR_PIN_BY_INDEX(index) (io_pin_e) ((int) INJECTOR_1_OUTPUT + (index))
 
 void findTriggerPosition(

@@ -13,7 +13,7 @@
 
 void initSettings(engine_configuration_s *engineConfiguration);
 void printSpiState(Logging *logger, board_configuration_s *boardConfiguration);
-void printConfiguration(engine_configuration_s *engineConfiguration, engine_configuration2_s *engineConfiguration2);
+void printConfiguration(engine_configuration_s *engineConfiguration);
 
 #ifdef __cplusplus
 extern "C"

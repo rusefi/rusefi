@@ -383,7 +383,7 @@ void initEngineContoller(Engine *engine) {
 		/**
 		 * This method initialized the main listener which actually runs injectors & ignition
 		 */
-		initMainEventListener(engine, engineConfiguration2);
+		initMainEventListener(engine);
 	}
 #endif /* EFI_ENGINE_CONTROL */
 

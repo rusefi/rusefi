@@ -559,7 +559,6 @@ static void setCustomEngineConfiguration(engine_configuration_s *engineConfigura
 
 void resetConfigurationExt(Logging * logger, engine_type_e engineType, Engine *engine) {
 	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
-	engine_configuration2_s *engineConfiguration2 = engine->engineConfiguration2;
 	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 	/**
 	 * Let's apply global defaults first
@@ -677,7 +676,6 @@ engine_configuration2_s::engine_configuration2_s() {
 
 void applyNonPersistentConfiguration(Logging * logger, Engine *engine) {
 	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
-	engine_configuration2_s *engineConfiguration2 = engine->engineConfiguration2;
 // todo: this would require 'initThermistors() to re-establish a reference, todo: fix
 //	memset(engineConfiguration2, 0, sizeof(engine_configuration2_s));
 #if EFI_PROD_CODE

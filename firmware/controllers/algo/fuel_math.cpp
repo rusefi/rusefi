@@ -43,6 +43,8 @@
 
 EXTERN_ENGINE;
 
+static Map3D1616 fuelMap;
+
 float getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	if (engine->engineConfiguration->algorithm == LM_SPEED_DENSITY) {
 		return getSpeedDensityFuel(engine, rpm);
@@ -97,8 +99,6 @@ float getRunningFuel(float baseFuelMs, int rpm DECLARE_ENGINE_PARAMETER_S) {
 
 	return baseFuelMs * cltCorrection * iatCorrection;
 }
-
-static Map3D1616 fuelMap;
 
 /**
  * @brief	Injector lag correction

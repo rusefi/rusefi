@@ -41,10 +41,6 @@ void initMapAdjuster(void) {
 	avgFill(&adjustments, 1, 1);
 }
 
-float maxF(float i1, float i2) {
-	return i1 > i2 ? i1 : i2;
-}
-
 static int adjustCell(int i, int j, void (*callback)(int, float, float)) {
 	int count = afrs.counts[i][j];
 	if (count < HOW_MANY_MEASURMENTS_ARE_NEEDED)

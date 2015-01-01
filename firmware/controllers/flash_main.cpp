@@ -32,8 +32,6 @@ extern persistent_config_container_s persistentState;
 
 extern engine_configuration_s *engineConfiguration;
 
-extern engine_configuration2_s * engineConfiguration2;
-
 #define FLASH_ADDR 0x08060000
 
 #define PERSISTENT_SIZE sizeof(persistent_config_container_s)

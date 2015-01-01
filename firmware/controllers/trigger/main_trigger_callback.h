@@ -23,12 +23,12 @@
 
 class MainTriggerCallback {
 public:
-	void init(Engine *engine, engine_configuration2_s *engineConfiguration2);
+	void init(Engine *engine);
 
 	Engine *engine;
 
 };
-void initMainEventListener(Engine *engine, engine_configuration2_s *engineConfiguration2);
+void initMainEventListener(Engine *engine);
 void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECLARE_ENGINE_PARAMETER_S);
 #endif
 

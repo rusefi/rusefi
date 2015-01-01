@@ -138,11 +138,11 @@ static void test1995FordInline6TriggerDecoder(void) {
 
 	IgnitionEventList *ecl = &eth.ec2.ignitionEvents[0];
 	assertEqualsM("ignition events size", 6, ecl->size);
-	assertEqualsM("event index", 0, ecl->events[0].dwellPosition.eventIndex);
-	assertEquals(0, ecl->events[0].dwellPosition.angleOffset);
+	assertEqualsM("event index", 0, ecl->elements[0].dwellPosition.eventIndex);
+	assertEquals(0, ecl->elements[0].dwellPosition.angleOffset);
 
-	assertEqualsM("event index", 10, ecl->events[5].dwellPosition.eventIndex);
-	assertEquals(0, ecl->events[5].dwellPosition.angleOffset);
+	assertEqualsM("event index", 10, ecl->elements[5].dwellPosition.eventIndex);
+	assertEquals(0, ecl->elements[5].dwellPosition.angleOffset);
 
 	TriggerState state;
 
@@ -418,7 +418,7 @@ static void testRpmCalculator(void) {
 	assertEqualsM("index #1", 15, eth.triggerCentral.triggerState.getCurrentIndex());
 
 	static MainTriggerCallback triggerCallbackInstance;
-	triggerCallbackInstance.init(&eth.engine, ec2);
+	triggerCallbackInstance.init(&eth.engine);
 	eth.triggerCentral.addEventListener(mainTriggerCallback, "main loop", &eth.engine);
 
 //	engine.rpmCalculator = &eth.rpmState;
