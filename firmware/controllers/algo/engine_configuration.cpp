@@ -673,13 +673,6 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType, Engine *e
 }
 
 engine_configuration2_s::engine_configuration2_s() {
-	engineConfiguration = NULL;
-	stopEngineRequestTimeNt = 0;
-}
-
-void engine_configuration2_s::precalc() {
-	sparkTable.init(DWELL_CURVE_SIZE, sparkAtable, sparkBtable);
-	sparkTable.preCalc(engineConfiguration->sparkDwellBins, engineConfiguration->sparkDwell);
 }
 
 void applyNonPersistentConfiguration(Logging * logger, Engine *engine) {
