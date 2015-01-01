@@ -1,8 +1,8 @@
 /*
- * test_idle_controller.c
+ * @file test_idle_controller.cpp
  *
- *  Created on: Oct 17, 2013
- *      Author: Andrey
+ * @date Oct 17, 2013
+ * @author Andrey Belomutskiy, (c) 2012-2014
  */
 
 #include <stdio.h>
