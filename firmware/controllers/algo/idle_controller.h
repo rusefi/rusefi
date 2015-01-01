@@ -13,7 +13,7 @@
 // 600‰ duty cycle by default
 #define DEFAULT_IDLE_DUTY 600
 
-#define IDLE_PERIOD 1
+#define IDLE_PERIOD 1000
 
 // Per mil (1/1000) values
 #define MIN_IDLE 100
@@ -28,11 +28,11 @@ public:
 	int targetRpmRangeLeft, targetRpmRangeRight;
 
 	int value;
-	int timeOfLastIdleChange;
+	efitimems_t timeOfLastIdleChange;
 };
 
 void idleInit(IdleValveState *idle DECLARE_ENGINE_PARAMETER_S);
-int getIdle(IdleValveState *idle, int currentRpm, int time DECLARE_ENGINE_PARAMETER_S);
+int getIdle(IdleValveState *idle, int currentRpm, efitimems_t now DECLARE_ENGINE_PARAMETER_S);
 void setIdleRpm(IdleValveState *idle, int targetRpm);
 
 void idleDebug(const char *msg, int value);

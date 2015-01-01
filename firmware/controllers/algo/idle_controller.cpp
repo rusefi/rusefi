@@ -38,7 +38,7 @@ void setIdleRpm(IdleValveState *idle, int targetRpm) {
 /**
  * @brief	sets new idle valve duty cycle: checks the bounds and reports new value
  */
-static int setNewValue(IdleValveState *idle, int currentRpm, int now, const char * msg, int newValue) {
+static int setNewValue(IdleValveState *idle, int currentRpm, efitimems_t now, const char * msg, int newValue) {
 	newValue = maxI(newValue, MIN_IDLE);
 	newValue = minI(newValue, MAX_IDLE);
 
@@ -62,9 +62,9 @@ static int changeValue(IdleValveState *idle, int currentRpm, int now, const char
 }
 
 /**
- * now - current time in seconds
+ * now - current time in milliseconds
  */
-int getIdle(IdleValveState *idle, int currentRpm, int now DECLARE_ENGINE_PARAMETER_S) {
+int getIdle(IdleValveState *idle, int currentRpm, efitimems_t now DECLARE_ENGINE_PARAMETER_S) {
 	if (currentRpm == 0 || isCranking()) {
 		return setNewValue(idle, currentRpm, now, "cranking value: ", DEFAULT_IDLE_DUTY);
 	}
