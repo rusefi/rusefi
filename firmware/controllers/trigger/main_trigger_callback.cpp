@@ -390,7 +390,9 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECL
 #endif /* EFI_HISTOGRAMS */
 }
 
+#if EFI_PROD_CODE
 #include "wave_chart.h"
+#endif
 
 static void showTriggerHistogram(void) {
 	printAllCallbacksHistogram();

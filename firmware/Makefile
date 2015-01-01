@@ -90,7 +90,7 @@ include $(CHIBIOS)/os/various/fatfs_bindings/fatfs.mk
 include console/tunerstudio/tunerstudio.mk
 include ext/ext.mk
 include hw_layer/hw_layer.mk
-include emulation/development.mk
+include development/development.mk
 include controllers/controllers.mk
 
 include $(PROJECT_DIR)/util/util.mk
@@ -121,7 +121,7 @@ CSRC = $(PORTSRC) \
 	$(CONSOLESRC) \
 	$(CONSOLEUTILSRC) \
 	$(HALSRC) \
-	$(EMULATIONSRC) \
+	$(DEV_SRC) \
 	$(HW_LAYER_EMS) \
 	$(CONTROLLERSSRC) \
 	$(CONTROLLERS_ALGO_SRC) \
@@ -139,7 +139,7 @@ CSRC = $(PORTSRC) \
 CPPSRC = $(CHCPPSRC) \
 	$(TRIGGER_SRC_CPP) \
 	$(TRIGGER_DECODERS_SRC_CPP) \
-	$(EMULATIONSRC_CPP) \
+	$(DEV_SRC_CPP) \
 	$(CONTROLLERS_ALGO_SRC_CPP) \
 	$(SYSTEMSRC_CPP) \
 	$(ENGINES_SRC_CPP) \
@@ -196,9 +196,9 @@ INCDIR = $(PORTINC) $(KERNINC) $(TESTINC) \
 	hw_layer/algo \
 	hw_layer/lcd \
 	hw_layer/stm32f4 \
-	emulation \
-	emulation/hw_layer \
-	emulation/test \
+	development \
+	development/hw_layer \
+	development/test \
 	controllers \
 	controllers/sensors \
 	controllers/system \

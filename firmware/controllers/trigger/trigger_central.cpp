@@ -16,7 +16,6 @@
 #include "listener_array.h"
 #include "data_buffer.h"
 #include "histogram.h"
-#include "wave_chart.h"
 #include "pwm_generator_logic.h"
 #include "efilib2.h"
 
@@ -27,6 +26,7 @@
 #endif
 
 #if EFI_WAVE_CHART
+#include "wave_chart.h"
 WaveChart waveChart;
 #endif /* EFI_WAVE_CHART */
 
