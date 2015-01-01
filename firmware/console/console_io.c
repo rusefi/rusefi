@@ -122,7 +122,7 @@ bool isSerialOverUart(void) {
 	return is_serial_over_uart;
 }
 
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || EFI_EGT
 
 static SerialConfig serialConfig = { SERIAL_SPEED, 0, USART_CR2_STOP1_BITS | USART_CR2_LINEN, 0 };
 
@@ -138,6 +138,10 @@ SerialDriver * getConsoleChannel(void) {
 #endif
 }
 
+
+#endif /* EFI_PROD_CODE || EFI_EGT */
+
+#if EFI_PROD_CODE
 bool isConsoleReady(void) {
 	if (isSerialOverUart()) {
 		return isSerialConsoleStarted;
@@ -145,8 +149,9 @@ bool isConsoleReady(void) {
 		return is_usb_serial_ready();
 	}
 }
-
 #endif /* EFI_PROD_CODE */
+
+
 
 static THD_WORKING_AREA(consoleThreadStack, 2 * UTILITY_THREAD_STACK_SIZE);
 static msg_t consoleThreadThreadEntryPoint(void *arg) {
