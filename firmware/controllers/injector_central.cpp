@@ -20,7 +20,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-// todo: merge with ignition_central and rename this file?
+// todo: this file?
 
 #include "main.h"
 
@@ -42,6 +42,14 @@ EXTERN_ENGINE
 static bool_t isRunningBench = false;
 
 static int is_injector_enabled[MAX_INJECTOR_COUNT];
+
+void initIgnitionCentral(void) {
+
+	for (int i = 0; i < engineConfiguration->cylindersCount; i++) {
+		io_pin_e pin = (io_pin_e)((int)SPARKOUT_1_OUTPUT + i);
+		outputPinRegisterExt2(getPinName(pin), pin, boardConfiguration->ignitionPins[i], &boardConfiguration->ignitionPinMode);
+	}
+}
 
 bool_t isRunningBenchTest(void) {
 	return isRunningBench;

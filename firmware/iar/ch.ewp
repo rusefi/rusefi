@@ -2470,12 +2470,6 @@
       <name>$PROJ_DIR$\..\controllers\idle_thread.h</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\controllers\ignition_central.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\controllers\ignition_central.h</name>
-    </file>
-    <file>
       <name>$PROJ_DIR$\..\controllers\injector_central.cpp</name>
     </file>
     <file>
@@ -2498,12 +2492,6 @@
     </file>
     <file>
       <name>$PROJ_DIR$\..\controllers\map_averaging.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\controllers\map_multiplier_thread.cpp</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\controllers\map_multiplier_thread.h</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\controllers\obd2viaCAN.c</name>
@@ -2692,7 +2680,7 @@
       <name>$PROJ_DIR$\..\hw_layer\io_pins.c</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\hw_layer\max31855.c</name>
+      <name>$PROJ_DIR$\..\hw_layer\max31855.cpp</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\hw_layer\max31855.h</name>

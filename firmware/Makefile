@@ -90,7 +90,7 @@ include $(CHIBIOS)/os/various/fatfs_bindings/fatfs.mk
 include console/tunerstudio/tunerstudio.mk
 include ext/ext.mk
 include hw_layer/hw_layer.mk
-include emulation/emulation.mk
+include emulation/development.mk
 include controllers/controllers.mk
 
 include $(PROJECT_DIR)/util/util.mk
