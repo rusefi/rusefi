@@ -10,41 +10,35 @@
 #ifndef IDLE_CONTROLLER_H_
 #define IDLE_CONTROLLER_H_
 
-// 600‰ duty cycle by default
-#define DEFAULT_IDLE_DUTY 600
+// 60% duty cycle by default
+#define DEFAULT_IDLE_DUTY 60
 
 #define IDLE_PERIOD 1000
 
-// Per mil (1/1000) values
-#define MIN_IDLE 100
-#define MAX_IDLE 900
-#define IDLE_INCREASE_STEP 5
-#define IDLE_DECREASE_STEP 5
+// Percent values
+#define MIN_IDLE 10.0f
+#define MAX_IDLE 90.0f
+#define IDLE_INCREASE_STEP 0.5f
+#define IDLE_DECREASE_STEP 0.5f
+#define IDLE_INCREASE_SMALL_STEP 0.1F
+#define IDLE_DECREASE_SMALL_STEP 0.1F
 
 class IdleValveState {
 public:
+	IdleValveState();
+	void init(DECLARE_ENGINE_PARAMETER_F);
+	percent_t getIdle(int currentRpm, efitimems_t now DECLARE_ENGINE_PARAMETER_S);
+
 	int time;
 
 	int targetRpmRangeLeft, targetRpmRangeRight;
 
-	int value;
+	percent_t value;
 	efitimems_t timeOfLastIdleChange;
 };
 
-void idleInit(IdleValveState *idle DECLARE_ENGINE_PARAMETER_S);
-int getIdle(IdleValveState *idle, int currentRpm, efitimems_t now DECLARE_ENGINE_PARAMETER_S);
 void setIdleRpm(IdleValveState *idle, int targetRpm);
 
-void idleDebug(const char *msg, int value);
-
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
-
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+void idleDebug(const char *msg, percent_t value);
 
 #endif /* IDLE_CONTROLLER_H_ */
