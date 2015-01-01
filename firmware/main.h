@@ -30,8 +30,6 @@ extern "C"
 #include "datalogging.h"
 #include "chprintf.h"
 
-#include "stm32f4xx_specific.h"
-
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

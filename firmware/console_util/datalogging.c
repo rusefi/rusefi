@@ -82,7 +82,9 @@ static INLINE bool validateBuffer(Logging *logging, uint32_t extraLen) {
 	}
 
 	if (remainingSize(logging) < extraLen + 1) {
+#if EFI_PROD_CODE
 		warning(OBD_PCM_Processor_Fault, "buffer overflow %s", logging->name);
+#endif
 		return true;
 	}
 	return false;

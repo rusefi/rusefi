@@ -48,6 +48,8 @@ static StepperMotor iacMotor;
 
 static Mutex spiMtx;
 
+int maxNesting = 0;
+
 #if HAL_USE_SPI || defined(__DOXYGEN__)
 static bool isSpiInitialized[5] = { false, false, false, false, false };
 

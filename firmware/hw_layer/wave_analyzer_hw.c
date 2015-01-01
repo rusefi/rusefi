@@ -7,6 +7,7 @@
  */
 
 #include "wave_analyzer_hw.h"
+#include "mpu_util.h"
 
 #if EFI_WAVE_ANALYZER || defined(__DOXYGEN__)
 
