@@ -10,8 +10,6 @@
 
 #include "engine_configuration.h"
 
-#ifdef __cplusplus
-
 #include "ec2.h"
 #include "trigger_structure.h"
 #include "table_helper.h"
@@ -24,12 +22,8 @@ void findTriggerPosition(
 
 int isInjectionEnabled(engine_configuration_s *engineConfiguration);
 
-#endif
-
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
+void initializeIgnitionActions(float advance, float dwellAngle,
+		IgnitionEventList *list DECLARE_ENGINE_PARAMETER_S);
 
 /**
  * @brief Shifts angle into the [0..720) range for four stroke and [0..360) for two stroke
@@ -74,9 +68,5 @@ void setTimingRpmBin(engine_configuration_s *engineConfiguration, float l, float
 void setTimingLoadBin(engine_configuration_s *engineConfiguration, float l, float r);
 
 void setSingleCoilDwell(engine_configuration_s *engineConfiguration);
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
 
 #endif /* ENGINE_MATH_H_ */

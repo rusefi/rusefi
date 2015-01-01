@@ -1,5 +1,5 @@
 /**
- * @file	signal_executor.c
+ * @file	signal_executor.cpp
  *
  * todo: we should split this file into two:
  * one for pure scheduling and another one for signal output which would
@@ -34,8 +34,10 @@
 
 EXTERN_ENGINE;
 
+#if EFI_WAVE_CHART
 #include "wave_chart.h"
 extern WaveChart waveChart;
+#endif
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
 static Logging logger;

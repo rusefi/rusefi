@@ -66,10 +66,5 @@ public:
 	uint64_t stopEngineRequestTimeNt;
 };
 
-void initializeIgnitionActions(float advance, float dwellAngle,
-		IgnitionEventList *list DECLARE_ENGINE_PARAMETER_S);
-
-void setDefaultNonPersistentConfiguration(engine_configuration2_s *engineConfiguration2);
-void printConfiguration(engine_configuration_s *engineConfiguration, engine_configuration2_s *engineConfiguration2);
 
 #endif /* EC2_H_ */

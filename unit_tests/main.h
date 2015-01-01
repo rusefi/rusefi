@@ -12,13 +12,6 @@
 #include <stdio.h>
 #include <math.h>
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-
-#define CH_FREQUENCY 1000
-
 #include "global.h"
 #include "error_handling.h"
 #include "efifeatures.h"
@@ -27,6 +20,13 @@ extern "C"
 #include "efitime.h"
 
 #include "boards.h"
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
+#define CH_FREQUENCY 1000
 
 typedef int bool_t;
 

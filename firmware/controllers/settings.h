@@ -9,16 +9,17 @@
 #ifndef INJECTOR_CONTROL_H_
 #define INJECTOR_CONTROL_H_
 
-#include "engine_configuration.h"
+#include "engine.h"
+
 void initSettings(engine_configuration_s *engineConfiguration);
+void printSpiState(Logging *logger, board_configuration_s *boardConfiguration);
+void printConfiguration(engine_configuration_s *engineConfiguration, engine_configuration2_s *engineConfiguration2);
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif /* __cplusplus */
 
-void printSpiState(Logging *logger, board_configuration_s *boardConfiguration);
-void pokeControl(void);
 void setEngineType(int value);
 
 #ifdef __cplusplus
