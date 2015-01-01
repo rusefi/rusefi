@@ -10,6 +10,7 @@
 
 #include "global.h"
 #include "signal_executor.h"
+#include "fl_stack.h"
 
 #define MAX_EVENT_COUNT 80
 
@@ -51,38 +52,8 @@ struct IgnitionEvent_struct {
 	char *name;
 };
 
-template <class Type, int Dimention>
-class ArrayList {
-public:
-	int size;
-	Type events[Dimention];
-	void resetEventList(void);
-	Type *getNextActuatorEvent(void);
-};
-
-template <class Type, int Dimention>
-void ArrayList< Type, Dimention>::resetEventList(void) {
-	size = 0;
-}
-
-template <class Type, int Dimention>
-Type * ArrayList< Type, Dimention>::getNextActuatorEvent(void) {
-	efiAssert(size < Dimention, "registerActuatorEvent() too many events", (Type *)NULL);
-	return &events[size++];
-}
-
 typedef ArrayList<InjectionEvent, MAX_EVENT_COUNT> ActuatorEventList;
 
 typedef ArrayList<IgnitionEvent, MAX_EVENT_COUNT> IgnitionEventList;
-
-///**
-// * this is an intermediate implementation of flexible event handling.
-// *
-// * In the future implementation we will drop the 'eventIndex' parameter and everything will be
-// * angle-driven. But that's just a plan for next iteration.
-// *
-// * @param	actuator injector or coil OutputSignal
-// */
-//void registerActuatorEvent(ActuatorEventList *list, int eventIndex, OutputSignal *actuator, float angleOffset);
 
 #endif /* EVENT_REGISTRY_H_ */

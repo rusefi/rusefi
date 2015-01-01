@@ -8,7 +8,6 @@
 #include "event_registry.h"
 #include "test_event_registry.h"
 #include "main.h"
-#include "OutputSignalList.h"
 
 static ActuatorEventList eventList;
 static ActuatorEventList result;

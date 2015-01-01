@@ -87,7 +87,7 @@ void rusEfiFunctionalTest(void) {
 
 	initTriggerEmulator(engine);
 
-	initMainEventListener(engine, engineConfiguration2);
+	initMainEventListener(engine);
 
 	initTriggerCentral(engine);
 

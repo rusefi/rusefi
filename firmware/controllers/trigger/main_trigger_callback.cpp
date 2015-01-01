@@ -170,7 +170,7 @@ static ALWAYS_INLINE void handleFuel(uint32_t eventIndex, int rpm DECLARE_ENGINE
 		return;
 
 	for (int i = 0; i < source->size; i++) {
-		InjectionEvent *event = &source->events[i];
+		InjectionEvent *event = &source->elements[i];
 		if (event->position.eventIndex != eventIndex)
 			continue;
 		handleFuelInjectionEvent(event, rpm PASS_ENGINE_PARAMETER);
@@ -267,7 +267,7 @@ static ALWAYS_INLINE void handleSpark(uint32_t eventIndex, int rpm,
 
 //	scheduleSimpleMsg(&logger, "eventId spark ", eventIndex);
 	for (int i = 0; i < list->size; i++) {
-		IgnitionEvent *event = &list->events[i];
+		IgnitionEvent *event = &list->elements[i];
 		if (event->dwellPosition.eventIndex != eventIndex)
 			continue;
 		handleSparkEvent(eventIndex, event, rpm PASS_ENGINE_PARAMETER);
@@ -402,7 +402,7 @@ static void showTriggerHistogram(void) {
 #endif
 }
 
-void MainTriggerCallback::init(Engine *engine, engine_configuration2_s *engineConfiguration2) {
+void MainTriggerCallback::init(Engine *engine) {
 	efiAssertVoid(engine!=NULL, "engine NULL");
 	this->engine = engine;
 }
@@ -417,10 +417,10 @@ static void showMainInfo(Engine *engine) {
 #endif
 }
 
-void initMainEventListener(Engine *engine, engine_configuration2_s *engineConfiguration2) {
+void initMainEventListener(Engine *engine) {
 	efiAssertVoid(engine!=NULL, "null engine");
 
-	mainTriggerCallbackInstance.init(engine, engineConfiguration2);
+	mainTriggerCallbackInstance.init(engine);
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	addConsoleAction("performanceinfo", showTriggerHistogram);

@@ -64,4 +64,24 @@ int FLStack<T, MAXSIZE>::size() {
 	return index;
 }
 
+template <class Type, int Dimention>
+class ArrayList {
+public:
+	int size;
+	Type elements[Dimention];
+	void reset(void);
+	Type *add(void);
+};
+
+template <class Type, int Dimention>
+void ArrayList< Type, Dimention>::reset(void) {
+	size = 0;
+}
+
+template <class Type, int Dimention>
+Type * ArrayList< Type, Dimention>::add(void) {
+	efiAssert(size < Dimention, "add() too many elements", (Type *)NULL);
+	return &elements[size++];
+}
+
 #endif /* FL_STACK_H_ */

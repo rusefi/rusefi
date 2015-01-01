@@ -47,8 +47,7 @@ void TriggerEmulatorHelper::handleEmulatorCallback(PwmConfig *state, int stateIn
 	//	print("hello %d\r\n", chTimeNow());
 }
 
-extern engine_configuration_s *engineConfiguration;
-extern engine_configuration2_s *engineConfiguration2;
+EXTERN_ENGINE;
 
 /*
  * todo: should we simply re-use instances used by trigger_decoder?

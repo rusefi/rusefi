@@ -65,7 +65,8 @@ void printSpiState(Logging *logger, board_configuration_s *boardConfiguration) {
 
 extern board_configuration_s *boardConfiguration;
 
-static void printOutputs(engine_configuration_s *engineConfiguration, engine_configuration2_s *engineConfiguration2) {
+static void printOutputs(engine_configuration_s *engineConfiguration) {
+	// engine_configuration2_s *engineConfiguration2
 	scheduleMsg(&logger, "injectionPins: mode %s", pinModeToString(boardConfiguration->injectionPinMode));
 	for (int i = 0; i < engineConfiguration->cylindersCount; i++) {
 		brain_pin_e brainPin = boardConfiguration->injectionPins[i];
@@ -93,7 +94,7 @@ static void printOutputs(engine_configuration_s *engineConfiguration, engine_con
 /**
  * @brief	Prints current engine configuration to human-readable console.
  */
-void printConfiguration(engine_configuration_s *engineConfiguration, engine_configuration2_s *engineConfiguration2) {
+void printConfiguration(engine_configuration_s *engineConfiguration) {
 
 	scheduleMsg(&logger, "Template %s/%d trigger %s/%s", getConfigurationName(engineConfiguration->engineType),
 			engineConfiguration->engineType, getTrigger_type_e(engineConfiguration->triggerConfig.triggerType),
@@ -162,7 +163,7 @@ void printConfiguration(engine_configuration_s *engineConfiguration, engine_conf
 
 	scheduleMsg(&logger, "analogInputDividerCoefficient: %f", engineConfiguration->analogInputDividerCoefficient);
 
-	printOutputs(engineConfiguration, engineConfiguration2);
+	printOutputs(engineConfiguration);
 
 	scheduleMsg(&logger, "boardTestModeJumperPin: %s/nesting=%d", hwPortname(boardConfiguration->boardTestModeJumperPin),
 			maxNesting);
@@ -184,7 +185,7 @@ extern engine_configuration_s *engineConfiguration;
 extern engine_configuration2_s *engineConfiguration2;
 
 static void doPrintConfiguration(Engine *engine) {
-	printConfiguration(engineConfiguration, engine->engineConfiguration2);
+	printConfiguration(engineConfiguration);
 }
 
 EXTERN_ENGINE;

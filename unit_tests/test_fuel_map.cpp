@@ -12,7 +12,6 @@
 #include "trigger_structure.h"
 #include "allsensors.h"
 #include "engine_math.h"
-#include "OutputSignalList.h"
 #include "ec2.h"
 #include "trigger_decoder.h"
 #include "engine_test_helper.h"
@@ -177,18 +176,18 @@ void testAngleResolver(void) {
 
 	OutputSignalList list;
 
-	ae.resetEventList();
+	ae.reset();
 	printf("*************************************************** testAngleResolver 0\r\n");
-	findTriggerPosition(&ae.getNextActuatorEvent()->position, 53 - 175 PASS_ENGINE_PARAMETER);
+	findTriggerPosition(&ae.add()->position, 53 - 175 PASS_ENGINE_PARAMETER);
 	assertEqualsM("size", 1, ae.size);
-	assertEquals(1, ae.events[0].position.eventIndex);
-	assertEquals(3.1588, ae.events[0].position.angleOffset);
+	assertEquals(1, ae.elements[0].position.eventIndex);
+	assertEquals(3.1588, ae.elements[0].position.angleOffset);
 
 	printf("*************************************************** testAngleResolver 2\r\n");
-	ae.resetEventList();
-	findTriggerPosition(&ae.getNextActuatorEvent()->position, 51 + 180 - 175 PASS_ENGINE_PARAMETER);
-	assertEquals(2, ae.events[0].position.eventIndex);
-	assertEquals(112.3495, ae.events[0].position.angleOffset);
+	ae.reset();
+	findTriggerPosition(&ae.add()->position, 51 + 180 - 175 PASS_ENGINE_PARAMETER);
+	assertEquals(2, ae.elements[0].position.eventIndex);
+	assertEquals(112.3495, ae.elements[0].position.angleOffset);
 }
 
 void testPinHelper(void) {

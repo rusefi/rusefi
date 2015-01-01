@@ -205,12 +205,7 @@ void printAllCallbacksHistogram(void) {
 #endif
 }
 
-#if EFI_PROD_CODE || EFI_SIMULATOR
-// todo: eliminate this extern which is needed by 'triggerInfo'
-extern engine_configuration_s *engineConfiguration;
-extern engine_configuration2_s * engineConfiguration2;
-extern board_configuration_s *boardConfiguration;
-#endif
+EXTERN_ENGINE;
 
 static void triggerShapeInfo(Engine *engine) {
 #if EFI_PROD_CODE || EFI_SIMULATOR

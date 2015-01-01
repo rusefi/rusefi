@@ -25,7 +25,6 @@
 #include "interpolation.h"
 #include "allsensors.h"
 #include "io_pins.h"
-#include "OutputSignalList.h"
 #include "trigger_decoder.h"
 #include "event_registry.h"
 #include "efiGpio.h"
@@ -101,14 +100,13 @@ void initializeIgnitionActions(float advance, float dwellAngle, IgnitionEventLis
 
 	efiAssertVoid(engineConfiguration->cylindersCount > 0, "cylindersCount");
 
-	list->resetEventList();
+	list->reset();
 
 	for (int i = 0; i < CONFIG(cylindersCount); i++) {
 		float localAdvance = advance + ENGINE(angleExtra[i]);
 		io_pin_e pin = ENGINE(ignitionPin[i]);
 
-		// todo efiAssertVoid(list->size)
-		IgnitionEvent *event = &list->events[list->size++];
+		IgnitionEvent *event = list->add();
 
 		if (!isPinAssigned(pin)) {
 			// todo: extact method for this index math
@@ -129,8 +127,10 @@ void FuelSchedule::registerInjectionEvent(io_pin_e pin, float angle, bool_t isSi
 		warning(OBD_PCM_Processor_Fault, "no_pin_inj #%d", (int) pin - (int) INJECTOR_1_OUTPUT + 1);
 	}
 
-	InjectionEvent *ev = list->getNextActuatorEvent();
-	OutputSignal *actuator = injectonSignals.add(pin);
+	InjectionEvent *ev = list->add();
+	OutputSignal *actuator = injectonSignals.add();
+	initOutputSignal(actuator, pin);
+
 
 	ev->isSimultanious = isSimultanious;
 
@@ -157,7 +157,7 @@ void FuelSchedule::clear() {
 void FuelSchedule::addFuelEvents(injection_mode_e mode DECLARE_ENGINE_PARAMETER_S) {
 	ActuatorEventList *list = &events;
 	;
-	list->resetEventList();
+	list->reset();
 
 	float baseAngle = engineConfiguration->globalTriggerAngleOffset + engineConfiguration->injectionOffset;
 
@@ -342,7 +342,7 @@ void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_F) {
 		triggerIndexByAngle[angle] = findAngleIndex(angle PASS_ENGINE_PARAMETER);
 	}
 
-	injectonSignals.clear();
+	injectonSignals.reset();
 	engineConfiguration2->crankingInjectionEvents.addFuelEvents(
 			engineConfiguration->crankingInjectionMode PASS_ENGINE_PARAMETER);
 	engineConfiguration2->injectionEvents.addFuelEvents(engineConfiguration->injectionMode PASS_ENGINE_PARAMETER);
