@@ -45,6 +45,12 @@ Engine::Engine() {
 	lastTriggerEventTimeNt = 0;
 	isCylinderCleanupMode = false;
 	engineCycleEventCount = 0;
+	stopEngineRequestTimeNt = 0;
+}
+
+void Engine::precalc(engine_configuration_s *engineConfiguration) {
+	sparkTable.init(DWELL_CURVE_SIZE, sparkAtable, sparkBtable);
+	sparkTable.preCalc(engineConfiguration->sparkDwellBins, engineConfiguration->sparkDwell);
 }
 
 void Engine::init() {
