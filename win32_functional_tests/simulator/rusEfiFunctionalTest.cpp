@@ -57,7 +57,7 @@ int getRemainingStack(Thread *otp) {
 	return 99999;
 }
 
-void idleDebug(const char *msg, int value) {
+void idleDebug(const char *msg, percent_t value) {
 }
 
 float getMap(void) {

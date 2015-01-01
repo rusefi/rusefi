@@ -20,6 +20,11 @@
  */
 typedef uint32_t efitimems_t;
 
+/**
+ * numeric value from 0 to 100
+ */
+typedef float percent_t;
+
 #ifdef __cplusplus
 extern "C"
 {

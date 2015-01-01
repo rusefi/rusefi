@@ -24,10 +24,11 @@
 #include "test_logic_expression.h"
 #include "engine_configuration.h"
 
+#include "test_idle_controller.h"
+
 extern "C"
 {
 #include "map_resize.h"
-#include "test_idle_controller.h"
 #include "test_event_registry.h"
 #include "test_signal_executor.h"
 #include "test_util.h"
@@ -137,8 +138,10 @@ int main(void) {
 
 	testFLStack();
 
+	testIdleController();
+
 	//	resizeMap();
-	printf("Success 20131216\r\n");
+	printf("Success 20150101\r\n");
 	return EXIT_SUCCESS;
 }
 
