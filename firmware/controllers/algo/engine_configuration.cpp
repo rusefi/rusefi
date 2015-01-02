@@ -422,7 +422,7 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	boardConfiguration->fanPin = GPIOC_15;
 	boardConfiguration->fanPinMode = OM_DEFAULT;
 
-	boardConfiguration->idleSwitchPin = GPIOC_8;
+	boardConfiguration->idleSwitchPin = GPIO_UNASSIGNED;
 
 	boardConfiguration->triggerSimulatorPins[0] = GPIOD_1;
 	boardConfiguration->triggerSimulatorPins[1] = GPIOD_2;
@@ -436,6 +436,7 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 
 	engineConfiguration->hip9011SpiDevice = SPI_DEVICE_2;
 
+	engineConfiguration->isGpsEnabled = false;
 	boardConfiguration->gps_rx_pin = GPIOB_7;
 	boardConfiguration->gps_tx_pin = GPIOB_6;
 
@@ -539,10 +540,13 @@ static void setCustomEngineConfiguration(engine_configuration_s *engineConfigura
 	// Frankenso low out #6: PE4
 	// Frankenso low out #7: PE1 (do not use with discovery!)
 	// Frankenso low out #8: PE2 injector #2
-	// Frankenso low out #9: PB9
+	// Frankenso low out #9: PB9 Idle valve solenoid
 	// Frankenso low out #10: PE0 (do not use with discovery!)
 	// Frankenso low out #11: PB8 injector #3
 	// Frankenso low out #12: PB7 injector #4
+
+	boardConfiguration->idleValvePin = GPIOB_9;
+
 
 	boardConfiguration->injectionPins[0] = GPIO_UNASSIGNED; // #1
 	boardConfiguration->injectionPins[1] = GPIOE_2; // #2

@@ -22,6 +22,7 @@ HW_LAYER_EMS_CPP = $(PROJECT_DIR)/hw_layer/hardware.cpp \
 	$(PROJECT_DIR)/hw_layer/HIP9011.cpp \
 	$(PROJECT_DIR)/hw_layer/vehicle_speed.cpp \
 	$(PROJECT_DIR)/hw_layer/max31855.cpp \
+	$(PROJECT_DIR)/hw_layer/joystick.cpp \
 	$(PROJECT_DIR)/hw_layer/stepper.cpp \
 	$(PROJECT_DIR)/hw_layer/stm32f4/mpu_util.cpp
 
