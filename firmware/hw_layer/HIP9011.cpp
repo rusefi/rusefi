@@ -36,6 +36,7 @@
 extern pin_output_mode_e DEFAULT_OUTPUT;
 
 static int bandIndex;
+static int gainIndex;
 static int intergratorIndex = -1;
 static bool_t isHip9011Busy = false;
 
@@ -268,6 +269,10 @@ static void intHoldCallback(trigger_event_e ckpEventType,
 			NULL);
 }
 
+static void setGain(float value) {
+
+}
+
 void initHip9011(void) {
 	if (!boardConfiguration->isHip9011Enabled)
 		return;
@@ -318,6 +323,7 @@ void initHip9011(void) {
 //	palSetPadMode(GPIOB, 15, PAL_MODE_ALTERNATE(EFI_SPI2_AF) | PAL_STM32_OTYPE_OPENDRAIN);
 
 	addConsoleAction("hipinfo", showHipInfo);
+	addConsoleActionF("set_gain", setGain);
 }
 
 #endif
