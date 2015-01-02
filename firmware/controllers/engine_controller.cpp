@@ -202,7 +202,6 @@ static void onEvenyGeneralMilliseconds(Engine *engine) {
 
 	runFsio();
 
-
 	updateErrorCodes();
 
 	// todo: migrate this to flex logic
@@ -269,20 +268,27 @@ static void printAnalogInfo(void) {
 
 static THD_WORKING_AREA(csThreadStack, UTILITY_THREAD_STACK_SIZE);	// declare thread stack
 
+#define isOutOfBounds(offset) ((offset<0) || (offset) >= sizeof(engine_configuration_s))
 
 static void setInt(const int offset, const int value) {
+	if (isOutOfBounds(offset))
+		return;
 	int *ptr = (int *) (&((char *) engine->engineConfiguration)[offset]);
 	*ptr = value;
 	scheduleMsg(&logger, "setting int @%d to %d", offset, value);
 }
 
 static void getInt(int offset) {
+	if (isOutOfBounds(offset))
+		return;
 	int *ptr = (int *) (&((char *) engine->engineConfiguration)[offset]);
 	int value = *ptr;
 	scheduleMsg(&logger, "int @%d is %d", offset, value);
 }
 
 static void getFloat(int offset) {
+	if (isOutOfBounds(offset))
+		return;
 	float *ptr = (float *) (&((char *) engine->engineConfiguration)[offset]);
 	float value = *ptr;
 	scheduleMsg(&logger, "float @%d is %f", offset, value);
@@ -294,6 +300,8 @@ static void setFloat(const char *offsetStr, const char *valueStr) {
 		scheduleMsg(&logger, "invalid offset [%s]", offsetStr);
 		return;
 	}
+	if (isOutOfBounds(offset))
+		return;
 	float value = atoff(valueStr);
 	if (cisnan(value)) {
 		scheduleMsg(&logger, "invalid value [%s]", valueStr);
