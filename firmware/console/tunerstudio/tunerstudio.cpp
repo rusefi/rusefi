@@ -124,8 +124,8 @@ static void printStats(void) {
 //	int fuelMapOffset = (int) (&engineConfiguration->fuelTable) - (int) engineConfiguration;
 //	scheduleMsg(&logger, "fuelTable %d", fuelMapOffset);
 //
-	int offset = (int) (&boardConfiguration->le_formulas) - (int) engineConfiguration;
-	scheduleMsg(&logger, "le_formulas %d", offset);
+	int offset = (int) (&boardConfiguration->hip9011Gain) - (int) engineConfiguration;
+	scheduleMsg(&logger, "hip9011Gain %d", offset);
 //
 	offset = (int) (&engineConfiguration->crankingCycleBins) - (int) engineConfiguration;
 	scheduleMsg(&logger, "crankingCycleBins %d", offset);
