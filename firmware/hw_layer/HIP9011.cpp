@@ -141,14 +141,29 @@ static msg_t ivThread(int param) {
 EXTERN_ENGINE
 ;
 
-#define INT_TIME_COUNT 32
+#define INT_LOOKUP_SIZE 32
 
 /**
  * These are HIP9011 magic values - integrator time constants in uS
  */
-static const int integratorValues[INT_TIME_COUNT] = { 40, 45, 50, 55, 60, 65,
+static const int integratorValues[INT_LOOKUP_SIZE] = { 40, 45, 50, 55, 60, 65,
 		70, 75, 80, 90, 100, 110, 120, 130, 140, 150, 160, 180, 200, 220, 240,
 		260, 280, 300, 320, 360, 400, 440, 480, 520, 560, 600 };
+
+#define GAIN_LOOKUP_SIZE 64
+
+static const float gainLookupInReverseOrder[GAIN_LOOKUP_SIZE] = {
+		/* 00 */ 0.111, 0.118, 0.125, 0.129, 0.133, 0.138, 0.143, 0.148,
+		/* 08 */ 0.154, 0.160, 0.167, 0.174, 0.182, 0.190, 0.200, 0.211,
+		/* 16 */ 0.222, 0.236, 0.250, 0.258, 0.267, 0.276, 0.286, 0.296,
+		/* 24 */ 0.308, 0.320, 0.333, 0.348, 0.364, 0.381, 0.400, 0.421,
+		/* 32 */ 0.444, 0.471, 0.500, 0.548, 0.567, 0.586, 0.607, 0.630,
+		/* 40 */ 0.654, 0.680, 0.708, 0.739, 0.773, 0.810, 0.850, 0.895,
+		/* 48 */ 0.944, 1.000, 1.063, 1.143, 1.185, 1.231, 1.280, 1.333,
+		/* 56 */ 1.391, 1.455, 1.523, 1.600, 1.684, 1.778, 1.882, 2.0
+};
+
+#define GAIN_INDEX(gain) (GAIN_LOOKUP_SIZE - 1 - findIndex(gainLookupInReverseOrder, GAIN_LOOKUP_SIZE, (gain)))
 
 #define BAND_LOOKUP_SIZE 64
 
@@ -162,7 +177,7 @@ static const float bandFreqLookup[BAND_LOOKUP_SIZE] = { 1.22, 1.26, 1.31, 1.35,
 
 #define PIF 3.14159f
 
-static float rpmLookup[INT_TIME_COUNT];
+static float rpmLookup[INT_LOOKUP_SIZE];
 
 /**
  * 'TC is typically TINT/(2*Pi*VOUT)'
@@ -175,7 +190,7 @@ static float rpmLookup[INT_TIME_COUNT];
  */
 #define DESIRED_OUTPUT_VALUE 5.0f
 static void prepareRpmLookup(engine_configuration_s *engineConfiguration) {
-	for (int i = 0; i < INT_TIME_COUNT; i++) {
+	for (int i = 0; i < INT_LOOKUP_SIZE; i++) {
 		float windowWidthMult = (engineConfiguration->knockDetectionWindowEnd
 				- engineConfiguration->knockDetectionWindowStart) / 360.0f;
 		// '60000000' because revolutions per MINUTE in uS conversion
@@ -188,14 +203,14 @@ static void prepareRpmLookup(engine_configuration_s *engineConfiguration) {
 
 #define BAND(bore) (900 / (PIF * (bore) / 2))
 
-#define INTEGRATOR_INDEX findIndex(rpmLookup, INT_TIME_COUNT, engine->rpmCalculator.rpmValue)
+#define INTEGRATOR_INDEX findIndex(rpmLookup, INT_LOOKUP_SIZE, engine->rpmCalculator.rpmValue)
 
 static void showHipInfo(void) {
 	printSpiState(&logger, boardConfiguration);
 	scheduleMsg(&logger, "bore=%f freq=%f", engineConfiguration->cylinderBore,
 			BAND(engineConfiguration->cylinderBore));
 
-	scheduleMsg(&logger, "band index=%d", bandIndex);
+	scheduleMsg(&logger, "band_index=%d gain_index=%d", bandIndex, GAIN_INDEX(boardConfiguration->hip9011Gain));
 
 	scheduleMsg(&logger, "integrator index=%d", INTEGRATOR_INDEX);
 
@@ -270,7 +285,8 @@ static void intHoldCallback(trigger_event_e ckpEventType,
 }
 
 static void setGain(float value) {
-
+	boardConfiguration->hip9011Gain = value;
+	showHipInfo();
 }
 
 void initHip9011(void) {
