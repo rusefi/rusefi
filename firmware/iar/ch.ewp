@@ -330,9 +330,9 @@
           <state>$PROJ_DIR$\..\config\stm32f4ems</state>
           <state>$PROJ_DIR$\..\console\tunerstudio</state>
           <state>$PROJ_DIR$\..\console_util</state>
-          <state>$PROJ_DIR$\..\emulation</state>
-          <state>$PROJ_DIR$\..\emulation\test</state>
-          <state>$PROJ_DIR$\..\emulation\hw_layer</state>
+          <state>$PROJ_DIR$\..\development</state>
+          <state>$PROJ_DIR$\..\development\test</state>
+          <state>$PROJ_DIR$\..\development\hw_layer</state>
           <state>$PROJ_DIR$\..\hw_layer\algo</state>
           <state>$PROJ_DIR$\..\hw_layer\lcd</state>
           <state>$PROJ_DIR$\..\hw_layer\stm32f4</state>
@@ -340,8 +340,8 @@
           <state>$PROJ_DIR$\..\hw_layer</state>
           <state>$PROJ_DIR$\..\ext</state>
           <state>$PROJ_DIR$\..\ext_algo</state>
-          <state>$PROJ_DIR$\..\emulation</state>
-          <state>$PROJ_DIR$\..\emulation\hw_layer</state>
+          <state>$PROJ_DIR$\..\development</state>
+          <state>$PROJ_DIR$\..\development\hw_layer</state>
           <state>$PROJ_DIR$\..\util</state>
         </option>
         <option>
@@ -2196,12 +2196,6 @@
         <name>$PROJ_DIR$\..\controllers\algo\obd_error_codes.h</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\controllers\algo\OutputSignalArray.cpp</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\controllers\algo\OutputSignalList.h</name>
-      </file>
-      <file>
         <name>$PROJ_DIR$\..\controllers\algo\rusefi_enums.h</name>
       </file>
       <file>
@@ -2210,17 +2204,11 @@
       <file>
         <name>$PROJ_DIR$\..\controllers\algo\signal_executor.h</name>
       </file>
-      <file>
-        <name>$PROJ_DIR$\..\controllers\algo\wave_chart.cpp</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\controllers\algo\wave_chart.h</name>
-      </file>
     </group>
     <group>
       <name>core</name>
       <file>
-        <name>$PROJ_DIR$\..\controllers\core\avg_values.c</name>
+        <name>$PROJ_DIR$\..\controllers\core\avg_values.cpp</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\controllers\core\avg_values.h</name>
@@ -2510,60 +2498,66 @@
     </file>
   </group>
   <group>
-    <name>emulation</name>
+    <name>development</name>
     <group>
       <name>hw_layer</name>
       <file>
-        <name>$PROJ_DIR$\..\emulation\hw_layer\poten.c</name>
+        <name>$PROJ_DIR$\..\development\hw_layer\poten.c</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\emulation\hw_layer\poten.h</name>
+        <name>$PROJ_DIR$\..\development\hw_layer\poten.h</name>
       </file>
     </group>
     <group>
       <name>test</name>
       <file>
-        <name>$PROJ_DIR$\..\emulation\test\test.c</name>
+        <name>$PROJ_DIR$\..\development\test\test.c</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\emulation\test\test.h</name>
+        <name>$PROJ_DIR$\..\development\test\test.h</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\emulation\test\testbmk.c</name>
+        <name>$PROJ_DIR$\..\development\test\testbmk.c</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\emulation\test\testbmk.h</name>
+        <name>$PROJ_DIR$\..\development\test\testbmk.h</name>
       </file>
     </group>
     <file>
-      <name>$PROJ_DIR$\..\emulation\analog_chart.cpp</name>
+      <name>$PROJ_DIR$\..\development\analog_chart.cpp</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\emulation\analog_chart.h</name>
+      <name>$PROJ_DIR$\..\development\analog_chart.h</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\emulation\engine_emulator.cpp</name>
+      <name>$PROJ_DIR$\..\development\engine_emulator.cpp</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\emulation\engine_emulator.h</name>
+      <name>$PROJ_DIR$\..\development\engine_emulator.h</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\emulation\rfi_perftest.cpp</name>
+      <name>$PROJ_DIR$\..\development\rfi_perftest.cpp</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\emulation\rfi_perftest.h</name>
+      <name>$PROJ_DIR$\..\development\rfi_perftest.h</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\emulation\trigger_emulator.cpp</name>
+      <name>$PROJ_DIR$\..\development\trigger_emulator.cpp</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\emulation\trigger_emulator.h</name>
+      <name>$PROJ_DIR$\..\development\trigger_emulator.h</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\emulation\wave_analyzer.cpp</name>
+      <name>$PROJ_DIR$\..\development\wave_analyzer.cpp</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\emulation\wave_analyzer.h</name>
+      <name>$PROJ_DIR$\..\development\wave_analyzer.h</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\development\wave_chart.cpp</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\development\wave_chart.h</name>
     </file>
   </group>
   <group>

@@ -15,6 +15,7 @@
 #include "global.h"
 #include "error_handling.h"
 #include "efifeatures.h"
+#include "datalogging.h"
 
 #include "efilib.h"
 #include "efitime.h"

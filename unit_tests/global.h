@@ -26,8 +26,6 @@
 
 typedef int bool_t;
 
-typedef void * Logging;
-
 #define EFI_ERROR_CODE 0xffffffff
 #define TRUE 1
 #define FALSE 0

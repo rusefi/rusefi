@@ -39,17 +39,13 @@ EXTERN_ENGINE;
 extern WaveChart waveChart;
 #endif
 
-#if EFI_PROD_CODE || EFI_SIMULATOR
 static Logging logger;
-#endif
 
 extern OutputPin outputs[IO_PIN_COUNT];
 extern pin_output_mode_e *pinDefaultState[IO_PIN_COUNT];
 
 void initSignalExecutor(void) {
-#if EFI_PROD_CODE || EFI_SIMULATOR
 	initLogging(&logger, "s exec");
-#endif
 	initSignalExecutorImpl();
 }
 

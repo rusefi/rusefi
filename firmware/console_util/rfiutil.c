@@ -46,14 +46,14 @@ int mylog10(int param) {
 	return mylog10(param / 10) + 1;
 }
 */
-
+/*
 char hexChar(int v) {
 	v = v & 0xF;
 	if (v < 10)
 		return (char)('0' + v);
 	return 'A' - 10 + v;
 }
-
+*/
 // todo: make this a macro?
 int isIsrContext(void) {
 	/**

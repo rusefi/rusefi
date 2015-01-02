@@ -67,21 +67,18 @@
 
 // this 'true' value is needed for simulator
 static volatile bool fullLog = true;
-int warningEnabled = TRUE;
+int warningEnabled = true;
 //int warningEnabled = FALSE;
 
 extern board_configuration_s *boardConfiguration;
 extern bool hasFirmwareErrorFlag;
 #define FULL_LOGGING_KEY "fl"
 
-#if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
 static Logging logger;
 
 static void setWarningEnabled(int value) {
 	warningEnabled = value;
 }
-
-#endif /* EFI_PROD_CODE || EFI_SIMULATOR */
 
 #if EFI_FILE_LOGGING || defined(__DOXYGEN__)
 static Logging fileLogger;
