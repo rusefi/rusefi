@@ -41,7 +41,8 @@
 #include "engine_configuration.h"
 #include "ec2.h"
 
-EXTERN_ENGINE;
+EXTERN_ENGINE
+;
 extern bool hasFirmwareErrorFlag;
 
 static StepperMotor iacMotor;
@@ -53,14 +54,16 @@ int maxNesting = 0;
 #if HAL_USE_SPI || defined(__DOXYGEN__)
 static bool isSpiInitialized[5] = { false, false, false, false, false };
 
-static void initSpiModule(SPIDriver *driver, brain_pin_e sck, brain_pin_e  miso,
+static void initSpiModule(SPIDriver *driver, brain_pin_e sck, brain_pin_e miso,
 		brain_pin_e mosi, int af) {
 
+	mySetPadMode("SPI clock", getHwPort(sck), getHwPin(sck),
+			PAL_MODE_ALTERNATE(af));
 
-	mySetPadMode("SPI clock", getHwPort(sck), getHwPin(sck), PAL_MODE_ALTERNATE(af));
-
-	mySetPadMode("SPI master out", getHwPort(mosi), getHwPin(mosi), PAL_MODE_ALTERNATE(af));
-	mySetPadMode("SPI master in ", getHwPort(miso), getHwPin(miso), PAL_MODE_ALTERNATE(af));
+	mySetPadMode("SPI master out", getHwPort(mosi), getHwPin(mosi),
+			PAL_MODE_ALTERNATE(af));
+	mySetPadMode("SPI master in ", getHwPort(miso), getHwPin(miso),
+			PAL_MODE_ALTERNATE(af));
 }
 
 /**
@@ -82,31 +85,28 @@ void turnOnSpi(spi_device_e device) {
 	if (device == SPI_DEVICE_1) {
 #if STM32_SPI_USE_SPI1
 //	scheduleMsg(&logging, "Turning on SPI1 pins");
-		initSpiModule(&SPID1,
-				boardConfiguration->spi1sckPin,
+		initSpiModule(&SPID1, boardConfiguration->spi1sckPin,
 				boardConfiguration->spi1misoPin,
-		boardConfiguration->spi1mosiPin,
-		EFI_SPI1_AF);
+				boardConfiguration->spi1mosiPin,
+				EFI_SPI1_AF);
 #endif
 	}
 	if (device == SPI_DEVICE_2) {
 #if STM32_SPI_USE_SPI2
 //	scheduleMsg(&logging, "Turning on SPI2 pins");
-		initSpiModule(&SPID2,
-				boardConfiguration->spi2sckPin,
+		initSpiModule(&SPID2, boardConfiguration->spi2sckPin,
 				boardConfiguration->spi2misoPin,
-		boardConfiguration->spi2mosiPin,
+				boardConfiguration->spi2mosiPin,
 				EFI_SPI2_AF);
 #endif
 	}
 	if (device == SPI_DEVICE_3) {
 #if STM32_SPI_USE_SPI3
 //	scheduleMsg(&logging, "Turning on SPI3 pins");
-		initSpiModule(&SPID3,
-				boardConfiguration->spi3sckPin,
+		initSpiModule(&SPID3, boardConfiguration->spi3sckPin,
 				boardConfiguration->spi3misoPin,
-		boardConfiguration->spi3mosiPin,
-		EFI_SPI3_AF);
+				boardConfiguration->spi3mosiPin,
+				EFI_SPI3_AF);
 #endif
 	}
 }
@@ -178,19 +178,21 @@ static void sendI2Cbyte(int addr, int data) {
 
 #endif
 
-
 // this is all very lame code, just playing with EXTI for now. TODO: refactor it competely!
 static int joyTotal = 0;
 static int joyA = 0;
 static int joyB = 0;
 static int joyC = 0;
 
-void initHardware(Logging *logger, Engine *engine) {
+static Logging *sharedLogger;
+
+void initHardware(Logging *l, Engine *engine) {
+	sharedLogger = l;
 	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
 	efiAssertVoid(engineConfiguration!=NULL, "engineConfiguration");
 	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 
-	printMsg(logger, "initHardware()");
+	printMsg(sharedLogger, "initHardware()");
 	// todo: enable protection. it's disabled because it takes
 	// 10 extra seconds to re-flash the chip
 	//flashProtect();
@@ -224,7 +226,8 @@ void initHardware(Logging *logger, Engine *engine) {
 
 #if EFI_INTERNAL_FLASH
 
-	palSetPadMode(CONFIG_RESET_SWITCH_PORT, CONFIG_RESET_SWITCH_PIN, PAL_MODE_INPUT_PULLUP);
+	palSetPadMode(CONFIG_RESET_SWITCH_PORT, CONFIG_RESET_SWITCH_PIN,
+			PAL_MODE_INPUT_PULLUP);
 
 	initFlash(engine);
 	/**
@@ -233,7 +236,8 @@ void initHardware(Logging *logger, Engine *engine) {
 	 */
 	if (SHOULD_INGORE_FLASH()) {
 		engineConfiguration->engineType = FORD_ASPIRE_1996;
-		resetConfigurationExt(logger, engineConfiguration->engineType, engine);
+		resetConfigurationExt(sharedLogger, engineConfiguration->engineType,
+				engine);
 		writeToFlash();
 	} else {
 		readFromFlash();
@@ -247,7 +251,8 @@ void initHardware(Logging *logger, Engine *engine) {
 		return;
 	}
 
-	mySetPadMode2("board test", boardConfiguration->boardTestModeJumperPin, PAL_MODE_INPUT_PULLUP);
+	mySetPadMode2("board test", boardConfiguration->boardTestModeJumperPin,
+	PAL_MODE_INPUT_PULLUP);
 	bool isBoardTestMode_b = GET_BOARD_TEST_MODE_VALUE();
 
 #if HAL_USE_ADC || defined(__DOXYGEN__)
@@ -264,9 +269,9 @@ void initHardware(Logging *logger, Engine *engine) {
 	initOutputPins();
 
 #if EFI_MAX_31855
-	initMax31855(getSpiDevice(boardConfiguration->max31855spiDevice), boardConfiguration->max31855_cs);
+	initMax31855(getSpiDevice(boardConfiguration->max31855spiDevice),
+			boardConfiguration->max31855_cs);
 #endif /* EFI_MAX_31855 */
-
 
 //	iacMotor.initialize(GPIOD_11, GPIOD_10);
 
@@ -291,7 +296,6 @@ void initHardware(Logging *logger, Engine *engine) {
 #if EFI_HIP_9011
 	initHip9011();
 #endif /* EFI_HIP_9011 */
-
 
 #if EFI_FILE_LOGGING
 	initMmcCard();
@@ -334,11 +338,10 @@ void initHardware(Logging *logger, Engine *engine) {
 //		}
 //	}
 
-	initVehicleSpeed(logger);
+	initVehicleSpeed(sharedLogger);
 
-	printMsg(logger, "initHardware() OK!");
+	printMsg(sharedLogger, "initHardware() OK!");
 }
-
 
 #if HAL_USE_EXT || defined(__DOXYGEN__)
 
@@ -355,6 +358,11 @@ static void extCallback(EXTDriver *extp, expchannel_t channel) {
 	}
 }
 
+static void joystickInfo(void) {
+	scheduleMsg(sharedLogger, "total %d a %d b %d c %d", joyTotal, joyA, joyB,
+			joyC);
+}
+
 /**
  * EXTI is a funny thing: you can only use same pin on one port. For example, you can use
  * PA0 PB5 PE2 PD7
@@ -363,34 +371,53 @@ static void extCallback(EXTDriver *extp, expchannel_t channel) {
  * because pin '0' would be used on two different ports
  */
 
-static EXTConfig extcfg = { { { EXT_CH_MODE_DISABLED, NULL }, { EXT_CH_MODE_DISABLED, NULL }, { EXT_CH_MODE_DISABLED,
-		NULL }, { EXT_CH_MODE_DISABLED, NULL }, { EXT_CH_MODE_DISABLED, NULL }, { EXT_CH_MODE_DISABLED, NULL }, {
-		EXT_CH_MODE_DISABLED, NULL }, { EXT_CH_MODE_DISABLED, NULL }, { EXT_CH_MODE_DISABLED, NULL }, {
-		EXT_CH_MODE_DISABLED, NULL }, { EXT_CH_MODE_DISABLED, NULL }, { EXT_CH_MODE_DISABLED, NULL }, {
-		EXT_CH_MODE_DISABLED, NULL }, { EXT_CH_MODE_DISABLED, NULL }, { EXT_CH_MODE_DISABLED, NULL }, {
-		EXT_CH_MODE_DISABLED, NULL }, { EXT_CH_MODE_DISABLED, NULL }, { EXT_CH_MODE_DISABLED, NULL }, {
-		EXT_CH_MODE_DISABLED, NULL }, { EXT_CH_MODE_DISABLED, NULL }, { EXT_CH_MODE_DISABLED, NULL }, {
-		EXT_CH_MODE_DISABLED, NULL }, { EXT_CH_MODE_DISABLED, NULL } } };
+static EXTConfig extcfg = { {
+/* CH#00 */{ EXT_CH_MODE_DISABLED, NULL },
+/* CH#01 */{ EXT_CH_MODE_DISABLED, NULL },
+/* CH#02 */{ EXT_CH_MODE_DISABLED, NULL },
+/* CH#03 */{ EXT_CH_MODE_DISABLED, NULL },
+/* CH#04 */{ EXT_CH_MODE_DISABLED, NULL },
+/* CH#05 */{ EXT_CH_MODE_DISABLED, NULL },
+/* CH#06 */{ EXT_CH_MODE_DISABLED, NULL },
+/* CH#07 */{ EXT_CH_MODE_DISABLED, NULL },
+/* CH#08 */{ EXT_CH_MODE_DISABLED, NULL },
+/* CH#09 */{ EXT_CH_MODE_DISABLED, NULL },
+/* CH#10 */{ EXT_CH_MODE_DISABLED, NULL },
+/* CH#11 */{ EXT_CH_MODE_DISABLED, NULL },
+/* CH#12 */{ EXT_CH_MODE_DISABLED, NULL },
+/* CH#13 */{ EXT_CH_MODE_DISABLED, NULL },
+/* CH#14 */{ EXT_CH_MODE_DISABLED, NULL },
+/* CH#15 */{ EXT_CH_MODE_DISABLED, NULL },
+/* CH#16 */{ EXT_CH_MODE_DISABLED, NULL },
+/* CH#17 */{ EXT_CH_MODE_DISABLED, NULL },
+/* CH#18 */{ EXT_CH_MODE_DISABLED, NULL },
+/* CH#19 */{ EXT_CH_MODE_DISABLED, NULL },
+/* CH#20 */{ EXT_CH_MODE_DISABLED, NULL },
+/* CH#21 */{ EXT_CH_MODE_DISABLED, NULL },
+/* CH#22 */{ EXT_CH_MODE_DISABLED, NULL } } };
 
 void initExt(void) {
+	if (!engineConfiguration->isJoystickEnabled)
+		return;
 
-//	if (1 == 1) {
-//		return;
-//	}
-
-	extcfg.channels[8].mode = EXT_CH_MODE_BOTH_EDGES | EXT_CH_MODE_AUTOSTART | EXT_MODE_GPIOD; // PD8
+	extcfg.channels[8].mode = EXT_CH_MODE_BOTH_EDGES | EXT_CH_MODE_AUTOSTART
+			| EXT_MODE_GPIOC; // PC8
 	extcfg.channels[8].cb = extCallback;
-	extcfg.channels[9].mode = EXT_CH_MODE_BOTH_EDGES | EXT_CH_MODE_AUTOSTART | EXT_MODE_GPIOD; // PD9
-	extcfg.channels[9].cb = extCallback;
-	extcfg.channels[10].mode = EXT_CH_MODE_BOTH_EDGES | EXT_CH_MODE_AUTOSTART | EXT_MODE_GPIOD; // PD10
+
+	extcfg.channels[10].mode = EXT_CH_MODE_BOTH_EDGES | EXT_CH_MODE_AUTOSTART
+			| EXT_MODE_GPIOD; // PD10
 	extcfg.channels[10].cb = extCallback;
-	extcfg.channels[11].mode = EXT_CH_MODE_BOTH_EDGES | EXT_CH_MODE_AUTOSTART | EXT_MODE_GPIOD; // PD11
+
+	extcfg.channels[11].mode = EXT_CH_MODE_BOTH_EDGES | EXT_CH_MODE_AUTOSTART
+			| EXT_MODE_GPIOD; // PD11
 	extcfg.channels[11].cb = extCallback;
 
-	mySetPadMode("joy A", GPIOD, 8, PAL_MODE_INPUT_PULLUP);
-	mySetPadMode("joy A", GPIOD, 9, PAL_MODE_INPUT_PULLUP);
-	mySetPadMode("joy A", GPIOD, 10, PAL_MODE_INPUT_PULLUP);
-	mySetPadMode("joy A", GPIOD, 11, PAL_MODE_INPUT_PULLUP);
+	mySetPadMode("joy center", GPIOD, 10, PAL_MODE_INPUT_PULLUP);
+	mySetPadMode("joy B", GPIOC, 8, PAL_MODE_INPUT_PULLUP);
+	mySetPadMode("joy D", GPIOD, 11, PAL_MODE_INPUT_PULLUP);
+
+	extStart(&EXTD1, &extcfg);
+
 }
 
 #endif
