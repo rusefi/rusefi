@@ -130,9 +130,6 @@ static void commonMiataNa(engine_configuration_s *engineConfiguration, board_con
 	setFuelLoadBin(engineConfiguration, 1.2, 4.4);
 	setFuelRpmBin(engineConfiguration, 800, 7000);
 
-	boardConfiguration->gps_rx_pin = GPIO_UNASSIGNED;
-	boardConfiguration->gps_tx_pin = GPIO_UNASSIGNED;
-
 	boardConfiguration->idleSolenoidFrequency = 160;
 
 	engineConfiguration->globalTriggerAngleOffset = 294;

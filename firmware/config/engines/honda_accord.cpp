@@ -173,9 +173,6 @@ static void setHondaAccordConfigurationCommon(engine_configuration_s *engineConf
 	boardConfiguration->fuelPumpPin = GPIOE_3;
 	boardConfiguration->fuelPumpPinMode = OM_DEFAULT;
 
-	boardConfiguration->gps_rx_pin = GPIO_UNASSIGNED;
-	boardConfiguration->gps_tx_pin = GPIO_UNASSIGNED;
-
 	setFrankenso_01_LCD(boardConfiguration);
 
 	boardConfiguration->logicAnalyzerPins[1] = GPIO_UNASSIGNED;

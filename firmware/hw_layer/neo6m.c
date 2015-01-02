@@ -27,6 +27,7 @@
 #include "engine_configuration.h"
 
 extern board_configuration_s *boardConfiguration;
+extern engine_configuration_s *engineConfiguration;
 
 static Logging logging;
 
@@ -46,8 +47,6 @@ float getCurrentSpeed(void) {
 }
 
 static void printGpsInfo(void) {
-	// todo: scheduleMsg()
-
 	scheduleMsg(&logging, "GPS RX %s", hwPortname(boardConfiguration->gps_rx_pin));
 	scheduleMsg(&logging, "GPS TX %s", hwPortname(boardConfiguration->gps_tx_pin));
 
@@ -84,7 +83,7 @@ static msg_t GpsThreadEntryPoint(void *arg) {
 
 	int count = 0;
 
-	while (TRUE) {
+	while (true) {
 		msg_t charbuf = chSequentialStreamGet(GPS_SERIAL_DEVICE);
 		if (charbuf == 10 || count == GPS_MAX_STRING) {					// if 0xD,0xA or limit
 			if (count >= 1)
@@ -106,9 +105,8 @@ static msg_t GpsThreadEntryPoint(void *arg) {
 }
 
 void initGps(void) {
-	if (boardConfiguration->gps_rx_pin == GPIO_UNASSIGNED || boardConfiguration->gps_tx_pin == GPIO_UNASSIGNED) {
+	if(!engineConfiguration->isGpsEnabled)
 		return;
-	}
 
 	initLogging(&logging, "uart gps");
 

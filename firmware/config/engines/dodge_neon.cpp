@@ -282,9 +282,6 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 	boardConfiguration->fuelPumpPin = GPIOE_3;
 	boardConfiguration->fuelPumpPinMode = OM_DEFAULT;
 
-	boardConfiguration->gps_rx_pin = GPIO_UNASSIGNED;
-	boardConfiguration->gps_tx_pin = GPIO_UNASSIGNED;
-
 	boardConfiguration->triggerInputPins[0] = GPIOA_5;
 	boardConfiguration->triggerInputPins[1] = GPIOC_6;
 
@@ -352,7 +349,7 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 	engineConfiguration->map.sensor.sensorType = MT_DODGE_NEON_2003;
 
 #if EFI_PROD_CODE
-	setHip9011FrankensoPinout();
+//	setHip9011FrankensoPinout();
 #endif
 	engineConfiguration->cylinderBore = 87.5;
 

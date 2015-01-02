@@ -672,6 +672,8 @@ static void setSpiMode(int index, bool mode) {
 static void enableOrDisable(const char *param, bool isEnabled) {
 	if (strEqualCaseInsensitive(param, "fastadc")) {
 		boardConfiguration->isFastAdcEnabled = isEnabled;
+	} else if (strEqualCaseInsensitive(param, "joystick")) {
+		engineConfiguration->isJoystickEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "can")) {
 		engineConfiguration->isCanEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "can_read")) {

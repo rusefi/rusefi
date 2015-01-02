@@ -521,6 +521,7 @@ typedef struct {
 	bool_t canWriteEnabled : 1; // bit 8
 	bool_t hasVehicleSpeedSensor : 1; // bit 9
 	bool_t isJoystickEnabled : 1; // bit 10
+	bool_t isGpsEnabled : 1; // bit 11
 
 	int unused6284;
 
