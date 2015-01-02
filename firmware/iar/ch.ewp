@@ -2086,12 +2086,6 @@
   <group>
     <name>console_util</name>
     <file>
-      <name>$PROJ_DIR$\..\console_util\datalogging.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\console_util\datalogging.h</name>
-    </file>
-    <file>
       <name>$PROJ_DIR$\..\console_util\rfiutil.c</name>
     </file>
     <file>
@@ -2674,6 +2668,12 @@
       <name>$PROJ_DIR$\..\hw_layer\io_pins.c</name>
     </file>
     <file>
+      <name>$PROJ_DIR$\..\hw_layer\joystick.cpp</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\hw_layer\joystick.h</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\..\hw_layer\max31855.cpp</name>
     </file>
     <file>
@@ -3177,6 +3177,12 @@
   </group>
   <group>
     <name>util</name>
+    <file>
+      <name>$PROJ_DIR$\..\util\datalogging.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\util\datalogging.h</name>
+    </file>
     <file>
       <name>$PROJ_DIR$\..\util\cli_registry.c</name>
     </file>

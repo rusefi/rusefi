@@ -58,13 +58,10 @@ static bool isSpiInitialized[5] = { false, false, false, false, false };
 static void initSpiModule(SPIDriver *driver, brain_pin_e sck, brain_pin_e miso,
 		brain_pin_e mosi, int af) {
 
-	mySetPadMode("SPI clock", getHwPort(sck), getHwPin(sck),
-			PAL_MODE_ALTERNATE(af));
+	mySetPadMode2("SPI clock", sck,	PAL_MODE_ALTERNATE(af));
 
-	mySetPadMode("SPI master out", getHwPort(mosi), getHwPin(mosi),
-			PAL_MODE_ALTERNATE(af));
-	mySetPadMode("SPI master in ", getHwPort(miso), getHwPin(miso),
-			PAL_MODE_ALTERNATE(af));
+	mySetPadMode2("SPI master out", mosi, PAL_MODE_ALTERNATE(af));
+	mySetPadMode2("SPI master in ", miso, PAL_MODE_ALTERNATE(af));
 }
 
 /**
@@ -90,7 +87,7 @@ void turnOnSpi(spi_device_e device) {
 				boardConfiguration->spi1misoPin,
 				boardConfiguration->spi1mosiPin,
 				EFI_SPI1_AF);
-#endif
+#endif /* STM32_SPI_USE_SPI1 */
 	}
 	if (device == SPI_DEVICE_2) {
 #if STM32_SPI_USE_SPI2
@@ -99,7 +96,7 @@ void turnOnSpi(spi_device_e device) {
 				boardConfiguration->spi2misoPin,
 				boardConfiguration->spi2mosiPin,
 				EFI_SPI2_AF);
-#endif
+#endif /* STM32_SPI_USE_SPI2 */
 	}
 	if (device == SPI_DEVICE_3) {
 #if STM32_SPI_USE_SPI3
@@ -108,7 +105,7 @@ void turnOnSpi(spi_device_e device) {
 				boardConfiguration->spi3misoPin,
 				boardConfiguration->spi3mosiPin,
 				EFI_SPI3_AF);
-#endif
+#endif /* STM32_SPI_USE_SPI3 */
 	}
 }
 

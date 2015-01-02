@@ -37,7 +37,7 @@ void StepperMotor::initialize(brain_pin_e stepPin, brain_pin_e directionPin) {
 	this->stepPin = getHwPin(stepPin);
 
 	mySetPadMode("st step", stepPort, this->stepPin, PAL_MODE_OUTPUT_PUSHPULL);
-	mySetPadMode("st dir", getHwPort(directionPin), getHwPin(directionPin), PAL_MODE_OUTPUT_PUSHPULL);
+	mySetPadMode2("st dir", directionPin, PAL_MODE_OUTPUT_PUSHPULL);
 
 	chThdCreateStatic(stThreadStack, sizeof(stThreadStack), NORMALPRIO, (tfunc_t) stThread, this);
 }
