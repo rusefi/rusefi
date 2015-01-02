@@ -21,9 +21,7 @@
 #define isRunningBenchTest() true
 #endif
 
-#if EFI_PROD_CODE || EFI_SIMULATOR
 static Logging logger;
-#endif
 
 EXTERN_ENGINE
 ;
@@ -54,17 +52,13 @@ void Engine::precalc(engine_configuration_s *engineConfiguration) {
 }
 
 void Engine::init() {
-#if EFI_PROD_CODE || EFI_SIMULATOR
 	initLogging(&logger, "engine");
-#endif
 }
 
 static bool stopPin(io_pin_e pin) {
 	if (getOutputPinValue(pin)) {
 		setOutputPinValue(pin, 0);
-#if EFI_PROD_CODE || EFI_SIMULATOR
 		scheduleMsg(&logger, "turning off %s", getPinName(pin));
-#endif
 		return true;
 	}
 	return false;
@@ -120,15 +114,10 @@ void StartupFuelPumping::setPumpsCounter(engine_configuration_s *engineConfigura
 		pumpsCounter = newValue;
 
 		if (pumpsCounter == PUMPS_TO_PRIME) {
-#if EFI_PROD_CODE || EFI_SIMULATOR
 			scheduleMsg(&logger, "let's squirt prime pulse %f", pumpsCounter);
-#endif
 			pumpsCounter = 0;
 		} else {
-#if EFI_PROD_CODE || EFI_SIMULATOR
 			scheduleMsg(&logger, "setPumpsCounter %d", pumpsCounter);
-#endif
-
 		}
 	}
 }

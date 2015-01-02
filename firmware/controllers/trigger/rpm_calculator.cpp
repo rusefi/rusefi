@@ -38,14 +38,9 @@ extern WaveChart waveChart;
 
 #define TOP_DEAD_CENTER_MESSAGE "r"
 
-EXTERN_ENGINE
-;
+EXTERN_ENGINE;
 
-#if EFI_PROD_CODE || EFI_SIMULATOR
 static Logging logger;
-EXTERN_ENGINE
-;
-#endif
 
 RpmCalculator::RpmCalculator() {
 #if !EFI_PROD_CODE

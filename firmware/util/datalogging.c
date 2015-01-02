@@ -32,11 +32,11 @@
 
 #include <stdbool.h>
 #include "main.h"
-#include "rfiutil.h"
 #include "chprintf.h"
 #include "chmtx.h"
 #include "memstreams.h"
 #include "console_io.h"
+#include "rfiutil.h"
 
 // we use this magic constant to make sure it's not just a random non-zero int in memory
 #define MAGIC_LOGGING_FLAG 45234441
