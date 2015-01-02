@@ -2,8 +2,7 @@
  * @file lcd_HD44780.c
  * @brief HD44780 character display driver
  *
- *
- * see http://joshuagalloway.com/lcd.html
+ * see http://en.wikipedia.org/wiki/Hitachi_HD44780_LCD_controller
  * @date 13.12.2013
  * @author Andrey Belomutskiy, (c) 2012-2014
  */

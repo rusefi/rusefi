@@ -60,7 +60,7 @@ static Logging logger;
 
 #if HIP_DEBUG
 static THD_WORKING_AREA(htThreadStack, UTILITY_THREAD_STACK_SIZE);
-#endif
+#endif /* HIP_DEBUG */
 
 // SPI_CR1_BR_1 // 5MHz
 // SPI_CR1_CPHA Clock Phase
@@ -136,6 +136,7 @@ static msg_t ivThread(int param) {
 #if defined __GNUC__
 	return 0;
 #endif
+
 }
 
 EXTERN_ENGINE
@@ -323,10 +324,7 @@ void initHip9011(void) {
 	spiStop(driver);
 	// todo spicfg.end_cb = spiEndCallback;
 	spiStart(driver, &spicfg);
-
-
-
-#endif
+#endif /* HIP_DEBUG */
 
 	bandIndex = findIndex(bandFreqLookup, BAND_LOOKUP_SIZE,
 			BAND(engineConfiguration->cylinderBore));
