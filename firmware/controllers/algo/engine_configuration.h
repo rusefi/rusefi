@@ -260,7 +260,12 @@ typedef struct {
 	brain_pin_e spi3sckPin;
 
 	float hip9011Gain;
-	int unusedbs[12];
+	brain_pin_e joystickCenterPin;
+	brain_pin_e joystickCenterA;
+	brain_pin_e joystickCenterB;
+	brain_pin_e joystickCenterC;
+	brain_pin_e joystickCenterD;
+	int unusedbs[7];
 
 	le_formula_t le_formulas[LE_COMMAND_COUNT];
 
@@ -515,6 +520,7 @@ typedef struct {
 	bool_t canReadEnabled : 1; // bit 7
 	bool_t canWriteEnabled : 1; // bit 8
 	bool_t hasVehicleSpeedSensor : 1; // bit 9
+	bool_t isJoystickEnabled : 1; // bit 10
 
 	int unused6284;
 
