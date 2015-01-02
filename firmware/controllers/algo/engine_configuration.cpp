@@ -500,6 +500,8 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	boardConfiguration->spi3misoPin = GPIOB_4;
 	boardConfiguration->spi3sckPin = GPIOB_3;
 
+	boardConfiguration->hip9011Gain = 1;
+
 	boardConfiguration->isSdCardEnabled = false;
 	boardConfiguration->isFastAdcEnabled = false;
 	boardConfiguration->isEngineControlEnabled = true;

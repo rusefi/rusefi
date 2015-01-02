@@ -259,7 +259,8 @@ typedef struct {
 	brain_pin_e spi3misoPin;
 	brain_pin_e spi3sckPin;
 
-	int unusedbs[13];
+	float hip9011Gain;
+	int unusedbs[12];
 
 	le_formula_t le_formulas[LE_COMMAND_COUNT];
 
