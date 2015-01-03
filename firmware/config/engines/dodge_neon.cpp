@@ -371,8 +371,10 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 
 	engineConfiguration->isJoystickEnabled = true;
 	boardConfiguration->joystickCenterPin = GPIOD_10;
-	boardConfiguration->joystickCenterA = GPIOD_8;
-	boardConfiguration->joystickCenterC = GPIOD_9;
+	boardConfiguration->joystickAPin = GPIOD_8;
+	boardConfiguration->joystickBPin = GPIO_UNASSIGNED;
+	boardConfiguration->joystickCPin = GPIOD_9;
+	boardConfiguration->joystickDPin = GPIOD_11;
 
 //	engineConfiguration->isCanEnabled = true;
 	boardConfiguration->canTxPin = GPIOB_6;

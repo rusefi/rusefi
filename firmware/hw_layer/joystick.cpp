@@ -15,9 +15,11 @@
 EXTERN_ENGINE;
 
 static int joyTotal = 0;
+static int joyCenter;
 static int joyA = 0;
 static int joyB = 0;
 static int joyC = 0;
+static int joyD = 0;;
 
 static Logging *sharedLogger;
 
@@ -25,7 +27,7 @@ static Logging *sharedLogger;
 
 static void extCallback(EXTDriver *extp, expchannel_t channel) {
 	joyTotal++;
-	if (channel == 8) {
+	if (channel == getHwPin(boardConfiguration->joystickAPin)) {
 		joyA++;
 	} else if (channel == 9) {
 		joyB++;
@@ -35,8 +37,12 @@ static void extCallback(EXTDriver *extp, expchannel_t channel) {
 }
 
 static void joystickInfo(void) {
-	scheduleMsg(sharedLogger, "total %d a %d b %d c %d", joyTotal, joyA, joyB,
-			joyC);
+	scheduleMsg(sharedLogger, "total %d center=%d@%s", joyTotal,
+			joyCenter, hwPortname(boardConfiguration->joystickCenterPin));
+	scheduleMsg(sharedLogger, "a=%d@%s", joyA, hwPortname(boardConfiguration->joystickAPin));
+	scheduleMsg(sharedLogger, "b=%d@%s", joyB, hwPortname(boardConfiguration->joystickBPin));
+	scheduleMsg(sharedLogger, "c=%d@%s", joyC, hwPortname(boardConfiguration->joystickCPin));
+	scheduleMsg(sharedLogger, "d=%d@%s", joyD, hwPortname(boardConfiguration->joystickDPin));
 }
 
 /**
@@ -89,7 +95,7 @@ void initJoystick(Logging *shared) {
 			| EXT_MODE_GPIOD; // PD11
 	extcfg.channels[11].cb = extCallback;
 
-	mySetPadMode("joy center", GPIOD, 10, PAL_MODE_INPUT_PULLUP);
+	mySetPadMode2("joy center", boardConfiguration->joystickCenterPin, PAL_MODE_INPUT_PULLUP);
 	mySetPadMode("joy B", GPIOC, 8, PAL_MODE_INPUT_PULLUP);
 	mySetPadMode("joy D", GPIOD, 11, PAL_MODE_INPUT_PULLUP);
 
