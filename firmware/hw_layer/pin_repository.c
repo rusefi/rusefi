@@ -127,7 +127,7 @@ void initPinRepository(void) {
 	 */
 	initLogging(&logger, "pin repos");
 
-	msObjectInit(&portNameStream, (uint8_t*)portNameBuffer, sizeof(portNameBuffer), 0);
+	msObjectInit(&portNameStream, (uint8_t*) portNameBuffer, sizeof(portNameBuffer), 0);
 
 	for (int i = 0; i < PIN_REPO_SIZE; i++)
 		PIN_USED[i] = 0;
@@ -152,6 +152,8 @@ void mySetPadMode(const char *msg, ioportid_t port, ioportmask_t pin, iomode_t m
 		firmwareError("repository not initialized");
 		return;
 	}
+	if (GPIO_NULL == NULL)
+		return;
 	print("%s on %s:%d\r\n", msg, portname(port), pin);
 
 	appendPrintf(&logger, "msg,%s", msg);
