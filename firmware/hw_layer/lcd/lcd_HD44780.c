@@ -141,6 +141,10 @@ void lcd_HD44780_set_position(uint8_t row, uint8_t column) {
 	lcd_HD44780_write_command(LCD_HD44780_DDRAM_ADDR + lineStart[row] + column);
 }
 
+int getCurrentHD44780row(void) {
+	return currentRow;
+}
+
 void lcd_HD44780_print_char(char data) {
 	if (data == '\n') {
 		lcd_HD44780_set_position(++currentRow, 0);

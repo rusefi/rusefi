@@ -154,11 +154,11 @@ static void fanRelayControl(void) {
 
 Overflow64Counter halTime;
 
-uint64_t getTimeNowUs(void) {
+efitimeus_t getTimeNowUs(void) {
 	return getTimeNowNt() / (CORE_CLOCK / 1000000);
 }
 
-uint64_t getTimeNowNt(void) {
+efitick_t getTimeNowNt(void) {
 	return halTime.get();
 }
 
