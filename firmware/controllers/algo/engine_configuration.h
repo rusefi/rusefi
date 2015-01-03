@@ -259,12 +259,18 @@ typedef struct {
 	brain_pin_e spi3misoPin;
 	brain_pin_e spi3sckPin;
 
+	// offset 6228
 	float hip9011Gain;
+	// offset 6232
 	brain_pin_e joystickCenterPin;
-	brain_pin_e joystickCenterA;
-	brain_pin_e joystickCenterB;
-	brain_pin_e joystickCenterC;
-	brain_pin_e joystickCenterD;
+	// offset 6236
+	brain_pin_e joystickAPin;
+	// offset 6240
+	brain_pin_e joystickBPin;
+	// offset 6244
+	brain_pin_e joystickCPin;
+	// offset 6248
+	brain_pin_e joystickDPin;
 	int unusedbs[7];
 
 	le_formula_t le_formulas[LE_COMMAND_COUNT];
