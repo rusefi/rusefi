@@ -12,7 +12,7 @@
 #include "engine_configuration.h"
 #include "engine.h"
 
-#define FLASH_DATA_VERSION 5964
+#define FLASH_DATA_VERSION 6100
 
 void readFromFlash(void);
 void initFlash(Engine *engine);
