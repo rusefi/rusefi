@@ -10,6 +10,14 @@
 
 #include "engine.h"
 
+typedef enum {
+	LL_VERSION,
+	LL_CONFIG,
+	LL_RPM,
+	LL_TEMPERATURE
+
+} lcd_line_e;
+
 void updateHD44780lcd(Engine *engine);
 
 #endif /* LCD_CONTROLLER_H_ */

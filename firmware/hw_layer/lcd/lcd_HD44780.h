@@ -17,6 +17,7 @@ void lcd_HD44780_init(void);
 void lcd_HD44780_set_position(uint8_t row, uint8_t column);
 void lcd_HD44780_print_char(char data);
 void lcd_HD44780_print_string(const char *string);
+int getCurrentHD44780row(void);
 
 void lcdShowFatalMessage(char *message);
 
