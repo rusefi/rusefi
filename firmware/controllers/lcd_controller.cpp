@@ -16,14 +16,22 @@
 #include "io_pins.h"
 #include "efiGpio.h"
 #include "svnversion.h"
+#include "joystick.h"
 
-EXTERN_ENGINE;
+EXTERN_ENGINE
+;
 
 extern bool hasFirmwareErrorFlag;
 
 #define LCD_WIDTH 20
 // this value should be even
 #define NUMBER_OF_DIFFERENT_LINES 4
+
+static int infoIndex = 0;
+
+void onJoystick(joystick_button_e button) {
+
+}
 
 char * appendStr(char *ptr, const char *suffix) {
 	for (uint32_t i = 0; i < efiStrlen(suffix); i++) {
@@ -140,69 +148,93 @@ static void prepareCurrentSecondLine(Engine *engine, int index) {
 	*ptr = ' ';
 }
 
-void updateHD44780lcd(Engine *engine) {
-	lcd_HD44780_set_position(0, 0);
-
-	bool_t isEven = getTimeNowSeconds() % 2 == 0;
-
-	if (isEven) {
-		lcd_HD44780_print_string (VCS_VERSION);
-	} else {
+static void showLine(lcd_line_e line) {
+	switch (line) {
+	case LL_VERSION:
+		lcd_HD44780_print_string("version ");
+		lcd_HD44780_print_string(VCS_VERSION);
+		return;
+	case LL_CONFIG:
+		lcd_HD44780_print_string("config ");
 		lcd_HD44780_print_string(getConfigurationName(engine->engineConfiguration->engineType));
-	}
-
-	lcd_HD44780_set_position(0, 9);
-	/**
-	 * this would blink so that we know the LCD is alive
-	 */
-	if (isEven) {
-		lcd_HD44780_print_char('R');
-	} else {
-		lcd_HD44780_print_char(' ');
-	}
-	lcd_HD44780_set_position(0, 10);
-
-	char * ptr = itoa10(buffer, getRpmE(engine));
-	ptr[0] = 0;
-	int len = ptr - buffer;
-	for (int i = 0; i < 6 - len; i++) {
-		lcd_HD44780_print_char(' ');
-	}
-	lcd_HD44780_print_string(buffer);
-
-	if (hasFirmwareError()) {
-		memcpy(buffer, getFirmwareError(), LCD_WIDTH);
-		buffer[LCD_WIDTH] = 0;
-		lcd_HD44780_set_position(1, 0);
-		lcd_HD44780_print_string(buffer);
 		return;
 	}
+}
 
-	lcd_HD44780_set_position(1, 0);
-	memset(buffer, ' ', LCD_WIDTH);
-	memcpy(buffer, getWarninig(), LCD_WIDTH);
-	buffer[LCD_WIDTH] = 0;
-	lcd_HD44780_print_string(buffer);
+void updateHD44780lcd(Engine *engine) {
+	for (int i = infoIndex; i < infoIndex + engineConfiguration->HD44780height - 1; i++) {
+		lcd_HD44780_set_position(i - infoIndex, 0);
 
-	if (engineConfiguration->HD44780height < 3) {
-		return;
+		showLine((lcd_line_e) i);
+
+		int column = getCurrentHD44780column();
+
+		for (int r = column; r < 20; r++) {
+			lcd_HD44780_print_char('*');
+		}
 	}
 
-	int index = (getTimeNowSeconds() / 2) % (NUMBER_OF_DIFFERENT_LINES / 2);
-
-	prepareCurrentSecondLine(engine, index);
-	buffer[LCD_WIDTH] = 0;
-	lcd_HD44780_set_position(2, 0);
-	lcd_HD44780_print_string(buffer);
-
-	prepareCurrentSecondLine(engine, index + NUMBER_OF_DIFFERENT_LINES / 2);
-	buffer[LCD_WIDTH] = 0;
-	lcd_HD44780_set_position(3, 0);
-	lcd_HD44780_print_string(buffer);
-
-#if EFI_PROD_CODE
-	dateToString(dateBuffer);
-	lcd_HD44780_set_position(1, 0);
-	lcd_HD44780_print_string(dateBuffer);
-#endif /* EFI_PROD_CODE */
+//	lcd_HD44780_set_position(0, 0);
+//	bool_t isEven = getTimeNowSeconds() % 2 == 0;
+//
+//	if (isEven) {
+//
+//	} else {
+//
+//	}
+//
+//	lcd_HD44780_set_position(0, 9);
+//	/**
+//	 * this would blink so that we know the LCD is alive
+//	 */
+//	if (isEven) {
+//		lcd_HD44780_print_char('R');
+//	} else {
+//		lcd_HD44780_print_char(' ');
+//	}
+//	lcd_HD44780_set_position(0, 10);
+//
+//	char * ptr = itoa10(buffer, getRpmE(engine));
+//	ptr[0] = 0;
+//	int len = ptr - buffer;
+//	for (int i = 0; i < 6 - len; i++) {
+//		lcd_HD44780_print_char(' ');
+//	}
+//	lcd_HD44780_print_string(buffer);
+//
+//	if (hasFirmwareError()) {
+//		memcpy(buffer, getFirmwareError(), LCD_WIDTH);
+//		buffer[LCD_WIDTH] = 0;
+//		lcd_HD44780_set_position(1, 0);
+//		lcd_HD44780_print_string(buffer);
+//		return;
+//	}
+//
+//	lcd_HD44780_set_position(1, 0);
+//	memset(buffer, ' ', LCD_WIDTH);
+//	memcpy(buffer, getWarninig(), LCD_WIDTH);
+//	buffer[LCD_WIDTH] = 0;
+//	lcd_HD44780_print_string(buffer);
+//
+//	if (engineConfiguration->HD44780height < 3) {
+//		return;
+//	}
+//
+//	int index = (getTimeNowSeconds() / 2) % (NUMBER_OF_DIFFERENT_LINES / 2);
+//
+//	prepareCurrentSecondLine(engine, index);
+//	buffer[LCD_WIDTH] = 0;
+//	lcd_HD44780_set_position(2, 0);
+//	lcd_HD44780_print_string(buffer);
+//
+//	prepareCurrentSecondLine(engine, index + NUMBER_OF_DIFFERENT_LINES / 2);
+//	buffer[LCD_WIDTH] = 0;
+//	lcd_HD44780_set_position(3, 0);
+//	lcd_HD44780_print_string(buffer);
+//
+//#if EFI_PROD_CODE
+//	dateToString(dateBuffer);
+//	lcd_HD44780_set_position(1, 0);
+//	lcd_HD44780_print_string(dateBuffer);
+//#endif /* EFI_PROD_CODE */
 }

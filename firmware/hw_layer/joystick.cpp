@@ -12,33 +12,42 @@
 
 #if HAL_USE_EXT || defined(__DOXYGEN__)
 
-EXTERN_ENGINE;
+EXTERN_ENGINE
+;
 
 static int joyTotal = 0;
 static int joyCenter;
 static int joyA = 0;
 static int joyB = 0;
 static int joyC = 0;
-static int joyD = 0;;
+static int joyD = 0;
+
+#define NT_EVENT_GAP US2NT(1000)
 
 static Logging *sharedLogger;
-
-//     {EXT_CH_MODE_BOTH_EDGES | EXT_CH_MODE_AUTOSTART | EXT_MODE_GPIOA, extcb1},
+static efitick_t lastEventTime = 0;
 
 static void extCallback(EXTDriver *extp, expchannel_t channel) {
+	efitick_t now = getTimeNowNt();
+	if (now - lastEventTime < NT_EVENT_GAP)
+		return; // two consecutive events are probably just jitter
 	joyTotal++;
-	if (channel == getHwPin(boardConfiguration->joystickAPin)) {
+	if (channel == getHwPin(boardConfiguration->joystickCenterPin)) {
+		joyCenter++;
+	} else if (channel == getHwPin(boardConfiguration->joystickAPin)) {
 		joyA++;
-	} else if (channel == 9) {
+	} else if (channel == getHwPin(boardConfiguration->joystickBPin)) {
 		joyB++;
-	} else if (channel == 10) {
+	} else if (channel == getHwPin(boardConfiguration->joystickCPin)) {
 		joyC++;
+	} else if (channel == getHwPin(boardConfiguration->joystickDPin)) {
+		joyD++;
 	}
 }
 
 static void joystickInfo(void) {
-	scheduleMsg(sharedLogger, "total %d center=%d@%s", joyTotal,
-			joyCenter, hwPortname(boardConfiguration->joystickCenterPin));
+	scheduleMsg(sharedLogger, "total %d center=%d@%s", joyTotal, joyCenter,
+			hwPortname(boardConfiguration->joystickCenterPin));
 	scheduleMsg(sharedLogger, "a=%d@%s", joyA, hwPortname(boardConfiguration->joystickAPin));
 	scheduleMsg(sharedLogger, "b=%d@%s", joyB, hwPortname(boardConfiguration->joystickBPin));
 	scheduleMsg(sharedLogger, "c=%d@%s", joyC, hwPortname(boardConfiguration->joystickCPin));
@@ -78,31 +87,55 @@ static EXTConfig extcfg = { {
 /* CH#21 */{ EXT_CH_MODE_DISABLED, NULL },
 /* CH#22 */{ EXT_CH_MODE_DISABLED, NULL } } };
 
+static uint32_t getExtMode(GPIO_TypeDef * port) {
+	if (port == GPIOA) {
+		return EXT_MODE_GPIOA;
+	} else if (port == GPIOB) {
+		return EXT_MODE_GPIOB;
+	} else if (port == GPIOC) {
+		return EXT_MODE_GPIOC;
+	} else if (port == GPIOD) {
+		return EXT_MODE_GPIOD;
+	} else if (port == GPIOE) {
+		return EXT_MODE_GPIOE;
+	} else if (port == GPIOF) {
+		return EXT_MODE_GPIOF;
+	}
+	firmwareError("Unsupported %d", port);
+	return 0;
+}
+
+static void applyPin(brain_pin_e pin) {
+	if (pin == GPIO_UNASSIGNED)
+		return;
+
+	int index = getHwPin(pin);
+	GPIO_TypeDef * port = getHwPort(pin);
+
+	extcfg.channels[index].mode = EXT_CH_MODE_RISING_EDGE | EXT_CH_MODE_AUTOSTART | getExtMode(port);
+	extcfg.channels[index].cb = extCallback;
+}
+
 void initJoystick(Logging *shared) {
 	if (!engineConfiguration->isJoystickEnabled)
 		return;
 	sharedLogger = shared;
 
-	extcfg.channels[8].mode = EXT_CH_MODE_BOTH_EDGES | EXT_CH_MODE_AUTOSTART
-			| EXT_MODE_GPIOC; // PC8
-	extcfg.channels[8].cb = extCallback;
-
-	extcfg.channels[10].mode = EXT_CH_MODE_BOTH_EDGES | EXT_CH_MODE_AUTOSTART
-			| EXT_MODE_GPIOD; // PD10
-	extcfg.channels[10].cb = extCallback;
-
-	extcfg.channels[11].mode = EXT_CH_MODE_BOTH_EDGES | EXT_CH_MODE_AUTOSTART
-			| EXT_MODE_GPIOD; // PD11
-	extcfg.channels[11].cb = extCallback;
+	applyPin(boardConfiguration->joystickCenterPin);
+	applyPin(boardConfiguration->joystickAPin);
+	applyPin(boardConfiguration->joystickBPin);
+	applyPin(boardConfiguration->joystickCPin);
+	applyPin(boardConfiguration->joystickDPin);
 
 	mySetPadMode2("joy center", boardConfiguration->joystickCenterPin, PAL_MODE_INPUT_PULLUP);
-	mySetPadMode("joy B", GPIOC, 8, PAL_MODE_INPUT_PULLUP);
-	mySetPadMode("joy D", GPIOD, 11, PAL_MODE_INPUT_PULLUP);
+	mySetPadMode2("joy A", boardConfiguration->joystickAPin, PAL_MODE_INPUT_PULLUP);
+	mySetPadMode2("joy B", boardConfiguration->joystickBPin, PAL_MODE_INPUT_PULLUP);
+	mySetPadMode2("joy C", boardConfiguration->joystickCPin, PAL_MODE_INPUT_PULLUP);
+	mySetPadMode2("joy D", boardConfiguration->joystickDPin, PAL_MODE_INPUT_PULLUP);
 
 	addConsoleAction("joystickinfo", joystickInfo);
 
 	extStart(&EXTD1, &extcfg);
-
 }
 
 #endif
