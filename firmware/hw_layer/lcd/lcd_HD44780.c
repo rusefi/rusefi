@@ -55,6 +55,7 @@ static const int lineStart[] = { 0, 0x40, 0x14, 0x54 };
 
 static int BUSY_WAIT_DELAY = FALSE;
 static int currentRow = 0;
+static int currentColumn = 0;
 
 static void lcdSleep(int period) {
 	if (BUSY_WAIT_DELAY) {
@@ -130,6 +131,7 @@ void lcd_HD44780_write_data(uint8_t data) {
 
 	lcd_HD44780_write(data);
 	lcd_HD44780_write(data << 4);
+	currentColumn++;
 
 	palClearPad(getHwPort(boardConfiguration->HD44780_rs), getHwPin(boardConfiguration->HD44780_rs));
 }
@@ -138,11 +140,16 @@ void lcd_HD44780_write_data(uint8_t data) {
 void lcd_HD44780_set_position(uint8_t row, uint8_t column) {
 	efiAssertVoid(row <= engineConfiguration->HD44780height, "invalid row");
 	currentRow = row;
+	currentColumn = column;
 	lcd_HD44780_write_command(LCD_HD44780_DDRAM_ADDR + lineStart[row] + column);
 }
 
 int getCurrentHD44780row(void) {
 	return currentRow;
+}
+
+int getCurrentHD44780column(void) {
+	return currentColumn;
 }
 
 void lcd_HD44780_print_char(char data) {

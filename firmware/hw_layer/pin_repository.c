@@ -152,7 +152,7 @@ void mySetPadMode(const char *msg, ioportid_t port, ioportmask_t pin, iomode_t m
 		firmwareError("repository not initialized");
 		return;
 	}
-	if (GPIO_NULL == NULL)
+	if (port == GPIO_NULL)
 		return;
 	print("%s on %s:%d\r\n", msg, portname(port), pin);
 
