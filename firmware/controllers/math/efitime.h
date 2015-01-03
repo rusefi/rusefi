@@ -21,6 +21,17 @@
 typedef uint32_t efitimems_t;
 
 /**
+ * 64 bit time in microseconds, since boot
+ */
+typedef uint64_t efitimeus_t;
+
+/**
+ * platform-dependent tick since boot
+ * in case of stm32f4 that's a CPU tick
+ */
+typedef uint64_t efitick_t;
+
+/**
  * numeric value from 0 to 100
  */
 typedef float percent_t;
@@ -49,12 +60,12 @@ extern "C"
  * WARNING: you should use getTimeNowNt where possible for performance reasons.
  * The heaviest part is '__aeabi_ildivmod' - non-native 64 bit division
  */
-uint64_t getTimeNowUs(void);
+efitimeus_t getTimeNowUs(void);
 
 /**
  * 64-bit counter CPU cycles since MCU reset
  */
-uint64_t getTimeNowNt(void);
+efitick_t getTimeNowNt(void);
 
 uint64_t getHalTimer(void);
 

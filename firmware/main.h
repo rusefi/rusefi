@@ -40,9 +40,15 @@ extern "C"
 // 168 ticks in microsecond
 #define US_TO_NT_MULTIPLIER 168
 
-#define US2NT(x) (((uint64_t)(x))*US_TO_NT_MULTIPLIER)
+/**
+ * converts efitimeus_t to efitick_t
+ */
+#define US2NT(us) (((uint64_t)(us))*US_TO_NT_MULTIPLIER)
 
-#define NT2US(x) ((x) / US_TO_NT_MULTIPLIER)
+/**
+ * converts efitick_t to efitimeus_t
+ */
+#define NT2US(nt) ((nt) / US_TO_NT_MULTIPLIER)
 
 
 /**
