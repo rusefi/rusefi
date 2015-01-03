@@ -32,17 +32,25 @@ static void extCallback(EXTDriver *extp, expchannel_t channel) {
 	if (now - lastEventTime < NT_EVENT_GAP)
 		return; // two consecutive events are probably just jitter
 	joyTotal++;
+	joystick_button_e button;
+	// todo: I guess it's time to reduce code duplication and start working with an array
 	if (channel == getHwPin(boardConfiguration->joystickCenterPin)) {
 		joyCenter++;
+		button = JB_CENTER;
 	} else if (channel == getHwPin(boardConfiguration->joystickAPin)) {
 		joyA++;
+		button = JB_BUTTON_A;
 	} else if (channel == getHwPin(boardConfiguration->joystickBPin)) {
 		joyB++;
+		button = JB_BUTTON_C;
 	} else if (channel == getHwPin(boardConfiguration->joystickCPin)) {
 		joyC++;
+		button = JB_BUTTON_B;
 	} else if (channel == getHwPin(boardConfiguration->joystickDPin)) {
 		joyD++;
+		button = JB_BUTTON_D;
 	}
+	onJoystick(button);
 }
 
 static void joystickInfo(void) {

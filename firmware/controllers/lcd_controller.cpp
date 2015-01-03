@@ -21,16 +21,19 @@
 EXTERN_ENGINE
 ;
 
-extern bool hasFirmwareErrorFlag;
-
-#define LCD_WIDTH 20
-// this value should be even
-#define NUMBER_OF_DIFFERENT_LINES 4
+#define DISP_LINES (engineConfiguration->HD44780height - 1)
 
 static int infoIndex = 0;
+static int cursorY = 0;
 
 void onJoystick(joystick_button_e button) {
-
+	if (cursorY == TOTAL_OPTIONS - 1) {
+		cursorY = infoIndex = 0;
+	} else {
+		cursorY++;
+		if (cursorY - DISP_LINES >= infoIndex)
+			infoIndex++;
+	}
 }
 
 char * appendStr(char *ptr, const char *suffix) {
@@ -53,10 +56,6 @@ static char * prepareVBattMapLine(engine_configuration_s *engineConfiguration, c
 static char * prepareCltIatTpsLine(Engine *engine, char *buffer) {
 	char *ptr = buffer;
 	*ptr++ = 'C';
-	ptr = ftoa(ptr, getCoolantTemperature(engine), 10.0f);
-
-	ptr = appendStr(ptr, " C");
-	ptr = ftoa(ptr, getIntakeAirTemperature(engine), 10.0f);
 
 	ptr = appendStr(ptr, " TP");
 	ptr = itoa10(ptr, (int) getTPS(PASS_ENGINE_PARAMETER_F));
@@ -98,8 +97,6 @@ char * appendPinStatus(char *buffer, io_pin_e pin) {
 static char * prepareInfoLine(engine_configuration_s *engineConfiguration, char *buffer) {
 	char *ptr = buffer;
 
-	ptr = appendStr(ptr, algorithmStr[engineConfiguration->algorithm]);
-
 	ptr = appendStr(ptr, " ");
 	ptr = appendStr(ptr, ignitionModeStr[engineConfiguration->ignitionMode]);
 
@@ -122,31 +119,8 @@ static char * prepareStatusLine(char *buffer) {
 	return ptr;
 }
 
-static char buffer[LCD_WIDTH + 4];
+static char buffer[MAX_LCD_WIDTH + 4];
 static char dateBuffer[30];
-
-static void prepareCurrentSecondLine(Engine *engine, int index) {
-	memset(buffer, ' ', LCD_WIDTH);
-	char *ptr;
-	switch (index) {
-	case 0:
-		ptr = prepareCltIatTpsLine(engine, buffer);
-		break;
-	case 1:
-		ptr = prepareInfoLine(engine->engineConfiguration, buffer);
-		break;
-	case 2:
-		ptr = prepareVBattMapLine(engine->engineConfiguration, buffer);
-		break;
-	case 3:
-		ptr = prepareStatusLine(buffer);
-		break;
-	default:
-		firmwareError("unexpected case");
-		return;
-	}
-	*ptr = ' ';
-}
 
 static void showLine(lcd_line_e line) {
 	switch (line) {
@@ -158,19 +132,39 @@ static void showLine(lcd_line_e line) {
 		lcd_HD44780_print_string("config ");
 		lcd_HD44780_print_string(getConfigurationName(engine->engineConfiguration->engineType));
 		return;
+	case LL_RPM:
+		lcd_HD44780_print_string("RPM ");
+		itoa10(buffer, getRpmE(engine));
+		lcd_HD44780_print_string(buffer);
+		return;
+	case LL_CLT_TEMPERATURE:
+		lcd_HD44780_print_string("Coolant ");
+		ftoa(buffer, getCoolantTemperature(engine), 10.0f);
+		lcd_HD44780_print_string(buffer);
+		return;
+	case LL_IAT_TEMPERATURE:
+		lcd_HD44780_print_string("Intake Air ");
+		ftoa(buffer, getIntakeAirTemperature(engine), 10.0f);
+		lcd_HD44780_print_string(buffer);
+		return;
+	case LL_ALGORITHM:
+		lcd_HD44780_print_string(getEngine_load_mode_e(engineConfiguration->algorithm));
+		return;
 	}
 }
 
 void updateHD44780lcd(Engine *engine) {
-	for (int i = infoIndex; i < infoIndex + engineConfiguration->HD44780height - 1; i++) {
+	for (int i = infoIndex; i < infoIndex + DISP_LINES; i++) {
 		lcd_HD44780_set_position(i - infoIndex, 0);
+
+		lcd_HD44780_print_char(cursorY == i ? '*' : ' ');
 
 		showLine((lcd_line_e) i);
 
 		int column = getCurrentHD44780column();
 
 		for (int r = column; r < 20; r++) {
-			lcd_HD44780_print_char('*');
+			lcd_HD44780_print_char(' ');
 		}
 	}
 

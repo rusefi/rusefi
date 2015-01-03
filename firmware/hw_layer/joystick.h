@@ -10,11 +10,11 @@
 #include "main.h"
 
 typedef enum {
-	CENTER = 0,
-	BUTTON_A = 1,
-	BUTTON_B = 2,
-	BUTTON_C = 3,
-	BUTTON_D = 4,
+	JB_CENTER = 0,
+	JB_BUTTON_A = 1,
+	JB_BUTTON_B = 2,
+	JB_BUTTON_C = 3,
+	JB_BUTTON_D = 4,
 } joystick_button_e;
 
 void onJoystick(joystick_button_e button);
