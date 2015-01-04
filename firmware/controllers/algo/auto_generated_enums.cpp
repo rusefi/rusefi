@@ -435,6 +435,10 @@ case Force_4b_pin_input_mode:
   return "Force_4b_pin_input_mode";
 case PI_DEFAULT:
   return "PI_DEFAULT";
+case PI_PULLUP:
+	return "PI_PULLUP";
+case PI_PULLDOWN:
+	return "PI_PULLDOWN";
   }
  return NULL;
 }

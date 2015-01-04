@@ -238,6 +238,8 @@ typedef enum {
 
 typedef enum {
 	PI_DEFAULT = 0,
+	PI_PULLUP = 1,
+	PI_PULLDOWN = 2,
 
 	Force_4b_pin_input_mode = ENUM_SIZE_HACK,
 } pin_input_mode_e;

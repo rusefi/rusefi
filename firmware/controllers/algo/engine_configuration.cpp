@@ -422,7 +422,8 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	boardConfiguration->fanPin = GPIOC_15;
 	boardConfiguration->fanPinMode = OM_DEFAULT;
 
-	boardConfiguration->idleSwitchPin = GPIO_UNASSIGNED;
+	boardConfiguration->clutchDownPin = GPIO_UNASSIGNED;
+	engineConfiguration->clutchUpPin = GPIO_UNASSIGNED;
 
 	boardConfiguration->triggerSimulatorPins[0] = GPIOD_1;
 	boardConfiguration->triggerSimulatorPins[1] = GPIOD_2;

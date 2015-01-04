@@ -37,7 +37,7 @@ $Descr A 11000 8500
 encoding utf-8
 Sheet 1 1
 Title "pOWERsso-24 breakout"
-Date "3 jan 2015"
+Date "4 jan 2015"
 Rev "R0.1"
 Comp "rusEFI"
 Comment1 ""
@@ -449,4 +449,22 @@ Text Notes 6100 4500 0    60   ~ 0
 MCU GND\n\nMCU TTL\n\nMCU TTL
 Wire Wire Line
 	8550 4100 8550 4150
+$Comp
+L CONN_5 P104
+U 1 1 54A88BBE
+P 10050 6750
+F 0 "P104" V 10000 6750 50  0000 C CNN
+F 1 "CONN_5" V 10100 6750 50  0000 C CNN
+F 2 "SIL-5" H 10050 6750 60  0001 C CNN
+F 3 "" H 10050 6750 60  0000 C CNN
+	1    10050 6750
+	1    0    0    -1  
+$EndComp
+Text Notes 9550 6400 0    60   ~ 0
+Mounting connector
+NoConn ~ 9650 6550
+NoConn ~ 9650 6650
+NoConn ~ 9650 6750
+NoConn ~ 9650 6850
+NoConn ~ 9650 6950
 $EndSCHEMATC
