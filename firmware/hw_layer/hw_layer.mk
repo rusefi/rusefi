@@ -24,6 +24,7 @@ HW_LAYER_EMS_CPP = $(PROJECT_DIR)/hw_layer/hardware.cpp \
 	$(PROJECT_DIR)/hw_layer/max31855.cpp \
 	$(PROJECT_DIR)/hw_layer/joystick.cpp \
 	$(PROJECT_DIR)/hw_layer/stepper.cpp \
+	$(PROJECT_DIR)/hw_layer/servo.cpp \
 	$(PROJECT_DIR)/hw_layer/stm32f4/mpu_util.cpp
 
 HW_LAYER_EGT_CPP = $(PROJECT_DIR)/hw_layer/can_hw.cpp \
