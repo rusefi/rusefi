@@ -12,6 +12,5 @@
 #include "engine.h"
 
 void startIdleThread(Engine *engine);
-int getIdleSwitch(void);
 
 #endif /* IDLE_THREAD_H_ */

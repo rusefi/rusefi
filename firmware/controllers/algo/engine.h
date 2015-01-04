@@ -41,6 +41,9 @@ public:
 	float dwellAngle;
 	float advance;
 
+	bool_t clutchUpState;
+	bool_t clutchDownState;
+
 	trigger_shape_s triggerShape;
 
 	float angleExtra[IGNITION_PIN_COUNT];

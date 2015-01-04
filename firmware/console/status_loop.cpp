@@ -482,6 +482,8 @@ void updateTunerStudioState(Engine *engine, TunerStudioOutputChannels *tsOutputC
 	tsOutputChannels->isCltError = !isValidCoolantTemperature(getCoolantTemperature(engine));
 	tsOutputChannels->isIatError = !isValidIntakeAirTemperature(getIntakeAirTemperature(engine));
 #endif
+	tsOutputChannels->clutchUpState = engine->clutchUpState;
+	tsOutputChannels->clutchDownState = engine->clutchDownState;
 	tsOutputChannels->tCharge = getTCharge(rpm, tps, coolant, intake);
 	float timing = getAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER);
 	tsOutputChannels->inj_adv = timing > 360 ? timing - 720 : timing;
