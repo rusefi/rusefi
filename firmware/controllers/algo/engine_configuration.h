@@ -146,10 +146,13 @@ typedef struct {
 	pin_output_mode_e electronicThrottlePin1Mode;
 
 	/**
-	 * Idle switch input signal
+	 * some cars have a switch to indicate that clutch pedal is all the way down
 	 */
-	brain_pin_e idleSwitchPin;
-	pin_input_mode_e idleSwitchPinMode;
+	brain_pin_e clutchDownPin;
+	/**
+	 * some cars have a switch to indicate that clutch pedal is all the way down
+	 */
+	pin_input_mode_e clutchDownPinMode;
 
 	brain_pin_e alternatorControlPin;
 	pin_output_mode_e alternatorControlPinMode;
@@ -598,7 +601,12 @@ typedef struct {
 	 */
 	float cylinderBore;
 
-	int unused3[84];
+	/**
+	 * Some vehicles have a switch to indicate that clutch pedal is all the way up
+	 */
+	brain_pin_e clutchUpPin;
+	pin_input_mode_e clutchUpPinMode;
+	int unused3[82];
 
 } engine_configuration_s;
 

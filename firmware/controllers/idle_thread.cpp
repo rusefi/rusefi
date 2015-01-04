@@ -96,9 +96,9 @@ static msg_t ivThread(int param) {
 		chThdSleepMilliseconds(boardConfiguration->idleThreadPeriod);
 
 		// this value is not used yet
-		if (boardConfiguration->idleSwitchPin != GPIO_UNASSIGNED) {
-			idleSwitchState = palReadPad(getHwPort(boardConfiguration->idleSwitchPin),
-					getHwPin(boardConfiguration->idleSwitchPin));
+		if (boardConfiguration->clutchDownPin != GPIO_UNASSIGNED) {
+			idleSwitchState = palReadPad(getHwPort(boardConfiguration->clutchDownPin),
+					getHwPin(boardConfiguration->clutchDownPin));
 		}
 
 		if (engineConfiguration->idleMode != IM_AUTO)
@@ -149,8 +149,11 @@ void startIdleThread(Engine *engine) {
 
 	// this is idle switch INPUT - sometimes there is a switch on the throttle pedal
 	// this switch is not used yet
-	if (boardConfiguration->idleSwitchPin != GPIO_UNASSIGNED)
-		mySetPadMode2("idle switch", boardConfiguration->idleSwitchPin, PAL_MODE_INPUT);
+	if (boardConfiguration->clutchDownPin != GPIO_UNASSIGNED)
+		mySetPadMode2("clutch down switch", boardConfiguration->clutchDownPin, PAL_MODE_INPUT);
+
+	if (engineConfiguration->clutchUpPin != GPIO_UNASSIGNED)
+		mySetPadMode2("clutch up switch", engineConfiguration->clutchUpPin, PAL_MODE_INPUT);
 
 	addConsoleAction("idleinfo", showIdleInfo);
 	addConsoleActionI("set_idle_rpm", setIdleRpmAction);
