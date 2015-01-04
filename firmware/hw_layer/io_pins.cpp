@@ -209,7 +209,7 @@ static io_pin_e TO_BE_TURNED_OFF_ON_ERROR[] = { SPARKOUT_1_OUTPUT, SPARKOUT_2_OU
 void turnAllPinsOff(void) {
 	int l = sizeof(TO_BE_TURNED_OFF_ON_ERROR) / sizeof(io_pin_e);
 	for (int i = 0; i < l; i++) {
-		turnOutputPinOff(l);
+		turnOutputPinOff(TO_BE_TURNED_OFF_ON_ERROR[l]);
 	}
 }
 #endif

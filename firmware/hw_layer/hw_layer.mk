@@ -1,6 +1,5 @@
 
 HW_LAYER_EMS = $(PROJECT_DIR)/hw_layer/pin_repository.c \
-	$(PROJECT_DIR)/hw_layer/io_pins.c \
 	$(PROJECT_DIR)/hw_layer/mcp3208.c \
 	$(PROJECT_DIR)/hw_layer/lcd/lcd_HD44780.c \
 	$(PROJECT_DIR)/hw_layer/microsecond_timer.c \
@@ -10,7 +9,6 @@ HW_LAYER_EMS = $(PROJECT_DIR)/hw_layer/pin_repository.c \
 	$(PROJECT_DIR)/hw_layer/rtc_helper.c \
 	$(PROJECT_DIR)/hw_layer/mmc_card.c \
 	$(PROJECT_DIR)/hw_layer/neo6m.c \
-	$(PROJECT_DIR)/hw_layer/gpio_helper.c \
 	$(PROJECT_DIR)/hw_layer/wave_analyzer_hw.c
 
 HW_LAYER_EMS_CPP = $(PROJECT_DIR)/hw_layer/hardware.cpp \
@@ -25,6 +23,8 @@ HW_LAYER_EMS_CPP = $(PROJECT_DIR)/hw_layer/hardware.cpp \
 	$(PROJECT_DIR)/hw_layer/joystick.cpp \
 	$(PROJECT_DIR)/hw_layer/stepper.cpp \
 	$(PROJECT_DIR)/hw_layer/servo.cpp \
+	$(PROJECT_DIR)/hw_layer/io_pins.cpp \
+	$(PROJECT_DIR)/hw_layer/gpio_helper.cpp \
 	$(PROJECT_DIR)/hw_layer/stm32f4/mpu_util.cpp
 
 HW_LAYER_EGT_CPP = $(PROJECT_DIR)/hw_layer/can_hw.cpp \
