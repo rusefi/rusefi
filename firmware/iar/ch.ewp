@@ -2647,7 +2647,7 @@
       <name>$PROJ_DIR$\..\hw_layer\flash.h</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\hw_layer\gpio_helper.c</name>
+      <name>$PROJ_DIR$\..\hw_layer\gpio_helper.cpp</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\hw_layer\gpio_helper.h</name>
@@ -2665,7 +2665,7 @@
       <name>$PROJ_DIR$\..\hw_layer\HIP9011.h</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\hw_layer\io_pins.c</name>
+      <name>$PROJ_DIR$\..\hw_layer\io_pins.cpp</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\hw_layer\joystick.cpp</name>
