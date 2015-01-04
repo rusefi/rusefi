@@ -13,12 +13,12 @@ class StepperMotor {
 public:
 	void initialize(brain_pin_e stepPin, brain_pin_e directionPin);
 	void pulse();
+	GPIO_TypeDef * directionPort;
+	ioportmask_t directionPin;
 private:
 
 	GPIO_TypeDef * stepPort;
 	ioportmask_t stepPin;
-	GPIO_TypeDef * directionPort;
-	ioportmask_t directionPin;
 
 	int position;
 

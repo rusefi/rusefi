@@ -10,17 +10,27 @@
 #include "stepper.h"
 #include "pin_repository.h"
 
-#define ST_DELAY_MS 200
+#define ST_DELAY_MS 10
 
-#define ST_COUNT 200
+#define ST_COUNT 100
 
 static msg_t stThread(StepperMotor *motor) {
 	chRegSetThreadName("stepper");
+        
+        palWritePad(motor->directionPort, motor->directionPin, true);
 
 	// let's part the motor in a known position to begin with
 	for (int i = 0; i < ST_COUNT; i++) {
 		motor->pulse();
 	}
+
+        palWritePad(motor->directionPort, motor->directionPin, false);
+        
+	// let's part the motor in a known position to begin with
+	for (int i = 0; i < ST_COUNT / 2; i++) {
+		motor->pulse();
+	}
+
 }
 
 void StepperMotor::pulse() {
@@ -36,7 +46,10 @@ void StepperMotor::initialize(brain_pin_e stepPin, brain_pin_e directionPin) {
 	stepPort = getHwPort(stepPin);
 	this->stepPin = getHwPin(stepPin);
 
-	mySetPadMode("st step", stepPort, this->stepPin, PAL_MODE_OUTPUT_PUSHPULL);
+        directionPort = getHwPort(directionPin);
+	this->directionPin = getHwPin(directionPin);
+
+	mySetPadMode2("st step", stepPin, PAL_MODE_OUTPUT_PUSHPULL);
 	mySetPadMode2("st dir", directionPin, PAL_MODE_OUTPUT_PUSHPULL);
 
 	chThdCreateStatic(stThreadStack, sizeof(stThreadStack), NORMALPRIO, (tfunc_t) stThread, this);
