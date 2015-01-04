@@ -70,6 +70,8 @@ typedef struct {
 	unsigned int checkEngine : 1; // bit 8
 	unsigned int needBurn : 1; // bit 9
 	unsigned int secondTriggerChannelEnabled : 1; // bit 10
+	unsigned int clutchUpState : 1; // bit 11
+	unsigned int clutchDownState : 1; // bit 11
 	float vehicleSpeedKph;
 	unsigned int isTpsError : 1; // bit 0
 	unsigned int isCltError : 1; // bit 1

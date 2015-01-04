@@ -36,11 +36,6 @@
 
 static THD_WORKING_AREA(ivThreadStack, UTILITY_THREAD_STACK_SIZE);
 
-/**
- * here we keep the value we got from IDLE SWITCH input
- */
-static volatile int idleSwitchState;
-
 static Logging logger;
 EXTERN_ENGINE
 ;
@@ -51,10 +46,6 @@ static SimplePwm idleValvePwm;
  * Idle level calculation algorithm lives in idle_controller.c
  */
 static IdleValveState idle;
-
-int getIdleSwitch() {
-	return idleSwitchState;
-}
 
 void idleDebug(const char *msg, percent_t value) {
 	printMsg(&logger, "%s%f", msg, value);
@@ -97,8 +88,12 @@ static msg_t ivThread(int param) {
 
 		// this value is not used yet
 		if (boardConfiguration->clutchDownPin != GPIO_UNASSIGNED) {
-			idleSwitchState = palReadPad(getHwPort(boardConfiguration->clutchDownPin),
+			engine->clutchDownState = palReadPad(getHwPort(boardConfiguration->clutchDownPin),
 					getHwPin(boardConfiguration->clutchDownPin));
+		}
+		if (engineConfiguration->clutchUpPin != GPIO_UNASSIGNED) {
+			engine->clutchUpState = palReadPad(getHwPort(engineConfiguration->clutchUpPin),
+					getHwPin(engineConfiguration->clutchUpPin));
 		}
 
 		if (engineConfiguration->idleMode != IM_AUTO)
@@ -150,10 +145,11 @@ void startIdleThread(Engine *engine) {
 	// this is idle switch INPUT - sometimes there is a switch on the throttle pedal
 	// this switch is not used yet
 	if (boardConfiguration->clutchDownPin != GPIO_UNASSIGNED)
-		mySetPadMode2("clutch down switch", boardConfiguration->clutchDownPin, PAL_MODE_INPUT);
+		mySetPadMode2("clutch down switch", boardConfiguration->clutchDownPin,
+				getInputMode(boardConfiguration->clutchDownPinMode));
 
 	if (engineConfiguration->clutchUpPin != GPIO_UNASSIGNED)
-		mySetPadMode2("clutch up switch", engineConfiguration->clutchUpPin, PAL_MODE_INPUT);
+		mySetPadMode2("clutch up switch", engineConfiguration->clutchUpPin, getInputMode(engineConfiguration->clutchUpPinMode));
 
 	addConsoleAction("idleinfo", showIdleInfo);
 	addConsoleActionI("set_idle_rpm", setIdleRpmAction);

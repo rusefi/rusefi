@@ -144,6 +144,18 @@ void mySetPadMode2(const char *msg, brain_pin_e pin, iomode_t mode) {
 	mySetPadMode(msg, getHwPort(pin), getHwPin(pin), mode);
 }
 
+iomode_t getInputMode(pin_input_mode_e mode) {
+	switch (mode) {
+	case PI_PULLUP:
+		return PAL_MODE_INPUT_PULLUP;
+	case PI_PULLDOWN:
+		return PAL_MODE_INPUT_PULLDOWN;
+	case PI_DEFAULT:
+	default:
+		return PAL_MODE_INPUT;
+	}
+}
+
 /**
  * This method would set an error condition if pin is already used
  */
