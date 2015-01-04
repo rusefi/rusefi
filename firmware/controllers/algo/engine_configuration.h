@@ -177,7 +177,9 @@ typedef struct {
 
 	adc_channel_mode_e adcHwChannelEnabled[HW_MAX_ADC_INDEX];
 
+	// offset 5760
 	brain_pin_e triggerInputPins[3];
+	// offset 5772
 	brain_pin_e mainRelayPin;
 
 	int idleThreadPeriod;
