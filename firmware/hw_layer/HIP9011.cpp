@@ -54,6 +54,8 @@ static int settingUpdateCount = 0;
  */
 static bool_t isIntegrating = false;
 /**
+ * we cannot afford relatively slow synchronous SPI communication from the scheduler callbacks, thus
+ * SPI is taken care from a dedicated thread where we care less about how long it would take
  * true by default so that we can update the settings before starting to integrate
  */
 static bool_t needToSendSpiCommand = true;
@@ -78,12 +80,14 @@ SPI_CR1_MSTR |
 
 static unsigned char tx_buff[1];
 static unsigned char rx_buff[1];
+static int nonZeroResponse = 0;
 
 #define SPI_SYNCHRONOUS(value) \
 	spiSelect(driver); \
 	tx_buff[0] = value; \
 	spiExchange(driver, 1, tx_buff, rx_buff); \
-	spiUnselect(driver);
+	spiUnselect(driver); \
+	if (rx_buff[0] != 0) nonZeroResponse++;
 
 // todo: make this configurable
 static SPIDriver *driver = &SPID2;
@@ -151,8 +155,8 @@ static void showHipInfo(void) {
 	scheduleMsg(&logger, "band_index=%d gain_index=%d", bandIndex, currentGainIndex);
 	scheduleMsg(&logger, "integrator index=%d", currentIntergratorIndex);
 
-	scheduleMsg(&logger, "spi= int=%s CS=%s updateCount=%d", hwPortname(boardConfiguration->hip9011IntHoldPin),
-			hwPortname(boardConfiguration->hip9011CsPin), settingUpdateCount);
+	scheduleMsg(&logger, "spi= int=%s response count=%d", hwPortname(boardConfiguration->hip9011IntHoldPin), nonZeroResponse);
+	scheduleMsg(&logger, "CS=%s updateCount=%d", hwPortname(boardConfiguration->hip9011CsPin), settingUpdateCount);
 }
 
 void setHip9011FrankensoPinout(void) {
@@ -168,10 +172,10 @@ void setHip9011FrankensoPinout(void) {
 static void startIntegration(void) {
 	if (!needToSendSpiCommand) {
 		/**
-		 * SPI communication is only allowed while not integrading, so we initiate the exchange
-		 * once we are done integrating
+		 * SPI communication is only allowed while not integrating, so we postpone the exchange
+		 * until we are done integrating
 		 */
-		isIntegrating = false;
+		isIntegrating = true;
 		turnPinHigh(HIP9011_INT_HOLD);
 	}
 }
