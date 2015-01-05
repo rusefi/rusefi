@@ -15,6 +15,9 @@
 // 0b11100000
 #define SET_CHANNEL_CMD 0xE0
 
+// 0b11000000
+#define SET_INTEGRATOR_CMD 0xC0
+
 // 0b00000000
 #define SET_BAND_PASS_CMD 0x0
 
@@ -22,7 +25,9 @@
 #define SET_GAIN_CMD 0x80
 
 // 0b01110001
-#define SET_ADVANCED_MODE 0x71
+//#define SET_ADVANCED_MODE 0x71
+
+#define HIP_THREAD_PERIOD 100
 
 void initHip9011(void);
 void setHip9011FrankensoPinout(void);

@@ -31,6 +31,7 @@
 #include "rpm_calculator.h"
 #include "trigger_central.h"
 #include "hip9011_lookup.h"
+#include "HIP9011.h"
 
 #if EFI_HIP_9011 || defined(__DOXYGEN__)
 
@@ -42,8 +43,9 @@ extern pin_output_mode_e DEFAULT_OUTPUT;
  * band index is only send to HIP chip on startup
  */
 static int bandIndex;
-static int currentGainIndex;
+static int currentGainIndex = -1;
 static int currentIntergratorIndex = -1;
+static int settingUpdateCount = 0;
 
 /**
  * Int/Hold pin is controlled from scheduler callbacks which are set according to current RPM
@@ -51,7 +53,10 @@ static int currentIntergratorIndex = -1;
  * The following flags make sure that we only have SPI communication while not integrating
  */
 static bool_t isIntegrating = false;
-static bool_t needToSendSpiCommand = false;
+/**
+ * true by default so that we can update the settings before starting to integrate
+ */
+static bool_t needToSendSpiCommand = true;
 
 static scheduling_s startTimer[2];
 static scheduling_s endTimer[2];
@@ -83,63 +88,54 @@ static unsigned char rx_buff[1];
 // todo: make this configurable
 static SPIDriver *driver = &SPID2;
 
+EXTERN_ENGINE
+;
+
 static msg_t ivThread(int param) {
 	chRegSetThreadName("HIP");
 
 	while (true) {
-		chThdSleepMilliseconds(10);
+		/**
+		 * do we need this configurable? probably not
+		 */
+		chThdSleepMilliseconds(HIP_THREAD_PERIOD);
 
-		// engine->rpmCalculator.rpmValue
+		int integratorIndex = getIntegrationIndexByRpm(engine->rpmCalculator.rpmValue);
+		int gainIndex = getHip9011GainIndex(boardConfiguration->hip9011Gain);
 
-//		int newValue = INTEGRATOR_INDEX;
-//		if (newValue != intergratorIndex) {
-//			intergratorIndex = newValue;
-//			// todo: send new value, be sure to use non-synchnonious approach!
-//
-//		}
-		// todo: move this into the end callback
+		if (currentGainIndex != gainIndex || currentIntergratorIndex != integratorIndex) {
+			needToSendSpiCommand = true;
+		}
 
+		/**
+		 * Loop if nothing has really changed
+		 */
+		if (!needToSendSpiCommand)
+			continue;
+		/**
+		 * Loop if the chip is busy. The 'needToSend' flag would prevent next integration, but we
+		 * need to let current integration finish
+		 */
+		if (isIntegrating)
+			continue;
+		settingUpdateCount++;
 
-//		scheduleMsg(&logger, "poking HIP=%d", counter++);
+		SPI_SYNCHRONOUS(SET_GAIN_CMD + gainIndex);
+		currentGainIndex = gainIndex;
 
-		spiSelect(driver);
+		SPI_SYNCHRONOUS(SET_INTEGRATOR_CMD + integratorIndex);
+		currentIntergratorIndex = integratorIndex;
 
-//		// '0' for 4MHz
-//		tx_buff[0] = SET_PRESCALER_CMD + 0 + 2;
-//		spiExchange(driver, 1, tx_buff, rx_buff);
-//
-//		// '0' for channel #1
-//		tx_buff[0] = SET_CHANNEL_CMD + 0;
-//		spiExchange(driver, 1, tx_buff, rx_buff);
-//
-//		// band index depends on cylinder bore
-//		tx_buff[0] = SET_BAND_PASS_CMD + bandIndex;
-//		spiExchange(driver, 1, tx_buff, rx_buff);
-//
-//		// todo
-//		tx_buff[0] = SET_GAIN_CMD + 41;
-//		spiExchange(driver, 1, tx_buff, rx_buff);
-//
-//		tx_buff[0] = SET_ADVANCED_MODE;
-//		spiExchange(driver, 1, tx_buff, rx_buff);
+		needToSendSpiCommand = false;
 
-// BAND_PASS_CMD
-		tx_buff[0] = 0x0 | (40 & 0x3F);
-		spiExchange(driver, 1, tx_buff, rx_buff);
-
-		// Set the gain 0b10000000
-		tx_buff[0] = 0x80 | (49 & 0x3F);
-		spiExchange(driver, 1, tx_buff, rx_buff);
-
-		// Set the integration time constant 0b11000000
-		tx_buff[0] = 0xC0 | (31 & 0x1F);
-		spiExchange(driver, 1, tx_buff, rx_buff);
-
-		// SET_ADVANCED_MODE 0b01110001
-		tx_buff[0] = 0x71;
-		spiExchange(driver, 1, tx_buff, rx_buff);
-
-		spiUnselect(driver);
+//// BAND_PASS_CMD
+//		SPI_SYNCHRONOUS(0x0 | (40 & 0x3F));
+//		// Set the gain 0b10000000
+//		SPI_SYNCHRONOUS(0x80 | (49 & 0x3F));
+//		// Set the integration time constant 0b11000000
+//		SPI_SYNCHRONOUS(0xC0 | (31 & 0x1F));
+//		// SET_ADVANCED_MODE 0b01110001
+//		SPI_SYNCHRONOUS(tx_buff[0] = 0x71;)
 
 	}
 #if defined __GNUC__
@@ -148,19 +144,15 @@ static msg_t ivThread(int param) {
 
 }
 
-EXTERN_ENGINE
-;
-
 static void showHipInfo(void) {
 	printSpiState(&logger, boardConfiguration);
 	scheduleMsg(&logger, "bore=%f freq=%f", engineConfiguration->cylinderBore, BAND(engineConfiguration->cylinderBore));
 
-	scheduleMsg(&logger, "band_index=%d gain_index=%d", bandIndex, GAIN_INDEX(boardConfiguration->hip9011Gain));
-
+	scheduleMsg(&logger, "band_index=%d gain_index=%d", bandIndex, currentGainIndex);
 	scheduleMsg(&logger, "integrator index=%d", currentIntergratorIndex);
 
-	scheduleMsg(&logger, "spi= int=%s CS=%s", hwPortname(boardConfiguration->hip9011IntHoldPin),
-			hwPortname(boardConfiguration->hip9011CsPin));
+	scheduleMsg(&logger, "spi= int=%s CS=%s updateCount=%d", hwPortname(boardConfiguration->hip9011IntHoldPin),
+			hwPortname(boardConfiguration->hip9011CsPin), settingUpdateCount);
 }
 
 void setHip9011FrankensoPinout(void) {
@@ -227,9 +219,12 @@ void initHip9011(void) {
 		return;
 	initLogging(&logger, "HIP driver");
 
-//	prepa engineConfiguration->knockDetectionWindowEnd	- engineConfiguration->knockDetectionWindowStart
+	// todo: apply new properties on the fly
+	prepareHip9011RpmLookup(
+			engineConfiguration->knockDetectionWindowEnd - engineConfiguration->knockDetectionWindowStart);
 
-//	driver = getSpiDevice(boardConfiguration->digitalPotentiometerSpiDevice);
+	// todo: configurable
+//	driver = getSpiDevice(boardConfiguration->hip9011SpiDevice);
 
 	spicfg.ssport = getHwPort(boardConfiguration->hip9011CsPin);
 	spicfg.sspad = getHwPin(boardConfiguration->hip9011CsPin);
@@ -240,19 +235,11 @@ void initHip9011(void) {
 	scheduleMsg(&logger, "Starting HIP9011/TPIC8101 driver");
 	spiStart(driver, &spicfg);
 
-	chThdCreateStatic(htThreadStack, sizeof(htThreadStack), NORMALPRIO,
-			(tfunc_t) ivThread, NULL);
-//#else
-//	/**
-//	 * for runtime we are re-starting SPI in non-synchronous mode
-//	 */
-//	spiStop(driver);
-//	// todo spicfg.end_cb = spiEndCallback;
-//	spiStart(driver, &spicfg);
-//#endif /* HIP_DEBUG */
-
 	bandIndex = getHip9011BandIndex(engineConfiguration->cylinderBore);
 
+	/**
+	 * this engine cycle callback would be scheduling actual integration start and end callbacks
+	 */
 	addTriggerEventListener(&intHoldCallback, "DD int/hold", engine);
 
 	// MISO PB14
@@ -262,6 +249,17 @@ void initHip9011(void) {
 
 	addConsoleAction("hipinfo", showHipInfo);
 	addConsoleActionF("set_gain", setGain);
+
+	// '0' for 4MHz
+	SPI_SYNCHRONOUS(SET_PRESCALER_CMD + 0);
+
+	// '0' for channel #1
+	SPI_SYNCHRONOUS(SET_CHANNEL_CMD + 0);
+
+	// band index depends on cylinder bore
+	SPI_SYNCHRONOUS(SET_BAND_PASS_CMD + bandIndex);
+
+	chThdCreateStatic(htThreadStack, sizeof(htThreadStack), NORMALPRIO, (tfunc_t) ivThread, NULL);
 }
 
 #endif
