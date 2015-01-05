@@ -2277,6 +2277,12 @@
         <name>$PROJ_DIR$\..\controllers\sensors\ego.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\controllers\sensors\hip9011_lookup.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\controllers\sensors\hip9011_lookup.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\controllers\sensors\maf.cpp</name>
       </file>
       <file>
@@ -3178,12 +3184,6 @@
   <group>
     <name>util</name>
     <file>
-      <name>$PROJ_DIR$\..\util\datalogging.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\util\datalogging.h</name>
-    </file>
-    <file>
       <name>$PROJ_DIR$\..\util\cli_registry.c</name>
     </file>
     <file>
@@ -3206,6 +3206,12 @@
     </file>
     <file>
       <name>$PROJ_DIR$\..\util\data_buffer.h</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\util\datalogging.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\util\datalogging.h</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\util\efilib.cpp</name>

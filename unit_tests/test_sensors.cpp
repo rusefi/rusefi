@@ -8,6 +8,7 @@
 #include "main.h"
 #include "thermistors.h"
 #include "allsensors.h"
+#include "hip9011_lookup.h"
 
 static ThermistorConf tc;
 
@@ -35,14 +36,21 @@ void testTpsRateOfChange(void) {
 
 	saveTpsState(3 * CH_FREQUENCY, 75);
 	assertEquals(25, getTpsRateOfChange());
+}
 
+static void testHip9011lookup(void) {
+	print("************************************************** testHip9011lookup\r\n");
 
+	assertEqualsM2("", 47746.5195, getRpmByAngleWindowAndTimeUs(40, 360), 0.1);
+	assertEqualsM2("", 3183.1013, getRpmByAngleWindowAndTimeUs(600, 360), 0.1);
+	assertEqualsM2("", 22918.3301, getRpmByAngleWindowAndTimeUs(600, 50), 0.1);
 }
 
 void testSensors(void) {
 	print("************************************************** testSensors\r\n");
 	testMapDecoding();
 	testTpsRateOfChange();
+	testHip9011lookup();
 
 	setThermistorConfiguration(&tc, 32, 9500, 75, 2100, 120, 1000);
 
@@ -55,3 +63,4 @@ void testSensors(void) {
 	float t = convertResistanceToKelvinTemperature(2100, &tc);
 	assertEquals(75 + KELV, t);
 }
+

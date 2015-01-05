@@ -10,12 +10,14 @@
  *	pin12	Slave Data In - MOSI
  *	pin13	SPI clock - SCLK
  *
+ *
+ *
  * http://www.ti.com/lit/ds/symlink/tpic8101.pdf
  * http://www.intersil.com/content/dam/Intersil/documents/hip9/hip9011.pdf
  * http://www.intersil.com/content/dam/Intersil/documents/an97/an9770.pdf
  * http://e2e.ti.com/cfs-file/__key/telligent-evolution-components-attachments/00-26-01-00-00-42-36-40/TPIC8101-Training.pdf
  *
- *	SPI frequency: 5MHz max
+ * max SPI frequency: 5MHz max
  *
  * @date Nov 27, 2013
  * @author Andrey Belomutskiy, (c) 2012-2014
@@ -28,6 +30,7 @@
 #include "hardware.h"
 #include "rpm_calculator.h"
 #include "trigger_central.h"
+#include "hip9011_lookup.h"
 
 #if EFI_HIP_9011 || defined(__DOXYGEN__)
 
@@ -38,29 +41,21 @@ extern pin_output_mode_e DEFAULT_OUTPUT;
 static int bandIndex;
 static int gainIndex;
 static int intergratorIndex = -1;
-static bool_t isHip9011Busy = false;
+
+/**
+ * Int/Hold pin is controlled from scheduler callbacks which are set according to current RPM
+ *
+ * The following flags make sure that we only have SPI communication while not integrating
+ */
+static bool_t isIntegrating = false;
+static bool_t needToSendSpiCommand = false;
 
 static scheduling_s startTimer[2];
 static scheduling_s endTimer[2];
 
-// 0b01000000
-#define SET_PRESCALER_CMD 0x40
-// 0b11100000
-#define SET_CHANNEL_CMD 0xE0
-// 0b00000000
-#define SET_BAND_PASS_CMD 0x0
-
-// 0b10000000
-#define SET_GAIN_CMD 0x80
-
-// 0b01110001
-#define SET_ADVANCED_MODE 0x71
-
 static Logging logger;
 
-#if HIP_DEBUG
 static THD_WORKING_AREA(htThreadStack, UTILITY_THREAD_STACK_SIZE);
-#endif /* HIP_DEBUG */
 
 // SPI_CR1_BR_1 // 5MHz
 // SPI_CR1_CPHA Clock Phase
@@ -90,6 +85,15 @@ static msg_t ivThread(int param) {
 
 	while (true) {
 		chThdSleepMilliseconds(10);
+
+//		int newValue = INTEGRATOR_INDEX;
+//		if (newValue != intergratorIndex) {
+//			intergratorIndex = newValue;
+//			// todo: send new value, be sure to use non-synchnonious approach!
+//
+//		}
+		// todo: move this into the end callback
+
 
 //		scheduleMsg(&logger, "poking HIP=%d", counter++);
 
@@ -142,63 +146,35 @@ static msg_t ivThread(int param) {
 EXTERN_ENGINE
 ;
 
-#define INT_LOOKUP_SIZE 32
-
-/**
- * These are HIP9011 magic values - integrator time constants in uS
- */
-static const int integratorValues[INT_LOOKUP_SIZE] = { 40, 45, 50, 55, 60, 65,
-		70, 75, 80, 90, 100, 110, 120, 130, 140, 150, 160, 180, 200, 220, 240,
-		260, 280, 300, 320, 360, 400, 440, 480, 520, 560, 600 };
-
-#define GAIN_LOOKUP_SIZE 64
-
 static const float gainLookupInReverseOrder[GAIN_LOOKUP_SIZE] = {
-		/* 00 */ 0.111, 0.118, 0.125, 0.129, 0.133, 0.138, 0.143, 0.148,
-		/* 08 */ 0.154, 0.160, 0.167, 0.174, 0.182, 0.190, 0.200, 0.211,
-		/* 16 */ 0.222, 0.236, 0.250, 0.258, 0.267, 0.276, 0.286, 0.296,
-		/* 24 */ 0.308, 0.320, 0.333, 0.348, 0.364, 0.381, 0.400, 0.421,
-		/* 32 */ 0.444, 0.471, 0.500, 0.548, 0.567, 0.586, 0.607, 0.630,
-		/* 40 */ 0.654, 0.680, 0.708, 0.739, 0.773, 0.810, 0.850, 0.895,
-		/* 48 */ 0.944, 1.000, 1.063, 1.143, 1.185, 1.231, 1.280, 1.333,
-		/* 56 */ 1.391, 1.455, 1.523, 1.600, 1.684, 1.778, 1.882, 2.0
-};
+/* 00 */0.111, 0.118, 0.125, 0.129, 0.133, 0.138, 0.143, 0.148,
+/* 08 */0.154, 0.160, 0.167, 0.174, 0.182, 0.190, 0.200, 0.211,
+/* 16 */0.222, 0.236, 0.250, 0.258, 0.267, 0.276, 0.286, 0.296,
+/* 24 */0.308, 0.320, 0.333, 0.348, 0.364, 0.381, 0.400, 0.421,
+/* 32 */0.444, 0.471, 0.500, 0.548, 0.567, 0.586, 0.607, 0.630,
+/* 40 */0.654, 0.680, 0.708, 0.739, 0.773, 0.810, 0.850, 0.895,
+/* 48 */0.944, 1.000, 1.063, 1.143, 1.185, 1.231, 1.280, 1.333,
+/* 56 */1.391, 1.455, 1.523, 1.600, 1.684, 1.778, 1.882, 2.0 };
 
 #define GAIN_INDEX(gain) (GAIN_LOOKUP_SIZE - 1 - findIndex(gainLookupInReverseOrder, GAIN_LOOKUP_SIZE, (gain)))
 
-#define BAND_LOOKUP_SIZE 64
 
-static const float bandFreqLookup[BAND_LOOKUP_SIZE] = { 1.22, 1.26, 1.31, 1.35,
-		1.4, 1.45, 1.51, 1.57, 1.63, 1.71, 1.78, 1.87, 1.96, 2.07, 2.18, 2.31,
-		2.46, 2.54, 2.62, 2.71, 2.81, 2.92, 3.03, 3.15, 3.28, 3.43, 3.59, 3.76,
-		3.95, 4.16, 4.39, 4.66, 4.95, 5.12, 5.29, 5.48, 5.68, 5.9, 6.12, 6.37,
-		6.64, 6.94, 7.27, 7.63, 8.02, 8.46, 8.95, 9.5, 10.12, 10.46, 10.83,
-		11.22, 11.65, 12.1, 12.6, 13.14, 13.72, 14.36, 15.07, 15.84, 16.71,
-		17.67, 18.76, 19.98 };
-
-#define PIF 3.14159f
+static const float bandFreqLookup[BAND_LOOKUP_SIZE] = { 1.22, 1.26, 1.31, 1.35, 1.4, 1.45, 1.51, 1.57, 1.63, 1.71, 1.78,
+		1.87, 1.96, 2.07, 2.18, 2.31, 2.46, 2.54, 2.62, 2.71, 2.81, 2.92, 3.03, 3.15, 3.28, 3.43, 3.59, 3.76, 3.95,
+		4.16, 4.39, 4.66, 4.95, 5.12, 5.29, 5.48, 5.68, 5.9, 6.12, 6.37, 6.64, 6.94, 7.27, 7.63, 8.02, 8.46, 8.95, 9.5,
+		10.12, 10.46, 10.83, 11.22, 11.65, 12.1, 12.6, 13.14, 13.72, 14.36, 15.07, 15.84, 16.71, 17.67, 18.76, 19.98 };
 
 static float rpmLookup[INT_LOOKUP_SIZE];
 
 /**
- * 'TC is typically TINT/(2*Pi*VOUT)'
- * Knock Sensor Training TPIC8101, page 24
  *
  * We know the set of possible integration times, we know the knock detection window width
- *
- * 2.2 volts should
- *
  */
-#define DESIRED_OUTPUT_VALUE 5.0f
 static void prepareRpmLookup(engine_configuration_s *engineConfiguration) {
 	for (int i = 0; i < INT_LOOKUP_SIZE; i++) {
-		float windowWidthMult = (engineConfiguration->knockDetectionWindowEnd
-				- engineConfiguration->knockDetectionWindowStart) / 360.0f;
-		// '60000000' because revolutions per MINUTE in uS conversion
 
-		rpmLookup[i] = 60000000.0f
-				/ (integratorValues[i] * 2 * PIF * DESIRED_OUTPUT_VALUE
-						* windowWidthMult);
+		rpmLookup[i] = getRpmByAngleWindowAndTimeUs(integratorValues[i], engineConfiguration->knockDetectionWindowEnd
+				- engineConfiguration->knockDetectionWindowStart);
 	}
 }
 
@@ -208,15 +184,13 @@ static void prepareRpmLookup(engine_configuration_s *engineConfiguration) {
 
 static void showHipInfo(void) {
 	printSpiState(&logger, boardConfiguration);
-	scheduleMsg(&logger, "bore=%f freq=%f", engineConfiguration->cylinderBore,
-			BAND(engineConfiguration->cylinderBore));
+	scheduleMsg(&logger, "bore=%f freq=%f", engineConfiguration->cylinderBore, BAND(engineConfiguration->cylinderBore));
 
 	scheduleMsg(&logger, "band_index=%d gain_index=%d", bandIndex, GAIN_INDEX(boardConfiguration->hip9011Gain));
 
 	scheduleMsg(&logger, "integrator index=%d", INTEGRATOR_INDEX);
 
-	scheduleMsg(&logger, "spi= int=%s CS=%s",
-			hwPortname(boardConfiguration->hip9011IntHoldPin),
+	scheduleMsg(&logger, "spi= int=%s CS=%s", hwPortname(boardConfiguration->hip9011IntHoldPin),
 			hwPortname(boardConfiguration->hip9011CsPin));
 }
 
@@ -231,40 +205,31 @@ void setHip9011FrankensoPinout(void) {
 }
 
 static void startIntegration(void) {
-	if(isHip9011Busy)
-		return;
-
-
-	turnPinHigh(HIP9011_INT_HOLD);
-
+	if (!needToSendSpiCommand) {
+		/**
+		 * SPI communication is only allowed while not integrading, so we initiate the exchange
+		 * once we are done integrating
+		 */
+		isIntegrating = false;
+		turnPinHigh(HIP9011_INT_HOLD);
+	}
 }
 
 static void endIntegration(void) {
-
-	turnPinLow(HIP9011_INT_HOLD);
 	/**
-	 * SPI communication is only allowed while not integrading, so we initiate the exchange
-	 * once we are done inregratng
+	 * isIntegrating could be 'false' if an SPI command was pending thus we did not integrate during this
+	 * engine cycle
 	 */
-
-	isHip9011Busy = true;
-
-	int newValue = INTEGRATOR_INDEX;
-	if (newValue != intergratorIndex) {
-		intergratorIndex = newValue;
-		// todo: send new value, be sure to use non-synchnonious approach!
-
+	if (isIntegrating) {
+		turnPinLow(HIP9011_INT_HOLD);
+		isIntegrating = false;
 	}
-	// todo: move this into the end callback
-	isHip9011Busy = false;
-
 }
 
 /**
  * Shaft Position callback used to start or finish HIP integration
  */
-static void intHoldCallback(trigger_event_e ckpEventType,
-		uint32_t index DECLARE_ENGINE_PARAMETER_S) {
+static void intHoldCallback(trigger_event_e ckpEventType, uint32_t index DECLARE_ENGINE_PARAMETER_S) {
 	// this callback is invoked on interrupt thread
 
 	if (index != 0)
@@ -276,11 +241,9 @@ static void intHoldCallback(trigger_event_e ckpEventType,
 
 	int structIndex = getRevolutionCounter() % 2;
 	// todo: schedule this based on closest trigger event, same as ignition works
-	scheduleByAngle(rpm, &startTimer[structIndex],
-			engineConfiguration->knockDetectionWindowStart,
+	scheduleByAngle(rpm, &startTimer[structIndex], engineConfiguration->knockDetectionWindowStart,
 			(schfunc_t) &startIntegration, NULL);
-	scheduleByAngle(rpm, &endTimer[structIndex],
-			engineConfiguration->knockDetectionWindowEnd,
+	scheduleByAngle(rpm, &endTimer[structIndex], engineConfiguration->knockDetectionWindowEnd,
 			(schfunc_t) &endIntegration,
 			NULL);
 }
@@ -300,34 +263,24 @@ void initHip9011(void) {
 	spicfg.ssport = getHwPort(boardConfiguration->hip9011CsPin);
 	spicfg.sspad = getHwPin(boardConfiguration->hip9011CsPin);
 
-
-	outputPinRegisterExt2("hip int/hold", HIP9011_INT_HOLD,
-			boardConfiguration->hip9011IntHoldPin, &DEFAULT_OUTPUT);
-	outputPinRegisterExt2("hip CS", SPI_CS_HIP9011,
-			boardConfiguration->hip9011CsPin, &DEFAULT_OUTPUT);
+	outputPinRegisterExt2("hip int/hold", HIP9011_INT_HOLD, boardConfiguration->hip9011IntHoldPin, &DEFAULT_OUTPUT);
+	outputPinRegisterExt2("hip CS", SPI_CS_HIP9011, boardConfiguration->hip9011CsPin, &DEFAULT_OUTPUT);
 
 	scheduleMsg(&logger, "Starting HIP9011/TPIC8101 driver");
 	spiStart(driver, &spicfg);
-	/**
-	 * Here we initialize the chip in synchronous mode
-	 */
 
-
-
-#if HIP_DEBUG
 	chThdCreateStatic(htThreadStack, sizeof(htThreadStack), NORMALPRIO,
 			(tfunc_t) ivThread, NULL);
-#else
-	/**
-	 * for runtime we are re-starting SPI in non-synchronous mode
-	 */
-	spiStop(driver);
-	// todo spicfg.end_cb = spiEndCallback;
-	spiStart(driver, &spicfg);
-#endif /* HIP_DEBUG */
+//#else
+//	/**
+//	 * for runtime we are re-starting SPI in non-synchronous mode
+//	 */
+//	spiStop(driver);
+//	// todo spicfg.end_cb = spiEndCallback;
+//	spiStart(driver, &spicfg);
+//#endif /* HIP_DEBUG */
 
-	bandIndex = findIndex(bandFreqLookup, BAND_LOOKUP_SIZE,
-			BAND(engineConfiguration->cylinderBore));
+	bandIndex = findIndex(bandFreqLookup, BAND_LOOKUP_SIZE, BAND(engineConfiguration->cylinderBore));
 
 	addTriggerEventListener(&intHoldCallback, "DD int/hold", engine);
 
