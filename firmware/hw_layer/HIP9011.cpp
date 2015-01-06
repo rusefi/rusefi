@@ -164,7 +164,7 @@ void setHip9011FrankensoPinout(void) {
 	 * SPI on PB13/14/15
 	 */
 	boardConfiguration->isHip9011Enabled = true;
-	boardConfiguration->hip9011CsPin = GPIOD_11;
+	boardConfiguration->hip9011CsPin = GPIOD_0;
 	boardConfiguration->hip9011IntHoldPin = GPIOB_11;
 	boardConfiguration->is_enabled_spi_2 = true;
 }

@@ -316,6 +316,7 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 	boardConfiguration->adcHwChannelEnabled[1] = ADC_SLOW;
 	boardConfiguration->adcHwChannelEnabled[4] = ADC_SLOW;
 	boardConfiguration->adcHwChannelEnabled[6] = ADC_FAST;
+	boardConfiguration->adcHwChannelEnabled[10] = ADC_SLOW; // HIP9011
 	boardConfiguration->adcHwChannelEnabled[11] = ADC_SLOW; // IAT
 	boardConfiguration->adcHwChannelEnabled[12] = ADC_SLOW; // CLT
 	boardConfiguration->adcHwChannelEnabled[13] = ADC_SLOW; // AFR
@@ -349,7 +350,7 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 	engineConfiguration->map.sensor.sensorType = MT_DODGE_NEON_2003;
 
 #if EFI_PROD_CODE
-//	setHip9011FrankensoPinout();
+	setHip9011FrankensoPinout();
 #endif
 	engineConfiguration->cylinderBore = 87.5;
 
