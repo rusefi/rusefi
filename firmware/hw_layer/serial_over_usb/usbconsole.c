@@ -8,7 +8,7 @@
 
 #include "main.h"
 
-#if (EFI_PROD_CODE && EFI_USB_SERIAL) || defined(__DOXYGEN__)
+#if EFI_USB_SERIAL || defined(__DOXYGEN__)
 
 #include "usbconsole.h"
 #include "usbcfg.h"

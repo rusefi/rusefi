@@ -319,7 +319,7 @@
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.debugging.format.1403205537" name="Debug format" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.debugging.format"/>
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.toolchain.name.1443668889" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.toolchain.name" value="Sourcery CodeBench Lite for ARM EABI" valueType="string"/>
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.architecture.1887488663" name="Architecture" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.architecture" value="ilg.gnuarmeclipse.managedbuild.cross.option.architecture.arm" valueType="enumerated"/>
-							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.arm.target.family.23097541" name="ARM family" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.arm.target.family" value="ilg.gnuarmeclipse.managedbuild.cross.option.arm.target.mcpu.cortex-m0" valueType="enumerated"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.arm.target.family.23097541" name="ARM family" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.arm.target.family" value="ilg.gnuarmeclipse.managedbuild.cross.option.arm.target.mcpu.cortex-m1" valueType="enumerated"/>
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.arm.target.instructionset.978474509" name="Instruction set" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.arm.target.instructionset" value="ilg.gnuarmeclipse.managedbuild.cross.option.arm.target.instructionset.thumb" valueType="enumerated"/>
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.command.prefix.177034630" name="Prefix" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.command.prefix" value="arm-none-eabi-" valueType="string"/>
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.command.c.1504138624" name="C compiler" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.command.c" value="gcc" valueType="string"/>
@@ -375,23 +375,23 @@
 									<listOptionValue builtIn="false" value="&quot;../russianefi/ckp&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../russianefi/adc&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../config/system&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../config/stm32f0egt&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../config/stm32f1egt&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../splib&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../chibios/os/kernel/include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../chibios/boards/ST_STM32F0_DISCOVERY&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../chibios/boards/ST_NUCLEO_F103RB&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../chibios/os/hal/src&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../chibios/os/hal/include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../chibios/os/hal/platforms/STM32/TIMv1&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../chibios/os/hal/platforms/STM32/I2Cv2&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../chibios/os/hal/platforms/STM32/I2Cv1&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../chibios/os/hal/platforms/STM32&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../chibios/os/hal/platforms/STM32/RTCv2&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../chibios/os/hal/platforms/STM32/OTGv1&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../chibios/os/hal/platforms/STM32/GPIOv2&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../chibios/os/hal/platforms/STM32F0xx&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../chibios/os/hal/platforms/STM32/SPIv2&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../chibios/os/hal/platforms/STM32/USBv1&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../chibios/os/hal/platforms/STM32/GPIOv1&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../chibios/os/hal/platforms/STM32F1xx&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../chibios/os/hal/platforms/STM32/SPIv1&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../chibios/os/hal/platforms/STM32/USARTv2&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../chibios/os/ports/GCC/ARMCMx&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../chibios/os/ports/GCC/ARMCMx/STM32F0xx&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../chibios/os/ports/GCC/ARMCMx/STM32F1xx&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../chibios/os/ports/common/ARMCMx&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../chibios/os/ports/common/ARMCMx/CMSIS/include&quot;"/>
 								</option>
@@ -423,7 +423,7 @@
 									<listOptionValue builtIn="false" value="&quot;../development/test&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../development/hw_layer&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../hw_layer&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../hw_layer/stm32f0&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../hw_layer/stm32f1&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../hw_layer/algo&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../hw_layer/flash&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../hw_layer/lcd&quot;"/>
@@ -433,22 +433,22 @@
 									<listOptionValue builtIn="false" value="&quot;../russianefi/ckp&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../russianefi/adc&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../config/system&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../config/stm32f0egt&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../chibios/boards/ST_STM32F0_DISCOVERY&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../config/stm32f1egt&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../chibios/boards/ST_NUCLEO_F103RB&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../chibios/os/kernel/include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../chibios/os/hal/src&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../chibios/os/hal/include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../chibios/os/hal/platforms/STM32/TIMv1&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../chibios/os/hal/platforms/STM32/I2Cv2&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../chibios/os/hal/platforms/STM32/I2Cv1&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../chibios/os/hal/platforms/STM32&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../chibios/os/hal/platforms/STM32/RTCv2&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../chibios/os/hal/platforms/STM32/OTGv1&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../chibios/os/hal/platforms/STM32/GPIOv2&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../chibios/os/hal/platforms/STM32F0xx&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../chibios/os/hal/platforms/STM32/SPIv2&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../chibios/os/hal/platforms/STM32/USBv1&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../chibios/os/hal/platforms/STM32/GPIOv1&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../chibios/os/hal/platforms/STM32F1xx&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../chibios/os/hal/platforms/STM32/SPIv1&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../chibios/os/hal/platforms/STM32/USARTv2&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../chibios/os/ports/GCC/ARMCMx&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;../chibios/os/ports/GCC/ARMCMx/STM32F0xx&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../chibios/os/ports/GCC/ARMCMx/STM32F1xx&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../chibios/os/ports/common/ARMCMx&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../chibios/os/ports/common/ARMCMx/CMSIS/include&quot;"/>
 								</option>
@@ -490,8 +490,105 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<folderInfo id="ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.1034318602.1044213654.198530188" name="/" resourcePath="chibios">
+						<toolChain id="ilg.gnuarmeclipse.managedbuild.cross.toolchain.elf.debug.962846903" name="Cross ARM GCC" superClass="ilg.gnuarmeclipse.managedbuild.cross.toolchain.elf.debug" unusedChildren="">
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.level.1589341452.559543768" name="Optimization Level" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.level.1589341452"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.messagelength.1207400841.626678522" name="Message length (-fmessage-length=0)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.messagelength.1207400841"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.signedchar.2088060218.51187625" name="'char' is signed (-fsigned-char)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.signedchar.2088060218"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.functionsections.1956055749.1237334367" name="Function sections (-ffunction-sections)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.functionsections.1956055749"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.datasections.315686629.1030657452" name="Data sections (-fdata-sections)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.datasections.315686629"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.debugging.level.598429016.1878406374" name="Debug level" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.debugging.level.598429016"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.debugging.format.1403205537.1675650572" name="Debug format" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.debugging.format.1403205537"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.toolchain.name.1443668889.610332078" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.toolchain.name.1443668889"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.architecture.1887488663.889322184" name="Architecture" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.architecture.1887488663"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.arm.target.family.23097541.2089861918" name="ARM family" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.arm.target.family.23097541"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.arm.target.instructionset.978474509.754387030" name="Instruction set" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.arm.target.instructionset.978474509"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.command.prefix.177034630.1988216623" name="Prefix" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.command.prefix.177034630"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.command.c.1504138624.811628775" name="C compiler" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.command.c.1504138624"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.command.cpp.144016175.598347740" name="C++ compiler" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.command.cpp.144016175"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.command.ar.862890427.684626326" name="Archiver" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.command.ar.862890427"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.command.objcopy.1528505178.1683377590" name="Hex/Bin converter" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.command.objcopy.1528505178"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.command.objdump.1451989724.1040015648" name="Listing generator" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.command.objdump.1451989724"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.command.size.718138181.811924152" name="Size command" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.command.size.718138181"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.command.make.530702658.552189281" name="Build command" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.command.make.530702658"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.command.rm.615375876.1396725" name="Remove command" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.command.rm.615375876"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.addtools.createflash.1062383544.1352734974" name="Create flash image" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.addtools.createflash.1062383544"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.addtools.printsize.1716904876.16434346" name="Print size" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.addtools.printsize.1716904876"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.arm.target.fpu.abi.542648601.1022714557" name="Float ABI" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.arm.target.fpu.abi.542648601"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.arm.target.fpu.unit.1732001730.1244989800" name="FPU Type" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.arm.target.fpu.unit.1732001730"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.lto.1668820449.997077344" name="Link-time optimizer (-flto)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.lto.1668820449"/>
+							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="ilg.gnuarmeclipse.managedbuild.cross.targetPlatform" isAbstract="false" osList="all" superClass="ilg.gnuarmeclipse.managedbuild.cross.targetPlatform"/>
+							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.461623446" name="Cross ARM GNU Assembler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.539236567">
+								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input.1658656680" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input"/>
+							</tool>
+							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.47816861" name="Cross ARM C Compiler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.1247184524">
+								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.1802690577" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
+							</tool>
+							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.compiler.44784324" name="Cross ARM C++ Compiler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.compiler.1076614034">
+								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.cpp.compiler.include.paths.2067151322" name="Include paths (-I)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.cpp.compiler.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;..&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../ext&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../ext_algo&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../chibios/os/various&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../util&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../console&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../console/tunerstudio&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../config&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../config/engines&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../config/boards&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../controllers&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../controllers/algo&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../controllers/core&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../controllers/trigger&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../controllers/sensors&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../controllers/system&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../controllers/math&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../console_util&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../development&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../development/test&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../development/hw_layer&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../hw_layer&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../hw_layer/stm32f1&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../hw_layer/algo&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../hw_layer/flash&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../hw_layer/lcd&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../hw_layer/serial_over_usb&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../russianefi&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../russianefi/algo&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../russianefi/ckp&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../russianefi/adc&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../config/system&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../config/stm32f1egt&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../chibios/boards/ST_NUCLEO_F103RB&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../chibios/os/kernel/include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../chibios/os/hal/src&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../chibios/os/hal/include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../chibios/os/hal/platforms/STM32/TIMv1&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../chibios/os/hal/platforms/STM32/I2Cv1&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../chibios/os/hal/platforms/STM32&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../chibios/os/hal/platforms/STM32/RTCv2&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../chibios/os/hal/platforms/STM32/USBv1&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../chibios/os/hal/platforms/STM32/GPIOv1&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../chibios/os/hal/platforms/STM32F1xx&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../chibios/os/hal/platforms/STM32/SPIv1&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../chibios/os/hal/platforms/STM32/USARTv2&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../chibios/os/ports/GCC/ARMCMx&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../chibios/os/ports/GCC/ARMCMx/STM32F1xx&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../chibios/os/ports/common/ARMCMx&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../chibios/os/ports/common/ARMCMx/CMSIS/include&quot;"/>
+								</option>
+								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.compiler.input.873780997" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.compiler.input"/>
+							</tool>
+							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.linker.1247958019" name="Cross ARM C Linker" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.linker.1355432717"/>
+							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.linker.781186241" name="Cross ARM C++ Linker" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.linker.1240793428"/>
+							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.archiver.586532554" name="Cross ARM GNU Archiver" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.archiver.1596461614"/>
+							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.createflash.1025523577" name="Cross ARM GNU Create Flash Image" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.createflash.1754519369"/>
+							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.createlisting.474073722" name="Cross ARM GNU Create Listing" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.createlisting.212945097"/>
+							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.printsize.976134399" name="Cross ARM GNU Print Size" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.printsize.496130042"/>
+						</toolChain>
+					</folderInfo>
 					<sourceEntries>
-						<entry excluding="chibios/os/various/fatfs_bindings|util/LocalVersionHolder.cpp|util/histogram.c|util/data_buffer.c|util/cyclic_buffer.cpp|controllers/algo|controllers/system/SingleTimerExecutor.cpp|controllers/system/signal_executor_sleep.c|controllers/system/pwm_generator_logic.cpp|controllers/system/event_queue.cpp|chibios/ext/fatfs|config/engines|hw_layer/rtc_helper.c|hw_layer/mmc_card.c|hw_layer/neo6m.c|hw_layer/lcd|controllers/core|controllers/math|controllers/sensors|controllers/trigger|controllers/sensors/tps.cpp|controllers/sensors/thermistors.cpp|controllers/sensors/map.cpp|controllers/sensors/maf.cpp|controllers/sensors/ego.cpp|hw_layer/wave_analyzer_hw.c|hw_layer/vehicle_speed.cpp|hw_layer/trigger_input.cpp|hw_layer/stepper.cpp|hw_layer/pwm_generator.cpp|hw_layer/HIP9011.cpp|controllers/map_multiplier_thread.cpp|controllers/map_averaging.cpp|controllers/malfunction_indicator.cpp|controllers/lcd_controller.cpp|controllers/injector_central.cpp|console/tunerstudio|controllers/idle_thread.cpp|controllers/electronic_throttle.cpp|controllers/alternatorController.cpp|controllers/engine_controller.cpp|rusefi.cpp|chibios/boards/ST_STM32F4_DISCOVERY|hw_layer/stm32f4|chibios/os/hal/platforms/STM32/USARTv1|chibios/os/hal/platforms/STM32/I2Cv1|chibios/os/hal/platforms/STM32/SPIv1|chibios/os/ports/GCC/ARMCMx/chcore_v7m.c|chibios/os/ports/GCC/ARMCMx/STM32F4xx|chibios/os/hal/platforms/STM32F4xx|config/stm32f4ems|chibios/boards/simulator|chibios/boards/OLIMEX_STM32_E407|chibios/os/ports/IAR|chibios/os/hal/platforms/Win32|chibios/os/ports/GCC/SIMIA32|chibios/os/ports/IAR/ARMCMx/chcore_v6m.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="hw_layer/gpio_helper.cpp|hw_layer/board_test.cpp|chibios/os/hal/platforms/STM32/USARTv2|chibios/os/hal/platforms/STM32/SPIv2|chibios/os/hal/platforms/STM32/OTGv1|chibios/os/hal/platforms/STM32/GPIOv2|chibios/os/hal/platforms/STM32F0xx|chibios/os/various/fatfs_bindings|util/LocalVersionHolder.cpp|util/histogram.c|util/data_buffer.c|util/cyclic_buffer.cpp|controllers/algo|controllers/system/SingleTimerExecutor.cpp|controllers/system/signal_executor_sleep.c|controllers/system/pwm_generator_logic.cpp|controllers/system/event_queue.cpp|chibios/ext/fatfs|config/engines|hw_layer/rtc_helper.c|hw_layer/mmc_card.c|hw_layer/neo6m.c|hw_layer/lcd|controllers/core|controllers/math|controllers/sensors|controllers/trigger|controllers/sensors/tps.cpp|controllers/sensors/thermistors.cpp|controllers/sensors/map.cpp|controllers/sensors/maf.cpp|controllers/sensors/ego.cpp|hw_layer/wave_analyzer_hw.c|hw_layer/vehicle_speed.cpp|hw_layer/trigger_input.cpp|hw_layer/stepper.cpp|hw_layer/pwm_generator.cpp|hw_layer/HIP9011.cpp|controllers/map_multiplier_thread.cpp|controllers/map_averaging.cpp|controllers/malfunction_indicator.cpp|controllers/lcd_controller.cpp|controllers/injector_central.cpp|console/tunerstudio|controllers/idle_thread.cpp|controllers/electronic_throttle.cpp|controllers/alternatorController.cpp|controllers/engine_controller.cpp|rusefi.cpp|chibios/boards/ST_STM32F4_DISCOVERY|hw_layer/stm32f4|chibios/os/hal/platforms/STM32/USARTv1|chibios/os/hal/platforms/STM32/I2Cv1|chibios/os/ports/GCC/ARMCMx/chcore_v7m.c|chibios/os/ports/GCC/ARMCMx/STM32F4xx|chibios/os/hal/platforms/STM32F4xx|config/stm32f4ems|chibios/boards/simulator|chibios/boards/OLIMEX_STM32_E407|chibios/os/ports/IAR|chibios/os/hal/platforms/Win32|chibios/os/ports/GCC/SIMIA32|chibios/os/ports/IAR/ARMCMx/chcore_v6m.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
