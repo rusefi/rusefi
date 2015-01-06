@@ -251,6 +251,7 @@ static void printAnalogChannelInfo(const char *name, adc_channel_e hwChannel) {
 }
 
 static void printAnalogInfo(void) {
+	printAnalogChannelInfo("hip9011", EFI_ADC_10);
 	printAnalogChannelInfo("TPS", engineConfiguration->tpsAdcChannel);
 	printAnalogChannelInfo("CLT", engineConfiguration->cltAdcChannel);
 	if (engineConfiguration->hasIatSensor) {
