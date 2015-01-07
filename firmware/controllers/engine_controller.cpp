@@ -54,6 +54,7 @@
 #include "engine.h"
 #include "pin_repository.h"
 #include "pwm_generator.h"
+#include "lcd_controller.h"
 
 extern OutputPin outputs[IO_PIN_COUNT];
 extern pin_output_mode_e *pinDefaultState[IO_PIN_COUNT];
@@ -410,4 +411,6 @@ void initEngineContoller(Engine *engine) {
 	addConsoleActionI("get_int", getInt);
 
 	initFsioImpl(engine);
+
+	initLcdController();
 }
