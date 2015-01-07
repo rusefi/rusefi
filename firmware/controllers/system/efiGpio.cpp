@@ -10,10 +10,10 @@
 #include "efiGpio.h"
 #include "io_pins.h"
 
+pin_output_mode_e OUTPUT_MODE_DEFAULT = OM_DEFAULT;
 
 // todo: clean this mess, this should become 'static'/private
 OutputPin outputs[IO_PIN_COUNT];
-pin_output_mode_e *pinDefaultState[IO_PIN_COUNT];
 
 int getOutputPinValue(io_pin_e pin) {
 	return getLogicPinValue(&outputs[pin]);
@@ -89,14 +89,21 @@ const char *getPinName(io_pin_e io_pin) {
 	}
 }
 
+OutputPin::OutputPin() {
+	modePtr = &OUTPUT_MODE_DEFAULT;
+}
+
+void OutputPin::setValue(int logicValue) {
+	doSetOutputPinValue2(this, logicValue);
+}
+
+extern uint32_t dbgStart;
+extern uint32_t dbgDurr;
 /**
  * @brief Sets the value according to current electrical settings
  *
  * This method costs about 85 ticks
  */
-extern uint32_t dbgStart;
-extern uint32_t dbgDurr;
-
 void setOutputPinValue(io_pin_e pin, int logicValue) {
 	doSetOutputPinValue(pin, logicValue);
 }

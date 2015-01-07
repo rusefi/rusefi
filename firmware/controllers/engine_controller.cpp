@@ -57,7 +57,6 @@
 #include "lcd_controller.h"
 
 extern OutputPin outputs[IO_PIN_COUNT];
-extern pin_output_mode_e *pinDefaultState[IO_PIN_COUNT];
 extern bool hasFirmwareErrorFlag;
 
 persistent_config_container_s persistentState CCM_OPTIONAL;
