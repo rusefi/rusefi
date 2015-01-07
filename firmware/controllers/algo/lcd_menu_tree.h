@@ -25,6 +25,7 @@ public:
 	int index;
 	// that's upper level menu item
 	MenuItem *parent;
+	MenuItem *topOfTheList;
 	MenuItem *firstChild;
 	MenuItem *lastChild;
 	MenuItem *next;
@@ -34,6 +35,8 @@ class MenuTree {
 public:
 	MenuTree(MenuItem *root);
 	void nextItem(void);
+	void back(void);
+	void enterSubMenu(void);
 	void init(MenuItem *first, int linesCount);
 	MenuItem *root;
 

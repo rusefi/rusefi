@@ -17,6 +17,7 @@
 
 #include "nmea.h"
 #include "efilib2.h"
+#include "lcd_menu_tree.h"
 #include "crc.h"
 #include "fl_stack.h"
 #include "io_pins.h"
@@ -353,4 +354,59 @@ void testFLStack(void) {
 void testMisc(void) {
 	assertEquals(true, strEqual("spa3", getPinName(SPARKOUT_3_OUTPUT)));
 	assertEquals(SPARKOUT_12_OUTPUT, getPinByName("spa12"));
+}
+
+void testMenuTree(void) {
+	print("******************************************* testMenuTree\r\n");
+
+	MenuItem ROOT(NULL, NULL);
+
+	MenuTree tree(&ROOT);
+
+	MenuItem miTopLevel1(tree.root, "top level 1");
+	MenuItem miTopLevel2(tree.root, "top level 2");
+	MenuItem miTopLevel3(tree.root, "top level 3");
+	MenuItem miTopLevel4(tree.root, "top level 4");
+	MenuItem miTopLevel5(tree.root, "top level 5");
+
+	MenuItem miSubMenu1_1(&miTopLevel1, "sub menu 1 1");
+	MenuItem miSubMenu1_2(&miTopLevel1, "sub menu 1 2");
+
+	MenuItem miSubMenu5_1(&miTopLevel5, "sub menu 5 1");
+	MenuItem miSubMenu5_2(&miTopLevel5, "sub menu 5 2");
+
+	assertEquals(0, miTopLevel1.index);
+	assertEquals(1, miTopLevel2.index);
+	assertEquals(4, miTopLevel5.index);
+
+	tree.init(&miTopLevel1, 3);
+
+	tree.nextItem();
+	assertTrue(tree.topVisible == &miTopLevel1);
+	assertTrue(tree.current == &miTopLevel2);
+
+	tree.back();
+	assertTrue(tree.current == &miTopLevel2); // no 'back' since we are on the top level already
+
+	tree.nextItem();
+	assertTrue(tree.topVisible == &miTopLevel1);
+	assertTrue(tree.current == &miTopLevel3);
+
+	tree.nextItem();
+	assertTrue(tree.topVisible == &miTopLevel2);
+	assertTrue(tree.current == &miTopLevel4);
+
+	tree.enterSubMenu();
+	assertTrueM("still same", tree.current == &miTopLevel4); // no children in this one
+
+	tree.nextItem();
+	assertTrue(tree.topVisible == &miTopLevel3);
+	assertTrue(tree.current == &miTopLevel5);
+
+	tree.enterSubMenu();
+	assertTrue(tree.current == &miSubMenu5_1);
+
+	tree.back();
+	assertTrue(tree.current == &miTopLevel1);
+
 }
