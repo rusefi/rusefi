@@ -22,6 +22,7 @@ void testConsoleLogic(void);
 void testGpsParser(void);
 void testFLStack(void);
 void testMisc(void);
+void testMenuTree(void);
 
 #ifdef __cplusplus
 }

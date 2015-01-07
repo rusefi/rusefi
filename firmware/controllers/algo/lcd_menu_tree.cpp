@@ -29,6 +29,18 @@ void MenuTree::init(MenuItem *first, int linesCount) {
 	topVisible = first;
 }
 
+void MenuTree::enterSubMenu(void) {
+	if (current->firstChild != NULL) {
+		current = topVisible = current->firstChild;
+	}
+}
+
+void MenuTree::back(void) {
+	if (current->parent == root)
+		return; // we are on the top level already
+	current = topVisible = current->parent->topOfTheList;
+}
+
 void MenuTree::nextItem(void) {
 	if (current->next == NULL) {
 		// todo: go to first element
@@ -42,6 +54,9 @@ void MenuTree::nextItem(void) {
 MenuItem::MenuItem(MenuItem * parent, const char *text) {
 	this->parent = parent;
 	this->text = text;
+	firstChild = NULL;
+	lastChild = NULL;
+	next = NULL;
 	lcdLine = LL_STRING;
 
 	// root element has NULL parent
@@ -49,14 +64,13 @@ MenuItem::MenuItem(MenuItem * parent, const char *text) {
 		if (parent->firstChild == NULL) {
 			parent->firstChild = this;
 			index = 0;
+			topOfTheList = this;
 		}
 		if (parent->lastChild != NULL) {
 			index = parent->lastChild->index + 1;
+			topOfTheList = parent->lastChild->topOfTheList;
 			parent->lastChild->next = this;
 		}
 		parent->lastChild = this;
-	} else {
-		firstChild = NULL;
-		lastChild = NULL;
 	}
 }

@@ -140,6 +140,8 @@ int main(void) {
 
 	testIdleController();
 
+	testMenuTree();
+
 	//	resizeMap();
 	printf("Success 20150101\r\n");
 	return EXIT_SUCCESS;
