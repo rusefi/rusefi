@@ -23,6 +23,30 @@
 EXTERN_ENGINE
 ;
 
+static MenuItem ROOT(NULL, NULL);
+
+static MenuTree tree(&ROOT);
+
+static MenuItem miRpm(tree.root, LL_RPM);
+static MenuItem miSensors(tree.root, "sensors");
+static MenuItem miTrigger(tree.root, "trigger");
+static MenuItem miBench(tree.root, "bench test");
+static MenuItem miAbout(tree.root, "about");
+
+static MenuItem miTestFan(&miAbout, "test fan");
+static MenuItem miTestFuelPump(&miAbout, "test pump");
+static MenuItem miTestSpark1(&miAbout, "test spark1");
+static MenuItem miTestSpark2(&miAbout, "test spark2");
+static MenuItem miTestSpark3(&miAbout, "test spark3");
+static MenuItem miTestSpark4(&miAbout, "test spark4");
+static MenuItem miTestInj1(&miAbout, "test injector1");
+static MenuItem miTestInj2(&miAbout, "test injector2");
+static MenuItem miTestInj3(&miAbout, "test injector3");
+static MenuItem miTestInj4(&miAbout, "test injector4");
+
+static MenuItem miVersion(&miAbout, LL_VERSION);
+static MenuItem miConfig(&miAbout, LL_CONFIG);
+
 #define DISP_LINES (engineConfiguration->HD44780height - 1)
 
 static int infoIndex = 0;
@@ -43,6 +67,10 @@ char * appendStr(char *ptr, const char *suffix) {
 		*ptr++ = suffix[i];
 	}
 	return ptr;
+}
+
+void initLcdController(void) {
+	tree.init(&miRpm, 3);
 }
 
 static char * prepareVBattMapLine(engine_configuration_s *engineConfiguration, char *buffer) {
@@ -156,19 +184,49 @@ static void showLine(lcd_line_e line) {
 }
 
 void updateHD44780lcd(Engine *engine) {
-	for (int i = infoIndex; i < infoIndex + DISP_LINES; i++) {
-		lcd_HD44780_set_position(i - infoIndex, 0);
-
-		lcd_HD44780_print_char(cursorY == i ? '*' : ' ');
-
-		showLine((lcd_line_e) i);
-
+	MenuItem *p = tree.topVisible;
+	int count = 0;
+	for (; count < tree.linesCount && p != NULL; count++) {
+		lcd_HD44780_set_position(count, 0);
+		char firstChar;
+		if (p == tree.current) {
+			firstChar = p->firstChild == NULL ? '*' : '>';
+		} else {
+			firstChar = ' ';
+		}
+		lcd_HD44780_print_char(firstChar);
+		if (p->lcdLine == LL_STRING) {
+			lcd_HD44780_print_string(p->text);
+		} else {
+			showLine(p->lcdLine);
+		}
 		int column = getCurrentHD44780column();
-
 		for (int r = column; r < 20; r++) {
 			lcd_HD44780_print_char(' ');
 		}
+		p = p->next;
 	}
+
+	for(; count < tree.linesCount && p != NULL; count++) {
+		lcd_HD44780_set_position(count, 0);
+		for (int r = 0; r < 20; r++) {
+			lcd_HD44780_print_char(' ');
+		}
+	}
+
+//	for (int i = infoIndex; i < infoIndex + DISP_LINES; i++) {
+//		lcd_HD44780_set_position(i - infoIndex, 0);
+//
+//		lcd_HD44780_print_char(cursorY == i ? '*' : ' ');
+//
+//		showLine((lcd_line_e) i);
+//
+//		int column = getCurrentHD44780column();
+//
+//		for (int r = column; r < 20; r++) {
+//			lcd_HD44780_print_char(' ');
+//		}
+//	}
 
 //	lcd_HD44780_set_position(0, 0);
 //	bool_t isEven = getTimeNowSeconds() % 2 == 0;

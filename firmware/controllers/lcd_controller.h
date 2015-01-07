@@ -14,6 +14,7 @@
 
 #define TOTAL_OPTIONS 6
 
+void initLcdController(void);
 void updateHD44780lcd(Engine *engine);
 
 #endif /* LCD_CONTROLLER_H_ */
