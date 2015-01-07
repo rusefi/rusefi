@@ -10,6 +10,11 @@
 #include "main.h"
 #include "io_pins.h"
 
+// mode >= 0  is always true since that's an unsigned
+#define assertOMode(mode) { \
+	efiAssertVoid(mode <= OM_OPENDRAIN_INVERTED, "invalid pin_output_mode_e"); \
+ }
+
 /**
  * @brief   Single output pin reference and state
  */
@@ -17,6 +22,7 @@ class OutputPin {
 public:
 	OutputPin();
 	void setValue(int logicValue);
+	void setDefaultPinState(pin_output_mode_e *defaultState);
 #if EFI_PROD_CODE
 	GPIO_TypeDef *port;
 	int pin;

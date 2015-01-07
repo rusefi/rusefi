@@ -65,6 +65,8 @@
 #include "vehicle_speed.h"
 #endif
 
+extern OutputPin outputs[IO_PIN_COUNT];
+
 // this 'true' value is needed for simulator
 static volatile bool fullLog = true;
 int warningEnabled = true;
@@ -350,8 +352,11 @@ static THD_WORKING_AREA(lcdThreadStack, UTILITY_THREAD_STACK_SIZE);
  */
 static THD_WORKING_AREA(comBlinkingStack, UTILITY_THREAD_STACK_SIZE);
 
-static io_pin_e leds[] = { LED_WARNING, LED_RUNNING, LED_ERROR, LED_COMMUNICATION_1, LED_DEBUG, LED_EXT_1,
-		LED_CHECK_ENGINE };
+static OutputPin *leds[] = { &outputs[(int)LED_WARNING], &outputs[(int)LED_RUNNING],
+		&outputs[(int)LED_ERROR],
+		&outputs[(int)LED_COMMUNICATION_1],
+		&outputs[(int)LED_EXT_1],
+		&outputs[(int)LED_CHECK_ENGINE] };
 
 /**
  * This method would blink all the LEDs just to test them
@@ -359,12 +364,12 @@ static io_pin_e leds[] = { LED_WARNING, LED_RUNNING, LED_ERROR, LED_COMMUNICATIO
 static void initialLedsBlink(void) {
 	int size = sizeof(leds) / sizeof(leds[0]);
 	for (int i = 0; i < size; i++)
-		setOutputPinValue(leds[i], 1);
+		leds[i]->setValue(1);
 
 	chThdSleepMilliseconds(100);
 
 	for (int i = 0; i < size; i++)
-		setOutputPinValue(leds[i], 0);
+		leds[i]->setValue(0);
 }
 
 /**
@@ -388,16 +393,12 @@ static void comBlinkingThread(void *arg) {
 			delay = isConsoleReady() ? 100 : 33;
 		}
 
-		setOutputPinValue(LED_COMMUNICATION_1, 0);
-		setOutputPinValue(LED_EXT_1, 1);
-//		setOutputPinValue(LED_EXT_2, 1);
-//		setOutputPinValue(LED_EXT_3, 1);
+		outputs[(int)LED_COMMUNICATION_1].setValue(0);
+		outputs[(int)LED_EXT_1].setValue(1);
 		chThdSleepMilliseconds(delay);
 
-		setOutputPinValue(LED_COMMUNICATION_1, 1);
-		setOutputPinValue(LED_EXT_1, 0);
-//		setOutputPinValue(LED_EXT_2, 0);
-//		setOutputPinValue(LED_EXT_3, 0);
+		outputs[(int)LED_COMMUNICATION_1].setValue(1);
+		outputs[(int)LED_EXT_1].setValue(0);
 		chThdSleepMilliseconds(delay);
 	}
 }
@@ -409,9 +410,9 @@ static void errBlinkingThread(void *arg) {
 	while (TRUE) {
 		int delay = 33;
 		if (isTriggerDecoderError() || isIgnitionTimingError())
-			setOutputPinValue(LED_WARNING, 1);
+			outputs[(int)LED_WARNING].setValue(1);
 		chThdSleepMilliseconds(delay);
-		setOutputPinValue(LED_WARNING, 0);
+		outputs[(int)LED_WARNING].setValue(0);
 		chThdSleepMilliseconds(delay);
 	}
 #endif /* EFI_ENGINE_CONTROL */

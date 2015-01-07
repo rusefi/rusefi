@@ -16,6 +16,12 @@
 #include "io_pins.h"
 
 #ifdef __cplusplus
+#include "efiGpio.h"
+// does not exactly belong here, but that works better for tests
+void outputPinRegister(const char *msg, OutputPin *output, GPIO_TypeDef *port, uint32_t pin);
+#endif /* __cplusplus */
+
+#ifdef __cplusplus
 extern "C"
 {
 #endif /* __cplusplus */
@@ -26,8 +32,6 @@ brain_pin_e parseBrainPin(const char *str);
 void mySetPadMode(const char *msg, ioportid_t port, ioportmask_t pin, iomode_t mode);
 void mySetPadMode2(const char *msg, brain_pin_e pin, iomode_t mode);
 char *portname(GPIO_TypeDef* GPIOx);
-// does not exactly belong here, but that works better for tests
-void outputPinRegister(const char *msg, io_pin_e ioPin, GPIO_TypeDef *port, uint32_t pin);
 iomode_t getInputMode(pin_input_mode_e mode);
 
 ioportmask_t getHwPin(brain_pin_e brainPin);

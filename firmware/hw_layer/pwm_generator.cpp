@@ -48,12 +48,14 @@ void startSimplePwm(PwmConfig *state, const char *msg, io_pin_e ioPin, float fre
 	weComplexInit(msg, state, 2, switchTimes, 1, pinStates, NULL, stateChangeCallback);
 }
 
+extern OutputPin outputs[IO_PIN_COUNT];
+
 void startSimplePwmExt(PwmConfig *state, const char *msg, brain_pin_e brainPin, io_pin_e ioPin, float frequency,
 		float dutyCycle, pwm_gen_callback *stateChangeCallback) {
 
 	GPIO_TypeDef * port = getHwPort(brainPin);
 	int pin = getHwPin(brainPin);
-	outputPinRegister(msg, ioPin, port, pin);
+	outputPinRegister(msg, &outputs[ioPin], port, pin);
 
 	startSimplePwm(state, msg, ioPin, frequency, dutyCycle, stateChangeCallback);
 }

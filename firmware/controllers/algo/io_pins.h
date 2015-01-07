@@ -82,7 +82,6 @@ typedef enum {
 	TRIGGER_EMULATOR_SECONDARY,
 	TRIGGER_EMULATOR_3RD,
 
-
 	ELECTRONIC_THROTTLE_CONTROL_1,
 	ELECTRONIC_THROTTLE_CONTROL_2,
 	ELECTRONIC_THROTTLE_CONTROL_3,
@@ -120,7 +119,7 @@ typedef enum {
 
 	// malfunction LED indicator - CheckEngine
 	LED_CHECK_ENGINE,
-	
+
 	FUEL_PUMP_RELAY,
 	FAN_RELAY,
 	O2_HEATER,
@@ -137,8 +136,6 @@ typedef enum {
 
 	MAIN_RELAY,
 
-
-
 	/**
 	 * This output pin is used to turn alternator on or off
 	 */
@@ -152,17 +149,15 @@ void initPrimaryPins(void);
 void initOutputPins(void);
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif /* __cplusplus */
 
 io_pin_e getPinByName(const char *name);
 
-void setDefaultPinState(io_pin_e pin, pin_output_mode_e *defaultState);
 #if EFI_GPIO
- void turnAllPinsOff(void);
+void turnAllPinsOff(void);
 #else
- #define turnAllPinsOff() {}
+#define turnAllPinsOff() {}
 #endif
 void outputPinRegisterExt2(const char *msg, io_pin_e ioPin, brain_pin_e brainPin, pin_output_mode_e *outputMode);
 #ifdef __cplusplus

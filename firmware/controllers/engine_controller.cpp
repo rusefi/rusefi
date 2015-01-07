@@ -107,13 +107,13 @@ static msg_t csThread(void) {
 		int is_running = rpm > 0 && !is_cranking;
 		if (is_running) {
 			// blinking while running
-			setOutputPinValue(LED_RUNNING, 0);
+			outputs[(int)LED_RUNNING].setValue(0);
 			chThdSleepMilliseconds(50);
-			setOutputPinValue(LED_RUNNING, 1);
+			outputs[(int)LED_RUNNING].setValue(1);
 			chThdSleepMilliseconds(50);
 		} else {
 			// constant on while cranking and off if engine is stopped
-			setOutputPinValue(LED_RUNNING, is_cranking);
+			outputs[(int)LED_RUNNING].setValue(is_cranking);
 			chThdSleepMilliseconds(100);
 		}
 	}
