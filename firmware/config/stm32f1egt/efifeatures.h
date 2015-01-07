@@ -12,6 +12,8 @@
 
 #define DL_OUTPUT_BUFFER 128
 
+#define EFI_USB_SERIAL TRUE
+
 #define hal_lld_get_counter_value()         DWT_CYCCNT
 
 #define EFI_USE_UART_FOR_CONSOLE TRUE
