@@ -255,7 +255,7 @@ void firmwareError(const char *fmt, ...) {
 	}
 }
 
-static char UNUSED_RAM_SIZE[6000];
+static char UNUSED_RAM_SIZE[5000];
 
 static char UNUSED_CCM_SIZE[9000] CCM_OPTIONAL;
 

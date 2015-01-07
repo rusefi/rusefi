@@ -13,17 +13,21 @@
 /**
  * @brief   Single output pin reference and state
  */
-typedef struct {
+class OutputPin {
+public:
+	OutputPin();
+	void setValue(int logicValue);
 #if EFI_PROD_CODE
 	GPIO_TypeDef *port;
 	int pin;
 #endif /* EFI_PROD_CODE */
+	pin_output_mode_e *modePtr;
 	/**
 	 * we track current pin status so that we do not touch the actual hardware if we want to write new pin bit
 	 * which is same as current pin value. This maybe helps in case of status leds, but maybe it's a total over-engineering
 	 */
 	int currentLogicValue;
-} OutputPin;
+};
 
 /**
  * it's a macro to be sure that stack is not used
@@ -85,25 +89,24 @@ const char *getPinName(io_pin_e io_pin);
 #endif
 
 #if EFI_PROD_CODE
-#define doSetOutputPinValue(pin, logicValue) {                                          \
-		if (outputs[(pin)].port != GPIO_NULL) {                                         \
-			efiAssertVoid(pinDefaultState[pin]!=NULL, "pin mode not initialized");      \
-			pin_output_mode_e mode = *pinDefaultState[pin];                             \
+#define doSetOutputPinValue2(output, logicValue) {                                      \
+		if (output->port != GPIO_NULL) {                                                \
+			efiAssertVoid(output->modePtr!=NULL, "pin mode not initialized");           \
+			pin_output_mode_e mode = *output->modePtr;                                  \
 			efiAssertVoid(mode <= OM_OPENDRAIN_INVERTED, "invalid pin_output_mode_e");  \
-			OutputPin *output = &outputs[pin];                                          \
 			int eValue = getElectricalValue(logicValue, mode);                          \
 			setPinValue(output, eValue, logicValue);                                    \
 		}                                                                               \
     }
 #else
-		#define doSetOutputPinValue(pin, logicValue) {                                  \
+		#define doSetOutputPinValue2(output, logicValue) {                              \
 				pin_output_mode_e mode = OM_DEFAULT;                                    \
-				OutputPin *output = &outputs[pin];                                      \
 				int eValue = getElectricalValue(logicValue, mode);                      \
 				setPinValue(output, eValue, logicValue);                                \
 		}
 #endif
 
+#define doSetOutputPinValue(pin, logicValue) doSetOutputPinValue2((&outputs[pin]), logicValue)
 
 #ifdef __cplusplus
 }

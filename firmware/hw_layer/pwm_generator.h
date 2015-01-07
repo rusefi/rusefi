@@ -24,14 +24,4 @@ void initPwmGenerator(void);
 void startSimplePwmExt(PwmConfig *state, const char *msg, brain_pin_e brainPin, io_pin_e ioPin,
 		float frequency, float dutyCycle, pwm_gen_callback *stateChangeCallback);
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
-
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-
 #endif /* PWM_GENERATOR_H_ */

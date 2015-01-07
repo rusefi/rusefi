@@ -25,7 +25,6 @@ extern board_configuration_s *boardConfiguration;
 
 static Logging logger;
 
-extern pin_output_mode_e *pinDefaultState[IO_PIN_COUNT];
 extern OutputPin outputs[IO_PIN_COUNT];
 
 #if defined(STM32F4XX)
@@ -45,8 +44,8 @@ void setDefaultPinState(io_pin_e pin, pin_output_mode_e *outputMode) {
 #if EFI_GPIO
 	pin_output_mode_e mode = *outputMode;
 	assertOMode(mode);
-	pinDefaultState[pin] = outputMode;
-	setOutputPinValue(pin, FALSE); // initial state
+	outputs[(int)pin].modePtr = outputMode;
+	outputs[(int)pin].setValue(false); // initial state
 #endif
 }
 
