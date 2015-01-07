@@ -97,6 +97,16 @@ void OutputPin::setValue(int logicValue) {
 	doSetOutputPinValue2(this, logicValue);
 }
 
+void OutputPin::setDefaultPinState(pin_output_mode_e *outputMode) {
+#if EFI_GPIO
+	pin_output_mode_e mode = *outputMode;
+	assertOMode(mode);
+	this->modePtr = outputMode;
+#endif
+	setValue(false); // initial state
+}
+
+
 extern uint32_t dbgStart;
 extern uint32_t dbgDurr;
 /**

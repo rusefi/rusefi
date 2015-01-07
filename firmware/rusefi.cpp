@@ -230,11 +230,13 @@ void chDbgStackOverflowPanic(Thread *otp) {
 	chDbgPanic3(panicMessage, __FILE__, __LINE__);
 }
 
+extern OutputPin outputs[IO_PIN_COUNT];
+
 // todo: why is this method here and not in error_handling.c ?
 void firmwareError(const char *fmt, ...) {
 	if (hasFirmwareErrorFlag)
 		return;
-	setOutputPinValue(LED_ERROR, 1);
+	outputs[(int)LED_ERROR].setValue(1);
 	turnAllPinsOff();
 	hasFirmwareErrorFlag = TRUE;
 	if (indexOf(fmt, '%') == -1) {
