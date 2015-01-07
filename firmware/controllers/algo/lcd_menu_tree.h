@@ -20,6 +20,7 @@ typedef enum {
 class MenuItem {
 public:
 	MenuItem(MenuItem * parent, const char *text);
+	MenuItem(MenuItem * parent, lcd_line_e lcdLine);
 	const char *text;
 	lcd_line_e lcdLine;
 	int index;
@@ -29,6 +30,8 @@ public:
 	MenuItem *firstChild;
 	MenuItem *lastChild;
 	MenuItem *next;
+private:
+	void init(MenuItem * parent);
 };
 
 class MenuTree {

@@ -9,15 +9,6 @@
 #include "lcd_menu_tree.h"
 #include "error_handling.h"
 
-static MenuItem ROOT(NULL, NULL);
-
-static MenuTree tree(&ROOT);
-
-static MenuItem miSensors(tree.root, "sensors");
-static MenuItem miTrigger(tree.root, "trigger");
-static MenuItem miBench(tree.root, "bench test");
-static MenuItem miAbout(tree.root, "about");
-
 MenuTree::MenuTree(MenuItem *root) {
 	this->root = root;
 	current = NULL;
@@ -43,7 +34,7 @@ void MenuTree::back(void) {
 
 void MenuTree::nextItem(void) {
 	if (current->next == NULL) {
-		// todo: go to first element
+		current = topVisible = current->topOfTheList;
 		return;
 	}
 	current = current->next;
@@ -52,12 +43,22 @@ void MenuTree::nextItem(void) {
 }
 
 MenuItem::MenuItem(MenuItem * parent, const char *text) {
-	this->parent = parent;
+	lcdLine = LL_STRING;
 	this->text = text;
+	init(parent);
+}
+
+MenuItem::MenuItem(MenuItem * parent, lcd_line_e lcdLine) {
+	this->lcdLine = lcdLine;
+	this->text = NULL;
+	init(parent);
+}
+
+void MenuItem::init(MenuItem * parent) {
+	this->parent = parent;
 	firstChild = NULL;
 	lastChild = NULL;
 	next = NULL;
-	lcdLine = LL_STRING;
 
 	// root element has NULL parent
 	if (parent != NULL) {

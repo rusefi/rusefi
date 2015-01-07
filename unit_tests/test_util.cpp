@@ -365,7 +365,7 @@ void testMenuTree(void) {
 
 	MenuItem miTopLevel1(tree.root, "top level 1");
 	MenuItem miTopLevel2(tree.root, "top level 2");
-	MenuItem miTopLevel3(tree.root, "top level 3");
+	MenuItem miTopLevel3(tree.root, LL_RPM);
 	MenuItem miTopLevel4(tree.root, "top level 4");
 	MenuItem miTopLevel5(tree.root, "top level 5");
 
@@ -401,7 +401,16 @@ void testMenuTree(void) {
 
 	tree.nextItem();
 	assertTrue(tree.topVisible == &miTopLevel3);
-	assertTrue(tree.current == &miTopLevel5);
+	assertTrueM("tl5", tree.current == &miTopLevel5);
+
+	tree.nextItem();
+	assertTrueM("tl1 t", tree.topVisible == &miTopLevel1);
+	assertTrueM("tl1 c", tree.current == &miTopLevel1);
+
+	tree.nextItem();
+	tree.nextItem();
+	tree.nextItem();
+	tree.nextItem();
 
 	tree.enterSubMenu();
 	assertTrue(tree.current == &miSubMenu5_1);
