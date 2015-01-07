@@ -17,6 +17,8 @@
 #include "efiGpio.h"
 #include "svnversion.h"
 #include "joystick.h"
+#include "utlist.h"
+#include "lcd_menu_tree.h"
 
 EXTERN_ENGINE
 ;

@@ -2166,6 +2166,12 @@
         <name>$PROJ_DIR$\..\controllers\algo\io_pins.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\controllers\algo\lcd_menu_tree.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\controllers\algo\lcd_menu_tree.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\controllers\algo\main_trigger_callback.h</name>
       </file>
       <file>

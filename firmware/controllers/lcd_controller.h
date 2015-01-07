@@ -12,15 +12,6 @@
 
 #define MAX_LCD_WIDTH 20
 
-typedef enum {
-	LL_VERSION,
-	LL_CONFIG,
-	LL_RPM,
-	LL_CLT_TEMPERATURE,
-	LL_IAT_TEMPERATURE,
-	LL_ALGORITHM,
-} lcd_line_e;
-
 #define TOTAL_OPTIONS 6
 
 void updateHD44780lcd(Engine *engine);
