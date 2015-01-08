@@ -46,7 +46,7 @@ engine_configuration_s * engineConfiguration = &persistentState.persistentConfig
 board_configuration_s *boardConfiguration = &persistentState.persistentConfiguration.engineConfiguration.bc;
 engine_configuration2_s *engineConfiguration2 = &ec2;
 
-void setOutputPinValue(io_pin_e pin, int logicValue) {
+void outputPinRegisterExt2(const char *msg, OutputPin *output, brain_pin_e brainPin, pin_output_mode_e *outputMode) {
 }
 
 int isInjectionEnabled(void) {

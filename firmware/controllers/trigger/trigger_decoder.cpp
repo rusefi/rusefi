@@ -35,6 +35,8 @@
 #include "efiGpio.h"
 #include "engine.h"
 
+static OutputPin triggerDecoderErrorPin;
+
 EXTERN_ENGINE
 ;
 
@@ -191,7 +193,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, uint64_t now
 				|| eventCount[1] != TRIGGER_SHAPE(expectedEventCount[1])
 				|| eventCount[2] != TRIGGER_SHAPE(expectedEventCount[2]);
 
-		setOutputPinValue(LED_TRIGGER_ERROR, isDecodingError);
+		triggerDecoderErrorPin.setValue(isDecodingError);
 		if (isDecodingError) {
 			totalTriggerErrorCounter++;
 			if (engineConfiguration->isPrintTriggerSynchDetails) {
@@ -444,6 +446,8 @@ uint32_t findTriggerZeroEventIndex(trigger_shape_s * shape, trigger_config_s con
 
 void initTriggerDecoder(void) {
 #if (EFI_PROD_CODE || EFI_SIMULATOR)
+	outputPinRegisterExt2("trg_err", &triggerDecoderErrorPin, boardConfiguration->triggerErrorPin, &boardConfiguration->triggerErrorPinMode);
+
 	initLogging(&logger, "trigger decoder");
 #endif
 }

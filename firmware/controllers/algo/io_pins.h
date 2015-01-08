@@ -63,12 +63,6 @@ typedef enum {
 
 	IO_INVALID,
 
-	LED_TRIGGER_ERROR,
-
-	/**
-	 * see board_configuration_s->idleValvePin
-	 */
-	IDLE_VALVE,
 	TRIGGER_EMULATOR_PRIMARY,
 	TRIGGER_EMULATOR_SECONDARY,
 	TRIGGER_EMULATOR_3RD,

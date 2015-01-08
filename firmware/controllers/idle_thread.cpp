@@ -40,6 +40,7 @@ static Logging logger;
 EXTERN_ENGINE
 ;
 
+static OutputPin idlePin;
 static SimplePwm idleValvePwm;
 
 /**
@@ -134,7 +135,7 @@ void startIdleThread(Engine *engine) {
 	/**
 	 * Start PWM for IDLE_VALVE logical / idleValvePin physical
 	 */
-	startSimplePwmExt(&idleValvePwm, "Idle Valve", boardConfiguration->idleValvePin, IDLE_VALVE,
+	startSimplePwmExt(&idleValvePwm, "Idle Valve", boardConfiguration->idleValvePin, &idlePin,
 			boardConfiguration->idleSolenoidFrequency, boardConfiguration->idleSolenoidPwm, applyIdleSolenoidPinState);
 
 	idle.init();
