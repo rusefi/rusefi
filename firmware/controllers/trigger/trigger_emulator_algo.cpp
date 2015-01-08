@@ -140,7 +140,7 @@ void initTriggerEmulatorLogic(Engine *engine) {
 	setTriggerEmulatorRPM(engineConfiguration->bc.triggerSimulatorFrequency, engine);
 	int *pinStates[PWM_PHASE_MAX_WAVE_PER_PWM] = { s->wave.waves[0].pinStates, s->wave.waves[1].pinStates,
 			s->wave.waves[2].pinStates };
-	weComplexInit("position sensor", &triggerSignal, s->getSize(), s->wave.switchTimes, PWM_PHASE_MAX_WAVE_PER_PWM,
+	triggerSignal.weComplexInit("position sensor", s->getSize(), s->wave.switchTimes, PWM_PHASE_MAX_WAVE_PER_PWM,
 			pinStates, updateTriggerShapeIfNeeded, emulatorApplyPinState);
 
 	addConsoleActionIP("rpm", (VoidIntVoidPtr)setTriggerEmulatorRPM, engine);

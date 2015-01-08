@@ -15,13 +15,23 @@
 
 #include "gpio_helper.h"
 
-void startSimplePwm(PwmConfig *state, const char *msg, OutputPin *output,
-		float dutyCycle, float frequency, pwm_gen_callback *stateChangeCallback);
-void applyPinState(PwmConfig *state, int stateIndex);
-
 void initPwmGenerator(void);
 
+/**
+ * start a one-channel PWM driver
+ */
+void startSimplePwm(PwmConfig *state, const char *msg, OutputPin *output,
+		float dutyCycle, float frequency, pwm_gen_callback *stateChangeCallback);
+
+/**
+ * initialize GPIO pin and start a one-channel PWM driver
+ */
 void startSimplePwmExt(PwmConfig *state, const char *msg, brain_pin_e brainPin, OutputPin *output,
 		float frequency, float dutyCycle, pwm_gen_callback *stateChangeCallback);
+
+/**
+ * default implementation of pwm_gen_callback which simply toggles the pins
+ */
+void applyPinState(PwmConfig *state, int stateIndex);
 
 #endif /* PWM_GENERATOR_H_ */

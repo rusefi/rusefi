@@ -17,9 +17,6 @@
 #include "pin_repository.h"
 #include "datalogging.h"
 
-static Logging logger;
-extern OutputPin outputs[IO_PIN_COUNT];
-
 /**
  * This method controls the actual hardware pins
  *
@@ -46,7 +43,7 @@ void startSimplePwm(PwmConfig *state, const char *msg, OutputPin *output, float 
 	state->outputPins[0] = output;
 
 	state->periodNt = US2NT(frequency2periodUs(frequency));
-	weComplexInit(msg, state, 2, switchTimes, 1, pinStates, NULL, stateChangeCallback);
+	state->weComplexInit(msg, 2, switchTimes, 1, pinStates, NULL, stateChangeCallback);
 }
 
 void startSimplePwmExt(PwmConfig *state, const char *msg, brain_pin_e brainPin, OutputPin *output, float frequency,
@@ -60,6 +57,5 @@ void startSimplePwmExt(PwmConfig *state, const char *msg, brain_pin_e brainPin, 
 }
 
 void initPwmGenerator(void) {
-	initLogging(&logger, "PWM gen");
 }
 
