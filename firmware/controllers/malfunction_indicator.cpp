@@ -42,11 +42,13 @@ static THD_WORKING_AREA(mfiThreadStack, UTILITY_THREAD_STACK_SIZE);	// declare t
 
 extern OutputPin outputs[IO_PIN_COUNT];
 
+extern OutputPin checkEnginePin;
+
 static void blink_digits(int digit, int duration) {
 	for (int iter = 0; iter < digit; iter++) {
-		outputs[(int)LED_CHECK_ENGINE].setValue(0);
+		checkEnginePin.setValue(0);
 		chThdSleepMilliseconds(duration);
-		outputs[(int)LED_CHECK_ENGINE].setValue(1);
+		checkEnginePin.setValue(1);
 		chThdSleepMilliseconds(MFI_BLINK_SEPARATOR);
 	}
 }

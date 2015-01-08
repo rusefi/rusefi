@@ -36,6 +36,7 @@
 #if EFI_HIP_9011 || defined(__DOXYGEN__)
 
 #define HIP_DEBUG FALSE
+extern OutputPin outputs[IO_PIN_COUNT];
 
 extern pin_output_mode_e DEFAULT_OUTPUT;
 
@@ -233,8 +234,8 @@ void initHip9011(void) {
 	spicfg.ssport = getHwPort(boardConfiguration->hip9011CsPin);
 	spicfg.sspad = getHwPin(boardConfiguration->hip9011CsPin);
 
-	outputPinRegisterExt2("hip int/hold", HIP9011_INT_HOLD, boardConfiguration->hip9011IntHoldPin, &DEFAULT_OUTPUT);
-	outputPinRegisterExt2("hip CS", SPI_CS_HIP9011, boardConfiguration->hip9011CsPin, &DEFAULT_OUTPUT);
+	outputPinRegisterExt2("hip int/hold", &outputs[(int)HIP9011_INT_HOLD], boardConfiguration->hip9011IntHoldPin, &DEFAULT_OUTPUT);
+	outputPinRegisterExt2("hip CS", &outputs[(int)SPI_CS_HIP9011], boardConfiguration->hip9011CsPin, &DEFAULT_OUTPUT);
 
 	scheduleMsg(&logger, "Starting HIP9011/TPIC8101 driver");
 	spiStart(driver, &spicfg);

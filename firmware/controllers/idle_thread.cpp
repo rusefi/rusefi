@@ -122,10 +122,10 @@ static void setIdleRpmAction(int value) {
 static void applyIdleSolenoidPinState(PwmConfig *state, int stateIndex) {
 	efiAssertVoid(stateIndex < PWM_PHASE_MAX_COUNT, "invalid stateIndex");
 	efiAssertVoid(state->multiWave.waveCount == 1, "invalid idle waveCount");
-	io_pin_e ioPin = state->outputPins[0];
+	OutputPin *output = state->outputPins[0];
 	int value = state->multiWave.waves[0].pinStates[stateIndex];
 	if (!value || engine->rpmCalculator.rpmValue != 0)
-		setOutputPinValue(ioPin, value);
+		output->setValue(value);
 }
 
 void startIdleThread(Engine *engine) {

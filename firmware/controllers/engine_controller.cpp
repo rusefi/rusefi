@@ -98,6 +98,8 @@ Engine * engine = &_engine;
  */
 #define CLEANUP_MODE_TPS 95
 
+extern OutputPin runningPin;
+
 static msg_t csThread(void) {
 	chRegSetThreadName("status");
 #if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
@@ -107,13 +109,13 @@ static msg_t csThread(void) {
 		int is_running = rpm > 0 && !is_cranking;
 		if (is_running) {
 			// blinking while running
-			outputs[(int)LED_RUNNING].setValue(0);
+			runningPin.setValue(0);
 			chThdSleepMilliseconds(50);
-			outputs[(int)LED_RUNNING].setValue(1);
+			runningPin.setValue(1);
 			chThdSleepMilliseconds(50);
 		} else {
 			// constant on while cranking and off if engine is stopped
-			outputs[(int)LED_RUNNING].setValue(is_cranking);
+			runningPin.setValue(is_cranking);
 			chThdSleepMilliseconds(100);
 		}
 	}

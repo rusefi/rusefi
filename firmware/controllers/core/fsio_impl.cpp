@@ -312,6 +312,8 @@ void runFsio(void) {
 
 static pin_output_mode_e defa = OM_DEFAULT;
 
+extern OutputPin outputs[IO_PIN_COUNT];
+
 void initFsioImpl(Engine *engine) {
 	initLogging(&logger, "le");
 
@@ -335,7 +337,7 @@ void initFsioImpl(Engine *engine) {
 
 			int frequency = boardConfiguration->fsioFrequency[i];
 			if (frequency == 0) {
-				outputPinRegisterExt2(getPinName(pin), pin, boardConfiguration->fsioPins[i], &defa);
+				outputPinRegisterExt2(getPinName(pin), &outputs[(int)pin], boardConfiguration->fsioPins[i], &defa);
 			} else {
 				startSimplePwmExt(&fsioPwm[i], "FSIO", brainPin, pin, frequency, 0.5f, applyPinState);
 			}

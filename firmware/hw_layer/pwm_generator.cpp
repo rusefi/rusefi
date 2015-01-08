@@ -18,6 +18,7 @@
 #include "datalogging.h"
 
 static Logging logger;
+extern OutputPin outputs[IO_PIN_COUNT];
 
 /**
  * This method controls the actual hardware pins
@@ -28,9 +29,9 @@ void applyPinState(PwmConfig *state, int stateIndex) {
 	efiAssertVoid(stateIndex < PWM_PHASE_MAX_COUNT, "invalid stateIndex");
 	efiAssertVoid(state->multiWave.waveCount <= PWM_PHASE_MAX_WAVE_PER_PWM, "invalid waveCount");
 	for (int waveIndex = 0; waveIndex < state->multiWave.waveCount; waveIndex++) {
-		io_pin_e ioPin = state->outputPins[waveIndex];
+		OutputPin *output = state->outputPins[waveIndex];
 		int value = state->multiWave.waves[waveIndex].pinStates[stateIndex];
-		setOutputPinValue(ioPin, value);
+		output->setValue(value);
 	}
 }
 
@@ -42,7 +43,7 @@ void startSimplePwm(PwmConfig *state, const char *msg, io_pin_e ioPin, float fre
 
 	int *pinStates[1] = { pinStates0 };
 
-	state->outputPins[0] = ioPin;
+	state->outputPins[0] = &outputs[(int)ioPin];
 
 	state->periodNt = US2NT(frequency2periodUs(frequency));
 	weComplexInit(msg, state, 2, switchTimes, 1, pinStates, NULL, stateChangeCallback);

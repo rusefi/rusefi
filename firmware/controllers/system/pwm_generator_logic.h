@@ -12,6 +12,7 @@
 #include "EfiWave.h"
 #include "io_pins.h"
 #include "scheduler.h"
+#include "efiGpio.h"
 
 typedef struct {
 	/**
@@ -47,7 +48,7 @@ public:
 	void handleCycleStart();
 
 
-	io_pin_e outputPins[PWM_PHASE_MAX_WAVE_PER_PWM];
+	OutputPin *outputPins[PWM_PHASE_MAX_WAVE_PER_PWM];
 	multi_wave_s multiWave;
 	const char *name;
 	/**

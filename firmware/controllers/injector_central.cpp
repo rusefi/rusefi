@@ -43,11 +43,13 @@ static bool_t isRunningBench = false;
 
 static int is_injector_enabled[MAX_INJECTOR_COUNT];
 
+extern OutputPin outputs[IO_PIN_COUNT];
+
 void initIgnitionCentral(void) {
 
 	for (int i = 0; i < engineConfiguration->cylindersCount; i++) {
 		io_pin_e pin = (io_pin_e)((int)SPARKOUT_1_OUTPUT + i);
-		outputPinRegisterExt2(getPinName(pin), pin, boardConfiguration->ignitionPins[i], &boardConfiguration->ignitionPinMode);
+		outputPinRegisterExt2(getPinName(pin), &outputs[(int)pin], boardConfiguration->ignitionPins[i], &boardConfiguration->ignitionPinMode);
 	}
 }
 
@@ -231,7 +233,7 @@ void initInjectorCentral(Engine *engine) {
 	for (int i = 0; i < engineConfiguration->cylindersCount; i++) {
 		io_pin_e pin = (io_pin_e) ((int) INJECTOR_1_OUTPUT + i);
 
-		outputPinRegisterExt2(getPinName(pin), pin, boardConfiguration->injectionPins[i],
+		outputPinRegisterExt2(getPinName(pin), &outputs[(int)pin], boardConfiguration->injectionPins[i],
 				&boardConfiguration->injectionPinMode);
 	}
 
