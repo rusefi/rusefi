@@ -2598,7 +2598,7 @@
     <group>
       <name>lcd</name>
       <file>
-        <name>$PROJ_DIR$\..\hw_layer\lcd\lcd_HD44780.c</name>
+        <name>$PROJ_DIR$\..\hw_layer\lcd\lcd_HD44780.cpp</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\hw_layer\lcd\lcd_HD44780.h</name>
