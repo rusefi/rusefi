@@ -62,15 +62,6 @@ typedef enum {
 	GPIO_15,
 
 	IO_INVALID,
-	LED_WARNING, // Orange on-board LED
-	LED_RUNNING, // Green on-board LED
-	LED_ERROR, // Red on-board LED
-	LED_COMMUNICATION_1, // Blue on-board LED
-	LED_EXT_1, // external board LED
-	LED_EXT_2, // external board LED
-	LED_EXT_3, // external board LED
-	LED_DEBUG,
-	LED_EMULATOR,
 
 	LED_TRIGGER_ERROR,
 
@@ -117,9 +108,6 @@ typedef enum {
 	LED_HUGE_19,
 	LED_HUGE_20,
 
-	// malfunction LED indicator - CheckEngine
-	LED_CHECK_ENGINE,
-
 	FUEL_PUMP_RELAY,
 	FAN_RELAY,
 	O2_HEATER,
@@ -159,7 +147,6 @@ void turnAllPinsOff(void);
 #else
 #define turnAllPinsOff() {}
 #endif
-void outputPinRegisterExt2(const char *msg, io_pin_e ioPin, brain_pin_e brainPin, pin_output_mode_e *outputMode);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

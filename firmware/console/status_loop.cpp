@@ -352,16 +352,28 @@ static THD_WORKING_AREA(lcdThreadStack, UTILITY_THREAD_STACK_SIZE);
  */
 static THD_WORKING_AREA(comBlinkingStack, UTILITY_THREAD_STACK_SIZE);
 
-static OutputPin *leds[] = { &outputs[(int)LED_WARNING], &outputs[(int)LED_RUNNING],
-		&outputs[(int)LED_ERROR],
-		&outputs[(int)LED_COMMUNICATION_1],
-		&outputs[(int)LED_EXT_1],
-		&outputs[(int)LED_CHECK_ENGINE] };
+extern OutputPin errorLedPin;
+static OutputPin communicationPin;
+OutputPin checkEnginePin;
+OutputPin warningPin;
+OutputPin runningPin;
+
+static OutputPin *leds[] = { &warningPin, &runningPin,
+		&errorLedPin,
+		&communicationPin,
+		&checkEnginePin };
 
 /**
  * This method would blink all the LEDs just to test them
  */
 static void initialLedsBlink(void) {
+	outputPinRegister("communication status 1", &communicationPin, LED_COMMUNICATION_PORT, LED_COMMUNICATION_PIN);
+
+#if EFI_WARNING_LED
+	outputPinRegister("warning", &warningPin, LED_WARNING_PORT, LED_WARNING_PIN);
+	outputPinRegister("is running status", &runningPin, LED_RUNNING_STATUS_PORT, LED_RUNNING_STATUS_PIN);
+#endif /* EFI_WARNING_LED */
+
 	int size = sizeof(leds) / sizeof(leds[0]);
 	for (int i = 0; i < size; i++)
 		leds[i]->setValue(1);
@@ -393,12 +405,10 @@ static void comBlinkingThread(void *arg) {
 			delay = isConsoleReady() ? 100 : 33;
 		}
 
-		outputs[(int)LED_COMMUNICATION_1].setValue(0);
-		outputs[(int)LED_EXT_1].setValue(1);
+		communicationPin.setValue(0);
 		chThdSleepMilliseconds(delay);
 
-		outputs[(int)LED_COMMUNICATION_1].setValue(1);
-		outputs[(int)LED_EXT_1].setValue(0);
+		communicationPin.setValue(1);
 		chThdSleepMilliseconds(delay);
 	}
 }
@@ -410,9 +420,9 @@ static void errBlinkingThread(void *arg) {
 	while (TRUE) {
 		int delay = 33;
 		if (isTriggerDecoderError() || isIgnitionTimingError())
-			outputs[(int)LED_WARNING].setValue(1);
+			warningPin.setValue(1);
 		chThdSleepMilliseconds(delay);
-		outputs[(int)LED_WARNING].setValue(0);
+		warningPin.setValue(0);
 		chThdSleepMilliseconds(delay);
 	}
 #endif /* EFI_ENGINE_CONTROL */

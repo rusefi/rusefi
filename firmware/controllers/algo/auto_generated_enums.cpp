@@ -81,22 +81,6 @@ case INJECTOR_9_OUTPUT:
   return "INJECTOR_9_OUTPUT";
 case IO_INVALID:
   return "IO_INVALID";
-case LED_CHECK_ENGINE:
-  return "LED_CHECK_ENGINE";
-case LED_COMMUNICATION_1:
-  return "LED_COMMUNICATION_1";
-case LED_DEBUG:
-  return "LED_DEBUG";
-case LED_EMULATOR:
-  return "LED_EMULATOR";
-case LED_ERROR:
-  return "LED_ERROR";
-case LED_EXT_1:
-  return "LED_EXT_1";
-case LED_EXT_2:
-  return "LED_EXT_2";
-case LED_EXT_3:
-  return "LED_EXT_3";
 case LED_HUGE_0:
   return "LED_HUGE_0";
 case LED_HUGE_1:
@@ -139,12 +123,8 @@ case LED_HUGE_8:
   return "LED_HUGE_8";
 case LED_HUGE_9:
   return "LED_HUGE_9";
-case LED_RUNNING:
-  return "LED_RUNNING";
 case LED_TRIGGER_ERROR:
   return "LED_TRIGGER_ERROR";
-case LED_WARNING:
-  return "LED_WARNING";
 case MAIN_RELAY:
   return "MAIN_RELAY";
 case O2_HEATER:

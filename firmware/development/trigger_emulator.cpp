@@ -24,6 +24,8 @@
 
 extern PwmConfig triggerSignal;
 
+extern OutputPin outputs[IO_PIN_COUNT];
+
 void initTriggerEmulator(Engine *engine) {
 
 	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
@@ -32,9 +34,9 @@ void initTriggerEmulator(Engine *engine) {
 #if EFI_EMULATE_POSITION_SENSORS || defined(__DOXYGEN__)
 	print("Emulating %s\r\n", getConfigurationName(engineConfiguration->engineType));
 
-	triggerSignal.outputPins[0] = TRIGGER_EMULATOR_PRIMARY;
-	triggerSignal.outputPins[1] = TRIGGER_EMULATOR_SECONDARY;
-	triggerSignal.outputPins[2] = TRIGGER_EMULATOR_3RD;
+	triggerSignal.outputPins[0] = &outputs[(int)TRIGGER_EMULATOR_PRIMARY];
+	triggerSignal.outputPins[1] = &outputs[(int)TRIGGER_EMULATOR_SECONDARY];
+	triggerSignal.outputPins[2] = &outputs[(int)TRIGGER_EMULATOR_3RD];
 
 #if EFI_PROD_CODE
 	// todo: refactor, make this a loop

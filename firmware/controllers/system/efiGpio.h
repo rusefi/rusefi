@@ -113,6 +113,7 @@ const char *getPinName(io_pin_e io_pin);
 #endif
 
 #define doSetOutputPinValue(pin, logicValue) doSetOutputPinValue2((&outputs[pin]), logicValue)
+void outputPinRegisterExt2(const char *msg, OutputPin *output, brain_pin_e brainPin, pin_output_mode_e *outputMode);
 
 #ifdef __cplusplus
 }

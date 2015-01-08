@@ -75,21 +75,24 @@ ioportmask_t getHwPin(brain_pin_e brainPin) {
 	return brainPin % 16;
 }
 
-void outputPinRegisterExt2(const char *msg, io_pin_e ioPin, brain_pin_e brainPin, pin_output_mode_e *outputMode) {
+void outputPinRegisterExt2(const char *msg, OutputPin *output, brain_pin_e brainPin, pin_output_mode_e *outputMode) {
 	if (brainPin == GPIO_UNASSIGNED)
 		return;
 	GPIO_TypeDef *hwPort = getHwPort(brainPin);
 	int hwPin = getHwPin(brainPin);
 
-	outputPinRegisterExt(msg, &outputs[(int)ioPin], hwPort, hwPin, outputMode);
+	outputPinRegisterExt(msg, output, hwPort, hwPin, outputMode);
 }
 
 void outputPinRegister(const char *msg, OutputPin *output, GPIO_TypeDef *port, uint32_t pin) {
 	outputPinRegisterExt(msg, output, port, pin, &DEFAULT_OUTPUT);
 }
 
+OutputPin errorLedPin;
+extern OutputPin checkEnginePin;
+
 void initPrimaryPins(void) {
-	outputPinRegister("LED_ERROR", &outputs[(int)LED_ERROR], LED_ERROR_PORT, LED_ERROR_PIN);
+	outputPinRegister("LED_ERROR", &errorLedPin, LED_ERROR_PORT, LED_ERROR_PIN);
 }
 
 static void getPinValue(const char *name) {
@@ -105,13 +108,6 @@ static void getPinValue(const char *name) {
 void initOutputPins(void) {
 	initLogging(&logger, "io_pins");
 
-#if EFI_WARNING_LED
-	outputPinRegister("warning", &outputs[(int)LED_WARNING], LED_WARNING_PORT, LED_WARNING_PIN);
-	outputPinRegister("is running status", &outputs[(int)LED_RUNNING], LED_RUNNING_STATUS_PORT, LED_RUNNING_STATUS_PIN);
-#endif /* EFI_WARNING_LED */
-
-	outputPinRegister("communication status 1", &outputs[(int)LED_COMMUNICATION_1], LED_COMMUNICATION_PORT, LED_COMMUNICATION_PIN);
-
 	/**
 	 * want to make sure it's all zeros so that we can compare in initOutputPinExt() method
 	 */
@@ -122,7 +118,7 @@ void initOutputPins(void) {
 //	outputPinRegister("ext led 2", LED_EXT_2, EXTRA_LED_2_PORT, EXTRA_LED_2_PIN);
 //	outputPinRegister("ext led 3", LED_EXT_3, EXTRA_LED_2_PORT, EXTRA_LED_3_PIN);
 //	outputPinRegister("alive1", LED_DEBUG, GPIOD, 6);
-	outputPinRegisterExt2("MalfunctionIndicator", LED_CHECK_ENGINE, boardConfiguration->malfunctionIndicatorPin, &DEFAULT_OUTPUT);
+	outputPinRegisterExt2("MalfunctionIndicator", &checkEnginePin, boardConfiguration->malfunctionIndicatorPin, &DEFAULT_OUTPUT);
 
 // todo: are these needed here? todo: make configurable
 //	outputPinRegister("spi CS1", SPI_CS_1, SPI_CS1_PORT, SPI_CS1_PIN);
@@ -134,14 +130,14 @@ void initOutputPins(void) {
 #endif
 
 	// todo: should we move this code closer to the fuel pump logic?
-	outputPinRegisterExt2("fuel pump relay", FUEL_PUMP_RELAY, boardConfiguration->fuelPumpPin, &DEFAULT_OUTPUT);
+	outputPinRegisterExt2("fuel pump relay", &outputs[(int)FUEL_PUMP_RELAY], boardConfiguration->fuelPumpPin, &DEFAULT_OUTPUT);
 
-	outputPinRegisterExt2("main relay", MAIN_RELAY, boardConfiguration->mainRelayPin, &boardConfiguration->mainRelayPinMode);
+	outputPinRegisterExt2("main relay", &outputs[(int)MAIN_RELAY], boardConfiguration->mainRelayPin, &boardConfiguration->mainRelayPinMode);
 
-	outputPinRegisterExt2("fan relay", FAN_RELAY, boardConfiguration->fanPin, &DEFAULT_OUTPUT);
-	outputPinRegisterExt2("o2 heater", O2_HEATER, boardConfiguration->o2heaterPin, &DEFAULT_OUTPUT);
-	outputPinRegisterExt2("trg_err", LED_TRIGGER_ERROR, boardConfiguration->triggerErrorPin, &boardConfiguration->triggerErrorPinMode);
-	outputPinRegisterExt2("A/C relay", AC_RELAY, boardConfiguration->acRelayPin, &boardConfiguration->acRelayPinMode);
+	outputPinRegisterExt2("fan relay", &outputs[(int)FAN_RELAY], boardConfiguration->fanPin, &DEFAULT_OUTPUT);
+	outputPinRegisterExt2("o2 heater", &outputs[(int)O2_HEATER], boardConfiguration->o2heaterPin, &DEFAULT_OUTPUT);
+	outputPinRegisterExt2("trg_err", &outputs[(int)LED_TRIGGER_ERROR], boardConfiguration->triggerErrorPin, &boardConfiguration->triggerErrorPinMode);
+	outputPinRegisterExt2("A/C relay", &outputs[(int)AC_RELAY], boardConfiguration->acRelayPin, &boardConfiguration->acRelayPinMode);
 
 	// digit 1
 	/*
