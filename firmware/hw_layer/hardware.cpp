@@ -20,11 +20,13 @@
 
 #include "trigger_input.h"
 #include "eficonsole.h"
+#include "max31855.h"
+#include "can_hw.h"
+
+#if EFI_PROD_CODE
 #include "board_test.h"
 #include "mcp3208.h"
 #include "HIP9011.h"
-#include "max31855.h"
-#include "can_hw.h"
 #include "histogram.h"
 #include "mmc_card.h"
 #include "neo6m.h"
@@ -32,15 +34,15 @@
 #include "settings.h"
 #include "algo.h"
 #include "joystick.h"
-
-#if EFI_INTERNAL_FLASH
-#include "flash_main.h"
-#endif /* EFI_INTERNAL_FLASH */
-
 #include "trigger_central.h"
 #include "svnversion.h"
 #include "engine_configuration.h"
 #include "ec2.h"
+#endif
+
+#if EFI_INTERNAL_FLASH
+#include "flash_main.h"
+#endif /* EFI_INTERNAL_FLASH */
 
 EXTERN_ENGINE
 ;
@@ -177,6 +179,8 @@ static void sendI2Cbyte(int addr, int data) {
 #endif
 
 static Logging *sharedLogger;
+
+#if EFI_PROD_CODE
 
 void initHardware(Logging *l, Engine *engine) {
 	sharedLogger = l;
@@ -336,3 +340,5 @@ void initHardware(Logging *l, Engine *engine) {
 
 	printMsg(sharedLogger, "initHardware() OK!");
 }
+
+#endif /* EFI_PROD_CODE */

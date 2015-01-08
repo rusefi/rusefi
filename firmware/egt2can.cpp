@@ -7,7 +7,11 @@ egt_cs_array_t max31855_cs;
 
 int main_loop_started;
 
+int maxNesting = 0;
+
 void firmwareError(const char *fmt, ...) {
+
+}
 
 /*
  * Blue LED blinker thread, times are in milliseconds.
@@ -18,27 +22,10 @@ static msg_t Thread1(void *arg) {
   (void)arg;
   chRegSetThreadName("blinker1");
   while (TRUE) {
-    palClearPad(GPIOC, GPIOC_LED4);
+    palClearPad(GPIOC, 13);
     chThdSleepMilliseconds(500);
-    palSetPad(GPIOC, GPIOC_LED4);
+    palSetPad(GPIOC, 13);
     chThdSleepMilliseconds(500);
-  }
-  return 0;
-}
-
-/*
- * Green LED blinker thread, times are in milliseconds.
- */
-static WORKING_AREA(waThread2, 128);
-static msg_t Thread2(void *arg) {
-
-  (void)arg;
-  chRegSetThreadName("blinker2");
-  while (TRUE) {
-    palClearPad(GPIOC, GPIOC_LED3);
-    chThdSleepMilliseconds(250);
-    palSetPad(GPIOC, GPIOC_LED3);
-    chThdSleepMilliseconds(250);
   }
   return 0;
 }
@@ -57,6 +44,7 @@ void initSpiCs(SPIConfig *spiConfig, brain_pin_e csPin) {
 
 void runRusEfi(void) {
 
+#if EFI_USE_UART_FOR_CONSOLE
   /*
    * Activates the serial driver 1 using the driver default configuration.
    * PA9 and PA10 are routed to USART1.
@@ -64,12 +52,12 @@ void runRusEfi(void) {
   sdStart(&SD1, NULL);
   palSetPadMode(GPIOA, 9, PAL_MODE_ALTERNATE(1));       /* USART1 TX.       */
   palSetPadMode(GPIOA, 10, PAL_MODE_ALTERNATE(1));      /* USART1 RX.       */
+#endif
 
   /*
    * Creates the blinker threads.
    */
   chThdCreateStatic(waThread1, sizeof(waThread1), NORMALPRIO, Thread1, NULL);
-  chThdCreateStatic(waThread2, sizeof(waThread2), NORMALPRIO, Thread2, NULL);
 
   initMax31855(NULL, max31855_cs);
 
