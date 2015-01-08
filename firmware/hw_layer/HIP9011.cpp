@@ -219,6 +219,9 @@ static void setGain(float value) {
 	showHipInfo();
 }
 
+static void endOfSpiCommunication(SPIDriver *spip) {
+}
+
 void initHip9011(void) {
 	if (!boardConfiguration->isHip9011Enabled)
 		return;
@@ -263,6 +266,14 @@ void initHip9011(void) {
 
 	// band index depends on cylinder bore
 	SPI_SYNCHRONOUS(SET_BAND_PASS_CMD + bandIndex);
+
+	/**
+	 * Let's restart SPI to switch it from synchronous mode into
+	 * asynchronous mode
+	 */
+//	spiStop(driver);
+//	spicfg.end_cb = endOfSpiCommunication;
+//	spiStart(driver, &spicfg);
 
 	chThdCreateStatic(htThreadStack, sizeof(htThreadStack), NORMALPRIO, (tfunc_t) ivThread, NULL);
 }

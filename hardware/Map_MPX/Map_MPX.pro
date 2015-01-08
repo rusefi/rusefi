@@ -1,4 +1,4 @@
-update=08.01.2015 3:52:30
+update=08.01.2015 23:51:34
 version=1
 last_client=kicad
 [cvpcb]
@@ -84,5 +84,6 @@ LibName14=dip_sockets
 LibName15=pga_sockets
 LibName16=valves
 LibName17=mpx_sensor
+LibName18=D:/rusEFI/svn/hardware/rusefi_lib/logo_flipped
 [general]
 version=1
