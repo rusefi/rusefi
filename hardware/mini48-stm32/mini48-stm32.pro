@@ -1,4 +1,4 @@
-update=1/6/2015 5:56:03 AM
+update=1/7/2015 8:07:15 PM
 version=1
 last_client=eeschema
 [general]
@@ -50,7 +50,7 @@ LibName18=smd_lqfp
 [eeschema]
 version=1
 LibDir=../rusefi_lib
-NetFmtName=
+NetFmtName=PcbnewAdvanced
 RptD_X=0
 RptD_Y=100
 RptLab=1
