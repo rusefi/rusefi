@@ -162,10 +162,10 @@ void copyPwmParameters(PwmConfig *state, int phaseCount, float *switchTimes, int
 	}
 }
 
-void weComplexInit(const char *msg, PwmConfig *state, int phaseCount, float *switchTimes, int waveCount,
+void PwmConfig::weComplexInit(const char *msg, int phaseCount, float *switchTimes, int waveCount,
 		int **pinStates, pwm_cycle_callback *cycleCallback, pwm_gen_callback *stateChangeCallback) {
 
-	efiAssertVoid(state->periodNt != 0, "period is not initialized");
+	efiAssertVoid(periodNt != 0, "period is not initialized");
 	if (phaseCount == 0) {
 		firmwareError("signal length cannot be zero");
 		return;
@@ -181,18 +181,18 @@ void weComplexInit(const char *msg, PwmConfig *state, int phaseCount, float *swi
 	efiAssertVoid(waveCount > 0, "waveCount should be positive");
 	checkSwitchTimes2(phaseCount, switchTimes);
 
-	state->multiWave.waveCount = waveCount;
+	this->cycleCallback = cycleCallback;
+	this->stateChangeCallback = stateChangeCallback;
 
-	copyPwmParameters(state, phaseCount, switchTimes, waveCount, pinStates);
+	multiWave.waveCount = waveCount;
 
-	state->cycleCallback = cycleCallback;
-	state->stateChangeCallback = stateChangeCallback;
+	copyPwmParameters(this, phaseCount, switchTimes, waveCount, pinStates);
 
-	state->safe.phaseIndex = 0;
-	state->safe.periodNt = -1;
-	state->safe.iteration = -1;
-	state->name = msg;
+	safe.phaseIndex = 0;
+	safe.periodNt = -1;
+	safe.iteration = -1;
+	name = msg;
 
 	// let's start the indefinite callback loop of PWM generation
-	timerCallback(state);
+	timerCallback(this);
 }
