@@ -16,9 +16,7 @@
 
 #define hal_lld_get_counter_value()         DWT_CYCCNT
 
-#define EFI_USE_UART_FOR_CONSOLE TRUE
-
-#define EFI_CONSOLE_UART_DEVICE (&SD1)
+#define EFI_USE_UART_FOR_CONSOLE FALSE
 
 #define EFI_CONSOLE_TX_PORT GPIOC
 #define EFI_CONSOLE_TX_PIN 10
