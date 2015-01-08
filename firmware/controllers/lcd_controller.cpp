@@ -33,33 +33,38 @@ static MenuItem miTrigger(tree.root, "trigger");
 static MenuItem miBench(tree.root, "bench test");
 static MenuItem miAbout(tree.root, "about");
 
-static MenuItem miTestFan(&miAbout, "test fan");
-static MenuItem miTestFuelPump(&miAbout, "test pump");
-static MenuItem miTestSpark1(&miAbout, "test spark1");
-static MenuItem miTestSpark2(&miAbout, "test spark2");
-static MenuItem miTestSpark3(&miAbout, "test spark3");
-static MenuItem miTestSpark4(&miAbout, "test spark4");
-static MenuItem miTestInj1(&miAbout, "test injector1");
-static MenuItem miTestInj2(&miAbout, "test injector2");
-static MenuItem miTestInj3(&miAbout, "test injector3");
-static MenuItem miTestInj4(&miAbout, "test injector4");
+static MenuItem miClt(&miSensors, LL_CLT_TEMPERATURE);
+static MenuItem miIat(&miSensors, LL_IAT_TEMPERATURE);
+
+static MenuItem miTestFan(&miBench, "test fan");
+static MenuItem miTestFuelPump(&miBench, "test pump");
+static MenuItem miTestSpark1(&miBench, "test spark1");
+static MenuItem miTestSpark2(&miBench, "test spark2");
+static MenuItem miTestSpark3(&miBench, "test spark3");
+static MenuItem miTestSpark4(&miBench, "test spark4");
+static MenuItem miTestInj1(&miBench, "test injector1");
+static MenuItem miTestInj2(&miBench, "test injector2");
+static MenuItem miTestInj3(&miBench, "test injector3");
+static MenuItem miTestInj4(&miBench, "test injector4");
 
 static MenuItem miVersion(&miAbout, LL_VERSION);
 static MenuItem miConfig(&miAbout, LL_CONFIG);
+//static MenuItem miAlgo(&miAbout, LL_ALGORITHM);
 
 #define DISP_LINES (engineConfiguration->HD44780height - 1)
 
-static int infoIndex = 0;
-static int cursorY = 0;
-
 void onJoystick(joystick_button_e button) {
-	if (cursorY == TOTAL_OPTIONS - 1) {
-		cursorY = infoIndex = 0;
-	} else {
-		cursorY++;
-		if (cursorY - DISP_LINES >= infoIndex)
-			infoIndex++;
+	/**
+	 * this method is invoked on EXTI IRQ thread
+	 */
+	if (button == JB_CENTER) {
+		tree.enterSubMenu();
+	} else if (button == JB_BUTTON_D) {
+		tree.nextItem();
+	} else if (button == JB_BUTTON_A) {
+		tree.back();
 	}
+	// actual repaint happends in the repaint loop
 }
 
 char * appendStr(char *ptr, const char *suffix) {
@@ -207,7 +212,7 @@ void updateHD44780lcd(Engine *engine) {
 		p = p->next;
 	}
 
-	for(; count < tree.linesCount && p != NULL; count++) {
+	for (; count < tree.linesCount; count++) {
 		lcd_HD44780_set_position(count, 0);
 		for (int r = 0; r < 20; r++) {
 			lcd_HD44780_print_char(' ');

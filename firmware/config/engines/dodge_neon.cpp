@@ -370,12 +370,7 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 	boardConfiguration->tunerStudioSerialSpeed = 9600;
 	engineConfiguration->algorithm = LM_SPEED_DENSITY;
 
-	engineConfiguration->isJoystickEnabled = true;
-	boardConfiguration->joystickCenterPin = GPIOD_10;
-	boardConfiguration->joystickAPin = GPIOD_8;
-	boardConfiguration->joystickBPin = GPIO_UNASSIGNED;
-	boardConfiguration->joystickCPin = GPIOD_9;
-	boardConfiguration->joystickDPin = GPIOD_11;
+	setFrankenso0_1_joystick(engineConfiguration);
 
 //	engineConfiguration->isCanEnabled = true;
 	boardConfiguration->canTxPin = GPIOB_6;

@@ -736,6 +736,16 @@ void commonFrankensoAnalogInputs(engine_configuration_s *engineConfiguration) {
 	engineConfiguration->bc.adcHwChannelEnabled[14] = ADC_SLOW;
 }
 
+void setFrankenso0_1_joystick(engine_configuration_s *engineConfiguration) {
+	engineConfiguration->isJoystickEnabled = true;
+	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
+	boardConfiguration->joystickCenterPin = GPIOC_8;
+	boardConfiguration->joystickAPin = GPIOD_10;
+	boardConfiguration->joystickBPin = GPIO_UNASSIGNED;
+	boardConfiguration->joystickCPin = GPIOD_9;
+	boardConfiguration->joystickDPin = GPIOD_11;
+}
+
 void copyFuelTable(fuel_table_t const source, fuel_table_t destination) {
 	for (int k = 0; k < FUEL_LOAD_COUNT; k++) {
 		for (int r = 0; r < FUEL_RPM_COUNT; r++) {

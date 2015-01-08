@@ -639,6 +639,7 @@ void incrementGlobalConfigurationVersion(void);
 int getGlobalConfigurationVersion(void);
 
 void commonFrankensoAnalogInputs(engine_configuration_s *engineConfiguration);
+void setFrankenso0_1_joystick(engine_configuration_s *engineConfiguration);
 
 #ifdef __cplusplus
 }
