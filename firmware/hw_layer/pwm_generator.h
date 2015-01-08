@@ -15,13 +15,13 @@
 
 #include "gpio_helper.h"
 
-void startSimplePwm(PwmConfig *state, const char *msg, io_pin_e ioPin,
+void startSimplePwm(PwmConfig *state, const char *msg, OutputPin *output,
 		float dutyCycle, float frequency, pwm_gen_callback *stateChangeCallback);
 void applyPinState(PwmConfig *state, int stateIndex);
 
 void initPwmGenerator(void);
 
-void startSimplePwmExt(PwmConfig *state, const char *msg, brain_pin_e brainPin, io_pin_e ioPin,
+void startSimplePwmExt(PwmConfig *state, const char *msg, brain_pin_e brainPin, OutputPin *output,
 		float frequency, float dutyCycle, pwm_gen_callback *stateChangeCallback);
 
 #endif /* PWM_GENERATOR_H_ */

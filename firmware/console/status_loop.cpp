@@ -367,7 +367,9 @@ static OutputPin *leds[] = { &warningPin, &runningPin,
  * This method would blink all the LEDs just to test them
  */
 static void initialLedsBlink(void) {
+#if EFI_PROD_CODE
 	outputPinRegister("communication status 1", &communicationPin, LED_COMMUNICATION_PORT, LED_COMMUNICATION_PIN);
+#endif
 
 #if EFI_WARNING_LED
 	outputPinRegister("warning", &warningPin, LED_WARNING_PORT, LED_WARNING_PIN);

@@ -53,8 +53,6 @@ case GPIO_9:
   return "GPIO_9";
 case HIP9011_INT_HOLD:
   return "HIP9011_INT_HOLD";
-case IDLE_VALVE:
-  return "IDLE_VALVE";
 case INJECTOR_10_OUTPUT:
   return "INJECTOR_10_OUTPUT";
 case INJECTOR_11_OUTPUT:
@@ -123,8 +121,6 @@ case LED_HUGE_8:
   return "LED_HUGE_8";
 case LED_HUGE_9:
   return "LED_HUGE_9";
-case LED_TRIGGER_ERROR:
-  return "LED_TRIGGER_ERROR";
 case MAIN_RELAY:
   return "MAIN_RELAY";
 case O2_HEATER:

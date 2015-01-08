@@ -339,7 +339,7 @@ void initFsioImpl(Engine *engine) {
 			if (frequency == 0) {
 				outputPinRegisterExt2(getPinName(pin), &outputs[(int)pin], boardConfiguration->fsioPins[i], &defa);
 			} else {
-				startSimplePwmExt(&fsioPwm[i], "FSIO", brainPin, pin, frequency, 0.5f, applyPinState);
+				startSimplePwmExt(&fsioPwm[i], "FSIO", brainPin, &outputs[(int)pin], frequency, 0.5f, applyPinState);
 			}
 		}
 	}

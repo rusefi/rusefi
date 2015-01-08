@@ -136,7 +136,6 @@ void initOutputPins(void) {
 
 	outputPinRegisterExt2("fan relay", &outputs[(int)FAN_RELAY], boardConfiguration->fanPin, &DEFAULT_OUTPUT);
 	outputPinRegisterExt2("o2 heater", &outputs[(int)O2_HEATER], boardConfiguration->o2heaterPin, &DEFAULT_OUTPUT);
-	outputPinRegisterExt2("trg_err", &outputs[(int)LED_TRIGGER_ERROR], boardConfiguration->triggerErrorPin, &boardConfiguration->triggerErrorPinMode);
 	outputPinRegisterExt2("A/C relay", &outputs[(int)AC_RELAY], boardConfiguration->acRelayPin, &boardConfiguration->acRelayPinMode);
 
 	// digit 1
