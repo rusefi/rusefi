@@ -19,6 +19,7 @@
 #include "joystick.h"
 #include "utlist.h"
 #include "lcd_menu_tree.h"
+#include "memstreams.h"
 
 EXTERN_ENGINE
 ;
@@ -29,12 +30,18 @@ static MenuTree tree(&ROOT);
 
 static MenuItem miRpm(tree.root, LL_RPM);
 static MenuItem miSensors(tree.root, "sensors");
-static MenuItem miTrigger(tree.root, "trigger");
 static MenuItem miBench(tree.root, "bench test");
 static MenuItem miAbout(tree.root, "about");
 
+static MenuItem miTriggerErrors(&miRpm, LL_TRIGGER_ERRORS);
+static MenuItem miTriggerDuty(&miRpm, LL_TRIGGER_DUTY);
+
 static MenuItem miClt(&miSensors, LL_CLT_TEMPERATURE);
 static MenuItem miIat(&miSensors, LL_IAT_TEMPERATURE);
+static MenuItem miTps(&miSensors, LL_TPS);
+static MenuItem miVBatt(&miSensors, LL_VBATT);
+static MenuItem miMap(&miSensors, LL_MAP);
+static MenuItem miBaro(&miSensors, LL_BARO);
 
 static MenuItem miTestFan(&miBench, "test fan");
 static MenuItem miTestFuelPump(&miBench, "test pump");
@@ -49,9 +56,12 @@ static MenuItem miTestInj4(&miBench, "test injector4");
 
 static MenuItem miVersion(&miAbout, LL_VERSION);
 static MenuItem miConfig(&miAbout, LL_CONFIG);
-//static MenuItem miAlgo(&miAbout, LL_ALGORITHM);
+static MenuItem miAlgo(&miAbout, LL_ALGORITHM);
 
 #define DISP_LINES (engineConfiguration->HD44780height - 1)
+
+static char lcdLineBuffer[30];
+static MemoryStream lcdLineStream;
 
 void onJoystick(joystick_button_e button) {
 	/**
@@ -76,9 +86,12 @@ char * appendStr(char *ptr, const char *suffix) {
 
 void initLcdController(void) {
 	tree.init(&miRpm, 3);
+	msObjectInit(&lcdLineStream, (uint8_t *) lcdLineBuffer,
+			sizeof(lcdLineBuffer), 0);
 }
 
-static char * prepareVBattMapLine(engine_configuration_s *engineConfiguration, char *buffer) {
+static char * prepareVBattMapLine(engine_configuration_s *engineConfiguration,
+		char *buffer) {
 	char *ptr = buffer;
 	*ptr++ = 'V';
 	ptr = ftoa(ptr, getVBatt(engineConfiguration), 10.0f);
@@ -97,7 +110,6 @@ static char * prepareCltIatTpsLine(Engine *engine, char *buffer) {
 	return ptr;
 }
 
-static const char* algorithmStr[] = { "MAF", "TPS", "MAP", "SD" };
 static const char* ignitionModeStr[] = { "1C", "IND", "WS" };
 static const char* injectionModeStr[] = { "Sim", "Seq", "Bch" };
 static const char* idleModeStr[] = { "I:A", "I:M" };
@@ -129,7 +141,8 @@ char * appendPinStatus(char *buffer, io_pin_e pin) {
 	}
 }
 
-static char * prepareInfoLine(engine_configuration_s *engineConfiguration, char *buffer) {
+static char * prepareInfoLine(engine_configuration_s *engineConfiguration,
+		char *buffer) {
 	char *ptr = buffer;
 
 	ptr = appendStr(ptr, " ");
@@ -157,33 +170,63 @@ static char * prepareStatusLine(char *buffer) {
 static char buffer[MAX_LCD_WIDTH + 4];
 static char dateBuffer[30];
 
+static void lcdPrintf(const char *fmt, ...) {
+	va_list ap;
+	va_start(ap, fmt);
+	lcdLineStream.eos = 0; // reset
+	chvprintf((BaseSequentialStream *) &lcdLineStream, fmt, ap);
+	lcdLineStream.buffer[lcdLineStream.eos] = 0; // terminator
+	va_end(ap);
+	lcd_HD44780_print_string(lcdLineBuffer);
+}
+
 static void showLine(lcd_line_e line) {
+
 	switch (line) {
 	case LL_VERSION:
-		lcd_HD44780_print_string("version ");
-		lcd_HD44780_print_string(VCS_VERSION);
+		lcdPrintf("version %s", VCS_VERSION);
 		return;
 	case LL_CONFIG:
-		lcd_HD44780_print_string("config ");
-		lcd_HD44780_print_string(getConfigurationName(engine->engineConfiguration->engineType));
+		lcdPrintf("config %s",
+				getConfigurationName(engine->engineConfiguration->engineType));
 		return;
 	case LL_RPM:
-		lcd_HD44780_print_string("RPM ");
-		itoa10(buffer, getRpmE(engine));
-		lcd_HD44780_print_string(buffer);
+		lcdPrintf("RPM %d", getRpmE(engine));
 		return;
 	case LL_CLT_TEMPERATURE:
-		lcd_HD44780_print_string("Coolant ");
-		ftoa(buffer, getCoolantTemperature(engine), 10.0f);
-		lcd_HD44780_print_string(buffer);
+		lcdPrintf("Coolant %f", getCoolantTemperature(engine));
 		return;
 	case LL_IAT_TEMPERATURE:
-		lcd_HD44780_print_string("Intake Air ");
-		ftoa(buffer, getIntakeAirTemperature(engine), 10.0f);
-		lcd_HD44780_print_string(buffer);
+		lcdPrintf("Intake Air %f", getIntakeAirTemperature(engine));
 		return;
 	case LL_ALGORITHM:
-		lcd_HD44780_print_string(getEngine_load_mode_e(engineConfiguration->algorithm));
+		lcdPrintf(getEngine_load_mode_e(engineConfiguration->algorithm));
+		return;
+	case LL_TPS:
+		lcdPrintf("Throttle %f%%", getTPS());
+		return;
+	case LL_VBATT:
+		lcdPrintf("Battery %fv", getVBatt(engineConfiguration));
+		return;
+	case LL_BARO:
+		if (engineConfiguration->hasBaroSensor) {
+			lcdPrintf("Baro: none");
+		} else {
+			lcdPrintf("Baro: %f", getBaroPressure());
+		}
+		return;
+	case LL_MAP:
+		if (engineConfiguration->hasMapSensor) {
+			lcdPrintf("MAP: none");
+		} else {
+			lcdPrintf("MAP %s", getMap());
+		}
+		return;
+	case LL_TRIGGER_ERRORS:
+		lcdPrintf("Errors");
+		return;
+	case LL_TRIGGER_DUTY:
+		lcdPrintf("Duty");
 		return;
 	}
 }
@@ -219,28 +262,6 @@ void updateHD44780lcd(Engine *engine) {
 		}
 	}
 
-//	for (int i = infoIndex; i < infoIndex + DISP_LINES; i++) {
-//		lcd_HD44780_set_position(i - infoIndex, 0);
-//
-//		lcd_HD44780_print_char(cursorY == i ? '*' : ' ');
-//
-//		showLine((lcd_line_e) i);
-//
-//		int column = getCurrentHD44780column();
-//
-//		for (int r = column; r < 20; r++) {
-//			lcd_HD44780_print_char(' ');
-//		}
-//	}
-
-//	lcd_HD44780_set_position(0, 0);
-//	bool_t isEven = getTimeNowSeconds() % 2 == 0;
-//
-//	if (isEven) {
-//
-//	} else {
-//
-//	}
 //
 //	lcd_HD44780_set_position(0, 9);
 //	/**

@@ -312,6 +312,8 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	engineConfiguration->diffLoadEnrichmentCoef = 1;
 
 	engineConfiguration->hasMapSensor = true;
+	engineConfiguration->hasMafSensor = true;
+	engineConfiguration->hasTpsSensor = true;
 	engineConfiguration->hasAfrSensor = true;
 	engineConfiguration->hasCltSensor = true;
 	engineConfiguration->hasBaroSensor = false;

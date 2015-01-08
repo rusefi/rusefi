@@ -533,6 +533,8 @@ typedef struct {
 	bool_t hasVehicleSpeedSensor : 1; // bit 9
 	bool_t isJoystickEnabled : 1; // bit 10
 	bool_t isGpsEnabled : 1; // bit 11
+	bool_t hasMafSensor : 1; // bit 12
+	bool_t hasTpsSensor : 1; // bit 13
 
 	int unused6284;
 
