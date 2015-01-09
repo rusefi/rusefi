@@ -31,7 +31,11 @@
 #include "chprintf.h"
 
 #define MAX_FILLER 11
-#define FLOAT_PRECISION 100000
+/**
+ * That's out default %f precision here. Two digits should be fine?
+ * That's important on the lcd screen
+ */
+#define FLOAT_PRECISION 100
 static char *long_to_string_with_divisor(char *p,
                                          long num,
                                          unsigned radix,
