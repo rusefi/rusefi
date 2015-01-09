@@ -20,7 +20,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-// todo: this file?
+// todo: rename this file
 
 #include "main.h"
 
@@ -151,7 +151,7 @@ static void fuelbench2(const char *delayStr, const char *indexStr, const char * 
 	pinbench(delayStr, onTimeStr, offTimeStr, countStr, p, b);
 }
 
-static void fanbench(Engine *engine) {
+void fanBench(void) {
 	brainPin = boardConfiguration->fanPin;
 	pinX = FAN_RELAY;
 
@@ -163,7 +163,7 @@ static void fanbench(Engine *engine) {
 	needToRunBench = true;
 }
 
-static void fuelpumpbench(void) {
+void fuelPumpBench(void) {
 	brainPin = boardConfiguration->fuelPumpPin;
 	pinX = FUEL_PUMP_RELAY;
 
@@ -240,8 +240,8 @@ void initInjectorCentral(Engine *engine) {
 	printStatus();
 	addConsoleActionII("injector", setInjectorEnabled);
 
-	addConsoleAction("fuelpumpbench", fuelpumpbench);
-	addConsoleActionP("fanbench", (VoidPtr) fanbench, engine);
+	addConsoleAction("fuelpumpbench", fuelPumpBench);
+	addConsoleAction("fanbench", fanBench);
 
 	addConsoleActionSSS("fuelbench", fuelbench);
 	addConsoleActionSSS("sparkbench", sparkbench);
