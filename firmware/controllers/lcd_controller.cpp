@@ -21,6 +21,7 @@
 #include "lcd_menu_tree.h"
 #include "memstreams.h"
 #include "settings.h"
+#include "injector_central.h"
 
 EXTERN_ENGINE
 ;
@@ -45,8 +46,8 @@ static MenuItem miMap(&miSensors, LL_MAP);
 static MenuItem miBaro(&miSensors, LL_BARO);
 
 static MenuItem miStopEngine(&miBench, "stop engine", stopEngine);
-static MenuItem miTestFan(&miBench, "test fan");
-static MenuItem miTestFuelPump(&miBench, "test pump");
+static MenuItem miTestFan(&miBench, "test fan", fanBench);
+static MenuItem miTestFuelPump(&miBench, "test pump", fuelPumpBench);
 static MenuItem miTestSpark1(&miBench, "test spark1");
 static MenuItem miTestSpark2(&miBench, "test spark2");
 static MenuItem miTestSpark3(&miBench, "test spark3");
