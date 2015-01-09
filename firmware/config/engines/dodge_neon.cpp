@@ -354,6 +354,11 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 #endif
 	engineConfiguration->cylinderBore = 87.5;
 
+	boardConfiguration->clutchDownPin = GPIOC_12;
+	boardConfiguration->clutchDownPinMode = PI_PULLUP;
+	engineConfiguration->clutchUpPin = GPIOD_3;
+	engineConfiguration->clutchUpPinMode = PI_PULLUP;
+
 	/**
 	 * set_fsio_setting 0 0.11
 	 */
