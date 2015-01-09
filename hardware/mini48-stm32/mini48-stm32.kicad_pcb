@@ -72,7 +72,7 @@
     (aux_axis_origin 0 0)
     (visible_elements 7FFFFB3F)
     (pcbplotparams
-      (layerselection 268468224)
+      (layerselection 284983297)
       (usegerberextensions false)
       (excludeedgelayer false)
       (linewidth 0.150000)
@@ -96,7 +96,7 @@
       (mirror true)
       (drillshape 0)
       (scaleselection 1)
-      (outputdirectory postscript/))
+      (outputdirectory mini48_gerbers))
   )
 
   (net 0 "")
