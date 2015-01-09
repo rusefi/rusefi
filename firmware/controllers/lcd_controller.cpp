@@ -20,6 +20,7 @@
 #include "utlist.h"
 #include "lcd_menu_tree.h"
 #include "memstreams.h"
+#include "settings.h"
 
 EXTERN_ENGINE
 ;
@@ -43,6 +44,7 @@ static MenuItem miVBatt(&miSensors, LL_VBATT);
 static MenuItem miMap(&miSensors, LL_MAP);
 static MenuItem miBaro(&miSensors, LL_BARO);
 
+static MenuItem miStopEngine(&miBench, "stop engine", stopEngine);
 static MenuItem miTestFan(&miBench, "test fan");
 static MenuItem miTestFuelPump(&miBench, "test pump");
 static MenuItem miTestSpark1(&miBench, "test spark1");
@@ -85,13 +87,11 @@ char * appendStr(char *ptr, const char *suffix) {
 }
 
 void initLcdController(void) {
-	tree.init(&miRpm, 3);
-	msObjectInit(&lcdLineStream, (uint8_t *) lcdLineBuffer,
-			sizeof(lcdLineBuffer), 0);
+	tree.init(&miRpm, engineConfiguration->HD44780height - 1);
+	msObjectInit(&lcdLineStream, (uint8_t *) lcdLineBuffer, sizeof(lcdLineBuffer), 0);
 }
 
-static char * prepareVBattMapLine(engine_configuration_s *engineConfiguration,
-		char *buffer) {
+static char * prepareVBattMapLine(engine_configuration_s *engineConfiguration, char *buffer) {
 	char *ptr = buffer;
 	*ptr++ = 'V';
 	ptr = ftoa(ptr, getVBatt(engineConfiguration), 10.0f);
@@ -141,8 +141,7 @@ char * appendPinStatus(char *buffer, io_pin_e pin) {
 	}
 }
 
-static char * prepareInfoLine(engine_configuration_s *engineConfiguration,
-		char *buffer) {
+static char * prepareInfoLine(engine_configuration_s *engineConfiguration, char *buffer) {
 	char *ptr = buffer;
 
 	ptr = appendStr(ptr, " ");
@@ -187,8 +186,7 @@ static void showLine(lcd_line_e line) {
 		lcdPrintf("version %s", VCS_VERSION);
 		return;
 	case LL_CONFIG:
-		lcdPrintf("config %s",
-				getConfigurationName(engine->engineConfiguration->engineType));
+		lcdPrintf("config %s", getConfigurationName(engine->engineConfiguration->engineType));
 		return;
 	case LL_RPM:
 		lcdPrintf("RPM %d", getRpmE(engine));
@@ -231,6 +229,13 @@ static void showLine(lcd_line_e line) {
 	}
 }
 
+static void fillWithSpaces(void) {
+	int column = getCurrentHD44780column();
+	for (int r = column; r < 20; r++) {
+		lcd_HD44780_print_char(' ');
+	}
+}
+
 void updateHD44780lcd(Engine *engine) {
 	MenuItem *p = tree.topVisible;
 	int count = 0;
@@ -238,7 +243,11 @@ void updateHD44780lcd(Engine *engine) {
 		lcd_HD44780_set_position(count, 0);
 		char firstChar;
 		if (p == tree.current) {
-			firstChar = p->firstChild == NULL ? '*' : '>';
+			if (p->callback != NULL) {
+				firstChar = '!';
+			} else {
+				firstChar = p->firstChild == NULL ? '*' : '>';
+			}
 		} else {
 			firstChar = ' ';
 		}
@@ -248,19 +257,20 @@ void updateHD44780lcd(Engine *engine) {
 		} else {
 			showLine(p->lcdLine);
 		}
-		int column = getCurrentHD44780column();
-		for (int r = column; r < 20; r++) {
-			lcd_HD44780_print_char(' ');
-		}
+		fillWithSpaces();
 		p = p->next;
 	}
 
 	for (; count < tree.linesCount; count++) {
 		lcd_HD44780_set_position(count, 0);
-		for (int r = 0; r < 20; r++) {
-			lcd_HD44780_print_char(' ');
-		}
+		fillWithSpaces();
 	}
+
+	memcpy(buffer, getWarninig(), engineConfiguration->HD44780width);
+	buffer[engineConfiguration->HD44780width] = 0;
+	lcd_HD44780_set_position(engineConfiguration->HD44780height - 1, 0);
+	lcd_HD44780_print_string(buffer);
+	fillWithSpaces();
 
 //
 //	lcd_HD44780_set_position(0, 9);

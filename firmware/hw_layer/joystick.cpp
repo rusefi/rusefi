@@ -31,6 +31,7 @@ static void extCallback(EXTDriver *extp, expchannel_t channel) {
 	efitick_t now = getTimeNowNt();
 	if (now - lastEventTime < NT_EVENT_GAP)
 		return; // two consecutive events are probably just jitter
+	lastEventTime = now;
 	joyTotal++;
 	joystick_button_e button;
 	// todo: I guess it's time to reduce code duplication and start working with an array

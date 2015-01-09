@@ -749,7 +749,7 @@ static void disableIgnition(void) {
 	scheduleMsg(&logger, "ignition disabled");
 }
 
-static void stopEngine(Engine *engine) {
+void stopEngine(void) {
 	engine->stopEngineRequestTimeNt = getTimeNowNt();
 }
 
@@ -818,7 +818,7 @@ void initSettings(engine_configuration_s *engineConfiguration) {
 	addConsoleActionI("set_rpm_hard_limit", setRpmHardLimit);
 	addConsoleActionI("set_firing_order", setFiringOrder);
 	addConsoleActionI("set_algorithm", setAlgorithm);
-	addConsoleActionP("stopengine", (VoidPtr)stopEngine, engine);
+	addConsoleAction("stopengine", (Void)stopEngine);
 
 	// todo: refactor this - looks like all boolean flags should be controlled with less code duplication
 	addConsoleAction("enable_injection", enableInjection);

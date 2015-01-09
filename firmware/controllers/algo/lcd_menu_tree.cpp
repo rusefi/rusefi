@@ -42,23 +42,30 @@ void MenuTree::nextItem(void) {
 		topVisible = topVisible->next;
 }
 
+MenuItem::MenuItem(MenuItem * parent, const char *text, VoidCallback callback) {
+	lcdLine = LL_STRING;
+	this->text = text;
+	init(parent, callback);
+}
+
 MenuItem::MenuItem(MenuItem * parent, const char *text) {
 	lcdLine = LL_STRING;
 	this->text = text;
-	init(parent);
+	init(parent, NULL);
 }
 
 MenuItem::MenuItem(MenuItem * parent, lcd_line_e lcdLine) {
 	this->lcdLine = lcdLine;
 	this->text = NULL;
-	init(parent);
+	init(parent, NULL);
 }
 
-void MenuItem::init(MenuItem * parent) {
+void MenuItem::init(MenuItem * parent, VoidCallback callback) {
 	this->parent = parent;
 	firstChild = NULL;
 	lastChild = NULL;
 	next = NULL;
+	this->callback = callback;
 
 	// root element has NULL parent
 	if (parent != NULL) {

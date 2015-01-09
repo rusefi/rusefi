@@ -32,8 +32,11 @@ typedef enum {
 	LL_IAT_FUEL_CORR,
 } lcd_line_e;
 
+typedef void (*VoidCallback)(void);
+
 class MenuItem {
 public:
+	MenuItem(MenuItem * parent, const char *text, VoidCallback callback);
 	MenuItem(MenuItem * parent, const char *text);
 	MenuItem(MenuItem * parent, lcd_line_e lcdLine);
 	const char *text;
@@ -45,8 +48,9 @@ public:
 	MenuItem *firstChild;
 	MenuItem *lastChild;
 	MenuItem *next;
+	VoidCallback callback;
 private:
-	void init(MenuItem * parent);
+	void init(MenuItem * parent, VoidCallback callback);
 };
 
 class MenuTree {

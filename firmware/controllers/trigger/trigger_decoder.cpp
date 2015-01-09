@@ -444,11 +444,15 @@ uint32_t findTriggerZeroEventIndex(trigger_shape_s * shape, trigger_config_s con
 //static Logging logger;
 #endif
 
+void initTriggerDecoderLogger(void) {
+#if (EFI_PROD_CODE || EFI_SIMULATOR)
+	initLogging(&logger, "trigger decoder");
+#endif
+}
+
 void initTriggerDecoder(void) {
 #if (EFI_PROD_CODE || EFI_SIMULATOR)
 	outputPinRegisterExt2("trg_err", &triggerDecoderErrorPin, boardConfiguration->triggerErrorPin, &boardConfiguration->triggerErrorPinMode);
-
-	initLogging(&logger, "trigger decoder");
 #endif
 }
 
