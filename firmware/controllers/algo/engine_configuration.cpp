@@ -394,8 +394,8 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	boardConfiguration->injectionPins[1] = GPIOB_8; // #2
 	boardConfiguration->injectionPins[2] = GPIOE_3; // #3
 	boardConfiguration->injectionPins[3] = GPIOE_5; // #4
-	boardConfiguration->injectionPins[4] = GPIOE_6; // #5
-	boardConfiguration->injectionPins[5] = GPIOC_12; // #6
+	boardConfiguration->injectionPins[4] = GPIO_UNASSIGNED;
+	boardConfiguration->injectionPins[5] = GPIO_UNASSIGNED;
 	boardConfiguration->injectionPins[6] = GPIO_UNASSIGNED;
 	boardConfiguration->injectionPins[7] = GPIO_UNASSIGNED;
 	boardConfiguration->injectionPins[8] = GPIO_UNASSIGNED;
@@ -425,11 +425,13 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	boardConfiguration->fanPinMode = OM_DEFAULT;
 
 	boardConfiguration->clutchDownPin = GPIO_UNASSIGNED;
+	boardConfiguration->clutchDownPinMode = PI_PULLUP;
 	engineConfiguration->clutchUpPin = GPIO_UNASSIGNED;
+	engineConfiguration->clutchUpPinMode = PI_PULLUP;
 
 	boardConfiguration->triggerSimulatorPins[0] = GPIOD_1;
 	boardConfiguration->triggerSimulatorPins[1] = GPIOD_2;
-	boardConfiguration->triggerSimulatorPins[2] = GPIOD_3;
+	boardConfiguration->triggerSimulatorPins[2] = GPIO_UNASSIGNED;
 
 	boardConfiguration->triggerSimulatorPinModes[0] = OM_DEFAULT;
 	boardConfiguration->triggerSimulatorPinModes[1] = OM_DEFAULT;

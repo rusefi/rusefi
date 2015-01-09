@@ -91,6 +91,8 @@ static void printOutputs(engine_configuration_s *engineConfiguration) {
 			hwPortname(boardConfiguration->fanPin));
 }
 
+EXTERN_ENGINE;
+
 /**
  * @brief	Prints current engine configuration to human-readable console.
  */
@@ -165,6 +167,9 @@ void printConfiguration(engine_configuration_s *engineConfiguration) {
 
 	printOutputs(engineConfiguration);
 
+	scheduleMsg(&logger, "clutchUp@%s: %s", hwPortname(engineConfiguration->clutchUpPin), boolToString(engine->clutchUpState));
+	scheduleMsg(&logger, "clutchDown@%s: %s", hwPortname(boardConfiguration->clutchDownPin), boolToString(engine->clutchDownState));
+
 	scheduleMsg(&logger, "boardTestModeJumperPin: %s/nesting=%d", hwPortname(boardConfiguration->boardTestModeJumperPin),
 			maxNesting);
 
@@ -181,14 +186,10 @@ void printConfiguration(engine_configuration_s *engineConfiguration) {
 #endif /* EFI_PROD_CODE */
 }
 
-extern engine_configuration_s *engineConfiguration;
-extern engine_configuration2_s *engineConfiguration2;
-
 static void doPrintConfiguration(Engine *engine) {
 	printConfiguration(engineConfiguration);
 }
 
-EXTERN_ENGINE;
 
 static void setFixedModeTiming(int value) {
 	engineConfiguration->fixedModeTiming = value;
