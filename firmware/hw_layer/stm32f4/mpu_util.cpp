@@ -8,6 +8,10 @@
 #include "main.h"
 #include "mpu_util.h"
 #include "error_handling.h"
+#include "engine.h"
+#include "pin_repository.h"
+
+EXTERN_ENGINE;
 
 extern "C" {
 int getRemainingStack(Thread *otp);
@@ -197,3 +201,74 @@ void HardFaultVector(void) {
 	}
 }
 
+#if HAL_USE_SPI || defined(__DOXYGEN__)
+static bool isSpiInitialized[5] = { false, false, false, false, false };
+
+static int getSpiAf(SPIDriver *driver) {
+#if STM32_SPI_USE_SPI1
+	if (driver == &SPID1) {
+		return EFI_SPI1_AF;
+	}
+#endif
+#if STM32_SPI_USE_SPI2
+	if (driver == &SPID2) {
+		return EFI_SPI2_AF;
+	}
+#endif
+#if STM32_SPI_USE_SPI3
+	if (driver == &SPID3) {
+		return EFI_SPI3_AF;
+	}
+#endif
+	return -1;
+}
+
+void turnOnSpi(spi_device_e device) {
+	if (isSpiInitialized[device])
+		return; // already initialized
+	isSpiInitialized[device] = true;
+	if (device == SPI_DEVICE_1) {
+#if STM32_SPI_USE_SPI1
+//	scheduleMsg(&logging, "Turning on SPI1 pins");
+		initSpiModule(&SPID1, boardConfiguration->spi1sckPin,
+				boardConfiguration->spi1misoPin,
+				boardConfiguration->spi1mosiPin);
+#endif /* STM32_SPI_USE_SPI1 */
+	}
+	if (device == SPI_DEVICE_2) {
+#if STM32_SPI_USE_SPI2
+//	scheduleMsg(&logging, "Turning on SPI2 pins");
+		initSpiModule(&SPID2, boardConfiguration->spi2sckPin,
+				boardConfiguration->spi2misoPin,
+				boardConfiguration->spi2mosiPin);
+#endif /* STM32_SPI_USE_SPI2 */
+	}
+	if (device == SPI_DEVICE_3) {
+#if STM32_SPI_USE_SPI3
+//	scheduleMsg(&logging, "Turning on SPI3 pins");
+		initSpiModule(&SPID3, boardConfiguration->spi3sckPin,
+				boardConfiguration->spi3misoPin,
+				boardConfiguration->spi3mosiPin);
+#endif /* STM32_SPI_USE_SPI3 */
+	}
+}
+
+void initSpiModule(SPIDriver *driver, brain_pin_e sck, brain_pin_e miso,
+		brain_pin_e mosi) {
+
+	mySetPadMode2("SPI clock", sck,	PAL_MODE_ALTERNATE(getSpiAf(driver)));
+
+	mySetPadMode2("SPI master out", mosi, PAL_MODE_ALTERNATE(getSpiAf(driver)));
+	mySetPadMode2("SPI master in ", miso, PAL_MODE_ALTERNATE(getSpiAf(driver)));
+}
+
+void initSpiCs(SPIConfig *spiConfig, brain_pin_e csPin) {
+	spiConfig->end_cb = NULL;
+	ioportid_t port = getHwPort(csPin);
+	ioportmask_t pin = getHwPin(csPin);
+	spiConfig->ssport = port;
+	spiConfig->sspad = pin;
+	mySetPadMode("chip select", port, pin, PAL_STM32_MODE_OUTPUT);
+}
+
+#endif

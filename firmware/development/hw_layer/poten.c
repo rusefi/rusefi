@@ -12,6 +12,7 @@
 #include "pin_repository.h"
 #include "engine_configuration.h"
 #include "hardware.h"
+#include "mpu_util.h"
 
 /**
  * MCP42010 digital potentiometer driver

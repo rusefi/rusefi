@@ -7,8 +7,6 @@ egt_cs_array_t max31855_cs;
 
 int main_loop_started;
 
-int maxNesting = 0;
-
 void firmwareError(const char *fmt, ...) {
 
 }
@@ -29,18 +27,6 @@ static msg_t Thread1(void *arg) {
   }
   return 0;
 }
-
-
-void initSpiCs(SPIConfig *spiConfig, brain_pin_e csPin) {
-	spiConfig->end_cb = NULL;
-//	ioportid_t port = getHwPort(csPin);
-//	ioportmask_t pin = getHwPin(csPin);
-//	spiConfig->ssport = port;
-//	spiConfig->sspad = pin;
-//	mySetPadMode("chip select", port, pin, PAL_STM32_MODE_OUTPUT);
-}
-
-
 
 void runRusEfi(void) {
 

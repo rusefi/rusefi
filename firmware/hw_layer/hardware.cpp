@@ -57,15 +57,6 @@ int maxNesting = 0;
 #if HAL_USE_SPI || defined(__DOXYGEN__)
 static bool isSpiInitialized[5] = { false, false, false, false, false };
 
-static void initSpiModule(SPIDriver *driver, brain_pin_e sck, brain_pin_e miso,
-		brain_pin_e mosi, int af) {
-
-	mySetPadMode2("SPI clock", sck,	PAL_MODE_ALTERNATE(af));
-
-	mySetPadMode2("SPI master out", mosi, PAL_MODE_ALTERNATE(af));
-	mySetPadMode2("SPI master in ", miso, PAL_MODE_ALTERNATE(af));
-}
-
 /**
  * Only one consumer can use SPI bus at a given time
  */
@@ -76,39 +67,6 @@ void lockSpi(spi_device_e device) {
 
 void unlockSpi(void) {
 	chMtxUnlock();
-}
-
-void turnOnSpi(spi_device_e device) {
-	if (isSpiInitialized[device])
-		return; // already initialized
-	isSpiInitialized[device] = true;
-	if (device == SPI_DEVICE_1) {
-#if STM32_SPI_USE_SPI1
-//	scheduleMsg(&logging, "Turning on SPI1 pins");
-		initSpiModule(&SPID1, boardConfiguration->spi1sckPin,
-				boardConfiguration->spi1misoPin,
-				boardConfiguration->spi1mosiPin,
-				EFI_SPI1_AF);
-#endif /* STM32_SPI_USE_SPI1 */
-	}
-	if (device == SPI_DEVICE_2) {
-#if STM32_SPI_USE_SPI2
-//	scheduleMsg(&logging, "Turning on SPI2 pins");
-		initSpiModule(&SPID2, boardConfiguration->spi2sckPin,
-				boardConfiguration->spi2misoPin,
-				boardConfiguration->spi2mosiPin,
-				EFI_SPI2_AF);
-#endif /* STM32_SPI_USE_SPI2 */
-	}
-	if (device == SPI_DEVICE_3) {
-#if STM32_SPI_USE_SPI3
-//	scheduleMsg(&logging, "Turning on SPI3 pins");
-		initSpiModule(&SPID3, boardConfiguration->spi3sckPin,
-				boardConfiguration->spi3misoPin,
-				boardConfiguration->spi3mosiPin,
-				EFI_SPI3_AF);
-#endif /* STM32_SPI_USE_SPI3 */
-	}
 }
 
 static void initSpiModules(board_configuration_s *boardConfiguration) {
@@ -141,15 +99,6 @@ SPIDriver * getSpiDevice(spi_device_e spiDevice) {
 #endif
 	firmwareError("Unexpected SPI device: %d", spiDevice);
 	return NULL;
-}
-
-void initSpiCs(SPIConfig *spiConfig, brain_pin_e csPin) {
-	spiConfig->end_cb = NULL;
-	ioportid_t port = getHwPort(csPin);
-	ioportmask_t pin = getHwPin(csPin);
-	spiConfig->ssport = port;
-	spiConfig->sspad = pin;
-	mySetPadMode("chip select", port, pin, PAL_STM32_MODE_OUTPUT);
 }
 #endif
 

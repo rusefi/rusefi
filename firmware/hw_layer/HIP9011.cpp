@@ -153,7 +153,7 @@ static void showHipInfo(void) {
 	printSpiState(&logger, boardConfiguration);
 	scheduleMsg(&logger, "bore=%f freq=%f", engineConfiguration->cylinderBore, BAND(engineConfiguration->cylinderBore));
 
-	scheduleMsg(&logger, "band_index=%d gain_index=%d", bandIndex, currentGainIndex);
+	scheduleMsg(&logger, "band_index=%d gain %f/index=%d", bandIndex, boardConfiguration->hip9011Gain, currentGainIndex);
 	scheduleMsg(&logger, "integrator index=%d", currentIntergratorIndex);
 
 	scheduleMsg(&logger, "spi= int=%s response count=%d", hwPortname(boardConfiguration->hip9011IntHoldPin), nonZeroResponse);
