@@ -86,84 +86,119 @@ static void setWarningEnabled(int value) {
 static Logging fileLogger;
 #endif /* EFI_FILE_LOGGING */
 
-static void reportSensorF(const char *caption, float value, int precision) {
+static int logFileLineIndex = 0;
+#define TAB "\t"
+
+static void reportSensorF(Logging *log, bool fileFormat, const char *caption, const char *units, float value,
+		int precision) {
+	if (!fileFormat) {
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
-	debugFloat(&logger, caption, value, precision);
+		debugFloat(log, caption, value, precision);
 #endif /* EFI_PROD_CODE || EFI_SIMULATOR */
+	} else {
 
 #if EFI_FILE_LOGGING || defined(__DOXYGEN__)
-	debugFloat(&fileLogger, caption, value, precision);
+		if (logFileLineIndex == 0) {
+			append(log, caption);
+			append(log, TAB);
+		} else if (logFileLineIndex == 1) {
+			append(log, units);
+			append(log, TAB);
+		} else {
+			appendFloat(log, value, precision);
+			append(log, TAB);
+		}
 #endif /* EFI_FILE_LOGGING */
+	}
 }
 
-static void reportSensorI(const char *caption, int value) {
+static void reportSensorI(Logging *log, bool fileFormat, const char *caption, const char *units, int value) {
+	if (!fileFormat) {
+
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
-	debugInt(&logger, caption, value);
+		debugInt(log, caption, value);
 #endif /* EFI_PROD_CODE || EFI_SIMULATOR */
+	} else {
 #if EFI_FILE_LOGGING || defined(__DOXYGEN__)
-	debugInt(&fileLogger, caption, value);
+		if (logFileLineIndex == 0) {
+			append(log, caption);
+			append(log, TAB);
+		} else if (logFileLineIndex == 1) {
+			append(log, units);
+			append(log, TAB);
+		} else {
+			appendPrintf(log, "%d%s", value, TAB);
+		}
 #endif /* EFI_FILE_LOGGING */
+	}
 }
 
 static const char* boolean2string(int value) {
 	return value ? "YES" : "NO";
 }
 
-void printSensors(Engine *engine) {
-#if EFI_FILE_LOGGING || defined(__DOXYGEN__)
-	resetLogging(&fileLogger);
-#endif /* EFI_FILE_LOGGING */
-
+void printSensors(Logging *log, bool fileFormat, Engine *engine) {
 	// current time, in milliseconds
 	int nowMs = currentTimeMillis();
 	float sec = ((float) nowMs) / 1000;
-	reportSensorF("time", sec, 3);
+	reportSensorF(log, fileFormat, "time", "", sec, 3);
 
-	reportSensorI("rpm", getRpmE(engine));
-	reportSensorF("maf", getMaf(), 2);
+	reportSensorI(log, fileFormat, "rpm", "RPM", getRpmE(engine));
+	reportSensorF(log, fileFormat, "maf", "V", getMaf(), 2);
 
 	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
 
 	if (engineConfiguration->hasMapSensor) {
-		reportSensorF(getCaption(LP_MAP), getMap(), 2);
-		reportSensorF("map_r", getRawMap(), 2);
+		reportSensorF(log, fileFormat, "MAP", "kPa", getMap(), 2);
+		reportSensorF(log, fileFormat, "map_r", "V", getRawMap(), 2);
 	}
 	if (engineConfiguration->hasBaroSensor) {
-		reportSensorF("baro", getBaroPressure(), 2);
+		reportSensorF(log, fileFormat, "baro", "kPa", getBaroPressure(), 2);
 	}
 	if (engineConfiguration->hasAfrSensor) {
-		reportSensorF("afr", getAfr(), 2);
+		reportSensorF(log, fileFormat, "afr", "AFR", getAfr(), 2);
 	}
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	if (engineConfiguration->hasVehicleSpeedSensor) {
-		reportSensorF("vss", getVehicleSpeed(), 2);
+		reportSensorF(log, fileFormat, "vss", "kph", getVehicleSpeed(), 2);
 	}
 #endif /* EFI_PROD_CODE */
-	reportSensorF("vref", getVRef(engineConfiguration), 2);
-	reportSensorF("vbatt", getVBatt(engineConfiguration), 2);
+	reportSensorF(log, fileFormat, "vref", "V", getVRef(engineConfiguration), 2);
+	reportSensorF(log, fileFormat, "vbatt", "V", getVBatt(engineConfiguration), 2);
 
-	reportSensorF("TRG_0_DUTY", getTriggerDutyCycle(0), 2);
-	reportSensorF("TRG_1_DUTY", getTriggerDutyCycle(1), 2);
+	reportSensorF(log, fileFormat, "TRG_0_DUTY", "%", getTriggerDutyCycle(0), 2);
+	reportSensorF(log, fileFormat, "TRG_1_DUTY", "%", getTriggerDutyCycle(1), 2);
 
-	reportSensorF(getCaption(LP_THROTTLE), getTPS(PASS_ENGINE_PARAMETER_F), 2);
+	reportSensorF(log, fileFormat, "TP", "%", getTPS(PASS_ENGINE_PARAMETER_F), 2);
 
 	if (engineConfiguration->hasCltSensor) {
-		reportSensorF(getCaption(LP_ECT), getCoolantTemperature(engine), 2);
+		reportSensorF(log, fileFormat, "CLT", "C", getCoolantTemperature(engine), 2);
 	}
 
-	reportSensorF(getCaption(LP_IAT), getIntakeAirTemperature(engine), 2);
+	reportSensorF(log, fileFormat, "MAT", "C", getIntakeAirTemperature(engine), 2);
 
 //	debugFloat(&logger, "tch", getTCharge1(tps), 2);
 
+}
+
+EXTERN_ENGINE;
+
+void writeLogLine(void) {
 #if EFI_FILE_LOGGING || defined(__DOXYGEN__)
-	appendPrintf(&fileLogger, "\r\n");
-	appendToLog(fileLogger.buffer);
+	resetLogging(&fileLogger);
+	printSensors(&fileLogger, true, engine);
+
+	if (isSdCardAlive()) {
+		appendPrintf(&fileLogger, "\r\n");
+		appendToLog(fileLogger.buffer);
+		logFileLineIndex++;
+	}
 #endif /* EFI_FILE_LOGGING */
 }
 
 void printState(Engine *engine, int currentCkpEventCounter) {
 #if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
-	printSensors(engine);
+	printSensors(&logger, false, engine);
 
 	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
 
@@ -358,10 +393,7 @@ OutputPin checkEnginePin;
 OutputPin warningPin;
 OutputPin runningPin;
 
-static OutputPin *leds[] = { &warningPin, &runningPin,
-		&errorLedPin,
-		&communicationPin,
-		&checkEnginePin };
+static OutputPin *leds[] = { &warningPin, &runningPin, &errorLedPin, &communicationPin, &checkEnginePin };
 
 /**
  * This method would blink all the LEDs just to test them
@@ -441,6 +473,7 @@ static void lcdThread(Engine *engine) {
 	}
 }
 
+// stack for Tuner Studio thread
 static THD_WORKING_AREA(tsThreadStack, UTILITY_THREAD_STACK_SIZE);
 
 #if EFI_TUNER_STUDIO
@@ -541,7 +574,6 @@ void initStatusLoop(Engine *engine) {
 #if EFI_FILE_LOGGING
 	initLogging(&fileLogger, "file logger");
 #endif /* EFI_FILE_LOGGING */
-
 }
 
 void startStatusThreads(Engine *engine) {

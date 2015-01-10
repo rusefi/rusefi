@@ -675,6 +675,8 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		boardConfiguration->isFastAdcEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "joystick")) {
 		engineConfiguration->isJoystickEnabled = isEnabled;
+	} else if (strEqualCaseInsensitive(param, "sd")) {
+		boardConfiguration->isSdCardEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "can")) {
 		engineConfiguration->isCanEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "can_read")) {

@@ -171,55 +171,6 @@ void appendPrintf(Logging *logging, const char *fmt, ...) {
 	va_end(ap);
 }
 
-// todo: this method does not really belong to this file
-char* getCaption(LoggingPoints loggingPoint) {
-	switch (loggingPoint) {
-	case LP_RPM:
-		return "RPM";
-	case LP_THROTTLE:
-		return "TP";
-	case LP_IAT:
-		return "MAT";
-	case LP_ECT:
-		return "CLT";
-//	case LP_SECONDS:
-//		return "SecL";
-	case LP_MAF:
-		return "MAF";
-	case LP_MAP:
-		return "MAP";
-	case LP_MAP_RAW:
-		return "MAP_R";
-	default:
-		firmwareError("No such loggingPoint");
-		return NULL;
-	}
-}
-
-/*
- // todo: this method does not really belong to this file
- static char* get2ndCaption(int loggingPoint) {
- switch (loggingPoint) {
- case LP_RPM:
- return "RPM";
- case LP_THROTTLE:
- return "%";
- case LP_IAT:
- return "°F";
- case LP_ECT:
- return "°F";
- case LP_SECONDS:
- return "s";
- case LP_MAP:
- return "MAP";
- case LP_MAF:
- return "MAF";
- }
- firmwareError("No such loggingPoint");
- return NULL;
- }
- */
-
 void initLoggingExt(Logging *logging, const char *name, char *buffer, int bufferSize) {
 	print("Init logging %s\r\n", name);
 	logging->name = name;

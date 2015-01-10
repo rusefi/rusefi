@@ -21,6 +21,7 @@
 #include "ff.h"
 #include "hardware.h"
 #include "engine_configuration.h"
+#include "status_loop.h"
 
 extern board_configuration_s *boardConfiguration;
 
@@ -44,7 +45,7 @@ static MMCConfig mmccfg = { &MMC_CARD_SPI, &ls_spicfg, &hs_spicfg };
 
 static bool fs_ready = false;
 
-#define PUSHPULLDELAY 500
+#define FILE_LOG_DELAY 200
 
 /**
  * fatfs MMC/SPI
@@ -72,6 +73,7 @@ static void printMmcPinout(void) {
 
 static void sdStatistics(void) {
 	printMmcPinout();
+	scheduleMsg(&logger, "SD enabled: %s", boolToString(boardConfiguration->isSdCardEnabled));
 	scheduleMsg(&logger, "fs_ready=%d totalLoggedBytes=%d", fs_ready, totalLoggedBytes);
 }
 
@@ -87,7 +89,7 @@ static void createLogFile(void) {
 	FRESULT err = f_open(&FDLogFile, "rusefi.log", FA_OPEN_ALWAYS | FA_WRITE);				// Create new file
 	if (err != FR_OK && err != FR_EXIST) {
 		unlockSpi();
-		printError("Card mounted...\r\nCan't create Log file, check your SD.\r\nFS mount failed", err);	// else - show error
+		printError("FS mount failed", err);	// else - show error
 		return;
 	}
 
@@ -103,7 +105,7 @@ static void createLogFile(void) {
 }
 
 static void ff_cmd_dir(const char *pathx) {
-	char *path = (char *)pathx; // todo: fix this hack!
+	char *path = (char *) pathx; // todo: fix this hack!
 	DIR dir;
 	FILINFO fno;
 	char *fn;
@@ -213,15 +215,15 @@ static void MMCmount(void) {
 	}
 	unlockSpi();
 	// if Ok - mount FS now
-	memset(&MMC_FS, 0, sizeof(FATFS));			// reserve the memory
+	memset(&MMC_FS, 0, sizeof(FATFS));
 	if (f_mount(0, &MMC_FS) == FR_OK) {
 		createLogFile();
-		scheduleMsg(&logger, "MMC/SD mounted!\r\nDon't forget umountsd before remove to prevent lost your data");
+		scheduleMsg(&logger, "MMC/SD mounted!");
 	}
 }
 
 #if defined __GNUC__
-__attribute__((noreturn))       static msg_t MMCmonThread(void)
+__attribute__((noreturn))        static msg_t MMCmonThread(void)
 #else
 static msg_t MMCmonThread(void)
 #endif
@@ -237,8 +239,10 @@ static msg_t MMCmonThread(void)
 			}
 		}
 
-		// this thread is activated 10 times per second
-		chThdSleepMilliseconds(PUSHPULLDELAY);
+		if (isSdCardAlive())
+			writeLogLine();
+
+		chThdSleepMilliseconds(FILE_LOG_DELAY);
 	}
 }
 
@@ -248,6 +252,7 @@ bool isSdCardAlive(void) {
 
 void initMmcCard(void) {
 	initLogging(&logger, "mmcCard");
+	addConsoleAction("sdstat", sdStatistics);
 	if (!boardConfiguration->isSdCardEnabled) {
 		return;
 	}
@@ -262,7 +267,6 @@ void initMmcCard(void) {
 
 	chThdCreateStatic(mmcThreadStack, sizeof(mmcThreadStack), LOWPRIO, (tfunc_t) MMCmonThread, NULL);
 
-	addConsoleAction("sdstat", sdStatistics);
 	addConsoleAction("mountsd", MMCmount);
 	addConsoleActionS("appendToLog", appendToLog);
 	addConsoleAction("umountsd", MMCumount);

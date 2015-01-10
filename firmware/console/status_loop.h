@@ -23,6 +23,7 @@ extern "C"
 {
 #endif /* __cplusplus */
 
+void writeLogLine(void);
 bool getFullLog(void);
 void setFullLog(int value);
 void sayOsHello(void);
