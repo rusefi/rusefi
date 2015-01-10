@@ -16,6 +16,7 @@
 #include "max31855.h"
 
 #include "hardware.h"
+#include "mpu_util.h"
 
 #if EFI_PROD_CODE
 #include "settings.h"

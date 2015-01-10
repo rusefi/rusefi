@@ -37,7 +37,6 @@ extern "C"
 #endif /* __cplusplus */
 
 SPIDriver * getSpiDevice(spi_device_e spiDevice);
-void initSpiCs(SPIConfig *spiConfig, brain_pin_e csPin);
 void turnOnSpi(spi_device_e device);
 void lockSpi(spi_device_e device);
 void unlockSpi(void);

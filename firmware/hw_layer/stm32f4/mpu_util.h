@@ -57,6 +57,11 @@ void DebugMonitorVector(void);
 void UsageFaultVector(void);
 void BusFaultVector(void);
 void HardFaultVector(void);
+void turnOnSpi(spi_device_e device);
+void initSpiModule(SPIDriver *driver, brain_pin_e sck, brain_pin_e miso,
+		brain_pin_e mosi);
+void initSpiCs(SPIConfig *spiConfig, brain_pin_e csPin);
+void turnOnSpi(spi_device_e device);
 
 #ifdef __cplusplus
 }
