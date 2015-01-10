@@ -35,6 +35,8 @@
 
 #if EFI_HIP_9011 || defined(__DOXYGEN__)
 
+#define NEW_CODE TRUE
+
 #define HIP_DEBUG FALSE
 extern OutputPin outputs[IO_PIN_COUNT];
 
@@ -60,6 +62,8 @@ static bool_t isIntegrating = false;
  * true by default so that we can update the settings before starting to integrate
  */
 static bool_t needToSendSpiCommand = true;
+
+static bool_t isSendingSpiCommand = false;
 
 static scheduling_s startTimer[2];
 static scheduling_s endTimer[2];
@@ -220,6 +224,8 @@ static void setGain(float value) {
 }
 
 static void endOfSpiCommunication(SPIDriver *spip) {
+	spiUnselectI(driver);
+	isSendingSpiCommand = false;
 }
 
 void initHip9011(void) {
