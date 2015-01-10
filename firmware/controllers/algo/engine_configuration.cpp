@@ -383,17 +383,17 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 
 	boardConfiguration->mainRelayPin = GPIO_UNASSIGNED;
 	boardConfiguration->mainRelayPinMode = OM_DEFAULT;
-	boardConfiguration->idleValvePin = GPIOE_2;
+	boardConfiguration->idleValvePin = GPIO_UNASSIGNED;
 	boardConfiguration->idleValvePinMode = OM_DEFAULT;
-	boardConfiguration->fuelPumpPin = GPIOC_13;
+	boardConfiguration->fuelPumpPin = GPIO_UNASSIGNED;
 	boardConfiguration->fuelPumpPinMode = OM_DEFAULT;
-	boardConfiguration->electronicThrottlePin1 = GPIOC_9;
+	boardConfiguration->electronicThrottlePin1 = GPIO_UNASSIGNED;
 	boardConfiguration->o2heaterPin = GPIO_UNASSIGNED;
 
-	boardConfiguration->injectionPins[0] = GPIOB_9; // #1
-	boardConfiguration->injectionPins[1] = GPIOB_8; // #2
-	boardConfiguration->injectionPins[2] = GPIOE_3; // #3
-	boardConfiguration->injectionPins[3] = GPIOE_5; // #4
+	boardConfiguration->injectionPins[0] = GPIO_UNASSIGNED;
+	boardConfiguration->injectionPins[1] = GPIO_UNASSIGNED;
+	boardConfiguration->injectionPins[2] = GPIO_UNASSIGNED;
+	boardConfiguration->injectionPins[3] = GPIO_UNASSIGNED;
 	boardConfiguration->injectionPins[4] = GPIO_UNASSIGNED;
 	boardConfiguration->injectionPins[5] = GPIO_UNASSIGNED;
 	boardConfiguration->injectionPins[6] = GPIO_UNASSIGNED;
