@@ -51,8 +51,6 @@ case GPIO_8:
   return "GPIO_8";
 case GPIO_9:
   return "GPIO_9";
-case HIP9011_INT_HOLD:
-  return "HIP9011_INT_HOLD";
 case INJECTOR_10_OUTPUT:
   return "INJECTOR_10_OUTPUT";
 case INJECTOR_11_OUTPUT:
@@ -157,10 +155,6 @@ case SPI_CS_3:
   return "SPI_CS_3";
 case SPI_CS_4:
   return "SPI_CS_4";
-case SPI_CS_HIP9011:
-  return "SPI_CS_HIP9011";
-case SPI_CS_SD_MODULE:
-  return "SPI_CS_SD_MODULE";
   }
  return NULL;
 }

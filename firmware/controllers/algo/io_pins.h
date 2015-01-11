@@ -107,10 +107,6 @@ typedef enum {
 	SPI_CS_2,
 	SPI_CS_3,
 	SPI_CS_4,
-	SPI_CS_SD_MODULE,
-	SPI_CS_HIP9011,
-
-	HIP9011_INT_HOLD,
 
 	MAIN_RELAY,
 
