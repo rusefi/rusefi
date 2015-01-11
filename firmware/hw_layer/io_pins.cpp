@@ -25,6 +25,8 @@ extern board_configuration_s *boardConfiguration;
 
 static Logging logger;
 
+static OutputPin sdCsPin;
+
 extern OutputPin outputs[IO_PIN_COUNT];
 
 #if defined(STM32F4XX)
@@ -126,7 +128,7 @@ void initOutputPins(void) {
 //	outputPinRegister("spi CS3", SPI_CS_3, SPI_CS3_PORT, SPI_CS3_PIN);
 //	outputPinRegister("spi CS4", SPI_CS_4, SPI_CS4_PORT, SPI_CS4_PIN);
 #if HAL_USE_SPI || defined(__DOXYGEN__)
-	outputPinRegister("spi CS5", &outputs[(int)SPI_CS_SD_MODULE], SPI_SD_MODULE_PORT, SPI_SD_MODULE_PIN);
+	outputPinRegister("spi CS5", &sdCsPin, SPI_SD_MODULE_PORT, SPI_SD_MODULE_PIN);
 #endif
 
 	// todo: should we move this code closer to the fuel pump logic?

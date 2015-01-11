@@ -35,10 +35,8 @@
 
 #if EFI_HIP_9011 || defined(__DOXYGEN__)
 
-#define NEW_CODE TRUE
-
-#define HIP_DEBUG FALSE
-extern OutputPin outputs[IO_PIN_COUNT];
+static OutputPin intHold;
+static OutputPin hipCs;
 
 extern pin_output_mode_e DEFAULT_OUTPUT;
 
@@ -57,20 +55,13 @@ static int settingUpdateCount = 0;
  */
 static bool_t isIntegrating = false;
 /**
- * we cannot afford relatively slow synchronous SPI communication from the scheduler callbacks, thus
- * SPI is taken care from a dedicated thread where we care less about how long it would take
- * true by default so that we can update the settings before starting to integrate
  */
-static bool_t needToSendSpiCommand = true;
-
 static bool_t isSendingSpiCommand = false;
 
 static scheduling_s startTimer[2];
 static scheduling_s endTimer[2];
 
 static Logging logger;
-
-static THD_WORKING_AREA(htThreadStack, UTILITY_THREAD_STACK_SIZE);
 
 // SPI_CR1_BR_1 // 5MHz
 // SPI_CR1_CPHA Clock Phase
@@ -100,59 +91,6 @@ static SPIDriver *driver = &SPID2;
 EXTERN_ENGINE
 ;
 
-static msg_t ivThread(int param) {
-	chRegSetThreadName("HIP");
-
-	while (true) {
-		/**
-		 * do we need this configurable? probably not
-		 */
-		chThdSleepMilliseconds(HIP_THREAD_PERIOD);
-
-		int integratorIndex = getIntegrationIndexByRpm(engine->rpmCalculator.rpmValue);
-		int gainIndex = getHip9011GainIndex(boardConfiguration->hip9011Gain);
-
-		if (currentGainIndex != gainIndex || currentIntergratorIndex != integratorIndex) {
-			needToSendSpiCommand = true;
-		}
-
-		/**
-		 * Loop if nothing has really changed
-		 */
-		if (!needToSendSpiCommand)
-			continue;
-		/**
-		 * Loop if the chip is busy. The 'needToSend' flag would prevent next integration, but we
-		 * need to let current integration finish
-		 */
-		if (isIntegrating)
-			continue;
-		settingUpdateCount++;
-
-		SPI_SYNCHRONOUS(SET_GAIN_CMD + gainIndex);
-		currentGainIndex = gainIndex;
-
-		SPI_SYNCHRONOUS(SET_INTEGRATOR_CMD + integratorIndex);
-		currentIntergratorIndex = integratorIndex;
-
-		needToSendSpiCommand = false;
-
-//// BAND_PASS_CMD
-//		SPI_SYNCHRONOUS(0x0 | (40 & 0x3F));
-//		// Set the gain 0b10000000
-//		SPI_SYNCHRONOUS(0x80 | (49 & 0x3F));
-//		// Set the integration time constant 0b11000000
-//		SPI_SYNCHRONOUS(0xC0 | (31 & 0x1F));
-//		// SET_ADVANCED_MODE 0b01110001
-//		SPI_SYNCHRONOUS(tx_buff[0] = 0x71;)
-
-	}
-#if defined __GNUC__
-	return 0;
-#endif
-
-}
-
 static void showHipInfo(void) {
 	printSpiState(&logger, boardConfiguration);
 	scheduleMsg(&logger, "bore=%f freq=%f", engineConfiguration->cylinderBore, BAND(engineConfiguration->cylinderBore));
@@ -175,13 +113,13 @@ void setHip9011FrankensoPinout(void) {
 }
 
 static void startIntegration(void) {
-	if (!needToSendSpiCommand) {
+	if (!isSendingSpiCommand) {
 		/**
 		 * SPI communication is only allowed while not integrating, so we postpone the exchange
 		 * until we are done integrating
 		 */
 		isIntegrating = true;
-		turnPinHigh(HIP9011_INT_HOLD);
+		intHold.setValue(true);
 	}
 }
 
@@ -191,8 +129,31 @@ static void endIntegration(void) {
 	 * engine cycle
 	 */
 	if (isIntegrating) {
-		turnPinLow(HIP9011_INT_HOLD);
+		intHold.setValue(false);
 		isIntegrating = false;
+
+		int integratorIndex = getIntegrationIndexByRpm(engine->rpmCalculator.rpmValue);
+		int gainIndex = getHip9011GainIndex(boardConfiguration->hip9011Gain);
+
+		if (currentGainIndex != gainIndex) {
+			tx_buff[0] = gainIndex;
+			currentGainIndex = gainIndex;
+
+			isSendingSpiCommand = true;
+			spiSelectI(driver);
+			spiStartExchangeI(driver, 1, tx_buff, rx_buff);
+			return;
+		}
+
+		if (currentIntergratorIndex != integratorIndex) {
+			tx_buff[0] = integratorIndex;
+			currentIntergratorIndex = integratorIndex;
+
+			isSendingSpiCommand = true;
+			spiSelectI(driver);
+			spiStartExchangeI(driver, 1, tx_buff, rx_buff);
+			return;
+		}
 	}
 }
 
@@ -243,8 +204,8 @@ void initHip9011(void) {
 	spicfg.ssport = getHwPort(boardConfiguration->hip9011CsPin);
 	spicfg.sspad = getHwPin(boardConfiguration->hip9011CsPin);
 
-	outputPinRegisterExt2("hip int/hold", &outputs[(int)HIP9011_INT_HOLD], boardConfiguration->hip9011IntHoldPin, &DEFAULT_OUTPUT);
-	outputPinRegisterExt2("hip CS", &outputs[(int)SPI_CS_HIP9011], boardConfiguration->hip9011CsPin, &DEFAULT_OUTPUT);
+	outputPinRegisterExt2("hip int/hold", &intHold, boardConfiguration->hip9011IntHoldPin, &DEFAULT_OUTPUT);
+	outputPinRegisterExt2("hip CS", &hipCs, boardConfiguration->hip9011CsPin, &DEFAULT_OUTPUT);
 
 	scheduleMsg(&logger, "Starting HIP9011/TPIC8101 driver");
 	spiStart(driver, &spicfg);
@@ -277,11 +238,9 @@ void initHip9011(void) {
 	 * Let's restart SPI to switch it from synchronous mode into
 	 * asynchronous mode
 	 */
-//	spiStop(driver);
-//	spicfg.end_cb = endOfSpiCommunication;
-//	spiStart(driver, &spicfg);
-
-	chThdCreateStatic(htThreadStack, sizeof(htThreadStack), NORMALPRIO, (tfunc_t) ivThread, NULL);
+	spiStop(driver);
+	spicfg.end_cb = endOfSpiCommunication;
+	spiStart(driver, &spicfg);
 }
 
 #endif
