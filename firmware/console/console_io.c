@@ -120,7 +120,7 @@ bool isSerialOverUart(void) {
 	return is_serial_over_uart;
 }
 
-#if defined(EFI_CONSOLE_UART_DEVICE) || defined(__DOXYGEN__)
+#if (defined(EFI_CONSOLE_UART_DEVICE) && ! EFI_SIMULATOR ) || defined(__DOXYGEN__)
 static SerialConfig serialConfig = { SERIAL_SPEED, 0, USART_CR2_STOP1_BITS | USART_CR2_LINEN, 0 };
 #endif
 
@@ -197,7 +197,7 @@ void consoleOutputBuffer(const uint8_t *buf, int size) {
 void startConsole(void (*console_line_callback_p)(char *)) {
 	console_line_callback = console_line_callback_p;
 
-#if defined(EFI_CONSOLE_UART_DEVICE) || defined(__DOXYGEN__)
+#if (defined(EFI_CONSOLE_UART_DEVICE) && ! EFI_SIMULATOR) || defined(__DOXYGEN__)
 
 	palSetPadMode(CONSOLE_MODE_SWITCH_PORT, CONSOLE_MODE_SWITCH_PIN, PAL_MODE_INPUT_PULLUP);
 
