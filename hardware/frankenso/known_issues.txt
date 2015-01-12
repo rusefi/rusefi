@@ -53,8 +53,9 @@
 52) RESOLVED IN R0.4 Add header for CAN bus with 5V and GND. see P401
 53)                  verify D9 is the same BOM item as discovery board. 
 54) RESOLVED IN R0.4 Add 5V and GND vias to proto area
-55)                  knock1 is actually knock2 and vice versa. Need to fix net names & the pinout picture      
-56)                  route unused stm32 pins (D3 PC13 etc) to unused connector pins
+55)                  Add Top, T-1, T-2 and T-3 to PCB copper layers to more clearly identify layers to MFG
+56)                  knock1 is actually knock2 and vice versa. Need to fix net names & the pinout picture
+57)                  route unused stm32 pins (D3 PC13 etc) to unused connector pins
 
 
 For honda add-on / rewiring board
