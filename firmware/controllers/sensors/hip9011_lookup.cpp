@@ -2,7 +2,7 @@
  * @file	hip9011_lookup.cpp
  *
  * @date Jan 4, 2015
- * @author Andrey Belomutskiy, (c) 2012-2014
+ * @author Andrey Belomutskiy, (c) 2012-2015
  */
 
 #include "hip9011_lookup.h"

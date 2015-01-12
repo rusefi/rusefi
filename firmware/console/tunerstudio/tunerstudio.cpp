@@ -5,7 +5,7 @@
  * todo: merge this file with tunerstudio_algo.c?
  *
  * @date Aug 26, 2013
- * @author Andrey Belomutskiy, (c) 2012-2014
+ * @author Andrey Belomutskiy, (c) 2012-2015
  *
  * This file is part of rusEfi - see http://rusefi.com
  *

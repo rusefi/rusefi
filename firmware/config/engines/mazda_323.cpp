@@ -2,7 +2,7 @@
  * @file	mazda_323.cpp
  *
  * @date Mar 8, 2014
- * @author Andrey Belomutskiy, (c) 2012-2014
+ * @author Andrey Belomutskiy, (c) 2012-2015
  */
 
 #include "mazda_323.h"

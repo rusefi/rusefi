@@ -2,7 +2,7 @@
  * @file	LocalVersionHolder.cpp
  *
  * @date Mar 19, 2014
- * @author Andrey Belomutskiy, (c) 2012-2014
+ * @author Andrey Belomutskiy, (c) 2012-2015
  */
 
 #include "LocalVersionHolder.h"

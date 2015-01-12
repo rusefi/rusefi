@@ -4,7 +4,7 @@
  * http://rusefi.com/wiki/index.php?title=Hardware:Servo_motor
  *
  * @date Jan 3, 2015
- * @author Andrey Belomutskiy, (c) 2012-2014
+ * @author Andrey Belomutskiy, (c) 2012-2015
  */
 
 #include "servo.h"

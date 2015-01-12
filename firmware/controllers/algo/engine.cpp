@@ -6,7 +6,7 @@
  * express myself in C/C++. I am open for suggestions :)
  *
  * @date May 21, 2014
- * @author Andrey Belomutskiy, (c) 2012-2014
+ * @author Andrey Belomutskiy, (c) 2012-2015
  */
 
 #include "main.h"

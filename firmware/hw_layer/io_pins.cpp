@@ -3,7 +3,7 @@
  * @brief	It could be that the main purpose of this file is the status LED blinking
  *
  * @date Jan 24, 2013
- * @author Andrey Belomutskiy, (c) 2012-2014
+ * @author Andrey Belomutskiy, (c) 2012-2015
  */
 
 #include <board.h>

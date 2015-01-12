@@ -6,7 +6,7 @@
  * TODO: rename? merge? Do something with this file
  *
  * @date Apr 26, 2014
- * @author Andrey Belomutskiy, (c) 2012-2014
+ * @author Andrey Belomutskiy, (c) 2012-2015
  */
 
 #ifndef EC2_H_

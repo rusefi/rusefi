@@ -2,7 +2,7 @@
  * @file fsio_core.h
  *
  * @date Oct 3, 2014
- * @author Andrey Belomutskiy, (c) 2012-2014
+ * @author Andrey Belomutskiy, (c) 2012-2015
  */
 
 #ifndef LOGIC_EXPRESSION_H_

@@ -8,7 +8,7 @@
  * Injector groups: 1,2,3 è 4,5,6
  *
  * @date Nov 5, 2014
- * @author Andrey Belomutskiy, (c) 2012-2014
+ * @author Andrey Belomutskiy, (c) 2012-2015
  */
 
 #include "global.h"

@@ -2,7 +2,7 @@
  * @file	subaru.cpp
  *
  * @date Sep 14, 2014
- * @author Andrey Belomutskiy, (c) 2012-2014
+ * @author Andrey Belomutskiy, (c) 2012-2015
  */
 
 #include "subaru.h"

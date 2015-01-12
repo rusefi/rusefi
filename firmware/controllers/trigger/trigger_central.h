@@ -2,7 +2,7 @@
  * @file	trigger_central.h
  *
  * @date Feb 23, 2014
- * @author Andrey Belomutskiy, (c) 2012-2014
+ * @author Andrey Belomutskiy, (c) 2012-2015
  */
 
 #ifndef TRIGGER_CENTRAL_H_

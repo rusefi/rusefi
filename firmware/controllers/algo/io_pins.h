@@ -2,7 +2,7 @@
  * @file	io_pins.h
  *
  * @date Jan 24, 2013
- * @author Andrey Belomutskiy, (c) 2012-2014
+ * @author Andrey Belomutskiy, (c) 2012-2015
  */
 
 #ifndef STATUS_LEDS_H_

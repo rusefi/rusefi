@@ -5,7 +5,7 @@
  * By default this is enabled by grounding PB0
  *
  * @date Mar 12, 2014
- * @author Andrey Belomutskiy, (c) 2012-2014
+ * @author Andrey Belomutskiy, (c) 2012-2015
  *
  * This file is part of rusEfi - see http://rusefi.com
  *

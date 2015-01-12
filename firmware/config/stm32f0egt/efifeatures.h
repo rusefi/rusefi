@@ -4,7 +4,7 @@
  * @brief In this header we can configure which modules are used for EGT2CAN firmware.
  *
  * @date Dec 23, 2014
- * @author Andrey Belomutskiy, (c) 2012-2014
+ * @author Andrey Belomutskiy, (c) 2012-2015
  */
 
 #ifndef EFIFEATURES_H_

@@ -2,7 +2,7 @@
  * @file rfi_perftest.cpp
  *
  * @date Nov 30, 2012
- * @author Andrey Belomutskiy, (c) 2012-2014
+ * @author Andrey Belomutskiy, (c) 2012-2015
  */
 
 #include "main.h"

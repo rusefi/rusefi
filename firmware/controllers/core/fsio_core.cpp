@@ -10,7 +10,7 @@
  *
  *
  * @date Oct 3, 2014
- * @author Andrey Belomutskiy, (c) 2012-2014
+ * @author Andrey Belomutskiy, (c) 2012-2015
  */
 
 #include "main.h"

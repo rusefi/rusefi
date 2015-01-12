@@ -2,7 +2,7 @@
  * @file	trigger_chrysler.cpp
  *
  * @date Mar 24, 2014
- * @author Andrey Belomutskiy, (c) 2012-2014
+ * @author Andrey Belomutskiy, (c) 2012-2015
  */
 
 #include "trigger_chrysler.h"

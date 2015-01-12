@@ -2,7 +2,7 @@
  * @file	PwmTester.h
  *
  * @date Apr 29, 2014
- * @author Andrey Belomutskiy, (c) 2012-2014
+ * @author Andrey Belomutskiy, (c) 2012-2015
  */
 #ifndef PWMTESTER_H_
 #define PWMTESTER_H_

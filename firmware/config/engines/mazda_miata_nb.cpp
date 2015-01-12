@@ -4,7 +4,7 @@
  * MAZDA_MIATA_NB = 9
  *
  * @date Feb 18, 2014
- * @author Andrey Belomutskiy, (c) 2012-2014
+ * @author Andrey Belomutskiy, (c) 2012-2015
  */
 
 #include "mazda_miata_nb.h"
