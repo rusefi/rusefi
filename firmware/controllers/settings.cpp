@@ -136,8 +136,8 @@ void printConfiguration(engine_configuration_s *engineConfiguration) {
 			boolToString(engineConfiguration->isIgnitionEnabled));
 	scheduleMsg(&logger, "timingMode: %d", /*getTiming_mode_etodo*/(engineConfiguration->timingMode));
 	scheduleMsg(&logger, "fixedModeTiming: %d", (int) engineConfiguration->fixedModeTiming);
-	scheduleMsg(&logger, "ignitionOffset=%f", engineConfiguration->ignitionOffset);
-	scheduleMsg(&logger, "injectionOffset=%f/enabled=%s", (double) engineConfiguration->injectionOffset,
+	scheduleMsg(&logger, "ignitionOffset=%f", engineConfiguration->ignitionBaseAngle);
+	scheduleMsg(&logger, "injectionOffset=%f/enabled=%s", (double) engineConfiguration->injectionAngle,
 			boolToString(engineConfiguration->isInjectionEnabled));
 
 	scheduleMsg(&logger, "map_avg=%s/mil=%s/fp=%s/ts=%s/wa=%s/it=%s/fastAdc=%s",
@@ -234,13 +234,13 @@ static void setIdlePinMode(int value) {
 }
 
 static void setInjectionOffset(int value) {
-	engineConfiguration->injectionOffset = value;
+	engineConfiguration->injectionAngle = value;
 	doPrintConfiguration(engine);
 	incrementGlobalConfigurationVersion();
 }
 
 static void setIgnitionOffset(int value) {
-	engineConfiguration->ignitionOffset = value;
+	engineConfiguration->ignitionBaseAngle = value;
 	doPrintConfiguration(engine);
 	incrementGlobalConfigurationVersion();
 }

@@ -360,7 +360,7 @@ typedef struct {
 	/**
 	 * this value could be used to offset the whole ignition timing table by a constant
 	 */
-	float ignitionOffset;
+	float ignitionBaseAngle;
 
 	/**
 	 * While cranking (which causes battery voltage to drop) we can calculate dwell time in shaft
@@ -491,7 +491,7 @@ typedef struct {
 	/**
 	 * this is about deciding when the injector starts it's squirt
 	 */
-	float injectionOffset;
+	float injectionAngle;
 
 	float crankingTimingAngle;
 

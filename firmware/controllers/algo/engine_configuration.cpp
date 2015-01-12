@@ -249,8 +249,8 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
 	engineConfiguration->globalTriggerAngleOffset = 0;
-	engineConfiguration->injectionOffset = 0;
-	engineConfiguration->ignitionOffset = 0;
+	engineConfiguration->injectionAngle = 0;
+	engineConfiguration->ignitionBaseAngle = 0;
 	engineConfiguration->overrideCrankingIgnition = true;
 	engineConfiguration->analogChartFrequency = 20;
 

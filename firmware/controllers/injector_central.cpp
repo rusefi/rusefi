@@ -46,7 +46,6 @@ static int is_injector_enabled[MAX_INJECTOR_COUNT];
 extern OutputPin outputs[IO_PIN_COUNT];
 
 void initIgnitionCentral(void) {
-
 	for (int i = 0; i < engineConfiguration->cylindersCount; i++) {
 		io_pin_e pin = (io_pin_e)((int)SPARKOUT_1_OUTPUT + i);
 		outputPinRegisterExt2(getPinName(pin), &outputs[(int)pin], boardConfiguration->ignitionPins[i], &boardConfiguration->ignitionPinMode);
@@ -101,11 +100,13 @@ static void runBench(brain_pin_e brainPin, io_pin_e pin, float delayMs, float on
 		chThdSleep(delaySt);
 	}
 
+	OutputPin *output = &outputs[(int)pin];
+
 	isRunningBench = true;
 	for (int i = 0; i < count; i++) {
-		setOutputPinValue(pin, true);
+		output->setValue(true);
 		chThdSleep((int) (onTimeMs * CH_FREQUENCY / 1000));
-		setOutputPinValue(pin, false);
+		output->setValue(false);
 		int offTimeSt = (int) (offTimeMs * CH_FREQUENCY / 1000);
 		if (offTimeSt > 0) {
 			chThdSleep(offTimeSt);
@@ -161,6 +162,18 @@ void fanBench(void) {
 	count = 1;
 
 	needToRunBench = true;
+}
+
+void milBench(void) {
+//	brainPin = boardConfiguration->malfunctionIndicatorPin;
+//	pinX = C;
+//
+//	delayMs = 0;
+//	onTime = 3000;
+//	offTime = 0;
+//	count = 1;
+//
+//	needToRunBench = true;
 }
 
 void fuelPumpBench(void) {
@@ -243,6 +256,7 @@ void initInjectorCentral(Engine *engine) {
 	addConsoleAction("fuelpumpbench", fuelPumpBench);
 	addConsoleAction("fanbench", fanBench);
 
+	addConsoleAction("milbench", milBench);
 	addConsoleActionSSS("fuelbench", fuelbench);
 	addConsoleActionSSS("sparkbench", sparkbench);
 

@@ -77,48 +77,6 @@ case INJECTOR_9_OUTPUT:
   return "INJECTOR_9_OUTPUT";
 case IO_INVALID:
   return "IO_INVALID";
-case LED_HUGE_0:
-  return "LED_HUGE_0";
-case LED_HUGE_1:
-  return "LED_HUGE_1";
-case LED_HUGE_10:
-  return "LED_HUGE_10";
-case LED_HUGE_11:
-  return "LED_HUGE_11";
-case LED_HUGE_12:
-  return "LED_HUGE_12";
-case LED_HUGE_13:
-  return "LED_HUGE_13";
-case LED_HUGE_14:
-  return "LED_HUGE_14";
-case LED_HUGE_15:
-  return "LED_HUGE_15";
-case LED_HUGE_16:
-  return "LED_HUGE_16";
-case LED_HUGE_17:
-  return "LED_HUGE_17";
-case LED_HUGE_18:
-  return "LED_HUGE_18";
-case LED_HUGE_19:
-  return "LED_HUGE_19";
-case LED_HUGE_2:
-  return "LED_HUGE_2";
-case LED_HUGE_20:
-  return "LED_HUGE_20";
-case LED_HUGE_3:
-  return "LED_HUGE_3";
-case LED_HUGE_4:
-  return "LED_HUGE_4";
-case LED_HUGE_5:
-  return "LED_HUGE_5";
-case LED_HUGE_6:
-  return "LED_HUGE_6";
-case LED_HUGE_7:
-  return "LED_HUGE_7";
-case LED_HUGE_8:
-  return "LED_HUGE_8";
-case LED_HUGE_9:
-  return "LED_HUGE_9";
 case MAIN_RELAY:
   return "MAIN_RELAY";
 case O2_HEATER:

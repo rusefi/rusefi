@@ -77,7 +77,7 @@ static void setHondaAccordConfigurationCommon(engine_configuration_s *engineConf
 
 
 	// set_ignition_offset 350
-//	engineConfiguration->ignitionOffset = 350;
+//	engineConfiguration->ignitionBaseAngle = 350;
 	 // set_injection_offset 510
 //	engineConfiguration->injectionOffset = 510;
 

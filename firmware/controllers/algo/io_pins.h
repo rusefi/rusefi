@@ -74,29 +74,29 @@ typedef enum {
 	 * todo: this should be re-implemented in a smarter way with some sort of multiplexing anyway
 	 */
 	/* digit 1 */
-	LED_HUGE_0, // B2
-	LED_HUGE_1,
-	LED_HUGE_2,
-	LED_HUGE_3,
-	LED_HUGE_4,
-	LED_HUGE_5,
-	LED_HUGE_6,
-	/* digit 2 */
-	LED_HUGE_7,
-	LED_HUGE_8,
-	LED_HUGE_9, // E15
-	LED_HUGE_10,
-	LED_HUGE_11,
-	LED_HUGE_12,
-	LED_HUGE_13,
-	/* digit 3 */
-	LED_HUGE_14,
-	LED_HUGE_15,
-	LED_HUGE_16,
-	LED_HUGE_17,
-	LED_HUGE_18,
-	LED_HUGE_19,
-	LED_HUGE_20,
+//	LED_HUGE_0, // B2
+//	LED_HUGE_1,
+//	LED_HUGE_2,
+//	LED_HUGE_3,
+//	LED_HUGE_4,
+//	LED_HUGE_5,
+//	LED_HUGE_6,
+//	/* digit 2 */
+//	LED_HUGE_7,
+//	LED_HUGE_8,
+//	LED_HUGE_9, // E15
+//	LED_HUGE_10,
+//	LED_HUGE_11,
+//	LED_HUGE_12,
+//	LED_HUGE_13,
+//	/* digit 3 */
+//	LED_HUGE_14,
+//	LED_HUGE_15,
+//	LED_HUGE_16,
+//	LED_HUGE_17,
+//	LED_HUGE_18,
+//	LED_HUGE_19,
+//	LED_HUGE_20,
 
 	FUEL_PUMP_RELAY,
 	FAN_RELAY,
