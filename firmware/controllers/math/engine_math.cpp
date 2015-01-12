@@ -159,7 +159,7 @@ void FuelSchedule::addFuelEvents(injection_mode_e mode DECLARE_ENGINE_PARAMETER_
 	;
 	list->reset();
 
-	float baseAngle = engineConfiguration->globalTriggerAngleOffset + engineConfiguration->injectionOffset;
+	float baseAngle = engineConfiguration->globalTriggerAngleOffset + engineConfiguration->injectionAngle;
 
 	switch (mode) {
 	case IM_SEQUENTIAL:

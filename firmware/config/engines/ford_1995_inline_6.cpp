@@ -46,7 +46,7 @@ void setFordInline6(engine_configuration_s *engineConfiguration, board_configura
 	engineConfiguration->triggerConfig.customIsSynchronizationNeeded = false;
 
 	engineConfiguration->globalTriggerAngleOffset = 0;
-	engineConfiguration->ignitionOffset = 13;
+	engineConfiguration->ignitionBaseAngle = 13;
 
 	setThermistorConfiguration(&engineConfiguration->cltThermistorConf, -10.0, 160310.0, 60.0, 7700.0, 120.0, 1180.0);
 	engineConfiguration->cltThermistorConf.bias_resistor = 2700;
