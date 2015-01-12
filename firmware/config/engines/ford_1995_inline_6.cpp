@@ -9,7 +9,7 @@
  * FORD_INLINE_6_1995 = 7
  *
  * @date Feb 12, 2014
- * @author Andrey Belomutskiy, (c) 2012-2014
+ * @author Andrey Belomutskiy, (c) 2012-2015
  */
 
 #include "main.h"

@@ -9,7 +9,7 @@
  * This config overrides some values of the default configuration which is set by setDefaultConfiguration() method
  *
  * @date Dec 16, 2013
- * @author Andrey Belomutskiy, (c) 2012-2014
+ * @author Andrey Belomutskiy, (c) 2012-2015
  */
 
 #include "main.h"

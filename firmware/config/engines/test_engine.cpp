@@ -4,7 +4,7 @@
  * set_engine_type 26
  *
  * @date Nov 14, 2014
- * @author Andrey Belomutskiy, (c) 2012-2014
+ * @author Andrey Belomutskiy, (c) 2012-2015
  */
 
 #include "main.h"

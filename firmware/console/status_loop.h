@@ -2,7 +2,7 @@
  * @file	status_loop.h
  *
  * @date Mar 15, 2013
- * @author Andrey Belomutskiy, (c) 2012-2014
+ * @author Andrey Belomutskiy, (c) 2012-2015
  */
 
 #ifndef CONSOLE_LOOP_H_

@@ -2,7 +2,7 @@
  * @file	trigger_chrysler.h
  *
  * @date Mar 24, 2014
- * @author Andrey Belomutskiy, (c) 2012-2014
+ * @author Andrey Belomutskiy, (c) 2012-2015
  */
 
 #ifndef TRIGGER_CHRYSLER_H_

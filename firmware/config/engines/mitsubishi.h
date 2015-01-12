@@ -2,7 +2,7 @@
  * @file	mitsubishi.h
  *
  * @date Aug 5, 2014
- * @author Andrey Belomutskiy, (c) 2012-2014
+ * @author Andrey Belomutskiy, (c) 2012-2015
  */
 #ifndef MITSUBISHI_H_
 #define MITSUBISHI_H_

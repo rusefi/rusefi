@@ -2,7 +2,7 @@
  * @file	trigger_mazda.h
  *
  * @date Feb 18, 2014
- * @author Andrey Belomutskiy, (c) 2012-2014
+ * @author Andrey Belomutskiy, (c) 2012-2015
  */
 
 #ifndef TRIGGER_MAZDA_H_

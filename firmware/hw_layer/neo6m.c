@@ -7,7 +7,7 @@
  * Technically any UART GPS should work with this driver since NMEA protocol is pretty common anyway
  *
  * @date Dec 28, 2013
- * @author Andrey Belomutskiy, (c) 2012-2014
+ * @author Andrey Belomutskiy, (c) 2012-2015
  * Kot_dnz 2014
  */
 

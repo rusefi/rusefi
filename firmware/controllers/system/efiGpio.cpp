@@ -2,7 +2,7 @@
  * @file	efiGpio.cpp
  *
  * @date Sep 26, 2014
- * @author Andrey Belomutskiy, (c) 2012-2014
+ * @author Andrey Belomutskiy, (c) 2012-2015
  */
 
 #include "main.h"

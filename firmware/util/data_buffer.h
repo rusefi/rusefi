@@ -2,7 +2,7 @@
  * data_buffer.h
  *
  * @date Dec 8, 2012
- * @author Andrey Belomutskiy, (c) 2012-2014
+ * @author Andrey Belomutskiy, (c) 2012-2015
  */
 
 #ifndef DATA_BUFFER_H_

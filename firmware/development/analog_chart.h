@@ -2,7 +2,7 @@
  * @file	analog_chart.h
  *
  * @date Dec 20, 2013
- * @author Andrey Belomutskiy, (c) 2012-2014
+ * @author Andrey Belomutskiy, (c) 2012-2015
  */
 
 #ifndef ANALOG_CHART_H_

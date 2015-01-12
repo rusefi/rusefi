@@ -4,7 +4,7 @@
  * By the way, there are 86400000 milliseconds in a day
  *
  * @date Apr 14, 2014
- * @author Andrey Belomutskiy, (c) 2012-2014
+ * @author Andrey Belomutskiy, (c) 2012-2015
  */
 
 #ifndef EFITIME_H_

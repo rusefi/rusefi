@@ -2,7 +2,7 @@
  * @file	trigger_mitsubishi.h
  *
  * @date Aug 5, 2014
- * @author Andrey Belomutskiy, (c) 2012-2014
+ * @author Andrey Belomutskiy, (c) 2012-2015
  */
 #ifndef TRIGGER_MITSUBISHI_H_
 #define TRIGGER_MITSUBISHI_H_

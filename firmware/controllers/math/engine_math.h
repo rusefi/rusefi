@@ -2,7 +2,7 @@
  * @file	engine_math.h
  *
  * @date Jul 13, 2013
- * @author Andrey Belomutskiy, (c) 2012-2014
+ * @author Andrey Belomutskiy, (c) 2012-2015
  */
 
 #ifndef ENGINE_MATH_H_

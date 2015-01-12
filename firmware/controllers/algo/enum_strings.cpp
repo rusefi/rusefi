@@ -4,7 +4,7 @@
  * Maybe we will figure out a way to auto-generate this file?
  *
  * @date Sep 4, 2014
- * @author Andrey Belomutskiy, (c) 2012-2014
+ * @author Andrey Belomutskiy, (c) 2012-2015
  */
 
 #include "main.h"

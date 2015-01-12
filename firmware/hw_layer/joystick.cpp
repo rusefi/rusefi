@@ -2,7 +2,7 @@
  * @file	joystick.cpp
  *
  * @date Jan 2, 2015
- * @author Andrey Belomutskiy, (c) 2012-2014
+ * @author Andrey Belomutskiy, (c) 2012-2015
  */
 
 #include "engine_configuration.h"

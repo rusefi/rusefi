@@ -2,7 +2,7 @@
  * @file advance_map.h
  *
  * @date Mar 27, 2013
- * @author Andrey Belomutskiy, (c) 2012-2014
+ * @author Andrey Belomutskiy, (c) 2012-2015
  */
 
 #ifndef ADVANCE_H_

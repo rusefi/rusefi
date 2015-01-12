@@ -5,7 +5,7 @@
  * FORD_ASPIRE_1996 = 3
  *
  * @date Sep 9, 2013
- * @author Andrey Belomutskiy, (c) 2012-2014
+ * @author Andrey Belomutskiy, (c) 2012-2015
  */
 
 #include "main.h"

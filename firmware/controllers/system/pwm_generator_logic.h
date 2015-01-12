@@ -2,7 +2,7 @@
  * @file    pwm_generator_logic.h
  *
  * @date Mar 2, 2014
- * @author Andrey Belomutskiy, (c) 2012-2014
+ * @author Andrey Belomutskiy, (c) 2012-2015
  */
 
 #ifndef PWM_GENERATOR_LOGIC_H_
