@@ -25,7 +25,7 @@ typedef struct {
 	 * This value controls what RPM values we consider 'cranking' (any RPM below 'crankingRpm')
 	 * Anything above 'crankingRpm' would be 'running'
 	 */
-	short int crankingRpm;
+	int16_t crankingRpm;
 } cranking_parameters_s;
 
 #define INJECTION_PIN_COUNT 12
@@ -247,7 +247,7 @@ typedef struct {
 	brain_pin_e acRelayPin;
 	pin_output_mode_e acRelayPinMode;
 
-	short int fsioFrequency[LE_COMMAND_COUNT];
+	int16_t fsioFrequency[LE_COMMAND_COUNT];
 
 	brain_pin_e hip9011CsPin;
 	brain_pin_e hip9011IntHoldPin;
@@ -317,20 +317,20 @@ typedef struct {
 	 * PS: Funny name, right? :)
 	 * todo: make this a bit on some bit field
 	 */
-	short int directSelfStimulation; // size 2, offset 328
+	int16_t directSelfStimulation; // size 2, offset 328
 
 	// todo: extract these two fields into a structure
 	// todo: we need two sets of TPS parameters - modern ETBs have to sensors
-	short int tpsMin; // size 2, offset 330
+	int16_t tpsMin; // size 2, offset 330
 	// tpsMax value as 10 bit ADC value. Not Voltage!
-	short int tpsMax; // size 2, offset 332
-	short int analogChartMode;
+	int16_t tpsMax; // size 2, offset 332
+	int16_t analogChartMode;
 
 	/**
 	 * todo: finish implementation. These values are used for TPS disconnect detection
 	 */
-	short int tpsErrorLowValue;
-	short int tpsErrorHighValue;
+	int16_t tpsErrorLowValue;
+	int16_t tpsErrorHighValue;
 
 	float primingSquirtDurationMs;
 	/**
@@ -587,11 +587,11 @@ typedef struct {
 
 	int ignMathCalculateAtIndex;
 
-	short int acCutoffLowRpm;
-	short int acCutoffHighRpm;
+	int16_t acCutoffLowRpm;
+	int16_t acCutoffHighRpm;
 
-	short int acIdleRpmBump;
-	short int unusedShort;
+	int16_t acIdleRpmBump;
+	int16_t unusedShort;
 
 	adc_channel_e vRefAdcChannel;
 
