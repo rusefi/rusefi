@@ -67,12 +67,12 @@ public:
 class EngineState {
 public:
 	/**
+	 * WIP: accessing these values here would be a performance optimization since log() function needed for
+	 * thermistor logic is relatively heavy
 	 * Access to these two fields is not synchronized in any way - that should work since float read/write are atomic.
 	 */
 	float iat;
 	float clt;
-
-
 };
 
 class RpmCalculator;
@@ -85,11 +85,17 @@ public:
 	engine_configuration_s *engineConfiguration;
 	engine_configuration2_s *engineConfiguration2;
 
+	/**
+	 * this is about 'stopengine' command
+	 */
 	uint64_t stopEngineRequestTimeNt;
 
 	Thermistor iat;
 	Thermistor clt;
 
+	/**
+	 * ignition dwell duration as crankshaft angle
+	 */
 	float dwellAngle;
 	float advance;
 
