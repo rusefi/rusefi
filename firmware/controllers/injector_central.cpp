@@ -43,6 +43,7 @@ static bool_t isRunningBench = false;
 static int is_injector_enabled[MAX_INJECTOR_COUNT];
 
 extern OutputPin outputs[IO_PIN_COUNT];
+extern engine_pins_s enginePins;
 
 void initIgnitionCentral(void) {
 	for (int i = 0; i < engineConfiguration->cylindersCount; i++) {
@@ -90,7 +91,7 @@ static void setInjectorEnabled(int id, int value) {
 	printStatus();
 }
 
-static void runBench(brain_pin_e brainPin, io_pin_e pin, float delayMs, float onTimeMs, float offTimeMs, int count) {
+static void runBench(brain_pin_e brainPin, OutputPin *output, float delayMs, float onTimeMs, float offTimeMs, int count) {
 	scheduleMsg(&logger, "Running bench: ON_TIME=%f ms OFF_TIME=%fms Counter=%d", onTimeMs, offTimeMs, count);
 	scheduleMsg(&logger, "output on %s", hwPortname(brainPin));
 
@@ -98,8 +99,6 @@ static void runBench(brain_pin_e brainPin, io_pin_e pin, float delayMs, float on
 	if (delaySt != 0) {
 		chThdSleep(delaySt);
 	}
-
-	OutputPin *output = &outputs[(int)pin];
 
 	isRunningBench = true;
 	for (int i = 0; i < count; i++) {
@@ -121,10 +120,10 @@ static float offTime;
 static float delayMs;
 static int count;
 static brain_pin_e brainPin;
-static io_pin_e pinX;
+static OutputPin* pinX;
 
 static void pinbench(const char *delayStr, const char *onTimeStr, const char *offTimeStr, const char *countStr,
-		io_pin_e pinParam, brain_pin_e brainPinParam) {
+		OutputPin*  pinParam, brain_pin_e brainPinParam) {
 	delayMs = atoff(delayStr);
 	onTime = atoff(onTimeStr);
 	offTime = atoff(offTimeStr);
@@ -148,12 +147,12 @@ static void fuelbench2(const char *delayStr, const char *indexStr, const char * 
 	}
 	brain_pin_e b = boardConfiguration->injectionPins[index - 1];
 	io_pin_e p = (io_pin_e) ((int) INJECTOR_1_OUTPUT - 1 + index);
-	pinbench(delayStr, onTimeStr, offTimeStr, countStr, p, b);
+	pinbench(delayStr, onTimeStr, offTimeStr, countStr, &outputs[(int)p], b);
 }
 
 void fanBench(void) {
 	brainPin = boardConfiguration->fanPin;
-	pinX = FAN_RELAY;
+	pinX = &enginePins.fanRelay;
 
 	delayMs = 0;
 	onTime = 3000;
@@ -177,7 +176,7 @@ void milBench(void) {
 
 void fuelPumpBench(void) {
 	brainPin = boardConfiguration->fuelPumpPin;
-	pinX = FUEL_PUMP_RELAY;
+	pinX = &enginePins.fuelPumpRelay;
 
 	delayMs = 0;
 	onTime = 3000;
@@ -204,7 +203,7 @@ static void sparkbench2(const char *delayStr, const char *indexStr, const char *
 	}
 	brain_pin_e b = boardConfiguration->ignitionPins[index - 1];
 	io_pin_e p = (io_pin_e) ((int) SPARKOUT_1_OUTPUT - 1 + index);
-	pinbench(delayStr, onTimeStr, offTimeStr, countStr, p, b);
+	pinbench(delayStr, onTimeStr, offTimeStr, countStr, &outputs[(int)p], b);
 }
 
 /**

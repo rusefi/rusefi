@@ -64,7 +64,7 @@
 #include "vehicle_speed.h"
 #endif
 
-extern OutputPin outputs[IO_PIN_COUNT];
+extern engine_pins_s enginePins;
 
 // this 'true' value is needed for simulator
 static volatile bool fullLog = true;
@@ -354,7 +354,7 @@ static void showFuelInfo2(float rpm, float engineLoad, Engine *engine) {
 	scheduleMsg(&logger, "SD magic fuel %f", sdMath(engineConfiguration, 100, 100, 14.7, convertCelsiusToKelvin(20)));
 
 	scheduleMsg(&logger2, "algo=%s/pump=%s", getEngine_load_mode_e(engineConfiguration->algorithm),
-			boolToString(getOutputPinValue(FUEL_PUMP_RELAY)));
+			boolToString(enginePins.fuelPumpRelay.getLogicValue()));
 
 	scheduleMsg(&logger2, "cranking fuel: %f", getCrankingFuel(engine));
 
@@ -515,9 +515,9 @@ void updateTunerStudioState(Engine *engine, TunerStudioOutputChannels *tsOutputC
 
 	tsOutputChannels->needBurn = getNeedToWriteConfiguration();
 	tsOutputChannels->hasSdCard = isSdCardAlive();
-	tsOutputChannels->isFuelPumpOn = getOutputPinValue(FUEL_PUMP_RELAY);
-	tsOutputChannels->isFanOn = getOutputPinValue(FAN_RELAY);
-	tsOutputChannels->isO2HeaterOn = getOutputPinValue(O2_HEATER);
+	tsOutputChannels->isFuelPumpOn = enginePins.fuelPumpRelay.getLogicValue();
+	tsOutputChannels->isFanOn = enginePins.fanRelay.getLogicValue();
+	tsOutputChannels->isO2HeaterOn = enginePins.o2heater.getLogicValue();
 	tsOutputChannels->ignition_enabled = engineConfiguration->isIgnitionEnabled;
 	tsOutputChannels->injection_enabled = engineConfiguration->isInjectionEnabled;
 	tsOutputChannels->cylinder_cleanup_enabled = engineConfiguration->isCylinderCleanupEnabled;

@@ -23,6 +23,8 @@
 
 static Logging logger;
 
+extern OutputPin outputs[IO_PIN_COUNT];
+
 EXTERN_ENGINE
 ;
 
@@ -56,7 +58,7 @@ void Engine::init() {
 }
 
 static bool stopPin(io_pin_e pin) {
-	if (getOutputPinValue(pin)) {
+	if (outputs[(int)pin].getLogicValue()) {
 		setOutputPinValue(pin, 0);
 		scheduleMsg(&logger, "turning off %s", getPinName(pin));
 		return true;

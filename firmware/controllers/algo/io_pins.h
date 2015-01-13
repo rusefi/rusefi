@@ -44,23 +44,6 @@ typedef enum {
 	INJECTOR_11_OUTPUT,
 	INJECTOR_12_OUTPUT,
 
-	GPIO_0,
-	GPIO_1,
-	GPIO_2,
-	GPIO_3,
-	GPIO_4,
-	GPIO_5,
-	GPIO_6,
-	GPIO_7,
-	GPIO_8,
-	GPIO_9,
-	GPIO_10,
-	GPIO_11,
-	GPIO_12,
-	GPIO_13,
-	GPIO_14,
-	GPIO_15,
-
 	IO_INVALID,
 
 	/**
@@ -94,22 +77,6 @@ typedef enum {
 //	LED_HUGE_19,
 //	LED_HUGE_20,
 
-	FUEL_PUMP_RELAY,
-	FAN_RELAY,
-	O2_HEATER,
-	AC_RELAY,
-
-	SPI_CS_1,
-	SPI_CS_2,
-	SPI_CS_3,
-	SPI_CS_4,
-
-	MAIN_RELAY,
-
-	/**
-	 * This output pin is used to turn alternator on or off
-	 */
-	ALTERNATOR_SWITCH,
 
 } io_pin_e;
 

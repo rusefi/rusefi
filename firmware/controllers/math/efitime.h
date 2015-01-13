@@ -10,7 +10,6 @@
 #ifndef EFITIME_H_
 #define EFITIME_H_
 
-#include <stdint.h>
 #include "efifeatures.h"
 #include "rusefi_types.h"
 
