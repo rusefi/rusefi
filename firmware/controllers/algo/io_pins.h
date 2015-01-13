@@ -63,10 +63,6 @@ typedef enum {
 
 	IO_INVALID,
 
-	ELECTRONIC_THROTTLE_CONTROL_1,
-	ELECTRONIC_THROTTLE_CONTROL_2,
-	ELECTRONIC_THROTTLE_CONTROL_3,
-
 	/**
 	 * these seven segment display pins are related to unused external tachometer code
 	 * I still have the hardware so maybe one day I will fix it, but for now it's just dead code

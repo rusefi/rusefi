@@ -25,6 +25,7 @@ typedef unsigned int time_t;
 #endif
 
 #include "efifeatures.h"
+#include "rusefi_types.h"
 #include "rusefi_enums.h"
 #if EFI_PROD_CODE
 #include "io_pins.h"

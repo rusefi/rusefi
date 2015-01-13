@@ -280,7 +280,7 @@ void showMainHistogram(void) {
 static void doSomeCalc(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	/**
 	 * Within one engine cycle all cylinders are fired with same timing advance.
-	 * todo: one day we can control cylinders individually
+	 * todo: one day we can control cylinders individually?
 	 */
 	float dwellMs = getSparkDwellMsT(rpm PASS_ENGINE_PARAMETER);
 
