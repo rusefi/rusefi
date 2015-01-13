@@ -37,7 +37,6 @@
 #include "trigger_central.h"
 #include "svnversion.h"
 #include "engine_configuration.h"
-#include "ec2.h"
 #endif
 
 #if EFI_INTERNAL_FLASH

@@ -9,8 +9,7 @@
 #define TRIGGER_MAZDA_H_
 
 #include "trigger_structure.h"
-#include "engine_configuration.h"
-#include "ec2.h"
+#include "engine.h"
 
 #define MIATA_NA_GAP 1.4930f
 

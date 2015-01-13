@@ -1,6 +1,6 @@
 /*
  *  Created on: Oct 17, 2013
- *      Author: Andrey Belomutskiy, (c) 2012-2013
+ *      Author: Andrey Belomutskiy, (c) 2012-2015
  */
 
 /**

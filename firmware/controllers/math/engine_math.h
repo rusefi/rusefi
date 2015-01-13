@@ -10,7 +10,6 @@
 
 #include "engine_configuration.h"
 
-#include "ec2.h"
 #include "trigger_structure.h"
 #include "table_helper.h"
 #include "engine.h"

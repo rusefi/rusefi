@@ -49,7 +49,6 @@
 #include "adc_inputs.h"
 #include "algo.h"
 #include "efilib2.h"
-#include "ec2.h"
 #include "PwmTester.h"
 #include "engine.h"
 #include "pin_repository.h"

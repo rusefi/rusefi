@@ -2,7 +2,7 @@
  * test_find_index.cpp
  *
  *  Created on: Oct 30, 2013
- *      Author: Andrey Belomutskiy, (c) 2012-2013
+ *      Author: Andrey Belomutskiy, (c) 2012-2015
  */
 
 #include "main.h"

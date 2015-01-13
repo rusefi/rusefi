@@ -96,7 +96,6 @@
 
 #include "main.h"
 #include "trigger_structure.h"
-#include "ec2.h"
 #include "hardware.h"
 #include "engine_controller.h"
 #include "efiGpio.h"

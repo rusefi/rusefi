@@ -26,11 +26,12 @@
 
 #include "test_idle_controller.h"
 
+#include "test_signal_executor.h"
+
 extern "C"
 {
 #include "map_resize.h"
 #include "test_event_registry.h"
-#include "test_signal_executor.h"
 #include "test_util.h"
 }
 

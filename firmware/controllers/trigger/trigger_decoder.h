@@ -10,7 +10,6 @@
 
 #include "trigger_structure.h"
 #include "engine_configuration.h"
-#include "ec2.h"
 
 class TriggerState;
 

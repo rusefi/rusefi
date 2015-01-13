@@ -2,7 +2,7 @@
  * boards.h
  *
  *  Created on: Nov 15, 2013
- *      Author: Andrey Belomutskiy, (c) 2012-2013
+ *      Author: Andrey Belomutskiy, (c) 2012-2015
  */
 
 #ifndef BOARDS_H_

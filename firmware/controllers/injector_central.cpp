@@ -32,7 +32,6 @@
 #include "main_trigger_callback.h"
 #include "engine_configuration.h"
 #include "pin_repository.h"
-#include "ec2.h"
 #include "efiGpio.h"
 
 static Logging logger;

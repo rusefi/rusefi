@@ -2,7 +2,7 @@
  * @file	rusEfiFunctionalTest.cpp
  *
  * @date Mar 1, 2014
- * @author Andrey Belomutskiy, (c) 2012-2013
+ * @author Andrey Belomutskiy, (c) 2012-2015
  */
 
 #include "global.h"

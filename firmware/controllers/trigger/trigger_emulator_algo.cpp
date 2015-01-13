@@ -11,7 +11,6 @@
 #include "trigger_emulator_algo.h"
 #include "engine_configuration.h"
 #include "LocalVersionHolder.h"
-#include "ec2.h"
 #include "trigger_central.h"
 
 #if EFI_PROD_CODE

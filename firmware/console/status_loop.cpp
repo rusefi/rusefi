@@ -26,7 +26,6 @@
 
 #include "main.h"
 #include "status_loop.h"
-#include "ec2.h"
 
 #include "adc_inputs.h"
 #if EFI_WAVE_ANALYZER || defined(__DOXYGEN__)
