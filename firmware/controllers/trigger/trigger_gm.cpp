@@ -7,7 +7,7 @@
 
 #include "trigger_gm.h"
 
-void configureGmTriggerShape(trigger_shape_s *s) {
+void configureGmTriggerShape(TriggerShape *s) {
 	s->reset(FOUR_STROKE_CAM_SENSOR);
 
 	// all angles are x2 here - so, 5 degree width is 10

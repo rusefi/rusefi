@@ -59,7 +59,7 @@ private:
 	void clear();
 	/**
 	 * Number of actual events within current trigger cycle
-	 * see trigger_shape_s
+	 * see TriggerShape
 	 */
 	uint32_t eventCount[PWM_PHASE_MAX_WAVE_PER_PWM];
 	trigger_event_e curSignal;
@@ -76,15 +76,15 @@ private:
 class TriggerStimulatorHelper {
 public:
 	TriggerStimulatorHelper();
-	void nextStep(TriggerState *state, trigger_shape_s * shape, int i, trigger_config_s const*triggerConfig DECLARE_ENGINE_PARAMETER_S);
+	void nextStep(TriggerState *state, TriggerShape * shape, int i, trigger_config_s const*triggerConfig DECLARE_ENGINE_PARAMETER_S);
 private:
 	bool primaryWheelState;
 	bool secondaryWheelState;
 	bool thirdWheelState;
 };
 
-void initializeSkippedToothTriggerShapeExt(trigger_shape_s *s, int totalTeethCount, int skippedCount, operation_mode_e operationMode);
-uint32_t findTriggerZeroEventIndex(trigger_shape_s * shape, trigger_config_s const*triggerConfig DECLARE_ENGINE_PARAMETER_S);
+void initializeSkippedToothTriggerShapeExt(TriggerShape *s, int totalTeethCount, int skippedCount, operation_mode_e operationMode);
+uint32_t findTriggerZeroEventIndex(TriggerShape * shape, trigger_config_s const*triggerConfig DECLARE_ENGINE_PARAMETER_S);
 
 class Engine;
 

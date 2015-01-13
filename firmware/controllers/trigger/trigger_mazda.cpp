@@ -20,7 +20,7 @@
 
 #include "trigger_mazda.h"
 
-void initializeMazdaMiataNaShape(trigger_shape_s *s) {
+void initializeMazdaMiataNaShape(TriggerShape *s) {
 	s->reset(FOUR_STROKE_CAM_SENSOR);
 	setTriggerSynchronizationGap(s, MIATA_NA_GAP);
 	s->useRiseEdge = false;
@@ -47,7 +47,7 @@ void initializeMazdaMiataNaShape(trigger_shape_s *s) {
 	s->addEvent(720.0f, T_PRIMARY, TV_LOW);
 }
 
-void initializeMazdaMiataNbShape(trigger_shape_s *s) {
+void initializeMazdaMiataNbShape(TriggerShape *s) {
 	setTriggerSynchronizationGap(s, 0.11f);
 	s->useRiseEdge = false;
 
@@ -85,7 +85,7 @@ void initializeMazdaMiataNbShape(trigger_shape_s *s) {
 	s->addEvent(720.0f, T_PRIMARY, TV_LOW);
 }
 
-void configureMazdaProtegeLx(trigger_shape_s *s) {
+void configureMazdaProtegeLx(TriggerShape *s) {
 
 	// todo: move to into configuration definition s->needSecondTriggerInput = FALSE;
 

@@ -9,7 +9,6 @@
 #include "main.h"
 #include "engine_math.h"
 #include "engine_configuration.h"
-#include "ec2.h"
 #include "map.h"
 #include "speed_density.h"
 

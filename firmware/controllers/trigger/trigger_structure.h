@@ -14,7 +14,7 @@
 #include "EfiWave.h"
 #include "engine_configuration.h"
 
-class trigger_shape_s;
+class TriggerShape;
 
 #define TRIGGER_CHANNEL_COUNT 3
 
@@ -28,9 +28,9 @@ public:
 
 class Engine;
 
-class trigger_shape_s {
+class TriggerShape {
 public:
-	trigger_shape_s();
+	TriggerShape();
 	bool_t isSynchronizationNeeded;
 
 	int totalToothCount;
@@ -92,7 +92,7 @@ private:
 	trigger_shape_helper h;
 
 	/**
-	 * index of synchronization event within trigger_shape_s
+	 * index of synchronization event within TriggerShape
 	 * See findTriggerZeroEventIndex()
 	 */
 	int triggerShapeSynchPointIndex;
@@ -120,8 +120,8 @@ private:
 	int getCycleDuration() const;
 };
 
-void setTriggerSynchronizationGap(trigger_shape_s *s, float synchGap);
-void setTriggerSynchronizationGap2(trigger_shape_s *s, float syncGapFrom, float syncRatioTo);
-void setToothedWheelConfiguration(trigger_shape_s *s, int total, int skipped, engine_configuration_s const *engineConfiguration);
+void setTriggerSynchronizationGap(TriggerShape *s, float synchGap);
+void setTriggerSynchronizationGap2(TriggerShape *s, float syncGapFrom, float syncRatioTo);
+void setToothedWheelConfiguration(TriggerShape *s, int total, int skipped, engine_configuration_s const *engineConfiguration);
 
 #endif /* TRIGGER_STRUCTURE_H_ */

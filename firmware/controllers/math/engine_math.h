@@ -25,7 +25,7 @@ void findTriggerPosition(
 
 int isInjectionEnabled(engine_configuration_s *engineConfiguration);
 
-void initializeIgnitionActions(float advance, float dwellAngle,
+void initializeIgnitionActions(angle_t advance, angle_t dwellAngle,
 		IgnitionEventList *list DECLARE_ENGINE_PARAMETER_S);
 
 /**

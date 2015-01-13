@@ -12,7 +12,6 @@
 #include "trigger_structure.h"
 #include "allsensors.h"
 #include "engine_math.h"
-#include "ec2.h"
 #include "trigger_decoder.h"
 #include "engine_test_helper.h"
 #include "efiGpio.h"
@@ -105,7 +104,7 @@ void testFuelMap(void) {
 extern engine_configuration_s *engineConfiguration;
 extern engine_configuration2_s *engineConfiguration2;
 
-static void confgiureFordAspireTriggerShape(trigger_shape_s * s) {
+static void confgiureFordAspireTriggerShape(TriggerShape * s) {
 	s->reset(FOUR_STROKE_CAM_SENSOR);
 
 	s->addEvent(53.747, T_SECONDARY, TV_HIGH);
@@ -159,7 +158,7 @@ void testAngleResolver(void) {
 
 	engineConfiguration->globalTriggerAngleOffset = 175;
 	assertTrue(engine->engineConfiguration2!=NULL);
-	trigger_shape_s * ts = &engine->triggerShape;
+	TriggerShape * ts = &engine->triggerShape;
 
 	confgiureFordAspireTriggerShape(ts);
 

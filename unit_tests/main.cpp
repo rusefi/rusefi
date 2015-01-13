@@ -12,7 +12,6 @@
 
 #include "main.h"
 #include "error_handling.h"
-#include "ec2.h"
 #include "test_accel_enrichment.h"
 #include "test_interpolation_3d.h"
 #include "test_find_index.h"

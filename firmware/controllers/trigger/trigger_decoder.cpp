@@ -228,9 +228,9 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, uint64_t now
 	toothed_previous_time = nowNt;
 }
 
-static void initializeSkippedToothTriggerShape(trigger_shape_s *s, int totalTeethCount, int skippedCount,
+static void initializeSkippedToothTriggerShape(TriggerShape *s, int totalTeethCount, int skippedCount,
 		operation_mode_e operationMode) {
-	efiAssertVoid(s != NULL, "trigger_shape_s is NULL");
+	efiAssertVoid(s != NULL, "TriggerShape is NULL");
 	s->reset(operationMode);
 
 	float toothWidth = 0.5;
@@ -247,7 +247,7 @@ static void initializeSkippedToothTriggerShape(trigger_shape_s *s, int totalTeet
 	s->addEvent(720, T_PRIMARY, TV_LOW);
 }
 
-void initializeSkippedToothTriggerShapeExt(trigger_shape_s *s, int totalTeethCount, int skippedCount,
+void initializeSkippedToothTriggerShapeExt(TriggerShape *s, int totalTeethCount, int skippedCount,
 		operation_mode_e operationMode) {
 	efiAssertVoid(totalTeethCount > 0, "totalTeethCount is zero");
 
@@ -264,7 +264,7 @@ void initializeTriggerShape(Logging *logger, engine_configuration_s const *engin
 	scheduleMsg(logger, "initializeTriggerShape()");
 #endif
 	const trigger_config_s *triggerConfig = &engineConfiguration->triggerConfig;
-	trigger_shape_s *triggerShape = &engine->triggerShape;
+	TriggerShape *triggerShape = &engine->triggerShape;
 
 	setTriggerSynchronizationGap(triggerShape, 2);
 	triggerShape->useRiseEdge = true;
@@ -351,7 +351,7 @@ TriggerStimulatorHelper::TriggerStimulatorHelper() {
 	thirdWheelState = false;
 }
 
-void TriggerStimulatorHelper::nextStep(TriggerState *state, trigger_shape_s * shape, int i,
+void TriggerStimulatorHelper::nextStep(TriggerState *state, TriggerShape * shape, int i,
 		trigger_config_s const*triggerConfig DECLARE_ENGINE_PARAMETER_S) {
 	int stateIndex = i % shape->getSize();
 
@@ -389,7 +389,7 @@ static void onFindIndex(TriggerState *state) {
 	}
 }
 
-static uint32_t doFindTrigger(TriggerStimulatorHelper *helper, trigger_shape_s * shape,
+static uint32_t doFindTrigger(TriggerStimulatorHelper *helper, TriggerShape * shape,
 		trigger_config_s const*triggerConfig, TriggerState *state DECLARE_ENGINE_PARAMETER_S) {
 	for (int i = 0; i < 4 * PWM_PHASE_MAX_COUNT; i++) {
 		helper->nextStep(state, shape, i, triggerConfig PASS_ENGINE_PARAMETER);
@@ -405,9 +405,9 @@ static uint32_t doFindTrigger(TriggerStimulatorHelper *helper, trigger_shape_s *
  * Trigger shape is defined in a way which is convenient for trigger shape definition
  * On the other hand, trigger decoder indexing begins from synchronization event.
  *
- * This function finds the index of synchronization event within trigger_shape_s
+ * This function finds the index of synchronization event within TriggerShape
  */
-uint32_t findTriggerZeroEventIndex(trigger_shape_s * shape, trigger_config_s const*triggerConfig
+uint32_t findTriggerZeroEventIndex(TriggerShape * shape, trigger_config_s const*triggerConfig
 		DECLARE_ENGINE_PARAMETER_S) {
 
 	TriggerState state;

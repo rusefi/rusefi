@@ -23,11 +23,11 @@ public:
 	 * That's trigger event index
 	 */
 	uint32_t eventIndex;
-	float eventAngle;
+	angle_t eventAngle;
 	/**
 	 * Angle offset from the trigger event
 	 */
-	float angleOffset;
+	angle_t angleOffset;
 };
 
 typedef struct {

@@ -32,7 +32,7 @@ trigger_shape_helper::trigger_shape_helper() {
 	}
 }
 
-trigger_shape_s::trigger_shape_s() :
+TriggerShape::TriggerShape() :
 		wave(switchTimesBuffer, NULL) {
 	reset(OM_NONE);
 	wave.waves = h.waves;
@@ -42,20 +42,20 @@ trigger_shape_s::trigger_shape_s() :
 	invertOnAdd = false;
 }
 
-int trigger_shape_s::getSize() const {
+int TriggerShape::getSize() const {
 	return size;
 }
 
-int trigger_shape_s::getTriggerShapeSynchPointIndex() {
+int TriggerShape::getTriggerShapeSynchPointIndex() {
 	return triggerShapeSynchPointIndex;
 }
 
-void trigger_shape_s::calculateTriggerSynchPoint(engine_configuration_s *engineConfiguration, Engine *engine) {
+void TriggerShape::calculateTriggerSynchPoint(engine_configuration_s *engineConfiguration, Engine *engine) {
 	trigger_config_s const*triggerConfig = &engineConfiguration->triggerConfig;
 	setTriggerShapeSynchPointIndex(engineConfiguration, findTriggerZeroEventIndex(this, triggerConfig PASS_ENGINE_PARAMETER), engine);
 }
 
-void trigger_shape_s::setTriggerShapeSynchPointIndex(engine_configuration_s *engineConfiguration, int triggerShapeSynchPointIndex, Engine *engine) {
+void TriggerShape::setTriggerShapeSynchPointIndex(engine_configuration_s *engineConfiguration, int triggerShapeSynchPointIndex, Engine *engine) {
 	this->triggerShapeSynchPointIndex = triggerShapeSynchPointIndex;
 
 	engine->engineCycleEventCount = getLength();
@@ -74,7 +74,7 @@ void trigger_shape_s::setTriggerShapeSynchPointIndex(engine_configuration_s *eng
 	}
 }
 
-void trigger_shape_s::reset(operation_mode_e operationMode) {
+void TriggerShape::reset(operation_mode_e operationMode) {
 	this->operationMode = operationMode;
 	size = 0;
 	triggerShapeSynchPointIndex = 0;
@@ -150,11 +150,11 @@ void TriggerState::clear() {
  * Trigger event count equals engine cycle event count if we have a cam sensor.
  * Two trigger cycles make one engine cycle in case of a four stroke engine If we only have a cranksensor.
  */
-uint32_t trigger_shape_s::getLength() const {
+uint32_t TriggerShape::getLength() const {
 	return operationMode == FOUR_STROKE_CAM_SENSOR ? getSize() : 2 * getSize();
 }
 
-float trigger_shape_s::getAngle(int index) const {
+float TriggerShape::getAngle(int index) const {
 	if (operationMode == FOUR_STROKE_CAM_SENSOR) {
 		return getSwitchAngle(index);
 	}
@@ -173,7 +173,7 @@ float trigger_shape_s::getAngle(int index) const {
 	}
 }
 
-void trigger_shape_s::addEvent(float angle, trigger_wheel_e const waveIndex, trigger_value_e const stateParam) {
+void TriggerShape::addEvent(float angle, trigger_wheel_e const waveIndex, trigger_value_e const stateParam) {
 	efiAssertVoid(operationMode != OM_NONE, "operationMode not set");
 
 	trigger_value_e state;
@@ -246,11 +246,11 @@ void trigger_shape_s::addEvent(float angle, trigger_wheel_e const waveIndex, tri
 	wave.waves[waveIndex].pinStates[index] = state;
 }
 
-int trigger_shape_s::getCycleDuration() const {
+int TriggerShape::getCycleDuration() const {
 	return (operationMode == FOUR_STROKE_CAM_SENSOR) ? 720 : 360;
 }
 
-float trigger_shape_s::getSwitchAngle(int index) const {
+float TriggerShape::getSwitchAngle(int index) const {
 	return getCycleDuration() * wave.getSwitchTime(index);
 }
 
@@ -258,7 +258,7 @@ void multi_wave_s::checkSwitchTimes(int size) {
 	checkSwitchTimes2(size, switchTimes);
 }
 
-void setToothedWheelConfiguration(trigger_shape_s *s, int total, int skipped,
+void setToothedWheelConfiguration(TriggerShape *s, int total, int skipped,
 		engine_configuration_s const *engineConfiguration) {
 	s->isSynchronizationNeeded = (skipped != 0);
 
@@ -271,19 +271,19 @@ void setToothedWheelConfiguration(trigger_shape_s *s, int total, int skipped,
 			getOperationMode(engineConfiguration));
 }
 
-void setTriggerSynchronizationGap2(trigger_shape_s *s, float syncGapFrom, float syncRatioTo) {
+void setTriggerSynchronizationGap2(TriggerShape *s, float syncGapFrom, float syncRatioTo) {
 	s->isSynchronizationNeeded = true;
 	s->syncRatioFrom = syncGapFrom;
 	s->syncRatioTo = syncRatioTo;
 }
 
-void setTriggerSynchronizationGap(trigger_shape_s *s, float synchGap) {
+void setTriggerSynchronizationGap(TriggerShape *s, float synchGap) {
 	setTriggerSynchronizationGap2(s, synchGap * 0.75f, synchGap * 1.25f);
 }
 
 #define S24 (720.0f / 24 / 2)
 
-static float addAccordPair(trigger_shape_s *s, float sb) {
+static float addAccordPair(TriggerShape *s, float sb) {
 	s->addEvent(sb, T_SECONDARY, TV_HIGH);
 	sb += S24;
 	s->addEvent(sb, T_SECONDARY, TV_LOW);
@@ -293,7 +293,7 @@ static float addAccordPair(trigger_shape_s *s, float sb) {
 }
 
 #define DIP 7.5f
-static float addAccordPair3(trigger_shape_s *s, float sb) {
+static float addAccordPair3(TriggerShape *s, float sb) {
 	sb += DIP;
 	s->addEvent(sb, T_CHANNEL_3, TV_HIGH);
 	sb += DIP;
@@ -306,7 +306,7 @@ static float addAccordPair3(trigger_shape_s *s, float sb) {
  * Thank you Dip!
  * http://forum.pgmfi.org/viewtopic.php?f=2&t=15570start=210#p139007
  */
-void configureHondaAccordCDDip(trigger_shape_s *s) {
+void configureHondaAccordCDDip(TriggerShape *s) {
 	s->reset(FOUR_STROKE_CAM_SENSOR);
 
 	s->initialState[T_SECONDARY] = TV_HIGH;
@@ -369,7 +369,7 @@ void configureHondaAccordCDDip(trigger_shape_s *s) {
 	s->isSynchronizationNeeded = false;
 }
 
-void configureHondaAccordCD(trigger_shape_s *s, bool with3rdSignal) {
+void configureHondaAccordCD(TriggerShape *s, bool with3rdSignal) {
 	s->reset(FOUR_STROKE_CAM_SENSOR);
 
 	float sb = 5.0f;
