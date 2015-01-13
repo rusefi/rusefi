@@ -33,7 +33,7 @@
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 
 #include "main_trigger_callback.h"
-
+#include "efiGpio.h"
 #include "engine_math.h"
 #include "trigger_central.h"
 #include "rpm_calculator.h"
@@ -57,6 +57,7 @@
 EXTERN_ENGINE
 ;
 extern bool hasFirmwareErrorFlag;
+extern NamedOutputPin outputs[IO_PIN_COUNT];
 
 static LocalVersionHolder localVersion;
 
@@ -88,13 +89,13 @@ static Logging logger;
 
 static void startSimultaniousInjection(Engine *engine) {
 	for (int i = 0; i < engine->engineConfiguration->cylindersCount; i++) {
-		turnPinHigh(INJECTOR_PIN_BY_INDEX(i));
+		turnPinHigh(&outputs[(int)INJECTOR_PIN_BY_INDEX(i)]);
 	}
 }
 
 static void endSimultaniousInjection(Engine *engine) {
 	for (int i = 0; i < engine->engineConfiguration->cylindersCount; i++) {
-		turnPinLow(INJECTOR_PIN_BY_INDEX(i));
+		turnPinLow(&outputs[(int)INJECTOR_PIN_BY_INDEX(i)]);
 	}
 }
 

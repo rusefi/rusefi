@@ -40,8 +40,6 @@
 
 static THD_WORKING_AREA(mfiThreadStack, UTILITY_THREAD_STACK_SIZE);	// declare thread
 
-extern OutputPin outputs[IO_PIN_COUNT];
-
 extern OutputPin checkEnginePin;
 
 static void blink_digits(int digit, int duration) {

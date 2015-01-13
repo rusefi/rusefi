@@ -27,7 +27,7 @@ static Logging logger;
 
 static OutputPin sdCsPin;
 
-extern OutputPin outputs[IO_PIN_COUNT];
+extern NamedOutputPin outputs[IO_PIN_COUNT];
 extern engine_pins_s enginePins;
 
 #if defined(STM32F4XX)
@@ -110,6 +110,9 @@ static void getPinValue(const char *name) {
 
 void initOutputPins(void) {
 	initLogging(&logger, "io_pins");
+
+	for (int i = 0; i < IO_PIN_COUNT;i++)
+		outputs[i].name = getPinName((io_pin_e)i);
 
 	/**
 	 * want to make sure it's all zeros so that we can compare in initOutputPinExt() method

@@ -41,7 +41,7 @@ extern WaveChart waveChart;
 
 static Logging logger;
 
-extern OutputPin outputs[IO_PIN_COUNT];
+extern NamedOutputPin outputs[IO_PIN_COUNT];
 
 void initSignalExecutor(void) {
 	initLogging(&logger, "s exec");
@@ -52,12 +52,12 @@ void initOutputSignal(OutputSignal *signal, io_pin_e ioPin) {
 	signal->io_pin = ioPin;
 }
 
-uint32_t dbgStart;
-uint32_t dbgDurr;
+//uint32_t dbgStart;
+//uint32_t dbgDurr;
 
 extern const char *namedPinsArray[NAMED_PIN_COUNT];
 
-void turnPinHigh(io_pin_e pin) {
+void turnPinHigh(NamedOutputPin *output) {
 #if EFI_DEFAILED_LOGGING
 //	signal->hi_time = hTimeNow();
 #endif /* EFI_DEFAILED_LOGGING */
@@ -65,14 +65,14 @@ void turnPinHigh(io_pin_e pin) {
 #if EFI_GPIO
 	// turn the output level ACTIVE
 	// todo: this XOR should go inside the setOutputPinValue method
-	doSetOutputPinValue2((&outputs[pin]), true);
+	doSetOutputPinValue2(output, true);
 	// sleep for the needed duration
 #endif
 #if EFI_WAVE_CHART
 	// explicit check here is a performance optimization to speed up no-chart mode
 	if (CONFIG(isDigitalChartEnabled)) {
 		// this is a performance optimization - array index is cheaper then invoking a method with 'switch'
-		const char *pinName = namedPinsArray[pin];
+		const char *pinName = output->name;
 //	dbgDurr = hal_lld_get_counter_value() - dbgStart;
 
 		addWaveChartEvent(pinName, WC_UP);
@@ -81,10 +81,10 @@ void turnPinHigh(io_pin_e pin) {
 //	dbgDurr = hal_lld_get_counter_value() - dbgStart;
 }
 
-void turnPinLow(io_pin_e pin) {
+void turnPinLow(NamedOutputPin *output) {
 #if EFI_GPIO
 	// turn off the output
-	doSetOutputPinValue2((&outputs[pin]), false);
+	doSetOutputPinValue2(output, false);
 #endif
 
 #if EFI_DEFAILED_LOGGING
@@ -96,7 +96,7 @@ void turnPinLow(io_pin_e pin) {
 #if EFI_WAVE_CHART
 	if (CONFIG(isDigitalChartEnabled)) {
 		// this is a performance optimization - array index is cheaper then invoking a method with 'switch'
-		const char *pinName = namedPinsArray[pin];
+		const char *pinName = output->name;
 
 		addWaveChartEvent(pinName, WC_DOWN);
 	}
@@ -128,8 +128,8 @@ void scheduleOutput(OutputSignal *signal, float delayMs, float durationMs) {
 	scheduling_s * sUp = &signal->signalTimerUp[index];
 	scheduling_s * sDown = &signal->signalTimerDown[index];
 
-	scheduleTask("out up", sUp, (int) MS2US(delayMs), (schfunc_t) &turnPinHigh, (void *) signal->io_pin);
-	scheduleTask("out down", sDown, (int) MS2US(delayMs) + MS2US(durationMs), (schfunc_t) &turnPinLow, (void*) signal->io_pin);
+	scheduleTask("out up", sUp, (int) MS2US(delayMs), (schfunc_t) &turnPinHigh, &outputs[(int)signal->io_pin]);
+	scheduleTask("out down", sDown, (int) MS2US(delayMs) + MS2US(durationMs), (schfunc_t) &turnPinLow, &outputs[(int)signal->io_pin]);
 #endif
 }
 

@@ -149,7 +149,6 @@ static SimplePwm fsioPwm[LE_COMMAND_COUNT] CCM_OPTIONAL;
 
 static LECalculator calc;
 extern LEElement * fsioLogics[LE_COMMAND_COUNT];
-extern OutputPin outputs[IO_PIN_COUNT];
 
 // that's crazy, but what's an alternative? we need const char *, a shared buffer would not work for pin repository
 static const char *getGpioPinName(int index) {
@@ -356,8 +355,6 @@ void runFsio(void) {
 }
 
 static pin_output_mode_e defa = OM_DEFAULT;
-
-extern OutputPin outputs[IO_PIN_COUNT];
 
 void initFsioImpl(Engine *engine) {
 	initLogging(&logger, "le");

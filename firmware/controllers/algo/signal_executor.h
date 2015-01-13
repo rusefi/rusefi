@@ -48,9 +48,6 @@ void scheduleOutput(OutputSignal *signal, float delayMs, float durationMs);
 void initOutputSignalBase(OutputSignal *signal);
 void scheduleOutputBase(OutputSignal *signal, float delayMs, float durationMs);
 
-void turnPinHigh(io_pin_e pin);
-void turnPinLow(io_pin_e pin);
-
 void initSignalExecutor(void);
 void initSignalExecutorImpl(void);
 void scheduleByAngle(int rpm, scheduling_s *timer, float angle, schfunc_t callback, void *param);
