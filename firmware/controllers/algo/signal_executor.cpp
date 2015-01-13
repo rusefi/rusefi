@@ -39,54 +39,26 @@ EXTERN_ENGINE;
 extern WaveChart waveChart;
 #endif
 
+#include "efiGpio.h"
+
 static Logging logger;
 
-extern NamedOutputPin outputs[IO_PIN_COUNT];
+extern engine_pins_s enginePins;
 
-static const char *namedPinsArray[NAMED_PIN_COUNT] = { "spa1", "spa2", "spa3", "spa4", "spa5", "spa6", "spa7", "spa8",
-		"spa9", "spa10", "spa11", "spa12", "inj1", "inj2", "inj3", "inj4", "inj5", "inj6", "inj7", "inj8", "inj9",
-		"inj10", "inj11", "inj12", };
+static const char *sparkNames[ENGINE_CHANNEL_COUNT] = { "spa1", "spa2", "spa3", "spa4", "spa5", "spa6", "spa7", "spa8",
+		"spa9", "spa10", "spa11", "spa12"};
 
-static const char *getPinName(io_pin_e io_pin) {
-	switch (io_pin) {
-	// todo: refactor this hell - introduce arrays & checks?
-	case SPARKOUT_1_OUTPUT:
-	case SPARKOUT_2_OUTPUT:
-	case SPARKOUT_3_OUTPUT:
-	case SPARKOUT_4_OUTPUT:
-	case SPARKOUT_5_OUTPUT:
-	case SPARKOUT_6_OUTPUT:
-	case SPARKOUT_7_OUTPUT:
-	case SPARKOUT_8_OUTPUT:
-	case SPARKOUT_9_OUTPUT:
-	case SPARKOUT_10_OUTPUT:
-	case SPARKOUT_11_OUTPUT:
-	case SPARKOUT_12_OUTPUT:
-	case INJECTOR_1_OUTPUT:
-	case INJECTOR_2_OUTPUT:
-	case INJECTOR_3_OUTPUT:
-	case INJECTOR_4_OUTPUT:
-	case INJECTOR_5_OUTPUT:
-	case INJECTOR_6_OUTPUT:
-	case INJECTOR_7_OUTPUT:
-	case INJECTOR_8_OUTPUT:
-	case INJECTOR_9_OUTPUT:
-	case INJECTOR_10_OUTPUT:
-	case INJECTOR_11_OUTPUT:
-	case INJECTOR_12_OUTPUT:
-		return namedPinsArray[io_pin];
-	default:
-		return "Pin needs name";
-	}
-}
+static const char *injectorNames[ENGINE_CHANNEL_COUNT] = { "inj1", "inj2", "inj3", "inj4", "inj5", "inj6", "inj7", "inj8", "inj9",
+		"inj10", "inj11", "inj12"};
 
 void initSignalExecutor(void) {
 	initLogging(&logger, "s exec");
 	initSignalExecutorImpl();
 
-	for (int i = 0; i < IO_PIN_COUNT;i++)
-		outputs[i].name = getPinName((io_pin_e)i);
-
+	for (int i = 0; i < ENGINE_CHANNEL_COUNT;i++) {
+		enginePins.coils[i].name = sparkNames[i];
+		enginePins.injectors[i].name = injectorNames[i];
+	}
 }
 
 //uint32_t dbgStart;

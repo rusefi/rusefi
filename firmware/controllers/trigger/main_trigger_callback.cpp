@@ -57,10 +57,10 @@
 EXTERN_ENGINE
 ;
 extern bool hasFirmwareErrorFlag;
-extern NamedOutputPin outputs[IO_PIN_COUNT];
 
 static LocalVersionHolder localVersion;
 
+extern engine_pins_s enginePins;
 static MainTriggerCallback mainTriggerCallbackInstance;
 
 /**
@@ -89,13 +89,13 @@ static Logging logger;
 
 static void startSimultaniousInjection(Engine *engine) {
 	for (int i = 0; i < engine->engineConfiguration->cylindersCount; i++) {
-		turnPinHigh(&outputs[(int)INJECTOR_PIN_BY_INDEX(i)]);
+		turnPinHigh(&enginePins.injectors[i]);
 	}
 }
 
 static void endSimultaniousInjection(Engine *engine) {
 	for (int i = 0; i < engine->engineConfiguration->cylindersCount; i++) {
-		turnPinLow(&outputs[(int)INJECTOR_PIN_BY_INDEX(i)]);
+		turnPinLow(&enginePins.injectors[i]);
 	}
 }
 

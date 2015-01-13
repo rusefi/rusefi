@@ -32,7 +32,7 @@
 EXTERN_ENGINE
 ;
 
-extern NamedOutputPin outputs[IO_PIN_COUNT];
+extern engine_pins_s enginePins;
 
 /**
  * this cache allows us to find a close-enough (with one degree precision) trigger wheel index by
@@ -161,10 +161,10 @@ void FuelSchedule::addFuelEvents(injection_mode_e mode DECLARE_ENGINE_PARAMETER_
 	switch (mode) {
 	case IM_SEQUENTIAL:
 		for (int i = 0; i < engineConfiguration->cylindersCount; i++) {
-			io_pin_e pin = INJECTOR_PIN_BY_INDEX(getCylinderId(engineConfiguration->firingOrder, i) - 1);
+			int index = getCylinderId(engineConfiguration->firingOrder, i) - 1;
 			float angle = baseAngle
 					+ (float) engineConfiguration->engineCycle * i / engineConfiguration->cylindersCount;
-			registerInjectionEvent(&outputs[(pin)], angle, false PASS_ENGINE_PARAMETER);
+			registerInjectionEvent(&enginePins.injectors[index], angle, false PASS_ENGINE_PARAMETER);
 		}
 		break;
 	case IM_SIMULTANEOUS:
@@ -182,16 +182,15 @@ void FuelSchedule::addFuelEvents(injection_mode_e mode DECLARE_ENGINE_PARAMETER_
 	case IM_BATCH:
 		for (int i = 0; i < engineConfiguration->cylindersCount; i++) {
 			int index = i % (engineConfiguration->cylindersCount / 2);
-			io_pin_e pin = INJECTOR_PIN_BY_INDEX(index);
 			float angle = baseAngle
 					+ i * (float) engineConfiguration->engineCycle / engineConfiguration->cylindersCount;
-			registerInjectionEvent(&outputs[(pin)], angle, false PASS_ENGINE_PARAMETER);
+			registerInjectionEvent(&enginePins.injectors[index], angle, false PASS_ENGINE_PARAMETER);
 
 			/**
 			 * also fire the 2nd half of the injectors so that we can implement a batch mode on individual wires
 			 */
-			pin = INJECTOR_PIN_BY_INDEX(index + (engineConfiguration->cylindersCount / 2));
-			registerInjectionEvent(&outputs[(pin)], angle, false PASS_ENGINE_PARAMETER);
+			index = index + (engineConfiguration->cylindersCount / 2);
+			registerInjectionEvent(&enginePins.injectors[index], angle, false PASS_ENGINE_PARAMETER);
 		}
 		break;
 	default:
@@ -299,21 +298,21 @@ int getCylinderId(firing_order_e firingOrder, int index) {
 static NamedOutputPin * getIgnitionPinForIndex(int i DECLARE_ENGINE_PARAMETER_S) {
 	switch (CONFIG(ignitionMode)) {
 	case IM_ONE_COIL:
-		return &outputs[(int)SPARKOUT_1_OUTPUT];
+		return &enginePins.coils[0];
 		break;
 	case IM_WASTED_SPARK: {
 		int wastedIndex = i % (CONFIG(cylindersCount) / 2);
-		int id = getCylinderId(CONFIG(firingOrder), wastedIndex) - 1;
-		return &outputs[(int)(SPARKOUT_1_OUTPUT + id)];
+		int id = getCylinderId(CONFIG(firingOrder), wastedIndex);
+		return &enginePins.coils[id];
 	}
 		break;
 	case IM_INDIVIDUAL_COILS:
-		return &outputs[ ((int) SPARKOUT_1_OUTPUT + getCylinderId(CONFIG(firingOrder), i) - 1)];
+		return &enginePins.coils[getCylinderId(CONFIG(firingOrder), i)];
 		break;
 
 	default:
 		firmwareError("unsupported ignitionMode %d in initializeIgnitionActions()", engineConfiguration->ignitionMode);
-		return &outputs[(int)SPARKOUT_1_OUTPUT];
+		return &enginePins.coils[0];
 	}
 }
 

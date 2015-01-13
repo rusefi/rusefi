@@ -12,7 +12,7 @@
 
 #define GPIO_NULL NULL
 
-#define NAMED_PIN_COUNT 24
+#define ENGINE_CHANNEL_COUNT 12
 
 typedef enum {
 	INJECTOR_1,
@@ -95,8 +95,6 @@ typedef enum {
 //	LED_HUGE_20,
 
 } io_pin_e;
-
-#define IO_PIN_COUNT 24
 
 void initPrimaryPins(void);
 void initOutputPins(void);
