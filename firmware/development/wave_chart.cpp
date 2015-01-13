@@ -142,6 +142,7 @@ static char timeBuffer[10];
  * @brief	Register an event for digital sniffer
  */
 void WaveChart::addWaveChartEvent3(const char *name, const char * msg) {
+	efiAssertVoid(name!=NULL, "WC: NULL name");
 	if(!engineConfiguration->isDigitalChartEnabled) {
 		return;
 	}

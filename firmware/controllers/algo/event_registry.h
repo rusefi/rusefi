@@ -43,7 +43,7 @@ typedef struct {
 typedef struct IgnitionEvent_struct IgnitionEvent;
 
 struct IgnitionEvent_struct {
-	io_pin_e io_pin;
+	NamedOutputPin *output;
 	scheduling_s signalTimerUp;
 	scheduling_s signalTimerDown;
 	event_trigger_position_s dwellPosition;
