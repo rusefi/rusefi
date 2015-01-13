@@ -107,7 +107,7 @@ void initializeIgnitionActions(angle_t advance, angle_t dwellAngle, IgnitionEven
 
 		IgnitionEvent *event = list->add();
 
-		if (!isPinAssigned(pin)) {
+		if (!isPinAssigned(&outputs[(pin)])) {
 			// todo: extact method for this index math
 			warning(OBD_PCM_Processor_Fault, "no_pin_cl #%d", (int) pin - (int) SPARKOUT_1_OUTPUT + 1);
 		}
@@ -119,7 +119,7 @@ void initializeIgnitionActions(angle_t advance, angle_t dwellAngle, IgnitionEven
 }
 
 void FuelSchedule::registerInjectionEvent(io_pin_e pin, float angle, bool_t isSimultanious DECLARE_ENGINE_PARAMETER_S) {
-	if (!isSimultanious && !isPinAssigned(pin)) {
+	if (!isSimultanious && !isPinAssigned(&outputs[(pin)])) {
 		// todo: extact method for this index math
 		warning(OBD_PCM_Processor_Fault, "no_pin_inj #%d", (int) pin - (int) INJECTOR_1_OUTPUT + 1);
 	}

@@ -75,13 +75,4 @@ void OutputPin::setDefaultPinState(pin_output_mode_e *outputMode) {
 	setValue(false); // initial state
 }
 
-/**
- * @brief Sets the value according to current electrical settings
- *
- * This method costs about 85 ticks
- */
-void setOutputPinValue(io_pin_e pin, int logicValue) {
-	doSetOutputPinValue(pin, logicValue);
-}
-
 #endif /* EFI_GPIO */

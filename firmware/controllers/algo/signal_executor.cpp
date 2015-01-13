@@ -65,7 +65,7 @@ void turnPinHigh(io_pin_e pin) {
 #if EFI_GPIO
 	// turn the output level ACTIVE
 	// todo: this XOR should go inside the setOutputPinValue method
-	doSetOutputPinValue(pin, true);
+	doSetOutputPinValue2((&outputs[pin]), true);
 	// sleep for the needed duration
 #endif
 #if EFI_WAVE_CHART
@@ -84,7 +84,7 @@ void turnPinHigh(io_pin_e pin) {
 void turnPinLow(io_pin_e pin) {
 #if EFI_GPIO
 	// turn off the output
-	doSetOutputPinValue(pin, false);
+	doSetOutputPinValue2((&outputs[pin]), false);
 #endif
 
 #if EFI_DEFAILED_LOGGING

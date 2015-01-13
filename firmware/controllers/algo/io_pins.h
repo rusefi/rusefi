@@ -14,6 +14,23 @@
 
 #define NAMED_PIN_COUNT 24
 
+typedef enum {
+	INJECTOR_1,
+	INJECTOR_2,
+	INJECTOR_3,
+	INJECTOR_4,
+	INJECTOR_5,
+	INJECTOR_6,
+	INJECTOR_7,
+	INJECTOR_8,
+	INJECTOR_9_,
+	INJECTOR_10,
+	INJECTOR_11,
+	INJECTOR_12,
+
+	INJECTOR_NONE,
+} injector_channel_e;
+
 /**
  * Logical pins. See brain_pin_e for physical pins.
  */
