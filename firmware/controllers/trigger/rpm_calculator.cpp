@@ -239,7 +239,7 @@ void initRpmCalculator(Engine *engine) {
  * The callback would be executed once after the duration of time which
  * it takes the crankshaft to rotate to the specified angle.
  */
-void scheduleByAngle(int rpm, scheduling_s *timer, float angle, schfunc_t callback, void *param) {
+void scheduleByAngle(int rpm, scheduling_s *timer, angle_t angle, schfunc_t callback, void *param) {
 	if (!isValidRpm(rpm)) {
 		/**
 		 * this might happen in case of a single trigger event after a pause - this is normal, so no

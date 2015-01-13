@@ -48,7 +48,8 @@ extern engine_pins_s enginePins;
 void initIgnitionCentral(void) {
 	for (int i = 0; i < engineConfiguration->cylindersCount; i++) {
 		io_pin_e pin = (io_pin_e)((int)SPARKOUT_1_OUTPUT + i);
-		outputPinRegisterExt2(getPinName(pin), &outputs[(int)pin], boardConfiguration->ignitionPins[i], &boardConfiguration->ignitionPinMode);
+		NamedOutputPin *output = &outputs[(int)pin];
+		outputPinRegisterExt2(output->name, output, boardConfiguration->ignitionPins[i], &boardConfiguration->ignitionPinMode);
 	}
 }
 
@@ -244,7 +245,9 @@ void initInjectorCentral(Engine *engine) {
 	for (int i = 0; i < engineConfiguration->cylindersCount; i++) {
 		io_pin_e pin = (io_pin_e) ((int) INJECTOR_1_OUTPUT + i);
 
-		outputPinRegisterExt2(getPinName(pin), &outputs[(int)pin], boardConfiguration->injectionPins[i],
+		NamedOutputPin *output = &outputs[(int)pin];
+
+		outputPinRegisterExt2(output->name, output, boardConfiguration->injectionPins[i],
 				&boardConfiguration->injectionPinMode);
 	}
 
