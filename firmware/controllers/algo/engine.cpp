@@ -57,10 +57,9 @@ void Engine::init() {
 	initLogging(&logger, "engine");
 }
 
-static bool stopPin(io_pin_e pin) {
-	NamedOutputPin *output = &outputs[(int)pin];
+static bool stopPin(NamedOutputPin *output) {
 	if (output->getLogicValue()) {
-		doSetOutputPinValue2(output, false);
+		output->setValue(false);
 		scheduleMsg(&logger, "turning off %s", output->name);
 		return true;
 	}
@@ -71,9 +70,9 @@ bool Engine::stopPins() {
 	bool result = false;
 	for (int i = 0; i < engineConfiguration->cylindersCount; i++) {
 		io_pin_e pin = (io_pin_e) ((int) INJECTOR_1_OUTPUT + i);
-		result |= stopPin(pin);
+		result |= stopPin(&outputs[(int)pin]);
 		pin = (io_pin_e) ((int) SPARKOUT_1_OUTPUT + i);
-		result |= stopPin(pin);
+		result |= stopPin(&outputs[(int)pin]);
 	}
 	return result;
 }
