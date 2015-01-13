@@ -9,8 +9,51 @@
 
 #include "main.h"
 #include "engine_configuration.h"
-#include "ec2.h"
 #include "rpm_calculator.h"
+
+#include "global.h"
+#include "engine_configuration.h"
+#include "event_registry.h"
+#include "trigger_structure.h"
+#include "table_helper.h"
+
+class FuelSchedule {
+public:
+	FuelSchedule();
+	void clear();
+	ActuatorEventList events;
+
+	void addFuelEvents(injection_mode_e mode DECLARE_ENGINE_PARAMETER_S);
+	void registerInjectionEvent(
+			io_pin_e pin, float angle, bool_t isSimultanious DECLARE_ENGINE_PARAMETER_S);
+
+	uint8_t hasEvents[PWM_PHASE_MAX_COUNT];
+
+};
+
+/**
+ * this part of the structure is separate just because so far
+ * these fields are not integrated with Tuner Studio. Step by step :)
+ */
+class engine_configuration2_s {
+	// todo: move these fields into Engine class, eliminate this class
+public:
+	engine_configuration2_s();
+
+#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
+	FuelSchedule crankingInjectionEvents;
+	FuelSchedule injectionEvents;
+#endif
+
+	float fsioLastValue[LE_COMMAND_COUNT];
+
+	/**
+	 * We are alternating two event lists in order to avoid a potential issue around revolution boundary
+	 * when an event is scheduled within the next revolution.
+	 */
+	IgnitionEventList ignitionEvents[2];
+};
+
 
 class EngineState {
 public:

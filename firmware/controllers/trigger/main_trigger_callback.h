@@ -16,8 +16,6 @@
 #define MAX_IGNITER_COUNT 4
 
 #ifdef __cplusplus
-#include "engine_configuration.h"
-#include "ec2.h"
 #include "event_registry.h"
 #include "engine.h"
 

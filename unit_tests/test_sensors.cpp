@@ -2,7 +2,7 @@
  * @file	test_sensors.c
  *
  * @date Dec 7, 2013
- * @author Andrey Belomutskiy, (c) 2012-2013
+ * @author Andrey Belomutskiy, (c) 2012-2015
  */
 
 #include "main.h"

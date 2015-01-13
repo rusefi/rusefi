@@ -12,31 +12,28 @@
 
 #include "main.h"
 
-#include "rpm_calculator.h"
-
-#if EFI_WAVE_CHART
-#include "wave_chart.h"
-extern WaveChart waveChart;
-#endif /* EFI_WAVE_CHART */
-
 #if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
 
+#include "rpm_calculator.h"
 #include "trigger_central.h"
 #include "engine_configuration.h"
-#include "ec2.h"
 #include "engine_math.h"
+
 #if EFI_PROD_CODE
 #include "rfiutil.h"
 #include "engine.h"
 #endif
 
-#if EFI_ANALOG_CHART
+#if ! EFI_UNIT_TEST
 #include "analog_chart.h"
-#endif /* EFI_PROD_CODE */
+#endif
 
 #include "efilib2.h"
 
-#define TOP_DEAD_CENTER_MESSAGE "r"
+#if EFI_WAVE_CHART
+#include "wave_chart.h"
+extern WaveChart waveChart;
+#endif /* EFI_WAVE_CHART */
 
 EXTERN_ENGINE;
 
@@ -124,8 +121,6 @@ bool isCranking(void) {
 	return isCrankingE(engine);
 }
 #endif
-
-extern uint32_t triggerHanlderEntryTime;
 
 /**
  * @brief Shaft position callback used by RPM calculation logic.

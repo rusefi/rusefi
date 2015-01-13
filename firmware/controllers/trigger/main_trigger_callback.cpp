@@ -33,7 +33,6 @@
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 
 #include "main_trigger_callback.h"
-#include "ec2.h"
 
 #include "engine_math.h"
 #include "trigger_central.h"

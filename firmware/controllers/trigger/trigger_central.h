@@ -16,7 +16,6 @@ class Engine;
 typedef void (*ShaftPositionListener)(trigger_event_e signal, uint32_t index DECLARE_ENGINE_PARAMETER_S);
 
 #ifdef __cplusplus
-#include "ec2.h"
 #include "engine.h"
 
 #define HW_EVENT_TYPES 6

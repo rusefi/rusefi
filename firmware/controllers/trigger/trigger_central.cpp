@@ -228,8 +228,11 @@ void triggerInfo(Engine *engine) {
 
 	trigger_shape_s *ts = &engine->triggerShape;
 
-	scheduleMsg(&logger, "Template %s/%d trigger %d", getConfigurationName(engineConfiguration->engineType),
-			engineConfiguration->engineType, engineConfiguration->triggerConfig.triggerType);
+	scheduleMsg(&logger, "Template %s (%d) trigger %s (%d)",
+			getConfigurationName(engineConfiguration->engineType),
+			engineConfiguration->engineType,
+			getTrigger_type_e(engineConfiguration->triggerConfig.triggerType),
+			engineConfiguration->triggerConfig.triggerType);
 
 	scheduleMsg(&logger, "trigger event counters %d/%d/%d/%d", triggerCentral.getHwEventCounter(0),
 			triggerCentral.getHwEventCounter(1), triggerCentral.getHwEventCounter(2),

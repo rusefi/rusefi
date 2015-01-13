@@ -16,7 +16,6 @@
 #include "adc_inputs.h"
 #include "interpolation.h"
 #include "tps.h"
-#include "ec2.h"
 #include "map.h"
 #include "trigger_decoder.h"
 #include "console_io.h"

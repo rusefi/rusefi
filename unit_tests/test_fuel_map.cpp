@@ -2,7 +2,7 @@
  * @file	test_fuel_map.cpp
  *
  *  Created on: Nov 6, 2013
- *      Author: Andrey Belomutskiy, (c) 2012-2013
+ *      Author: Andrey Belomutskiy, (c) 2012-2015
  */
 
 #include "test_fuel_map.h"

@@ -13,7 +13,6 @@
 
 #if EFI_WAVE_CHART
 #include "datalogging.h"
-#endif /* EFI_WAVE_CHART */
 
 /**
  * @brief	Dev console sniffer data buffer
@@ -28,9 +27,7 @@ public:
 	void publishChartIfFull();
 	void addWaveChartEvent3(const char *name, const char *msg);
 private:
-#if EFI_WAVE_CHART
 	Logging logging;
-#endif /* EFI_WAVE_CHART */
 	uint32_t counter;
 	uint64_t startTimeNt;
 	volatile int isInitialized;
@@ -39,5 +36,7 @@ private:
 void initWaveChart(WaveChart *chart);
 void showWaveChartHistogram(void);
 void setChartSize(int newSize);
+
+#endif /* EFI_WAVE_CHART */
 
 #endif /* WAVE_CHART_H_ */

@@ -2,7 +2,7 @@
  * test_find_index.h
  *
  *  Created on: Oct 30, 2013
- *      Author: Andrey Belomutskiy, (c) 2012-2013
+ *      Author: Andrey Belomutskiy, (c) 2012-2015
  */
 
 #ifndef TEST_FIND_INDEX_H_

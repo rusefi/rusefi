@@ -2,7 +2,7 @@
  * @file	map_resize.h
  *
  * @date Jan 12, 2014
- * @author Andrey Belomutskiy, (c) 2012-2013
+ * @author Andrey Belomutskiy, (c) 2012-2015
  */
 
 #ifndef MAP_RESIZE_H_

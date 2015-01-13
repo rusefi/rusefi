@@ -7,8 +7,6 @@
 #ifndef SPEED_DENSITY_H_
 #define SPEED_DENSITY_H_
 
-#include "engine_configuration.h"
-#include "ec2.h"
 #include "engine.h"
 
 float getTCharge(int rpm, float tps, float coolantTemp, float airTemp);

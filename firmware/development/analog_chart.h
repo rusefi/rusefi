@@ -8,16 +8,9 @@
 #ifndef ANALOG_CHART_H_
 #define ANALOG_CHART_H_
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
+#include "global.h"
 
 void acAddData(float angle, float value);
 void initAnalogChart(void);
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
 
 #endif /* ANALOG_CHART_H_ */

@@ -7,8 +7,7 @@
 #ifndef TRIGGER_BMW_H_
 #define TRIGGER_BMW_H_
 
-#include "engine_configuration.h"
-#include "ec2.h"
+#include "engine.h"
 
 void configureMiniCooperTriggerShape(trigger_shape_s *s);
 
