@@ -23,7 +23,7 @@
 
 static Logging logger;
 
-extern NamedOutputPin outputs[IO_PIN_COUNT];
+extern engine_pins_s enginePins;
 
 EXTERN_ENGINE
 ;
@@ -69,10 +69,8 @@ static bool stopPin(NamedOutputPin *output) {
 bool Engine::stopPins() {
 	bool result = false;
 	for (int i = 0; i < engineConfiguration->cylindersCount; i++) {
-		io_pin_e pin = (io_pin_e) ((int) INJECTOR_1_OUTPUT + i);
-		result |= stopPin(&outputs[(int)pin]);
-		pin = (io_pin_e) ((int) SPARKOUT_1_OUTPUT + i);
-		result |= stopPin(&outputs[(int)pin]);
+		result |= stopPin(&enginePins.coils[i]);
+		result |= stopPin(&enginePins.injectors[i]);
 	}
 	return result;
 }

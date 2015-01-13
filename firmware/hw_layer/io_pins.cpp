@@ -27,7 +27,6 @@ static Logging logger;
 
 static OutputPin sdCsPin;
 
-extern NamedOutputPin outputs[IO_PIN_COUNT];
 extern engine_pins_s enginePins;
 
 #if defined(STM32F4XX)
@@ -162,24 +161,15 @@ void initOutputPins(void) {
 
 #if EFI_GPIO
 
-static io_pin_e TO_BE_TURNED_OFF_ON_ERROR[] = { SPARKOUT_1_OUTPUT, SPARKOUT_2_OUTPUT, SPARKOUT_3_OUTPUT,
-		SPARKOUT_4_OUTPUT, SPARKOUT_5_OUTPUT, SPARKOUT_6_OUTPUT, SPARKOUT_7_OUTPUT, SPARKOUT_8_OUTPUT,
-		SPARKOUT_9_OUTPUT, SPARKOUT_10_OUTPUT, SPARKOUT_11_OUTPUT, SPARKOUT_12_OUTPUT,
-
-		INJECTOR_1_OUTPUT, INJECTOR_2_OUTPUT, INJECTOR_3_OUTPUT, INJECTOR_4_OUTPUT, INJECTOR_5_OUTPUT,
-		INJECTOR_6_OUTPUT, INJECTOR_7_OUTPUT, INJECTOR_8_OUTPUT, INJECTOR_9_OUTPUT, INJECTOR_10_OUTPUT,
-		INJECTOR_11_OUTPUT, INJECTOR_12_OUTPUT };
-
 /**
  * This method is part of fatal error handling.
  * Please note that worst case scenario the pins might get re-enabled by some other code :(
  * The whole method is pretty naive, but that's at least something.
  */
 void turnAllPinsOff(void) {
-	int l = sizeof(TO_BE_TURNED_OFF_ON_ERROR) / sizeof(io_pin_e);
-	for (int i = 0; i < l; i++) {
-		OutputPin *output = &outputs[TO_BE_TURNED_OFF_ON_ERROR[l]];
-		output->setValue(false);
+	for (int i = 0; i < ENGINE_CHANNEL_COUNT; i++) {
+		enginePins.coils[i].setValue(false);
+		enginePins.injectors[i].setValue(false);
 	}
 }
 #endif
