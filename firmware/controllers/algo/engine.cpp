@@ -23,7 +23,7 @@
 
 static Logging logger;
 
-extern OutputPin outputs[IO_PIN_COUNT];
+extern NamedOutputPin outputs[IO_PIN_COUNT];
 
 EXTERN_ENGINE
 ;

@@ -229,8 +229,6 @@ void chDbgStackOverflowPanic(Thread *otp) {
 	chDbgPanic3(panicMessage, __FILE__, __LINE__);
 }
 
-extern OutputPin outputs[IO_PIN_COUNT];
-
 extern OutputPin errorLedPin;
 
 // todo: why is this method here and not in error_handling.c ?

@@ -36,6 +36,12 @@ public:
 	int currentLogicValue;
 };
 
+class NamedOutputPin : public OutputPin {
+public:
+	NamedOutputPin();
+	const char *name;
+};
+
 typedef struct {
 	OutputPin mainRelay;
 	OutputPin fanRelay;
@@ -112,6 +118,9 @@ typedef struct {
 #endif
 
 void outputPinRegisterExt2(const char *msg, OutputPin *output, brain_pin_e brainPin, pin_output_mode_e *outputMode);
+
+void turnPinHigh(NamedOutputPin *output);
+void turnPinLow(NamedOutputPin *output);
 
 const char *getPinName(io_pin_e io_pin);
 

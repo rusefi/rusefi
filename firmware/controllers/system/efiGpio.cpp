@@ -13,7 +13,7 @@
 pin_output_mode_e OUTPUT_MODE_DEFAULT = OM_DEFAULT;
 
 // todo: clean this mess, this should become 'static'/private
-OutputPin outputs[IO_PIN_COUNT];
+NamedOutputPin outputs[IO_PIN_COUNT];
 engine_pins_s enginePins;
 
 const char *namedPinsArray[NAMED_PIN_COUNT] = { "spa1", "spa2", "spa3", "spa4", "spa5", "spa6", "spa7", "spa8",
@@ -52,6 +52,10 @@ const char *getPinName(io_pin_e io_pin) {
 	default:
 		return "Pin needs name";
 	}
+}
+
+NamedOutputPin::NamedOutputPin() : OutputPin() {
+
 }
 
 OutputPin::OutputPin() {

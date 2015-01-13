@@ -32,7 +32,7 @@
 EXTERN_ENGINE
 ;
 
-extern OutputPin outputs[IO_PIN_COUNT];
+extern NamedOutputPin outputs[IO_PIN_COUNT];
 
 /**
  * this cache allows us to find a close-enough (with one degree precision) trigger wheel index by

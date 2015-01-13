@@ -63,13 +63,13 @@ typedef enum {
 
 	IO_INVALID,
 
-	/**
-	 * these seven segment display pins are related to unused external tachometer code
-	 * I still have the hardware so maybe one day I will fix it, but for now it's just dead code
-	 * See https://www.youtube.com/watch?v=YYiHoN6MBqE
-	 * todo: this should be re-implemented in a smarter way with some sort of multiplexing anyway
-	 */
-	/* digit 1 */
+/**
+ * these seven segment display pins are related to unused external tachometer code
+ * I still have the hardware so maybe one day I will fix it, but for now it's just dead code
+ * See https://www.youtube.com/watch?v=YYiHoN6MBqE
+ * todo: this should be re-implemented in a smarter way with some sort of multiplexing anyway
+ */
+/* digit 1 */
 //	LED_HUGE_0, // B2
 //	LED_HUGE_1,
 //	LED_HUGE_2,
@@ -94,19 +94,18 @@ typedef enum {
 //	LED_HUGE_19,
 //	LED_HUGE_20,
 
-
 } io_pin_e;
 
-#define IO_PIN_COUNT 100
+#define IO_PIN_COUNT 24
 
 void initPrimaryPins(void);
 void initOutputPins(void);
 
+io_pin_e getPinByName(const char *name);
+
 #ifdef __cplusplus
 extern "C" {
 #endif /* __cplusplus */
-
-io_pin_e getPinByName(const char *name);
 
 #if EFI_GPIO
 void turnAllPinsOff(void);
