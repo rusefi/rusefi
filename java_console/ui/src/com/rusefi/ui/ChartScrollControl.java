@@ -32,7 +32,7 @@ public class ChartScrollControl {
         prev.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-               previousPage();
+                previousPage();
             }
         });
 
@@ -54,11 +54,16 @@ public class ChartScrollControl {
     }
 
     private void previousPage() {
+        if (ChartRepository.getInstance().getSize() < index.get()) {
+            index.set(0);
+        }
+        if (ChartRepository.getInstance().getSize() == 0)
+            return;
         if (index.intValue() > 0) {
             index.decrementAndGet();
             showChart();
         } else if (index.intValue() == 0) {
-            // let's go to the last chart
+            // let's go to the last chart if chart repository is not empty
             index.set(ChartRepository.getInstance().getSize() - 1);
             showChart();
         }

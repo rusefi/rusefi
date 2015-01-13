@@ -53,10 +53,9 @@ public class EngineState {
             public void onResponse(String message) {
                 String response = unpackString(message);
                 if (response != null) {
-                    // todo: improve this hack
-                    int i = response.indexOf("2014: ");
+                    int i = response.indexOf(FileLog.END_OF_TIMESTAND_TAG);
                     if (i != -1)
-                        response = response.substring(i + 6);
+                        response = response.substring(i + FileLog.END_OF_TIMESTAND_TAG.length());
                     String copy = response;
                     listener.beforeLine(response);
                     while (!response.isEmpty())

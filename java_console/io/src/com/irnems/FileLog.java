@@ -16,6 +16,7 @@ public enum FileLog {
     SIMULATOR_CONSOLE;
 
     private static final String DIR = "out/";
+    public static final String END_OF_TIMESTAND_TAG = "<EOT>: ";
 
     @Nullable
     private OutputStream fileLog; // null if not opened yet or already closed
@@ -58,7 +59,7 @@ public enum FileLog {
         if (fileLog == null)
             return;
         try {
-            fileLog.write((new Date() + ": " + fullLine + "\r\n").getBytes());
+            fileLog.write((new Date() + END_OF_TIMESTAND_TAG + fullLine + "\r\n").getBytes());
             fileLog.flush();
             System.out.println(fullLine);
         } catch (IOException e) {
