@@ -10,6 +10,6 @@
 
 #include "trigger_structure.h"
 
-void configureGmTriggerShape(trigger_shape_s *s);
+void configureGmTriggerShape(TriggerShape *s);
 
 #endif /* TRIGGER_GM_H_ */

@@ -95,7 +95,7 @@ static void updateTriggerShapeIfNeeded(PwmConfig *state) {
 
 		applyNonPersistentConfiguration(&logger, engine);
 
-		trigger_shape_s *s = &engine->triggerShape;
+		TriggerShape *s = &engine->triggerShape;
 		int *pinStates[PWM_PHASE_MAX_WAVE_PER_PWM] = { s->wave.waves[0].pinStates, s->wave.waves[1].pinStates,
 				s->wave.waves[2].pinStates };
 		copyPwmParameters(state, s->getSize(), s->wave.switchTimes, PWM_PHASE_MAX_WAVE_PER_PWM, pinStates);
@@ -135,7 +135,7 @@ static void resumeStimulator(Engine *engine) {
 void initTriggerEmulatorLogic(Engine *engine) {
 	initLogging(&logger, "position sensor(s) emulator");
 
-	trigger_shape_s *s = &engine->triggerShape;
+	TriggerShape *s = &engine->triggerShape;
 	setTriggerEmulatorRPM(engineConfiguration->bc.triggerSimulatorFrequency, engine);
 	int *pinStates[PWM_PHASE_MAX_WAVE_PER_PWM] = { s->wave.waves[0].pinStates, s->wave.waves[1].pinStates,
 			s->wave.waves[2].pinStates };

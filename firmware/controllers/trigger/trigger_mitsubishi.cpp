@@ -7,7 +7,7 @@
 
 #include "trigger_mitsubishi.h"
 
-void configureFordAspireTriggerShape(trigger_shape_s * s) {
+void configureFordAspireTriggerShape(TriggerShape * s) {
 	s->isSynchronizationNeeded = false;
 	s->reset(FOUR_STROKE_CAM_SENSOR);
 
@@ -28,7 +28,7 @@ void configureFordAspireTriggerShape(trigger_shape_s * s) {
 	s->addEvent(720, T_PRIMARY, TV_LOW);
 }
 
-void initializeMitsubishi4g18(trigger_shape_s *s) {
+void initializeMitsubishi4g18(TriggerShape *s) {
 	s->reset(FOUR_STROKE_CAM_SENSOR);
 	s->useRiseEdge = false;
 

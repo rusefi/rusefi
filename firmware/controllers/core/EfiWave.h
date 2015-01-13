@@ -23,7 +23,7 @@ public:
 	int *pinStates;
 };
 
-class trigger_shape_s;
+class TriggerShape;
 
 class multi_wave_s {
 public:
@@ -53,7 +53,7 @@ public:
 };
 
 void checkSwitchTimes2(int size, float *switchTimes);
-void configureHondaAccordCD(trigger_shape_s *s, bool with3rdSignal);
-void configureHondaAccordCDDip(trigger_shape_s *s);
+void configureHondaAccordCD(TriggerShape *s, bool with3rdSignal);
+void configureHondaAccordCDDip(TriggerShape *s);
 
 #endif /* EFI_WAVE_H_ */

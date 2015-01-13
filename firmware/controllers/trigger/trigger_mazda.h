@@ -13,8 +13,8 @@
 
 #define MIATA_NA_GAP 1.4930f
 
-void initializeMazdaMiataNaShape(trigger_shape_s *s);
-void initializeMazdaMiataNbShape(trigger_shape_s *s);
-void configureMazdaProtegeLx(trigger_shape_s *s);
+void initializeMazdaMiataNaShape(TriggerShape *s);
+void initializeMazdaMiataNbShape(TriggerShape *s);
+void configureMazdaProtegeLx(TriggerShape *s);
 
 #endif /* TRIGGER_MAZDA_H_ */

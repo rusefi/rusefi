@@ -79,20 +79,7 @@ const char* getConfigurationName(engine_type_e engineType) {
 		return NULL;
 	}
 }
-/*
-const char * ignitionModeToString(ignition_mode_e mode) {
-	switch (mode) {
-	case IM_ONE_COIL:
-		return "single";
-	case IM_INDIVIDUAL_COILS:
-		return "individual";
-	case IM_WASTED_SPARK:
-		return "wasted";
-	default:
-		return "unexpected";
-	}
-}
-*/
+
 const char * pinModeToString(pin_output_mode_e mode) {
 	switch (mode) {
 	case OM_DEFAULT:
@@ -107,19 +94,3 @@ const char * pinModeToString(pin_output_mode_e mode) {
 		return "unexpected";
 	}
 }
-/*
-const char * algorithmToString(engine_load_mode_e mode) {
-	switch(mode) {
-	case LM_ALPHA_N:
-		return "Alpha-N";
-	case LM_MAF:
-		return "Maf";
-	case LM_MAP:
-		return "pMap";
-	case LM_SPEED_DENSITY:
-		return "SD";
-	default:
-		return "unexpected";
-	}
-}
-*/

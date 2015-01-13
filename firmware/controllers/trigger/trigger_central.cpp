@@ -209,7 +209,7 @@ EXTERN_ENGINE;
 
 static void triggerShapeInfo(Engine *engine) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
-	trigger_shape_s *s = &engine->triggerShape;
+	TriggerShape *s = &engine->triggerShape;
 	for (int i = 0; i < s->getSize(); i++) {
 		scheduleMsg(&logger, "event %d %f", i, s->eventAngles[i]);
 	}
@@ -226,7 +226,7 @@ extern uint32_t maxEventQueueTime;
 void triggerInfo(Engine *engine) {
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
 
-	trigger_shape_s *ts = &engine->triggerShape;
+	TriggerShape *ts = &engine->triggerShape;
 
 	scheduleMsg(&logger, "Template %s (%d) trigger %s (%d)",
 			getConfigurationName(engineConfiguration->engineType),
@@ -267,16 +267,16 @@ void triggerInfo(Engine *engine) {
 
 	scheduleMsg(&logger, "primary trigger simulator: %s %s freq=%d",
 			hwPortname(boardConfiguration->triggerSimulatorPins[0]),
-			pinModeToString(boardConfiguration->triggerSimulatorPinModes[0]),
+			getPin_output_mode_e(boardConfiguration->triggerSimulatorPinModes[0]),
 			boardConfiguration->triggerSimulatorFrequency);
 	scheduleMsg(&logger, "secondary trigger simulator: %s %s phase=%d",
 			hwPortname(boardConfiguration->triggerSimulatorPins[1]),
-			pinModeToString(boardConfiguration->triggerSimulatorPinModes[1]), triggerSignal.safe.phaseIndex);
+			getPin_output_mode_e(boardConfiguration->triggerSimulatorPinModes[1]), triggerSignal.safe.phaseIndex);
 	scheduleMsg(&logger, "3rd trigger simulator: %s %s", hwPortname(boardConfiguration->triggerSimulatorPins[2]),
-			pinModeToString(boardConfiguration->triggerSimulatorPinModes[2]));
+			getPin_output_mode_e(boardConfiguration->triggerSimulatorPinModes[2]));
 
 	scheduleMsg(&logger, "trigger error extra LED: %s %s", hwPortname(boardConfiguration->triggerErrorPin),
-			pinModeToString(boardConfiguration->triggerErrorPinMode));
+			getPin_output_mode_e(boardConfiguration->triggerErrorPinMode));
 
 	scheduleMsg(&logger, "primary trigger input: %s", hwPortname(boardConfiguration->triggerInputPins[0]));
 	scheduleMsg(&logger, "secondary trigger input: %s", hwPortname(boardConfiguration->triggerInputPins[1]));

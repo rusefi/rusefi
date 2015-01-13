@@ -11,7 +11,6 @@
 #include "console_io.h"
 #include "eficonsole.h"
 #include "engine_configuration.h"
-#include "ec2.h"
 #include "rusefi_enums.h"
 #include "pwm_generator_logic.h"
 #include "trigger_central.h"

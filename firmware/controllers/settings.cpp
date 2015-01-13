@@ -67,13 +67,13 @@ extern board_configuration_s *boardConfiguration;
 
 static void printOutputs(engine_configuration_s *engineConfiguration) {
 	// engine_configuration2_s *engineConfiguration2
-	scheduleMsg(&logger, "injectionPins: mode %s", pinModeToString(boardConfiguration->injectionPinMode));
+	scheduleMsg(&logger, "injectionPins: mode %s", getPin_output_mode_e(boardConfiguration->injectionPinMode));
 	for (int i = 0; i < engineConfiguration->cylindersCount; i++) {
 		brain_pin_e brainPin = boardConfiguration->injectionPins[i];
 		scheduleMsg(&logger, "injection #%d @ %s", (1 + i), hwPortname(brainPin));
 	}
 
-	scheduleMsg(&logger, "ignitionPins: mode %s", pinModeToString(boardConfiguration->ignitionPinMode));
+	scheduleMsg(&logger, "ignitionPins: mode %s", getPin_output_mode_e(boardConfiguration->ignitionPinMode));
 	for (int i = 0; i < engineConfiguration->cylindersCount; i++) {
 		brain_pin_e brainPin = boardConfiguration->ignitionPins[i];
 		scheduleMsg(&logger, "ignition #%d @ %s", (1 + i), hwPortname(brainPin));
@@ -82,7 +82,7 @@ static void printOutputs(engine_configuration_s *engineConfiguration) {
 	scheduleMsg(&logger, "idlePin: mode %s @ %s freq=%d", getPin_output_mode_e(boardConfiguration->idleValvePinMode),
 			hwPortname(boardConfiguration->idleValvePin), boardConfiguration->idleSolenoidFrequency);
 	scheduleMsg(&logger, "malfunctionIndicatorn: %s mode=%s", hwPortname(boardConfiguration->malfunctionIndicatorPin),
-			pinModeToString(boardConfiguration->malfunctionIndicatorPinMode));
+			getPin_output_mode_e(boardConfiguration->malfunctionIndicatorPinMode));
 
 	scheduleMsg(&logger, "fuelPumpPin: mode %s @ %s", getPin_output_mode_e(boardConfiguration->fuelPumpPinMode),
 			hwPortname(boardConfiguration->fuelPumpPin));

@@ -96,13 +96,13 @@ public:
 	/**
 	 * ignition dwell duration as crankshaft angle
 	 */
-	float dwellAngle;
-	float advance;
+	angle_t dwellAngle;
+	angle_t advance;
 
 	bool_t clutchUpState;
 	bool_t clutchDownState;
 
-	trigger_shape_s triggerShape;
+	TriggerShape triggerShape;
 
 	float angleExtra[IGNITION_PIN_COUNT];
 	io_pin_e ignitionPin[IGNITION_PIN_COUNT];
