@@ -18,6 +18,7 @@
 #include "histogram.h"
 #include "pwm_generator_logic.h"
 #include "efilib2.h"
+#include "settings.h"
 
 #include "rpm_calculator.h"
 #if EFI_PROD_CODE

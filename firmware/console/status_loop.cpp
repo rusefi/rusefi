@@ -52,6 +52,7 @@
 #include "svnversion.h"
 #include "engine.h"
 #include "lcd_controller.h"
+#include "settings.h"
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 // todo: move this logic to algo folder!

@@ -21,10 +21,9 @@
 #include "io_pins.h"
 #include "trigger_emulator_algo.h"
 #include "trigger_central.h"
+#include "settings.h"
 
 extern PwmConfig triggerSignal;
-
-extern OutputPin outputs[IO_PIN_COUNT];
 
 static OutputPin emulatorOutputs[3];
 

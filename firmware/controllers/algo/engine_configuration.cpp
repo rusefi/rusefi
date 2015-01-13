@@ -452,7 +452,7 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	boardConfiguration->adcHwChannelEnabled[2] = ADC_SLOW;
 	boardConfiguration->adcHwChannelEnabled[3] = ADC_SLOW;
 	boardConfiguration->adcHwChannelEnabled[4] = ADC_FAST;
-	boardConfiguration->adcHwChannelEnabled[5] = ADC_SLOW;
+	// boardConfiguration->adcHwChannelEnabled[5] = ADC_SLOW; PA5 is also timer input
 	boardConfiguration->adcHwChannelEnabled[6] = ADC_SLOW;
 	boardConfiguration->adcHwChannelEnabled[7] = ADC_SLOW;
 	boardConfiguration->adcHwChannelEnabled[11] = ADC_SLOW;
