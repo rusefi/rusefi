@@ -17,18 +17,27 @@
 #include "trigger_structure.h"
 #include "table_helper.h"
 
+/**
+ * This class knows about when to inject fuel
+ */
 class FuelSchedule {
 public:
 	FuelSchedule();
-	void clear();
 	ActuatorEventList events;
 
+	/**
+	 * this method schedules all fuel events for an engine cycle
+	 */
 	void addFuelEvents(injection_mode_e mode DECLARE_ENGINE_PARAMETER_S);
-	void registerInjectionEvent(
-			io_pin_e pin, float angle, bool_t isSimultanious DECLARE_ENGINE_PARAMETER_S);
 
+	/**
+	 * This is a performance optimization for https://sourceforge.net/p/rusefi/tickets/64/
+	 * TODO: better data structure? better algorithm?
+	 */
 	uint8_t hasEvents[PWM_PHASE_MAX_COUNT];
-
+private:
+	void clear();
+	void registerInjectionEvent(io_pin_e pin, float angle, bool_t isSimultanious DECLARE_ENGINE_PARAMETER_S);
 };
 
 /**

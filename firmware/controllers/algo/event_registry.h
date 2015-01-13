@@ -17,7 +17,8 @@
 /**
  * This structure defines an angle position within the trigger
  */
-typedef struct {
+class event_trigger_position_s {
+public:
 	/**
 	 * That's trigger event index
 	 */
@@ -27,7 +28,7 @@ typedef struct {
 	 * Angle offset from the trigger event
 	 */
 	float angleOffset;
-} event_trigger_position_s;
+};
 
 typedef struct {
 	event_trigger_position_s position;

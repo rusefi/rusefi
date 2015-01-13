@@ -10,7 +10,7 @@ import java.util.List;
 public class ChartRepository {
     private static final ChartRepository instance = new ChartRepository();
 
-    private final List<String> charts = new ArrayList<String>();
+    private final List<String> charts = new ArrayList<>();
 
     private ChartRepository() {
     }
@@ -20,6 +20,8 @@ public class ChartRepository {
     }
 
     public String getChart(int index) {
+        if (index < 0 || index >= charts.size())
+            throw new IllegalArgumentException("No chart by index " + index);
         return charts.get(index);
     }
 

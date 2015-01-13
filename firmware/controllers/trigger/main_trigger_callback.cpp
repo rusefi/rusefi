@@ -161,10 +161,6 @@ static ALWAYS_INLINE void handleFuel(uint32_t eventIndex, int rpm DECLARE_ENGINE
 
 	ActuatorEventList *source = &fs->events;
 
-	/**
-	 * This is a performance optimization for https://sourceforge.net/p/rusefi/tickets/64/
-	 * TODO: better data structure? better algorithm?
-	 */
 	if (!fs->hasEvents[eventIndex])
 		return;
 

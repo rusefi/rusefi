@@ -13,13 +13,13 @@ import javax.swing.*;
  * this is the main entry point of rusEfi ECU console
  * <p/>
  * <p/>
- * Date: 12/25/12
- * (c) Andrey Belomutskiy
+ * 12/25/12
+ * (c) Andrey Belomutskiy 2013-2015
  *
  * @see WavePanel
  */
 public class Launcher extends FrameHelper {
-    public static final int CONSOLE_VERSION = 20141228;
+    public static final int CONSOLE_VERSION = 20150112;
     public static final boolean SHOW_STIMULATOR = true;
     private final String port;
 

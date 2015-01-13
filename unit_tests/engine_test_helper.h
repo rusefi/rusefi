@@ -7,8 +7,7 @@
 #ifndef ENGINE_TEST_HELPER_H_
 #define ENGINE_TEST_HELPER_H_
 
-#include "engine_configuration.h"
-#include "ec2.h"
+#include "engine.h"
 #include "trigger_central.h"
 #include "rpm_calculator.h"
 

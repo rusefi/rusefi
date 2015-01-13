@@ -97,7 +97,6 @@ void setSingleCoilDwell(engine_configuration_s *engineConfiguration) {
 OutputSignalList injectonSignals CCM_OPTIONAL;
 
 void initializeIgnitionActions(float advance, float dwellAngle, IgnitionEventList *list DECLARE_ENGINE_PARAMETER_S) {
-
 	efiAssertVoid(engineConfiguration->cylindersCount > 0, "cylindersCount");
 
 	list->reset();
@@ -120,26 +119,24 @@ void initializeIgnitionActions(float advance, float dwellAngle, IgnitionEventLis
 }
 
 void FuelSchedule::registerInjectionEvent(io_pin_e pin, float angle, bool_t isSimultanious DECLARE_ENGINE_PARAMETER_S) {
-	ActuatorEventList *list = &events;
-
 	if (!isSimultanious && !isPinAssigned(pin)) {
 		// todo: extact method for this index math
 		warning(OBD_PCM_Processor_Fault, "no_pin_inj #%d", (int) pin - (int) INJECTOR_1_OUTPUT + 1);
 	}
 
-	InjectionEvent *ev = list->add();
+	InjectionEvent *ev = events.add();
+	if (ev == NULL) {
+		// error already reported
+		return;
+	}
+
 	OutputSignal *actuator = injectonSignals.add();
 	initOutputSignal(actuator, pin);
-
 
 	ev->isSimultanious = isSimultanious;
 
 	efiAssertVoid(TRIGGER_SHAPE(getSize()) > 0, "uninitialized trigger_shape_s");
 
-	if (ev == NULL) {
-		// error already reported
-		return;
-	}
 	ev->actuator = actuator;
 
 	findTriggerPosition(&ev->position, angle PASS_ENGINE_PARAMETER);

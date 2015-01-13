@@ -18,6 +18,9 @@ import java.io.FileFilter;
 import java.util.Arrays;
 
 /**
+ * This tab is the entry point of rusEfi own log browser
+ * <p/>
+ * <p/>
  * 7/27/13
  * (c) Andrey Belomutskiy
  */
@@ -28,6 +31,7 @@ public class LogViewer extends JPanel {
             return pathname.getName().contains("MAIN_rfi_report");
         }
     };
+    public static final String DEFAULT_LOG_LOCATION = "out";
     private final JLabel folderLabel = new JLabel();
     private final JLabel fileLabel = new JLabel();
     private final DefaultListModel<FIleItem> fileListModel = new DefaultListModel<FIleItem>();
@@ -43,8 +47,10 @@ public class LogViewer extends JPanel {
 
         setBackground(Color.green);
 
-        // todo: this is not perfect
-        openFolder("out");
+        /**
+         * scan the default folder on start-up
+         */
+        openFolder(DEFAULT_LOG_LOCATION);
 
         JPanel folderPanel = new JPanel(new FlowLayout());
 
@@ -63,8 +69,6 @@ public class LogViewer extends JPanel {
         folderPanel.add(folderButton);
         folderPanel.add(folderLabel);
         folderPanel.add(fileLabel);
-
-        //folderPanel.setBackground(Color.red);
 
         add(folderPanel, BorderLayout.NORTH);
 
@@ -107,15 +111,14 @@ public class LogViewer extends JPanel {
             throw new IllegalStateException("Not directory: " + folder);
 
         File[] files = folder.listFiles(FILE_FILTER);
-	Arrays.sort(files);
-	
+        Arrays.sort(files);
+
         fileListModel.removeAllElements();
         for (File file : files)
             fileListModel.addElement(getFileDesc(file));
 
         if (files.length > 0 && LinkManager.isLogViewer())
             openFile(files[0]);
-
     }
 
     private FIleItem getFileDesc(File file) {
@@ -153,18 +156,16 @@ public class LogViewer extends JPanel {
     private void openFile(File file) {
         fileLabel.setText("Current file: " + file.getName());
         String filename = file.getAbsolutePath();
-        EngineState.EngineStateListener listener = new EngineState.EngineStateListenerImpl() {
-        };
+        EngineState.EngineStateListener listener = new EngineState.EngineStateListenerImpl();
 
         ChartRepository.getInstance().clear();
         EngineState engineState = new EngineState(listener);
         engineState.registerStringValueAction("wave_chart", new EngineState.ValueCallback<String>() {
             @Override
             public void onUpdate(String value) {
-                FileLog.rlog("chart " + value);
+                FileLog.rlog("Got wave_chart: " + value);
 
                 ChartRepository.getInstance().addChart(value);
-
             }
         });
         FileUtils.readFile2(filename, engineState);

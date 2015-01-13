@@ -420,6 +420,4 @@ void setMiata1996(engine_configuration_s *engineConfiguration, board_configurati
 	boardConfiguration->injectionPins[4] = GPIO_UNASSIGNED;
 	boardConfiguration->injectionPins[5] = GPIO_UNASSIGNED;
 	boardConfiguration->injectionPinMode = OM_DEFAULT;
-
 }
-
