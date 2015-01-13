@@ -58,10 +58,10 @@ void Engine::init() {
 }
 
 static bool stopPin(io_pin_e pin) {
-	OutputPin *output = &outputs[(int)pin];
+	NamedOutputPin *output = &outputs[(int)pin];
 	if (output->getLogicValue()) {
 		doSetOutputPinValue2(output, false);
-		scheduleMsg(&logger, "turning off %s", getPinName(pin));
+		scheduleMsg(&logger, "turning off %s", output->name);
 		return true;
 	}
 	return false;

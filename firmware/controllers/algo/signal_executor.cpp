@@ -48,16 +48,11 @@ void initSignalExecutor(void) {
 	initSignalExecutorImpl();
 }
 
-void initOutputSignal(OutputSignal *signal, io_pin_e ioPin) {
-	signal->io_pin = ioPin;
-}
-
 //uint32_t dbgStart;
 //uint32_t dbgDurr;
 
-extern const char *namedPinsArray[NAMED_PIN_COUNT];
-
 void turnPinHigh(NamedOutputPin *output) {
+	efiAssertVoid(output!=NULL, "NULL @ turnPinHigh");
 #if EFI_DEFAILED_LOGGING
 //	signal->hi_time = hTimeNow();
 #endif /* EFI_DEFAILED_LOGGING */
@@ -128,8 +123,8 @@ void scheduleOutput(OutputSignal *signal, float delayMs, float durationMs) {
 	scheduling_s * sUp = &signal->signalTimerUp[index];
 	scheduling_s * sDown = &signal->signalTimerDown[index];
 
-	scheduleTask("out up", sUp, (int) MS2US(delayMs), (schfunc_t) &turnPinHigh, &outputs[(int)signal->io_pin]);
-	scheduleTask("out down", sDown, (int) MS2US(delayMs) + MS2US(durationMs), (schfunc_t) &turnPinLow, &outputs[(int)signal->io_pin]);
+	scheduleTask("out up", sUp, (int) MS2US(delayMs), (schfunc_t) &turnPinHigh, signal->output);
+	scheduleTask("out down", sDown, (int) MS2US(delayMs) + MS2US(durationMs), (schfunc_t) &turnPinLow, signal->output);
 #endif
 }
 
