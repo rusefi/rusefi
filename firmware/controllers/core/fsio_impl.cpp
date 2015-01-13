@@ -32,6 +32,8 @@ static LENameOrdinalPair leFsioSsetting(LE_METHOD_FSIO_SETTING, "fsio_setting");
 
 #define LE_EVAL_POOL_SIZE 32
 
+extern engine_pins_s enginePins;
+
 static LECalculator evalCalc;
 static LEElement evalPoolElements[LE_EVAL_POOL_SIZE];
 static LEElementPool evalPool(evalPoolElements, LE_EVAL_POOL_SIZE);
@@ -62,7 +64,7 @@ float getLEValue(Engine *engine, calc_stack_t *s, le_action_e action) {
 	efiAssert(engine!=NULL, "getLEValue", NAN);
 	switch (action) {
 	case LE_METHOD_FAN:
-		return getOutputPinValue(FAN_RELAY);
+		return enginePins.fanRelay.getLogicValue();
 	case LE_METHOD_AC_TOGGLE:
 		return getAcToggle(engine);
 	case LE_METHOD_COOLANT:
@@ -147,14 +149,54 @@ static SimplePwm fsioPwm[LE_COMMAND_COUNT] CCM_OPTIONAL;
 
 static LECalculator calc;
 extern LEElement * fsioLogics[LE_COMMAND_COUNT];
+extern OutputPin outputs[IO_PIN_COUNT];
+
+// that's crazy, but what's an alternative? we need const char *, a shared buffer would not work for pin repository
+static const char *getGpioPinName(int index) {
+switch (index) {
+case 0:
+  return "GPIO_0";
+case 1:
+  return "GPIO_1";
+case 10:
+  return "GPIO_10";
+case 11:
+  return "GPIO_11";
+case 12:
+  return "GPIO_12";
+case 13:
+  return "GPIO_13";
+case 14:
+  return "GPIO_14";
+case 15:
+  return "GPIO_15";
+case 2:
+  return "GPIO_2";
+case 3:
+  return "GPIO_3";
+case 4:
+  return "GPIO_4";
+case 5:
+  return "GPIO_5";
+case 6:
+  return "GPIO_6";
+case 7:
+  return "GPIO_7";
+case 8:
+  return "GPIO_8";
+case 9:
+  return "GPIO_9";
+}
+return NULL;
+}
+
+static OutputPin fsioPins[LE_COMMAND_COUNT];
 
 static void handleFsio(Engine *engine, int index) {
 	if (boardConfiguration->fsioPins[index] == GPIO_UNASSIGNED)
 		return;
 
 	bool_t isPwmMode = boardConfiguration->fsioFrequency[index] != 0;
-
-	io_pin_e pin = (io_pin_e) ((int) GPIO_0 + index);
 
 	float fvalue = calc.getValue2(fsioLogics[index], engine);
 	engine->engineConfiguration2->fsioLastValue[index] = fvalue;
@@ -163,23 +205,23 @@ static void handleFsio(Engine *engine, int index) {
 		fsioPwm[index].setSimplePwmDutyCycle(fvalue);
 	} else {
 		int value = (int) fvalue;
-		if (value != getOutputPinValue(pin)) {
+		if (value != fsioPins[index].getLogicValue()) {
 			//		scheduleMsg(&logger, "setting %s %s", getIo_pin_e(pin), boolToString(value));
-			setOutputPinValue(pin, value);
+			fsioPins[index].setValue(value);
 		}
 	}
 }
 
-static void setPinState(io_pin_e ioPin, LEElement *element, Engine *engine) {
+static void setPinState(const char * msg, OutputPin *pin, LEElement *element, Engine *engine) {
 	if (element == NULL) {
-		warning(OBD_PCM_Processor_Fault, "invalid expression for %s", getIo_pin_e(ioPin));
+		warning(OBD_PCM_Processor_Fault, "invalid expression for %s", msg);
 	} else {
 		int value = calc.getValue2(element, engine);
-		if (value != getOutputPinValue(ioPin)) {
+		if (value != pin->getLogicValue()) {
 			if (isRunningBenchTest())
 				return; // let's not mess with bench testing
-			scheduleMsg(&logger, "setting %s %s", getIo_pin_e(ioPin), boolToString(value));
-			setOutputPinValue(ioPin, value);
+			scheduleMsg(&logger, "setting %s %s", msg, boolToString(value));
+			pin->setValue(value);
 		}
 	}
 }
@@ -286,7 +328,7 @@ void runFsio(void) {
 
 #if EFI_FUEL_PUMP
 	if (boardConfiguration->fuelPumpPin != GPIO_UNASSIGNED && engineConfiguration->isFuelPumpEnabled) {
-		setPinState(FUEL_PUMP_RELAY, fuelPumpLogic, engine);
+		setPinState("pump", &enginePins.fuelPumpRelay, fuelPumpLogic, engine);
 	}
 #endif
 
@@ -294,18 +336,21 @@ void runFsio(void) {
 	 * main relay is always on if ECU is on, that's a good enough initial implementation
 	 */
 	if (boardConfiguration->mainRelayPin != GPIO_UNASSIGNED)
-		setOutputPinValue(MAIN_RELAY, 1);
+		enginePins.mainRelay.setValue(true);
+
+	enginePins.o2heater.setValue(engine->rpmCalculator.isRunning());
+
 
 	if (boardConfiguration->acRelayPin != GPIO_UNASSIGNED) {
-		setPinState(AC_RELAY, acRelayLogic, engine);
+		setPinState("A/C", &enginePins.acRelay, acRelayLogic, engine);
 	}
 
 	if (boardConfiguration->alternatorControlPin != GPIO_UNASSIGNED) {
-		setPinState(ALTERNATOR_SWITCH, alternatorLogic, engine);
+		setPinState("alternator", &enginePins.alternatorField, alternatorLogic, engine);
 	}
 
 	if (boardConfiguration->fanPin != GPIO_UNASSIGNED) {
-//		setPinState(FAN_RELAY, radiatorFanLogic, engine);
+		setPinState("fan", &enginePins.fanRelay, radiatorFanLogic, engine);
 	}
 
 }
@@ -333,13 +378,13 @@ void initFsioImpl(Engine *engine) {
 		if (brainPin != GPIO_UNASSIGNED) {
 			//mySetPadMode2("user-defined", boardConfiguration->gpioPins[i], PAL_STM32_MODE_OUTPUT);
 
-			io_pin_e pin = (io_pin_e) ((int) GPIO_0 + i);
+
 
 			int frequency = boardConfiguration->fsioFrequency[i];
 			if (frequency == 0) {
-				outputPinRegisterExt2(getPinName(pin), &outputs[(int)pin], boardConfiguration->fsioPins[i], &defa);
+				outputPinRegisterExt2(getGpioPinName(i), &fsioPins[i], boardConfiguration->fsioPins[i], &defa);
 			} else {
-				startSimplePwmExt(&fsioPwm[i], "FSIO", brainPin, &outputs[(int)pin], frequency, 0.5f, applyPinState);
+				startSimplePwmExt(&fsioPwm[i], "FSIO", brainPin, &fsioPins[i], frequency, 0.5f, applyPinState);
 			}
 		}
 	}

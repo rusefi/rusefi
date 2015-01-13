@@ -132,26 +132,26 @@ static void updateErrorCodes(void) {
 			OBD_Engine_Coolant_Temperature_Circuit_Malfunction);
 }
 
-static void fanRelayControl(void) {
-	if (boardConfiguration->fanPin == GPIO_UNASSIGNED)
-		return;
-
-	int isCurrentlyOn = getOutputPinValue(FAN_RELAY);
-	int newValue;
-	if (isCurrentlyOn) {
-		// if the fan is already on, we keep it on till the 'fanOff' temperature
-		newValue = getCoolantTemperature(engine) > engineConfiguration->fanOffTemperature;
-	} else {
-		newValue = getCoolantTemperature(engine) > engineConfiguration->fanOnTemperature;
-	}
-
-	if (isCurrentlyOn != newValue) {
-		if (isRunningBenchTest())
-			return; // let's not mess with bench testing
-		scheduleMsg(&logger, "FAN relay: %s", newValue ? "ON" : "OFF");
-		setOutputPinValue(FAN_RELAY, newValue);
-	}
-}
+//static void fanRelayControl(void) {
+//	if (boardConfiguration->fanPin == GPIO_UNASSIGNED)
+//		return;
+//
+//	int isCurrentlyOn = getLogicPinValue(&en);
+//	int newValue;
+//	if (isCurrentlyOn) {
+//		// if the fan is already on, we keep it on till the 'fanOff' temperature
+//		newValue = getCoolantTemperature(engine) > engineConfiguration->fanOffTemperature;
+//	} else {
+//		newValue = getCoolantTemperature(engine) > engineConfiguration->fanOnTemperature;
+//	}
+//
+//	if (isCurrentlyOn != newValue) {
+//		if (isRunningBenchTest())
+//			return; // let's not mess with bench testing
+//		scheduleMsg(&logger, "FAN relay: %s", newValue ? "ON" : "OFF");
+//		setOutputPinValue(FAN_RELAY, newValue);
+//	}
+//}
 
 Overflow64Counter halTime;
 
@@ -205,12 +205,7 @@ static void onEvenyGeneralMilliseconds(Engine *engine) {
 
 	updateErrorCodes();
 
-	// todo: migrate this to flex logic
-	fanRelayControl();
-
 	cylinderCleanupControl(engine);
-
-	setOutputPinValue(O2_HEATER, engine->rpmCalculator.isRunning());
 
 	// schedule next invocation
 	chVTSetAny(&everyMsTimer, boardConfiguration->generalPeriodicThreadPeriod * TICKS_IN_MS,

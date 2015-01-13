@@ -37,6 +37,7 @@ static Logging logger;
 static char LOGGING_BUFFER[1000];
 
 extern int maxNesting;
+extern engine_pins_s enginePins;
 
 /*
  static void printIntArray(int array[], int size) {
@@ -329,10 +330,10 @@ static void printTemperatureInfo(void) {
 		scheduleMsg(&logger, "IAT sensing error");
 	}
 
-	scheduleMsg(&logger, "fan=%s @ %s", boolToString(getOutputPinValue(FAN_RELAY)),
+	scheduleMsg(&logger, "fan=%s @ %s", boolToString(enginePins.fanRelay.getLogicValue()),
 			hwPortname(boardConfiguration->fanPin));
 
-	scheduleMsg(&logger, "A/C relay=%s @ %s", boolToString(getOutputPinValue(AC_RELAY)),
+	scheduleMsg(&logger, "A/C relay=%s @ %s", boolToString(enginePins.acRelay.getLogicValue()),
 			hwPortname(boardConfiguration->acRelayPin));
 
 

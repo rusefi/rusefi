@@ -23,6 +23,7 @@ public:
 	OutputPin();
 	void setValue(int logicValue);
 	void setDefaultPinState(pin_output_mode_e *defaultState);
+	bool_t getLogicValue();
 #if EFI_PROD_CODE
 	GPIO_TypeDef *port;
 	int pin;
@@ -34,6 +35,15 @@ public:
 	 */
 	int currentLogicValue;
 };
+
+typedef struct {
+	OutputPin mainRelay;
+	OutputPin fanRelay;
+	OutputPin acRelay;
+	OutputPin fuelPumpRelay;
+	OutputPin o2heater;
+	OutputPin alternatorField;
+} engine_pins_s;
 
 /**
  * it's a macro to be sure that stack is not used
@@ -49,8 +59,6 @@ public:
  */
 #define getElectricalValue1(mode) ((mode) == OM_DEFAULT || (mode) == OM_OPENDRAIN)
 
-#define getLogicPinValue(outputPin) ((outputPin)->currentLogicValue)
-
 /**
  * Sets the value of the pin. On this layer the value is assigned as is, without any conversion.
  */
@@ -59,7 +67,7 @@ public:
 
 #define setPinValue(outputPin, electricalValue, logicValue)                        \
   {                                                                                \
-    if (getLogicPinValue(outputPin) != (logicValue)) {                             \
+    if ((outputPin)->currentLogicValue != (logicValue)) {                          \
 	  palWritePad((outputPin)->port, (outputPin)->pin, (electricalValue));         \
 	  (outputPin)->currentLogicValue = (logicValue);                               \
     }                                                                              \
@@ -67,7 +75,7 @@ public:
 #else /* EFI_PROD_CODE */
 #define setPinValue(outputPin, electricalValue, logicValue)                        \
   {                                                                                \
-    if (getLogicPinValue(outputPin) != (logicValue)) {                             \
+    if ((outputPin)->currentLogicValue != (logicValue)) {                          \
 	  (outputPin)->currentLogicValue = (logicValue);                               \
     }                                                                              \
   }
@@ -84,7 +92,6 @@ extern "C"
 {
 #endif /* __cplusplus */
 
-int getOutputPinValue(io_pin_e pin);
 void setOutputPinValue(io_pin_e pin, int logicValue);
 const char *getPinName(io_pin_e io_pin);
 

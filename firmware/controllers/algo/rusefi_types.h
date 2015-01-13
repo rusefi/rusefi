@@ -7,6 +7,8 @@
 #ifndef CONTROLLERS_ALGO_RUSEFI_TYPES_H_
 #define CONTROLLERS_ALGO_RUSEFI_TYPES_H_
 
+#include <stdint.h>
+
 /**
  * integer time in milliseconds
  * 32 bit 4B / 1000 = 4M seconds = 1111.11 hours = 46 days.

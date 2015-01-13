@@ -28,6 +28,7 @@ static Logging logger;
 static OutputPin sdCsPin;
 
 extern OutputPin outputs[IO_PIN_COUNT];
+extern engine_pins_s enginePins;
 
 #if defined(STM32F4XX)
 static GPIO_TypeDef *PORTS[] = { GPIOA, GPIOB, GPIOC, GPIOD, GPIOE, GPIOF, GPIOG, GPIOH };
@@ -103,7 +104,7 @@ static void getPinValue(const char *name) {
 		return;
 	}
 	OutputPin * outputPin = &outputs[pin];
-	int value = getLogicPinValue(outputPin);
+	int value = outputPin->getLogicValue();
 	scheduleMsg(&logger, "pin_value %s %d", name, value);
 }
 
@@ -132,13 +133,13 @@ void initOutputPins(void) {
 #endif
 
 	// todo: should we move this code closer to the fuel pump logic?
-	outputPinRegisterExt2("fuel pump relay", &outputs[(int)FUEL_PUMP_RELAY], boardConfiguration->fuelPumpPin, &DEFAULT_OUTPUT);
+	outputPinRegisterExt2("fuel pump relay", &enginePins.fuelPumpRelay, boardConfiguration->fuelPumpPin, &DEFAULT_OUTPUT);
 
-	outputPinRegisterExt2("main relay", &outputs[(int)MAIN_RELAY], boardConfiguration->mainRelayPin, &boardConfiguration->mainRelayPinMode);
+	outputPinRegisterExt2("main relay", &enginePins.mainRelay, boardConfiguration->mainRelayPin, &boardConfiguration->mainRelayPinMode);
 
-	outputPinRegisterExt2("fan relay", &outputs[(int)FAN_RELAY], boardConfiguration->fanPin, &DEFAULT_OUTPUT);
-	outputPinRegisterExt2("o2 heater", &outputs[(int)O2_HEATER], boardConfiguration->o2heaterPin, &DEFAULT_OUTPUT);
-	outputPinRegisterExt2("A/C relay", &outputs[(int)AC_RELAY], boardConfiguration->acRelayPin, &boardConfiguration->acRelayPinMode);
+	outputPinRegisterExt2("fan relay", &enginePins.fanRelay, boardConfiguration->fanPin, &DEFAULT_OUTPUT);
+	outputPinRegisterExt2("o2 heater", &enginePins.o2heater, boardConfiguration->o2heaterPin, &DEFAULT_OUTPUT);
+	outputPinRegisterExt2("A/C relay", &enginePins.acRelay, boardConfiguration->acRelayPin, &boardConfiguration->acRelayPinMode);
 
 	// digit 1
 	/*
@@ -180,7 +181,7 @@ static io_pin_e TO_BE_TURNED_OFF_ON_ERROR[] = { SPARKOUT_1_OUTPUT, SPARKOUT_2_OU
 
 		INJECTOR_1_OUTPUT, INJECTOR_2_OUTPUT, INJECTOR_3_OUTPUT, INJECTOR_4_OUTPUT, INJECTOR_5_OUTPUT,
 		INJECTOR_6_OUTPUT, INJECTOR_7_OUTPUT, INJECTOR_8_OUTPUT, INJECTOR_9_OUTPUT, INJECTOR_10_OUTPUT,
-		INJECTOR_11_OUTPUT, INJECTOR_12_OUTPUT, FUEL_PUMP_RELAY };
+		INJECTOR_11_OUTPUT, INJECTOR_12_OUTPUT };
 
 /**
  * This method is part of fatal error handling.

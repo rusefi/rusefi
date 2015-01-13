@@ -115,32 +115,32 @@ static const char* ignitionModeStr[] = { "1C", "IND", "WS" };
 static const char* injectionModeStr[] = { "Sim", "Seq", "Bch" };
 static const char* idleModeStr[] = { "I:A", "I:M" };
 
-static const char *getPinShortName(io_pin_e pin) {
-	switch (pin) {
-	case ALTERNATOR_SWITCH:
-		return "AL";
-	case FUEL_PUMP_RELAY:
-		return "FP";
-	case FAN_RELAY:
-		return "FN";
-	case O2_HEATER:
-		return "O2H";
-	default:
-		firmwareError("No short name for %d", (int) pin);
-		return "";
-	}
-}
+//static const char *getPinShortName(io_pin_e pin) {
+//	switch (pin) {
+//	case ALTERNATOR_SWITCH:
+//		return "AL";
+//	case FUEL_PUMP_RELAY:
+//		return "FP";
+//	case FAN_RELAY:
+//		return "FN";
+//	case O2_HEATER:
+//		return "O2H";
+//	default:
+//		firmwareError("No short name for %d", (int) pin);
+//		return "";
+//	}
+//}
 
-char * appendPinStatus(char *buffer, io_pin_e pin) {
-	char *ptr = appendStr(buffer, getPinShortName(pin));
-	int state = getOutputPinValue(pin);
-	// todo: should we handle INITIAL_PIN_STATE?
-	if (state) {
-		return appendStr(ptr, ":Y ");
-	} else {
-		return appendStr(ptr, ":n ");
-	}
-}
+//char * appendPinStatus(char *buffer, io_pin_e pin) {
+//	char *ptr = appendStr(buffer, getPinShortName(pin));
+//	int state = getOutputPinValue(pin);
+//	// todo: should we handle INITIAL_PIN_STATE?
+//	if (state) {
+//		return appendStr(ptr, ":Y ");
+//	} else {
+//		return appendStr(ptr, ":n ");
+//	}
+//}
 
 static char * prepareInfoLine(engine_configuration_s *engineConfiguration, char *buffer) {
 	char *ptr = buffer;
@@ -158,14 +158,14 @@ static char * prepareInfoLine(engine_configuration_s *engineConfiguration, char 
 	return ptr;
 }
 
-static char * prepareStatusLine(char *buffer) {
-	char *ptr = buffer;
-
-	ptr = appendPinStatus(ptr, FUEL_PUMP_RELAY);
-	ptr = appendPinStatus(ptr, FAN_RELAY);
-	ptr = appendPinStatus(ptr, O2_HEATER);
-	return ptr;
-}
+//static char * prepareStatusLine(char *buffer) {
+//	char *ptr = buffer;
+//
+//	ptr = appendPinStatus(ptr, FUEL_PUMP_RELAY);
+//	ptr = appendPinStatus(ptr, FAN_RELAY);
+//	ptr = appendPinStatus(ptr, O2_HEATER);
+//	return ptr;
+//}
 
 static char buffer[MAX_LCD_WIDTH + 4];
 static char dateBuffer[30];
