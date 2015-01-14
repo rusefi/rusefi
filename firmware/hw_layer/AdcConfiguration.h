@@ -9,9 +9,9 @@
 
 #if HAL_USE_ADC || defined(__DOXYGEN__)
 
-class AdcConfiguration {
+class AdcDevice {
 public:
-	AdcConfiguration(ADCConversionGroup* hwConfig);
+	AdcDevice(ADCConversionGroup* hwConfig);
 	void addChannel(adc_channel_e hwChannelIndex);
 	adc_channel_e getAdcHardwareIndexByInternalIndex(int index);
 	int internalAdcIndexByHardwareIndex[20];
@@ -21,6 +21,8 @@ public:
 	int conversionCount;
 	int errorsCount;
 	int getAdcValueByIndex(int internalIndex);
+
+	adcsample_t samples[ADC_MAX_CHANNELS_COUNT * ADC_GRP1_BUF_DEPTH_SLOW];
 
 	adc_state values;
 private:

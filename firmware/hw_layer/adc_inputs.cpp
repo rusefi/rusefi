@@ -23,7 +23,7 @@
 #include "map_averaging.h"
 #endif /* EFI_SPEED_DENSITY */
 
-AdcConfiguration::AdcConfiguration(ADCConversionGroup* hwConfig) {
+AdcDevice::AdcDevice(ADCConversionGroup* hwConfig) {
 	this->hwConfig = hwConfig;
 	channelCount = 0;
 	conversionCount = 0;
@@ -68,8 +68,6 @@ static int adcDebugReporting = FALSE;
 static int fastAdcValue;
 extern engine_configuration_s *engineConfiguration;
 extern board_configuration_s *boardConfiguration;
-
-static adc_hw_helper_s slowAdcState;
 
 /*
  * ADC samples buffer.
@@ -133,7 +131,7 @@ ADC_TwoSamplingDelay_20Cycles,   // cr1
 // Conversion group sequence 1...6
 		};
 
-AdcConfiguration slowAdc(&adcgrpcfgSlow);
+AdcDevice slowAdc(&adcgrpcfgSlow);
 
 static ADCConversionGroup adcgrpcfg_fast = { FALSE, 0 /* num_channels */, adc_callback_fast, NULL,
 /* HW dependent part.*/
@@ -151,7 +149,7 @@ ADC_TwoSamplingDelay_5Cycles,   // cr1
 // Conversion group sequence 1...6
 		};
 
-AdcConfiguration fastAdc(&adcgrpcfg_fast);
+AdcDevice fastAdc(&adcgrpcfg_fast);
 
 static void pwmpcb_slow(PWMDriver *pwmp) {
 #if EFI_INTERNAL_ADC
@@ -172,7 +170,7 @@ static void pwmpcb_slow(PWMDriver *pwmp) {
 		;
 		return;
 	}
-	adcStartConversionI(&ADC_SLOW_DEVICE, &adcgrpcfgSlow, slowAdcState.samples, ADC_GRP1_BUF_DEPTH_SLOW);
+	adcStartConversionI(&ADC_SLOW_DEVICE, &adcgrpcfgSlow, slowAdc.samples, ADC_GRP1_BUF_DEPTH_SLOW);
 	chSysUnlockFromIsr()
 	;
 #endif
@@ -371,20 +369,20 @@ static void initAdcHwChannel(adc_channel_e hwChannel) {
 	initAdcPin(port, pin, "hw");
 }
 
-int AdcConfiguration::size() {
+int AdcDevice::size() {
 	return channelCount;
 }
 
-int AdcConfiguration::getAdcValueByIndex(int internalIndex) {
+int AdcDevice::getAdcValueByIndex(int internalIndex) {
 	return values.adc_data[internalIndex];
 }
 
-void AdcConfiguration::init(void) {
+void AdcDevice::init(void) {
 	hwConfig->num_channels = size();
 	hwConfig->sqr1 += ADC_SQR1_NUM_CH(size());
 }
 
-bool AdcConfiguration::isHwUsed(adc_channel_e hwChannelIndex) {
+bool AdcDevice::isHwUsed(adc_channel_e hwChannelIndex) {
 	for (int i = 0; i < channelCount; i++) {
 		if (hardwareIndexByIndernalAdcIndex[i] == hwChannelIndex) {
 			return true;
@@ -393,7 +391,7 @@ bool AdcConfiguration::isHwUsed(adc_channel_e hwChannelIndex) {
 	return false;
 }
 
-void AdcConfiguration::addChannel(adc_channel_e hwChannel) {
+void AdcDevice::addChannel(adc_channel_e hwChannel) {
 	int logicChannel = channelCount++;
 
 	internalAdcIndexByHardwareIndex[hwChannel] = logicChannel;
@@ -414,7 +412,7 @@ static void printAdcValue(adc_channel_e channel) {
 	scheduleMsg(&logger, "adc voltage : %f", volts);
 }
 
-adc_channel_e AdcConfiguration::getAdcHardwareIndexByInternalIndex(int index) {
+adc_channel_e AdcDevice::getAdcHardwareIndexByInternalIndex(int index) {
 	return hardwareIndexByIndernalAdcIndex[index];
 }
 
@@ -461,7 +459,7 @@ static void adc_callback_slow(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 
 //		newState.time = chimeNow();
 		for (int i = 0; i < slowAdc.size(); i++) {
-			int value = getAvgAdcValue(i, slowAdcState.samples, ADC_GRP1_BUF_DEPTH_SLOW, slowAdc.size());
+			int value = getAvgAdcValue(i, slowAdc.samples, ADC_GRP1_BUF_DEPTH_SLOW, slowAdc.size());
 			slowAdc.values.adc_data[i] = value;
 		}
 	}

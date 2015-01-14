@@ -36,12 +36,11 @@ static bool isTimeForNextStep(int copy) {
 	return copy != stepCoutner;
 }
 
-
 #if HAL_USE_ADC || defined(__DOXYGEN__)
-extern AdcConfiguration slowAdc;
-extern AdcConfiguration fastAdc;
+extern AdcDevice slowAdc;
+extern AdcDevice fastAdc;
 
-static void processAdcPin(AdcConfiguration *adc, int index, const char *prefix) {
+static void processAdcPin(AdcDevice *adc, int index, const char *prefix) {
 	adc_channel_e hwIndex = adc->getAdcHardwareIndexByInternalIndex(index);
 	GPIO_TypeDef* port = getAdcChannelPort(hwIndex);
 	int pin = getAdcChannelPin(hwIndex);
