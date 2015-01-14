@@ -14,15 +14,6 @@
 #include "utlist.h"
 #include "event_queue.h"
 
-static io_pin_e testLastToggledPin;
-static int testToggleCounter;
-
-void setOutputPinValue(io_pin_e pin, int value) {
-	// this is a test implementation of the method - we use it to see what's going on
-	testLastToggledPin = pin;
-	testToggleCounter++;
-}
-
 EventQueue schedulingQueue;
 
 void scheduleTask(const char *msg, scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) {

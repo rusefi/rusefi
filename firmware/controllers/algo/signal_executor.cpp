@@ -141,11 +141,3 @@ void scheduleOutput(OutputSignal *signal, float delayMs, float durationMs) {
 	scheduleTask("out down", sDown, (int) MS2US(delayMs) + MS2US(durationMs), (schfunc_t) &turnPinLow, signal->output);
 #endif
 }
-
-io_pin_e getPinByName(const char *name) {
-	if (startsWith(name, "spa")) {
-		int index = atoi(name + 3);
-		return (io_pin_e) ((int) SPARKOUT_1_OUTPUT - 1 + index);
-	}
-	return IO_INVALID;
-}

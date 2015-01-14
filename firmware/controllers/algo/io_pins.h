@@ -31,37 +31,6 @@ typedef enum {
 	INJECTOR_NONE,
 } injector_channel_e;
 
-/**
- * Logical pins. See brain_pin_e for physical pins.
- */
-typedef enum {
-	SPARKOUT_1_OUTPUT,
-	SPARKOUT_2_OUTPUT,
-	SPARKOUT_3_OUTPUT,
-	SPARKOUT_4_OUTPUT,
-	SPARKOUT_5_OUTPUT,
-	SPARKOUT_6_OUTPUT,
-	SPARKOUT_7_OUTPUT,
-	SPARKOUT_8_OUTPUT,
-	SPARKOUT_9_OUTPUT,
-	SPARKOUT_10_OUTPUT,
-	SPARKOUT_11_OUTPUT,
-	SPARKOUT_12_OUTPUT,
-
-	INJECTOR_1_OUTPUT,
-	INJECTOR_2_OUTPUT,
-	INJECTOR_3_OUTPUT,
-	INJECTOR_4_OUTPUT,
-	INJECTOR_5_OUTPUT,
-	INJECTOR_6_OUTPUT,
-	INJECTOR_7_OUTPUT,
-	INJECTOR_8_OUTPUT,
-	INJECTOR_9_OUTPUT,
-	INJECTOR_10_OUTPUT,
-	INJECTOR_11_OUTPUT,
-	INJECTOR_12_OUTPUT,
-
-	IO_INVALID,
 
 /**
  * these seven segment display pins are related to unused external tachometer code
@@ -94,12 +63,8 @@ typedef enum {
 //	LED_HUGE_19,
 //	LED_HUGE_20,
 
-} io_pin_e;
-
 void initPrimaryPins(void);
 void initOutputPins(void);
-
-io_pin_e getPinByName(const char *name);
 
 #ifdef __cplusplus
 extern "C" {

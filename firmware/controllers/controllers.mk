@@ -1,9 +1,9 @@
 
-CONTROLLERSSRC = \
-	$(PROJECT_DIR)/controllers/error_handling.c
+CONTROLLERSSRC =
 	
 CONTROLLERS_SRC_CPP = $(PROJECT_DIR)/controllers/settings.cpp \
 	controllers/electronic_throttle.cpp \
+	$(PROJECT_DIR)/controllers/error_handling.cpp \
 	controllers/map_averaging.cpp \
 	controllers/flash_main.cpp \
 	controllers/injector_central.cpp \

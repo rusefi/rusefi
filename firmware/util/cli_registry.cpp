@@ -39,7 +39,7 @@ void resetConsoleActions(void) {
 	consoleActionCount = 0;
 }
 
-static void doAddAction(const char *token, int type, Void callback, void *param) {
+static void doAddAction(const char *token, action_type_e type, Void callback, void *param) {
 	efiAssertVoid(consoleActionCount < CONSOLE_MAX_ACTIONS, "Too many console actions");
 	TokenCallback *current = &consoleActions[consoleActionCount++];
 	current->token = token;
