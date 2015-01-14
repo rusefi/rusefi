@@ -26,7 +26,10 @@ extern "C"
 #include "efitime.h"
 #include "rusefi_enums.h"
 
+#ifdef __cplusplus
 #include "datalogging.h"
+#endif
+
 #include "chprintf.h"
 
 #ifdef __cplusplus

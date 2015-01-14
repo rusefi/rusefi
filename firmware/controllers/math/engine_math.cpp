@@ -34,12 +34,6 @@ EXTERN_ENGINE
 
 extern engine_pins_s enginePins;
 
-/**
- * this cache allows us to find a close-enough (with one degree precision) trigger wheel index by
- * given angle with fast constant speed
- */
-static int triggerIndexByAngle[720];
-
 /*
  * default Volumetric Efficiency
  */
@@ -255,7 +249,7 @@ void findTriggerPosition(event_trigger_position_s *position, angle_t angleOffset
 	angleOffset += CONFIG(globalTriggerAngleOffset);
 	fixAngle(angleOffset);
 
-	int index = triggerIndexByAngle[(int)angleOffset];
+	int index = TRIGGER_SHAPE(triggerIndexByAngle[(int)angleOffset]);
 	angle_t eventAngle = TRIGGER_SHAPE(eventAngles[index]);
 	if (angleOffset < eventAngle) {
 		firmwareError("angle constraint violation in registerActuatorEventExt(): %f/%f", angleOffset, eventAngle);
@@ -333,7 +327,7 @@ void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_F) {
 	}
 
 	for (int angle = 0; angle < CONFIG(engineCycle); angle++) {
-		triggerIndexByAngle[angle] = findAngleIndex(angle PASS_ENGINE_PARAMETER);
+		TRIGGER_SHAPE(triggerIndexByAngle[angle]) = findAngleIndex(angle PASS_ENGINE_PARAMETER);
 	}
 
 	injectonSignals.reset();

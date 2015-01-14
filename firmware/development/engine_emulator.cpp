@@ -17,9 +17,7 @@
 #include "pin_repository.h"
 #include "pwm_generator_logic.h"
 
-extern "C" {
 #include "poten.h"
-}
 #include "trigger_emulator.h"
 
 extern bool hasFirmwareErrorFlag;

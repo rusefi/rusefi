@@ -31,7 +31,7 @@ char *hwPortname(brain_pin_e brainPin);
 brain_pin_e parseBrainPin(const char *str);
 void mySetPadMode(const char *msg, ioportid_t port, ioportmask_t pin, iomode_t mode);
 void mySetPadMode2(const char *msg, brain_pin_e pin, iomode_t mode);
-char *portname(GPIO_TypeDef* GPIOx);
+const char *portname(GPIO_TypeDef* GPIOx);
 iomode_t getInputMode(pin_input_mode_e mode);
 
 ioportmask_t getHwPin(brain_pin_e brainPin);

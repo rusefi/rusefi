@@ -4,7 +4,6 @@
 
 
 #include "io_pins.h"
-const char *getIo_pin_e(io_pin_e value);
 // auto-generated from../../firmware/controllers/algo/rusefi_enums.h
 
 

@@ -239,8 +239,6 @@ void initInjectorCentral(Engine *engine) {
 
 	// todo: should we move this code closer to the injection logic?
 	for (int i = 0; i < engineConfiguration->cylindersCount; i++) {
-		io_pin_e pin = (io_pin_e) ((int) INJECTOR_1_OUTPUT + i);
-
 		NamedOutputPin *output = &enginePins.coils[i];
 
 		outputPinRegisterExt2(output->name, output, boardConfiguration->injectionPins[i],

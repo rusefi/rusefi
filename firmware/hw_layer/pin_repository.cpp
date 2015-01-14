@@ -26,7 +26,7 @@ static int totalPinsUsed = 0;
 /**
  * @deprecated - use hwPortname() instead
  */
-char *portname(GPIO_TypeDef* GPIOx) {
+const char *portname(GPIO_TypeDef* GPIOx) {
 	if (GPIOx == GPIOA)
 		return "PA";
 	if (GPIOx == GPIOB)
@@ -103,7 +103,7 @@ brain_pin_e parseBrainPin(const char *str) {
 	}
 	const char *pinStr = str + 2;
 	int pin = atoi(pinStr);
-	return basePin + pin;
+	return (brain_pin_e)(basePin + pin);
 }
 
 char *hwPortname(brain_pin_e brainPin) {

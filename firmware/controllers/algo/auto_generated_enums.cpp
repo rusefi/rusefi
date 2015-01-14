@@ -3,61 +3,6 @@
 
 #include "main.h"
 #include "io_pins.h"
-const char *getIo_pin_e(io_pin_e value){
-switch(value) {
-case INJECTOR_10_OUTPUT:
-  return "INJECTOR_10_OUTPUT";
-case INJECTOR_11_OUTPUT:
-  return "INJECTOR_11_OUTPUT";
-case INJECTOR_12_OUTPUT:
-  return "INJECTOR_12_OUTPUT";
-case INJECTOR_1_OUTPUT:
-  return "INJECTOR_1_OUTPUT";
-case INJECTOR_2_OUTPUT:
-  return "INJECTOR_2_OUTPUT";
-case INJECTOR_3_OUTPUT:
-  return "INJECTOR_3_OUTPUT";
-case INJECTOR_4_OUTPUT:
-  return "INJECTOR_4_OUTPUT";
-case INJECTOR_5_OUTPUT:
-  return "INJECTOR_5_OUTPUT";
-case INJECTOR_6_OUTPUT:
-  return "INJECTOR_6_OUTPUT";
-case INJECTOR_7_OUTPUT:
-  return "INJECTOR_7_OUTPUT";
-case INJECTOR_8_OUTPUT:
-  return "INJECTOR_8_OUTPUT";
-case INJECTOR_9_OUTPUT:
-  return "INJECTOR_9_OUTPUT";
-case IO_INVALID:
-  return "IO_INVALID";
-case SPARKOUT_10_OUTPUT:
-  return "SPARKOUT_10_OUTPUT";
-case SPARKOUT_11_OUTPUT:
-  return "SPARKOUT_11_OUTPUT";
-case SPARKOUT_12_OUTPUT:
-  return "SPARKOUT_12_OUTPUT";
-case SPARKOUT_1_OUTPUT:
-  return "SPARKOUT_1_OUTPUT";
-case SPARKOUT_2_OUTPUT:
-  return "SPARKOUT_2_OUTPUT";
-case SPARKOUT_3_OUTPUT:
-  return "SPARKOUT_3_OUTPUT";
-case SPARKOUT_4_OUTPUT:
-  return "SPARKOUT_4_OUTPUT";
-case SPARKOUT_5_OUTPUT:
-  return "SPARKOUT_5_OUTPUT";
-case SPARKOUT_6_OUTPUT:
-  return "SPARKOUT_6_OUTPUT";
-case SPARKOUT_7_OUTPUT:
-  return "SPARKOUT_7_OUTPUT";
-case SPARKOUT_8_OUTPUT:
-  return "SPARKOUT_8_OUTPUT";
-case SPARKOUT_9_OUTPUT:
-  return "SPARKOUT_9_OUTPUT";
-  }
- return NULL;
-}
 // auto-generated from../../firmware/\controllers/algo/rusefi_enums.h
 // by enum2string.jar tool
 

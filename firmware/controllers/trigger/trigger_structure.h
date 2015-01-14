@@ -38,6 +38,12 @@ public:
 
 	float dutyCycle[PWM_PHASE_MAX_WAVE_PER_PWM];
 
+	/**
+	 * this cache allows us to find a close-enough (with one degree precision) trigger wheel index by
+	 * given angle with fast constant speed
+	 */
+	int triggerIndexByAngle[720];
+
 	float syncRatioFrom;
 	float syncRatioTo;
 
