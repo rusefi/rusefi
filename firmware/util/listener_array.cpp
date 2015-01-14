@@ -16,7 +16,7 @@ void IntListenerArray::registerCallback(IntListener handler, void *arg) {
 }
 
 void IntListenerArray::registerCallback(Void listener) {
-
+	registerCallback((IntListener)listener, NULL);
 }
 
 void invokeCallbacks(IntListenerArray *array, int value) {

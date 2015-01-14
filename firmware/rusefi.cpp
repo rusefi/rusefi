@@ -101,11 +101,8 @@
 #include "efiGpio.h"
 
 #include "global.h"
-extern "C" {
-
 #include "rfi_perftest.h"
 #include "rusefi.h"
-}
 #include "memstreams.h"
 
 #include "eficonsole.h"
@@ -120,7 +117,7 @@ extern "C" {
 #include "engine_emulator.h"
 #endif /* EFI_ENGINE_EMULATOR */
 
-static LoggingWithStorage logging;
+static LoggingWithStorage sharedLogger;
 
 int main_loop_started = FALSE;
 
@@ -155,7 +152,7 @@ void runRusEfi(void) {
 	 * Next we should initialize serial port console, it's important to know what's going on
 	 */
 	initializeConsole();
-	initLogging(&logging, "main");
+	initLogging(&sharedLogger, "main");
 
 	engine->init();
 
@@ -164,17 +161,17 @@ void runRusEfi(void) {
 	/**
 	 * Initialize hardware drivers
 	 */
-	initHardware(&logging, engine);
+	initHardware(&sharedLogger, engine);
 
 	initStatusLoop(engine);
 	/**
 	 * Now let's initialize actual engine control logic
 	 * todo: should we initialize some? most? controllers before hardware?
 	 */
-	initEngineContoller(engine);
+	initEngineContoller(&sharedLogger, engine);
 
 #if EFI_PERF_METRICS || defined(__DOXYGEN__)
-	initTimePerfActions();
+	initTimePerfActions(&sharedLogger);
 #endif
 
 #if EFI_ENGINE_EMULATOR || defined(__DOXYGEN__)
@@ -211,7 +208,7 @@ static void rebootNow(void) {
  * Once day we will write graceful shutdown, but that would be one day.
  */
 void scheduleReset(void) {
-	scheduleMsg(&logging, "Rebooting in 5 seconds...");
+	scheduleMsg(&sharedLogger, "Rebooting in 5 seconds...");
 	lockAnyContext();
 	chVTSetI(&resetTimer, 5 * CH_FREQUENCY, (vtfunc_t) rebootNow, NULL);
 	unlockAnyContext();

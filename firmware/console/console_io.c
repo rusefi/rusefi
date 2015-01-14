@@ -231,7 +231,7 @@ void startConsole(void (*console_line_callback_p)(char *)) {
 bool lockAnyContext(void) {
 	int alreadyLocked = isLocked();
 	if (alreadyLocked)
-		return TRUE;
+		return true;
 	if (isIsrContext()) {
 		chSysLockFromIsr()
 		;

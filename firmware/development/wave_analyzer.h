@@ -57,7 +57,7 @@ public:
 	volatile uint64_t last_wave_high_widthUs; // time period in systimer ticks
 };
 
-void initWaveAnalyzer(void);
+void initWaveAnalyzer(Logging *sharedLogger);
 void printWave(Logging *logging);
 
 #endif
