@@ -46,13 +46,6 @@ typedef struct {
 //	time_t time;
 } adc_state;
 
-typedef struct {
-	adcsample_t samples[ADC_MAX_CHANNELS_COUNT * ADC_GRP1_BUF_DEPTH_SLOW];
-
-
-} adc_hw_helper_s;
-
-
 #define getAdcValue(hwChannel) getInternalAdcValue(hwChannel)
 
 // todo: migrate to adcToVoltageInputDividerCoefficient
