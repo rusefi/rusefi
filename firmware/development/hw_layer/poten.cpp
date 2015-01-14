@@ -40,7 +40,7 @@
 /* Low speed SPI configuration (281.250kHz, CPHA=0, CPOL=0, MSb first).*/
 #define SPI_POT_CONFIG SPI_CR1_BR_2 | SPI_CR1_BR_1 | SPI_CR1_DFF
 
-static Logging logger;
+static LoggingWithStorage logger;
 
 #if EFI_POTENTIOMETER || defined(__DOXYGEN__)
 Mcp42010Driver config[DIGIPOT_COUNT];

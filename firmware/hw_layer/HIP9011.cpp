@@ -61,7 +61,7 @@ static bool_t isSendingSpiCommand = false;
 static scheduling_s startTimer[2];
 static scheduling_s endTimer[2];
 
-static Logging logger;
+static LoggingWithStorage logger;
 
 // SPI_CR1_BR_1 // 5MHz
 // SPI_CR1_CPHA Clock Phase

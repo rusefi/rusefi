@@ -179,7 +179,7 @@ bool isCranking(void) {
 	return 0;
 }
 
-void initLogging(Logging *logging, const char *name) {
+void initLogging(LoggingWithStorage *logging, const char *name) {
 }
 
 void scheduleMsg(Logging *logging, const char *fmt, ...) {

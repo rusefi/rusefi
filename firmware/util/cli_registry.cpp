@@ -1,5 +1,5 @@
 /**
- * @file    cli_registry.c
+ * @file    cli_registry.cpp
  * @brief   Command-line interface commands registry
  *
  * Here we have a data structure which holds all the dynamically-registered
@@ -27,7 +27,7 @@
 
 #if ! EFI_UNIT_TEST
 #include "eficonsole.h"
-static Logging logging;
+static LoggingWithStorage logging;
 #endif /* ! EFI_UNIT_TEST */
 
 static int consoleActionCount = 0;

@@ -11,7 +11,6 @@
 
 #include "global.h"
 #include "histogram.h"
-#include "datalogging.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -22,10 +21,10 @@ char hexC(int v);
 int isIsrContext(void);
 int isLocked(void);
 void chVTSetAny(virtual_timer_t *vtp, systime_t time, vtfunc_t vtfunc, void *par);
-void printHistogram(Logging *logging, histogram_s *histogram);
 
 #ifdef __cplusplus
 }
+void printHistogram(Logging *logging, histogram_s *histogram);
 #endif /* __cplusplus */
 
 #endif /* RFIUTIL_H_ */

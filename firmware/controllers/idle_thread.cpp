@@ -36,7 +36,7 @@
 
 static THD_WORKING_AREA(ivThreadStack, UTILITY_THREAD_STACK_SIZE);
 
-static Logging logger;
+static LoggingWithStorage logger;
 EXTERN_ENGINE
 ;
 

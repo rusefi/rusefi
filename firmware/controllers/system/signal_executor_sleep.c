@@ -24,7 +24,6 @@
 
 #include "main.h"
 #include "scheduler.h"
-#include "datalogging.h"
 
 #if EFI_SIGNAL_EXECUTOR_SLEEP || defined(__DOXYGEN__)
 

@@ -21,7 +21,7 @@
 #define isRunningBenchTest() true
 #endif
 
-static Logging logger;
+static LoggingWithStorage logger;
 
 extern engine_pins_s enginePins;
 

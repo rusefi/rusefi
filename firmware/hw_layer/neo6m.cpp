@@ -1,5 +1,5 @@
 /**
- * @file	neo6m.c
+ * @file	neo6m.cpp
  * @brief	Ublox 6M hardware UART driver
  *
  * http://www.u-blox.com/en/gps-modules/pvt-modules/previous-generations/neo-6-family.html
@@ -29,7 +29,7 @@
 extern board_configuration_s *boardConfiguration;
 extern engine_configuration_s *engineConfiguration;
 
-static Logging logging;
+static LoggingWithStorage logging;
 
 static SerialConfig GPSserialConfig = { GPS_SERIAL_SPEED, 0, USART_CR2_STOP1_BITS | USART_CR2_LINEN, 0 };
 static THD_WORKING_AREA(gpsThreadStack, UTILITY_THREAD_STACK_SIZE);

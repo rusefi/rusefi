@@ -1,5 +1,5 @@
 /**
- * @file board.c
+ * @file board.cpp
  *
  * @date Nov 15, 2013
  * @author Andrey Belomutskiy, (c) 2012-2015
@@ -10,7 +10,7 @@
 #include "engine_configuration.h"
 #include "adc_math.h"
 
-static Logging logger;
+static LoggingWithStorage logger;
 extern engine_configuration_s *engineConfiguration;
 
 static float fakeAdcValues[16];

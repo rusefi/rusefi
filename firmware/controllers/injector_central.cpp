@@ -34,7 +34,7 @@
 #include "pin_repository.h"
 #include "efiGpio.h"
 
-static Logging logger;
+static LoggingWithStorage logger;
 EXTERN_ENGINE
 ;
 

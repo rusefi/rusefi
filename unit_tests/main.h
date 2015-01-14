@@ -15,7 +15,6 @@
 #include "global.h"
 #include "error_handling.h"
 #include "efifeatures.h"
-#include "datalogging.h"
 
 #include "efilib.h"
 #include "efitime.h"
@@ -23,6 +22,8 @@
 #include "boards.h"
 
 #ifdef __cplusplus
+#include "datalogging.h"
+
 extern "C"
 {
 #endif

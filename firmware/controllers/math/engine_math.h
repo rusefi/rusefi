@@ -19,7 +19,7 @@
 typedef ArrayList<OutputSignal, OUTPUT_SIGNAL_MAX_SIZE> OutputSignalList;
 
 void findTriggerPosition(
-		event_trigger_position_s *position, float angleOffset DECLARE_ENGINE_PARAMETER_S);
+		event_trigger_position_s *position, angle_t angleOffset DECLARE_ENGINE_PARAMETER_S);
 
 int isInjectionEnabled(engine_configuration_s *engineConfiguration);
 

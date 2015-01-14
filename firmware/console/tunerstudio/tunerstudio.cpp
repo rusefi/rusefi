@@ -72,7 +72,7 @@ BaseChannel * getTsSerialDevice(void) {
 #endif
 }
 
-static Logging logger;
+static LoggingWithStorage logger;
 
 extern persistent_config_s configWorkingCopy;
 extern persistent_config_container_s persistentState;

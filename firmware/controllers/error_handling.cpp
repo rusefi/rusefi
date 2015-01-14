@@ -15,7 +15,7 @@
 #endif /* EFI_HD44780_LCD */
 
 static time_t timeOfPreviousWarning = -10;
-static Logging logger;
+static LoggingWithStorage logger;
 
 #define WARNING_PREFIX "WARNING: "
 

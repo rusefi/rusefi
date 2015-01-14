@@ -12,7 +12,6 @@
 #include "boards.h"
 #include "eficonsole.h"
 #include "efilib.h"
-#include "datalogging.h"
 #include "efitime.h"
 
 #define US_TO_NT_MULTIPLIER 100
@@ -58,6 +57,7 @@ extern TestStream testStream;
 #endif /* GLOBAL_FT_H_ */
 
 #ifdef __cplusplus
+#include "datalogging.h"
 extern "C"
 {
 #endif /* __cplusplus */

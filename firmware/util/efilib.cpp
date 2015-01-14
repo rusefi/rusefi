@@ -10,6 +10,8 @@
 #include <string.h>
 #include <math.h>
 #include "efilib.h"
+#include "datalogging.h"
+#include "histogram.h"
 
 #define _MAX_FILLER 11
 
@@ -242,3 +244,23 @@ bool strEqual(const char *str1, const char *str2) {
 			return false;
 	return true;
 }
+
+/**
+ * @brief This function knows how to print a histogram_s summary
+ */
+void printHistogram(Logging *logging, histogram_s *histogram) {
+#if EFI_HISTOGRAMS && ! EFI_UNIT_TEST
+	int report[5];
+	int len = hsReport(histogram, report);
+
+	resetLogging(logging);
+	appendMsgPrefix(logging);
+	appendPrintf(logging, "histogram %s *", histogram->name);
+	for (int i = 0; i < len; i++)
+		appendPrintf(logging, "%d ", report[i]);
+	appendPrintf(logging, "*");
+	appendMsgPostfix(logging);
+	scheduleLogging(logging);
+#endif /* EFI_HISTOGRAMS */
+}
+

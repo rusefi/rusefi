@@ -45,7 +45,7 @@ static int waveReaderCount = 0;
 static WaveReader readers[MAX_ICU_COUNT];
 
 static THD_WORKING_AREA(waThreadStack, UTILITY_THREAD_STACK_SIZE);
-static Logging logger;
+static LoggingWithStorage logger;
 
 static void ensureInitialized(WaveReader *reader) {
 	efiAssertVoid(reader->hw.started, "wave analyzer NOT INITIALIZED");

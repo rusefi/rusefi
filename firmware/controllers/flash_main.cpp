@@ -26,7 +26,7 @@
 static bool needToWriteConfiguration = false;
 
 EXTERN_ENGINE;
-static Logging logger;
+static LoggingWithStorage logger;
 
 extern persistent_config_container_s persistentState;
 

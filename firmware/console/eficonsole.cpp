@@ -1,5 +1,5 @@
 /**
- * @file    eficonsole.c
+ * @file    eficonsole.cpp
  * @brief   Console package entry point code
  *
  *
@@ -29,7 +29,7 @@
 #include "console_io.h"
 #include "svnversion.h"
 
-static Logging logger;
+static LoggingWithStorage logger;
 
 static char fatalErrorMessage[200];
 

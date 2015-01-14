@@ -78,7 +78,7 @@ static IgnitionEvent *iHead = NULL;
 
 static cyclic_buffer ignitionErrorDetection;
 
-static Logging logger;
+static LoggingWithStorage logger;
 
 // todo: figure out if this even helps?
 //#if defined __GNUC__

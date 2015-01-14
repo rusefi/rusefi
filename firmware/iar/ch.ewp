@@ -2071,7 +2071,7 @@
       <name>$PROJ_DIR$\..\console\console_io.h</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\console\eficonsole.c</name>
+      <name>$PROJ_DIR$\..\console\eficonsole.cpp</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\console\eficonsole.h</name>
@@ -2443,13 +2443,7 @@
       <name>$PROJ_DIR$\..\controllers\engine_controller.h</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\controllers\algo\enum_strings.cpp</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\controllers\algo\enum_strings.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\controllers\error_handling.c</name>
+      <name>$PROJ_DIR$\..\controllers\error_handling.cpp</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\controllers\flash_main.cpp</name>
@@ -2508,7 +2502,7 @@
     <group>
       <name>hw_layer</name>
       <file>
-        <name>$PROJ_DIR$\..\development\hw_layer\poten.c</name>
+        <name>$PROJ_DIR$\..\development\hw_layer\poten.cpp</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\development\hw_layer\poten.h</name>
@@ -2704,19 +2698,19 @@
       <name>$PROJ_DIR$\..\hw_layer\microsecond_timer.h</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\hw_layer\mmc_card.c</name>
+      <name>$PROJ_DIR$\..\hw_layer\mmc_card.cpp</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\hw_layer\mmc_card.h</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\hw_layer\neo6m.c</name>
+      <name>$PROJ_DIR$\..\hw_layer\neo6m.cpp</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\hw_layer\neo6m.h</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\hw_layer\pin_repository.c</name>
+      <name>$PROJ_DIR$\..\hw_layer\pin_repository.cpp</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\hw_layer\pin_repository.h</name>
@@ -3190,7 +3184,7 @@
   <group>
     <name>util</name>
     <file>
-      <name>$PROJ_DIR$\..\util\cli_registry.c</name>
+      <name>$PROJ_DIR$\..\util\cli_registry.cpp</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\util\cli_registry.h</name>
@@ -3214,7 +3208,7 @@
       <name>$PROJ_DIR$\..\util\data_buffer.h</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\util\datalogging.c</name>
+      <name>$PROJ_DIR$\..\util\datalogging.cpp</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\util\datalogging.h</name>

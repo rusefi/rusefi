@@ -20,7 +20,7 @@
 extern engine_configuration_s *engineConfiguration;
 extern board_configuration_s *boardConfiguration;
 
-static Logging logger;
+static Logging *logger;
 
 enum {
 	LCD_HD44780_DISPLAY_CLEAR = 0x01,
@@ -166,16 +166,16 @@ void lcd_HD44780_print_string(const char* string) {
 }
 //getHwPin(boardConfiguration->HD44780_db7)
 static void lcdInfo(void) {
-	scheduleMsg(&logger, "HD44780 RS=%s E=%s", hwPortname(boardConfiguration->HD44780_rs),
+	scheduleMsg(logger, "HD44780 RS=%s E=%s", hwPortname(boardConfiguration->HD44780_rs),
 			hwPortname(boardConfiguration->HD44780_e));
-	scheduleMsg(&logger, "HD44780 D4=%s D5=%s", hwPortname(boardConfiguration->HD44780_db4),
+	scheduleMsg(logger, "HD44780 D4=%s D5=%s", hwPortname(boardConfiguration->HD44780_db4),
 			hwPortname(boardConfiguration->HD44780_db5));
-	scheduleMsg(&logger, "HD44780 D6=%s D7=%s", hwPortname(boardConfiguration->HD44780_db6),
+	scheduleMsg(logger, "HD44780 D6=%s D7=%s", hwPortname(boardConfiguration->HD44780_db6),
 			hwPortname(boardConfiguration->HD44780_db7));
 }
 
-void lcd_HD44780_init(void) {
-	initLogging(&logger, "HD44780 driver");
+void lcd_HD44780_init(Logging *sharedLogger) {
+	logger = sharedLogger;
 
 	addConsoleAction("lcdinfo", lcdInfo);
 
@@ -184,7 +184,7 @@ void lcd_HD44780_init(void) {
 		return;
 	}
 
-	printMsg(&logger, "lcd_HD44780_init %d", engineConfiguration->displayMode);
+	printMsg(logger, "lcd_HD44780_init %d", engineConfiguration->displayMode);
 
 	if (engineConfiguration->displayMode == DM_HD44780) {
 		// initialize hardware lines
@@ -228,7 +228,7 @@ void lcd_HD44780_init(void) {
 	lcd_HD44780_write_command(LCD_HD44780_DISPLAY_ON);
 
 	lcd_HD44780_set_position(0, 0);
-	printMsg(&logger, "lcd_HD44780_init() done");
+	printMsg(logger, "lcd_HD44780_init() done");
 }
 
 void lcdShowFatalMessage(char *message) {

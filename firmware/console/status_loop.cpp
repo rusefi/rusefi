@@ -83,7 +83,7 @@ static void setWarningEnabled(int value) {
 }
 
 #if EFI_FILE_LOGGING || defined(__DOXYGEN__)
-static Logging fileLogger;
+static LoggingWithStorage fileLogger;
 #endif /* EFI_FILE_LOGGING */
 
 static int logFileLineIndex = 0;
@@ -232,7 +232,7 @@ static char LOGGING_BUFFER[700];
 volatile int needToReportStatus = FALSE;
 static int prevCkpEventCounter = -1;
 
-static Logging logger2;
+static LoggingWithStorage logger2;
 
 static void printStatus(void) {
 	needToReportStatus = TRUE;
