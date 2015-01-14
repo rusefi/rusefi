@@ -18,24 +18,22 @@
 const char * getAdcMode(adc_channel_e hwChannel);
 int getAdcChannelPin(adc_channel_e hwChannel);
 void initAdcInputs(bool boardTestMode);
+void adc_callback_fast(ADCDriver *adcp, adcsample_t *buffer, size_t n);
 GPIO_TypeDef* getAdcChannelPort(adc_channel_e hwChannel);
 adc_channel_e getAdcChannel(brain_pin_e pin);
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
-
 int getAdcHardwareIndexByInternalIndex(int index);
+
 void pokeAdcInputs(void);
 int getInternalAdcValue(adc_channel_e index);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-
 /* Depth of the conversion buffer, channels are sampled X times each.*/
-#define ADC_GRP1_BUF_DEPTH_SLOW      1
+#define ADC_BUF_DEPTH_SLOW      1
+#define ADC_BUF_DEPTH_FAST      1
+
+// max(ADC_BUF_DEPTH_SLOW, ADC_BUF_DEPTH_FAST)
+#define MAX_ADC_GRP_BUF_DEPTH 1
+
 #define ADC_MAX_CHANNELS_COUNT 16
 
 //typedef struct

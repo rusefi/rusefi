@@ -123,9 +123,9 @@ static void initWave(const char *name, int index) {
 
 	reader->name = name;
 
-	registerCallback(&hw->widthListeners, (IntListener) waAnaWidthCallback, (void*) reader);
+	hw->widthListeners.registerCallback((IntListener) waAnaWidthCallback, (void*) reader);
 
-	registerCallback(&hw->periodListeners, (IntListener) waIcuPeriodCallback, (void*) reader);
+	hw->periodListeners.registerCallback((IntListener) waIcuPeriodCallback, (void*) reader);
 
 	initWaveAnalyzerDriver(hw, brainPin);
 

@@ -15,6 +15,7 @@ extern "C"
 #endif /* __cplusplus */
 
 #include "efifeatures.h"
+#include "rusefi_types.h"
 
 typedef enum {
 	NO_PARAMETER,
@@ -46,7 +47,6 @@ int tokenLength(const char *msgp);
 
 typedef void (*VoidPtr)(void*);
 
-typedef void (*Void)(void);
 typedef void (*VoidInt)(int);
 typedef void (*VoidIntVoidPtr)(int, void*);
 typedef void (*VoidFloat)(float);
