@@ -27,7 +27,7 @@ extern "C"
 #endif /* __cplusplus */
 
 void initPinRepository(void);
-char *hwPortname(brain_pin_e brainPin);
+const char *hwPortname(brain_pin_e brainPin);
 brain_pin_e parseBrainPin(const char *str);
 void mySetPadMode(const char *msg, ioportid_t port, ioportmask_t pin, iomode_t mode);
 void mySetPadMode2(const char *msg, brain_pin_e pin, iomode_t mode);

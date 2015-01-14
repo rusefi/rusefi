@@ -41,7 +41,7 @@ extern WaveChart waveChart;
 
 #include "efiGpio.h"
 
-static Logging logger;
+static LoggingWithStorage logger;
 
 extern engine_pins_s enginePins;
 

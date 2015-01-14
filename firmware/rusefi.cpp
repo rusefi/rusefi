@@ -120,7 +120,7 @@ extern "C" {
 #include "engine_emulator.h"
 #endif /* EFI_ENGINE_EMULATOR */
 
-static Logging logging;
+static LoggingWithStorage logging;
 
 int main_loop_started = FALSE;
 
@@ -256,7 +256,7 @@ void firmwareError(const char *fmt, ...) {
 	}
 }
 
-static char UNUSED_RAM_SIZE[3000];
+static char UNUSED_RAM_SIZE[3500];
 
 static char UNUSED_CCM_SIZE[8000] CCM_OPTIONAL;
 

@@ -39,7 +39,7 @@
 
 #define FAST_MAP_CHART_SKIP_FACTOR 16
 
-static Logging logger;
+static LoggingWithStorage logger;
 
 /**
  * Running counter of measurements per revolution

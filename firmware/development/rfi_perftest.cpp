@@ -20,7 +20,7 @@
 
 #if EFI_PERF_METRICS || defined(__DOXYGEN__)
 
-static Logging logger;
+static LoggingWithStorage logger;
 
 static void testSystemCalls(const int count) {
 	time_t start, time;

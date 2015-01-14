@@ -73,7 +73,7 @@ board_configuration_s *boardConfiguration = &persistentState.persistentConfigura
 
 static VirtualTimer everyMsTimer;
 
-static Logging logger;
+static LoggingWithStorage logger;
 
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 static engine_configuration2_s ec2 CCM_OPTIONAL;

@@ -16,13 +16,10 @@
 #ifndef HISTOGRAM_H_
 #define HISTOGRAM_H_
 
-
 #ifdef __cplusplus
 extern "C"
 {
 #endif /* __cplusplus */
-
-
 
 #include <stdint.h>
 

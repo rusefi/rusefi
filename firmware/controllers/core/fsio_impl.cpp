@@ -58,7 +58,7 @@ EXTERN_ENGINE;
 
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
-static Logging logger;
+static LoggingWithStorage logger;
 
 float getLEValue(Engine *engine, calc_stack_t *s, le_action_e action) {
 	efiAssert(engine!=NULL, "getLEValue", NAN);

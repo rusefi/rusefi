@@ -1,5 +1,5 @@
 /**
- * @file    datalogging.c
+ * @file    datalogging.cpp
  * @brief   Buffered console output stream code
  *
  * Here we have a memory buffer and method related to
@@ -32,6 +32,8 @@
 
 #include <stdbool.h>
 #include "main.h"
+
+#if ! EFI_UNIT_TEST
 #include "chprintf.h"
 #include "chmtx.h"
 #include "memstreams.h"
@@ -184,7 +186,7 @@ int isInitialized(Logging *logging) {
 	return logging->isInitialized == MAGIC_LOGGING_FLAG;
 }
 
-void initLogging(Logging *logging, const char *name) {
+void initLogging(LoggingWithStorage *logging, const char *name) {
 	initLoggingExt(logging, name, logging->DEFAULT_BUFFER, sizeof(logging->DEFAULT_BUFFER));
 }
 
@@ -387,4 +389,10 @@ void initIntermediateLoggingBuffer(void) {
 
 	msObjectInit(&intermediateLoggingBuffer, intermediateLoggingBufferData, INTERMEDIATE_LOGGING_BUFFER_SIZE, 0);
 	intermediateLoggingBufferInited = TRUE;
+}
+
+#endif /* ! EFI_UNIT_TEST */
+
+LoggingWithStorage::LoggingWithStorage() {
+
 }

@@ -62,7 +62,7 @@ int waveChartUsedSize;
 static Logging debugLogging;
 #endif /* DEBUG_WAVE */
 
-static Logging logger;
+static LoggingWithStorage logger;
 
 void WaveChart::resetWaveChart() {
 #if DEBUG_WAVE

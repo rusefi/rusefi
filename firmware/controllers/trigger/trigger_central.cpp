@@ -38,7 +38,7 @@ static volatile uint64_t previousShaftEventTimeNt = (efitimems_t) -10 * US2NT(US
 
 TriggerCentral triggerCentral;
 
-static Logging logger;
+static LoggingWithStorage logger;
 
 uint64_t getCrankEventCounter() {
 	return triggerCentral.triggerState.getTotalEventCounter();

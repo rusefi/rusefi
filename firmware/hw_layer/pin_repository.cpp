@@ -1,5 +1,5 @@
 /**
- * @file    pin_repository.c
+ * @file    pin_repository.cpp
  * @brief   I/O pin registry code
  *
  * This job of this class is to make sure that we are not using same hardware pin for two
@@ -20,7 +20,7 @@
 const char *PIN_USED[PIN_REPO_SIZE];
 static int initialized = FALSE;
 
-static Logging logger;
+static LoggingWithStorage logger;
 static int totalPinsUsed = 0;
 
 /**
@@ -106,7 +106,7 @@ brain_pin_e parseBrainPin(const char *str) {
 	return (brain_pin_e)(basePin + pin);
 }
 
-char *hwPortname(brain_pin_e brainPin) {
+const char *hwPortname(brain_pin_e brainPin) {
 	if (brainPin == GPIO_INVALID) {
 		return "INVALID";
 	}

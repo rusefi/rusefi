@@ -37,7 +37,7 @@ extern WaveChart waveChart;
 
 EXTERN_ENGINE;
 
-static Logging logger;
+static LoggingWithStorage logger;
 
 RpmCalculator::RpmCalculator() {
 #if !EFI_PROD_CODE

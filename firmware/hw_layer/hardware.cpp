@@ -261,7 +261,7 @@ void initHardware(Logging *l, Engine *engine) {
 
 #if EFI_HD44780_LCD
 //	initI2Cmodule();
-	lcd_HD44780_init();
+	lcd_HD44780_init(sharedLogger);
 	if (hasFirmwareError())
 		return;
 

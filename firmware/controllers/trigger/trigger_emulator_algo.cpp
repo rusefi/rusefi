@@ -68,7 +68,7 @@ PwmConfig triggerSignal(swtchTms, sr);
 static int stopEmulationAtIndex = DO_NOT_STOP;
 static bool isEmulating = true;
 
-static Logging logger;
+static LoggingWithStorage logger;
 static LocalVersionHolder localVersion;
 
 EXTERN_ENGINE;

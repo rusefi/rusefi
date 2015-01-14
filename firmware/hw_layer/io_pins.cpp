@@ -23,7 +23,7 @@
 
 extern board_configuration_s *boardConfiguration;
 
-static Logging logger;
+static LoggingWithStorage logger;
 
 static OutputPin sdCsPin;
 

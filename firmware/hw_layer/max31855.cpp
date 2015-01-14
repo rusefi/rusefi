@@ -29,7 +29,7 @@
 
 static SPIDriver *driver;
 
-static Logging logger;
+static LoggingWithStorage logger;
 
 static SPIConfig spiConfig[MAX31855_CS_COUNT];
 

@@ -51,7 +51,7 @@ float actualSynchGap;
 #endif /* ! EFI_PROD_CODE */
 
 #if (EFI_PROD_CODE || EFI_SIMULATOR)
-static Logging logger;
+static LoggingWithStorage logger;
 #endif
 
 /**

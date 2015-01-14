@@ -37,15 +37,14 @@ typedef enum {
 
 // todo: migrate to external buffer so that different instances have different
 // size of buffers?
-typedef struct {
+class Logging {
+public:
 	const char *name;
 	char SMALL_BUFFER[40];
-	// todo: explicitly default buffer externally so that we do not have default_buffer where we do not need it?
-	char DEFAULT_BUFFER[200];
 	/**
 	 * Zero-terminated buffer of pending debug message
 	 *
-	 * Unless a larger exteran buffer is specified, this is just a pointer to DEFAULT_BUFFER
+	 * Unless a larger external buffer is specified, this is just a pointer to DEFAULT_BUFFER
 	 */
 	char *buffer;
 	/**
@@ -55,7 +54,13 @@ typedef struct {
 	char *linePointer;
 	int bufferSize;
 	volatile int isInitialized;
-} Logging;
+};
+
+class LoggingWithStorage : public Logging {
+public:
+	LoggingWithStorage();
+	char DEFAULT_BUFFER[200];
+};
 
 #ifdef __cplusplus
 extern "C"
@@ -72,7 +77,7 @@ uint32_t remainingSize(Logging *logging);
 
 int isInitialized(Logging *logging);
 
-void initLogging(Logging *logging, const char *name);
+void initLogging(LoggingWithStorage *logging, const char *name);
 void initLoggingExt(Logging *logging, const char *name, char *buffer, int bufferSize);
 
 void debugInt(Logging *logging, const char *caption, int value);
