@@ -12,14 +12,14 @@ LIBS:art-electro-ic
 LIBS:STM32F407IGT6
 LIBS:art-electro-power
 LIBS:art-electro-max
-LIBS:176-pin_STM32F407IGT6_board-cache
+LIBS:176-pin_board-cache
 EELAYER 27 0
 EELAYER END
 $Descr A3 16535 11693
 encoding utf-8
 Sheet 1 1
 Title ""
-Date "12 jan 2015"
+Date "14 jan 2015"
 Rev ""
 Comp ""
 Comment1 "v1.3"
@@ -2332,7 +2332,7 @@ Text Label 1250 2575 2    60   ~ 0
 PH1
 Text Label 1250 1975 2    60   ~ 0
 PH0
-Text Label 1275 5825 2    60   ~ 0
+Text Label 11950 4050 2    60   ~ 0
 BYPASS_REG
 Text Label 1275 6025 2    60   ~ 0
 PDR_ON
@@ -2645,66 +2645,6 @@ Wire Wire Line
 Wire Wire Line
 	2825 1125 2625 1125
 Connection ~ 2825 1125
-NoConn ~ 1250 2675
-NoConn ~ 1250 2775
-NoConn ~ 1250 2875
-NoConn ~ 1250 2975
-NoConn ~ 1250 3075
-NoConn ~ 1250 3175
-NoConn ~ 1250 3275
-NoConn ~ 1250 3375
-NoConn ~ 1250 3475
-NoConn ~ 1250 3575
-NoConn ~ 1250 3675
-NoConn ~ 1250 3775
-NoConn ~ 1250 3875
-NoConn ~ 1250 3975
-NoConn ~ 1250 4275
-NoConn ~ 1250 4375
-NoConn ~ 1250 4475
-NoConn ~ 1250 4575
-NoConn ~ 1250 4675
-NoConn ~ 1250 4775
-NoConn ~ 1250 4875
-NoConn ~ 1250 4975
-NoConn ~ 1250 5075
-NoConn ~ 1250 5175
-NoConn ~ 1250 5275
-NoConn ~ 1250 5375
-NoConn ~ 1275 6025
-NoConn ~ 1275 5825
-NoConn ~ 11200 4875
-NoConn ~ 11200 4775
-NoConn ~ 11200 4675
-NoConn ~ 11200 4575
-NoConn ~ 11200 4475
-NoConn ~ 11200 4375
-NoConn ~ 11200 4275
-NoConn ~ 11200 4175
-NoConn ~ 11200 4075
-NoConn ~ 11200 3975
-NoConn ~ 11200 3875
-NoConn ~ 11200 3775
-NoConn ~ 11200 3675
-NoConn ~ 11200 3575
-NoConn ~ 11200 3475
-NoConn ~ 11200 3375
-NoConn ~ 11200 3075
-NoConn ~ 11200 2975
-NoConn ~ 11200 2875
-NoConn ~ 11200 2775
-NoConn ~ 11200 2675
-NoConn ~ 11200 2575
-NoConn ~ 11200 2475
-NoConn ~ 11200 1575
-NoConn ~ 11200 1675
-NoConn ~ 11200 1775
-NoConn ~ 11200 1875
-NoConn ~ 11200 1975
-NoConn ~ 11200 2075
-NoConn ~ 11200 2175
-NoConn ~ 11200 2275
-NoConn ~ 11200 2375
 $Comp
 L PWR_FLAG #FLG075
 U 1 1 54B2C77F
@@ -2763,12 +2703,12 @@ $EndComp
 $Comp
 L CONN_4X2 P9
 U 1 1 54B3047B
-P 13750 4200
-F 0 "P9" H 13750 4450 50  0000 C CNN
-F 1 "CONN_4X2" V 13750 4200 40  0000 C CNN
-F 2 "pin_array_4x2" H 13750 4200 60  0001 C CNN
-F 3 "" H 13750 4200 60  0000 C CNN
-	1    13750 4200
+P 13750 4750
+F 0 "P9" H 13750 5000 50  0000 C CNN
+F 1 "CONN_4X2" V 13750 4750 40  0000 C CNN
+F 2 "pin_array_4x2" H 13750 4750 60  0001 C CNN
+F 3 "" H 13750 4750 60  0000 C CNN
+	1    13750 4750
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -2825,5 +2765,180 @@ F 2 "PIN_ARRAY_2X2" H 15250 3700 60  0001 C CNN
 F 3 "" H 15250 3700 60  0000 C CNN
 	1    15250 3700
 	1    0    0    -1  
+$EndComp
+$Comp
+L CONN_8X2 P13
+U 1 1 54B5C557
+P 13750 4000
+F 0 "P13" H 13750 4450 60  0000 C CNN
+F 1 "CONN_8X2" V 13750 4000 50  0000 C CNN
+F 2 "pin_array_8x2" H 13750 4000 60  0001 C CNN
+F 3 "" H 13750 4000 60  0000 C CNN
+	1    13750 4000
+	1    0    0    -1  
+$EndComp
+Text Label 14150 4350 0    60   ~ 0
+PI8
+Text Label 13350 4250 2    60   ~ 0
+PI9
+Text Label 14150 4250 0    60   ~ 0
+PI10
+Text Label 13350 4150 2    60   ~ 0
+PI11
+Text Label 14150 4150 0    60   ~ 0
+PF0
+Text Label 13350 4050 2    60   ~ 0
+PF1
+Text Label 14150 3850 0    60   ~ 0
+PF2
+Text Label 13350 3850 2    60   ~ 0
+PF3
+Text Label 14150 3950 0    60   ~ 0
+PF4
+Text Label 13350 3950 2    60   ~ 0
+PF5
+Text Label 14150 4050 0    60   ~ 0
+PF6
+Text Label 13350 3750 2    60   ~ 0
+PF7
+Text Label 13350 3650 2    60   ~ 0
+PF8
+Text Label 14150 3750 0    60   ~ 0
+PF9
+Text Label 14150 3650 0    60   ~ 0
+PF10
+Text Label 13350 4350 2    60   ~ 0
+PI7
+Text Label 15650 3750 0    60   ~ 0
+PDR_ON
+Text Label 14850 3750 2    60   ~ 0
+PI4
+Text Label 15650 3650 0    60   ~ 0
+PI5
+Text Label 14850 3650 2    60   ~ 0
+PI6
+Text Label 13350 4900 2    60   ~ 0
+PG2
+Text Label 13350 4800 2    60   ~ 0
+PG3
+Text Label 13350 4700 2    60   ~ 0
+PG4
+Text Label 13350 4600 2    60   ~ 0
+PG5
+Text Label 14150 4600 0    60   ~ 0
+PG6
+Text Label 14150 4700 0    60   ~ 0
+PG7
+Text Label 14150 4800 0    60   ~ 0
+PG8
+Text Label 14850 4900 2    60   ~ 0
+PG9
+Text Label 15650 4800 0    60   ~ 0
+PG10
+Text Label 14850 4800 2    60   ~ 0
+PG11
+Text Label 15650 4700 0    60   ~ 0
+PG12
+Text Label 14850 4700 2    60   ~ 0
+PG13
+Text Label 15650 4600 0    60   ~ 0
+PG14
+Text Label 14850 4600 2    60   ~ 0
+PG15
+Text Label 14850 4150 2    60   ~ 0
+PI0
+Text Label 15650 4150 0    60   ~ 0
+PI1
+Text Label 14850 4050 2    60   ~ 0
+PI2
+Text Label 15650 4050 0    60   ~ 0
+PI3
+Text Label 14850 4350 2    60   ~ 0
+PH13
+Text Label 14850 4250 2    60   ~ 0
+PH14
+Text Label 15650 4250 0    60   ~ 0
+PH15
+$Comp
+L GND #PWR079
+U 1 1 54B5E377
+P 15650 4900
+F 0 "#PWR079" H 15650 4900 30  0001 C CNN
+F 1 "GND" H 15650 4830 30  0001 C CNN
+F 2 "" H 15650 4900 60  0000 C CNN
+F 3 "" H 15650 4900 60  0000 C CNN
+	1    15650 4900
+	0    -1   -1   0   
+$EndComp
+$Comp
+L GND #PWR080
+U 1 1 54B5E388
+P 14150 4900
+F 0 "#PWR080" H 14150 4900 30  0001 C CNN
+F 1 "GND" H 14150 4830 30  0001 C CNN
+F 2 "" H 14150 4900 60  0000 C CNN
+F 3 "" H 14150 4900 60  0000 C CNN
+	1    14150 4900
+	0    -1   -1   0   
+$EndComp
+Text Label 12750 4050 0    60   ~ 0
+PF11
+Text Label 11950 4150 2    60   ~ 0
+PF12
+Text Label 12750 4150 0    60   ~ 0
+PF13
+Text Label 11950 4250 2    60   ~ 0
+PF14
+Text Label 12750 4250 0    60   ~ 0
+PF15
+Text Label 11950 4350 2    60   ~ 0
+PG0
+Text Label 12750 4350 0    60   ~ 0
+PG1
+Text Label 12750 3650 0    60   ~ 0
+PH2
+Text Label 11950 3650 2    60   ~ 0
+PH3
+Text Label 12750 3750 0    60   ~ 0
+PH4
+Text Label 11950 3750 2    60   ~ 0
+PH5
+Text Label 11950 4600 2    60   ~ 0
+PH6
+Text Label 12750 4600 0    60   ~ 0
+PH7
+Text Label 11950 4700 2    60   ~ 0
+PH8
+Text Label 12750 4700 0    60   ~ 0
+PH9
+Text Label 11950 4800 2    60   ~ 0
+PH10
+Text Label 12750 4800 0    60   ~ 0
+PH11
+Text Label 11950 4900 2    60   ~ 0
+PH12
+$Comp
+L GND #PWR081
+U 1 1 54B5E68A
+P 12750 4900
+F 0 "#PWR081" H 12750 4900 30  0001 C CNN
+F 1 "GND" H 12750 4830 30  0001 C CNN
+F 2 "" H 12750 4900 60  0000 C CNN
+F 3 "" H 12750 4900 60  0000 C CNN
+	1    12750 4900
+	0    -1   1    0   
+$EndComp
+Text Label 1275 5825 2    60   ~ 0
+BYPASS_REG
+$Comp
+L GND #PWR082
+U 1 1 54B5F093
+P 15650 4350
+F 0 "#PWR082" H 15650 4350 30  0001 C CNN
+F 1 "GND" H 15650 4280 30  0001 C CNN
+F 2 "" H 15650 4350 60  0000 C CNN
+F 3 "" H 15650 4350 60  0000 C CNN
+	1    15650 4350
+	0    -1   -1   0   
 $EndComp
 $EndSCHEMATC

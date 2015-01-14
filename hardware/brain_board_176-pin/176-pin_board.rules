@@ -11,7 +11,7 @@
     (via_costs 50)
     (plane_via_costs 5)
     (start_ripup_costs 100)
-    (start_pass_no 413)
+    (start_pass_no 240)
     (layer_rule F.Cu
       (active on)
       (preferred_direction vertical)
@@ -97,29 +97,56 @@
     (rule
       (width 254.0)
     )
+    (layer_rule GND
+      (rule 
+        (width 0.0) 
+      )
+    )
+    (layer_rule PWR
+      (rule 
+        (width 0.0) 
+      )
+    )
     (circuit 
       (use_layer F.Cu B.Cu)
     )
   )
   (class "kicad_default"
-    GND /VDD /3.3V /5V /5Vi /BOOT0 /D+ "/D-"
-    /NRST /PA0 /PA1 /PA10 /PA11 /PA12 /PA13 /PA14
-    /PA15 /PA2 /PA3 /PA4 /PA5 /PA6 /PA7 /PA8
-    /PA9 /PB0 /PB1 /PB10 /PB11 /PB12 /PB13 /PB14
-    /PB15 /PB3 /PB4 /PB5 /PB6 /PB7 /PB8 /PB9
-    /PC0 /PC1 /PC10 /PC11 /PC12 /PC13 /PC2 /PC3
-    /PC4 /PC5 /PC6 /PC7 /PC8 /PC9 /PD0 /PD1
-    /PD10 /PD11 /PD12 /PD13 /PD14 /PD15 /PD2 /PD3
-    /PD4 /PD5 /PD6 /PD7 /PD8 /PD9 /PE0 /PE1
-    /PE10 /PE11 /PE12 /PE13 /PE14 /PE15 /PE2 /PE3
-    /PE4 /PE5 /PE6 /PE7 /PE8 /PE9 /PH0 /PH1
-    "N-0000013" "N-0000014" "N-0000015" "N-00000154" "N-00000159" "N-0000016" "N-0000017" "N-0000021"
-    "N-0000030" "N-0000031" "N-0000033" "N-0000038" "N-0000039" "N-0000042" "N-0000046" "N-0000047"
-    "N-0000078"
+    GND /VDD /3.3V /5V /5Vi /BOOT0 "/BYPASS_REG" /D+
+    "/D-" /NRST /PA0 /PA1 /PA10 /PA11 /PA12 /PA13
+    /PA14 /PA15 /PA2 /PA3 /PA4 /PA5 /PA6 /PA7
+    /PA8 /PA9 /PB0 /PB1 /PB10 /PB11 /PB12 /PB13
+    /PB14 /PB15 /PB3 /PB4 /PB5 /PB6 /PB7 /PB8
+    /PB9 /PC0 /PC1 /PC10 /PC11 /PC12 /PC13 /PC2
+    /PC3 /PC4 /PC5 /PC6 /PC7 /PC8 /PC9 /PD0
+    /PD1 /PD10 /PD11 /PD12 /PD13 /PD14 /PD15 /PD2
+    /PD3 /PD4 /PD5 /PD6 /PD7 /PD8 /PD9 "/PDR_ON"
+    /PE0 /PE1 /PE10 /PE11 /PE12 /PE13 /PE14 /PE15
+    /PE2 /PE3 /PE4 /PE5 /PE6 /PE7 /PE8 /PE9
+    /PF0 /PF1 /PF10 /PF11 /PF12 /PF13 /PF14 /PF15
+    /PF2 /PF3 /PF4 /PF5 /PF6 /PF7 /PF8 /PF9
+    /PG0 /PG1 /PG10 /PG11 /PG12 /PG13 /PG14 /PG15
+    /PG2 /PG3 /PG4 /PG5 /PG6 /PG7 /PG8 /PG9
+    /PH0 /PH1 /PH10 /PH11 /PH12 /PH13 /PH14 /PH15
+    /PH2 /PH3 /PH4 /PH5 /PH6 /PH7 /PH8 /PH9
+    /PI0 /PI1 /PI10 /PI11 /PI2 /PI3 /PI4 /PI5
+    /PI6 /PI7 /PI8 /PI9 "N-0000016" "N-0000017" "N-0000018" "N-0000024"
+    "N-0000025" "N-0000026" "N-0000027" "N-0000028" "N-0000029" "N-0000032" "N-0000040" "N-0000041"
+    "N-0000046" "N-0000049" "N-0000074" "N-000008" "N-0000082"
     (clearance_class "kicad_default")
     (via_rule kicad_default)
     (rule
       (width 254.0)
+    )
+    (layer_rule GND
+      (rule 
+        (width 0.0) 
+      )
+    )
+    (layer_rule PWR
+      (rule 
+        (width 0.0) 
+      )
     )
     (circuit 
       (use_layer F.Cu B.Cu)
