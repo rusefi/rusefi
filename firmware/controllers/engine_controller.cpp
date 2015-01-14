@@ -308,7 +308,7 @@ static void setFloat(const char *offsetStr, const char *valueStr) {
 	scheduleMsg(&logger, "setting float @%d to %f", offset, value);
 }
 
-void initEngineContoller(Engine *engine) {
+void initEngineContoller(Logging *sharedLogger, Engine *engine) {
 	if (hasFirmwareError()) {
 		return;
 	}
@@ -326,7 +326,7 @@ void initEngineContoller(Engine *engine) {
 
 #if EFI_WAVE_ANALYZER
 	if (engineConfiguration->isWaveAnalyzerEnabled) {
-		initWaveAnalyzer();
+		initWaveAnalyzer(sharedLogger);
 	}
 #endif /* EFI_WAVE_ANALYZER */
 

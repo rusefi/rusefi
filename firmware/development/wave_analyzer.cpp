@@ -45,7 +45,7 @@ static int waveReaderCount = 0;
 static WaveReader readers[MAX_ICU_COUNT];
 
 static THD_WORKING_AREA(waThreadStack, UTILITY_THREAD_STACK_SIZE);
-static LoggingWithStorage logger;
+static Logging * logger;
 
 static void ensureInitialized(WaveReader *reader) {
 	efiAssertVoid(reader->hw.started, "wave analyzer NOT INITIALIZED");
@@ -238,10 +238,9 @@ void printWave(Logging *logging) {
 	reportWave(logging, 1);
 }
 
-void initWaveAnalyzer(void) {
+void initWaveAnalyzer(Logging *sharedLogger) {
+	logger = sharedLogger;
 #if EFI_WAVE_ANALYZER || defined(__DOXYGEN__)
-	initLogging(&logger, "wave");
-
 	initWave(WA_CHANNEL_1, 0);
 	initWave(WA_CHANNEL_2, 1);
 

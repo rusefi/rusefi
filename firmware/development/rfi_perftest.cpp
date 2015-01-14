@@ -20,7 +20,7 @@
 
 #if EFI_PERF_METRICS || defined(__DOXYGEN__)
 
-static LoggingWithStorage logger;
+static Logging* logger;
 
 static void testSystemCalls(const int count) {
 	time_t start, time;
@@ -42,7 +42,7 @@ static void testSystemCalls(const int count) {
 	time = currentTimeMillis() - start;
 	if (result != 0) {
 		// Finished 100000 iterations of 'chTimeNow()' in 33ms
-		scheduleMsg(&logger, "Finished %d iterations of 'chTimeNow()' in %dms", count, time);
+		scheduleMsg(logger, "Finished %d iterations of 'chTimeNow()' in %dms", count, time);
 	}
 
 	start = currentTimeMillis();
@@ -56,7 +56,7 @@ static void testSystemCalls(const int count) {
 	time = currentTimeMillis() - start;
 	if (result != 0) {
 		// Finished 100000 iterations of 'chTimeNow()' with chSysLock in 144ms
-		scheduleMsg(&logger, "Finished %d iterations of 'chTimeNow()' with chSysLock in %dms", count, time);
+		scheduleMsg(logger, "Finished %d iterations of 'chTimeNow()' with chSysLock in %dms", count, time);
 	}
 
 	start = currentTimeMillis();
@@ -64,7 +64,7 @@ static void testSystemCalls(const int count) {
 		result += currentTimeMillis();
 	time = currentTimeMillis() - start;
 	if (result != 0)
-		scheduleMsg(&logger, "Finished %d iterations of 'currentTimeMillis' in %dms", count, time);
+		scheduleMsg(logger, "Finished %d iterations of 'currentTimeMillis' in %dms", count, time);
 }
 
 static Engine testEngine;
@@ -79,14 +79,14 @@ static void testRusefiMethods(const int count) {
 		tempi += getBaseTableFuel(testEngine.engineConfiguration, 4020, 2.21111);
 	time = currentTimeMillis() - start;
 	if (tempi != 0)
-		scheduleMsg(&logger, "Finished %d iterations of getBaseFuel in %dms", count, time);
+		scheduleMsg(logger, "Finished %d iterations of getBaseFuel in %dms", count, time);
 
 //	start = currentTimeMillis();
 //	for (int i = 0; i < count; i++)
 //		tempi += getFuelMs(1200, NULL); // todo
 //	time = currentTimeMillis() - start;
 //	if (tempi != 0)
-//		scheduleMsg(&logger, "Finished %d iterations of getFuelMs in %dms", count, time);
+//		scheduleMsg(logger, "Finished %d iterations of getFuelMs in %dms", count, time);
 
 	start = currentTimeMillis();
 	for (int i = 0; i < count; i++) {
@@ -95,7 +95,7 @@ static void testRusefiMethods(const int count) {
 	}
 	time = currentTimeMillis() - start;
 	if (tempi != 0)
-		scheduleMsg(&logger, "Finished %d iterations of updateSlowSensors in %dms", count, time);
+		scheduleMsg(logger, "Finished %d iterations of updateSlowSensors in %dms", count, time);
 }
 
 static void testMath(const int count) {
@@ -108,7 +108,7 @@ static void testMath(const int count) {
 	}
 	time = currentTimeMillis() - start;
 	if (temp64 != 0) {
-		scheduleMsg(&logger, "Finished %d iterations of int64_t summation in %dms", count, time);
+		scheduleMsg(logger, "Finished %d iterations of int64_t summation in %dms", count, time);
 	}
 
 	temp64 = 1;
@@ -118,14 +118,14 @@ static void testMath(const int count) {
 	}
 	time = currentTimeMillis() - start;
 	if (temp64 == 0) {
-		scheduleMsg(&logger, "Finished %d iterations of int64_t multiplication in %dms", count, time);
+		scheduleMsg(logger, "Finished %d iterations of int64_t multiplication in %dms", count, time);
 	}
 
 	start = currentTimeMillis();
 	for (int i = 0; i < count; i++)
 		;
 	time = currentTimeMillis() - start;
-	scheduleMsg(&logger, "Finished %d iterations of empty loop in %dms", count, time);
+	scheduleMsg(logger, "Finished %d iterations of empty loop in %dms", count, time);
 
 	uint32_t tempi = 1;
 	start = currentTimeMillis();
@@ -135,7 +135,7 @@ static void testMath(const int count) {
 	time = currentTimeMillis() - start;
 	if (tempi == 0) {
 		// Finished 100000 iterations of uint32_t summation in 11ms
-		scheduleMsg(&logger, "Finished %d iterations of uint32_t summation in %dms", count, time);
+		scheduleMsg(logger, "Finished %d iterations of uint32_t summation in %dms", count, time);
 	}
 
 	start = currentTimeMillis();
@@ -146,7 +146,7 @@ static void testMath(const int count) {
 	time = currentTimeMillis() - start;
 	if (tempi != 0) {
 		// Finished 100000 iterations of uint32_t division in 16ms
-		scheduleMsg(&logger, "Finished %d iterations of uint32_t division in %dms", count, time);
+		scheduleMsg(logger, "Finished %d iterations of uint32_t division in %dms", count, time);
 	}
 
 	start = currentTimeMillis();
@@ -157,7 +157,7 @@ static void testMath(const int count) {
 	time = currentTimeMillis() - start;
 	if (temp64 == 0) {
 		//  Finished 100000 iterations of int64_t summation in 21ms
-		scheduleMsg(&logger, "Finished %d iterations of int64_t summation in %dms", count, time);
+		scheduleMsg(logger, "Finished %d iterations of int64_t summation in %dms", count, time);
 	}
 
 	start = currentTimeMillis();
@@ -168,7 +168,7 @@ static void testMath(const int count) {
 	time = currentTimeMillis() - start;
 	if (temp64 != 0) {
 		// Finished 100000 iterations of int64_t division in 181ms
-		scheduleMsg(&logger, "Finished %d iterations of int64_t division in %dms", count, time);
+		scheduleMsg(logger, "Finished %d iterations of int64_t division in %dms", count, time);
 	}
 
 	start = currentTimeMillis();
@@ -178,7 +178,7 @@ static void testMath(const int count) {
 	}
 	time = currentTimeMillis() - start;
 	if (tempf != 0) {
-		scheduleMsg(&logger, "Finished %d iterations of float summation in %dms", count, time);
+		scheduleMsg(logger, "Finished %d iterations of float summation in %dms", count, time);
 	}
 
 	start = currentTimeMillis();
@@ -189,7 +189,7 @@ static void testMath(const int count) {
 	time = currentTimeMillis() - start;
 	if (tempf != 0) {
 		// Finished 100000 iterations of float division in 65ms
-		scheduleMsg(&logger, "Finished %d iterations of float division in %dms", count, time);
+		scheduleMsg(logger, "Finished %d iterations of float division in %dms", count, time);
 	}
 
 	start = currentTimeMillis();
@@ -200,7 +200,7 @@ static void testMath(const int count) {
 	time = currentTimeMillis() - start;
 	if (tempf != 0) {
 		// Finished 100000 iterations of float log in 191ms
-		scheduleMsg(&logger, "Finished %d iterations of float log in %dms", count, time);
+		scheduleMsg(logger, "Finished %d iterations of float log in %dms", count, time);
 	}
 
 	start = currentTimeMillis();
@@ -210,7 +210,7 @@ static void testMath(const int count) {
 	time = currentTimeMillis() - start;
 	if (tempd != 0) {
 		// Finished 100000 iterations of double summation in 80ms
-		scheduleMsg(&logger, "Finished %d iterations of double summation in %dms", count, time);
+		scheduleMsg(logger, "Finished %d iterations of double summation in %dms", count, time);
 	}
 
 	start = currentTimeMillis();
@@ -220,7 +220,7 @@ static void testMath(const int count) {
 	time = currentTimeMillis() - start;
 	if (tempd != 0) {
 		// Finished 100000 iterations of double division in 497ms
-		scheduleMsg(&logger, "Finished %d iterations of double division in %dms", count, time);
+		scheduleMsg(logger, "Finished %d iterations of double division in %dms", count, time);
 	}
 
 	start = currentTimeMillis();
@@ -231,12 +231,12 @@ static void testMath(const int count) {
 	time = currentTimeMillis() - start;
 	if (tempd != 0) {
 		// Finished 100000 iterations of double log in 242ms
-		scheduleMsg(&logger, "Finished %d iterations of double log in %dms", count, time);
+		scheduleMsg(logger, "Finished %d iterations of double log in %dms", count, time);
 	}
 }
 
 static void runTests(const int count) {
-	scheduleMsg(&logger, "Running tests: %d", count);
+	scheduleMsg(logger, "Running tests: %d", count);
 	testRusefiMethods(count / 10);
 	testSystemCalls(count);
 	testMath(count);
@@ -251,12 +251,12 @@ static int rtcStartTime;
 #include "chrtclib.h"
 
 static void timeInfo(void) {
-	scheduleMsg(&logger, "chTimeNow as seconds = %d", getTimeNowSeconds());
-	scheduleMsg(&logger, "hal seconds = %d", halTime.get() / 168000000LL);
+	scheduleMsg(logger, "chTimeNow as seconds = %d", getTimeNowSeconds());
+	scheduleMsg(logger, "hal seconds = %d", halTime.get() / 168000000LL);
 
 #if EFI_RTC
 	int unix = rtcGetTimeUnixSec(&RTCD1) - rtcStartTime;
-	scheduleMsg(&logger, "unix seconds = %d", unix);
+	scheduleMsg(logger, "unix seconds = %d", unix);
 #endif
 }
 
@@ -280,13 +280,14 @@ static void runChibioTest(void) {
 	TestThread(getConsoleChannel());
 }
 
-void initTimePerfActions() {
+void initTimePerfActions(Logging *sharedLogger) {
+	logger = sharedLogger;
 #if EFI_RTC
 	rtcStartTime = rtcGetTimeUnixSec(&RTCD1);
 #endif
 
 
-	initLogging(&logger, "perftest");
+
 //	initOutputPin("test pad", &testOutput, TEST_PORT, TEST_PIN);
 	addConsoleActionI("perftest", runTests);
 

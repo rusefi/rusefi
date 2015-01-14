@@ -189,5 +189,5 @@ void initThermistors(Engine *engine) {
 			engine->engineConfiguration->cltAdcChannel);
 	initThermistorCurve(&engine->iat, &engine->engineConfiguration->iatThermistorConf,
 			engine->engineConfiguration->iatAdcChannel);
-	initialized = TRUE;
+	initialized = true;
 }

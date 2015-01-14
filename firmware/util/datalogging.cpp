@@ -138,30 +138,19 @@ static void vappendPrintfI(Logging *logging, const char *fmt, va_list arg) {
 	append(logging, (char *) intermediateLoggingBufferData);
 }
 
+/**
+ * this method acquires system lock to guard the shared intermediateLoggingBuffer memory stream
+ */
 void vappendPrintf(Logging *logging, const char *fmt, va_list arg) {
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#5b");
 	if (!intermediateLoggingBufferInited) {
 		firmwareError("intermediateLoggingBufferInited not inited!");
 		return;
 	}
-	int is_locked = isLocked();
-	int icsr_vectactive = isIsrContext();
-	if (is_locked) {
-		vappendPrintfI(logging, fmt, arg);
-	} else {
-		if (icsr_vectactive == 0) {
-			chSysLock()
-			;
-			vappendPrintfI(logging, fmt, arg);
-			chSysUnlock()
-			;
-		} else {
-			chSysLockFromIsr()
-			;
-			vappendPrintfI(logging, fmt, arg);
-			chSysUnlockFromIsr()
-			;
-		}
+	int wasLocked = lockAnyContext();
+	vappendPrintfI(logging, fmt, arg);
+	if (wasLocked) {
+		unlockAnyContext();
 	}
 }
 
@@ -274,7 +263,7 @@ void printLine(Logging *logging) {
 }
 
 void appendMsgPrefix(Logging *logging) {
-	appendPrintf(logging, "msg%s", DELIMETER);
+	append(logging, "msg" DELIMETER);
 }
 
 void appendMsgPostfix(Logging *logging) {
@@ -309,7 +298,12 @@ void printMsg(Logging *logger, const char *fmt, ...) {
 	printLine(logger);
 }
 
+/**
+ * this whole method is executed under syslock so that we can have multiple threads use the same shared buffer
+ * in order to reduce memory usage
+ */
 void scheduleMsg(Logging *logging, const char *fmt, ...) {
+	int wasLocked = lockAnyContext();
 	resetLogging(logging); // todo: is 'reset' really needed here?
 	appendMsgPrefix(logging);
 
@@ -320,6 +314,9 @@ void scheduleMsg(Logging *logging, const char *fmt, ...) {
 
 	appendMsgPostfix(logging);
 	scheduleLogging(logging);
+	if (wasLocked) {
+		unlockAnyContext();
+	}
 }
 
 void scheduleLogging(Logging *logging) {
