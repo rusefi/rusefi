@@ -56,6 +56,7 @@
 55)                  Add Top, T-1, T-2 and T-3 to PCB copper layers to more clearly identify layers to MFG
 56)                  knock1 is actually knock2 and vice versa. Need to fix net names & the pinout picture
 57)                  route unused stm32 pins (D3 PC13 etc) to unused connector pins
+58)                  cheaper battery holder - through-hole (need to find out footprint)
 
 
 For honda add-on / rewiring board
