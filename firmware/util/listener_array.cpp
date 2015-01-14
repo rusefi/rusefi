@@ -8,11 +8,15 @@
 #include "listener_array.h"
 #include "main.h"
 
-void registerCallback(IntListenerArray *array, IntListener handler, void *arg) {
-	efiAssertVoid(array->currentListenersCount < MAX_INT_LISTENER_COUNT, "Too many callbacks");
-	int index = array->currentListenersCount++;
-	array->callbacks[index] = handler;
-	array->args[index] = arg;
+void IntListenerArray::registerCallback(IntListener handler, void *arg) {
+	efiAssertVoid(currentListenersCount < MAX_INT_LISTENER_COUNT, "Too many callbacks");
+	int index = currentListenersCount++;
+	callbacks[index] = handler;
+	args[index] = arg;
+}
+
+void IntListenerArray::registerCallback(Void listener) {
+
 }
 
 void invokeCallbacks(IntListenerArray *array, int value) {
@@ -20,10 +24,10 @@ void invokeCallbacks(IntListenerArray *array, int value) {
 		(array->callbacks[i])(value);
 }
 
-void invokeJustArgCallbacks(IntListenerArray *array) {
-	for (int i = 0; i < array->currentListenersCount; i++) {
-		ArgListener listener = (ArgListener)array->callbacks[i];
-		void *arg = array->args[i];
+void IntListenerArray::invokeJustArgCallbacks() {
+	for (int i = 0; i < currentListenersCount; i++) {
+		ArgListener listener = (ArgListener)callbacks[i];
+		void *arg = args[i];
 		(listener)(arg);
 	}
 }

@@ -8,10 +8,7 @@
 #ifndef LISTENER_ARRAY_H_
 #define LISTENER_ARRAY_H_
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
+#include "rusefi_types.h"
 
 #define MAX_INT_LISTENER_COUNT 15
 
@@ -24,22 +21,21 @@ typedef void (*IntIntVoidListener)(int value1, int value2, void *arg);
 typedef void (*ArgListener)(void *arg);
 typedef void (*ArgIntListener)(void *arg, int value);
 
-typedef struct {
+class IntListenerArray {
+public:
+	void registerCallback(IntListener handler, void *arg);
+	void registerCallback(Void listener);
+	void invokeJustArgCallbacks();
 	int currentListenersCount;
 	IntListener callbacks[MAX_INT_LISTENER_COUNT];
 	void * args[MAX_INT_LISTENER_COUNT];
-} IntListenerArray;
+};
 
-void registerCallback(IntListenerArray *array, IntListener handler, void *arg);
 void invokeCallbacks(IntListenerArray *array, int value);
 void invokeJustArgCallbacks(IntListenerArray *array);
 void invokeArgIntCallbacks(IntListenerArray *array, int value);
 void invokeIntIntCallbacks(IntListenerArray *array, int value, int value2);
 void invokeIntIntVoidCallbacks(IntListenerArray *array, int value, int value2);
 void clearCallbacks(IntListenerArray *array);
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
 
 #endif /* LISTENER_ARRAY_H_ */

@@ -34,4 +34,6 @@ typedef float angle_t;
  */
 typedef float percent_t;
 
+typedef void (*Void)(void);
+
 #endif /* CONTROLLERS_ALGO_RUSEFI_TYPES_H_ */

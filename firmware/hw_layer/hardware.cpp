@@ -24,6 +24,7 @@
 #include "can_hw.h"
 
 #if EFI_PROD_CODE
+#include "AdcConfiguration.h"
 #include "board_test.h"
 #include "mcp3208.h"
 #include "HIP9011.h"
@@ -38,6 +39,10 @@
 #include "svnversion.h"
 #include "engine_configuration.h"
 #endif
+
+#if EFI_SPEED_DENSITY
+#include "map_averaging.h"
+#endif /* EFI_SPEED_DENSITY */
 
 #if EFI_INTERNAL_FLASH
 #include "flash_main.h"
@@ -129,6 +134,30 @@ static void sendI2Cbyte(int addr, int data) {
 static Logging *sharedLogger;
 
 #if EFI_PROD_CODE
+
+extern AdcDevice fastAdc;
+
+/**
+ * This method is not in the adc* lower-level file because it is more business logic then hardware.
+ */
+void adc_callback_fast(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
+	(void) buffer;
+	(void) n;
+	/**
+	 * Note, only in the ADC_COMPLETE state because the ADC driver fires an
+	 * intermediate callback when the buffer is half full.
+	 * */
+	if (adcp->state == ADC_COMPLETE) {
+		/**
+		 * this callback is executed 10 000 times a second, it needs to be as fast as possible
+		 */
+		efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#9b");
+
+#if EFI_MAP_AVERAGING
+		mapAveragingCallback(fastAdc.samples[0]);
+#endif /* EFI_MAP_AVERAGING */
+	}
+}
 
 void initHardware(Logging *l, Engine *engine) {
 	sharedLogger = l;

@@ -22,15 +22,17 @@ public:
 	int errorsCount;
 	int getAdcValueByIndex(int internalIndex);
 
-	adcsample_t samples[ADC_MAX_CHANNELS_COUNT * ADC_GRP1_BUF_DEPTH_SLOW];
+	adcsample_t samples[ADC_MAX_CHANNELS_COUNT * MAX_ADC_GRP_BUF_DEPTH];
+
+	int getAdcValueByHwChannel(int hwChannel);
 
 	adc_state values;
+	int channelCount;
 private:
 	ADCConversionGroup* hwConfig;
 	/**
 	 * Number of ADC channels in use
 	 */
-	int channelCount;
 
 	adc_channel_e hardwareIndexByIndernalAdcIndex[20];
 };
