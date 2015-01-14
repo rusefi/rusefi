@@ -27,7 +27,6 @@ public class AutoTest {
         sendCommand("set_engine_type 7");
         testFord6();
 
-        sendCommand("set_engine_type 4");
         testFordFiesta();
     }
 
@@ -61,14 +60,17 @@ public class AutoTest {
     }
 
     private static void testFordFiesta() {
+        sendCommand("set_engine_type 4");
         WaveChart chart;
         IoUtil.changeRpm(2000);
         chart = nextChart();
 
         String msg = "Fiesta";
         double x = 312;
-        assertWave(msg, chart, WaveChart.SPARK_1, 0.1333333, x, x + 360);
-        assertWave(msg, chart, WaveChart.SPARK_3, 0.1333333, x + 180, x + 540);
+        assertWave("wasted spark #1 with Fiesta", chart, WaveChart.SPARK_1, 0.1333333, x, x + 360);
+        assertNull(msg, chart.get(WaveChart.SPARK_2));
+        assertWave("wasted spark #3 with Fiesta", chart, WaveChart.SPARK_3, 0.1333333, x + 180, x + 540);
+        assertNull(msg, chart.get(WaveChart.SPARK_4));
     }
 
     private static void testFord6() {
@@ -172,7 +174,7 @@ public class AutoTest {
         // let's enable more channels dynamically
         sendCommand("set_ignition_mode 1");
         chart = nextChart();
-        assertWave(chart, WaveChart.SPARK_2, 0.133, x);
+        assertWave("Switching Aspire into INDIVIDUAL_COILS mode", chart, WaveChart.SPARK_2, 0.133, x);
         assertWave(chart, WaveChart.SPARK_3, 0.133, x + 360);
 
         sendCommand("set_whole_timing_map 520");

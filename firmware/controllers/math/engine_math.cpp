@@ -303,11 +303,11 @@ static NamedOutputPin * getIgnitionPinForIndex(int i DECLARE_ENGINE_PARAMETER_S)
 	case IM_WASTED_SPARK: {
 		int wastedIndex = i % (CONFIG(cylindersCount) / 2);
 		int id = getCylinderId(CONFIG(firingOrder), wastedIndex);
-		return &enginePins.coils[id];
+		return &enginePins.coils[ID2INDEX(id)];
 	}
 		break;
 	case IM_INDIVIDUAL_COILS:
-		return &enginePins.coils[getCylinderId(CONFIG(firingOrder), i)];
+		return &enginePins.coils[ID2INDEX(getCylinderId(CONFIG(firingOrder), i))];
 		break;
 
 	default:
