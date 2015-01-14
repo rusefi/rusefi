@@ -53,8 +53,10 @@ AdcConfiguration::AdcConfiguration(ADCConversionGroup* hwConfig) {
 #define PWM_FREQ_FAST 100000   /* PWM clock frequency. I wonder what does this setting mean?  */
 #define PWM_PERIOD_FAST 10  /* PWM period (in PWM ticks).    */
 
+// is there a reason to have this configurable?
 #define ADC_SLOW_DEVICE ADCD1
 
+// is there a reason to have this configurable?
 #define ADC_FAST_DEVICE ADCD2
 
 static char LOGGING_BUFFER[500];

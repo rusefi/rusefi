@@ -43,7 +43,7 @@ void SimplePwm::setSimplePwmDutyCycle(float dutyCycle) {
 	multiWave.setSwitchTime(0, dutyCycle);
 }
 
-static uint64_t getNextSwitchTimeUs(PwmConfig *state) {
+static efitimeus_t getNextSwitchTimeUs(PwmConfig *state) {
 	efiAssert(state->safe.phaseIndex < PWM_PHASE_MAX_COUNT, "phaseIndex range", 0);
 	int iteration = state->safe.iteration;
 	float switchTime = state->multiWave.getSwitchTime(state->safe.phaseIndex);
@@ -87,7 +87,7 @@ void PwmConfig::handleCycleStart() {
 /**
  * @return Next time for signal toggle
  */
-static uint64_t togglePwmState(PwmConfig *state) {
+static efitimeus_t togglePwmState(PwmConfig *state) {
 #if DEBUG_PWM
 	scheduleMsg(&logger, "togglePwmState phaseIndex=%d iteration=%d", state->safe.phaseIndex, state->safe.iteration);
 	scheduleMsg(&logger, "state->period=%f state->safe.period=%f", state->period, state->safe.period);
@@ -109,7 +109,7 @@ static uint64_t togglePwmState(PwmConfig *state) {
 	int cbStateIndex = state->safe.phaseIndex == 0 ? state->phaseCount - 1 : state->safe.phaseIndex - 1;
 	state->stateChangeCallback(state, cbStateIndex);
 
-	uint64_t nextSwitchTimeUs = getNextSwitchTimeUs(state);
+	efitimeus_t nextSwitchTimeUs = getNextSwitchTimeUs(state);
 #if DEBUG_PWM
 	scheduleMsg(&logger, "%s: nextSwitchTime %d", state->name, nextSwitchTime);
 #endif
@@ -140,7 +140,7 @@ static uint64_t togglePwmState(PwmConfig *state) {
  * Main PWM loop: toggle pin & schedule next invocation
  */
 static void timerCallback(PwmConfig *state) {
-	uint64_t switchTimeUs = togglePwmState(state);
+	efitimeus_t switchTimeUs = togglePwmState(state);
 	scheduleTask2("pwm", &state->scheduling, switchTimeUs, (schfunc_t) timerCallback, state);
 }
 
