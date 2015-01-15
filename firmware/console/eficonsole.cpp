@@ -159,9 +159,9 @@ void print(const char *format, ...) {
 #endif /* EFI_UART_ECHO_TEST_MODE */
 }
 
-void initializeConsole(void) {
+void initializeConsole(Logging *sharedLogger) {
 	initIntermediateLoggingBuffer();
-	initConsoleLogic();
+	initConsoleLogic(sharedLogger);
 
 	startConsole(&handleConsoleLine);
 

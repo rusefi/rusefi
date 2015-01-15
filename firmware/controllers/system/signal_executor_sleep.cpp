@@ -1,5 +1,5 @@
 /**
- * @file	signal_executor_sleep.c
+ * @file	signal_executor_sleep.cpp
  * @brief   Asynchronous output signal code
  *
  * Here we have the simplest, thread-based implementation of signal executor.
@@ -24,6 +24,7 @@
 
 #include "main.h"
 #include "scheduler.h"
+#include "signal_executor.h"
 
 #if EFI_SIGNAL_EXECUTOR_SLEEP || defined(__DOXYGEN__)
 

@@ -189,6 +189,19 @@ void mySetPadMode(const char *msg, ioportid_t port, ioportmask_t pin, iomode_t m
 	palSetPadMode(port, pin, mode);
 }
 
+void unmarkPin(brain_pin_e brainPin) {
+	ioportid_t port = getHwPort(brainPin);
+	ioportmask_t pin = getHwPin(brainPin);
+
+	int portIndex = getPortIndex(port);
+	int index = portIndex * 16 + pin;
+
+	if (PIN_USED[index] != NULL) {
+		PIN_USED[index] = NULL;
+		totalPinsUsed--;
+	}
+}
+
 /**
  * This method would crash the program if pin is already in use
  */

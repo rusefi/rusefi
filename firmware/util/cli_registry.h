@@ -9,6 +9,8 @@
 #ifndef RFICONSOLE_LOGIC_H_
 #define RFICONSOLE_LOGIC_H_
 
+#include "datalogging.h"
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -67,7 +69,7 @@ typedef void (*VoidCharPtrCharPtrCharPtrCharPtrCharPtr)(const char *, const char
 char *validateSecureLine(char *line);
 void resetConsoleActions(void);
 void helpCommand(void);
-void initConsoleLogic(void);
+void initConsoleLogic(Logging *sharedLogger);
 void handleConsoleLine(char *line);
 int findEndOfToken(const char *line);
 char *unquote(char *line);

@@ -17,8 +17,6 @@ extern "C"
 
 #include "global.h"
 
-#include "eficonsole.h"
-#include "cli_registry.h"
 #include "efilib.h"
 #include "rusefi.h"
 
@@ -27,7 +25,9 @@ extern "C"
 #include "rusefi_enums.h"
 
 #ifdef __cplusplus
+#include "cli_registry.h"
 #include "datalogging.h"
+#include "eficonsole.h"
 #endif
 
 #include "chprintf.h"

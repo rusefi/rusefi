@@ -40,7 +40,7 @@
 /* Low speed SPI configuration (281.250kHz, CPHA=0, CPOL=0, MSb first).*/
 #define SPI_POT_CONFIG SPI_CR1_BR_2 | SPI_CR1_BR_1 | SPI_CR1_DFF
 
-static LoggingWithStorage logger;
+static Logging * logger;
 
 #if EFI_POTENTIOMETER || defined(__DOXYGEN__)
 Mcp42010Driver config[DIGIPOT_COUNT];
@@ -69,17 +69,7 @@ static void sendToPot(Mcp42010Driver *driver, int channel, int value) {
 void setPotResistance(Mcp42010Driver *driver, int channel, int resistance) {
 	int value = getPotStep(resistance);
 
-	Logging *logging = &logger;
-	resetLogging(logging);
-	appendPrintf(logging, "msg");
-	appendPrintf(logging, DELIMETER);
-	appendPrintf(logging, "Sending to potentiometer%d", channel);
-	appendPrintf(&logger, ": ");
-	appendPrintf(&logger, "%d for R=%d", value, resistance);
-	appendMsgPostfix(logging);
-
-	scheduleLogging(logging);
-
+	scheduleMsg(logger, "Sending to potentiometer%d: %d for R=%d", channel, value, resistance);
 	sendToPot(driver, channel, value);
 }
 
@@ -93,11 +83,11 @@ static void setPotValue1(int value) {
 
 #endif /* EFI_POTENTIOMETER */
 
-void initPotentiometers(board_configuration_s *boardConfiguration) {
+void initPotentiometers(Logging *sharedLogger, board_configuration_s *boardConfiguration) {
+	logger = sharedLogger;
 #if EFI_POTENTIOMETER
-	initLogging(&logger, "potentiometer");
 	if (boardConfiguration->digitalPotentiometerSpiDevice == SPI_NONE) {
-		scheduleMsg(&logger, "digiPot spi disabled");
+		scheduleMsg(logger, "digiPot spi disabled");
 		return;
 	}
 	turnOnSpi(boardConfiguration->digitalPotentiometerSpiDevice);

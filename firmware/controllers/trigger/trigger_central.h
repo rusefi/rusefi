@@ -39,18 +39,10 @@ uint64_t getCrankEventCounter(void);
 uint64_t getStartOfRevolutionIndex(void);
 void hwHandleShaftSignal(trigger_event_e signal);
 float getTriggerDutyCycle(int index);
-void initTriggerCentral(Engine *engine);
+void initTriggerCentral(Logging *sharedLogger, Engine *engine);
 void printAllCallbacksHistogram(void);
-
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
 
 void addTriggerEventListener(ShaftPositionListener handler, const char *name, Engine *engine);
 int isSignalDecoderError(void);
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
 
 #endif /* TRIGGER_CENTRAL_H_ */

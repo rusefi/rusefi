@@ -41,8 +41,6 @@ extern WaveChart waveChart;
 
 #include "efiGpio.h"
 
-static LoggingWithStorage logger;
-
 extern engine_pins_s enginePins;
 
 static const char *sparkNames[ENGINE_CHANNEL_COUNT] = { "spa1", "spa2", "spa3", "spa4", "spa5", "spa6", "spa7", "spa8",
@@ -52,7 +50,6 @@ static const char *injectorNames[ENGINE_CHANNEL_COUNT] = { "inj1", "inj2", "inj3
 		"inj10", "inj11", "inj12"};
 
 void initSignalExecutor(void) {
-	initLogging(&logger, "s exec");
 	initSignalExecutorImpl();
 
 	for (int i = 0; i < ENGINE_CHANNEL_COUNT;i++) {
