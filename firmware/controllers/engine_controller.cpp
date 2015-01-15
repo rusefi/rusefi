@@ -378,7 +378,7 @@ void initEngineContoller(Logging *sharedLogger, Engine *engine) {
 
 #if EFI_MAP_AVERAGING || defined(__DOXYGEN__)
 	if (engineConfiguration->isMapAveragingEnabled) {
-		initMapAveraging(engine);
+		initMapAveraging(sharedLogger, engine);
 	}
 #endif /* EFI_MAP_AVERAGING */
 

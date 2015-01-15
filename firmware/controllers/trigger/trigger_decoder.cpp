@@ -50,9 +50,7 @@ bool printGapRatio = false;
 float actualSynchGap;
 #endif /* ! EFI_PROD_CODE */
 
-#if (EFI_PROD_CODE || EFI_SIMULATOR)
-static LoggingWithStorage logger;
-#endif
+static Logging * logger;
 
 /**
  * @return TRUE is something is wrong with trigger decoding
@@ -170,7 +168,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, uint64_t now
 #endif /* EFI_PROD_CODE */
 			float gap = 1.0 * currentDuration / toothed_previous_duration;
 #if EFI_PROD_CODE
-			scheduleMsg(&logger, "gap=%f @ %d", gap, current_index);
+			scheduleMsg(logger, "gap=%f @ %d", gap, current_index);
 #else
 			actualSynchGap = gap;
 			print("current gap %f\r\n", gap);
@@ -198,7 +196,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, uint64_t now
 			totalTriggerErrorCounter++;
 			if (engineConfiguration->isPrintTriggerSynchDetails) {
 #if EFI_PROD_CODE
-				scheduleMsg(&logger, "error: synchronizationPoint @ index %d expected %d/%d/%d got %d/%d/%d", current_index,
+				scheduleMsg(logger, "error: synchronizationPoint @ index %d expected %d/%d/%d got %d/%d/%d", current_index,
 						TRIGGER_SHAPE(expectedEventCount[0]), TRIGGER_SHAPE(expectedEventCount[1]),
 						TRIGGER_SHAPE(expectedEventCount[2]), eventCount[0], eventCount[1], eventCount[2]);
 #endif /* EFI_PROD_CODE */
@@ -444,10 +442,8 @@ uint32_t findTriggerZeroEventIndex(TriggerShape * shape, trigger_config_s const*
 //static Logging logger;
 #endif
 
-void initTriggerDecoderLogger(void) {
-#if (EFI_PROD_CODE || EFI_SIMULATOR)
-	initLogging(&logger, "trigger decoder");
-#endif
+void initTriggerDecoderLogger(Logging *sharedLogger) {
+	logger = sharedLogger;
 }
 
 void initTriggerDecoder(void) {
