@@ -189,6 +189,10 @@ static void endOfSpiCommunication(SPIDriver *spip) {
 	isSendingSpiCommand = false;
 }
 
+void hipAdcCallback(adcsample_t value) {
+
+}
+
 void initHip9011(Logging *sharedLogger) {
 	if (!boardConfiguration->isHip9011Enabled)
 		return;

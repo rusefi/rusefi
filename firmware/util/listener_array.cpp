@@ -8,6 +8,10 @@
 #include "listener_array.h"
 #include "main.h"
 
+IntListenerArray::IntListenerArray() {
+	currentListenersCount = 0;
+}
+
 void IntListenerArray::registerCallback(IntListener handler, void *arg) {
 	efiAssertVoid(currentListenersCount < MAX_INT_LISTENER_COUNT, "Too many callbacks");
 	int index = currentListenersCount++;

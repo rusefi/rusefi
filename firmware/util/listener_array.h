@@ -23,6 +23,7 @@ typedef void (*ArgIntListener)(void *arg, int value);
 
 class IntListenerArray {
 public:
+	IntListenerArray();
 	void registerCallback(IntListener handler, void *arg);
 	void registerCallback(Void listener);
 	void invokeJustArgCallbacks();

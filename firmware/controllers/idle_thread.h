@@ -11,6 +11,6 @@
 
 #include "engine.h"
 
-void startIdleThread(Engine *engine);
+void startIdleThread(Logging*sharedLogger, Engine *engine);
 
 #endif /* IDLE_THREAD_H_ */

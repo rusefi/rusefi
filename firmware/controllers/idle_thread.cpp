@@ -36,7 +36,7 @@
 
 static THD_WORKING_AREA(ivThreadStack, UTILITY_THREAD_STACK_SIZE);
 
-static LoggingWithStorage logger;
+static Logging *logger;
 EXTERN_ENGINE
 ;
 
@@ -49,14 +49,13 @@ static SimplePwm idleValvePwm;
 static IdleValveState idle;
 
 void idleDebug(const char *msg, percent_t value) {
-	printMsg(&logger, "%s%f", msg, value);
-	scheduleLogging(&logger);
+	scheduleMsg(logger, "%s%f", msg, value);
 }
 
 static void showIdleInfo(void) {
-	scheduleMsg(&logger, "idleMode=%s duty=%f", getIdle_mode_e(engineConfiguration->idleMode),
+	scheduleMsg(logger, "idleMode=%s duty=%f", getIdle_mode_e(engineConfiguration->idleMode),
 			boardConfiguration->idleSolenoidPwm);
-	scheduleMsg(&logger, "idle valve freq=%d on %s", boardConfiguration->idleSolenoidFrequency,
+	scheduleMsg(logger, "idle valve freq=%d on %s", boardConfiguration->idleSolenoidFrequency,
 			hwPortname(boardConfiguration->idleValvePin));
 }
 
@@ -68,7 +67,7 @@ static void setIdleControlEnabled(int value) {
 static void setIdleValvePwm(percent_t value) {
 	if (value < 0.01 || value > 99.9)
 		return;
-	scheduleMsg(&logger, "setting idle valve PWM %f", value);
+	scheduleMsg(logger, "setting idle valve PWM %f", value);
 	float f = 0.01 * value;
 	boardConfiguration->idleSolenoidPwm = f;
 	showIdleInfo();
@@ -117,7 +116,7 @@ static msg_t ivThread(int param) {
 
 static void setIdleRpmAction(int value) {
 	setIdleRpm(&idle, value);
-	scheduleMsg(&logger, "target idle RPM %d", value);
+	scheduleMsg(logger, "target idle RPM %d", value);
 }
 
 static void applyIdleSolenoidPinState(PwmConfig *state, int stateIndex) {
@@ -129,8 +128,8 @@ static void applyIdleSolenoidPinState(PwmConfig *state, int stateIndex) {
 		output->setValue(value);
 }
 
-void startIdleThread(Engine *engine) {
-	initLogging(&logger, "Idle Valve Control");
+void startIdleThread(Logging*sharedLogger, Engine *engine) {
+	logger = sharedLogger;
 
 	/**
 	 * Start PWM for IDLE_VALVE logical / idleValvePin physical
@@ -139,7 +138,7 @@ void startIdleThread(Engine *engine) {
 			boardConfiguration->idleSolenoidFrequency, boardConfiguration->idleSolenoidPwm, applyIdleSolenoidPinState);
 
 	idle.init();
-	scheduleMsg(&logger, "initial idle %d", idle.value);
+	scheduleMsg(logger, "initial idle %d", idle.value);
 
 	chThdCreateStatic(ivThreadStack, sizeof(ivThreadStack), NORMALPRIO, (tfunc_t) ivThread, NULL);
 

@@ -137,6 +137,9 @@ static Logging *sharedLogger;
 
 extern AdcDevice fastAdc;
 
+static int fastMapSampleIndex;
+static int hipSampleIndex;
+
 /**
  * This method is not in the adc* lower-level file because it is more business logic then hardware.
  */
@@ -154,9 +157,23 @@ void adc_callback_fast(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 		efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#9b");
 
 #if EFI_MAP_AVERAGING
-		mapAveragingCallback(fastAdc.samples[0]);
+		mapAveragingCallback(fastAdc.samples[fastMapSampleIndex]);
 #endif /* EFI_MAP_AVERAGING */
+		if (boardConfiguration->isHip9011Enabled) {
+			hipAdcCallback(fastAdc.samples[hipSampleIndex]);
+		}
 	}
+}
+
+static void calcFastAdcIndexes(void) {
+	fastMapSampleIndex = fastAdc.internalAdcIndexByHardwareIndex[engineConfiguration->map.sensor.hwChannel];
+	hipSampleIndex =
+			engineConfiguration->hipOutputChannel == EFI_ADC_NONE ?
+					-1 : fastAdc.internalAdcIndexByHardwareIndex[engineConfiguration->hipOutputChannel];
+}
+
+static void adcConfigListener(void) {
+	calcFastAdcIndexes();
 }
 
 void initHardware(Logging *l, Engine *engine) {
@@ -199,8 +216,7 @@ void initHardware(Logging *l, Engine *engine) {
 
 #if EFI_INTERNAL_FLASH
 
-	palSetPadMode(CONFIG_RESET_SWITCH_PORT, CONFIG_RESET_SWITCH_PIN,
-			PAL_MODE_INPUT_PULLUP);
+	palSetPadMode(CONFIG_RESET_SWITCH_PORT, CONFIG_RESET_SWITCH_PIN, PAL_MODE_INPUT_PULLUP);
 
 	initFlash(sharedLogger, engine);
 	/**
@@ -209,8 +225,7 @@ void initHardware(Logging *l, Engine *engine) {
 	 */
 	if (SHOULD_INGORE_FLASH()) {
 		engineConfiguration->engineType = DEFAULT_ENGINE_TYPE;
-		resetConfigurationExt(sharedLogger, engineConfiguration->engineType,
-				engine);
+		resetConfigurationExt(sharedLogger, engineConfiguration->engineType, engine);
 		writeToFlash();
 	} else {
 		readFromFlash();
@@ -244,8 +259,7 @@ void initHardware(Logging *l, Engine *engine) {
 	initOutputPins();
 
 #if EFI_MAX_31855
-	initMax31855(sharedLogger, getSpiDevice(boardConfiguration->max31855spiDevice),
-			boardConfiguration->max31855_cs);
+	initMax31855(sharedLogger, getSpiDevice(boardConfiguration->max31855spiDevice), boardConfiguration->max31855_cs);
 #endif /* EFI_MAX_31855 */
 
 //	iacMotor.initialize(GPIOD_11, GPIOD_10);
@@ -316,6 +330,9 @@ void initHardware(Logging *l, Engine *engine) {
 	initVehicleSpeed(sharedLogger);
 
 	initJoystick(sharedLogger);
+
+	calcFastAdcIndexes();
+	engine->configurationListeners.registerCallback(adcConfigListener);
 
 	printMsg(sharedLogger, "initHardware() OK!");
 }
