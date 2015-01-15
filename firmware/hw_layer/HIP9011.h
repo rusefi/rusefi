@@ -31,5 +31,6 @@
 
 void initHip9011(Logging *sharedLogger);
 void setHip9011FrankensoPinout(void);
+void hipAdcCallback(adcsample_t value);
 
 #endif /* HIP9011_H_ */

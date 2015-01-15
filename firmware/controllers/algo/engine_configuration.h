@@ -536,7 +536,11 @@ typedef struct {
 	bool_t hasMafSensor : 1; // bit 12
 	bool_t hasTpsSensor : 1; // bit 13
 
-	int unused6284;
+	/**
+	 * see also
+	 * offset 6284
+	 */
+	adc_channel_e hipOutputChannel;
 
 	idle_mode_e idleMode;
 

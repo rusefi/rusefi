@@ -393,7 +393,7 @@ void initEngineContoller(Logging *sharedLogger, Engine *engine) {
 
 #if EFI_IDLE_CONTROL || defined(__DOXYGEN__)
 	if (engineConfiguration->isIdleThreadEnabled) {
-		startIdleThread(engine);
+		startIdleThread(sharedLogger, engine);
 	}
 #endif
 

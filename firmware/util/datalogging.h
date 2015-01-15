@@ -14,27 +14,6 @@
 
 #define DELIMETER	","
 
-typedef enum {
-	LP_RPM = 0,
-	LP_ECT = 1,
-	LP_IAT = 2,
-
-	LP_THROTTLE = 3,
-	LP_THROTTLE_ADC = 4,
-
-	LP_MAP = 5,
-	LP_MAP_RAW = 6,
-
-	LP_MAF = 7,
-	LP_TRG_CH0_DUTY = 8,
-	LP_TRG_CH1_DUTY = 9,
-
-
-	//	LP_SECONDS,
-	LP_COUNT = 9
-
-} LoggingPoints;
-
 // todo: migrate to external buffer so that different instances have different
 // size of buffers?
 class Logging {
@@ -81,10 +60,8 @@ void initLogging(LoggingWithStorage *logging, const char *name);
 void initLoggingExt(Logging *logging, const char *name, char *buffer, int bufferSize);
 
 void debugInt(Logging *logging, const char *caption, int value);
-void logInt(Logging *logging, LoggingPoints loggingPoint, int value);
 
 void debugFloat(Logging *logging, const char *text, float value, int precision);
-void logFloat(Logging *logging, LoggingPoints loggingPoint, float value);
 void appendFloat(Logging *logging, float value, int precision);
 
 void resetLogging(Logging *logging);

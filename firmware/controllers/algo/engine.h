@@ -16,6 +16,7 @@
 #include "event_registry.h"
 #include "trigger_structure.h"
 #include "table_helper.h"
+#include "listener_array.h"
 
 /**
  * This class knows about when to inject fuel
@@ -142,6 +143,9 @@ public:
 
 	void updateSlowSensors();
 	void watchdog();
+
+	IntListenerArray configurationListeners;
+
 private:
 	/**
 	 * By the way:
