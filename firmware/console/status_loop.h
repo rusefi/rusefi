@@ -24,12 +24,12 @@ extern "C"
 #endif /* __cplusplus */
 
 void writeLogLine(void);
-bool getFullLog(void);
-void setFullLog(int value);
-void sayOsHello(void);
 
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
+
+bool getFullLog(void);
+void setFullLog(int value);
 
 #endif /* CONSOLE_LOOP_H_ */

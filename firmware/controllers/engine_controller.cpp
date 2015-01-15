@@ -340,7 +340,7 @@ void initEngineContoller(Logging *sharedLogger, Engine *engine) {
 
 #if EFI_TUNER_STUDIO
 	if (engineConfiguration->isTunerStudioEnabled) {
-		startTunerStudioConnectivity();
+		startTunerStudioConnectivity(sharedLogger);
 	}
 #endif
 

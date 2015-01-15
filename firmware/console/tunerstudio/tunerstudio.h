@@ -16,18 +16,9 @@
 
 void updateTunerStudioState(Engine *engine, TunerStudioOutputChannels *tsOutputChannels);
 
-
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
-
-void startTunerStudioConnectivity(void);
+void startTunerStudioConnectivity(Logging *sharedLogger);
 void syncTunerStudioCopy(void);
 void tunerStudioWriteCrcPacket(const uint8_t command, const void *buf, const uint16_t size);
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
 
 #if defined __GNUC__
 // GCC

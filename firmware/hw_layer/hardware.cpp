@@ -202,7 +202,7 @@ void initHardware(Logging *l, Engine *engine) {
 	palSetPadMode(CONFIG_RESET_SWITCH_PORT, CONFIG_RESET_SWITCH_PIN,
 			PAL_MODE_INPUT_PULLUP);
 
-	initFlash(engine);
+	initFlash(sharedLogger, engine);
 	/**
 	 * this call reads configuration from flash memory or sets default configuration
 	 * if flash state does not look right.
@@ -244,7 +244,7 @@ void initHardware(Logging *l, Engine *engine) {
 	initOutputPins();
 
 #if EFI_MAX_31855
-	initMax31855(getSpiDevice(boardConfiguration->max31855spiDevice),
+	initMax31855(sharedLogger, getSpiDevice(boardConfiguration->max31855spiDevice),
 			boardConfiguration->max31855_cs);
 #endif /* EFI_MAX_31855 */
 
@@ -269,7 +269,7 @@ void initHardware(Logging *l, Engine *engine) {
 #endif
 
 #if EFI_HIP_9011
-	initHip9011();
+	initHip9011(sharedLogger);
 #endif /* EFI_HIP_9011 */
 
 #if EFI_FILE_LOGGING

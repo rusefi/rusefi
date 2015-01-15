@@ -9,6 +9,6 @@
 #define ENGINE_EMULATOR_H_
 
 #include "engine.h"
-void initEngineEmulator(Engine *engine);
+void initEngineEmulator(Logging *sharedLogger, Engine *engine);
 
 #endif /* ENGINE_EMULATOR_H_ */

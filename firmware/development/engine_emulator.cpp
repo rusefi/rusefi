@@ -93,7 +93,7 @@ static void initECUstimulator(Engine *engine) {
 	chThdCreateStatic(eeThreadStack, sizeof(eeThreadStack), NORMALPRIO, (tfunc_t) eeThread, engine);
 }
 
-void initEngineEmulator(Engine *engine) {
+void initEngineEmulator(Logging *sharedLogger, Engine *engine) {
 	if (hasFirmwareError())
 		return;
 
@@ -102,5 +102,5 @@ void initEngineEmulator(Engine *engine) {
 #endif /* EFI_POTENTIOMETER */
 
 	//initECUstimulator();
-	initTriggerEmulator(engine);
+	initTriggerEmulator(sharedLogger, engine);
 }

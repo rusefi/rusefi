@@ -15,7 +15,7 @@
 #define FLASH_DATA_VERSION 6130
 
 void readFromFlash(void);
-void initFlash(Engine *engine);
+void initFlash(Logging *sharedLogger, Engine *engine);
 
 /**
  * Because of hardware-related issues, stm32f4 chip is totally

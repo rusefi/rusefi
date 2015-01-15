@@ -68,7 +68,7 @@ PwmConfig triggerSignal(swtchTms, sr);
 static int stopEmulationAtIndex = DO_NOT_STOP;
 static bool isEmulating = true;
 
-static LoggingWithStorage logger;
+static Logging *logger;
 static LocalVersionHolder localVersion;
 
 EXTERN_ENGINE;
@@ -85,15 +85,15 @@ void setTriggerEmulatorRPM(int rpm, Engine *engine) {
 		float gRpm = rpm * engineConfiguration->rpmMultiplier / 60.0; // per minute converted to per second
 		triggerSignal.periodNt = US2NT(frequency2periodUs(gRpm));
 	}
-	scheduleMsg(&logger, "Emulating position sensor(s). RPM=%d", rpm);
+	scheduleMsg(logger, "Emulating position sensor(s). RPM=%d", rpm);
 }
 
 static void updateTriggerShapeIfNeeded(PwmConfig *state) {
 	if (localVersion.isOld()) {
-		scheduleMsg(&logger, "Stimulator: updating trigger shape: %d/%d %d", localVersion.getVersion(),
+		scheduleMsg(logger, "Stimulator: updating trigger shape: %d/%d %d", localVersion.getVersion(),
 				getGlobalConfigurationVersion(), currentTimeMillis());
 
-		applyNonPersistentConfiguration(&logger, engine);
+		applyNonPersistentConfiguration(logger, engine);
 
 		TriggerShape *s = &engine->triggerShape;
 		int *pinStates[PWM_PHASE_MAX_WAVE_PER_PWM] = { s->wave.waves[0].pinStates, s->wave.waves[1].pinStates,
@@ -132,8 +132,8 @@ static void resumeStimulator(Engine *engine) {
 	stopEmulationAtIndex = DO_NOT_STOP;
 }
 
-void initTriggerEmulatorLogic(Engine *engine) {
-	initLogging(&logger, "position sensor(s) emulator");
+void initTriggerEmulatorLogic(Logging *sharedLogger, Engine *engine) {
+	logger = sharedLogger;
 
 	TriggerShape *s = &engine->triggerShape;
 	setTriggerEmulatorRPM(engineConfiguration->bc.triggerSimulatorFrequency, engine);
