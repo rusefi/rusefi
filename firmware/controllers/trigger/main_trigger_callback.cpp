@@ -78,7 +78,7 @@ static IgnitionEvent *iHead = NULL;
 
 static cyclic_buffer ignitionErrorDetection;
 
-static LoggingWithStorage logger;
+static Logging *logger;
 
 // todo: figure out if this even helps?
 //#if defined __GNUC__
@@ -187,7 +187,7 @@ static ALWAYS_INLINE void handleSparkEvent(uint32_t eventIndex, IgnitionEvent *i
 	ignitionErrorDetection.add(isIgnitionError);
 	if (isIgnitionError) {
 #if EFI_PROD_CODE
-		scheduleMsg(&logger, "Negative spark delay=%f", sparkDelayUs);
+		scheduleMsg(logger, "Negative spark delay=%f", sparkDelayUs);
 #endif
 		sparkDelayUs = 0;
 		return;
@@ -274,7 +274,7 @@ static histogram_s mainLoopHisto;
 
 void showMainHistogram(void) {
 #if EFI_PROD_CODE
-	printHistogram(&logger, &mainLoopHisto);
+	printHistogram(logger, &mainLoopHisto);
 #endif
 }
 
@@ -407,13 +407,14 @@ static void showMainInfo(Engine *engine) {
 #if EFI_PROD_CODE
 	int rpm = engine->rpmCalculator.rpm(PASS_ENGINE_PARAMETER_F);
 	float el = getEngineLoadT(PASS_ENGINE_PARAMETER);
-	scheduleMsg(&logger, "rpm %d engine_load %f", rpm, el);
-	scheduleMsg(&logger, "fuel %fms timing %f", getFuelMs(rpm PASS_ENGINE_PARAMETER),
+	scheduleMsg(logger, "rpm %d engine_load %f", rpm, el);
+	scheduleMsg(logger, "fuel %fms timing %f", getFuelMs(rpm PASS_ENGINE_PARAMETER),
 			getAdvance(rpm, el PASS_ENGINE_PARAMETER));
 #endif
 }
 
-void initMainEventListener(Engine *engine) {
+void initMainEventListener(Logging *sharedLogger, Engine *engine) {
+	logger = sharedLogger;
 	efiAssertVoid(engine!=NULL, "null engine");
 
 	mainTriggerCallbackInstance.init(engine);
@@ -422,10 +423,10 @@ void initMainEventListener(Engine *engine) {
 	addConsoleAction("performanceinfo", showTriggerHistogram);
 	addConsoleActionP("maininfo", (VoidPtr) showMainInfo, engine);
 
-	initLogging(&logger, "main event handler");
-	printMsg(&logger, "initMainLoop: %d", currentTimeMillis());
+
+	printMsg(logger, "initMainLoop: %d", currentTimeMillis());
 	if (!isInjectionEnabled(mainTriggerCallbackInstance.engine->engineConfiguration))
-		printMsg(&logger, "!!!!!!!!!!!!!!!!!!! injection disabled");
+		printMsg(logger, "!!!!!!!!!!!!!!!!!!! injection disabled");
 #endif
 
 #if EFI_HISTOGRAMS
