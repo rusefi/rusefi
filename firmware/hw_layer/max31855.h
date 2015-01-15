@@ -11,16 +11,7 @@
 #include "main.h"
 #include "engine_configuration.h"
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
-
-void initMax31855(SPIDriver *drv, egt_cs_array_t max31855_cs);
+void initMax31855(Logging *sharedLogger, SPIDriver *drv, egt_cs_array_t max31855_cs);
 uint16_t getEgtValue(int egtChannel);
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
 
 #endif /* MAX31855_H_ */

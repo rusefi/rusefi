@@ -175,7 +175,7 @@ void runRusEfi(void) {
 #endif
 
 #if EFI_ENGINE_EMULATOR || defined(__DOXYGEN__)
-	initEngineEmulator(engine);
+	initEngineEmulator(&sharedLogger, engine);
 #endif
 	startStatusThreads(engine);
 
@@ -253,7 +253,7 @@ void firmwareError(const char *fmt, ...) {
 	}
 }
 
-static char UNUSED_RAM_SIZE[3500];
+static char UNUSED_RAM_SIZE[5500];
 
 static char UNUSED_CCM_SIZE[8000] CCM_OPTIONAL;
 

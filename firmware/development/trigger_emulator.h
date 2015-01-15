@@ -14,7 +14,7 @@
 #include "trigger_structure.h"
 #include "engine.h"
 
-void initTriggerEmulator(Engine *engine);
+void initTriggerEmulator(Logging *sharedLogger, Engine *engine);
 void setTriggerEmulatorRPM(int value, Engine *engine);
 
 #endif /* DIST_EMULATOR_H_ */

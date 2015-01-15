@@ -29,7 +29,7 @@
 
 #define HIP_THREAD_PERIOD 100
 
-void initHip9011(void);
+void initHip9011(Logging *sharedLogger);
 void setHip9011FrankensoPinout(void);
 
 #endif /* HIP9011_H_ */

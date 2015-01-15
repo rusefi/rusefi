@@ -29,7 +29,7 @@
 
 static SPIDriver *driver;
 
-static LoggingWithStorage logger;
+static Logging* logger;
 
 static SPIConfig spiConfig[MAX31855_CS_COUNT];
 
@@ -37,13 +37,13 @@ EXTERN_ENGINE;
 
 static void showEgtInfo(void) {
 #if EFI_PROD_CODE
-	printSpiState(&logger, boardConfiguration);
+	printSpiState(logger, boardConfiguration);
 
-	scheduleMsg(&logger, "EGT spi: %d", boardConfiguration->max31855spiDevice);
+	scheduleMsg(logger, "EGT spi: %d", boardConfiguration->max31855spiDevice);
 
 	for (int i = 0; i < MAX31855_CS_COUNT; i++) {
 		if (boardConfiguration->max31855_cs[i] != GPIO_UNASSIGNED) {
-			scheduleMsg(&logger, "%d ETG @ %s", i, hwPortname(boardConfiguration->max31855_cs[i]));
+			scheduleMsg(logger, "%d ETG @ %s", i, hwPortname(boardConfiguration->max31855_cs[i]));
 		}
 	}
 #endif
@@ -120,29 +120,29 @@ uint16_t getEgtValue(int egtChannel) {
 static void egtRead(void) {
 
 	if (driver == NULL) {
-		scheduleMsg(&logger, "No SPI selected for EGT");
+		scheduleMsg(logger, "No SPI selected for EGT");
 		return;
 	}
 
-	scheduleMsg(&logger, "Reading egt");
+	scheduleMsg(logger, "Reading egt");
 
 	uint32_t egtPacket = readEgtPacket(0);
 
 	max_32855_code code = getResultCode(egtPacket);
 
-	scheduleMsg(&logger, "egt %x code=%d %s", egtPacket, code, getMcCode(code));
+	scheduleMsg(logger, "egt %x code=%d %s", egtPacket, code, getMcCode(code));
 
 	if (code != MC_INVALID) {
 		int refBits = ((egtPacket & 0xFFFF) / 16); // bits 15:4
 		float refTemp = refBits / 16.0;
-		scheduleMsg(&logger, "reference temperature %f", refTemp);
+		scheduleMsg(logger, "reference temperature %f", refTemp);
 
-		scheduleMsg(&logger, "EGT temperature %d", GET_TEMPERATURE_C(egtPacket));
+		scheduleMsg(logger, "EGT temperature %d", GET_TEMPERATURE_C(egtPacket));
 	}
 }
 
-void initMax31855(SPIDriver *drv, egt_cs_array_t max31855_cs) {
-	initLogging(&logger, "EGT");
+void initMax31855(Logging *sharedLogger, SPIDriver *drv, egt_cs_array_t max31855_cs) {
+	logger = sharedLogger;
 
 	driver = drv;
 

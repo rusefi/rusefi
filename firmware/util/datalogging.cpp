@@ -149,7 +149,7 @@ void vappendPrintf(Logging *logging, const char *fmt, va_list arg) {
 	}
 	int wasLocked = lockAnyContext();
 	vappendPrintfI(logging, fmt, arg);
-	if (wasLocked) {
+	if (!wasLocked) {
 		unlockAnyContext();
 	}
 }
@@ -314,7 +314,7 @@ void scheduleMsg(Logging *logging, const char *fmt, ...) {
 
 	appendMsgPostfix(logging);
 	scheduleLogging(logging);
-	if (wasLocked) {
+	if (!wasLocked) {
 		unlockAnyContext();
 	}
 }

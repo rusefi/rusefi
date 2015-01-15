@@ -27,7 +27,7 @@ extern PwmConfig triggerSignal;
 
 static OutputPin emulatorOutputs[3];
 
-void initTriggerEmulator(Engine *engine) {
+void initTriggerEmulator(Logging *sharedLogger, Engine *engine) {
 
 	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
 	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
@@ -51,7 +51,7 @@ void initTriggerEmulator(Engine *engine) {
 			&boardConfiguration->triggerSimulatorPinModes[2]);
 #endif /* EFI_PROD_CODE */
 
-	initTriggerEmulatorLogic(engine);
+	initTriggerEmulatorLogic(sharedLogger, engine);
 #else
 	print("No position sensor(s) emulation\r\n");
 #endif /* EFI_EMULATE_POSITION_SENSORS */

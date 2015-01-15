@@ -61,7 +61,7 @@ static bool_t isSendingSpiCommand = false;
 static scheduling_s startTimer[2];
 static scheduling_s endTimer[2];
 
-static LoggingWithStorage logger;
+static Logging *logger;
 
 // SPI_CR1_BR_1 // 5MHz
 // SPI_CR1_CPHA Clock Phase
@@ -92,14 +92,14 @@ EXTERN_ENGINE
 ;
 
 static void showHipInfo(void) {
-	printSpiState(&logger, boardConfiguration);
-	scheduleMsg(&logger, "bore=%f freq=%f", engineConfiguration->cylinderBore, BAND(engineConfiguration->cylinderBore));
+	printSpiState(logger, boardConfiguration);
+	scheduleMsg(logger, "bore=%f freq=%f", engineConfiguration->cylinderBore, BAND(engineConfiguration->cylinderBore));
 
-	scheduleMsg(&logger, "band_index=%d gain %f/index=%d", bandIndex, boardConfiguration->hip9011Gain, currentGainIndex);
-	scheduleMsg(&logger, "integrator index=%d", currentIntergratorIndex);
+	scheduleMsg(logger, "band_index=%d gain %f/index=%d", bandIndex, boardConfiguration->hip9011Gain, currentGainIndex);
+	scheduleMsg(logger, "integrator index=%d", currentIntergratorIndex);
 
-	scheduleMsg(&logger, "spi= int=%s response count=%d", hwPortname(boardConfiguration->hip9011IntHoldPin), nonZeroResponse);
-	scheduleMsg(&logger, "CS=%s updateCount=%d", hwPortname(boardConfiguration->hip9011CsPin), settingUpdateCount);
+	scheduleMsg(logger, "spi= int=%s response count=%d", hwPortname(boardConfiguration->hip9011IntHoldPin), nonZeroResponse);
+	scheduleMsg(logger, "CS=%s updateCount=%d", hwPortname(boardConfiguration->hip9011CsPin), settingUpdateCount);
 }
 
 void setHip9011FrankensoPinout(void) {
@@ -189,10 +189,10 @@ static void endOfSpiCommunication(SPIDriver *spip) {
 	isSendingSpiCommand = false;
 }
 
-void initHip9011(void) {
+void initHip9011(Logging *sharedLogger) {
 	if (!boardConfiguration->isHip9011Enabled)
 		return;
-	initLogging(&logger, "HIP driver");
+	logger = sharedLogger;
 
 	// todo: apply new properties on the fly
 	prepareHip9011RpmLookup(
@@ -207,7 +207,7 @@ void initHip9011(void) {
 	outputPinRegisterExt2("hip int/hold", &intHold, boardConfiguration->hip9011IntHoldPin, &DEFAULT_OUTPUT);
 	outputPinRegisterExt2("hip CS", &hipCs, boardConfiguration->hip9011CsPin, &DEFAULT_OUTPUT);
 
-	scheduleMsg(&logger, "Starting HIP9011/TPIC8101 driver");
+	scheduleMsg(logger, "Starting HIP9011/TPIC8101 driver");
 	spiStart(driver, &spicfg);
 
 	bandIndex = getHip9011BandIndex(engineConfiguration->cylinderBore);
