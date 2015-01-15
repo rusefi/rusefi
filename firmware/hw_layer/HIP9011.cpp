@@ -32,6 +32,7 @@
 #include "trigger_central.h"
 #include "hip9011_lookup.h"
 #include "HIP9011.h"
+#include "adc_inputs.h"
 
 #if EFI_HIP_9011 || defined(__DOXYGEN__)
 
@@ -47,6 +48,10 @@ static int bandIndex;
 static int currentGainIndex = -1;
 static int currentIntergratorIndex = -1;
 static int settingUpdateCount = 0;
+static int totalKnockEventsCount = 0;
+
+static hip_state_e state = READY_TO_INTEGRATE;
+static efitimeus_t timeOfLastKnockEvent = 0;
 
 /**
  * Int/Hold pin is controlled from scheduler callbacks which are set according to current RPM
@@ -96,9 +101,11 @@ static void showHipInfo(void) {
 	scheduleMsg(logger, "bore=%f freq=%f", engineConfiguration->cylinderBore, BAND(engineConfiguration->cylinderBore));
 
 	scheduleMsg(logger, "band_index=%d gain %f/index=%d", bandIndex, boardConfiguration->hip9011Gain, currentGainIndex);
-	scheduleMsg(logger, "integrator index=%d", currentIntergratorIndex);
+	scheduleMsg(logger, "integrator index=%d hip_threshold=%f totalKnockEventsCount=%d", currentIntergratorIndex,
+			engineConfiguration->hipThreshold, totalKnockEventsCount);
 
-	scheduleMsg(logger, "spi= int=%s response count=%d", hwPortname(boardConfiguration->hip9011IntHoldPin), nonZeroResponse);
+	scheduleMsg(logger, "spi= int=%s response count=%d", hwPortname(boardConfiguration->hip9011IntHoldPin),
+			nonZeroResponse);
 	scheduleMsg(logger, "CS=%s updateCount=%d", hwPortname(boardConfiguration->hip9011CsPin), settingUpdateCount);
 }
 
@@ -110,6 +117,8 @@ void setHip9011FrankensoPinout(void) {
 	boardConfiguration->hip9011CsPin = GPIOD_0;
 	boardConfiguration->hip9011IntHoldPin = GPIOB_11;
 	boardConfiguration->is_enabled_spi_2 = true;
+
+	engineConfiguration->hipThreshold = 2;
 }
 
 static void startIntegration(void) {
@@ -119,6 +128,7 @@ static void startIntegration(void) {
 		 * until we are done integrating
 		 */
 		isIntegrating = true;
+		state = IS_INTEGRATING;
 		intHold.setValue(true);
 	}
 }
@@ -136,6 +146,7 @@ static void endIntegration(void) {
 		int gainIndex = getHip9011GainIndex(boardConfiguration->hip9011Gain);
 
 		if (currentGainIndex != gainIndex) {
+			state = IS_SENDING_SPI_COMMAND;
 			tx_buff[0] = gainIndex;
 			currentGainIndex = gainIndex;
 
@@ -146,6 +157,7 @@ static void endIntegration(void) {
 		}
 
 		if (currentIntergratorIndex != integratorIndex) {
+			state = IS_SENDING_SPI_COMMAND;
 			tx_buff[0] = integratorIndex;
 			currentIntergratorIndex = integratorIndex;
 
@@ -154,6 +166,7 @@ static void endIntegration(void) {
 			spiStartExchangeI(driver, 1, tx_buff, rx_buff);
 			return;
 		}
+		state = READY_TO_INTEGRATE;
 	}
 }
 
@@ -190,7 +203,14 @@ static void endOfSpiCommunication(SPIDriver *spip) {
 }
 
 void hipAdcCallback(adcsample_t value) {
-
+	if (state == WAITING_FOR_ADC_TO_SKIP) {
+		state = WAITING_FOR_RESULT_ADC;
+	} else if (state == WAITING_FOR_RESULT_ADC) {
+		if (adcToVoltsDivided(value) > engineConfiguration->hipThreshold) {
+			totalKnockEventsCount++;
+			timeOfLastKnockEvent = getTimeNowUs();
+		}
+	}
 }
 
 void initHip9011(Logging *sharedLogger) {

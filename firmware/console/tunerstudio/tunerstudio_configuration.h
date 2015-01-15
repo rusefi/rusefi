@@ -80,7 +80,8 @@ typedef struct {
 	unsigned int isAcSwitchEngaged : 1; // bit 4
 	int tsConfigVersion;
 	egt_values_s egtValues;
-	int unused3[3];
+	float rpmAcceleration;
+	int unused3[2];
 } TunerStudioOutputChannels;
 
 #endif /* TUNERSTUDIO_CONFIGURATION_H_ */

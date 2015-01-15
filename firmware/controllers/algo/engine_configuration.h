@@ -612,7 +612,8 @@ typedef struct {
 	 */
 	brain_pin_e clutchUpPin;
 	pin_input_mode_e clutchUpPinMode;
-	int unused3[182];
+	float hipThreshold;
+	int unused3[181];
 
 	le_formula_t timingMultiplier;
 	le_formula_t timingAdditive;

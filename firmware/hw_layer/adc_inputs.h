@@ -14,7 +14,6 @@
 
 #if HAL_USE_ADC || defined(__DOXYGEN__)
 
-
 const char * getAdcMode(adc_channel_e hwChannel);
 int getAdcChannelPin(adc_channel_e hwChannel);
 void initAdcInputs(bool boardTestMode);
