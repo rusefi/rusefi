@@ -184,7 +184,7 @@ void initHardware(Logging *l, Engine *engine) {
 	 * which would be used while finding trigger synch index
 	 * while config read
 	 */
-	initTriggerDecoderLogger();
+	initTriggerDecoderLogger(sharedLogger);
 
 	/**
 	 * We need the LED_ERROR pin even before we read configuration

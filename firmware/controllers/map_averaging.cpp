@@ -39,7 +39,7 @@
 
 #define FAST_MAP_CHART_SKIP_FACTOR 16
 
-static LoggingWithStorage logger;
+static Logging *logger;
 
 /**
  * Running counter of measurements per revolution
@@ -153,7 +153,7 @@ static void mapAveragingCallback(trigger_event_e ckpEventType, uint32_t index DE
 }
 
 static void showMapStats(void) {
-	scheduleMsg(&logger, "per revolution %d", perRevolution);
+	scheduleMsg(logger, "per revolution %d", perRevolution);
 }
 
 float getMapVoltage(void) {
@@ -170,8 +170,8 @@ float getMap(void) {
 	return getMapByVoltage(v_averagedMapValue);
 }
 
-void initMapAveraging(Engine *engine) {
-	initLogging(&logger, "Map Averaging");
+void initMapAveraging(Logging *sharedLogger, Engine *engine) {
+	logger = sharedLogger;
 
 	startTimer[0].name = "map start0";
 	startTimer[1].name = "map start1";

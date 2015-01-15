@@ -41,6 +41,8 @@ bool isInsideTriggerHandler;
 persistent_config_container_s persistentState;
 static engine_configuration2_s ec2;
 
+static LoggingWithStorage sharedLogger;
+
 engine_configuration_s * engineConfiguration = &persistentState.persistentConfiguration.engineConfiguration;
 board_configuration_s *boardConfiguration = &persistentState.persistentConfiguration.engineConfiguration.bc;
 engine_configuration2_s *engineConfiguration2 = &ec2;
@@ -48,9 +50,9 @@ engine_configuration2_s *engineConfiguration2 = &ec2;
 void outputPinRegisterExt2(const char *msg, OutputPin *output, brain_pin_e brainPin, pin_output_mode_e *outputMode) {
 }
 
-int isInjectionEnabled(void) {
-	return TRUE;
-}
+//int isInjectionEnabled(void) {
+//	return true;
+//}
 
 int getRemainingStack(Thread *otp) {
 	return 99999;
@@ -68,6 +70,8 @@ void rusEfiFunctionalTest(void) {
 
 	initFakeBoard();
 
+	initLogging(&sharedLogger, "simulator");
+
 	initStatusLoop(engine);
 	initDataStructures(PASS_ENGINE_PARAMETER_F);
 
@@ -84,14 +88,14 @@ void rusEfiFunctionalTest(void) {
 
 	initAnalogChart();
 
-	initTriggerEmulator(engine);
+	initTriggerEmulator(&sharedLogger, engine);
 
-	initMainEventListener(engine);
+	initMainEventListener(&sharedLogger, engine);
 
 	initTriggerCentral(engine);
 
 	startStatusThreads(engine);
-	startTunerStudioConnectivity();
+	startTunerStudioConnectivity(&sharedLogger);
 }
 
 void printPendingMessages(void) {

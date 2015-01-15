@@ -13,7 +13,7 @@
 #if HAL_USE_ADC || defined(__DOXYGEN__)
 
 void mapAveragingCallback(adcsample_t newValue);
-void initMapAveraging(Engine *engine);
+void initMapAveraging(Logging *sharedLogger, Engine *engine);
 
 #endif
 

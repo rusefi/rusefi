@@ -90,7 +90,7 @@ class Engine;
 
 void initializeTriggerShape(Logging *logger, engine_configuration_s const *engineConfiguration, Engine *engine);
 void initTriggerDecoder(void);
-void initTriggerDecoderLogger(void);
+void initTriggerDecoderLogger(Logging *sharedLogger);
 
 bool_t isTriggerDecoderError(void);
 
