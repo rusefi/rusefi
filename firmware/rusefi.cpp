@@ -151,7 +151,7 @@ void runRusEfi(void) {
 	/**
 	 * Next we should initialize serial port console, it's important to know what's going on
 	 */
-	initializeConsole();
+	initializeConsole(&sharedLogger);
 	initLogging(&sharedLogger, "main");
 
 	engine->init();
@@ -253,7 +253,7 @@ void firmwareError(const char *fmt, ...) {
 	}
 }
 
-static char UNUSED_RAM_SIZE[6500];
+static char UNUSED_RAM_SIZE[7500];
 
 static char UNUSED_CCM_SIZE[8000] CCM_OPTIONAL;
 

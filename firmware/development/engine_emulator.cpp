@@ -98,7 +98,7 @@ void initEngineEmulator(Logging *sharedLogger, Engine *engine) {
 		return;
 
 #if EFI_POTENTIOMETER
-	initPotentiometers(&engine->engineConfiguration->bc);
+	initPotentiometers(sharedLogger, &engine->engineConfiguration->bc);
 #endif /* EFI_POTENTIOMETER */
 
 	//initECUstimulator();

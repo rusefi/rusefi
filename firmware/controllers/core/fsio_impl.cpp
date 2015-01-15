@@ -25,9 +25,12 @@ static LENameOrdinalPair leVBatt(LE_METHOD_VBATT, "vbatt");
 static LENameOrdinalPair leFan(LE_METHOD_FAN, "fan");
 static LENameOrdinalPair leCoolant(LE_METHOD_COOLANT, "coolant");
 static LENameOrdinalPair leAcToggle(LE_METHOD_AC_TOGGLE, "ac_on_switch");
-static LENameOrdinalPair leFanOnSetting(LE_METHOD_FAN_ON_SETTING, "fan_on_setting");
-static LENameOrdinalPair leFanOffSetting(LE_METHOD_FAN_OFF_SETTING, "fan_off_setting");
-static LENameOrdinalPair leTimeSinceBoot(LE_METHOD_TIME_SINCE_BOOT, "time_since_boot");
+static LENameOrdinalPair leFanOnSetting(LE_METHOD_FAN_ON_SETTING,
+		"fan_on_setting");
+static LENameOrdinalPair leFanOffSetting(LE_METHOD_FAN_OFF_SETTING,
+		"fan_off_setting");
+static LENameOrdinalPair leTimeSinceBoot(LE_METHOD_TIME_SINCE_BOOT,
+		"time_since_boot");
 static LENameOrdinalPair leFsioSsetting(LE_METHOD_FSIO_SETTING, "fsio_setting");
 
 #define LE_EVAL_POOL_SIZE 32
@@ -53,7 +56,8 @@ static LEElement * fuelPumpLogic;
 static LEElement * radiatorFanLogic;
 static LEElement * alternatorLogic;
 
-EXTERN_ENGINE;
+EXTERN_ENGINE
+;
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
 static Logging *logger;
@@ -111,8 +115,8 @@ static void setFsioPin(const char *indexStr, const char *pinName) {
 }
 #endif
 
-
-void setFsioExt(engine_configuration_s *engineConfiguration, int index, brain_pin_e pin, const char * exp, int freq) {
+void setFsioExt(engine_configuration_s *engineConfiguration, int index,
+		brain_pin_e pin, const char * exp, int freq) {
 	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 
 	boardConfiguration->fsioPins[index] = pin;
@@ -120,7 +124,8 @@ void setFsioExt(engine_configuration_s *engineConfiguration, int index, brain_pi
 	boardConfiguration->fsioFrequency[index] = freq;
 }
 
-void setFsio(engine_configuration_s *engineConfiguration, int index, brain_pin_e pin, const char * exp) {
+void setFsio(engine_configuration_s *engineConfiguration, int index,
+		brain_pin_e pin, const char * exp) {
 	setFsioExt(engineConfiguration, index, pin, exp, 0);
 }
 
@@ -150,44 +155,44 @@ extern LEElement * fsioLogics[LE_COMMAND_COUNT];
 
 // that's crazy, but what's an alternative? we need const char *, a shared buffer would not work for pin repository
 static const char *getGpioPinName(int index) {
-switch (index) {
-case 0:
-  return "GPIO_0";
-case 1:
-  return "GPIO_1";
-case 10:
-  return "GPIO_10";
-case 11:
-  return "GPIO_11";
-case 12:
-  return "GPIO_12";
-case 13:
-  return "GPIO_13";
-case 14:
-  return "GPIO_14";
-case 15:
-  return "GPIO_15";
-case 2:
-  return "GPIO_2";
-case 3:
-  return "GPIO_3";
-case 4:
-  return "GPIO_4";
-case 5:
-  return "GPIO_5";
-case 6:
-  return "GPIO_6";
-case 7:
-  return "GPIO_7";
-case 8:
-  return "GPIO_8";
-case 9:
-  return "GPIO_9";
-}
-return NULL;
+	switch (index) {
+	case 0:
+		return "GPIO_0";
+	case 1:
+		return "GPIO_1";
+	case 10:
+		return "GPIO_10";
+	case 11:
+		return "GPIO_11";
+	case 12:
+		return "GPIO_12";
+	case 13:
+		return "GPIO_13";
+	case 14:
+		return "GPIO_14";
+	case 15:
+		return "GPIO_15";
+	case 2:
+		return "GPIO_2";
+	case 3:
+		return "GPIO_3";
+	case 4:
+		return "GPIO_4";
+	case 5:
+		return "GPIO_5";
+	case 6:
+		return "GPIO_6";
+	case 7:
+		return "GPIO_7";
+	case 8:
+		return "GPIO_8";
+	case 9:
+		return "GPIO_9";
+	}
+	return NULL;
 }
 
-static OutputPin fsioPins[LE_COMMAND_COUNT];
+static OutputPin fsioOutputs[LE_COMMAND_COUNT];
 
 static void handleFsio(Engine *engine, int index) {
 	if (boardConfiguration->fsioPins[index] == GPIO_UNASSIGNED)
@@ -202,14 +207,15 @@ static void handleFsio(Engine *engine, int index) {
 		fsioPwm[index].setSimplePwmDutyCycle(fvalue);
 	} else {
 		int value = (int) fvalue;
-		if (value != fsioPins[index].getLogicValue()) {
+		if (value != fsioOutputs[index].getLogicValue()) {
 			//		scheduleMsg(logger, "setting %s %s", getIo_pin_e(pin), boolToString(value));
-			fsioPins[index].setValue(value);
+			fsioOutputs[index].setValue(value);
 		}
 	}
 }
 
-static void setPinState(const char * msg, OutputPin *pin, LEElement *element, Engine *engine) {
+static void setPinState(const char * msg, OutputPin *pin, LEElement *element,
+		Engine *engine) {
 	if (element == NULL) {
 		warning(OBD_PCM_Processor_Fault, "invalid expression for %s", msg);
 	} else {
@@ -227,14 +233,16 @@ static void showFsio(const char *msg, LEElement *element) {
 	if (msg != NULL)
 		scheduleMsg(logger, "%s:", msg);
 	while (element != NULL) {
-		scheduleMsg(logger, "action %d: fValue=%f iValue=%d", element->action, element->fValue, element->iValue);
+		scheduleMsg(logger, "action %d: fValue=%f iValue=%d", element->action,
+				element->fValue, element->iValue);
 		element = element->next;
 	}
 	scheduleMsg(logger, "<end>");
 }
 
 static void showFsioInfo(void) {
-	scheduleMsg(logger, "sys used %d/user used %d", sysPool.getSize(), userPool.getSize());
+	scheduleMsg(logger, "sys used %d/user used %d", sysPool.getSize(),
+			userPool.getSize());
 	showFsio("a/c", acRelayLogic);
 	showFsio("fuel", fuelPumpLogic);
 	showFsio("fan", radiatorFanLogic);
@@ -248,7 +256,8 @@ static void showFsioInfo(void) {
 			 * is the fact that the target audience is more software developers
 			 */
 			scheduleMsg(logger, "FSIO #%d [%s] at %s@%dHz value=%f", i, exp,
-					hwPortname(boardConfiguration->fsioPins[i]), boardConfiguration->fsioFrequency[i],
+					hwPortname(boardConfiguration->fsioPins[i]),
+					boardConfiguration->fsioFrequency[i],
 					engineConfiguration2->fsioLastValue[i]);
 //			scheduleMsg(logger, "user-defined #%d value=%f", i, engine->engineConfiguration2->fsioLastValue[i]);
 			showFsio(NULL, fsioLogics[i]);
@@ -282,10 +291,12 @@ static void setFsioFrequency(int index, int frequency) {
 		return;
 	}
 	boardConfiguration->fsioFrequency[index] = frequency;
-	scheduleMsg(logger, "Setting FSIO frequency %d on #%d", frequency, index + 1);
+	scheduleMsg(logger, "Setting FSIO frequency %d on #%d", frequency,
+			index + 1);
 }
 
-static void setUserOutput(const char *indexStr, const char *quotedLine, Engine *engine) {
+static void setUserOutput(const char *indexStr, const char *quotedLine,
+		Engine *engine) {
 	int index = atoi(indexStr) - 1;
 	if (index < 0 || index >= LE_COMMAND_COUNT) {
 		scheduleMsg(logger, "invalid index %d", index);
@@ -317,14 +328,14 @@ static void eval(char *line, Engine *engine) {
 	}
 }
 
-
 void runFsio(void) {
 	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
 		handleFsio(engine, i);
 	}
 
 #if EFI_FUEL_PUMP
-	if (boardConfiguration->fuelPumpPin != GPIO_UNASSIGNED && engineConfiguration->isFuelPumpEnabled) {
+	if (boardConfiguration->fuelPumpPin != GPIO_UNASSIGNED
+			&& engineConfiguration->isFuelPumpEnabled) {
 		setPinState("pump", &enginePins.fuelPumpRelay, fuelPumpLogic, engine);
 	}
 #endif
@@ -337,13 +348,13 @@ void runFsio(void) {
 
 	enginePins.o2heater.setValue(engine->rpmCalculator.isRunning());
 
-
 	if (boardConfiguration->acRelayPin != GPIO_UNASSIGNED) {
 		setPinState("A/C", &enginePins.acRelay, acRelayLogic, engine);
 	}
 
 	if (boardConfiguration->alternatorControlPin != GPIO_UNASSIGNED) {
-		setPinState("alternator", &enginePins.alternatorField, alternatorLogic, engine);
+		setPinState("alternator", &enginePins.alternatorField, alternatorLogic,
+				engine);
 	}
 
 	if (boardConfiguration->fanPin != GPIO_UNASSIGNED) {
@@ -371,22 +382,29 @@ void initFsioImpl(Logging *sharedLogger, Engine *engine) {
 		brain_pin_e brainPin = boardConfiguration->fsioPins[i];
 
 		if (brainPin != GPIO_UNASSIGNED) {
-			//mySetPadMode2("user-defined", boardConfiguration->gpioPins[i], PAL_STM32_MODE_OUTPUT);
-
-
-
 			int frequency = boardConfiguration->fsioFrequency[i];
 			if (frequency == 0) {
-				outputPinRegisterExt2(getGpioPinName(i), &fsioPins[i], boardConfiguration->fsioPins[i], &defa);
+				outputPinRegisterExt2(getGpioPinName(i), &fsioOutputs[i],
+						boardConfiguration->fsioPins[i], &defa);
 			} else {
-				startSimplePwmExt(&fsioPwm[i], "FSIO", brainPin, &fsioPins[i], frequency, 0.5f, applyPinState);
+				startSimplePwmExt(&fsioPwm[i], "FSIO", brainPin, &fsioOutputs[i],
+						frequency, 0.5f, applyPinState);
 			}
+		}
+	}
+
+	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
+		brain_pin_e inputPin = engineConfiguration->fsioInpus[i];
+
+		if (inputPin != GPIO_UNASSIGNED) {
+
 		}
 	}
 
 #endif /* EFI_PROD_CODE */
 
-	addConsoleActionSSP("set_fsio", (VoidCharPtrCharPtrVoidPtr) setUserOutput, engine);
+	addConsoleActionSSP("set_fsio", (VoidCharPtrCharPtrVoidPtr) setUserOutput,
+			engine);
 	addConsoleActionSS("set_fsio_pin", (VoidCharPtrCharPtr) setFsioPin);
 	addConsoleActionII("set_fsio_frequency", (VoidIntInt) setFsioFrequency);
 	addConsoleActionFF("set_fsio_setting", setFsioSetting);

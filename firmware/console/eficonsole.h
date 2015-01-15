@@ -10,13 +10,16 @@
 #ifndef RFICONSOLE_H_
 #define RFICONSOLE_H_
 
+#include "datalogging.h"
+
+void initializeConsole(Logging *sharedLogger);
+void print(const char *fmt, ...);
+
 #ifdef __cplusplus
 extern "C"
 {
 #endif /* __cplusplus */
 
-void initializeConsole(void);
-void print(const char *fmt, ...);
 
 #ifdef __cplusplus
 }

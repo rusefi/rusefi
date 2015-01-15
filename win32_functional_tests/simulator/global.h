@@ -10,7 +10,6 @@
 #include "error_handling.h"
 
 #include "boards.h"
-#include "eficonsole.h"
 #include "efilib.h"
 #include "efitime.h"
 
@@ -31,7 +30,6 @@
 
 #define CCM_OPTIONAL
 
-#include "cli_registry.h"
 #include "rusefi_enums.h"
 
 #define EFI_CUSTOM_PANIC_METHOD 1
@@ -57,7 +55,6 @@ extern TestStream testStream;
 #endif /* GLOBAL_FT_H_ */
 
 #ifdef __cplusplus
-#include "datalogging.h"
 extern "C"
 {
 #endif /* __cplusplus */

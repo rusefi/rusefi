@@ -66,11 +66,11 @@ float getMap(void) {
 }
 
 void rusEfiFunctionalTest(void) {
-	initializeConsole();
+	initLogging(&sharedLogger, "simulator");
+	initializeConsole(&sharedLogger);
 
 	initFakeBoard();
 
-	initLogging(&sharedLogger, "simulator");
 
 	initStatusLoop(engine);
 	initDataStructures(PASS_ENGINE_PARAMETER_F);
@@ -92,7 +92,7 @@ void rusEfiFunctionalTest(void) {
 
 	initMainEventListener(&sharedLogger, engine);
 
-	initTriggerCentral(engine);
+	initTriggerCentral(&sharedLogger, engine);
 
 	startStatusThreads(engine);
 	startTunerStudioConnectivity(&sharedLogger);

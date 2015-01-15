@@ -27,8 +27,9 @@
 
 #if ! EFI_UNIT_TEST
 #include "eficonsole.h"
-static LoggingWithStorage logging;
 #endif /* ! EFI_UNIT_TEST */
+
+static Logging * logging;
 
 static int consoleActionCount = 0;
 static TokenCallback consoleActions[CONSOLE_MAX_ACTIONS];
@@ -155,10 +156,10 @@ void helpCommand(void) {
 #endif /* EFI_PROD_CODE */
 
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
-	scheduleMsg(&logging, "%d actions available", consoleActionCount);
+	scheduleMsg(logging, "%d actions available", consoleActionCount);
 	for (int i = 0; i < consoleActionCount; i++) {
 		TokenCallback *current = &consoleActions[i];
-		scheduleMsg(&logging, "  %s: %d parameters", current->token, getParameterCount(current->parameterType));
+		scheduleMsg(logging, "  %s: %d parameters", current->token, getParameterCount(current->parameterType));
 	}
 #endif
 }
@@ -306,7 +307,7 @@ void handleActionWithParameter(TokenCallback *current, char *parameter) {
 		int value1 = atoi(parameter);
 		if (absI(value1) == ERROR_CODE) {
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
-			scheduleMsg(&logging, "not an integer [%s]", parameter);
+			scheduleMsg(logging, "not an integer [%s]", parameter);
 #endif
 			return;
 		}
@@ -314,7 +315,7 @@ void handleActionWithParameter(TokenCallback *current, char *parameter) {
 		int value2 = atoi(parameter);
 		if (absI(value2) == ERROR_CODE) {
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
-			scheduleMsg(&logging, "not an integer [%s]", parameter);
+			scheduleMsg(logging, "not an integer [%s]", parameter);
 #endif
 			return;
 		}
@@ -384,10 +385,8 @@ int tokenLength(const char *msgp) {
 	return result;
 }
 
-void initConsoleLogic() {
-#if EFI_PROD_CODE || EFI_SIMULATOR
-	initLogging(&logging, "rfi console");
-#endif /* EFI_PROD_CODE */
+void initConsoleLogic(Logging *sharedLogger) {
+	logging = sharedLogger;
 	resetConsoleActions();
 	addConsoleAction("help", helpCommand);
 	addConsoleActionI("echo", echo);
@@ -466,7 +465,7 @@ static bool handleConsoleLineInternal(char *line, int lineLength) {
 
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
 static void sendOutConfirmation(const char *command, int length) {
-	scheduleMsg(&logging, "%s%d", command, length);
+	scheduleMsg(logging, "%s%d", command, length);
 }
 #endif
 
