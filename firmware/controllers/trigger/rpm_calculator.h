@@ -38,14 +38,19 @@ public:
 	 */
 	bool isRunning(DECLARE_ENGINE_PARAMETER_F);
 	int rpm(DECLARE_ENGINE_PARAMETER_F);
+	/**
+	 * This method is invoked once per engine cycle right after we calculate new RPM value
+	 */
 	void onNewEngineCycle();
 	uint32_t getRevolutionCounter(void);
 	void setRpmValue(int value);
 	uint32_t getRevolutionCounterSinceStart(void);
+	float getRpmAcceleration();
 	/**
 	 * This is public because sometimes we cannot afford to call isRunning() and the value is good enough
 	 */
 	volatile int rpmValue;
+	int previousRpmValue;
 	/**
 	 * This is a performance optimization: let's pre-calulate this each time RPM changes
 	 */

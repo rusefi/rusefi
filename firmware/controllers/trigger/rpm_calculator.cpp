@@ -68,6 +68,7 @@ bool RpmCalculator::isRunning(DECLARE_ENGINE_PARAMETER_F) {
 }
 
 void RpmCalculator::setRpmValue(int value) {
+	previousRpmValue = rpmValue;
 	rpmValue = value;
 	if (rpmValue <= 0) {
 		oneDegreeUs = NAN;
@@ -87,6 +88,10 @@ uint32_t RpmCalculator::getRevolutionCounter(void) {
 
 uint32_t RpmCalculator::getRevolutionCounterSinceStart(void) {
 	return revolutionCounterSinceStart;
+}
+
+float RpmCalculator::getRpmAcceleration() {
+	return 1.0 * previousRpmValue / rpmValue;
 }
 
 /**
