@@ -377,6 +377,8 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
 		boardConfiguration->fsioPins[i] = GPIO_UNASSIGNED;
 		boardConfiguration->le_formulas[i][0] = 0;
+		engineConfiguration->fsioInpus[i] = GPIO_UNASSIGNED;
+		engineConfiguration->fsioInpusMode[i] = PI_DEFAULT;
 	}
 	for (int i = 0; i < JOYSTICK_PIN_COUNT; i++) {
 		boardConfiguration->joystickPins[i] = GPIO_UNASSIGNED;
