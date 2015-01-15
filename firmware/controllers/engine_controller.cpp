@@ -387,7 +387,7 @@ void initEngineContoller(Logging *sharedLogger, Engine *engine) {
 		/**
 		 * This method initialized the main listener which actually runs injectors & ignition
 		 */
-		initMainEventListener(engine);
+		initMainEventListener(sharedLogger, engine);
 	}
 #endif /* EFI_ENGINE_CONTROL */
 
@@ -404,7 +404,7 @@ void initEngineContoller(Logging *sharedLogger, Engine *engine) {
 	addConsoleActionI("get_float", getFloat);
 	addConsoleActionI("get_int", getInt);
 
-	initFsioImpl(engine);
+	initFsioImpl(sharedLogger, engine);
 
 	initLcdController();
 }

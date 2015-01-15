@@ -55,10 +55,8 @@ static LEElement * alternatorLogic;
 
 EXTERN_ENGINE;
 
-
-
 #if EFI_PROD_CODE || EFI_SIMULATOR
-static LoggingWithStorage logger;
+static Logging *logger;
 
 float getLEValue(Engine *engine, calc_stack_t *s, le_action_e action) {
 	efiAssert(engine!=NULL, "getLEValue", NAN);
@@ -99,17 +97,17 @@ float getLEValue(Engine *engine, calc_stack_t *s, le_action_e action) {
 static void setFsioPin(const char *indexStr, const char *pinName) {
 	int index = atoi(indexStr) - 1;
 	if (index < 0 || index >= LE_COMMAND_COUNT) {
-		scheduleMsg(&logger, "invalid index %d", index);
+		scheduleMsg(logger, "invalid index %d", index);
 		return;
 	}
 	brain_pin_e pin = parseBrainPin(pinName);
 	// todo: extract method - code duplication with other 'set_xxx_pin' methods?
 	if (pin == GPIO_INVALID) {
-		scheduleMsg(&logger, "invalid pin name [%s]", pinName);
+		scheduleMsg(logger, "invalid pin name [%s]", pinName);
 		return;
 	}
 	boardConfiguration->fsioPins[index] = pin;
-	scheduleMsg(&logger, "FSIO pin #%d [%s]", (index + 1), hwPortname(pin));
+	scheduleMsg(logger, "FSIO pin #%d [%s]", (index + 1), hwPortname(pin));
 }
 #endif
 
@@ -205,7 +203,7 @@ static void handleFsio(Engine *engine, int index) {
 	} else {
 		int value = (int) fvalue;
 		if (value != fsioPins[index].getLogicValue()) {
-			//		scheduleMsg(&logger, "setting %s %s", getIo_pin_e(pin), boolToString(value));
+			//		scheduleMsg(logger, "setting %s %s", getIo_pin_e(pin), boolToString(value));
 			fsioPins[index].setValue(value);
 		}
 	}
@@ -219,7 +217,7 @@ static void setPinState(const char * msg, OutputPin *pin, LEElement *element, En
 		if (value != pin->getLogicValue()) {
 			if (isRunningBenchTest())
 				return; // let's not mess with bench testing
-			scheduleMsg(&logger, "setting %s %s", msg, boolToString(value));
+			scheduleMsg(logger, "setting %s %s", msg, boolToString(value));
 			pin->setValue(value);
 		}
 	}
@@ -227,16 +225,16 @@ static void setPinState(const char * msg, OutputPin *pin, LEElement *element, En
 
 static void showFsio(const char *msg, LEElement *element) {
 	if (msg != NULL)
-		scheduleMsg(&logger, "%s:", msg);
+		scheduleMsg(logger, "%s:", msg);
 	while (element != NULL) {
-		scheduleMsg(&logger, "action %d: fValue=%f iValue=%d", element->action, element->fValue, element->iValue);
+		scheduleMsg(logger, "action %d: fValue=%f iValue=%d", element->action, element->fValue, element->iValue);
 		element = element->next;
 	}
-	scheduleMsg(&logger, "<end>");
+	scheduleMsg(logger, "<end>");
 }
 
 static void showFsioInfo(void) {
-	scheduleMsg(&logger, "sys used %d/user used %d", sysPool.getSize(), userPool.getSize());
+	scheduleMsg(logger, "sys used %d/user used %d", sysPool.getSize(), userPool.getSize());
 	showFsio("a/c", acRelayLogic);
 	showFsio("fuel", fuelPumpLogic);
 	showFsio("fan", radiatorFanLogic);
@@ -249,17 +247,17 @@ static void showFsioInfo(void) {
 			 * in case of FSIO user interface indexes are starting with 0, the argument for that
 			 * is the fact that the target audience is more software developers
 			 */
-			scheduleMsg(&logger, "FSIO #%d [%s] at %s@%dHz value=%f", i, exp,
+			scheduleMsg(logger, "FSIO #%d [%s] at %s@%dHz value=%f", i, exp,
 					hwPortname(boardConfiguration->fsioPins[i]), boardConfiguration->fsioFrequency[i],
 					engineConfiguration2->fsioLastValue[i]);
-//			scheduleMsg(&logger, "user-defined #%d value=%f", i, engine->engineConfiguration2->fsioLastValue[i]);
+//			scheduleMsg(logger, "user-defined #%d value=%f", i, engine->engineConfiguration2->fsioLastValue[i]);
 			showFsio(NULL, fsioLogics[i]);
 		}
 	}
 	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
 		float v = boardConfiguration->fsio_setting[i];
 		if (!cisnan(v)) {
-			scheduleMsg(&logger, "user property #%d: %f", i + 1, v);
+			scheduleMsg(logger, "user property #%d: %f", i + 1, v);
 		}
 	}
 }
@@ -270,7 +268,7 @@ static void showFsioInfo(void) {
 static void setFsioSetting(float indexF, float value) {
 	int index = indexF;
 	if (index < 0 || index >= LE_COMMAND_COUNT) {
-		scheduleMsg(&logger, "invalid index %d", index);
+		scheduleMsg(logger, "invalid index %d", index);
 		return;
 	}
 	engineConfiguration->bc.fsio_setting[index] = value;
@@ -280,26 +278,26 @@ static void setFsioSetting(float indexF, float value) {
 static void setFsioFrequency(int index, int frequency) {
 	index--;
 	if (index < 0 || index >= LE_COMMAND_COUNT) {
-		scheduleMsg(&logger, "invalid index %d", index);
+		scheduleMsg(logger, "invalid index %d", index);
 		return;
 	}
 	boardConfiguration->fsioFrequency[index] = frequency;
-	scheduleMsg(&logger, "Setting FSIO frequency %d on #%d", frequency, index + 1);
+	scheduleMsg(logger, "Setting FSIO frequency %d on #%d", frequency, index + 1);
 }
 
 static void setUserOutput(const char *indexStr, const char *quotedLine, Engine *engine) {
 	int index = atoi(indexStr) - 1;
 	if (index < 0 || index >= LE_COMMAND_COUNT) {
-		scheduleMsg(&logger, "invalid index %d", index);
+		scheduleMsg(logger, "invalid index %d", index);
 		return;
 	}
 	char * l = unquote((char*) quotedLine);
 	if (strlen(l) > LE_COMMAND_LENGTH - 1) {
-		scheduleMsg(&logger, "Too long %d", strlen(l));
+		scheduleMsg(logger, "Too long %d", strlen(l));
 		return;
 	}
 
-	scheduleMsg(&logger, "setting user out #%d to [%s]", index + 1, l);
+	scheduleMsg(logger, "setting user out #%d to [%s]", index + 1, l);
 	strcpy(engine->engineConfiguration->bc.le_formulas[index], l);
 	// this would apply the changes
 	applyFsioConfiguration(PASS_ENGINE_PARAMETER_F);
@@ -308,14 +306,14 @@ static void setUserOutput(const char *indexStr, const char *quotedLine, Engine *
 
 static void eval(char *line, Engine *engine) {
 	line = unquote(line);
-	scheduleMsg(&logger, "Parsing [%s]", line);
+	scheduleMsg(logger, "Parsing [%s]", line);
 	evalPool.reset();
 	LEElement * e = evalPool.parseExpression(line);
 	if (e == NULL) {
-		scheduleMsg(&logger, "parsing failed");
+		scheduleMsg(logger, "parsing failed");
 	} else {
 		float result = evalCalc.getValue2(e, engine);
-		scheduleMsg(&logger, "Eval result: %f", result);
+		scheduleMsg(logger, "Eval result: %f", result);
 	}
 }
 
@@ -356,8 +354,8 @@ void runFsio(void) {
 
 static pin_output_mode_e defa = OM_DEFAULT;
 
-void initFsioImpl(Engine *engine) {
-	initLogging(&logger, "le");
+void initFsioImpl(Logging *sharedLogger, Engine *engine) {
+	logger = sharedLogger;
 
 #if EFI_FUEL_PUMP
 	fuelPumpLogic = sysPool.parseExpression(FUEL_PUMP_LOGIC);

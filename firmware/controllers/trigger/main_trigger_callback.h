@@ -26,7 +26,7 @@ public:
 	Engine *engine;
 
 };
-void initMainEventListener(Engine *engine);
+void initMainEventListener(Logging *sharedLogger, Engine *engine);
 void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECLARE_ENGINE_PARAMETER_S);
 #endif
 
@@ -40,8 +40,9 @@ extern "C"
 void showMainHistogram(void);
 void onEveryMillisecondTimerSignal(void);
 
-float getFuel(int rpm, float key);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
+
+float getFuel(int rpm, float key);
 #endif /* MAIN_LOOP_H_ */
