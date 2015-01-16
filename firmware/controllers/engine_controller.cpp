@@ -259,6 +259,7 @@ static void printAnalogInfo(void) {
 		printAnalogChannelInfo("BARO", engineConfiguration->baroSensor.hwChannel);
 	}
 	printAnalogChannelInfo("A/C sw", engineConfiguration->acSwitchAdc);
+	printAnalogChannelInfo("HIP9011", engineConfiguration->hipOutputChannel);
 	printAnalogChannelInfoExt("Vbatt", engineConfiguration->vbattAdcChannel, getVBatt(engineConfiguration));
 }
 

@@ -107,6 +107,9 @@ static void showHipInfo(void) {
 	scheduleMsg(logger, "spi= int=%s response count=%d", hwPortname(boardConfiguration->hip9011IntHoldPin),
 			nonZeroResponse);
 	scheduleMsg(logger, "CS=%s updateCount=%d", hwPortname(boardConfiguration->hip9011CsPin), settingUpdateCount);
+
+	scheduleMsg(logger, "value=%f@#%d", getVoltageDivided(engineConfiguration->hipOutputChannel),
+			engineConfiguration->hipOutputChannel);
 }
 
 void setHip9011FrankensoPinout(void) {
@@ -119,6 +122,9 @@ void setHip9011FrankensoPinout(void) {
 	boardConfiguration->is_enabled_spi_2 = true;
 
 	engineConfiguration->hipThreshold = 2;
+
+	boardConfiguration->adcHwChannelEnabled[10] = ADC_FAST; // HIP9011
+	engineConfiguration->hipOutputChannel = EFI_ADC_10;
 }
 
 static void startIntegration(void) {
