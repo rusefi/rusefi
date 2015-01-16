@@ -18,14 +18,14 @@ EELAYER END
 $Descr A3 16535 11693
 encoding utf-8
 Sheet 1 1
-Title ""
-Date "14 jan 2015"
-Rev ""
-Comp ""
-Comment1 "v1.3"
-Comment2 "Art_Electro"
-Comment3 "Art_Electro"
-Comment4 "Art_Electro"
+Title "176 STM32 board"
+Date "16 jan 2015"
+Rev "R0.1"
+Comp "rusEFI by DAECU and artelectro"
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
 $EndDescr
 $Comp
 L CONN_25X2 P1
@@ -2941,4 +2941,6 @@ F 3 "" H 15650 4350 60  0000 C CNN
 	1    15650 4350
 	0    -1   -1   0   
 $EndComp
+Text Label 8600 1125 3    60   ~ 0
+VBAT
 $EndSCHEMATC
