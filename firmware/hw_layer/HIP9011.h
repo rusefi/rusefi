@@ -10,11 +10,26 @@
 #define HIP9011_H_
 
 typedef enum {
+	/**
+	 * the step after this one is always IS_INTEGRATING
+	 */
 	READY_TO_INTEGRATE,
+	/**
+	 * the step after this one is always WAITING_FOR_ADC_TO_SKIP
+	 */
 	IS_INTEGRATING,
-	IS_SENDING_SPI_COMMAND,
+	/**
+	 * the step after this one is always WAITING_FOR_RESULT_ADC
+	 */
 	WAITING_FOR_ADC_TO_SKIP,
+	/**
+	 * the step after this one is always IS_SENDING_SPI_COMMAND or READY_TO_INTEGRATE
+	 */
 	WAITING_FOR_RESULT_ADC,
+	/**
+	 * the step after this one is always READY_TO_INTEGRATE
+	 */
+	IS_SENDING_SPI_COMMAND,
 } hip_state_e;
 
 // 0b01000000
