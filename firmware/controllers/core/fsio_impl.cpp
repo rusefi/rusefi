@@ -394,9 +394,11 @@ void initFsioImpl(Logging *sharedLogger, Engine *engine) {
 	}
 
 	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
-		brain_pin_e inputPin = engineConfiguration->fsioInpus[i];
+		brain_pin_e inputPin = engineConfiguration->fsioInputs[i];
 
 		if (inputPin != GPIO_UNASSIGNED) {
+			mySetPadMode2("FSIO input", inputPin,
+					getInputMode(engineConfiguration->fsioInputModes[i]));
 
 		}
 	}
