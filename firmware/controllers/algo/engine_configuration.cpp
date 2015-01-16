@@ -377,8 +377,8 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
 		boardConfiguration->fsioPins[i] = GPIO_UNASSIGNED;
 		boardConfiguration->le_formulas[i][0] = 0;
-		engineConfiguration->fsioInpus[i] = GPIO_UNASSIGNED;
-		engineConfiguration->fsioInpusMode[i] = PI_DEFAULT;
+		engineConfiguration->fsioInputs[i] = GPIO_UNASSIGNED;
+		engineConfiguration->fsioInputModes[i] = PI_DEFAULT;
 	}
 	for (int i = 0; i < JOYSTICK_PIN_COUNT; i++) {
 		boardConfiguration->joystickPins[i] = GPIO_UNASSIGNED;
@@ -441,6 +441,9 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	boardConfiguration->triggerSimulatorPinModes[2] = OM_DEFAULT;
 
 	setFrankenstein_01_LCD(boardConfiguration);
+
+	strcpy(engineConfiguration->timingMultiplier, "1");
+	strcpy(engineConfiguration->timingAdditive, "0");
 
 	engineConfiguration->hip9011SpiDevice = SPI_DEVICE_2;
 
