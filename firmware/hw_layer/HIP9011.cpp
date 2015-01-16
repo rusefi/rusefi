@@ -50,18 +50,19 @@ static int currentIntergratorIndex = -1;
 static int settingUpdateCount = 0;
 static int totalKnockEventsCount = 0;
 
-static hip_state_e state = READY_TO_INTEGRATE;
 static efitimeus_t timeOfLastKnockEvent = 0;
 
 /**
  * Int/Hold pin is controlled from scheduler callbacks which are set according to current RPM
  *
- * The following flags make sure that we only have SPI communication while not integrating
+ * The following state make sure that we only have SPI communication while not integrating and that we take
+ * a good ADC reading after integrating.
+ *
+ * Once integtation window is over, we wait for the 2nd ADC callback and then initiate SPI communication if needed
+ *
+ * hipOutput should be set to used FAST adc device
  */
-static bool_t isIntegrating = false;
-/**
- */
-static bool_t isSendingSpiCommand = false;
+static hip_state_e state = READY_TO_INTEGRATE;
 
 static scheduling_s startTimer[2];
 static scheduling_s endTimer[2];
@@ -128,12 +129,11 @@ void setHip9011FrankensoPinout(void) {
 }
 
 static void startIntegration(void) {
-	if (!isSendingSpiCommand) {
+	if (state == READY_TO_INTEGRATE) {
 		/**
 		 * SPI communication is only allowed while not integrating, so we postpone the exchange
 		 * until we are done integrating
 		 */
-		isIntegrating = true;
 		state = IS_INTEGRATING;
 		intHold.setValue(true);
 	}
@@ -144,35 +144,9 @@ static void endIntegration(void) {
 	 * isIntegrating could be 'false' if an SPI command was pending thus we did not integrate during this
 	 * engine cycle
 	 */
-	if (isIntegrating) {
+	if (state == IS_INTEGRATING) {
 		intHold.setValue(false);
-		isIntegrating = false;
-
-		int integratorIndex = getIntegrationIndexByRpm(engine->rpmCalculator.rpmValue);
-		int gainIndex = getHip9011GainIndex(boardConfiguration->hip9011Gain);
-
-		if (currentGainIndex != gainIndex) {
-			state = IS_SENDING_SPI_COMMAND;
-			tx_buff[0] = gainIndex;
-			currentGainIndex = gainIndex;
-
-			isSendingSpiCommand = true;
-			spiSelectI(driver);
-			spiStartExchangeI(driver, 1, tx_buff, rx_buff);
-			return;
-		}
-
-		if (currentIntergratorIndex != integratorIndex) {
-			state = IS_SENDING_SPI_COMMAND;
-			tx_buff[0] = integratorIndex;
-			currentIntergratorIndex = integratorIndex;
-
-			isSendingSpiCommand = true;
-			spiSelectI(driver);
-			spiStartExchangeI(driver, 1, tx_buff, rx_buff);
-			return;
-		}
-		state = READY_TO_INTEGRATE;
+		state = WAITING_FOR_ADC_TO_SKIP;
 	}
 }
 
@@ -205,7 +179,7 @@ static void setGain(float value) {
 
 static void endOfSpiCommunication(SPIDriver *spip) {
 	spiUnselectI(driver);
-	isSendingSpiCommand = false;
+	state = READY_TO_INTEGRATE;
 }
 
 void hipAdcCallback(adcsample_t value) {
@@ -215,6 +189,28 @@ void hipAdcCallback(adcsample_t value) {
 		if (adcToVoltsDivided(value) > engineConfiguration->hipThreshold) {
 			totalKnockEventsCount++;
 			timeOfLastKnockEvent = getTimeNowUs();
+		}
+
+
+		int integratorIndex = getIntegrationIndexByRpm(engine->rpmCalculator.rpmValue);
+		int gainIndex = getHip9011GainIndex(boardConfiguration->hip9011Gain);
+
+		if (currentGainIndex != gainIndex) {
+			state = IS_SENDING_SPI_COMMAND;
+			tx_buff[0] = gainIndex;
+			currentGainIndex = gainIndex;
+
+			spiSelectI(driver);
+			spiStartExchangeI(driver, 1, tx_buff, rx_buff);
+		} else if (currentIntergratorIndex != integratorIndex) {
+			state = IS_SENDING_SPI_COMMAND;
+			tx_buff[0] = integratorIndex;
+			currentIntergratorIndex = integratorIndex;
+
+			spiSelectI(driver);
+			spiStartExchangeI(driver, 1, tx_buff, rx_buff);
+		} else {
+			state = READY_TO_INTEGRATE;
 		}
 	}
 }
