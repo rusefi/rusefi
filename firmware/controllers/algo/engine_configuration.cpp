@@ -28,6 +28,8 @@
 #include "trigger_decoder.h"
 #include "engine_math.h"
 #include "speed_density.h"
+
+#include "acura_rsx.h"
 #include "audi_aan.h"
 #include "bmw_e34.h"
 #include "dodge_neon.h"
@@ -40,6 +42,7 @@
 #include "GY6_139QMB.h"
 #include "mazda_miata_nb.h"
 #include "mazda_323.h"
+#include "mazda_626.h"
 #include "saturn_ion.h"
 #include "MiniCooperR50.h"
 #include "mazda_miata.h"
@@ -592,6 +595,9 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType, Engine *e
 	case CUSTOM_ENGINE:
 		setCustomEngineConfiguration(engineConfiguration);
 		break;
+	case ACURA_RSX:
+		setAcuraRSX(engineConfiguration);
+		break;
 #if EFI_SUPPORT_DODGE_NEON || defined(__DOXYGEN__)
 	case DODGE_NEON_1995:
 		setDodgeNeon1995EngineConfiguration(engineConfiguration, boardConfiguration);
@@ -640,6 +646,9 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType, Engine *e
 		break;
 	case MAZDA_323:
 		setMazda323EngineConfiguration(engineConfiguration);
+		break;
+	case MAZDA_626:
+		setMazda626EngineConfiguration(engineConfiguration);
 		break;
 	case SATURN_ION_2004:
 		setSaturnIonEngineConfiguration(engineConfiguration);

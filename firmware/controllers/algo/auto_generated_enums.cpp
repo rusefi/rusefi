@@ -10,6 +10,8 @@
 #include "rusefi_enums.h"
 const char *getEngine_type_e(engine_type_e value){
 switch(value) {
+case ACURA_RSX:
+	return "ACURA_RSX";
 case AUDI_AAN:
   return "AUDI_AAN";
 case BMW_E34:
@@ -44,6 +46,8 @@ case HONDA_ACCORD_CD_TWO_WIRES:
   return "HONDA_ACCORD_CD_TWO_WIRES";
 case MAZDA_323:
   return "MAZDA_323";
+case MAZDA_626:
+  return "MAZDA_626";
 case MAZDA_MIATA_NB:
   return "MAZDA_MIATA_NB";
 case MIATA_1990:
