@@ -1,4 +1,5 @@
 <project default="jar">
+<property name="jar_file" value="../java_console_binary/rusefi_console.jar"/>
 
     <target name="clean">
         <delete dir="build"/>
@@ -35,7 +36,9 @@
 
     <target name="jar" depends="compile">
         <mkdir dir="build/jar"/>
-        <jar destfile="../java_console_binary/rusefi_console.jar" basedir="build/classes">
+	<delete file="${jar_file}"/>
+	<echo message="Building ${jar_file}"/>
+        <jar destfile="${jar_file}" basedir="build/classes">
             <manifest>
                 <attribute name="Main-Class" value="com.irnems.Launcher"/>
             </manifest>
@@ -58,12 +61,12 @@
     </target>
 
     <target name="run" depends="jar">
-        <java jar="../java_console_binary/rusefi_console.jar" fork="true"/>
+        <java jar="${jar_file}" fork="true"/>
     </target>
 
 
     <target name="autotest" depends="jar">
-	<java classpath="../java_console_binary/rusefi_console.jar" classname="com.rusefi.AutoTest" failonerror="true"> 
+	<java classpath="${jar_file}" classname="com.rusefi.AutoTest" failonerror="true"> 
 	</java>  
 
     </target>
