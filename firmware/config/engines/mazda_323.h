@@ -13,7 +13,6 @@
 #ifndef MAZDA_323_H_
 #define MAZDA_323_H_
 
-#include "main.h"
 #include "engine_configuration.h"
 
 void setMazda323EngineConfiguration(engine_configuration_s *engineConfiguration);
