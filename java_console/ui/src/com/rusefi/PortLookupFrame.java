@@ -24,7 +24,7 @@ import java.util.List;
  */
 public class PortLookupFrame {
 
-    public static final String RUS_EFI_C_2012_2014 = "rusEfi (c) 2012-2014";
+    public static final String RUS_EFI_C_2012_2014 = "rusEfi (c) 2012-2015";
     public static final String URI = "http://rusefi.com/?java_console";
 
     public static void chooseSerialPort() {
