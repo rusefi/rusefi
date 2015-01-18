@@ -114,9 +114,12 @@ TriggerState::TriggerState() {
 	shaft_is_synchronized = false;
 	toothed_previous_time = 0;
 	toothed_previous_duration = 0;
+
 	totalRevolutionCounter = 0;
-	runningRevolutionCounter = 0;
 	totalTriggerErrorCounter = 0;
+	orderingErrorCounter = 0;
+
+	resetRunningCounters();
 	clear();
 	memset(expectedTotalTime, 0, sizeof(expectedTotalTime));
 	totalEventCountBase = 0;
@@ -129,6 +132,12 @@ int TriggerState::getCurrentIndex() {
 
 uint64_t TriggerState::getStartOfRevolutionIndex() {
 	return totalEventCountBase;
+}
+
+void TriggerState::resetRunningCounters() {
+	runningRevolutionCounter = 0;
+	runningTriggerErrorCounter = 0;
+	runningOrderingErrorCounter = 0;
 }
 
 uint64_t TriggerState::getTotalEventCounter() {
