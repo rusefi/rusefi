@@ -23,6 +23,9 @@ void MenuTree::init(MenuItem *first, int linesCount) {
 void MenuTree::enterSubMenu(void) {
 	if (current->firstChild != NULL) {
 		current = topVisible = current->firstChild;
+	} else if (current->callback != NULL) {
+		VoidCallback cb = current->callback;
+		cb();
 	}
 }
 
