@@ -58,10 +58,13 @@ void setCustomEngineConfiguration(engine_configuration_s *engineConfiguration) {
 	boardConfiguration->injectionPins[7] = GPIOD_11;
 	boardConfiguration->injectionPins[8] = GPIOD_0;
 	boardConfiguration->injectionPins[9] = GPIOB_11;
+	boardConfiguration->injectionPins[10] = GPIOC_7;
+	boardConfiguration->injectionPins[11] = GPIOE_4;
+
 	/**
 	 * We want to initialize all outputs for test
 	 */
-	engineConfiguration->cylindersCount = 10;
+	engineConfiguration->cylindersCount = 12;
 
 	engineConfiguration->displayMode = DM_NONE;
 #else
@@ -71,10 +74,15 @@ void setCustomEngineConfiguration(engine_configuration_s *engineConfiguration) {
 	boardConfiguration->injectionPins[7] = GPIO_UNASSIGNED;
 	boardConfiguration->injectionPins[8] = GPIO_UNASSIGNED;
 	boardConfiguration->injectionPins[9] = GPIO_UNASSIGNED;
-#endif
-
 	boardConfiguration->injectionPins[10] = GPIO_UNASSIGNED;
 	boardConfiguration->injectionPins[11] = GPIO_UNASSIGNED;
+
+	boardConfiguration->ignitionPins[0] = GPIOC_7;
+	boardConfiguration->ignitionPins[1] = GPIOE_4; // todo: update this value
+	boardConfiguration->ignitionPins[2] = GPIOE_0; // todo: update this value
+	boardConfiguration->ignitionPins[3] = GPIOE_1; // todo: update this value
+#endif
+
 }
 
 #endif /* CONFIG_ENGINES_CUSTOM_ENGINE_CPP_ */
