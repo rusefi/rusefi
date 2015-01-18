@@ -291,8 +291,8 @@ float getTriggerDutyCycle(int index) {
 	return triggerCentral.triggerState.getTriggerDutyCycle(index);
 }
 
-static void resetRunningTriggerCounter() {
-	triggerCentral.triggerState.runningRevolutionCounter = 0;
+static void resetRunningTriggerCounters() {
+	triggerCentral.triggerState.resetRunningCounters();
 }
 
 void initTriggerCentral(Logging *sharedLogger, Engine *engine) {
@@ -306,7 +306,7 @@ void initTriggerCentral(Logging *sharedLogger, Engine *engine) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	addConsoleActionP("triggerinfo", (VoidPtr) triggerInfo, engine);
 	addConsoleActionP("triggershapeinfo", (VoidPtr) triggerShapeInfo, engine);
-	addConsoleAction("reset_running_trigger_counter", resetRunningTriggerCounter);
+	addConsoleAction("reset_running_counters", resetRunningTriggerCounters);
 #endif
 
 

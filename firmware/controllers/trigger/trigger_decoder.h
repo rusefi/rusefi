@@ -49,7 +49,12 @@ public:
 	uint32_t prevTotalTime[PWM_PHASE_MAX_WAVE_PER_PWM];
 	int expectedTotalTime[PWM_PHASE_MAX_WAVE_PER_PWM];
 	uint32_t totalTriggerErrorCounter;
+	uint32_t runningTriggerErrorCounter;
 	uint32_t orderingErrorCounter;
+	uint32_t runningOrderingErrorCounter;
+
+	void resetRunningCounters();
+
 
 	/**
 	 * index within trigger revolution, from 0 to trigger event count

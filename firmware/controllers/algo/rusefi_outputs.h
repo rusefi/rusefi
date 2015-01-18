@@ -10,7 +10,7 @@
 #define CONTROLLERS_ALGO_RUSEFI_OUTPUTS_H_
 
 /**
- * this enum is part of the console protocol API, it should be in sync with ...java
+ * this enum is part of the console protocol API, it should be in sync with com/rusefi/OutputChannel.java
  */
 
 /**
@@ -31,8 +31,11 @@ typedef enum {
 	RO_VBATT = 8,
 	RO_TOTAL_REVOLUTION_COUNTER = 9,
 	RO_RUNNING_REVOLUTION_COUNTER = 10,
+	RO_WAVE_CHART_CURRENT_SIZE = 11,
+	RO_RUNNING_TRIGGER_ERROR = 12,
+	RO_RUNNING_ORDERING_TRIGGER_ERROR = 13,
 
-	RO_LAST_ELEMENT = 11
+	RO_LAST_ELEMENT = 14
 } rusefi_output_e;
 
 

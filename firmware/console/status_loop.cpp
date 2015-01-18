@@ -213,6 +213,15 @@ static void printState(Engine *engine) {
 	if (subscription[(int) RO_RUNNING_REVOLUTION_COUNTER])
 		debugInt(&logger, "ckp_r", triggerCentral.triggerState.runningRevolutionCounter);
 
+	if (subscription[(int) RO_RUNNING_TRIGGER_ERROR])
+		debugInt(&logger, "trg_r_errors", triggerCentral.triggerState.runningTriggerErrorCounter);
+
+	if (subscription[(int) RO_RUNNING_ORDERING_TRIGGER_ERROR])
+		debugInt(&logger, "trg_r_order_errors", triggerCentral.triggerState.runningOrderingErrorCounter);
+
+	if (subscription[(int) RO_WAVE_CHART_CURRENT_SIZE])
+		debugInt(&logger, "wave_chart_current", 0);
+
 //	debugInt(&logger, "idl", getIdleSwitch());
 
 //	debugFloat(&logger, "table_spark", getAdvance(rpm, getMaf()), 2);
