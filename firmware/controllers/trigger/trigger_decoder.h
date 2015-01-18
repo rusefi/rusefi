@@ -55,6 +55,7 @@ public:
 	 * index within trigger revolution, from 0 to trigger event count
 	 */
 	uint32_t current_index;
+	uint32_t runningRevolutionCounter;
 private:
 	void clear();
 	/**

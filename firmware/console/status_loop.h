@@ -8,27 +8,13 @@
 #ifndef CONSOLE_LOOP_H_
 #define CONSOLE_LOOP_H_
 
-#ifdef __cplusplus
 #include "engine.h"
+
 void updateDevConsoleState(Engine *engine);
 void printSensors(Engine *engine);
-void printState(Engine *engine, int currentCkpEventCounter);
 void startStatusThreads(Engine *engine);
 void initStatusLoop(Engine *engine);
-
-#endif /* __cplusplus */
-
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
-
 void writeLogLine(void);
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-
 bool getFullLog(void);
 void setFullLog(int value);
 
