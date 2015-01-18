@@ -14,6 +14,8 @@
 
 #define EFI_FSIO TRUE
 
+#define EFI_PWM_TESTER FALSE
+
 #define EFI_USE_CCM TRUE
 
 #ifndef EFI_ENABLE_ASSERTS

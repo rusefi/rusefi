@@ -46,6 +46,7 @@ Engine::Engine() {
 	isCylinderCleanupMode = false;
 	engineCycleEventCount = 0;
 	stopEngineRequestTimeNt = 0;
+	isRunningPwmTest = false;
 }
 
 void Engine::precalc(engine_configuration_s *engineConfiguration) {
@@ -76,6 +77,8 @@ bool Engine::stopPins() {
 }
 
 void Engine::watchdog() {
+	if (isRunningPwmTest)
+		return;
 	if (!isSpinning) {
 		if (!isRunningBenchTest() && stopPins()) {
 			firmwareError("Some pins were turned off by 2nd pass watchdog");

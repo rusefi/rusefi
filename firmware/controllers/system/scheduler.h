@@ -24,16 +24,7 @@ struct scheduling_struct {
 	const char *name;
 };
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
-
 void scheduleTask(const char *prefix, scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param);
 void scheduleTask2(const char *prefix, scheduling_s *scheduling, uint64_t time, schfunc_t callback, void *param);
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
 
 #endif /* SCHEDULER_H_ */
