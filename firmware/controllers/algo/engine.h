@@ -103,6 +103,8 @@ public:
 	bool_t clutchUpState;
 	bool_t clutchDownState;
 
+	bool_t isRunningPwmTest;
+
 	TriggerShape triggerShape;
 
 	float angleExtra[IGNITION_PIN_COUNT];

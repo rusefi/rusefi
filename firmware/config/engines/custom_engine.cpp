@@ -62,6 +62,8 @@ void setCustomEngineConfiguration(engine_configuration_s *engineConfiguration) {
 	 * We want to initialize all outputs for test
 	 */
 	engineConfiguration->cylindersCount = 10;
+
+	engineConfiguration->displayMode = DM_NONE;
 #else
 	boardConfiguration->injectionPins[4] = GPIO_UNASSIGNED;
 	boardConfiguration->injectionPins[5] = GPIO_UNASSIGNED;
