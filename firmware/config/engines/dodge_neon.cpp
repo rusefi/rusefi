@@ -381,7 +381,7 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 	engineConfiguration->canWriteEnabled = true;
 	engineConfiguration->canReadEnabled = false;
 	engineConfiguration->canNbcType = CAN_BUS_NBC_BMW;
-//	engineConfiguration->can_nbc_type = CAN_BUS_MAZDA_RX8;
+//	engineConfiguration->canNbcType = CAN_BUS_MAZDA_RX8;
 }
 
 #endif /* EFI_SUPPORT_DODGE_NEON */

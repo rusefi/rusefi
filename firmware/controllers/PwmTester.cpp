@@ -48,17 +48,24 @@ static void startPwmTest(int freq) {
 
 static scheduling_s ioTest;
 
-static OutputSignal outSignals[4];
+static OutputSignal outSignals[8];
 
 static void testCallback(void *arg) {
 
 	/**
 	 * 0.1ms from now please squirt for 1.6ms
 	 */
-	scheduleOutput(&outSignals[0], 0.1, 1.6);
-	scheduleOutput(&outSignals[1], 0.1, 1.6);
-	scheduleOutput(&outSignals[2], 0.1, 1.6);
-	scheduleOutput(&outSignals[3], 0.1, 1.6);
+	float delayMs = 0.1;
+	float durationMs = 1.6;
+	scheduleOutput(&outSignals[0], delayMs, durationMs);
+	scheduleOutput(&outSignals[1], delayMs, durationMs);
+	scheduleOutput(&outSignals[2], delayMs, durationMs);
+	scheduleOutput(&outSignals[3], delayMs, durationMs);
+
+	scheduleOutput(&outSignals[4], delayMs, durationMs);
+	scheduleOutput(&outSignals[5], delayMs, durationMs);
+	scheduleOutput(&outSignals[6], delayMs, durationMs);
+	scheduleOutput(&outSignals[7], delayMs, durationMs);
 
 	/**
 	 * this would re-schedule another callback in 2ms from now
@@ -74,10 +81,15 @@ void initPwmTester(void) {
 	/**
 	 * injector channels #4-#8 are used for individual squirt test
 	 */
+	// todo: yet, it's some horrible code duplication
 	outSignals[0].output = &enginePins.injectors[4];
 	outSignals[1].output = &enginePins.injectors[5];
 	outSignals[2].output = &enginePins.injectors[6];
 	outSignals[3].output = &enginePins.injectors[7];
+	outSignals[4].output = &enginePins.injectors[8];
+	outSignals[5].output = &enginePins.injectors[9];
+	outSignals[6].output = &enginePins.injectors[10];
+	outSignals[7].output = &enginePins.injectors[11];
 
 	/**
 	 * this would schedule a callback in 2ms from now

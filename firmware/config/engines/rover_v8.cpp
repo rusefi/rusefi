@@ -23,8 +23,7 @@ void setFrankenstein_01_LCD(board_configuration_s *boardConfiguration) {
 	boardConfiguration->HD44780_db7 = GPIOB_13;
 }
 
-void setRoverv8(engine_configuration_s *engineConfiguration,
-		board_configuration_s *boardConfiguration) {
+void setRoverv8(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->triggerConfig.triggerType = TT_TOOTHED_WHEEL_36_1;
@@ -41,15 +40,13 @@ void setRoverv8(engine_configuration_s *engineConfiguration,
 	// set_whole_fuel_map 3
 	setWholeFuelMap(engineConfiguration, 3);
 
-
-    // set_cranking_injection_mode 0
+	// set_cranking_injection_mode 0
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	// set_injection_mode 1
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 
 	// set_ignition_mode 2
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
-        
 
 	// Frankenstein: low side - out #1: PC14
 	// Frankenstein: low side - out #2: PC15
@@ -75,5 +72,10 @@ void setRoverv8(engine_configuration_s *engineConfiguration,
 	// set_injection_pin_mode 0
 	boardConfiguration->injectionPinMode = OM_DEFAULT;
 
-
+	boardConfiguration->canTxPin = GPIOB_6;
+	boardConfiguration->canRxPin = GPIOB_12;
+	engineConfiguration->canWriteEnabled = true;
+	engineConfiguration->canReadEnabled = false;
+	engineConfiguration->isCanEnabled = true;
+	engineConfiguration->canNbcType = CAN_BUS_MAZDA_RX8;
 }

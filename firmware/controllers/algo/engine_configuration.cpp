@@ -411,10 +411,11 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	boardConfiguration->injectionPins[11] = GPIO_UNASSIGNED;
 	boardConfiguration->injectionPinMode = OM_DEFAULT;
 
-	boardConfiguration->ignitionPins[0] = GPIOC_7;
-	boardConfiguration->ignitionPins[1] = GPIOE_4; // todo: update this value
-	boardConfiguration->ignitionPins[2] = GPIOE_0; // todo: update this value
-	boardConfiguration->ignitionPins[3] = GPIOE_1; // todo: update this value
+
+	boardConfiguration->ignitionPins[0] = GPIO_UNASSIGNED;
+	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
+	boardConfiguration->ignitionPins[2] = GPIO_UNASSIGNED;
+	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
 	boardConfiguration->ignitionPins[4] = GPIO_UNASSIGNED;
 	boardConfiguration->ignitionPins[5] = GPIO_UNASSIGNED;
 	boardConfiguration->ignitionPins[6] = GPIO_UNASSIGNED;
