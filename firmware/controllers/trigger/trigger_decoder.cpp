@@ -94,6 +94,7 @@ static trigger_value_e eventType[6] = { TV_LOW, TV_HIGH, TV_LOW, TV_HIGH, TV_LOW
 	startOfCycleNt = nowNt; \
 	clear(); \
 	totalRevolutionCounter++; \
+	runningRevolutionCounter++; \
 	totalEventCountBase += TRIGGER_SHAPE(size); \
 }
 

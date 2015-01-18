@@ -53,6 +53,7 @@
 #include "engine.h"
 #include "lcd_controller.h"
 #include "settings.h"
+#include "rusefi_outputs.h"
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 // todo: move this logic to algo folder!
@@ -66,6 +67,9 @@
 #endif
 
 extern engine_pins_s enginePins;
+extern TriggerCentral triggerCentral;
+
+static bool_t subscription[(int) RO_LAST_ELEMENT];
 
 // this 'true' value is needed for simulator
 static volatile bool fullLog = true;
@@ -181,7 +185,8 @@ void printSensors(Logging *log, bool fileFormat, Engine *engine) {
 
 }
 
-EXTERN_ENGINE;
+EXTERN_ENGINE
+;
 
 void writeLogLine(void) {
 #if EFI_FILE_LOGGING || defined(__DOXYGEN__)
@@ -196,14 +201,17 @@ void writeLogLine(void) {
 #endif /* EFI_FILE_LOGGING */
 }
 
-void printState(Engine *engine, int currentCkpEventCounter) {
+static void printState(Engine *engine) {
 #if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
 	printSensors(&logger, false, engine);
 
 	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
 
 	int rpm = getRpmE(engine);
-	debugInt(&logger, "ckp_c", currentCkpEventCounter);
+	if (subscription[(int) RO_TOTAL_REVOLUTION_COUNTER])
+		debugInt(&logger, "ckp_c", getCrankEventCounter());
+	if (subscription[(int) RO_RUNNING_REVOLUTION_COUNTER])
+		debugInt(&logger, "ckp_r", triggerCentral.triggerState.runningRevolutionCounter);
 
 //	debugInt(&logger, "idl", getIdleSwitch());
 
@@ -326,7 +334,7 @@ void updateDevConsoleState(Engine *engine) {
 
 	prevCkpEventCounter = currentCkpEventCounter;
 
-	printState(engine, currentCkpEventCounter);
+	printState(engine);
 
 #if EFI_WAVE_ANALYZER
 	printWave(&logger);
@@ -550,6 +558,14 @@ static void tsStatusThread(Engine *engine) {
 	}
 }
 
+static void subscribe(int outputOrdinal) {
+	subscription[outputOrdinal] = true;
+}
+
+static void unsubscribe(int outputOrdinal) {
+	subscription[outputOrdinal] = false;
+}
+
 void initStatusLoop(Engine *engine) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	initLoggingExt(&logger, "status loop", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
@@ -564,6 +580,16 @@ void initStatusLoop(Engine *engine) {
 
 	addConsoleActionFFP("fuelinfo2", (VoidFloatFloatVoidPtr) showFuelInfo2, engine);
 	addConsoleActionP("fuelinfo", (VoidPtr) showFuelInfo, engine);
+
+	subscription[(int) RO_TRG1_DUTY] = true;
+	subscription[(int) RO_TRG2_DUTY] = true;
+	subscription[(int) RO_TRG3_DUTY] = false;
+	subscription[(int) RO_TRG4_DUTY] = false;
+	subscription[(int) RO_TOTAL_REVOLUTION_COUNTER] = true;
+	subscription[(int) RO_RUNNING_REVOLUTION_COUNTER] = false;
+
+	addConsoleActionI("subscribe", subscribe);
+	addConsoleActionI("unsubscribe", unsubscribe);
 
 	addConsoleAction("status", printStatus);
 #endif /* EFI_PROD_CODE */

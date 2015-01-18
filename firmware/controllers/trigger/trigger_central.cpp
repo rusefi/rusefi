@@ -291,6 +291,10 @@ float getTriggerDutyCycle(int index) {
 	return triggerCentral.triggerState.getTriggerDutyCycle(index);
 }
 
+static void resetRunningTriggerCounter() {
+	triggerCentral.triggerState.runningRevolutionCounter = 0;
+}
+
 void initTriggerCentral(Logging *sharedLogger, Engine *engine) {
 	logger = sharedLogger;
 	strcpy((char*) shaft_signal_msg_index, "x_");
@@ -302,7 +306,10 @@ void initTriggerCentral(Logging *sharedLogger, Engine *engine) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	addConsoleActionP("triggerinfo", (VoidPtr) triggerInfo, engine);
 	addConsoleActionP("triggershapeinfo", (VoidPtr) triggerShapeInfo, engine);
+	addConsoleAction("reset_running_trigger_counter", resetRunningTriggerCounter);
 #endif
+
+
 
 #if EFI_HISTOGRAMS
 	initHistogram(&triggerCallback, "all callbacks");
