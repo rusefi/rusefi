@@ -39,12 +39,12 @@ void acAddData(float angle, float value) {
 			if (getFullLog()) {
 				scheduleLogging(&logging);
 			}
-			pendingData = FALSE;
+			pendingData = false;
 		}
 		return;
 	}
 	if (!pendingData) {
-		pendingData = TRUE;
+		pendingData = true;
 		resetLogging(&logging);
 		// message header
 		appendPrintf(&logging, "analog_chart%s", DELIMETER);
@@ -55,9 +55,16 @@ void acAddData(float angle, float value) {
 	}
 }
 
+static void setAnalogChartFrequency(int value) {
+	engineConfiguration->analogChartFrequency = value;
+}
+
 void initAnalogChart(void) {
 	initLoggingExt(&logging, "analog chart", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
-	initialized = TRUE;
+
+	addConsoleActionI("set_analog_chart_freq", setAnalogChartFrequency);
+
+	initialized = true;
 }
 
 #endif /* EFI_ANALOG_CHART */
