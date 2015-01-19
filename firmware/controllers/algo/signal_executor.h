@@ -47,11 +47,12 @@ extern "C"
 void scheduleOutput(OutputSignal *signal, float delayMs, float durationMs);
 
 void initSignalExecutor(void);
-void initSignalExecutorImpl(void);
 void scheduleByAngle(int rpm, scheduling_s *timer, angle_t angle, schfunc_t callback, void *param);
 
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
+
+void initSignalExecutorImpl(void);
 
 #endif /* SPARKOUT_H_ */

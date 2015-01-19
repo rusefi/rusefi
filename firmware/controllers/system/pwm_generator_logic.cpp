@@ -141,7 +141,7 @@ static efitimeus_t togglePwmState(PwmConfig *state) {
  */
 static void timerCallback(PwmConfig *state) {
 	efitimeus_t switchTimeUs = togglePwmState(state);
-	scheduleTask2("pwm", &state->scheduling, switchTimeUs, (schfunc_t) timerCallback, state);
+	scheduleByTime("pwm", &state->scheduling, switchTimeUs, (schfunc_t) timerCallback, state);
 }
 
 /**

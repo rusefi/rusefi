@@ -144,7 +144,7 @@ void scheduleTask(const char *prefix, scheduling_s *scheduling, int delayUs, sch
 	instance.schedule(scheduling, getTimeNowUs(), delayUs, callback, param);
 }
 
-void scheduleTask2(const char *prefix, scheduling_s *scheduling, uint64_t time, schfunc_t callback, void *param) {
+void scheduleByTime(const char *prefix, scheduling_s *scheduling, efitimeus_t time, schfunc_t callback, void *param) {
 	scheduling->name = prefix;
 	instance.schedule2(scheduling, time, callback, param);
 }

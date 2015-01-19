@@ -15,7 +15,7 @@ class Executor {
 public:
 	Executor();
 	void schedule(scheduling_s *scheduling, uint64_t nowUs, int delayUs, schfunc_t callback, void *param);
-	void schedule2(scheduling_s *scheduling, uint64_t timeUs, schfunc_t callback, void *param);
+	void schedule2(scheduling_s *scheduling, efitimeus_t timeUs, schfunc_t callback, void *param);
 	void onTimerCallback();
 private:
 	EventQueue queue;
@@ -23,15 +23,6 @@ private:
 	void doExecute();
 };
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
-
 void initSignalExecutorImpl(void);
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
 
 #endif /* SINGLETIMEREXECUTOR_H_ */
