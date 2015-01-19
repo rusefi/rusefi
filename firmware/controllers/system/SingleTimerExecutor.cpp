@@ -55,7 +55,7 @@ Executor::Executor() {
 #define lock() lockAnyContext()
 #define unlock() unlockAnyContext()
 
-void Executor::schedule2(scheduling_s *scheduling, uint64_t timeUs, schfunc_t callback,
+void Executor::scheduleByTime(scheduling_s *scheduling, efitimeus_t timeUs, schfunc_t callback,
 		void *param) {
 //	if (delayUs < 0) {
 //		firmwareError("Negative delayUs %s: %d", prefix, delayUs);
@@ -78,7 +78,7 @@ void Executor::schedule2(scheduling_s *scheduling, uint64_t timeUs, schfunc_t ca
 
 void Executor::schedule(scheduling_s *scheduling, uint64_t nowUs, int delayUs, schfunc_t callback,
 		void *param) {
-	schedule2(scheduling, nowUs + delayUs, callback, param);
+	scheduleByTime(scheduling, nowUs + delayUs, callback, param);
 }
 
 void Executor::onTimerCallback() {
@@ -141,12 +141,12 @@ void Executor::doExecute() {
  */
 void scheduleTask(const char *prefix, scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) {
 	scheduling->name = prefix;
-	instance.schedule(scheduling, getTimeNowUs(), delayUs, callback, param);
+	instance.scheduleByTime(scheduling, getTimeNowUs() + delayUs, callback, param);
 }
 
 void scheduleByTime(const char *prefix, scheduling_s *scheduling, efitimeus_t time, schfunc_t callback, void *param) {
 	scheduling->name = prefix;
-	instance.schedule2(scheduling, time, callback, param);
+	instance.scheduleByTime(scheduling, time, callback, param);
 }
 
 void initSignalExecutorImpl(void) {
