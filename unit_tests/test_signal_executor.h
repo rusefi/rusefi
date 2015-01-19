@@ -9,16 +9,6 @@
 #define TEST_SIGNAL_EXECUTOR_H_
 
 int getRevolutionCounter();
-
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
-
 void testSignalExecutor(void);
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
 
 #endif /* TEST_SIGNAL_EXECUTOR_H_ */

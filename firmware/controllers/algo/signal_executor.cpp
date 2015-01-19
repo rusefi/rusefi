@@ -118,7 +118,7 @@ int getRevolutionCounter(void);
  * @param	dwell	the number of ticks of output duration
  *
  */
-void scheduleOutput(OutputSignal *signal, float delayMs, float durationMs) {
+void scheduleOutput(OutputSignal *signal, efitimeus_t nowUs, float delayMs, float durationMs) {
 #if EFI_GPIO
 	if (durationMs < 0) {
 		firmwareError("duration cannot be negative: %d", durationMs);
@@ -133,8 +133,6 @@ void scheduleOutput(OutputSignal *signal, float delayMs, float durationMs) {
 	int index = getRevolutionCounter() % 2;
 	scheduling_s * sUp = &signal->signalTimerUp[index];
 	scheduling_s * sDown = &signal->signalTimerDown[index];
-
-	efitimeus_t nowUs = getTimeNowUs();
 
 	scheduleByTime("out up", sUp, nowUs + (int) MS2US(delayMs), (schfunc_t) &turnPinHigh, signal->output);
 	scheduleByTime("out down", sDown, nowUs + (int) MS2US(delayMs + durationMs), (schfunc_t) &turnPinLow, signal->output);
