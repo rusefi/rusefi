@@ -12,6 +12,7 @@ import java.awt.event.WindowEvent;
  */
 public class FrameHelper {
     protected final JFrame frame = new JFrame();
+    public static int defaultFontSize;
 
     protected void showFrame(JComponent component) {
         frame.setSize(800, 500);
@@ -29,6 +30,12 @@ public class FrameHelper {
             }
         });
         frame.add(component);
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowOpened(WindowEvent e) {
+                defaultFontSize = frame.getFont().getSize();
+            }
+        });
         frame.setVisible(true);
     }
 
@@ -39,5 +46,9 @@ public class FrameHelper {
     protected void onWindowClosed() {
         FileLog.rlog("onWindowClosed");
         FileLog.MAIN.close();
+    }
+
+    public int getDefaultFontSize() {
+        return defaultFontSize;
     }
 }
