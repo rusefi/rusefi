@@ -17,14 +17,12 @@
 EventQueue schedulingQueue;
 
 void scheduleTask(const char *msg, scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) {
-	schedulingQueue.insertTask(scheduling, getTimeNowUs() + delayUs, callback, param);
+	scheduleByTime(msg, scheduling, getTimeNowUs() + delayUs, callback, param);
 }
 
-void scheduleTask2(const char *prefix, scheduling_s *scheduling, uint64_t time, schfunc_t callback, void *param) {
-	firmwareError("not implemented");
-	//schedulingQueue.insertTask(scheduling, getTimeNowUs() + delayUs, callback, param);
+void scheduleByTime(const char *prefix, scheduling_s *scheduling, efitimeus_t time, schfunc_t callback, void *param) {
+	schedulingQueue.insertTask(scheduling, time, callback, param);
 }
-
 
 void initSignalExecutorImpl(void) {
 }

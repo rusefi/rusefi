@@ -57,15 +57,18 @@ static void testCallback(void *arg) {
 	 */
 	float delayMs = 0.1;
 	float durationMs = 1.6;
-	scheduleOutput(&outSignals[0], delayMs, durationMs);
-	scheduleOutput(&outSignals[1], delayMs, durationMs);
-	scheduleOutput(&outSignals[2], delayMs, durationMs);
-	scheduleOutput(&outSignals[3], delayMs, durationMs);
 
-	scheduleOutput(&outSignals[4], delayMs, durationMs);
-	scheduleOutput(&outSignals[5], delayMs, durationMs);
-	scheduleOutput(&outSignals[6], delayMs, durationMs);
-	scheduleOutput(&outSignals[7], delayMs, durationMs);
+	efitimeus_t nowUs = getTimeNowUs();
+
+	scheduleOutput(&outSignals[0], nowUs, delayMs, durationMs);
+	scheduleOutput(&outSignals[1], nowUs, delayMs, durationMs);
+	scheduleOutput(&outSignals[2], nowUs, delayMs, durationMs);
+	scheduleOutput(&outSignals[3], nowUs, delayMs, durationMs);
+
+	scheduleOutput(&outSignals[4], nowUs, delayMs, durationMs);
+	scheduleOutput(&outSignals[5], nowUs, delayMs, durationMs);
+	scheduleOutput(&outSignals[6], nowUs, delayMs, durationMs);
+	scheduleOutput(&outSignals[7], nowUs, delayMs, durationMs);
 
 	/**
 	 * this would re-schedule another callback in 2ms from now
