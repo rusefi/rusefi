@@ -340,14 +340,12 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 	 */
 	engineConfiguration->cltAdcChannel = EFI_ADC_12;
 
-	boardConfiguration->fsio_setting[0] = 0.55;
-	setFsioExt(engineConfiguration, 0, GPIOE_10, "0 fsio_setting", 400);
 
 	engineConfiguration->analogChartMode = AC_MAP;
 	boardConfiguration->isFastAdcEnabled = true;
 	engineConfiguration->map.sensor.sensorType = MT_DODGE_NEON_2003;
 
-#if EFI_PROD_CODE
+#if EFI_HIP_9011 || defined(__DOXYGEN__)
 	setHip9011FrankensoPinout();
 #endif
 	engineConfiguration->cylinderBore = 87.5;
@@ -361,7 +359,10 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 	 * set_fsio_setting 0 0.11
 	 */
 	engineConfiguration->bc.fsio_setting[0] = 0.2;
+#if EFI_HIP_9011 || defined(__DOXYGEN__)
+	boardConfiguration->fsio_setting[0] = 0.55;
 	setFsioExt(engineConfiguration, 0, GPIOE_5, "0 fsio_setting", 400);
+#endif
 
 	boardConfiguration->logicAnalyzerPins[0] = GPIO_UNASSIGNED;
 	engineConfiguration->vehicleSpeedSensorInputPin = GPIOA_8;

@@ -23,6 +23,8 @@
 #include "settings.h"
 #include "injector_central.h"
 
+#if EFI_HD44780_LCD || defined(__DOXYGEN__)
+
 EXTERN_ENGINE
 ;
 
@@ -329,3 +331,5 @@ void updateHD44780lcd(Engine *engine) {
 //	lcd_HD44780_print_string(dateBuffer);
 //#endif /* EFI_PROD_CODE */
 }
+
+#endif
