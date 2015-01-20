@@ -11,10 +11,10 @@
  */
 
 #include "main.h"
+#include "rpm_calculator.h"
 
 #if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
 
-#include "rpm_calculator.h"
 #include "trigger_central.h"
 #include "engine_configuration.h"
 #include "engine_math.h"

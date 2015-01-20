@@ -666,7 +666,9 @@ void applyNonPersistentConfiguration(Logging * logger, Engine *engine) {
 		return;
 	}
 	engine->engineCycleEventCount = engine->triggerShape.getLength();
+#if EFI_FSIO || defined(__DOXYGEN__)
 	applyFsioConfiguration(PASS_ENGINE_PARAMETER_F);
+#endif
 }
 
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
