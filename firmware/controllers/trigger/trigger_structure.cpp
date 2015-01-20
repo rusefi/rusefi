@@ -277,8 +277,10 @@ void setToothedWheelConfiguration(TriggerShape *s, int total, int skipped,
 	// todo: move to into configuration definition s->needSecondTriggerInput = false;
 	s->useRiseEdge = true;
 
+#if EFI_ENGINE_CONTROL
 	initializeSkippedToothTriggerShapeExt(s, s->totalToothCount, s->skippedToothCount,
 			getOperationMode(engineConfiguration));
+#endif
 }
 
 void setTriggerSynchronizationGap2(TriggerShape *s, float syncGapFrom, float syncRatioTo) {

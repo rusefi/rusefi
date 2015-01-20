@@ -147,11 +147,18 @@ void printSensors(Logging *log, bool fileFormat, Engine *engine) {
 	float sec = ((float) nowMs) / 1000;
 	reportSensorF(log, fileFormat, "time", "", sec, 3);
 
+#if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
 	reportSensorI(log, fileFormat, "rpm", "RPM", getRpmE(engine));
+
+	reportSensorF(log, fileFormat, "TRG_0_DUTY", "%", getTriggerDutyCycle(0), 2);
+	reportSensorF(log, fileFormat, "TRG_1_DUTY", "%", getTriggerDutyCycle(1), 2);
+#endif
+
 	reportSensorF(log, fileFormat, "maf", "V", getMaf(), 2);
 
 	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
 
+#if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
 	if (engineConfiguration->hasMapSensor) {
 		reportSensorF(log, fileFormat, "MAP", "kPa", getMap(), 2);
 		reportSensorF(log, fileFormat, "map_r", "V", getRawMap(), 2);
@@ -162,7 +169,9 @@ void printSensors(Logging *log, bool fileFormat, Engine *engine) {
 	if (engineConfiguration->hasAfrSensor) {
 		reportSensorF(log, fileFormat, "afr", "AFR", getAfr(), 2);
 	}
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#endif
+
+#if EFI_VEHICLE_SPEED || defined(__DOXYGEN__)
 	if (engineConfiguration->hasVehicleSpeedSensor) {
 		reportSensorF(log, fileFormat, "vss", "kph", getVehicleSpeed(), 2);
 	}
@@ -170,8 +179,6 @@ void printSensors(Logging *log, bool fileFormat, Engine *engine) {
 	reportSensorF(log, fileFormat, "vref", "V", getVRef(engineConfiguration), 2);
 	reportSensorF(log, fileFormat, "vbatt", "V", getVBatt(engineConfiguration), 2);
 
-	reportSensorF(log, fileFormat, "TRG_0_DUTY", "%", getTriggerDutyCycle(0), 2);
-	reportSensorF(log, fileFormat, "TRG_1_DUTY", "%", getTriggerDutyCycle(1), 2);
 
 	reportSensorF(log, fileFormat, "TP", "%", getTPS(PASS_ENGINE_PARAMETER_F), 2);
 
@@ -334,14 +341,18 @@ void updateDevConsoleState(Engine *engine) {
 	systime_t nowSeconds = getTimeNowSeconds();
 	printInfo(engine, nowSeconds);
 
+#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 	int currentCkpEventCounter = getCrankEventCounter();
 	if (prevCkpEventCounter == currentCkpEventCounter && timeOfPreviousReport == nowSeconds) {
 		return;
 	}
-
 	timeOfPreviousReport = nowSeconds;
 
 	prevCkpEventCounter = currentCkpEventCounter;
+#else
+	chThdSleepMilliseconds(200);
+#endif
+
 
 	printState(engine);
 
@@ -370,6 +381,7 @@ static void showFuelInfo2(float rpm, float engineLoad, Engine *engine) {
 	scheduleMsg(&logger2, "algo=%s/pump=%s", getEngine_load_mode_e(engineConfiguration->algorithm),
 			boolToString(enginePins.fuelPumpRelay.getLogicValue()));
 
+#if EFI_ENGINE_CONTROL
 	scheduleMsg(&logger2, "cranking fuel: %f", getCrankingFuel(engine));
 
 	if (engine->rpmCalculator.isRunning()) {
@@ -385,11 +397,14 @@ static void showFuelInfo2(float rpm, float engineLoad, Engine *engine) {
 		float value = getRunningFuel(baseFuelMs, (int) rpm PASS_ENGINE_PARAMETER);
 		scheduleMsg(&logger2, "injection pulse width: %f", value);
 	}
+#endif
 }
 
+#if EFI_ENGINE_CONTROL
 static void showFuelInfo(Engine *engine) {
 	showFuelInfo2((float) getRpmE(engine), getEngineLoadT(PASS_ENGINE_PARAMETER), engine);
 }
+#endif
 
 #endif /* EFI_PROD_CODE */
 
@@ -587,8 +602,10 @@ void initStatusLoop(Engine *engine) {
 #if EFI_PROD_CODE
 	initLogging(&logger2, "main event handler");
 
+#if EFI_ENGINE_CONTROL
 	addConsoleActionFFP("fuelinfo2", (VoidFloatFloatVoidPtr) showFuelInfo2, engine);
 	addConsoleActionP("fuelinfo", (VoidPtr) showFuelInfo, engine);
+#endif
 
 	subscription[(int) RO_TRG1_DUTY] = true;
 	subscription[(int) RO_TRG2_DUTY] = true;

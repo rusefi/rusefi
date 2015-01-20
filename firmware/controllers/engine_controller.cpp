@@ -174,6 +174,7 @@ int getTimeNowSeconds(void) {
 }
 
 static void cylinderCleanupControl(Engine *engine) {
+#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 	bool newValue;
 	if (engineConfiguration->isCylinderCleanupEnabled) {
 		newValue = isCrankingE(engine) && getTPS(PASS_ENGINE_PARAMETER_F) > CLEANUP_MODE_TPS;
@@ -184,6 +185,7 @@ static void cylinderCleanupControl(Engine *engine) {
 		engine->isCylinderCleanupMode = newValue;
 		scheduleMsg(&logger, "isCylinderCleanupMode %s", boolToString(newValue));
 	}
+#endif
 }
 
 static void onEvenyGeneralMilliseconds(Engine *engine) {
@@ -196,13 +198,17 @@ static void onEvenyGeneralMilliseconds(Engine *engine) {
 		unlockAnyContext();
 	}
 
+#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 	if (!engine->rpmCalculator.isRunning())
 		writeToFlashIfPending();
+#endif
 
 	engine->watchdog();
 	engine->updateSlowSensors();
 
+#if EFI_FSIO || defined(__DOXYGEN__)
 	runFsio();
+#endif
 
 	updateErrorCodes();
 
@@ -355,17 +361,16 @@ void initEngineContoller(Logging *sharedLogger, Engine *engine) {
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 	initInjectorCentral(engine);
 	initIgnitionCentral();
-#endif
-
-#if EFI_PWM_TESTER
-	initPwmTester();
-#endif
-
 	/**
 	 * This has to go after 'initInjectorCentral' and 'initInjectorCentral' in order to
 	 * properly detect un-assigned output pins
 	 */
 	prepareShapes(engine);
+#endif
+
+#if EFI_PWM_TESTER
+	initPwmTester();
+#endif
 
 	initMalfunctionCentral();
 
@@ -407,7 +412,11 @@ void initEngineContoller(Logging *sharedLogger, Engine *engine) {
 	addConsoleActionI("get_float", getFloat);
 	addConsoleActionI("get_int", getInt);
 
+#if EFI_FSIO || defined(__DOXYGEN__)
 	initFsioImpl(sharedLogger, engine);
+#endif
 
+#if EFI_HD44780_LCD || defined(__DOXYGEN__)
 	initLcdController();
+#endif
 }

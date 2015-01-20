@@ -77,6 +77,7 @@ bool Engine::stopPins() {
 }
 
 void Engine::watchdog() {
+#if EFI_ENGINE_CONTROL
 	if (isRunningPwmTest)
 		return;
 	if (!isSpinning) {
@@ -85,7 +86,7 @@ void Engine::watchdog() {
 		}
 		return;
 	}
-	uint64_t nowNt = getTimeNowNt();
+	efitick_t nowNt = getTimeNowNt();
 	/**
 	 * Lowest possible cranking is about 240 RPM, that's 4 revolutions per second.
 	 * 0.25 second is 250000 uS
@@ -103,6 +104,7 @@ void Engine::watchdog() {
 #endif
 
 	stopPins();
+#endif
 }
 
 StartupFuelPumping::StartupFuelPumping() {

@@ -159,9 +159,11 @@ void adc_callback_fast(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 #if EFI_MAP_AVERAGING
 		mapAveragingCallback(fastAdc.samples[fastMapSampleIndex]);
 #endif /* EFI_MAP_AVERAGING */
+#if EFI_HIP_9011 || defined(__DOXYGEN__)
 		if (boardConfiguration->isHip9011Enabled) {
 			hipAdcCallback(fastAdc.samples[hipSampleIndex]);
 		}
+#endif
 	}
 }
 
@@ -196,12 +198,14 @@ void initHardware(Logging *l, Engine *engine) {
 	initHistogramsModule();
 #endif /* EFI_HISTOGRAMS */
 
+#if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
 	/**
 	 * This is so early because we want to init logger
 	 * which would be used while finding trigger synch index
 	 * while config read
 	 */
 	initTriggerDecoderLogger(sharedLogger);
+#endif
 
 	/**
 	 * We need the LED_ERROR pin even before we read configuration
@@ -239,7 +243,9 @@ void initHardware(Logging *l, Engine *engine) {
 		return;
 	}
 
+#if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
 	initTriggerDecoder();
+#endif
 
 	mySetPadMode2("board test", boardConfiguration->boardTestModeJumperPin,
 	PAL_MODE_INPUT_PULLUP);
@@ -271,10 +277,11 @@ void initHardware(Logging *l, Engine *engine) {
 //	init_adc_mcp3208(&adcState, &SPID2);
 //	requestAdcValue(&adcState, 0);
 
+
+#if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
 	// todo: figure out better startup logic
 	initTriggerCentral(sharedLogger, engine);
 
-#if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
 	initShaftPositionInputCapture();
 #endif /* EFI_SHAFT_POSITION_INPUT */
 
@@ -327,7 +334,9 @@ void initHardware(Logging *l, Engine *engine) {
 //		}
 //	}
 
+#if EFI_VEHICLE_SPEED || defined(__DOXYGEN__)
 	initVehicleSpeed(sharedLogger);
+#endif
 
 	initJoystick(sharedLogger);
 

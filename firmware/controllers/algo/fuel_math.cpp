@@ -151,6 +151,7 @@ float getBaseTableFuel(engine_configuration_s *engineConfiguration, int rpm, flo
 			engineConfiguration->fuelRpmBins);
 }
 
+#if EFI_ENGINE_CONTROL
 /**
  * @return Duration of fuel injection while craning, in milliseconds
  */
@@ -159,6 +160,7 @@ float getCrankingFuel(Engine *engine) {
 			engine->rpmCalculator.getRevolutionCounterSinceStart()
 		);
 }
+#endif
 
 float getCrankingFuel3(engine_configuration_s *engineConfiguration, float coolantTemperature,
 		uint32_t revolutionCounterSinceStart) {
