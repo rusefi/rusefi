@@ -50,8 +50,16 @@ typedef char le_formula_t[LE_COMMAND_LENGTH];
 #define IGN_LOAD_COUNT 16
 #define IGN_RPM_COUNT 16
 
+// todo: merge these two types together?
 typedef float fuel_table_t[FUEL_LOAD_COUNT][FUEL_RPM_COUNT];
 typedef float ignition_table_t[IGN_LOAD_COUNT][IGN_RPM_COUNT];
+
+// todo: rename this structure one all tables migrated
+typedef struct {
+	float loadBins[IGN_LOAD_COUNT];
+	float rpmBins[IGN_RPM_COUNT];
+	ignition_table_t map;
+} full_i_table_s;
 
 typedef brain_pin_e egt_cs_array_t[MAX31855_CS_COUNT];
 
