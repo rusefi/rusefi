@@ -19,7 +19,7 @@ class TriggerShape;
 #define TRIGGER_CHANNEL_COUNT 3
 
 class trigger_shape_helper {
-	int pinStates[TRIGGER_CHANNEL_COUNT][PWM_PHASE_MAX_COUNT];
+	pin_state_t pinStates[TRIGGER_CHANNEL_COUNT][PWM_PHASE_MAX_COUNT];
 public:
 	trigger_shape_helper();
 

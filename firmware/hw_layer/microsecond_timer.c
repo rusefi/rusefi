@@ -31,6 +31,12 @@ static volatile int timerRestartCounter = 0;
 
 schfunc_t globalTimerCallback;
 
+static THD_WORKING_AREA(mwThreadStack, UTILITY_THREAD_STACK_SIZE);
+
+static const char * msg;
+
+static char buff[32];
+
 /**
  * sets the alarm to the specified number of microseconds from now.
  * This function should be invoked under kernel lock which would disable interrupts.
@@ -72,29 +78,27 @@ static void callback(GPTDriver *gptp) {
 	globalTimerCallback(NULL);
 }
 
-static THD_WORKING_AREA(mwThreadStack, UTILITY_THREAD_STACK_SIZE);
+static void usTimerWatchDog(void) {
+	if (getTimeNowNt() >= lastSetTimerTimeNt + 2 * CORE_CLOCK) {
+		strcpy(buff, "no_event");
+		itoa10(&buff[8], lastSetTimerValue);
+		firmwareError(buff);
+		return;
+	}
 
-static const char * msg;
+	msg = isTimerPending ? "No_cb too long" : "Timer not awhile";
+	// 2 seconds of inactivity would not look right
+	efiAssert(getTimeNowNt() < lastSetTimerTimeNt + 2 * CORE_CLOCK, msg, -1);
 
-static char buff[32];
+}
 
 static msg_t mwThread(int param) {
 	(void)param;
 	chRegSetThreadName("timer watchdog");
 
-	while (TRUE) {
+	while (true) {
 		chThdSleepMilliseconds(1000); // once a second is enough
-
-		if (getTimeNowNt() >= lastSetTimerTimeNt + 2 * CORE_CLOCK) {
-			strcpy(buff, "no_event");
-			itoa10(&buff[8], lastSetTimerValue);
-			firmwareError(buff);
-			return -1;
-		}
-
-		msg = isTimerPending ? "No_cb too long" : "Timer not awhile";
-		// 2 seconds of inactivity would not look right
-		efiAssert(getTimeNowNt() < lastSetTimerTimeNt + 2 * CORE_CLOCK, msg, -1);
+		usTimerWatchDog();
 	}
 #if defined __GNUC__
 	return -1;

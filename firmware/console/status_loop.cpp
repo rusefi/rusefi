@@ -412,8 +412,9 @@ static THD_WORKING_AREA(lcdThreadStack, UTILITY_THREAD_STACK_SIZE);
 
 /**
  * blinking thread to show that we are alive
+ * that's a trivial task - a smaller stack should work
  */
-static THD_WORKING_AREA(comBlinkingStack, UTILITY_THREAD_STACK_SIZE);
+static THD_WORKING_AREA(blinkingStack, 128);
 
 static OutputPin communicationPin;
 OutputPin checkEnginePin;
@@ -446,13 +447,8 @@ static void initialLedsBlink(void) {
 		leds[i]->setValue(0);
 }
 
-/**
- * error thread to show error condition (blinking LED means non-fatal error)
- */
-static THD_WORKING_AREA(errBlinkingStack, UTILITY_THREAD_STACK_SIZE);
-
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-static void comBlinkingThread(void *arg) {
+static void blinkingThread(void *arg) {
 	(void) arg;
 	chRegSetThreadName("communication blinking");
 
@@ -468,27 +464,19 @@ static void comBlinkingThread(void *arg) {
 		}
 
 		communicationPin.setValue(0);
+		warningPin.setValue(0);
 		chThdSleepMilliseconds(delay);
 
 		communicationPin.setValue(1);
+#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
+		if (isTriggerDecoderError() || isIgnitionTimingError())
+			warningPin.setValue(1);
+#endif
 		chThdSleepMilliseconds(delay);
+
 	}
 }
 
-static void errBlinkingThread(void *arg) {
-	(void) arg;
-	chRegSetThreadName("err blinking");
-#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
-	while (TRUE) {
-		int delay = 33;
-		if (isTriggerDecoderError() || isIgnitionTimingError())
-			warningPin.setValue(1);
-		chThdSleepMilliseconds(delay);
-		warningPin.setValue(0);
-		chThdSleepMilliseconds(delay);
-	}
-#endif /* EFI_ENGINE_CONTROL */
-}
 #endif /* EFI_PROD_CODE */
 
 static void lcdThread(Engine *engine) {
@@ -630,8 +618,7 @@ void startStatusThreads(Engine *engine) {
 	chThdCreateStatic(lcdThreadStack, sizeof(lcdThreadStack), NORMALPRIO, (tfunc_t) lcdThread, engine);
 	chThdCreateStatic(tsThreadStack, sizeof(tsThreadStack), NORMALPRIO, (tfunc_t) tsStatusThread, engine);
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-	chThdCreateStatic(comBlinkingStack, sizeof(comBlinkingStack), NORMALPRIO, (tfunc_t) comBlinkingThread, NULL);
-	chThdCreateStatic(errBlinkingStack, sizeof(errBlinkingStack), NORMALPRIO, (tfunc_t) errBlinkingThread, NULL);
+	chThdCreateStatic(blinkingStack, sizeof(blinkingStack), NORMALPRIO, (tfunc_t) blinkingThread, NULL);
 #endif /* EFI_PROD_CODE */
 }
 
