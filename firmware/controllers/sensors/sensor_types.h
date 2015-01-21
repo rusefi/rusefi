@@ -12,6 +12,7 @@
 #define MAP_WINDOW_SIZE 8
 
 #include "rusefi_enums.h"
+#include "engine_configuration_generated_structures.h"
 
 typedef struct {
 	/**
@@ -46,25 +47,6 @@ typedef struct {
 
 } MAP_sensor_config_s;
 
-
-/**
- * @brief Thermistor curve parameters
- */
-typedef struct {
-	// these values is in Celcuus
-	float tempC_1;
-	float tempC_2;
-	float tempC_3;
-	float resistance_1;
-	float resistance_2;
-	float resistance_3;
-
-	float bias_resistor;
-
-	float s_h_a;
-	float s_h_b;
-	float s_h_c;
-} ThermistorConf;
 
 typedef struct {
 	ThermistorConf *config;
