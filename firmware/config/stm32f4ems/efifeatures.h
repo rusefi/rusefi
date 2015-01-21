@@ -139,7 +139,7 @@
 #define EFI_ANALOG_CHART TRUE
 
 #if defined __GNUC__
-#define EFI_PERF_METRICS TRUE
+#define EFI_PERF_METRICS FALSE
 #define DL_OUTPUT_BUFFER 6500
 #else
 #define EFI_PERF_METRICS FALSE
