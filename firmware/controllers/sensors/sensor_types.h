@@ -15,40 +15,6 @@
 #include "engine_configuration_generated_structures.h"
 
 typedef struct {
-	/**
-	 * kPa value at zero volts
-	 */
-	float customValueAt0;
-	/**
-	 * kPa value at 5 volts
-	 */
-	float customValueAt5;
-	air_pressure_sensor_type_e sensorType;
-	adc_channel_e hwChannel;
-} air_pressure_sensor_config_s;
-
-/**
- * @brief MAP averaging configuration
- */
-typedef struct {
-	float samplingAngleBins[MAP_ANGLE_SIZE];
-	/**
-	 * @brief MAP averaging sampling start angle, by RPM
-	 */
-	float samplingAngle[MAP_ANGLE_SIZE];
-
-	float samplingWindowBins[MAP_WINDOW_SIZE];
-	/**
-	 * @brief MAP averaging angle duration, by RPM
-	 */
-	float samplingWindow[MAP_WINDOW_SIZE];
-
-	air_pressure_sensor_config_s sensor;
-
-} MAP_sensor_config_s;
-
-
-typedef struct {
 	ThermistorConf *config;
 	adc_channel_e channel;
 } Thermistor;
