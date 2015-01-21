@@ -13,11 +13,11 @@ single_wave_s::single_wave_s() {
 	init(NULL);
 }
 
-single_wave_s::single_wave_s(int *ps) {
+single_wave_s::single_wave_s(pin_state_t *ps) {
 	init(ps);
 }
 
-void single_wave_s::init(int *pinStates) {
+void single_wave_s::init(pin_state_t *pinStates) {
 	this->pinStates = pinStates;
 }
 

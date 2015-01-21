@@ -18,8 +18,8 @@
 #define ITERATION_LIMIT 1000
 
 SimplePwm::SimplePwm() {
-	wave.init(pinStates);
-	sr[0] = wave;
+	waveInstance.init(pinStates);
+	sr[0] = waveInstance;
 	init(_switchTimes, sr);
 }
 
@@ -148,7 +148,7 @@ static void timerCallback(PwmConfig *state) {
  * Incoming parameters are potentially just values on current stack, so we have to copy
  * into our own permanent storage, right?
  */
-void copyPwmParameters(PwmConfig *state, int phaseCount, float *switchTimes, int waveCount, int **pinStates) {
+void copyPwmParameters(PwmConfig *state, int phaseCount, float *switchTimes, int waveCount, pin_state_t **pinStates) {
 	state->phaseCount = phaseCount;
 
 	for (int phaseIndex = 0; phaseIndex < phaseCount; phaseIndex++) {
@@ -163,7 +163,7 @@ void copyPwmParameters(PwmConfig *state, int phaseCount, float *switchTimes, int
 }
 
 void PwmConfig::weComplexInit(const char *msg, int phaseCount, float *switchTimes, int waveCount,
-		int **pinStates, pwm_cycle_callback *cycleCallback, pwm_gen_callback *stateChangeCallback) {
+		pin_state_t **pinStates, pwm_cycle_callback *cycleCallback, pwm_gen_callback *stateChangeCallback) {
 
 	efiAssertVoid(periodNt != 0, "period is not initialized");
 	if (phaseCount == 0) {

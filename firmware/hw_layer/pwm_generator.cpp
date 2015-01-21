@@ -36,9 +36,9 @@ void startSimplePwm(PwmConfig *state, const char *msg, OutputPin *output, float 
 	efiAssertVoid(dutyCycle >= 0 && dutyCycle <= 1, "dutyCycle");
 
 	float switchTimes[] = { dutyCycle, 1 };
-	int pinStates0[] = { 0, 1 };
+	pin_state_t pinStates0[] = { 0, 1 };
 
-	int *pinStates[1] = { pinStates0 };
+	pin_state_t *pinStates[1] = { pinStates0 };
 
 	state->outputPins[0] = output;
 

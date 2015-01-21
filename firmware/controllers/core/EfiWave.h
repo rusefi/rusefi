@@ -13,14 +13,23 @@
 #define PWM_PHASE_MAX_WAVE_PER_PWM 3
 
 /**
+ * int8_t is probably less efficient then int32_t but we need
+ * to reduce memory footprint
+ *
+ * todo: migrate to bit-array to same memory? but this would
+ * this would some CPU cycles. see std::vector<bool>
+ */
+typedef int8_t pin_state_t;
+
+/**
  * @brief   PWM configuration for the specific output pin
  */
 class single_wave_s {
 public:
 	single_wave_s();
-	single_wave_s(int *pinStates);
-	void init(int *pinStates);
-	int *pinStates;
+	single_wave_s(pin_state_t *pinStates);
+	void init(pin_state_t *pinStates);
+	pin_state_t *pinStates;
 };
 
 class TriggerShape;
