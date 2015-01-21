@@ -18,16 +18,6 @@
 
 #define MOCK_UNDEFINED -1
 
-typedef struct {
-	float baseCrankingFuel;
-
-	/**
-	 * This value controls what RPM values we consider 'cranking' (any RPM below 'crankingRpm')
-	 * Anything above 'crankingRpm' would be 'running'
-	 */
-	int16_t crankingRpm;
-} cranking_parameters_s;
-
 #define INJECTION_PIN_COUNT 12
 #define IGNITION_PIN_COUNT 12
 
@@ -382,12 +372,15 @@ typedef struct {
 	*/
 	int engineCycle;
 
+	/**
+	 * offset 348
+	*/
 	cranking_parameters_s crankingSettings;
-
 	/**
 	 * @see hasMapSensor
 	 * @see isMapAveragingEnabled
-	 */
+	 * offset 356
+	*/
 	MAP_sensor_config_s map;
 
 	// todo: merge with channel settings, use full-scale Thermistor here!
