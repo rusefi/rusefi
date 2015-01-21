@@ -122,11 +122,13 @@ static LoggingWithStorage sharedLogger;
 int main_loop_started = FALSE;
 
 static MemoryStream firmwareErrorMessageStream;
+static char panicMessage[200];
+
 uint8_t errorMessageBuffer[200];
 bool hasFirmwareErrorFlag = false;
-extern engine_configuration_s *engineConfiguration;
-extern board_configuration_s *boardConfiguration;
-extern engine_configuration2_s *engineConfiguration2;
+
+static virtual_timer_t resetTimer;
+
 EXTERN_ENGINE
 ;
 
@@ -199,8 +201,6 @@ void runRusEfi(void) {
 	}
 }
 
-static virtual_timer_t resetTimer;
-
 // todo: move this into a hw-specific file
 static void rebootNow(void) {
 	NVIC_SystemReset();
@@ -217,8 +217,6 @@ void scheduleReset(void) {
 }
 
 extern int main_loop_started;
-
-static char panicMessage[200];
 
 void chDbgStackOverflowPanic(Thread *otp) {
 	strcpy(panicMessage, "stack overflow: ");
