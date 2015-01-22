@@ -61,8 +61,6 @@ typedef enum {
 	 * You would use this value if you want to see a detailed graph of your trigger events
 	 */
 	AC_TRIGGER = 1, AC_MAP = 2,
-
-	Internal_ForceMyEnumIntSize_analog_chart_mode = ENUM_16_BITS,
 } analog_chart_e;
 
 typedef enum {
@@ -351,7 +349,8 @@ typedef struct {
 	/**
 	 * offset 334
 	*/
-	int16_t analogChartMode;
+	uint16_t analogChartMode;
+
 	/**
 	 * todo: finish implementation. These values are used for TPS disconnect detection
 	 * offset 336
