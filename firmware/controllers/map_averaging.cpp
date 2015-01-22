@@ -96,7 +96,7 @@ void mapAveragingCallback(adcsample_t value) {
 	float currentPressure = getMapByVoltage(voltage);
 
 #if EFI_ANALOG_CHART
-	if (engineConfiguration->analogChartMode == AC_MAP)
+	if (boardConfiguration->analogChartMode == AC_MAP)
 		if (perRevolutionCounter % FAST_MAP_CHART_SKIP_FACTOR == 0)
 			acAddData(getCrankshaftAngleNt(getTimeNowNt() PASS_ENGINE_PARAMETER), currentPressure);
 #endif /* EFI_ANALOG_CHART */

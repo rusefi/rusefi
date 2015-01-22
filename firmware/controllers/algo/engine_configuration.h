@@ -272,7 +272,9 @@ typedef struct {
 	brain_pin_e joystickCPin;
 	// offset 6248
 	brain_pin_e joystickDPin;
-	int unusedbs[7];
+	// offset 6252
+	uint32_t analogChartMode;
+	int unusedbs[6];
 
 	le_formula_t le_formulas[LE_COMMAND_COUNT];
 
@@ -349,7 +351,7 @@ typedef struct {
 	/**
 	 * offset 334
 	*/
-	uint16_t analogChartMode;
+	uint16_t unused334;
 
 	/**
 	 * todo: finish implementation. These values are used for TPS disconnect detection

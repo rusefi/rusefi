@@ -341,7 +341,7 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 	engineConfiguration->cltAdcChannel = EFI_ADC_12;
 
 
-	engineConfiguration->analogChartMode = AC_MAP;
+	boardConfiguration->analogChartMode = AC_MAP;
 	boardConfiguration->isFastAdcEnabled = true;
 	engineConfiguration->map.sensor.sensorType = MT_DODGE_NEON_2003;
 

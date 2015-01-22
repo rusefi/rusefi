@@ -143,7 +143,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index DECL
 
 	if (index != 0) {
 #if EFI_ANALOG_CHART || defined(__DOXYGEN__)
-		if (engineConfiguration->analogChartMode == AC_TRIGGER)
+		if (boardConfiguration->analogChartMode == AC_TRIGGER)
 			acAddData(getCrankshaftAngleNt(nowNt PASS_ENGINE_PARAMETER), 1000 * ckpSignalType + index);
 #endif
 		return;
@@ -171,7 +171,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index DECL
 	rpmState->onNewEngineCycle();
 	rpmState->lastRpmEventTimeNt = nowNt;
 #if EFI_ANALOG_CHART || defined(__DOXYGEN__)
-	if (engineConfiguration->analogChartMode == AC_TRIGGER)
+	if (boardConfiguration->analogChartMode == AC_TRIGGER)
 		acAddData(getCrankshaftAngleNt(nowNt PASS_ENGINE_PARAMETER), index);
 #endif
 }
