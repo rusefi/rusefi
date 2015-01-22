@@ -1,5 +1,5 @@
 /**
- * @file lcd_HD44780.c
+ * @file lcd_HD44780.cpp
  * @brief HD44780 character display driver
  *
  * see http://en.wikipedia.org/wiki/Hitachi_HD44780_LCD_controller

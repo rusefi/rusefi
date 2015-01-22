@@ -1665,7 +1665,7 @@ typedef enum {
 	//P3493 Cyl12 Exhaust Valve Ctrl Circ/Open
 
 	// this is needed for proper enum size, this matters for malfunction_central
-	Internal_ForceMyEnumIntSize_cranking_obd_code = ENUM_SIZE_HACK,
+	Internal_ForceMyEnumIntSize_cranking_obd_code = ENUM_32_BITS,
 } obd_code_e;
 
 #ifdef __cplusplus

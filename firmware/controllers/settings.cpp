@@ -325,7 +325,7 @@ static void setMalfunctionIndicatorPinMode(int value) {
 }
 
 static void setAnalogChartMode(int value) {
-	engineConfiguration->analogChartMode = value;
+	engineConfiguration->analogChartMode = (analog_chart_e)value;
 	doPrintConfiguration(engine);
 }
 
