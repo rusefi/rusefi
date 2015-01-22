@@ -395,26 +395,30 @@ typedef struct {
 
 	/**
 	 * this value could be used to offset the whole ignition timing table by a constant
-	 */
+	 * offset 772
+	*/
 	float ignitionBaseAngle;
-
 	/**
 	 * While cranking (which causes battery voltage to drop) we can calculate dwell time in shaft
 	 * degrees, not in absolute time as in running mode.
-	 */
+	 * offset 776
+	*/
 	float crankingChargeAngle;
-
+	/**
+	 * offset 780
+	*/
 	timing_mode_e timingMode;
+
 	/**
 	 * This value is used in 'fixed timing' mode, i.e. constant timing
 	 * This mode is useful for instance while adjusting distributor location
 	 */
 	float fixedModeTiming;
 
-	float injectorLag;	// size 4, offset 0
+	float injectorLag;
 
 
-	float fuelLoadBins[FUEL_LOAD_COUNT]; //
+	float fuelLoadBins[FUEL_LOAD_COUNT];
 	// RPM is float and not integer in order to use unified methods for interpolation
 	float fuelRpmBins[FUEL_RPM_COUNT]; //
 
