@@ -131,7 +131,14 @@ int warning(obd_code_e code, const char *fmt, ...) {
 }
 
 void firmwareError(const char *fmt, ...) {
-	printf("firmwareError [%s]", fmt);
+	printf("firmwareError [%s]\r\n", fmt);
+
+	va_list ap;
+	va_start(ap, fmt);
+	vprintf(fmt, ap);
+	va_end(ap);
+
+
 	exit(-1);
 }
 

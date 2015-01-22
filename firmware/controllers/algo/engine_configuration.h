@@ -121,7 +121,7 @@ typedef struct {
 #define HW_MAX_ADC_INDEX 16
 
 typedef struct {
-	// WARNING: by default, our small enums are ONE BYTE. this one is made 4-byte with the 'ENUM_SIZE_HACK' hack
+	// WARNING: by default, our small enums are ONE BYTE. this one is made 4-byte with the 'ENUM_32_BITS' hack
 	brain_pin_e idleValvePin;
 	pin_output_mode_e idleValvePinMode;
 
@@ -351,7 +351,7 @@ typedef struct {
 	/**
 	 * offset 334
 	*/
-	analog_chart_e analogChartMode;
+	int16_t analogChartMode;
 	/**
 	 * todo: finish implementation. These values are used for TPS disconnect detection
 	 * offset 336
