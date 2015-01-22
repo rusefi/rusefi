@@ -61,6 +61,8 @@ typedef enum {
 	 * You would use this value if you want to see a detailed graph of your trigger events
 	 */
 	AC_TRIGGER = 1, AC_MAP = 2,
+
+	Internal_ForceMyEnumIntSize_analog_chart = ENUM_32_BITS,
 } analog_chart_e;
 
 typedef enum {
@@ -273,7 +275,7 @@ typedef struct {
 	// offset 6248
 	brain_pin_e joystickDPin;
 	// offset 6252
-	uint32_t analogChartMode;
+	analog_chart_e analogChartMode;
 	int unusedbs[6];
 
 	le_formula_t le_formulas[LE_COMMAND_COUNT];
@@ -384,16 +386,31 @@ typedef struct {
 	*/
 	MAP_sensor_config_s map;
 
-	// todo: merge with channel settings, use full-scale Thermistor here!
-	ThermistorConf cltThermistorConf; // size 40 (10*4), offset 336
-	ThermistorConf iatThermistorConf; // size 40, offset 376
-
-	float sparkDwellBins[DWELL_COUNT]; // offset 580
+	/**
+	 * todo: merge with channel settings, use full-scale Thermistor here!
+	 * offset 500
+	*/
+	ThermistorConf cltThermistorConf;
+	/**
+	 * offset 540
+	*/
+	ThermistorConf iatThermistorConf;
+	/**
+	 * offset 580
+	*/
+	float sparkDwellBins[DWELL_COUNT];
+	/**
+	 * offset 612
+	*/
 	float sparkDwell[DWELL_COUNT];
-
+	/**
+	 * offset 644
+	*/
 	float ignitionLoadBins[IGN_LOAD_COUNT];
+	/**
+	 * offset 708
+	*/
 	float ignitionRpmBins[IGN_RPM_COUNT];
-
 	/**
 	 * this value could be used to offset the whole ignition timing table by a constant
 	 * offset 772
