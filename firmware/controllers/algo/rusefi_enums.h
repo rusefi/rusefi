@@ -13,9 +13,11 @@
 
 #include "efifeatures.h"
 
-// for now I want all enums to be 32 bit integers. At some point maybe we will make the one-byte
+// for now I want most enums to be 32 bit integers. At some point maybe we will make the one-byte
 // this is about offsets and sizes in TunerStudio
-#define ENUM_SIZE_HACK 2000000000
+#define ENUM_32_BITS 2000000000
+
+#define ENUM_16_BITS 20000
 
 #define DIGIPOT_COUNT 4
 
@@ -103,7 +105,7 @@ typedef enum {
 
 	ET_UNUSED = 29,
 
-	Force_4b_engine_type = ENUM_SIZE_HACK,
+	Force_4b_engine_type = ENUM_32_BITS,
 } engine_type_e;
 
 #define DEFAULT_ENGINE_TYPE CUSTOM_ENGINE
@@ -130,7 +132,7 @@ typedef enum {
 
 	TT_DODGE_NEON_2003 = 14,
 
-	Force_4b_trigger_type = ENUM_SIZE_HACK,
+	Force_4b_trigger_type = ENUM_32_BITS,
 } trigger_type_e;
 
 typedef enum {
@@ -138,7 +140,7 @@ typedef enum {
 	ADC_SLOW = 1,
 	ADC_FAST = 2,
 
-	Force_4b_adc_channel_mode = ENUM_SIZE_HACK,
+	Force_4b_adc_channel_mode = ENUM_32_BITS,
 } adc_channel_mode_e;
 
 // todo: better names?
@@ -187,7 +189,7 @@ typedef enum {
 	 */
 	LM_SPEED_DENSITY = 3,
 
-	Force_4b_engine_load_mode = ENUM_SIZE_HACK,
+	Force_4b_engine_load_mode = ENUM_32_BITS,
 } engine_load_mode_e;
 
 typedef enum {
@@ -195,7 +197,7 @@ typedef enum {
 	DM_HD44780 = 1,
 	DM_HD44780_OVER_PCF8574 = 2,
 
-	Force_4b_display_mode = ENUM_SIZE_HACK,
+	Force_4b_display_mode = ENUM_32_BITS,
 
 } display_mode_e;
 
@@ -207,14 +209,14 @@ typedef enum {
 	 */
 	LM_MLV = 1,
 
-	Force_4b_log_format = ENUM_SIZE_HACK,
+	Force_4b_log_format = ENUM_32_BITS,
 } log_format_e;
 
 
 typedef enum {
 	IM_AUTO = 0,
 	IM_MANUAL = 1,
-	Force_4b_idle_mode = ENUM_SIZE_HACK,
+	Force_4b_idle_mode = ENUM_32_BITS,
 } idle_mode_e;
 
 typedef enum {
@@ -232,12 +234,12 @@ typedef enum {
 	OM_OPENDRAIN = 2,
 	OM_OPENDRAIN_INVERTED = 3,
 
-	Force_4b_pin_output_mode = ENUM_SIZE_HACK,
+	Force_4b_pin_output_mode = ENUM_32_BITS,
 } pin_output_mode_e;
 
 typedef enum {
 
-	Force_4b_gpio_mode = ENUM_SIZE_HACK,
+	Force_4b_gpio_mode = ENUM_32_BITS,
 } gpio_mode_e;
 
 typedef enum {
@@ -245,7 +247,7 @@ typedef enum {
 	PI_PULLUP = 1,
 	PI_PULLDOWN = 2,
 
-	Force_4b_pin_input_mode = ENUM_SIZE_HACK,
+	Force_4b_pin_input_mode = ENUM_32_BITS,
 } pin_input_mode_e;
 
 typedef enum {
@@ -260,7 +262,7 @@ typedef enum {
 	FO_1_8_4_3_6_5_7_2 = 5,
 	// 5 cylinder
 	FO_1_2_4_5_3 = 6,
-	Force_4b_firing_order = ENUM_SIZE_HACK,
+	Force_4b_firing_order = ENUM_32_BITS,
 } firing_order_e;
 
 // todo: better enum name
@@ -269,7 +271,7 @@ typedef enum {
 	FOUR_STROKE_CRANK_SENSOR = 1,
 	FOUR_STROKE_CAM_SENSOR = 2,
 
-	Force_4b_operation_mode_e = ENUM_SIZE_HACK,
+	Force_4b_operation_mode_e = ENUM_32_BITS,
 } operation_mode_e;
 
 /**
@@ -286,7 +288,7 @@ typedef enum {
 	IM_INDIVIDUAL_COILS = 1,
 	IM_WASTED_SPARK = 2,
 
-	Force_4b_ignition_mode = ENUM_SIZE_HACK,
+	Force_4b_ignition_mode = ENUM_32_BITS,
 } ignition_mode_e;
 
 typedef enum {
@@ -294,7 +296,7 @@ typedef enum {
 	IM_SEQUENTIAL = 1,
 	IM_BATCH = 2,
 
-	Force_4b_injection_mode = ENUM_SIZE_HACK,
+	Force_4b_injection_mode = ENUM_32_BITS,
 } injection_mode_e;
 
 /**
@@ -304,7 +306,7 @@ typedef enum {
 	CIM_DEFAULT = 0,
 	CIM_FIXED_ANGLE = 1,
 
-	Force_4b_cranking_ignition_mode = ENUM_SIZE_HACK,
+	Force_4b_cranking_ignition_mode = ENUM_32_BITS,
 } cranking_ignition_mode_e;
 
 typedef enum {
@@ -314,14 +316,14 @@ typedef enum {
 	SPI_DEVICE_3 = 3,
 	SPI_DEVICE_4 = 4,
 
-	Force_4b_spi_device = ENUM_SIZE_HACK,
+	Force_4b_spi_device = ENUM_32_BITS,
 } spi_device_e;
 
 typedef enum {
 	IE_NO_ERROR = 0,
 	IE_UNEXPECTED_FIRING_ORDER = 1,
 
-	Force_4b_cranking_internal_error = ENUM_SIZE_HACK,
+	Force_4b_cranking_internal_error = ENUM_32_BITS,
 } internal_error_e;
 
 typedef enum {
@@ -346,7 +348,7 @@ typedef enum {
 	EFI_ADC_NONE = 888,
 	EFI_ADC_ERROR = 999,
 
-	Force_4b_cranking_adc_channel = ENUM_SIZE_HACK,
+	Force_4b_cranking_adc_channel = ENUM_32_BITS,
 } adc_channel_e;
 
 
@@ -355,7 +357,7 @@ typedef enum {
 	ES_Innovate_MTX_L = 1,
 	ES_14Point7_Free = 2,
 
-	Force_4b_ego_sensor = ENUM_SIZE_HACK,
+	Force_4b_ego_sensor = ENUM_32_BITS,
 } ego_sensor_e;
 
 
@@ -503,7 +505,7 @@ typedef enum {
 	GPIO_UNASSIGNED = 80,
 	GPIO_INVALID = 81,
 
-	Force_4b_cranking_brain_pin = ENUM_SIZE_HACK,
+	Force_4b_cranking_brain_pin = ENUM_32_BITS,
 } brain_pin_e;
 
 typedef enum {
@@ -513,7 +515,7 @@ typedef enum {
 	MT_HONDA3BAR = 3,
 	MT_DODGE_NEON_2003 = 4,
 
-	Force_4b_cranking_map_type = ENUM_SIZE_HACK,
+	Force_4b_cranking_map_type = ENUM_32_BITS,
 } air_pressure_sensor_type_e;
 
 #endif /* RUSEFI_ENUMS_H_ */

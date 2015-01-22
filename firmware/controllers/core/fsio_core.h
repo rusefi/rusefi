@@ -44,7 +44,7 @@ typedef enum {
 	LE_METHOD_AC_TOGGLE = 110,
 	LE_METHOD_FSIO_SETTING = 111,
 
-	Force_4b_le_action = ENUM_SIZE_HACK,
+	Force_4b_le_action = ENUM_32_BITS,
 
 } le_action_e;
 
