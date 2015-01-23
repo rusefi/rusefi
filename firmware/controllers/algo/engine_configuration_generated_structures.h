@@ -154,3 +154,27 @@ typedef struct {
 	/** total size 28*/
 } trigger_config_s;
 
+typedef struct {
+	/**
+	 * offset 0
+	*/
+	adc_channel_e afrAdcChannel;
+	/**
+	 * offset 4
+	*/
+	float v1;
+	/**
+	 * offset 8
+	*/
+	float value1;
+	/**
+	 * offset 12
+	*/
+	float v2;
+	/**
+	 * offset 16
+	*/
+	float value2;
+/** total size 20*/
+} afr_sensor_s;
+
