@@ -119,7 +119,7 @@ static void setDefaultCrankingFuel(engine_configuration_s *engineConfiguration) 
 	// todo: set cranking parameters method based on injectors and displacement?
 
 	// set_cranking_fuel 5
-	engineConfiguration->crankingSettings.baseCrankingFuel = 5;
+	engineConfiguration->cranking.baseFuel = 5;
 }
 
 static void commonMiataNa(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {

@@ -30,10 +30,10 @@ static FastInterpolation mpx4250(0, 8, 5, 260);
 static FastInterpolation dodgeNeon2003(0.5, 0, 4.5, 100);
 
 float decodePressure(float voltage, air_pressure_sensor_config_s * config) {
-	switch (config->sensorType) {
+	switch (config->type) {
 	case MT_CUSTOM:
 		// todo: introduce 'FastInterpolation customMap'
-		return interpolate(0, config->customValueAt0, 5, config->customValueAt5, voltage);
+		return interpolate(0, config->valueAt0, 5, config->valueAt5, voltage);
 	case MT_DENSO183:
 		return denso183.getValue(voltage);
 	case MT_MPX4250:
@@ -43,7 +43,7 @@ float decodePressure(float voltage, air_pressure_sensor_config_s * config) {
 	case MT_DODGE_NEON_2003:
 		return dodgeNeon2003.getValue(voltage);
 	default:
-		firmwareError("Unknown MAP type: %d", config->sensorType);
+		firmwareError("Unknown MAP type: %d", config->type);
 		return NAN;
 	}
 }

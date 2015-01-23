@@ -2,13 +2,13 @@ typedef struct {
 	/**
 	 * offset 0
 	 */
-	float baseCrankingFuel;
+	float baseFuel;
 	/**
 	 * This value controls what RPM values we consider 'cranking' (any RPM below 'crankingRpm')
 	 * Anything above 'crankingRpm' would be 'running'
 	 * offset 4
 	 */
-	int16_t crankingRpm;
+	int16_t rpm;
 	/**
 	 * need 4 byte alignment
 	 * offset 6
@@ -72,16 +72,16 @@ typedef struct {
 	 * kPa value at zero volts
 	 * offset 0
 	*/
-	float customValueAt0;
+	float valueAt0;
 	/**
 	 * kPa value at 5 volts
 	 * offset 4
 	*/
-	float customValueAt5;
+	float valueAt5;
 	/**
 	 * offset 8
 	*/
-	air_pressure_sensor_type_e sensorType;
+	air_pressure_sensor_type_e type;
 	/**
 	 * offset 12
 	*/

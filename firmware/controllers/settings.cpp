@@ -230,7 +230,7 @@ void printConfiguration(engine_configuration_s *engineConfiguration) {
 
 //	scheduleMsg(&logger, "analogChartMode: %d", engineConfiguration->analogChartMode);
 
-	scheduleMsg(&logger, "crankingRpm: %d", engineConfiguration->crankingSettings.crankingRpm);
+	scheduleMsg(&logger, "crankingRpm: %d", engineConfiguration->cranking.rpm);
 
 	scheduleMsg(&logger, "analogInputDividerCoefficient: %f", engineConfiguration->analogInputDividerCoefficient);
 
@@ -359,17 +359,17 @@ static void printThermistor(const char *msg, Thermistor *thermistor) {
 #if EFI_PROD_CODE
 static void printMAPInfo(void) {
 #if EFI_ANALOG_INPUTS
-	scheduleMsg(&logger, "map type=%d raw=%f MAP=%f", engineConfiguration->map.sensor.sensorType, getRawMap(),
+	scheduleMsg(&logger, "map type=%d raw=%f MAP=%f", engineConfiguration->map.sensor.type, getRawMap(),
 			getMap());
-	if (engineConfiguration->map.sensor.sensorType == MT_CUSTOM) {
-		scheduleMsg(&logger, "at0=%f at5=%f", engineConfiguration->map.sensor.customValueAt0,
-				engineConfiguration->map.sensor.customValueAt5);
+	if (engineConfiguration->map.sensor.type == MT_CUSTOM) {
+		scheduleMsg(&logger, "at0=%f at5=%f", engineConfiguration->map.sensor.valueAt0,
+				engineConfiguration->map.sensor.valueAt5);
 	}
 
-	scheduleMsg(&logger, "baro type=%d value=%f", engineConfiguration->baroSensor.sensorType, getBaroPressure());
-	if (engineConfiguration->baroSensor.sensorType == MT_CUSTOM) {
-		scheduleMsg(&logger, "min=%f max=%f", engineConfiguration->baroSensor.customValueAt0,
-				engineConfiguration->baroSensor.customValueAt5);
+	scheduleMsg(&logger, "baro type=%d value=%f", engineConfiguration->baroSensor.type, getBaroPressure());
+	if (engineConfiguration->baroSensor.type == MT_CUSTOM) {
+		scheduleMsg(&logger, "min=%f max=%f", engineConfiguration->baroSensor.valueAt0,
+				engineConfiguration->baroSensor.valueAt5);
 	}
 #endif
 }
@@ -407,13 +407,13 @@ static void printTemperatureInfo(void) {
 
 
 #if EFI_ANALOG_INPUTS
-	scheduleMsg(&logger, "base cranking fuel %f", engineConfiguration->crankingSettings.baseCrankingFuel);
+	scheduleMsg(&logger, "base cranking fuel %f", engineConfiguration->cranking.baseFuel);
 #endif /* EFI_ANALOG_INPUTS */
 #endif
 }
 
 static void setCrankingRpm(int value) {
-	engineConfiguration->crankingSettings.crankingRpm = value;
+	engineConfiguration->cranking.rpm = value;
 	doPrintConfiguration(engine);
 }
 
@@ -433,7 +433,7 @@ static void setRpmHardLimit(int value) {
 }
 
 static void setCrankingFuel(float timeMs) {
-	engineConfiguration->crankingSettings.baseCrankingFuel = timeMs;
+	engineConfiguration->cranking.baseFuel = timeMs;
 	printTemperatureInfo();
 }
 

@@ -198,7 +198,7 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	engineConfiguration->iatThermistorConf.bias_resistor = 2700;
 
 	engineConfiguration->rpmHardLimit = 7000;
-	engineConfiguration->crankingSettings.crankingRpm = 550;
+	engineConfiguration->cranking.rpm = 550;
 
 	engineConfiguration->crankingFuelCoef[0] = 5; // base cranking fuel adjustment coefficient
 	engineConfiguration->crankingFuelBins[0] = -20; // temperature in C
@@ -234,7 +234,7 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	engineConfiguration->crankingCycleCoef[7] = 0.5;
 	engineConfiguration->crankingCycleBins[7] = 77;
 
-	engineConfiguration->crankingSettings.baseCrankingFuel = 5;
+	engineConfiguration->cranking.baseFuel = 5;
 
 	engineConfiguration->analogInputDividerCoefficient = 2;
 
@@ -308,11 +308,11 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 
 	engineConfiguration->globalFuelCorrection = 1;
 
-	engineConfiguration->map.sensor.sensorType = MT_MPX4250;
+	engineConfiguration->map.sensor.type = MT_MPX4250;
 
-	engineConfiguration->baroSensor.sensorType = MT_CUSTOM;
-	engineConfiguration->baroSensor.customValueAt0 = 0;
-	engineConfiguration->baroSensor.customValueAt5 = 500;
+	engineConfiguration->baroSensor.type = MT_CUSTOM;
+	engineConfiguration->baroSensor.valueAt0 = 0;
+	engineConfiguration->baroSensor.valueAt5 = 500;
 
 	engineConfiguration->diffLoadEnrichmentCoef = 1;
 

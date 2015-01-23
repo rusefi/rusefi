@@ -12,7 +12,7 @@
 
 void setGy6139qmbDefaultEngineConfiguration(engine_configuration_s *engineConfiguration) {
 	engineConfiguration->rpmHardLimit = 9000;
-	engineConfiguration->crankingSettings.crankingRpm = 800;
+	engineConfiguration->cranking.rpm = 800;
 	engineConfiguration->analogInputDividerCoefficient = 1.52;
 	engineConfiguration->algorithm = LM_MAP;
 	engineConfiguration->globalTriggerAngleOffset = 15;

@@ -29,7 +29,7 @@ void setMitsubishiConfiguration(engine_configuration_s *engineConfiguration, boa
 	engineConfiguration->globalTriggerAngleOffset = 671;
 
 	// set_cranking_rpm 550
-	engineConfiguration->crankingSettings.crankingRpm = 550;
+	engineConfiguration->cranking.rpm = 550;
 	// set_cranking_charge_angle 70
 	engineConfiguration->crankingChargeAngle = 70;
 	// set_cranking_timing_angle 715
@@ -39,7 +39,7 @@ void setMitsubishiConfiguration(engine_configuration_s *engineConfiguration, boa
 	setWholeFuelMap(engineConfiguration, 3);
 
 	// set_cranking_fuel 4
-	engineConfiguration->crankingSettings.baseCrankingFuel = 4;
+	engineConfiguration->cranking.baseFuel = 4;
 
 //	/**
 //	 * 29150 Ohm @ 40C

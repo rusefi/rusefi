@@ -28,7 +28,7 @@ void setFrankenso_01_LCD(board_configuration_s *boardConfiguration) {
 }
 
 static void setHondaAccordConfigurationCommon(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
-	engineConfiguration->map.sensor.sensorType = MT_DENSO183;
+	engineConfiguration->map.sensor.type = MT_DENSO183;
 	boardConfiguration->isFastAdcEnabled = true;
 
 
@@ -73,7 +73,7 @@ static void setHondaAccordConfigurationCommon(engine_configuration_s *engineConf
 	// set_rpm_hard_limit 4000
 	engineConfiguration->rpmHardLimit = 4000; // yes, 4k. let's play it safe for now
 	// set_cranking_rpm 2000
-	engineConfiguration->crankingSettings.crankingRpm = 500;
+	engineConfiguration->cranking.rpm = 500;
 
 
 	// set_ignition_offset 350
