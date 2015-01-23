@@ -271,39 +271,73 @@ typedef struct {
 	 * offset 336
 	*/
 	brain_pin_e canRxPin;
-
-
+	/**
+	 * offset 340
+	*/
 	brain_pin_e triggerSimulatorPins[TRIGGER_SIMULATOR_PIN_COUNT];
+	/**
+	 * offset 352
+	*/
 	pin_output_mode_e triggerSimulatorPinModes[TRIGGER_SIMULATOR_PIN_COUNT];
-
+	/**
+	 * offset 364
+	*/
 	brain_pin_e o2heaterPin;
+	/**
+	 * offset 368
+	*/
 	pin_output_mode_e o2heaterPinModeTodO;
 
-	unsigned int is_enabled_spi_1 : 1; // bit 0
-	unsigned int is_enabled_spi_2 : 1; // bit 1
-	unsigned int is_enabled_spi_3 : 1; // bit 2
-	unsigned int isSdCardEnabled : 1; // bit 3
-	unsigned int isFastAdcEnabled : 1; // bit 4
-	unsigned int isEngineControlEnabled : 1; // bit 5
-	unsigned int isHip9011Enabled : 1; // bit 6
-
+	/** offset 372 bit 0 */
+	uint32_t is_enabled_spi_1 : 1;
+	/** offset 372 bit 1 */
+	uint32_t is_enabled_spi_2 : 1;
+	/** offset 372 bit 2 */
+	uint32_t is_enabled_spi_3 : 1;
+	/** offset 372 bit 3 */
+	uint32_t isSdCardEnabled : 1;
+	/** offset 372 bit 4 */
+	uint32_t isFastAdcEnabled : 1;
+	/** offset 372 bit 5 */
+	uint32_t isEngineControlEnabled : 1;
+	/** offset 372 bit 6 */
+	uint32_t isHip9011Enabled : 1;
+	/**
+	 * offset 376
+	*/
 	brain_pin_e logicAnalyzerPins[LOGIC_ANALYZER_CHANNEL_COUNT];
 	/**
 	 * default or inverted input
-	 */
+	 * offset 392
+	*/
 	uint8_t logicAnalyzerMode[LOGIC_ANALYZER_CHANNEL_COUNT];
-
+	/**
+	 * offset 396
+	*/
 	int unrealisticRpmThreashold;
-
+	/**
+	 * offset 400
+	*/
 	pin_output_mode_e mainRelayPinMode;
-
+	/**
+	 * offset 404
+	*/
 	egt_cs_array_t max31855_cs;
-
+	/**
+	 * offset 408
+	*/
 	spi_device_e max31855spiDevice;
-
+	/**
+	 * offset 412
+	*/
 	brain_pin_e fsioPins[LE_COMMAND_COUNT];
+	/**
+	 * offset 476
+	*/
 	pin_output_mode_e gpioPinModes[LE_COMMAND_COUNT];
-
+	/**
+	 * offset 540
+	*/
 	brain_pin_e joystickPins[JOYSTICK_PIN_COUNT];
 
 	/**
