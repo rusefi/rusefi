@@ -232,8 +232,8 @@ void triggerInfo(Engine *engine) {
 	scheduleMsg(logger, "Template %s (%d) trigger %s (%d)",
 			getConfigurationName(engineConfiguration->engineType),
 			engineConfiguration->engineType,
-			getTrigger_type_e(engineConfiguration->triggerConfig.triggerType),
-			engineConfiguration->triggerConfig.triggerType);
+			getTrigger_type_e(engineConfiguration->trigger.type),
+			engineConfiguration->trigger.type);
 
 	scheduleMsg(logger, "trigger event counters %d/%d/%d/%d", triggerCentral.getHwEventCounter(0),
 			triggerCentral.getHwEventCounter(1), triggerCentral.getHwEventCounter(2),
@@ -241,7 +241,7 @@ void triggerInfo(Engine *engine) {
 	scheduleMsg(logger, "expected cycle events %d/%d/%d", ts->expectedEventCount[0],
 			engine->triggerShape.expectedEventCount[1], ts->expectedEventCount[2]);
 
-	scheduleMsg(logger, "trigger type=%d/need2ndChannel=%s", engineConfiguration->triggerConfig.triggerType,
+	scheduleMsg(logger, "trigger type=%d/need2ndChannel=%s", engineConfiguration->trigger.type,
 			boolToString(engineConfiguration->needSecondTriggerInput));
 	scheduleMsg(logger, "expected duty #0=%f/#1=%f", ts->dutyCycle[0], ts->dutyCycle[1]);
 

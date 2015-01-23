@@ -262,18 +262,18 @@ void initializeTriggerShape(Logging *logger, engine_configuration_s const *engin
 #if EFI_PROD_CODE
 	scheduleMsg(logger, "initializeTriggerShape()");
 #endif
-	const trigger_config_s *triggerConfig = &engineConfiguration->triggerConfig;
+	const trigger_config_s *triggerConfig = &engineConfiguration->trigger;
 	TriggerShape *triggerShape = &engine->triggerShape;
 
 	setTriggerSynchronizationGap(triggerShape, 2);
 	triggerShape->useRiseEdge = true;
 
-	switch (triggerConfig->triggerType) {
+	switch (triggerConfig->type) {
 
 	case TT_TOOTHED_WHEEL:
 		// todo: move to into configuration definition		engineConfiguration2->triggerShape.needSecondTriggerInput = false;
 
-		triggerShape->isSynchronizationNeeded = engineConfiguration->triggerConfig.customIsSynchronizationNeeded;
+		triggerShape->isSynchronizationNeeded = engineConfiguration->trigger.customIsSynchronizationNeeded;
 
 		initializeSkippedToothTriggerShapeExt(triggerShape, triggerConfig->customTotalToothCount,
 				triggerConfig->customSkippedToothCount, getOperationMode(engineConfiguration));
@@ -337,7 +337,7 @@ void initializeTriggerShape(Logging *logger, engine_configuration_s const *engin
 		break;
 
 	default:
-		firmwareError("initializeTriggerShape() not implemented: %d", triggerConfig->triggerType);
+		firmwareError("initializeTriggerShape() not implemented: %d", triggerConfig->type);
 		;
 		return;
 	}

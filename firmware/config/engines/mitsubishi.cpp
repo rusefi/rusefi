@@ -16,7 +16,7 @@
 void setMitsubishiConfiguration(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
 	engineConfiguration->engineType = MITSU_4G93;
 
-	engineConfiguration->triggerConfig.triggerType = TT_MITSU;
+	engineConfiguration->trigger.type = TT_MITSU;
 
 	engineConfiguration->cylindersCount = 4;
 	engineConfiguration->displacement = 1.800;

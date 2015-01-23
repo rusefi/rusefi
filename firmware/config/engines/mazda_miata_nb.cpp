@@ -15,7 +15,7 @@ void setMazdaMiataNbEngineConfiguration(engine_configuration_s *engineConfigurat
 	// set_rpm_hard_limit 3000
 	engineConfiguration->rpmHardLimit = 3000; // yes, 3k. let's play it safe for now
 
-	engineConfiguration->triggerConfig.triggerType = TT_MAZDA_MIATA_NB;
+	engineConfiguration->trigger.type = TT_MAZDA_MIATA_NB;
 
 	engineConfiguration->globalTriggerAngleOffset = 276;
 

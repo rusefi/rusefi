@@ -20,7 +20,7 @@ void setFordFiestaDefaultEngineConfiguration(engine_configuration_s *engineConfi
 	engineConfiguration->rpmHardLimit = 7000;
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 
-	engineConfiguration->triggerConfig.triggerType = TT_TOOTHED_WHEEL_36_1;
+	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_36_1;
 
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 	engineConfiguration->firingOrder = FO_1_THEN_3_THEN_4_THEN2;

@@ -183,18 +183,18 @@ static void setHondaAccordConfigurationCommon(engine_configuration_s *engineConf
 
 void setHondaAccordConfigurationTwoWires(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
 	engineConfiguration->engineType = HONDA_ACCORD_CD_TWO_WIRES;
-	engineConfiguration->triggerConfig.triggerType = TT_HONDA_ACCORD_CD_TWO_WIRES;
+	engineConfiguration->trigger.type = TT_HONDA_ACCORD_CD_TWO_WIRES;
 	setHondaAccordConfigurationCommon(engineConfiguration, boardConfiguration);
 }
 
 void setHondaAccordConfigurationThreeWires(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
 	engineConfiguration->engineType = HONDA_ACCORD_CD;
-	engineConfiguration->triggerConfig.triggerType = TT_HONDA_ACCORD_CD;
+	engineConfiguration->trigger.type = TT_HONDA_ACCORD_CD;
 	setHondaAccordConfigurationCommon(engineConfiguration, boardConfiguration);
 }
 
 void setHondaAccordConfigurationDip(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
 	engineConfiguration->engineType = HONDA_ACCORD_CD_DIP;
-	engineConfiguration->triggerConfig.triggerType = TT_HONDA_ACCORD_CD_DIP;
+	engineConfiguration->trigger.type = TT_HONDA_ACCORD_CD_DIP;
 	setHondaAccordConfigurationCommon(engineConfiguration, boardConfiguration);
 }

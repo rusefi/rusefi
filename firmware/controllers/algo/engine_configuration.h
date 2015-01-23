@@ -103,7 +103,7 @@ typedef struct {
  * @brief Trigger wheel(s) configuration
  */
 typedef struct {
-	trigger_type_e triggerType;
+	trigger_type_e type;
 
 	int customIsSynchronizationNeeded;
 
@@ -522,27 +522,46 @@ typedef struct {
 	 * offset 984
 	*/
 	firing_order_e firingOrder;
-
-
 	/**
 	 * todo: refactor this, see operation_mode_e
-	 */
-
+	 * offset 988
+	*/
 	float rpmMultiplier;
-
+	/**
+	 * offset 992
+	*/
 	display_mode_e displayMode;
-
+	/**
+	 * offset 996
+	*/
 	log_format_e logFormat;
-
+	/**
+	 * offset 1000
+	*/
 	int firmwareVersion;
+	/**
+	 * offset 1004
+	*/
 	int HD44780width;
+	/**
+	 * offset 1008
+	*/
 	int HD44780height;
-
+	/**
+	 * offset 1012
+	*/
 	adc_channel_e tpsAdcChannel;
+	/**
+	 * offset 1016
+	*/
 	int overrideCrankingIgnition;
+	/**
+	 * offset 1020
+	*/
 	int analogChartFrequency;
 
-	trigger_config_s triggerConfig;
+
+	trigger_config_s trigger;
 
 	spi_device_e hip9011SpiDevice;
 	adc_channel_e vbattAdcChannel;

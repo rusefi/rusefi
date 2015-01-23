@@ -123,7 +123,7 @@ static void setDefaultCrankingFuel(engine_configuration_s *engineConfiguration) 
 }
 
 static void commonMiataNa(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
-	engineConfiguration->triggerConfig.triggerType = TT_MAZDA_MIATA_NA;
+	engineConfiguration->trigger.type = TT_MAZDA_MIATA_NA;
 	engineConfiguration->digitalChartSize = 100;
 
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
@@ -221,7 +221,7 @@ void setMiata1990(engine_configuration_s *engineConfiguration, board_configurati
 }
 
 void setFordEscortGt(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
-	engineConfiguration->triggerConfig.triggerType = TT_FORD_ESCORT_GT;
+	engineConfiguration->trigger.type = TT_FORD_ESCORT_GT;
 
 	common079721_2351(engineConfiguration, boardConfiguration);
 
