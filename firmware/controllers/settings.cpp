@@ -168,7 +168,7 @@ const char* getConfigurationName(engine_type_e engineType) {
 void printConfiguration(engine_configuration_s *engineConfiguration) {
 
 	scheduleMsg(&logger, "Template %s/%d trigger %s/%s", getConfigurationName(engineConfiguration->engineType),
-			engineConfiguration->engineType, getTrigger_type_e(engineConfiguration->triggerConfig.triggerType),
+			engineConfiguration->engineType, getTrigger_type_e(engineConfiguration->trigger.type),
 			getEngine_load_mode_e(engineConfiguration->algorithm));
 
 	scheduleMsg(&logger, "configurationVersion=%d", getGlobalConfigurationVersion());
@@ -468,7 +468,7 @@ static void setIgnitionMode(int value) {
 }
 
 static void setTriggerType(int value) {
-	engineConfiguration->triggerConfig.triggerType = (trigger_type_e) value;
+	engineConfiguration->trigger.type = (trigger_type_e) value;
 	incrementGlobalConfigurationVersion();
 	doPrintConfiguration(engine);
 }

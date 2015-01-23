@@ -11,9 +11,9 @@
 #include "test_engine.h"
 
 void setTestEngineConfiguration(engine_configuration_s *engineConfiguration) {
-	engineConfiguration->triggerConfig.triggerType = TT_TOOTHED_WHEEL;
+	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
 
-	trigger_config_s *triggerConfig = &engineConfiguration->triggerConfig;
+	trigger_config_s *triggerConfig = &engineConfiguration->trigger;
 	triggerConfig->customIsSynchronizationNeeded = false;
 	triggerConfig->customTotalToothCount = 60;
 	triggerConfig->customSkippedToothCount = 0;

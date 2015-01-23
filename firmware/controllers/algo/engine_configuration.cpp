@@ -290,7 +290,7 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	engineConfiguration->directSelfStimulation = false;
 
 	engineConfiguration->needSecondTriggerInput = true;
-	engineConfiguration->triggerConfig.triggerType = TT_TOOTHED_WHEEL_60_2;
+	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
 
 	engineConfiguration->HD44780width = 20;
 	engineConfiguration->HD44780height = 4;

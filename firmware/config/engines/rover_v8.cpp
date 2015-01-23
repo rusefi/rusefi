@@ -26,7 +26,7 @@ void setFrankenstein_01_LCD(board_configuration_s *boardConfiguration) {
 void setRoverv8(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
-	engineConfiguration->triggerConfig.triggerType = TT_TOOTHED_WHEEL_36_1;
+	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_36_1;
 
 	engineConfiguration->displacement = 3.528;
 	engineConfiguration->cylindersCount = 8;

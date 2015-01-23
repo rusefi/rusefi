@@ -12,6 +12,5 @@
 #include "saturn_ion.h"
 
 void setSaturnIonEngineConfiguration(engine_configuration_s *engineConfiguration) {
-	engineConfiguration->triggerConfig.triggerType = TT_GM_7X;
-
+	engineConfiguration->trigger.type = TT_GM_7X;
 }
