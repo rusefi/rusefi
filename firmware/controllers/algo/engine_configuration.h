@@ -493,32 +493,39 @@ typedef struct {
 	 * offset 956
 	*/
 	float fanOffTemperature;
-
-	// offset 960
-	brain_pin_e vehicleSpeedSensorInputPin;
-
 	/**
-	 * This coefficient translates vehicle speed input frequency (in Hz) into vehicle speed
-	 * (in km/h)
+	 * offset 960
+	*/
+	brain_pin_e vehicleSpeedSensorInputPin;
+	/**
+	 * This coefficient translates vehicle speed input frequency (in Hz) into vehicle speed, km/h
 	 * offset 964
-	 */
+	*/
 	float vehicleSpeedCoef;
-	// offset 968
+	/**
+	 * offset 968
+	*/
 	can_nbc_e canNbcType;
-	// offset 972
+	/**
+	 * offset 972
+	*/
 	int canSleepPeriod;
-
+	/**
+	 * offset 976
+	*/
 	int cylindersCount;
-
+	/**
+	 * offset 980
+	*/
 	ignition_mode_e ignitionMode;
+	/**
+	 * offset 984
+	*/
 	firing_order_e firingOrder;
 
+
 	/**
-	 * This magic constant is about four-stroke engines with camshaft position sensors.
-	 * On any four stroke engine, each revolution of the camshaft is two revolutions
-	 * of the crankshaft. If camshaft position is our primary sensor, we use this multiplier
-	 * to convert from camshaft angles to crankshaft angles. All angels across the system
-	 * should be crankshaft angles.
+	 * todo: refactor this, see operation_mode_e
 	 */
 
 	float rpmMultiplier;
