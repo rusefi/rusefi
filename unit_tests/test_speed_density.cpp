@@ -16,7 +16,7 @@ void testSpeedDensity(void) {
 	Engine *engine = &eth.engine;
 	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
 
-	eth.ec->triggerConfig.customTotalToothCount = 8;
+	eth.ec->trigger.customTotalToothCount = 8;
 	eth.initTriggerShapeAndRpmCalculator();
 
 	eth.fireTriggerEvents();

@@ -66,55 +66,91 @@ typedef struct {
 	/** total size 40*/
 } ThermistorConf;
 
-
 typedef struct {
 	/**
 	 * kPa value at zero volts
 	 * offset 0
-	*/
+	 */
 	float valueAt0;
 	/**
 	 * kPa value at 5 volts
 	 * offset 4
-	*/
+	 */
 	float valueAt5;
 	/**
 	 * offset 8
-	*/
+	 */
 	air_pressure_sensor_type_e type;
 	/**
 	 * offset 12
-	*/
+	 */
 	adc_channel_e hwChannel;
-/** total size 16*/
+	/** total size 16*/
 } air_pressure_sensor_config_s;
 
-	/**
-	 * @brief MAP averaging configuration
+/**
+ * @brief MAP averaging configuration
 
-	*/
+ */
 typedef struct {
 	/**
 	 * offset 0
-	*/
+	 */
 	float samplingAngleBins[MAP_ANGLE_SIZE];
 	/**
 	 * @brief MAP averaging sampling start angle, by RPM
 	 * offset 32
-	*/
+	 */
 	float samplingAngle[MAP_ANGLE_SIZE];
 	/**
 	 * offset 64
-	*/
+	 */
 	float samplingWindowBins[MAP_WINDOW_SIZE];
 	/**
 	 * @brief MAP averaging angle duration, by RPM
 	 * offset 96
-	*/
+	 */
 	float samplingWindow[MAP_WINDOW_SIZE];
 	/**
 	 * offset 128
-	*/
+	 */
 	air_pressure_sensor_config_s sensor;
-/** total size 144*/
+	/** total size 144*/
 } MAP_sensor_config_s;
+
+/**
+ * @brief Trigger wheel(s) configuration
+
+ */
+typedef struct {
+	/**
+	 * offset 0
+	 */
+	trigger_type_e type;
+	/**
+	 * offset 4
+	 */
+	int customIsSynchronizationNeeded;
+	/**
+	 * offset 8
+	 */
+	int customTotalToothCount;
+	/**
+	 * offset 12
+	 */
+	int customSkippedToothCount;
+	/**
+	 * offset 16
+	 */
+	float customSyncRatioFrom;
+	/**
+	 * offset 20
+	 */
+	float customSyncRatioTo;
+	/**
+	 * offset 24
+	 */
+	int customUseRiseEdge;
+	/** total size 28*/
+} trigger_config_s;
+

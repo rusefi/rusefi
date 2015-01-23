@@ -99,25 +99,6 @@ typedef struct {
 
 #define CRANKING_CURVE_SIZE 8
 
-/**
- * @brief Trigger wheel(s) configuration
- */
-typedef struct {
-	trigger_type_e type;
-
-	int customIsSynchronizationNeeded;
-
-	int customTotalToothCount;
-	int customSkippedToothCount;
-
-	float customSyncRatioFrom;
-	float customSyncRatioTo;
-
-	int customUseRiseEdge;
-
-} trigger_config_s;
-
-
 #define HW_MAX_ADC_INDEX 16
 
 typedef struct {
@@ -559,20 +540,36 @@ typedef struct {
 	 * offset 1020
 	*/
 	int analogChartFrequency;
-
-
+	/**
+	 * offset 1024
+	*/
 	trigger_config_s trigger;
-
+	/**
+	 * offset 1052
+	*/
 	spi_device_e hip9011SpiDevice;
+	/**
+	 * offset 1056
+	*/
 	adc_channel_e vbattAdcChannel;
-
-	// offset 1060
+	/**
+	 * offset 1060
+	*/
 	float globalFuelCorrection;
-
-	// todo: merge with channel settings, use full-scale Thermistor!
+	/**
+	 * todo: merge with channel settings, use full-scale Thermistor!
+	 * offset 1064
+	*/
 	adc_channel_e cltAdcChannel;
+	/**
+	 * offset 1068
+	*/
 	adc_channel_e iatAdcChannel;
+	/**
+	 * offset 1072
+	*/
 	adc_channel_e mafAdcChannel;
+
 
 	/**
 	 * @see hasAfrSensor
