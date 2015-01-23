@@ -87,13 +87,6 @@ typedef enum {
 	Internal_ForceMyEnumIntSize_can_device_mode = ENUM_32_BITS,
 } can_device_mode_e;
 
-typedef struct {
-	adc_channel_e afrAdcChannel;
-	float v1;
-	float value1;
-	float v2;
-	float value2;
-} afr_sensor_s;
 
 #define DWELL_COUNT 8
 
