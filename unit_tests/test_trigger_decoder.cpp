@@ -49,7 +49,7 @@ int getTheAngle(engine_type_e engineType) {
 	initDataStructures(PASS_ENGINE_PARAMETER_F);
 
 	TriggerShape * shape = &eth.engine.triggerShape;
-	return findTriggerZeroEventIndex(shape, &engineConfiguration->triggerConfig PASS_ENGINE_PARAMETER);
+	return findTriggerZeroEventIndex(shape, &engineConfiguration->trigger PASS_ENGINE_PARAMETER);
 }
 
 static void testDodgeNeonDecoder(void) {
@@ -402,7 +402,7 @@ static void testRpmCalculator(void) {
 
 	engine_configuration2_s *ec2 = &eth.ec2;
 
-	engineConfiguration->triggerConfig.customTotalToothCount = 8;
+	engineConfiguration->trigger.customTotalToothCount = 8;
 	engineConfiguration->globalFuelCorrection = 3;
 	eth.initTriggerShapeAndRpmCalculator();
 
