@@ -463,43 +463,35 @@ typedef struct {
 	 * offset 932
 	*/
 	injection_mode_e injectionMode;
-
-
 	/**
-	 * Inside rusEfi all the angles are handled in relation to the trigger synchronization event
-	 * which depends on the trigger shape and has nothing to do wit Top Dead Center (TDC)
-	 *
-	 * For engine configuration humans need angles from TDC.
-	 *
 	 * This field is the angle between Top Dead Center (TDC) and the first trigger event.
 	 * Knowing this angle allows us to control timing and other angles in reference to TDC.
-	 */
+	 * offset 936
+	*/
 	float globalTriggerAngleOffset;
 	/**
-	 * We have 3.3V ADC and most of the analog input signals are 5V, this forces us to use
-	 * voltage dividers on the input circuits. This parameter holds the coefficient of these dividers.
-	 * see also vbattDividerCoeff
-	 */
+	 * This parameter holds the coefficient of input voltage dividers
+	 * offset 940
+	*/
 	float analogInputDividerCoefficient;
-
 	/**
 	 * This setting controls which algorithm is used for ENGINE LOAD
-	 */
+	 * offset 944
+	*/
 	engine_load_mode_e algorithm;
-
 	/**
-	 * see
-	 */
+	 * offset 948
+	*/
 	float vbattDividerCoeff;
 	/**
 	 * Cooling fan turn-on temperature threshold, in Celsuis
 	 * offset 952
-	 */
+	*/
 	float fanOnTemperature;
 	/**
 	 * Cooling fan turn-off temperature threshold, in Celsuis
 	 * offset 956
-	 */
+	*/
 	float fanOffTemperature;
 
 	// offset 960
