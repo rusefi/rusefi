@@ -1,8 +1,8 @@
 /**
  * @file	test_fuel_map.cpp
  *
- *  Created on: Nov 6, 2013
- *      Author: Andrey Belomutskiy, (c) 2012-2015
+ * @date Nov 6, 2013
+ * @author Andrey Belomutskiy, (c) 2012-2015
  */
 
 #include "test_fuel_map.h"
@@ -90,7 +90,7 @@ void testFuelMap(void) {
 
 	testMafValue = 0;
 
-	engineConfiguration->crankingSettings.baseCrankingFuel = 4;
+	engineConfiguration->cranking.baseFuel = 4;
 
 	printf("*************************************************** getStartingFuel\r\n");
 	// NAN in case we have issues with the CLT sensor

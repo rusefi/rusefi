@@ -35,7 +35,7 @@ void setRoverv8(engine_configuration_s *engineConfiguration, board_configuration
 	// set_rpm_hard_limit 4000
 	engineConfiguration->rpmHardLimit = 4000; // yes, 4k. let's play it safe for now
 	// set_cranking_rpm 550
-	engineConfiguration->crankingSettings.crankingRpm = 550;
+	engineConfiguration->cranking.rpm = 550;
 
 	// set_whole_fuel_map 3
 	setWholeFuelMap(engineConfiguration, 3);

@@ -70,13 +70,13 @@ void setCitroenBerlingoTU3JPConfiguration(engine_configuration_s *engineConfigur
 	engineConfiguration->injectionMode = IM_BATCH;
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->rpmHardLimit = 5000;
-	engineConfiguration->crankingSettings.crankingRpm = 600;
+	engineConfiguration->cranking.rpm = 600;
 
 	/**
 	* Cranking fuel setting
 	* TODO: they recomend using something like -40C for low point and +80C for high point
 	*/
-	engineConfiguration->crankingSettings.baseCrankingFuel = 15;
+	engineConfiguration->cranking.baseFuel = 15;
 
 	/**
 	 * Algorithm Alpha-N setting
@@ -146,9 +146,9 @@ void setCitroenBerlingoTU3JPConfiguration(engine_configuration_s *engineConfigur
 	 * MAP <BOSCH 0 261 230 057>
 	 */
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_1;
-	engineConfiguration->map.sensor.sensorType = MT_CUSTOM;
-	engineConfiguration->map.sensor.customValueAt0 = 10;
-	engineConfiguration->map.sensor.customValueAt5 = 110;
+	engineConfiguration->map.sensor.type = MT_CUSTOM;
+	engineConfiguration->map.sensor.valueAt0 = 10;
+	engineConfiguration->map.sensor.valueAt5 = 110;
 	/**
 	 * TPS <MAGNETI MARELLI>
 	 */

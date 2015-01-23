@@ -165,7 +165,7 @@ float getCrankingFuel(Engine *engine) {
 float getCrankingFuel3(engine_configuration_s *engineConfiguration, float coolantTemperature,
 		uint32_t revolutionCounterSinceStart) {
 	// these magic constants are in Celsius
-	float baseCrankingFuel = engineConfiguration->crankingSettings.baseCrankingFuel;
+	float baseCrankingFuel = engineConfiguration->cranking.baseFuel;
 	if (cisnan(coolantTemperature))
 		return baseCrankingFuel;
 	float durationCoef = interpolate2d(revolutionCounterSinceStart,

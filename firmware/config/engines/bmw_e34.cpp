@@ -71,7 +71,7 @@ void setBmwE34(engine_configuration_s *engineConfiguration) {
 	 */
 	bc->triggerSimulatorFrequency = 200;
 
-	engineConfiguration->map.sensor.sensorType = MT_MPX4250;
+	engineConfiguration->map.sensor.type = MT_MPX4250;
 
 	engineConfiguration->hasCltSensor = false;
 	engineConfiguration->hasIatSensor = false;

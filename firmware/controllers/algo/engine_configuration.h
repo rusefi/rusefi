@@ -378,7 +378,7 @@ typedef struct {
 	/**
 	 * offset 348
 	*/
-	cranking_parameters_s crankingSettings;
+	cranking_parameters_s cranking;
 	/**
 	 * @see hasMapSensor
 	 * @see isMapAveragingEnabled
