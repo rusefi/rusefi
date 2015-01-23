@@ -19,7 +19,7 @@ $Descr A3 16535 11693
 encoding utf-8
 Sheet 1 1
 Title "176 STM32 board"
-Date "16 jan 2015"
+Date "23 jan 2015"
 Rev "R0.1"
 Comp "rusEFI by DAECU and artelectro"
 Comment1 ""
@@ -317,9 +317,9 @@ Text Label 15300 3175 0    60   ~ 0
 PC9
 Text Label 15300 3275 0    60   ~ 0
 PC7
-Text Label 1050 1575 2    60   ~ 0
+Text Label 1175 1575 2    60   ~ 0
 BOOT0
-Text Label 675  1775 2    60   ~ 0
+Text Label 1175 1775 2    60   ~ 0
 NRST
 Text Label 1200 6975 2    60   ~ 0
 PA0
@@ -1553,10 +1553,6 @@ Wire Wire Line
 Wire Wire Line
 	15300 3275 15150 3275
 Wire Wire Line
-	1050 1575 1250 1575
-Wire Wire Line
-	675  1775 1250 1775
-Wire Wire Line
 	1250 6975 1200 6975
 Wire Wire Line
 	1250 7075 1200 7075
@@ -1715,7 +1711,6 @@ Wire Wire Line
 	13425 6000 13425 6100
 Wire Wire Line
 	1875 1125 2125 1125
-Connection ~ 750  1775
 Wire Wire Line
 	750  1125 1425 1125
 Wire Wire Line
@@ -1723,7 +1718,6 @@ Wire Wire Line
 Connection ~ 950  1125
 Wire Wire Line
 	1175 1275 1175 1575
-Connection ~ 1175 1575
 Wire Wire Line
 	15225 8850 15150 8850
 Wire Wire Line
@@ -2629,17 +2623,6 @@ F 3 "" H 3525 725 60  0000 C CNN
 	1    3525 725 
 	-1   0    0    1   
 $EndComp
-$Comp
-L STM32F407IGT6 U1
-U 1 1 54B29FE6
-P 6225 5925
-F 0 "U1" H 6225 5825 50  0000 C CNN
-F 1 "STM32F407IGT6" H 6225 6025 50  0000 C CNN
-F 2 "LQFP-176" H 6225 5925 50  0001 C CNN
-F 3 "" H 6225 5925 50  0001 C CNN
-	1    6225 5925
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	750  1125 750  1775
 Wire Wire Line
@@ -2943,4 +2926,32 @@ F 3 "" H 15650 4350 60  0000 C CNN
 $EndComp
 Text Label 8600 1125 3    60   ~ 0
 VBAT
+Wire Wire Line
+	750  1775 1250 1775
+$Comp
+L R R1
+U 1 1 54C22CEB
+P 1275 6275
+F 0 "R1" V 1355 6275 50  0000 C CNN
+F 1 "1k" V 1275 6275 50  0000 C CNN
+F 2 "SM0805" H 1275 6275 60  0001 C CNN
+F 3 "" H 1275 6275 60  0001 C CNN
+	1    1275 6275
+	-1   0    0    -1  
+$EndComp
+Text Label 1275 6525 0    60   ~ 0
+VDD
+$Comp
+L STM32F407IGT6 U1
+U 1 1 54C22D56
+P 6225 5925
+F 0 "U1" H 6225 5825 50  0000 C CNN
+F 1 "STM32F407IGT6" H 6225 6025 50  0000 C CNN
+F 2 "LQFP-176" H 6225 5925 50  0001 C CNN
+F 3 "-" H 6225 5925 50  0001 C CNN
+	1    6225 5925
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1175 1575 1250 1575
 $EndSCHEMATC

@@ -1,4 +1,4 @@
-update=1/15/2015 8:19:48 PM
+update=1/23/2015 6:22:06 AM
 version=1
 last_client=eeschema
 [general]
@@ -47,7 +47,7 @@ LibName15=LQFP-176
 [eeschema]
 version=1
 LibDir=../rusefi_lib
-NetFmtName=
+NetFmtName=PcbnewAdvanced
 RptD_X=0
 RptD_Y=100
 RptLab=1
