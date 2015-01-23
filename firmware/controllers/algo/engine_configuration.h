@@ -562,30 +562,44 @@ typedef struct {
 	 * offset 1072
 	*/
 	adc_channel_e mafAdcChannel;
-
-
 	/**
 	 * @see hasAfrSensor
-	 */
+	 * offset 1076
+	*/
 	afr_sensor_s afrSensor;
-
 	/**
 	 * this is about deciding when the injector starts it's squirt
-	 */
+	 * offset 1096
+	*/
 	float injectionAngle;
-
+	/**
+	 * offset 1100
+	*/
 	float crankingTimingAngle;
-
+	/**
+	 * offset 1104
+	*/
 	float diffLoadEnrichmentCoef;
-
 	/**
 	 * @see hasBaroSensor
-	 */
+	 * offset 1108
+	*/
 	air_pressure_sensor_config_s baroSensor;
-
+	/**
+	 * offset 1124
+	*/
 	float veLoadBins[FUEL_LOAD_COUNT];
+	/**
+	 * offset 1188
+	*/
 	float veRpmBins[FUEL_RPM_COUNT];
+	/**
+	 * offset 1252
+	*/
 	float afrLoadBins[FUEL_LOAD_COUNT];
+	/**
+	 * offset 1316
+	*/
 	float afrRpmBins[FUEL_RPM_COUNT];
 
 	// the large tables are always in the end - that's related to TunerStudio paging implementation
