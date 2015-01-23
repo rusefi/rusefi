@@ -494,7 +494,7 @@ static void setGlobalFuelCorrection(float value) {
 }
 
 static void setCltBias(float value) {
-	engineConfiguration->cltThermistorConf.bias_resistor = value;
+	engineConfiguration->clt.bias_resistor = value;
 }
 
 static void setFanSetting(float onTempC, float offTempC) {
@@ -507,7 +507,7 @@ static void setFanSetting(float onTempC, float offTempC) {
 }
 
 static void setIatBias(float value) {
-	engineConfiguration->iatThermistorConf.bias_resistor = value;
+	engineConfiguration->iat.bias_resistor = value;
 }
 
 static void setVBattDivider(float value) {

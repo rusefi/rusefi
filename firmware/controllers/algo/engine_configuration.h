@@ -390,11 +390,11 @@ typedef struct {
 	 * todo: merge with channel settings, use full-scale Thermistor here!
 	 * offset 500
 	*/
-	ThermistorConf cltThermistorConf;
+	ThermistorConf clt;
 	/**
 	 * offset 540
 	*/
-	ThermistorConf iatThermistorConf;
+	ThermistorConf iat;
 	/**
 	 * offset 580
 	*/
@@ -426,29 +426,44 @@ typedef struct {
 	 * offset 780
 	*/
 	timing_mode_e timingMode;
-
 	/**
 	 * This value is used in 'fixed timing' mode, i.e. constant timing
 	 * This mode is useful for instance while adjusting distributor location
-	 */
+	 * offset 784
+	*/
 	float fixedModeTiming;
-
+	/**
+	 * offset 788
+	*/
 	float injectorLag;
-
-
+	/**
+	 * offset 792
+	*/
 	float fuelLoadBins[FUEL_LOAD_COUNT];
-	// RPM is float and not integer in order to use unified methods for interpolation
-	float fuelRpmBins[FUEL_RPM_COUNT]; //
-
+	/**
+	 * RPM is float and not integer in order to use unified methods for interpolation
+	 * offset 856
+	*/
+	float fuelRpmBins[FUEL_RPM_COUNT];
 	/**
 	 * Engine displacement, in liters
 	 * see also cylindersCount
-	 */
+	 * offset 920
+	*/
 	float displacement;
+	/**
+	 * offset 924
+	*/
 	int rpmHardLimit;
-
+	/**
+	 * offset 928
+	*/
 	injection_mode_e crankingInjectionMode;
+	/**
+	 * offset 932
+	*/
 	injection_mode_e injectionMode;
+
 
 	/**
 	 * Inside rusEfi all the angles are handled in relation to the trigger synchronization event

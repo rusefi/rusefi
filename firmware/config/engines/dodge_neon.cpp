@@ -175,8 +175,8 @@ void setDodgeNeon1995EngineConfiguration(engine_configuration_s *engineConfigura
 	// set_ignition_pin_mode 0
 	boardConfiguration->ignitionPinMode = OM_DEFAULT;
 
-	setThermistorConfiguration(&engineConfiguration->cltThermistorConf, 0, 32500, 30, 7550, 100, 700);
-	engineConfiguration->cltThermistorConf.bias_resistor = 2700;
+	setThermistorConfiguration(&engineConfiguration->clt, 0, 32500, 30, 7550, 100, 700);
+	engineConfiguration->clt.bias_resistor = 2700;
 
 	engineConfiguration->analogChartFrequency = 7;
 }
@@ -301,11 +301,11 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 	 */
 
 
-	setThermistorConfiguration(&engineConfiguration->cltThermistorConf, 0, 32500, 30, 7550, 100, 700);
-	engineConfiguration->cltThermistorConf.bias_resistor = 10000;
+	setThermistorConfiguration(&engineConfiguration->clt, 0, 32500, 30, 7550, 100, 700);
+	engineConfiguration->clt.bias_resistor = 10000;
 
-	setThermistorConfiguration(&engineConfiguration->iatThermistorConf, 0, 32500, 30, 7550, 100, 700);
-	engineConfiguration->iatThermistorConf.bias_resistor = 10000;
+	setThermistorConfiguration(&engineConfiguration->iat, 0, 32500, 30, 7550, 100, 700);
+	engineConfiguration->iat.bias_resistor = 10000;
 
 	/**
 	 * MAP PA6

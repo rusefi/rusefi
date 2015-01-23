@@ -159,14 +159,14 @@ void setCitroenBerlingoTU3JPConfiguration(engine_configuration_s *engineConfigur
 	 * IAT <OEM ECU>
 	 */
 	engineConfiguration->iatAdcChannel = EFI_ADC_13;
-	setThermistorConfiguration(&engineConfiguration->iatThermistorConf, -20.0, 15600.0, 23.0, 2250.0, 92.0, 240.0);
-	engineConfiguration->iatThermistorConf.bias_resistor = 2660;
+	setThermistorConfiguration(&engineConfiguration->iat, -20.0, 15600.0, 23.0, 2250.0, 92.0, 240.0);
+	engineConfiguration->iat.bias_resistor = 2660;
 	/**
 	* CLT <LADA Samara>
 	*/
 	engineConfiguration->cltAdcChannel = EFI_ADC_11;
-	setThermistorConfiguration(&engineConfiguration->cltThermistorConf, -20.0, 28680.0, 25.0, 2796.0, 100.0, 177.0);
-	engineConfiguration->cltThermistorConf.bias_resistor = 2660;
+	setThermistorConfiguration(&engineConfiguration->clt, -20.0, 28680.0, 25.0, 2796.0, 100.0, 177.0);
+	engineConfiguration->clt.bias_resistor = 2660;
 	/**
 	 * vBatt
 	 */

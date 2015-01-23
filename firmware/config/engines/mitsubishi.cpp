@@ -46,12 +46,12 @@ void setMitsubishiConfiguration(engine_configuration_s *engineConfiguration, boa
 //	 * 10160 Ohm @ 70C
 //	 * 1270 Ohm @ 150C
 //	 */
-//	setThermistorConfiguration(&engineConfiguration->cltThermistorConf, 40, 29150, 70, 10160, 150, 1270);
+//	setThermistorConfiguration(&engineConfiguration->clt, 40, 29150, 70, 10160, 150, 1270);
 
-	setCommonNTCSensor(&engineConfiguration->cltThermistorConf);
+	setCommonNTCSensor(&engineConfiguration->clt);
 
 
-	engineConfiguration->cltThermistorConf.bias_resistor = 2700;
+	engineConfiguration->clt.bias_resistor = 2700;
 
 	// Frankenstein: low side - out #1: PC14
 	// Frankenstein: low side - out #2: PC15
