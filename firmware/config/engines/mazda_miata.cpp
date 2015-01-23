@@ -152,10 +152,10 @@ static void commonMiataNa(engine_configuration_s *engineConfiguration, board_con
 	boardConfiguration->triggerSimulatorPinModes[0] = OM_OPENDRAIN;
 	boardConfiguration->triggerSimulatorPinModes[1] = OM_OPENDRAIN;
 
-	setCommonNTCSensor(&engineConfiguration->cltThermistorConf);
-	engineConfiguration->cltThermistorConf.bias_resistor = 2700;
-	setCommonNTCSensor(&engineConfiguration->iatThermistorConf);
-	engineConfiguration->iatThermistorConf.bias_resistor = 2700;
+	setCommonNTCSensor(&engineConfiguration->clt);
+	engineConfiguration->clt.bias_resistor = 2700;
+	setCommonNTCSensor(&engineConfiguration->iat);
+	engineConfiguration->iat.bias_resistor = 2700;
 
 }
 
