@@ -358,7 +358,7 @@ void setMiata1994_s(engine_configuration_s *engineConfiguration, board_configura
 	initEgoSensor(&engineConfiguration->afrSensor, ES_Innovate_MTX_L);
 
 	/**
-	 * This board has PE0 & PE1 mosfets rewires to PD3 and PD5
+	 * This board has PE0<>PD5 & PE1<>PD3 rewired in order to avoid Discovery issue
 	 */
 	boardConfiguration->injectionPins[0] = GPIOD_3; // avoiding PE1
 	boardConfiguration->injectionPins[1] = GPIOE_2; // injector #2
