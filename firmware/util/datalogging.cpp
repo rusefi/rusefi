@@ -163,7 +163,6 @@ void appendPrintf(Logging *logging, const char *fmt, ...) {
 }
 
 void initLoggingExt(Logging *logging, const char *name, char *buffer, int bufferSize) {
-	print("Init logging %s\r\n", name);
 	logging->name = name;
 	logging->buffer = buffer;
 	logging->bufferSize = bufferSize;
@@ -390,6 +389,10 @@ void initIntermediateLoggingBuffer(void) {
 
 #endif /* ! EFI_UNIT_TEST */
 
+// todo: eliminate this constructor
 LoggingWithStorage::LoggingWithStorage() {
+}
 
+LoggingWithStorage::LoggingWithStorage(const char *name) {
+	initLogging(this, name);
 }

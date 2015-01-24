@@ -55,6 +55,8 @@
 #include "settings.h"
 #include "rusefi_outputs.h"
 
+extern bool_t main_loop_started;
+
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 // todo: move this logic to algo folder!
 #include "rtc_helper.h"
@@ -87,7 +89,7 @@ static void setWarningEnabled(int value) {
 }
 
 #if EFI_FILE_LOGGING || defined(__DOXYGEN__)
-static LoggingWithStorage fileLogger;
+static LoggingWithStorage fileLogger("file logger");
 #endif /* EFI_FILE_LOGGING */
 
 static int logFileLineIndex = 0;
@@ -179,7 +181,6 @@ void printSensors(Logging *log, bool fileFormat, Engine *engine) {
 	reportSensorF(log, fileFormat, "vref", "V", getVRef(engineConfiguration), 2);
 	reportSensorF(log, fileFormat, "vbatt", "V", getVBatt(engineConfiguration), 2);
 
-
 	reportSensorF(log, fileFormat, "TP", "%", getTPS(PASS_ENGINE_PARAMETER_F), 2);
 
 	if (engineConfiguration->hasCltSensor) {
@@ -196,6 +197,8 @@ EXTERN_ENGINE
 ;
 
 void writeLogLine(void) {
+	if (!main_loop_started)
+		return;
 #if EFI_FILE_LOGGING || defined(__DOXYGEN__)
 	resetLogging(&fileLogger);
 	printSensors(&fileLogger, true, engine);
@@ -352,7 +355,6 @@ void updateDevConsoleState(Engine *engine) {
 #else
 	chThdSleepMilliseconds(200);
 #endif
-
 
 	printState(engine);
 
@@ -607,10 +609,6 @@ void initStatusLoop(Engine *engine) {
 
 	addConsoleAction("status", printStatus);
 #endif /* EFI_PROD_CODE */
-
-#if EFI_FILE_LOGGING
-	initLogging(&fileLogger, "file logger");
-#endif /* EFI_FILE_LOGGING */
 }
 
 void startStatusThreads(Engine *engine) {

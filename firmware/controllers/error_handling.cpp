@@ -20,7 +20,7 @@ static LoggingWithStorage logger;
 #define WARNING_PREFIX "WARNING: "
 
 extern int warningEnabled;
-extern int main_loop_started;
+extern bool_t main_loop_started;
 
 const char *dbg_panic_file;
 int dbg_panic_line;
