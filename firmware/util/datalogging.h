@@ -38,6 +38,7 @@ public:
 class LoggingWithStorage : public Logging {
 public:
 	LoggingWithStorage();
+	LoggingWithStorage(const char *name);
 	char DEFAULT_BUFFER[200];
 };
 

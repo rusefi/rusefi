@@ -119,7 +119,7 @@
 
 static LoggingWithStorage sharedLogger;
 
-int main_loop_started = FALSE;
+bool_t main_loop_started = false;
 
 static MemoryStream firmwareErrorMessageStream;
 static char panicMessage[200];
@@ -215,8 +215,6 @@ void scheduleReset(void) {
 	chVTSetI(&resetTimer, 5 * CH_FREQUENCY, (vtfunc_t) rebootNow, NULL);
 	unlockAnyContext();
 }
-
-extern int main_loop_started;
 
 void chDbgStackOverflowPanic(Thread *otp) {
 	strcpy(panicMessage, "stack overflow: ");

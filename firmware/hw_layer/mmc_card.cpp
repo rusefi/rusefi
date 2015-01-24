@@ -52,7 +52,7 @@ static bool fs_ready = false;
  */
 static FATFS MMC_FS;
 
-static LoggingWithStorage logger;
+static LoggingWithStorage logger("mmcCard");
 
 // print FAT error function
 static void printError(const char *str, FRESULT f_error) {
@@ -251,7 +251,6 @@ bool isSdCardAlive(void) {
 }
 
 void initMmcCard(void) {
-	initLogging(&logger, "mmcCard");
 	addConsoleAction("sdstat", sdStatistics);
 	if (!boardConfiguration->isSdCardEnabled) {
 		return;
