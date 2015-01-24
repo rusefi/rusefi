@@ -339,56 +339,121 @@ typedef struct {
 	 * offset 540
 	*/
 	brain_pin_e joystickPins[JOYSTICK_PIN_COUNT];
-
 	/**
 	 * This pin is used for debugging - snap a logic analyzer on it and see if it's ever high
-	 */
+	 * offset 560
+	*/
 	brain_pin_e triggerErrorPin;
+	/**
+	 * offset 564
+	*/
 	pin_output_mode_e triggerErrorPinMode;
-
 	/**
 	 * value between 0 and 1
-	 */
+	 * offset 568
+	*/
 	float idleSolenoidPwm;
-
+	/**
+	 * offset 572
+	*/
 	brain_pin_e acRelayPin;
+	/**
+	 * offset 576
+	*/
 	pin_output_mode_e acRelayPinMode;
-
+	/**
+	 * offset 580
+	*/
 	int16_t fsioFrequency[LE_COMMAND_COUNT];
-
+	/**
+	 * offset 612
+	*/
 	brain_pin_e hip9011CsPin;
+	/**
+	 * offset 616
+	*/
 	brain_pin_e hip9011IntHoldPin;
+	/**
+	 * offset 620
+	*/
 	brain_pin_e hip9011OutPin;
-
+	/**
+	 * offset 624
+	*/
 	float fsio_setting[LE_COMMAND_COUNT];
+	/**
+	 * offset 688
+	*/
 	brain_pin_e spi1mosiPin;
+	/**
+	 * offset 692
+	*/
 	brain_pin_e spi1misoPin;
+	/**
+	 * offset 696
+	*/
 	brain_pin_e spi1sckPin;
+	/**
+	 * offset 700
+	*/
 	brain_pin_e spi2mosiPin;
+	/**
+	 * offset 704
+	*/
 	brain_pin_e spi2misoPin;
+	/**
+	 * offset 708
+	*/
 	brain_pin_e spi2sckPin;
+	/**
+	 * offset 712
+	*/
 	brain_pin_e spi3mosiPin;
+	/**
+	 * offset 716
+	*/
 	brain_pin_e spi3misoPin;
+	/**
+	 * offset 720
+	*/
 	brain_pin_e spi3sckPin;
-
-	// offset 6228
+	/**
+	 * offset 724
+	*/
 	float hip9011Gain;
-	// offset 6232
+	/**
+	 * offset 728
+	*/
 	brain_pin_e joystickCenterPin;
-	// offset 6236
+	/**
+	 * offset 732
+	*/
 	brain_pin_e joystickAPin;
-	// offset 6240
+	/**
+	 * offset 736
+	*/
 	brain_pin_e joystickBPin;
-	// offset 6244
+	/**
+	 * offset 740
+	*/
 	brain_pin_e joystickCPin;
-	// offset 6248
+	/**
+	 * offset 744
+	*/
 	brain_pin_e joystickDPin;
-	// offset 6252
+	/**
+	 * offset 748
+	*/
 	analog_chart_e analogChartMode;
+	/**
+	 * offset 752
+	*/
 	int unusedbs[6];
-
+	/**
+	 * offset 776
+	*/
 	le_formula_t le_formulas[LE_COMMAND_COUNT];
-
+	/** total size 3976*/
 } board_configuration_s;
 
 // 19010105 decimal
@@ -755,7 +820,7 @@ typedef struct {
 
 	board_configuration_s bc;
 
-	// offset 6280
+	// offset 6280 ????
 	/**
 	 * @see isMapAveragingEnabled
 	 */
@@ -776,8 +841,7 @@ typedef struct {
 	bool_t hasTpsSensor : 1; // bit 13
 
 	/**
-	 * see also
-	 * offset 6284
+	 * offset 6284 ???
 	 */
 	adc_channel_e hipOutputChannel;
 
@@ -813,37 +877,71 @@ typedef struct {
 	 */
 	float injectorFlow; // size 4
 
+	/**
+	 * offset 9504
+	*/
 	float crankingFuelCoef[CRANKING_CURVE_SIZE];
+	/**
+	 * offset 9536
+	*/
 	float crankingFuelBins[CRANKING_CURVE_SIZE];
-
+	/**
+	 * offset 9568
+	*/
 	float crankingCycleCoef[CRANKING_CURVE_SIZE];
+	/**
+	 * offset 9600
+	*/
 	float crankingCycleBins[CRANKING_CURVE_SIZE];
-
+	/**
+	 * offset 9632
+	*/
 	float ignitionDwellForCrankingMs;
-
+	/**
+	 * offset 9636
+	*/
 	int targetIdleRpm;
-
 	/**
 	 * A/C button input handled as analog input
-	 */
+	 * offset 9640
+	*/
 	adc_channel_e acSwitchAdc;
-
+	/**
+	 * offset 9644
+	*/
 	int ignMathCalculateAtIndex;
-
+	/**
+	 * offset 9648
+	*/
 	int16_t acCutoffLowRpm;
+	/**
+	 * offset 9650
+	*/
 	int16_t acCutoffHighRpm;
-
+	/**
+	 * offset 9652
+	*/
 	int16_t acIdleRpmBump;
+	/**
+	 * offset 9654
+	*/
 	int16_t unusedShort;
-
+	/**
+	 * offset 9656
+	*/
 	adc_channel_e vRefAdcChannel;
-
+	/**
+	 * offset 9660
+	*/
 	float knockDetectionWindowStart;
+	/**
+	 * offset 9664
+	*/
 	float knockDetectionWindowEnd;
-
 	/**
 	 * Cylinder diameter, in mm.
-	 */
+	 * offset 9668
+	*/
 	float cylinderBore;
 
 	/**
