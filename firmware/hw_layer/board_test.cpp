@@ -106,7 +106,15 @@ static brain_pin_e BLINK_PINS[] = { GPIOE_8, // HIGH DRIVER 1
 		GPIOB_7, // OUT12 Frankenso
 		};
 
+int pinsCount = sizeof(BLINK_PINS) / sizeof(brain_pin_e);
+
 static THD_WORKING_AREA(btThreadStack, UTILITY_THREAD_STACK_SIZE);
+
+static void setCurrentPinValue(bool value) {
+	GPIO_TypeDef *hwPort = getHwPort(currentPin);
+	uint32_t hwPin = getHwPin(currentPin);
+	palWritePad(hwPort, hwPin, value);
+}
 
 static msg_t ivThread(int param) {
 	(void) param;
@@ -117,9 +125,7 @@ static msg_t ivThread(int param) {
 	while (TRUE) {
 		chThdSleepMilliseconds(250);
 		value = 1 - value;
-		GPIO_TypeDef *hwPort = getHwPort(currentPin);
-		uint32_t hwPin = getHwPin(currentPin);
-		palWritePad(hwPort, hwPin, value);
+		setCurrentPinValue(value);
 	}
 #if defined __GNUC__
 	return 0;
@@ -144,13 +150,48 @@ void printBoardTestState(void) {
 	}
 }
 
+static void btInitOutputPins() {
+	for (int i = 0; i < pinsCount; i++) {
+		currentPin = BLINK_PINS[i];
+		mySetPadMode2("test", currentPin, PAL_STM32_MODE_OUTPUT);
+	}
+}
+
+static void blinkAllOutputPins() {
+	for (int k = 0; k < 6; k++) {
+		for (int i = 0; i < pinsCount; i++) {
+			currentPin = BLINK_PINS[i];
+			setCurrentPinValue(k % 2);
+		}
+		chThdSleepMilliseconds(250);
+	}
+	currentPin = GPIO_UNASSIGNED;
+	/**
+	 * Now let's blink all pins one by one
+	 */
+	for (int k = 0; k < 2; k++) {
+		for (int i = 0; i < pinsCount; i++) {
+			if (currentPin != GPIO_UNASSIGNED)
+				setCurrentPinValue(false); // turn off previous pin
+
+			currentPin = BLINK_PINS[i];
+			setCurrentPinValue(true);
+			chThdSleepMilliseconds(250);
+		}
+	}
+	setCurrentPinValue(false);
+	currentPin = GPIO_UNASSIGNED;
+}
+
 void initBoardTest(void) {
 	is_board_test_mode = true;
 	addConsoleAction("n", nextStep);
 	addConsoleActionI("set", setIndex);
 
-	chThdCreateStatic(btThreadStack, sizeof(btThreadStack), NORMALPRIO, (tfunc_t) ivThread, NULL);
+	btInitOutputPins();
+	blinkAllOutputPins();
 
+	chThdCreateStatic(btThreadStack, sizeof(btThreadStack), NORMALPRIO, (tfunc_t) ivThread, NULL);
 	// this code is ugly as hell, I had no time to think. Todo: refactor
 
 #if HAL_USE_ADC || defined(__DOXYGEN__)
@@ -163,12 +204,10 @@ void initBoardTest(void) {
 
 	currentIndex = 0;
 
-	int pinsCount = sizeof(BLINK_PINS) / sizeof(brain_pin_e);
 	while (currentIndex < pinsCount) {
 		currentPin = BLINK_PINS[currentIndex];
 
 		printBoardTestState();
-		mySetPadMode2("test", currentPin, PAL_STM32_MODE_OUTPUT);
 
 		currentIndex++;
 		waitForKey();
