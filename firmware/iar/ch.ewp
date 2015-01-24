@@ -1905,6 +1905,12 @@
     <group>
       <name>engines</name>
       <file>
+        <name>$PROJ_DIR$\..\config\engines\acura_rsx.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\config\engines\acura_rsx.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\config\engines\audi_aan.cpp</name>
       </file>
       <file>
@@ -1921,6 +1927,12 @@
       </file>
       <file>
         <name>$PROJ_DIR$\..\config\engines\citroenBerlingoTU3JP.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\config\engines\custom_engine.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\config\engines\custom_engine.h</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\config\engines\dodge_neon.cpp</name>
@@ -1966,6 +1978,12 @@
       </file>
       <file>
         <name>$PROJ_DIR$\..\config\engines\mazda_323.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\config\engines\mazda_626.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\config\engines\mazda_626.h</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\config\engines\mazda_miata.cpp</name>

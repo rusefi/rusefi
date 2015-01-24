@@ -5,8 +5,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2015
  */
 
-#ifndef STATUS_LEDS_H_
-#define STATUS_LEDS_H_
+#ifndef IO_PINS_H_
+#define IO_PINS_H_
 
 #include "rusefi_enums.h"
 
@@ -66,17 +66,10 @@ typedef enum {
 void initPrimaryPins(void);
 void initOutputPins(void);
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
-
 #if EFI_GPIO
 void turnAllPinsOff(void);
 #else
 #define turnAllPinsOff() {}
 #endif
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
 
-#endif /* STATUS_LEDS_H_ */
+#endif /* IO_PINS_H_ */
