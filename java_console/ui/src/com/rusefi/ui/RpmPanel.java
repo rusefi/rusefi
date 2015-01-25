@@ -42,10 +42,14 @@ public class RpmPanel {
 
         startConnectionWatchDog();
 
+        JPanel smallMessagePanel = new JPanel(new BorderLayout());
+        MessagesPanel mp = new MessagesPanel();
+        smallMessagePanel.add(BorderLayout.NORTH, mp.getButtonPanel());
+        smallMessagePanel.add(BorderLayout.CENTER, mp.getMessagesScroll());
+
         JPanel msgPanel = new JPanel(new BorderLayout());
         msgPanel.add(new AnyCommand(), BorderLayout.NORTH);
-        msgPanel.add(new MsgPanel(false).getContent(), BorderLayout.CENTER);
-
+        msgPanel.add(smallMessagePanel, BorderLayout.CENTER);
 
         JComponent rpmPanel = new JPanel(new BorderLayout());
         rpmPanel.setBorder(BorderFactory.createLineBorder(Color.white));

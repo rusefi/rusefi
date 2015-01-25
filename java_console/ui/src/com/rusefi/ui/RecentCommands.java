@@ -9,11 +9,14 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.Map;
 
+/**
+ * This UI element displays an array of buttons, each for one of the recently used commands
+ */
+
 public class RecentCommands {
-    private final static int NUMBER_OF_COMMANDS = 12;
+    private final static int NUMBER_OF_COMMANDS = 20;
 
     private final JPanel content = new JPanel(new GridLayout(NUMBER_OF_COMMANDS, 1));
 

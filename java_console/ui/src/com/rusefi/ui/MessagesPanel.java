@@ -4,7 +4,6 @@ import com.irnems.core.MessagesCentral;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.io.serial.PortHolder;
 import com.rusefi.ui.widgets.AnyCommand;
-import com.rusefi.ui.widgets.IdleLabel;
 
 import javax.swing.*;
 import javax.swing.text.*;
@@ -23,40 +22,29 @@ import java.util.Date;
  *
  * @see AnyCommand
  */
-public class MsgPanel {
+public class MessagesPanel {
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH_mm");
     private static final int MAX_SIZE = 50000;
 
-    private final JTextPane msg = new JTextPane();
+    private final JTextPane messages = new JTextPane();
     private boolean isPaused;
     private final Style bold;
     private final Style italic;
-    private final JPanel content = new JPanel(new BorderLayout()) {
-        @Override
-        public Dimension getPreferredSize() {
-            Dimension size = super.getPreferredSize();
-            return new Dimension(250, size.height);
-        }
-    };
+    private final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
+    private final JScrollPane messagesScroll = new JScrollPane(messages, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
-    public MsgPanel(boolean needsRpmControl) {
-        content.setBorder(BorderFactory.createLineBorder(Color.green));
-        JScrollPane pane = new JScrollPane(msg, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-
+    public MessagesPanel() {
         JPanel middlePanel = new JPanel(new BorderLayout());
-        middlePanel.add(pane, BorderLayout.CENTER);
-        if (needsRpmControl)
-            middlePanel.add(new RecentCommands().getContent(), BorderLayout.EAST);
+        middlePanel.add(messagesScroll, BorderLayout.CENTER);
+        buttonPanel.setBorder(BorderFactory.createLineBorder(Color.red));
 
-
-        StyledDocument d = (StyledDocument) msg.getDocument();
+        StyledDocument d = (StyledDocument) messages.getDocument();
         bold = d.addStyle("StyleName", null);
         bold.addAttribute(StyleConstants.CharacterConstants.Bold, Boolean.TRUE);
 
         italic = d.addStyle("StyleName", null);
         italic.addAttribute(StyleConstants.CharacterConstants.Italic, Boolean.TRUE);
 
-        content.add(middlePanel, BorderLayout.CENTER);
         MessagesCentral.getInstance().addListener(new MessagesCentral.MessageListener() {
             @Override
             public void onMessage(Class clazz, String message) {
@@ -71,7 +59,7 @@ public class MsgPanel {
         resetButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
-                Document d = msg.getDocument();
+                Document d = messages.getDocument();
                 clearMessages(d);
             }
         });
@@ -86,25 +74,9 @@ public class MsgPanel {
             }
         });
 
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
         buttonPanel.add(resetButton);
         buttonPanel.add(pauseButton);
         buttonPanel.add(new AnyCommand());
-        if (needsRpmControl)
-            buttonPanel.add(new RpmControl().getContent());
-        content.add(buttonPanel, BorderLayout.NORTH);
-
-        JPanel statsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-
-        statsPanel.add(new RpmControl().getContent());
-        statsPanel.add(new IdleLabel());
-        statsPanel.add(new WarningPanel().getPanel());
-
-        content.add(statsPanel, BorderLayout.SOUTH);
-    }
-
-    public JPanel getContent() {
-        return content;
     }
 
     private void clearMessages(Document d) {
@@ -116,12 +88,12 @@ public class MsgPanel {
     }
 
     private void append(String line, Class clazz) {
-        Document d = msg.getDocument();
+        Document d = messages.getDocument();
         if (d.getLength() > MAX_SIZE)
             clearMessages(d);
         try {
             d.insertString(d.getLength(), line + "\r\n", getStyle(clazz));
-            msg.select(d.getLength(), d.getLength());
+            messages.select(d.getLength(), d.getLength());
         } catch (BadLocationException e) {
             throw new IllegalStateException(e);
         }
@@ -136,5 +108,13 @@ public class MsgPanel {
         if (clazz == PortHolder.class)
             return italic;
         return null;
+    }
+
+    public JPanel getButtonPanel() {
+        return buttonPanel;
+    }
+
+    public JScrollPane getMessagesScroll() {
+        return messagesScroll;
     }
 }
