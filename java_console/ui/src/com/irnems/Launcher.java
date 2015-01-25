@@ -5,6 +5,7 @@ import com.irnems.core.MessagesCentral;
 import com.rusefi.*;
 import com.rusefi.io.LinkManager;
 import com.rusefi.ui.*;
+import com.rusefi.ui.storage.PersistentConfiguration;
 import jssc.SerialPortList;
 
 import javax.swing.*;
@@ -19,9 +20,11 @@ import javax.swing.*;
  * @see WavePanel
  */
 public class Launcher extends FrameHelper {
-    public static final int CONSOLE_VERSION = 20150118;
+    public static final int CONSOLE_VERSION = 20150125;
     public static final boolean SHOW_STIMULATOR = true;
+    public static final String TAB_INDEX = "main_tab";
     private final String port;
+    private final JTabbedPane tabbedPane = new JTabbedPane();
 
     public static int defaultFontSize;
 
@@ -33,7 +36,6 @@ public class Launcher extends FrameHelper {
 
         FileLog.MAIN.logLine("Console " + CONSOLE_VERSION);
 
-        JTabbedPane tabbedPane = new JTabbedPane();
 
         if (LinkManager.isLogViewerMode(port))
             tabbedPane.add("Log Viewer", new LogViewer());
@@ -52,12 +54,14 @@ public class Launcher extends FrameHelper {
             tabbedPane.add("ECU stimulation", stimulator.getPanel());
         }
 //        tabbedPane.addTab("live map adjustment", new Live3DReport().getControl());
-        tabbedPane.add("Messages", new MsgPanel(true).getContent());
+        tabbedPane.add("Messages", new MessagesPane().getContent());
         tabbedPane.add("Wizards", new Wizard().createPane());
 
 
-        if (!LinkManager.isLogViewerMode(port))
-            tabbedPane.setSelectedIndex(2);
+        if (!LinkManager.isLogViewerMode(port)) {
+            int selectedIndex = PersistentConfiguration.getInstance().getIntProperty("main_tab", 2);
+            tabbedPane.setSelectedIndex(selectedIndex);
+        }
 
         showFrame(tabbedPane);
     }
@@ -89,10 +93,14 @@ public class Launcher extends FrameHelper {
          * looks like reconnectTimer in {@link RpmPanel} keeps AWT alive. Simplest solution would be to 'exit'
          */
         SimulatorHelper.onWindowClosed();
+        PersistentConfiguration.getInstance().setProperty("version", CONSOLE_VERSION);
+        PersistentConfiguration.getInstance().setProperty(TAB_INDEX, tabbedPane.getSelectedIndex());
+        PersistentConfiguration.getInstance().save();
         System.exit(0);
     }
 
     public static void main(final String[] args) throws Exception {
+        PersistentConfiguration.getInstance().load();
         Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler());
         VersionChecker.start();
         SwingUtilities.invokeAndWait(new Runnable() {
