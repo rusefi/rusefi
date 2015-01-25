@@ -13,16 +13,16 @@ public class PersistentConfiguration {
     private static final PersistentConfiguration INSTANCE = new PersistentConfiguration();
     public static final String CONFIG_FILE_NAME = "rusefi_console_properties.xml";
 
-    private Map<String, String> config = new HashMap<>();
+    private Map<String, Object> config = new HashMap<>();
 
-    public static PersistentConfiguration getInstance() {
+    public static PersistentConfiguration getConfig() {
         return INSTANCE;
     }
 
     public void load() {
         try {
             XMLDecoder e = new XMLDecoder(new BufferedInputStream(new FileInputStream(CONFIG_FILE_NAME)));
-            config = (Map<String, String>) e.readObject();
+            config = (Map<String, Object>) e.readObject();
             e.close();
         } catch (Throwable e) {
             FileLog.rlog("Error reading from " + CONFIG_FILE_NAME);
@@ -41,16 +41,7 @@ public class PersistentConfiguration {
         }
     }
 
-    public int getIntProperty(String key, int defaultValue) {
-        try {
-            String value = config.get(key);
-            return Integer.parseInt(value);
-        } catch (Throwable e) {
-            return defaultValue;
-        }
-    }
-
-    public void setProperty(String key, int value) {
-        config.put(key, "" + value);
+    public Node getRoot() {
+        return new Node("root", config);
     }
 }

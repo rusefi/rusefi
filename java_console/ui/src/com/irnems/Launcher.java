@@ -5,10 +5,13 @@ import com.irnems.core.MessagesCentral;
 import com.rusefi.*;
 import com.rusefi.io.LinkManager;
 import com.rusefi.ui.*;
+import com.rusefi.ui.storage.Node;
 import com.rusefi.ui.storage.PersistentConfiguration;
 import jssc.SerialPortList;
 
 import javax.swing.*;
+
+import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
 
 /**
  * this is the main entry point of rusEfi ECU console
@@ -37,13 +40,14 @@ public class Launcher extends FrameHelper {
         FileLog.MAIN.logLine("Console " + CONSOLE_VERSION);
 
 
+        WavePanel wavePanel = new WavePanel(getConfig().getRoot().getChild("digital_sniffer"));
         if (LinkManager.isLogViewerMode(port))
-            tabbedPane.add("Log Viewer", new LogViewer());
+            tabbedPane.add("Log Viewer", new LogViewer(wavePanel));
 
-        RpmPanel rpmPanel = new RpmPanel();
-        tabbedPane.addTab("Main", rpmPanel.createRpmPanel());
+        RpmPanel mainGauges = new RpmPanel(getConfig().getRoot().getChild("main_gauges"));
+        tabbedPane.addTab("Main", mainGauges.createRpmPanel());
         tabbedPane.addTab("Gauges", new GaugesPanel().getContent());
-        tabbedPane.addTab("Digital Sniffer", WavePanel.getInstance().getPanel());
+        tabbedPane.addTab("Digital Sniffer", wavePanel.getPanel());
         tabbedPane.addTab("Analog Sniffer", new AnalogChartPanel());
 
         tabbedPane.addTab("LE controls", new FlexibleControls().getPanel());
@@ -54,12 +58,12 @@ public class Launcher extends FrameHelper {
             tabbedPane.add("ECU stimulation", stimulator.getPanel());
         }
 //        tabbedPane.addTab("live map adjustment", new Live3DReport().getControl());
-        tabbedPane.add("Messages", new MessagesPane().getContent());
+        tabbedPane.add("Messages", new MessagesPane(getConfig().getRoot().getChild("messages")).getContent());
         tabbedPane.add("Wizards", new Wizard().createPane());
 
 
         if (!LinkManager.isLogViewerMode(port)) {
-            int selectedIndex = PersistentConfiguration.getInstance().getIntProperty("main_tab", 2);
+            int selectedIndex = getConfig().getRoot().getIntProperty("main_tab", 2);
             tabbedPane.setSelectedIndex(selectedIndex);
         }
 
@@ -93,14 +97,15 @@ public class Launcher extends FrameHelper {
          * looks like reconnectTimer in {@link RpmPanel} keeps AWT alive. Simplest solution would be to 'exit'
          */
         SimulatorHelper.onWindowClosed();
-        PersistentConfiguration.getInstance().setProperty("version", CONSOLE_VERSION);
-        PersistentConfiguration.getInstance().setProperty(TAB_INDEX, tabbedPane.getSelectedIndex());
-        PersistentConfiguration.getInstance().save();
+        Node root = getConfig().getRoot();
+        root.setProperty("version", CONSOLE_VERSION);
+        root.setProperty(TAB_INDEX, tabbedPane.getSelectedIndex());
+        getConfig().save();
         System.exit(0);
     }
 
     public static void main(final String[] args) throws Exception {
-        PersistentConfiguration.getInstance().load();
+        getConfig().load();
         Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler());
         VersionChecker.start();
         SwingUtilities.invokeAndWait(new Runnable() {

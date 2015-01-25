@@ -3,6 +3,7 @@ package com.rusefi.ui;
 import com.irnems.core.MessagesCentral;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.io.serial.PortHolder;
+import com.rusefi.ui.storage.Node;
 import com.rusefi.ui.widgets.AnyCommand;
 
 import javax.swing.*;
@@ -26,14 +27,22 @@ public class MessagesPanel {
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH_mm");
     private static final int MAX_SIZE = 50000;
 
-    private final JTextPane messages = new JTextPane();
+    private final AnyCommand anyCommand;
+    private final JTextPane messages = new JTextPane() {
+        @Override
+        public void setVisible(boolean aFlag) {
+            super.setVisible(aFlag);
+// todo: get focus on startup somehow
+//            anyCommand.getText().requestFocus();
+        }
+    };
     private boolean isPaused;
     private final Style bold;
     private final Style italic;
     private final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
     private final JScrollPane messagesScroll = new JScrollPane(messages, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
-    public MessagesPanel() {
+    public MessagesPanel(Node config) {
         JPanel middlePanel = new JPanel(new BorderLayout());
         middlePanel.add(messagesScroll, BorderLayout.CENTER);
         buttonPanel.setBorder(BorderFactory.createLineBorder(Color.red));
@@ -76,7 +85,8 @@ public class MessagesPanel {
 
         buttonPanel.add(resetButton);
         buttonPanel.add(pauseButton);
-        buttonPanel.add(new AnyCommand());
+        anyCommand = new AnyCommand(config);
+        buttonPanel.add(anyCommand.getContent());
     }
 
     private void clearMessages(Document d) {

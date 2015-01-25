@@ -36,14 +36,16 @@ public class LogViewer extends JPanel {
     private final JLabel fileLabel = new JLabel();
     private final DefaultListModel<FIleItem> fileListModel = new DefaultListModel<FIleItem>();
     private final JList<FIleItem> fileList = new JList<FIleItem>(fileListModel);
+    private final WavePanel wavePanel;
     private String currentFolder;
     private static JPanel descPanel = new JPanel();
 
 
 //    int currentChartIndex = 0;
 
-    public LogViewer() {
+    public LogViewer(WavePanel wavePanel) {
         super(new BorderLayout());
+        this.wavePanel = wavePanel;
 
         setBackground(Color.green);
 
@@ -146,7 +148,7 @@ public class LogViewer extends JPanel {
 
 
     //    private void refreshChart() {
-//        String chart = ChartRepository.getInstance().getChart(currentChartIndex);
+//        String chart = ChartRepository.getConfig().getChart(currentChartIndex);
 //    }
 //
 //    public static void main(String[] args) {
@@ -171,7 +173,7 @@ public class LogViewer extends JPanel {
         FileUtils.readFile2(filename, engineState);
 
         if (ChartRepository.getInstance().getSize() > 0)
-            WavePanel.getInstance().reloadFile();
+            wavePanel.reloadFile();
         refreshCountPanel();
     }
 }

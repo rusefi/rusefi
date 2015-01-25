@@ -1,5 +1,6 @@
 package com.rusefi.ui;
 
+import com.rusefi.ui.storage.Node;
 import com.rusefi.ui.widgets.IdleLabel;
 
 import javax.swing.*;
@@ -14,8 +15,8 @@ public class MessagesPane {
         }
     };
 
-    public MessagesPane() {
-        MessagesPanel messagesPanel = new MessagesPanel();
+    public MessagesPane(Node config) {
+        MessagesPanel messagesPanel = new MessagesPanel(config);
         content.setBorder(BorderFactory.createLineBorder(Color.red));
 
         JPanel middlePanel = new JPanel(new BorderLayout());

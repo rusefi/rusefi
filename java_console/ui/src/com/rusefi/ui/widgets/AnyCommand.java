@@ -1,6 +1,7 @@
 package com.rusefi.ui.widgets;
 
 import com.rusefi.io.CommandQueue;
+import com.rusefi.ui.storage.Node;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -13,25 +14,31 @@ import java.awt.event.ActionListener;
  * Date: 3/20/13
  * (c) Andrey Belomutskiy
  */
-public class AnyCommand extends JPanel {
+public class AnyCommand {
     private static final int COMMAND_CONFIRMATION_TIMEOUT = 1000;
+    public static final String KEY = "last_value";
+    private final JTextField text = new JTextField() {
+        @Override
+        public Dimension getPreferredSize() {
+            Dimension size = super.getPreferredSize();
+            return new Dimension(200, size.height);
+        }
+    };
 
-    public AnyCommand() {
-//        setBorder(BorderFactory.createLineBorder(Color.PINK));
-        setLayout(new FlowLayout(FlowLayout.LEFT));
-        add(new JLabel("Command: "));
-        final JTextField text = createCommandControl();
-        add(text);
+    private final Node config;
+    private JPanel content = new JPanel(new FlowLayout(FlowLayout.LEFT));
+
+    public AnyCommand(final Node config) {
+        this(config, config.getProperty(KEY, ""));
     }
 
-    public static JTextField createCommandControl() {
-        final JTextField text = new JTextField() {
-            @Override
-            public Dimension getPreferredSize() {
-                Dimension size = super.getPreferredSize();
-                return new Dimension(200, size.height);
-            }
-        };
+    public AnyCommand(final Node config, String defaultCommand) {
+        this.config = config;
+        text.setText(defaultCommand);
+        content.setBorder(BorderFactory.createLineBorder(Color.PINK));
+        content.add(new JLabel("Command: "));
+        content.add(text);
+
         text.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -56,6 +63,7 @@ public class AnyCommand extends JPanel {
             public void changedUpdate(DocumentEvent e) {
                 boolean isOk = isValidInput(text);
                 text.setBorder(isOk ? null : BorderFactory.createLineBorder(Color.red));
+                config.setProperty(KEY, text.getText());
             }
         });
 
@@ -68,8 +76,16 @@ public class AnyCommand extends JPanel {
 //            }
 //        });
         // todo: limit the length of text in the text field
+    }
+
+    public JTextField getText() {
         return text;
     }
+
+//    @Override
+//    public boolean requestFocusInWindow() {
+//        return text.requestFocusInWindow();
+//    }
 
     private static boolean isValidInput(JTextField text) {
         boolean isOk = true;
@@ -84,5 +100,13 @@ public class AnyCommand extends JPanel {
             }
         }
         return isOk;
+    }
+
+    public JComponent getContent() {
+        return content;
+    }
+
+    public void setContent(JPanel content) {
+        this.content = content;
     }
 }
