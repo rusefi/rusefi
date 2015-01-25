@@ -43,7 +43,7 @@ public class AnalogChartPanel extends JPanel {
 
                         unpackValues(values, message);
 
-//                MessagesCentral.getInstance().postMessage(AnalogChartPanel.class, "chart arrived, len=" + message.length());
+//                MessagesCentral.getConfig().postMessage(AnalogChartPanel.class, "chart arrived, len=" + message.length());
 
                         processValues();
                         UpDownImage.trueRepaint(analogChart);

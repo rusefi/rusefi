@@ -5,6 +5,7 @@ import com.irnems.core.EngineState;
 import com.irnems.core.Sensor;
 import com.irnems.core.SensorCentral;
 import com.rusefi.io.LinkManager;
+import com.rusefi.ui.storage.Node;
 import com.rusefi.ui.widgets.AnyCommand;
 import com.rusefi.ui.widgets.URLLabel;
 import com.rusefi.ui.widgets.UpDownImage;
@@ -14,6 +15,7 @@ import com.rusefi.waves.WaveChartParser;
 import com.rusefi.waves.WaveReport;
 
 import javax.swing.*;
+import javax.xml.bind.JAXBContext;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -65,9 +67,7 @@ public class WavePanel {
 
     private boolean isPaused;
 
-    private static WavePanel instance = new WavePanel();
-
-    private WavePanel() {
+    public WavePanel(Node config) {
         LinkManager.engineState.registerStringValueAction("outpin", new EngineState.ValueCallback<String>() {
             @Override
             public void onUpdate(String value) {
@@ -120,8 +120,7 @@ public class WavePanel {
         buttonPanel.add(pauseButton);
         buttonPanel.add(new RpmControl().setSize(2).getContent());
 
-        JTextField command = AnyCommand.createCommandControl();
-        command.setText("chartsize " + EFI_DEFAULT_CHART_SIZE);
+        JComponent command = new AnyCommand(config, "chartsize " + EFI_DEFAULT_CHART_SIZE).getContent();
         buttonPanel.add(command);
 
         buttonPanel.add(zoomControl);
@@ -173,10 +172,6 @@ public class WavePanel {
         imagePanel.removeAll();
         imagePanel.add(crank);
         images.put(CRANK1, crank);
-    }
-
-    public static WavePanel getInstance() {
-        return instance;
     }
 
     public void displayChart(String value) {

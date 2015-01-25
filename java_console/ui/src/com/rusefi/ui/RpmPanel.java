@@ -2,6 +2,7 @@ package com.rusefi.ui;
 
 import com.irnems.core.EngineTimeListener;
 import com.irnems.core.Sensor;
+import com.rusefi.ui.storage.Node;
 import com.rusefi.ui.widgets.*;
 import com.rusefi.io.LinkManager;
 import com.rusefi.ui.widgets.SensorGauge;
@@ -17,13 +18,15 @@ import java.awt.event.ActionListener;
  * (c) Andrey Belomutskiy
  */
 public class RpmPanel {
+    private final Node config;
     private RpmControl rpmControl = new RpmControl();
     // that's for CKP signal emulation
     public final WaveInfoPanel wave0 = new WaveInfoPanel(0);
     public final WaveInfoPanel wave1 = new WaveInfoPanel(1);
     public final WaveInfoPanel wave2 = new WaveInfoPanel(2);
 
-    public RpmPanel() {
+    public RpmPanel(Node config) {
+        this.config = config;
         rpmControl.setSize(15);
     }
 
@@ -43,12 +46,12 @@ public class RpmPanel {
         startConnectionWatchDog();
 
         JPanel smallMessagePanel = new JPanel(new BorderLayout());
-        MessagesPanel mp = new MessagesPanel();
+        MessagesPanel mp = new MessagesPanel(config);
         smallMessagePanel.add(BorderLayout.NORTH, mp.getButtonPanel());
         smallMessagePanel.add(BorderLayout.CENTER, mp.getMessagesScroll());
 
         JPanel msgPanel = new JPanel(new BorderLayout());
-        msgPanel.add(new AnyCommand(), BorderLayout.NORTH);
+        msgPanel.add(new AnyCommand(config).getContent(), BorderLayout.NORTH);
         msgPanel.add(smallMessagePanel, BorderLayout.CENTER);
 
         JComponent rpmPanel = new JPanel(new BorderLayout());

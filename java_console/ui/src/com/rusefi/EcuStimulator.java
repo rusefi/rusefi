@@ -230,7 +230,7 @@ public class EcuStimulator {
 
     private static double getVRef() {
         // todo: make this adjustable via the UI
-        //double vRef = SensorCentral.getInstance().getValue(Sensor.VREF) * PotCommand.VOLTAGE_CORRECTION;
+        //double vRef = SensorCentral.getConfig().getValue(Sensor.VREF) * PotCommand.VOLTAGE_CORRECTION;
         return 4.7;
     }
 
