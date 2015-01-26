@@ -65,7 +65,7 @@ static int DigitLength(int digit) {
 static void DisplayErrorCode(int length, int code) {
 	// todo: I suggest we use 'itoa' method to simplify this logic
 	for (int iter = length - 1; iter >= 0; iter--) {
-		int ourDigit = (int)efiPow10(iter);		// 10^0 = 1, 10^1 = 10, 10^2=100, 10^3 = 1000, ....
+		int ourDigit = (int) efiPow10(iter);		// 10^0 = 1, 10^1 = 10, 10^2=100, 10^3 = 1000, ....
 		int digit = 1;						// as we remember "0" we show as one blink
 		while (code >= ourDigit) {
 			code = code - ourDigit;
@@ -80,11 +80,11 @@ static void DisplayErrorCode(int length, int code) {
 
 //  our main thread for show check engine error
 #if defined __GNUC__
-__attribute__((noreturn))   static msg_t mfiThread(void)
+__attribute__((noreturn))    static msg_t mfiThread(void)
 #else
-static msg_t mfiThread(void)
+		static msg_t mfiThread(void)
 #endif
-{
+		{
 	chRegSetThreadName("MFIndicator");
 	error_codes_set_s localErrorCopy;
 
@@ -100,12 +100,17 @@ static msg_t mfiThread(void)
 	}
 }
 
+static void testMil(void) {
+	addError(OBD_Engine_Coolant_Temperature_Circuit_Malfunction);
+	addError(OBD_Intake_Air_Temperature_Circuit_Malfunction);
+}
+
 void initMalfunctionIndicator(Engine *engine) {
 	// create static thread
 	chThdCreateStatic(mfiThreadStack, sizeof(mfiThreadStack), LOWPRIO, (tfunc_t) mfiThread, NULL);
-	// only for debug
-	addError(OBD_Engine_Coolant_Temperature_Circuit_Malfunction);
-	addError(OBD_Intake_Air_Temperature_Circuit_Malfunction);
+
+	addConsoleAction("testmil", testMil);
+
 }
 
 #endif /* EFI_MALFUNCTION_INDICATOR */
