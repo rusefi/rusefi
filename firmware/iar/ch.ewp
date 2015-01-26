@@ -2022,6 +2022,12 @@
         <name>$PROJ_DIR$\..\config\engines\rover_v8.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\config\engines\sachs.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\config\engines\sachs.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\config\engines\saturn_ion.cpp</name>
       </file>
       <file>

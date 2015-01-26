@@ -52,6 +52,7 @@
 #include "mitsubishi.h"
 #include "subaru.h"
 #include "test_engine.h"
+#include "sachs.h"
 
 #if EFI_TUNER_STUDIO
 #include "tunerstudio.h"
@@ -635,6 +636,9 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType, Engine *e
 		break;
 	case TEST_ENGINE:
 		setTestEngineConfiguration(engineConfiguration);
+		break;
+	case SACHS:
+		setSachs(engineConfiguration);
 		break;
 	default:
 		firmwareError("Unexpected engine type: %d", engineType);

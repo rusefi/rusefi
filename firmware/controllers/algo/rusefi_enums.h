@@ -103,7 +103,9 @@ typedef enum {
 
 	MAZDA_626 = 28,
 
-	ET_UNUSED = 29,
+	SACHS = 29,
+
+	ET_UNUSED = 30,
 
 	Force_4b_engine_type = ENUM_32_BITS,
 } engine_type_e;
