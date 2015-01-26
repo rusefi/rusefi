@@ -2,6 +2,8 @@
  * @file	mazda_miata.cpp
  *
  * FORD_ESCORT_GT = 14
+ * set_engine_type 14
+ *
  * MIATA_1990 = 19
  * MIATA_1994_DEVIATOR = 20
  * MIATA_1996 = 21
@@ -126,6 +128,9 @@ static void commonMiataNa(engine_configuration_s *engineConfiguration, board_con
 	engineConfiguration->trigger.type = TT_MAZDA_MIATA_NA;
 	engineConfiguration->digitalChartSize = 100;
 
+	boardConfiguration->triggerInputPins[0] = GPIOC_6; // 2G YEL/BLU
+	boardConfiguration->triggerInputPins[1] = GPIOA_5; // 2E White CKP
+
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 	setFuelLoadBin(engineConfiguration, 1.2, 4.4);
 	setFuelRpmBin(engineConfiguration, 800, 7000);
@@ -225,6 +230,27 @@ void setFordEscortGt(engine_configuration_s *engineConfiguration, board_configur
 
 	common079721_2351(engineConfiguration, boardConfiguration);
 
+
+//	boardConfiguration->triggerInputPins[0] = GPIOC_6; // 2G YEL/BLU
+//	boardConfiguration->triggerInputPins[1] = GPIOA_5; // 2E White CKP
+
+	// in case of SOHC distributor we only have one signal
+	boardConfiguration->triggerInputPins[0] = GPIOA_5; // 2E White CKP
+	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
+	engineConfiguration->needSecondTriggerInput = false;
+
+
+	/**
+	 * W53 Frankenso input #3 / PA0 / ADC_0
+	 */
+	engineConfiguration->mafAdcChannel = EFI_ADC_0;
+	engineConfiguration->tpsAdcChannel = EFI_ADC_3;
+	/**
+	 * W55 Frankenso input #1 / PC2 / ADC_1
+	 */
+	engineConfiguration->cltAdcChannel = EFI_ADC_1;
+
+
 	// set_global_trigger_offset_angle 256
 	engineConfiguration->globalTriggerAngleOffset = 256;
 	// set_ignition_offset 170
@@ -238,14 +264,8 @@ void setFordEscortGt(engine_configuration_s *engineConfiguration, board_configur
 	boardConfiguration->triggerSimulatorPinModes[0] = OM_OPENDRAIN;
 	boardConfiguration->triggerSimulatorPinModes[1] = OM_OPENDRAIN;
 
-	// Frankenstein: high side #1 is PE8
-	// Frankenstein: high side #2 is PE10
-	// Frankenstein: high side #3 is PE12
-	// Frankenstein: high side #4 is PE14
-	// Frankenstein: high side #5 is PC9
-	// Frankenstein: high side #6 is PC7
 
-	boardConfiguration->ignitionPins[0] = GPIOE_12; // Frankenstein: high side #3
+	boardConfiguration->ignitionPins[0] = GPIO_UNASSIGNED;
 	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
 	boardConfiguration->ignitionPins[2] = GPIO_UNASSIGNED;
 	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
