@@ -14,6 +14,8 @@ case ACURA_RSX:
 	return "ACURA_RSX";
 case AUDI_AAN:
   return "AUDI_AAN";
+case SACHS:
+  return "SACHS";
 case BMW_E34:
   return "BMW_E34";
 case CITROEN_TU3JP:
