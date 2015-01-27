@@ -845,8 +845,10 @@ typedef struct {
 	 */
 	adc_channel_e hipOutputChannel;
 
+	/**
+	 * offset 9488
+	*/
 	idle_mode_e idleMode;
-
 	bool isInjectionEnabled : 1; // bit 0
 	bool isIgnitionEnabled : 1; // bit 1
 	bool isCylinderCleanupEnabled : 1; // bit 2
@@ -866,17 +868,18 @@ typedef struct {
 	 */
 	bool isManualSpinningMode : 1; // bit 11
 
+	/**
+	 * offset 9496
+	*/
 	uint32_t digitalChartSize;
 	/**
 	 * cc/min, cubic centimeter per minute
-	 *
 	 * By the way, g/s = 0.125997881 * (lb/hr)
 	 * g/s = 0.125997881 * (cc/min)/10.5
 	 * g/s = 0.0119997981 * cc/min
-	 *
-	 */
-	float injectorFlow; // size 4
-
+	 * offset 9500
+	*/
+	float injectorFlow;
 	/**
 	 * offset 9504
 	*/
@@ -943,23 +946,43 @@ typedef struct {
 	 * offset 9668
 	*/
 	float cylinderBore;
-
 	/**
 	 * Some vehicles have a switch to indicate that clutch pedal is all the way up
-	 */
+	 * offset 9672
+	*/
 	brain_pin_e clutchUpPin;
+	/**
+	 * offset 9676
+	*/
 	pin_input_mode_e clutchUpPinMode;
+	/**
+	 * offset 9680
+	*/
 	float hipThreshold;
+	/**
+	 * offset 9684
+	*/
 	brain_pin_e fsioInputs[LE_COMMAND_COUNT];
+	/**
+	 * offset 9748
+	*/
 	pin_input_mode_e fsioInputModes[LE_COMMAND_COUNT];
+	/**
+	 * offset 9812
+	*/
 	int unused3[149];
-
+	/**
+	 * offset 10408
+	*/
 	le_formula_t timingMultiplier;
+	/**
+	 * offset 10608
+	*/
 	le_formula_t timingAdditive;
-
+	/**
+	 * offset 10808
+	*/
 	fuel_table_t injectionPhase;
-
-
 } engine_configuration_s;
 
 void setOperationMode(engine_configuration_s *engineConfiguration, operation_mode_e mode);
@@ -976,10 +999,6 @@ typedef struct {
 	crc_t value;
 } persistent_config_container_s;
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
-
 void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration);
 void setMap(fuel_table_t table, float value);
 void setWholeFuelMap(engine_configuration_s *engineConfiguration, float value);
@@ -992,10 +1011,6 @@ int getGlobalConfigurationVersion(void);
 
 void commonFrankensoAnalogInputs(engine_configuration_s *engineConfiguration);
 void setFrankenso0_1_joystick(engine_configuration_s *engineConfiguration);
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
 
 void copyFuelTable(fuel_table_t const source, fuel_table_t destination);
 void copyTimingTable(ignition_table_t const source, ignition_table_t destination);
