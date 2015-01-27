@@ -2,7 +2,6 @@ package com.rusefi.ui.storage;
 
 import com.irnems.FileLog;
 
-import javax.swing.*;
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
 import java.io.*;
@@ -19,6 +18,7 @@ public class PersistentConfiguration {
         return INSTANCE;
     }
 
+    @SuppressWarnings("unchecked")
     public void load() {
         try {
             XMLDecoder e = new XMLDecoder(new BufferedInputStream(new FileInputStream(CONFIG_FILE_NAME)));
@@ -30,9 +30,8 @@ public class PersistentConfiguration {
     }
 
     public void save() {
-        XMLEncoder e = null;
         try {
-            e = new XMLEncoder(new BufferedOutputStream(new FileOutputStream(CONFIG_FILE_NAME)));
+            XMLEncoder e = new XMLEncoder(new BufferedOutputStream(new FileOutputStream(CONFIG_FILE_NAME)));
             e.writeObject(config);
             e.close();
             System.out.println("Saved to " + CONFIG_FILE_NAME);
