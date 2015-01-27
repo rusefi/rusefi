@@ -13,6 +13,20 @@
 
 void setSachs(engine_configuration_s *engineConfiguration) {
 	engineConfiguration->displacement = 0.1; // 100cc
+	engineConfiguration->cylindersCount = 1;
+	engineConfiguration->engineCycle = 360;
+
+	engineConfiguration->firingOrder = FO_ONE_CYLINDER;
+
+	/**
+	 * We treat the trigger as 1/0 toothed wheel
+	 */
+	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
+	engineConfiguration->trigger.customTotalToothCount = 1;
+	engineConfiguration->trigger.customSkippedToothCount = 0;
+	engineConfiguration->trigger.customIsSynchronizationNeeded = false;
+	engineConfiguration->needSecondTriggerInput = false;
+
 
 	engineConfiguration->hasIatSensor = false;
 	engineConfiguration->hasMapSensor = false;
