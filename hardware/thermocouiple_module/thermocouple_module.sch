@@ -37,7 +37,7 @@ $Descr A 11000 8500
 encoding utf-8
 Sheet 1 1
 Title "thermocouple break out board"
-Date "24 jan 2015"
+Date "27 jan 2015"
 Rev "R.01"
 Comp "rusEFI by DAECU"
 Comment1 ""
@@ -110,10 +110,10 @@ Text Notes 5600 4900 0    30   ~ 0
 Datasheet:\nhttp://datasheets.maxim-ic.com/en/ds/MAX31855.pdf
 NoConn ~ 6500 4250
 $Comp
-L GND #PWR2
+L GND #PWR01
 U 1 1 4E13FFF9
 P 7000 4000
-F 0 "#PWR2" H 7000 4000 30  0001 C CNN
+F 0 "#PWR01" H 7000 4000 30  0001 C CNN
 F 1 "GND" H 7000 3930 30  0001 C CNN
 F 2 "" H 7000 4000 60  0001 C CNN
 F 3 "" H 7000 4000 60  0001 C CNN
@@ -134,10 +134,10 @@ F 3 "" H 7000 3800 60  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR1
+L GND #PWR02
 U 1 1 4E13FFDB
 P 5400 4250
-F 0 "#PWR1" H 5400 4250 30  0001 C CNN
+F 0 "#PWR02" H 5400 4250 30  0001 C CNN
 F 1 "GND" H 5400 4180 30  0001 C CNN
 F 2 "" H 5400 4250 60  0001 C CNN
 F 3 "" H 5400 4250 60  0001 C CNN
@@ -260,7 +260,20 @@ F 3 "" H 4950 3750 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	4700 3550 4800 3550
+	4150 3550 4800 3550
 Wire Wire Line
-	4700 3750 4800 3750
+	4150 3750 4800 3750
+$Comp
+L CONN_2 P7
+U 1 1 54C7C9BE
+P 3800 3650
+F 0 "P7" V 3750 3650 40  0000 C CNN
+F 1 "CONN_2" V 3850 3650 40  0000 C CNN
+F 2 "AK300-2" H 3800 3650 60  0001 C CNN
+F 3 "" H 3800 3650 60  0000 C CNN
+	1    3800 3650
+	-1   0    0    1   
+$EndComp
+Connection ~ 4700 3550
+Connection ~ 4700 3750
 $EndSCHEMATC
