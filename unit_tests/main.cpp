@@ -143,7 +143,7 @@ int main(void) {
 	testMenuTree();
 
 	//	resizeMap();
-	printf("Success 20150101\r\n");
+	printf("Success 20150127\r\n");
 	return EXIT_SUCCESS;
 }
 

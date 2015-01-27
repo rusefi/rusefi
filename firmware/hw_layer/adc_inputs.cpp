@@ -30,8 +30,6 @@ AdcDevice::AdcDevice(ADCConversionGroup* hwConfig) {
 	memset(internalAdcIndexByHardwareIndex, 0xFFFFFFFF, sizeof(internalAdcIndexByHardwareIndex));
 }
 
-#define ADC_NUMBER_CHANNELS_FAST		1
-
 // todo: migrate from hardware timer to software ADC conversion triggering
 // todo: I guess we would have to use ChibiOS timer and not our own timer because
 // todo: adcStartConversionI requires OS lock. currently slow ADC is 10Hz (?)
@@ -117,9 +115,10 @@ ADC_TwoSamplingDelay_5Cycles,   // cr1
 		ADC_CR2_SWSTART, // cr2
 
 		0, // sample times for channels 10...18
+		// todo: IS SOMETHING MISSING HERE?
 		ADC_SMPR2_SMP_AN0(MY_SAMPLING_FAST), // In this field must be specified the sample times for channels 0...9
 
-		ADC_SQR1_NUM_CH(ADC_NUMBER_CHANNELS_FAST), // Conversion group sequence 13...16 + sequence length
+		0, // Conversion group sequence 13...16 + sequence length
 
 		0, // Conversion group sequence 7...12
 		0
@@ -382,8 +381,10 @@ void AdcDevice::addChannel(adc_channel_e hwChannel) {
 	hardwareIndexByIndernalAdcIndex[logicChannel] = hwChannel;
 	if (logicChannel < 6) {
 		hwConfig->sqr3 += (hwChannel) << (5 * logicChannel);
-	} else {
+	} else if (logicChannel < 12) {
 		hwConfig->sqr2 += (hwChannel) << (5 * (logicChannel - 6));
+	} else {
+		hwConfig->sqr1 += (hwChannel) << (5 * (logicChannel - 12));
 	}
 	// todo: support for more then 12 channels? not sure how needed it would be
 
