@@ -88,7 +88,10 @@ ADC_TwoSamplingDelay_20Cycles,   // cr1
 		ADC_SMPR1_SMP_AN10(MY_SAMPLING_SLOW) |
 		ADC_SMPR1_SMP_AN11(MY_SAMPLING_SLOW) |
 		ADC_SMPR1_SMP_AN12(MY_SAMPLING_SLOW) |
-		ADC_SMPR1_SMP_AN13(MY_SAMPLING_SLOW), // sample times for channels 10...18
+		ADC_SMPR1_SMP_AN13(MY_SAMPLING_SLOW) |
+		ADC_SMPR1_SMP_AN14(MY_SAMPLING_SLOW) |
+		ADC_SMPR1_SMP_AN15(MY_SAMPLING_SLOW)
+		, // sample times for channels 10...18
 		ADC_SMPR2_SMP_AN0(MY_SAMPLING_SLOW) |
 		ADC_SMPR2_SMP_AN1(MY_SAMPLING_SLOW) |
 		ADC_SMPR2_SMP_AN3(MY_SAMPLING_SLOW) |
@@ -102,20 +105,8 @@ ADC_TwoSamplingDelay_20Cycles,   // cr1
 		, // In this field must be specified the sample times for channels 0...9
 
 		0, // Conversion group sequence 13...16 + sequence length
-
-		0
-//		| ADC_SQR2_SQ7_N(ADC_CHANNEL_IN12) /* PC2 - green */
-//				| ADC_SQR2_SQ8_N(ADC_CHANNEL_IN13) /* PC3 - yellow maf? */
-
-		,// Conversion group sequence 7...12
-		0
-//		| ADC_SQR3_SQ1_N(ADC_CHANNEL_IN6) /* PA6 - white */
-//		| ADC_SQR3_SQ2_N(ADC_CHANNEL_IN7) /* PA7 - blue */
-//				| ADC_SQR3_SQ3_N(ADC_CHANNEL_IN14) /* PC4 - green */
-//				| ADC_SQR3_SQ4_N(ADC_CHANNEL_IN15) /* PC5 - yellow */
-//				| ADC_SQR3_SQ5_N(ADC_CHANNEL_IN8) /* PB0 - blue */
-//				| ADC_SQR3_SQ6_N(ADC_CHANNEL_IN9) /* PB1 - white */
-// Conversion group sequence 1...6
+		0, // Conversion group sequence 7...12
+		0  // Conversion group sequence 1...6
 		};
 
 AdcDevice slowAdc(&adcgrpcfgSlow);
@@ -480,7 +471,10 @@ void initAdcInputs(bool boardTestMode) {
 	for (int adc = 0; adc < HW_MAX_ADC_INDEX; adc++) {
 		adc_channel_mode_e mode = boardConfiguration->adcHwChannelEnabled[adc];
 
-		if (mode == ADC_SLOW) {
+		/**
+		 * in board test mode all currently enabled ADC channels are running in slow mode
+		 */
+		if (mode == ADC_SLOW || (boardTestMode && mode == ADC_FAST)) {
 			slowAdc.addChannel((adc_channel_e) (ADC_CHANNEL_IN0 + adc));
 		} else if (mode == ADC_FAST) {
 			fastAdc.addChannel((adc_channel_e) (ADC_CHANNEL_IN0 + adc));
@@ -489,7 +483,7 @@ void initAdcInputs(bool boardTestMode) {
 
 	slowAdc.init();
 	pwmStart(EFI_INTERNAL_SLOW_ADC_PWM, &pwmcfg_slow);
-	if (boardConfiguration->isFastAdcEnabled || boardTestMode) {
+	if (boardConfiguration->isFastAdcEnabled) {
 		fastAdc.init();
 		/*
 		 * Initializes the PWM driver.

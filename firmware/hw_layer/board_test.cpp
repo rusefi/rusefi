@@ -40,7 +40,7 @@ static bool isTimeForNextStep(int copy) {
 extern AdcDevice slowAdc;
 extern AdcDevice fastAdc;
 
-static void processAdcPin(AdcDevice *adc, int index, const char *prefix) {
+static void processAdcPin(AdcDevice *adc, int index) {
 	adc_channel_e hwIndex = adc->getAdcHardwareIndexByInternalIndex(index);
 	GPIO_TypeDef* port = getAdcChannelPort(hwIndex);
 	int pin = getAdcChannelPin(hwIndex);
@@ -50,7 +50,7 @@ static void processAdcPin(AdcDevice *adc, int index, const char *prefix) {
 	int c = 0;
 
 	while (!isTimeForNextStep(copy)) {
-		print("%s ch%d hwIndex=%d %s%d\r\n", prefix, index, hwIndex, portname(port), pin);
+		print("ch%d hwIndex=%d %s%d\r\n", index, hwIndex, portname(port), pin);
 		int adcValue = adc->getAdcValueByIndex(index);
 
 //		print("ADC%d val= %d%s", hwIndex, value, DELIMETER);
@@ -158,11 +158,13 @@ static void btInitOutputPins() {
 }
 
 static void blinkAllOutputPins() {
+	int msgCounter = 0;
 	for (int k = 0; k < 6; k++) {
 		for (int i = 0; i < pinsCount; i++) {
 			currentPin = BLINK_PINS[i];
 			setCurrentPinValue(k % 2);
 		}
+		print("blinking %d\r\n", msgCounter++);
 		chThdSleepMilliseconds(250);
 	}
 	currentPin = GPIO_UNASSIGNED;
@@ -176,6 +178,7 @@ static void blinkAllOutputPins() {
 
 			currentPin = BLINK_PINS[i];
 			setCurrentPinValue(true);
+			print("blinking %d!\r\n", msgCounter++);
 			chThdSleepMilliseconds(250);
 		}
 	}
@@ -195,9 +198,11 @@ void initBoardTest(void) {
 	// this code is ugly as hell, I had no time to think. Todo: refactor
 
 #if HAL_USE_ADC || defined(__DOXYGEN__)
-	processAdcPin(&fastAdc, 0, "fast");
+	/**
+	 * in board test mode all currently enabled ADC channels are running in slow mode
+	 */
 	while (currentIndex < slowAdc.size()) {
-		processAdcPin(&slowAdc, currentIndex, "slow");
+		processAdcPin(&slowAdc, currentIndex);
 		currentIndex++;
 	}
 #endif
