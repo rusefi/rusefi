@@ -288,16 +288,16 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 	/**
 	 * Frankenso analog #1 PC2 ADC12 CLT
 	 * Frankenso analog #2 PC1 ADC11 IAT
-	 * Frankenso analog #3
+	 * Frankenso analog #3 PA0 ADC0
 	 * Frankenso analog #4 PC3 ADC13
-	 * Frankenso analog #5
-	 * Frankenso analog #6
+	 * Frankenso analog #5 PA2 ADC2
+	 * Frankenso analog #6 PA1 ADC1
 	 * Frankenso analog #7 PA4 ADC4 WBO AFR
-	 * Frankenso analog #8
-	 * Frankenso analog #9
+	 * Frankenso analog #8 PA3 ADC3
+	 * Frankenso analog #9 PA7 ADC7
 	 * Frankenso analog #10 PA6 ADC6 MAP
 	 * Frankenso analog #11 PC5 ADC15 TPS
-	 * Frankenso analog #12 VBatt
+	 * Frankenso analog #12 PC4 ADC14 VBatt
 	 */
 
 
@@ -313,10 +313,20 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_6;
 
 	boardConfiguration->adcHwChannelEnabled[0] = ADC_SLOW; // ADC0 - PA0
-	boardConfiguration->adcHwChannelEnabled[1] = ADC_SLOW;
+	boardConfiguration->adcHwChannelEnabled[1] = ADC_SLOW; // just for test
+	boardConfiguration->adcHwChannelEnabled[2] = ADC_SLOW; // just for test
+	boardConfiguration->adcHwChannelEnabled[3] = ADC_SLOW; // just for test
+
 	boardConfiguration->adcHwChannelEnabled[4] = ADC_SLOW;
+	boardConfiguration->adcHwChannelEnabled[5] = ADC_OFF;
 	boardConfiguration->adcHwChannelEnabled[6] = ADC_FAST;
+	boardConfiguration->adcHwChannelEnabled[7] = ADC_SLOW; // just for test
+
+	boardConfiguration->adcHwChannelEnabled[8] = ADC_OFF;
+	boardConfiguration->adcHwChannelEnabled[9] = ADC_OFF;
+	boardConfiguration->adcHwChannelEnabled[10] = ADC_OFF;
 	boardConfiguration->adcHwChannelEnabled[11] = ADC_SLOW; // IAT
+
 	boardConfiguration->adcHwChannelEnabled[12] = ADC_SLOW; // CLT
 	boardConfiguration->adcHwChannelEnabled[13] = ADC_SLOW; // AFR
 	boardConfiguration->adcHwChannelEnabled[14] = ADC_SLOW; // VBatt
