@@ -43,8 +43,8 @@
 #define ADC_CR2_SWSTART ((uint32_t)0x40000000)
 #endif
 
-
 void baseHardwareInit(void);
+void turnOnSpi(spi_device_e device);
 
 #ifdef __cplusplus
 extern "C"
@@ -57,11 +57,9 @@ void DebugMonitorVector(void);
 void UsageFaultVector(void);
 void BusFaultVector(void);
 void HardFaultVector(void);
-void turnOnSpi(spi_device_e device);
 void initSpiModule(SPIDriver *driver, brain_pin_e sck, brain_pin_e miso,
 		brain_pin_e mosi);
 void initSpiCs(SPIConfig *spiConfig, brain_pin_e csPin);
-void turnOnSpi(spi_device_e device);
 
 #ifdef __cplusplus
 }
