@@ -7,9 +7,7 @@
 
 #include "LocalVersionHolder.h"
 
-extern "C" {
 int getGlobalConfigurationVersion(void);
-}
 
 //ctor
 LocalVersionHolder::LocalVersionHolder() {
