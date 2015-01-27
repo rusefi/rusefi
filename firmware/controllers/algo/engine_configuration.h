@@ -824,21 +824,36 @@ typedef struct {
 	/**
 	 * @see isMapAveragingEnabled
 	 */
-	bool_t hasMapSensor : 1; // bit 0
-	bool_t hasIatSensor : 1; // bit 1
-	bool_t hasBaroSensor : 1; // bit 1
-	bool_t hasAfrSensor : 1; // bit 2
-	bool_t useConstantDwellDuringCranking : 1; // bit 3
-	bool_t isDigitalChartEnabled : 1; // bit 4
-	bool_t isCanEnabled : 1; // bit 5
-	bool_t hasCltSensor : 1; // bit 6
-	bool_t canReadEnabled : 1; // bit 7
-	bool_t canWriteEnabled : 1; // bit 8
-	bool_t hasVehicleSpeedSensor : 1; // bit 9
-	bool_t isJoystickEnabled : 1; // bit 10
-	bool_t isGpsEnabled : 1; // bit 11
-	bool_t hasMafSensor : 1; // bit 12
-	bool_t hasTpsSensor : 1; // bit 13
+	/** offset 9480 bit 0 */
+	bool_t hasMapSensor : 1;
+	/** offset 9480 bit 1 */
+	bool_t hasIatSensor : 1;
+	/** offset 9480 bit 2 */
+	bool_t hasBaroSensor : 1;
+	/** offset 9480 bit 3 */
+	bool_t hasAfrSensor : 1;
+	/** offset 9480 bit 4 */
+	bool_t useConstantDwellDuringCranking : 1;
+	/** offset 9480 bit 5 */
+	bool_t isDigitalChartEnabled : 1;
+	/** offset 9480 bit 6 */
+	bool_t isCanEnabled : 1;
+	/** offset 9480 bit 7 */
+	bool_t hasCltSensor : 1;
+	/** offset 9480 bit 8 */
+	bool_t canReadEnabled : 1;
+	/** offset 9480 bit 9 */
+	bool_t canWriteEnabled : 1;
+	/** offset 9480 bit 10 */
+	bool_t hasVehicleSpeedSensor : 1;
+	/** offset 9480 bit 11 */
+	bool_t isJoystickEnabled : 1;
+	/** offset 9480 bit 12 */
+	bool_t isGpsEnabled : 1;
+	/** offset 9480 bit 13 */
+	bool_t hasMafSensor : 1;
+	/** offset 9480 bit 14 */
+	bool_t hasTpsSensor : 1;
 
 	/**
 	 * offset 6284 ???
@@ -849,18 +864,30 @@ typedef struct {
 	 * offset 9488
 	*/
 	idle_mode_e idleMode;
-	bool isInjectionEnabled : 1; // bit 0
-	bool isIgnitionEnabled : 1; // bit 1
-	bool isCylinderCleanupEnabled : 1; // bit 2
-	bool secondTriggerChannelEnabled : 1; // bit 3
-	bool needSecondTriggerInput : 1; // bit 4
-	bool isMapAveragingEnabled : 1; // bit 5
-	bool isMilEnabled : 1; // bit 6
-	bool isFuelPumpEnabled : 1; // bit 7
-	bool isTunerStudioEnabled : 1; // bit 8
-	bool isWaveAnalyzerEnabled : 1; // bit 9
-	bool isIdleThreadEnabled : 1; // bit 10
-	bool isPrintTriggerSynchDetails : 1; // bit 11
+	/** offset 9492 bit 0 */
+	bool_t isInjectionEnabled : 1;
+	/** offset 9492 bit 1 */
+	bool_t isIgnitionEnabled : 1;
+	/** offset 9492 bit 2 */
+	bool_t isCylinderCleanupEnabled : 1;
+	/** offset 9492 bit 3 */
+	bool_t secondTriggerChannelEnabled : 1;
+	/** offset 9492 bit 4 */
+	bool_t needSecondTriggerInput : 1;
+	/** offset 9492 bit 5 */
+	bool_t isMapAveragingEnabled : 1;
+	/** offset 9492 bit 6 */
+	bool_t isMilEnabled : 1;
+	/** offset 9492 bit 7 */
+	bool_t isFuelPumpEnabled : 1;
+	/** offset 9492 bit 8 */
+	bool_t isTunerStudioEnabled : 1;
+	/** offset 9492 bit 9 */
+	bool_t isWaveAnalyzerEnabled : 1;
+	/** offset 9492 bit 10 */
+	bool_t isIdleThreadEnabled : 1;
+	/** offset 9492 bit 11 */
+	bool_t isPrintTriggerSynchDetails : 1;
 	/**
 	 * Usually if we have no trigger events that means engine is stopped
 	 * Unless we are troubleshooting and spinning the engine by hand - this case a longer
