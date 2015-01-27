@@ -9,9 +9,17 @@
  */
 
 #include "sachs.h"
+#include "allsensors.h"
 
 void setSachs(engine_configuration_s *engineConfiguration) {
 	engineConfiguration->displacement = 0.1; // 100cc
+
+	engineConfiguration->hasIatSensor = false;
+	engineConfiguration->hasMapSensor = false;
+	engineConfiguration->hasBaroSensor = false;
+	engineConfiguration->hasAfrSensor = false;
+	engineConfiguration->hasCltSensor = false;
+
 
 	// Frankenstein analog input #1: PA1 adc1
 	// Frankenstein analog input #2: PA3 adc3
@@ -26,6 +34,14 @@ void setSachs(engine_configuration_s *engineConfiguration) {
 	// Frankenstein analog input #11: PC4 adc14
 	// Frankenstein analog input #12: PC5 adc15
 
+	engineConfiguration->tpsAdcChannel = EFI_ADC_1;
+
+	/**
+	 * TPS 0% 0.9v
+	 * TPS 100% 2.34v
+	 */
+	engineConfiguration->tpsMin = convertVoltageTo10bitADC(1.250);
+	engineConfiguration->tpsMax = convertVoltageTo10bitADC(4.538);
 
 
 	// Frankenstein: low side - out #1: PC14

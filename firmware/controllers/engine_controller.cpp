@@ -275,6 +275,22 @@ static THD_WORKING_AREA(csThreadStack, UTILITY_THREAD_STACK_SIZE);	// declare th
 
 #define isOutOfBounds(offset) ((offset<0) || (offset) >= sizeof(engine_configuration_s))
 
+static void setShort(const int offset, const int value) {
+	if (isOutOfBounds(offset))
+		return;
+	uint16_t *ptr = (uint16_t *) (&((char *) engine->engineConfiguration)[offset]);
+	*ptr = (uint16_t)value;
+	scheduleMsg(&logger, "setting short @%d to %d", offset, (uint16_t)value);
+}
+
+static void getShort(int offset) {
+	if (isOutOfBounds(offset))
+		return;
+	uint16_t *ptr = (uint16_t *) (&((char *) engine->engineConfiguration)[offset]);
+	uint16_t value = *ptr;
+	scheduleMsg(&logger, "short @%d is %d", offset, value);
+}
+
 static void setInt(const int offset, const int value) {
 	if (isOutOfBounds(offset))
 		return;
@@ -409,8 +425,10 @@ void initEngineContoller(Logging *sharedLogger, Engine *engine) {
 
 	addConsoleActionSS("set_float", (VoidCharPtrCharPtr) setFloat);
 	addConsoleActionII("set_int", (VoidIntInt) setInt);
+	addConsoleActionII("set_short", (VoidIntInt) setShort);
 	addConsoleActionI("get_float", getFloat);
 	addConsoleActionI("get_int", getInt);
+	addConsoleActionI("get_short", getShort);
 
 #if EFI_FSIO || defined(__DOXYGEN__)
 	initFsioImpl(sharedLogger, engine);
