@@ -28,33 +28,23 @@
 typedef enum {
 	CUSTOM_ENGINE = 0,
 	AUDI_AAN = 1,
-#if EFI_SUPPORT_DODGE_NEON
 	/**
 	 * 1995 Dodge Neon
 	 * http://rusefi.com/forum/viewtopic.php?t=360
 	 */
 	DODGE_NEON_1995 = 2,
-#endif /* EFI_SUPPORT_DODGE_NEON */
-#if EFI_SUPPORT_FORD_ASPIRE
 	/**
 	 * 1996 1.3 Ford Aspire
 	 * http://rusefi.com/forum/viewtopic.php?t=375
 	 */
 	FORD_ASPIRE_1996 = 3,
-#endif /* EFI_SUPPORT_FORD_ASPIRE */
-#if EFI_SUPPORT_FORD_FIESTA
 	/**
 	 * 36-1 toothed wheel engine
 	 * http://rusefi.com/forum/viewtopic.php?t=282
 	 */
 	FORD_FIESTA = 4,
-#endif /* EFI_SUPPORT_FORD_FIESTA */
-#if EFI_SUPPORT_NISSAN_PRIMERA
 	NISSAN_PRIMERA = 5,
-#endif /* EFI_SUPPORT_NISSAN_PRIMERA */
-
 	HONDA_ACCORD_CD = 6,
-
 	FORD_INLINE_6_1995 = 7,
 /**
  * one cylinder engine
@@ -519,5 +509,37 @@ typedef enum {
 
 	Force_4b_cranking_map_type = ENUM_32_BITS,
 } air_pressure_sensor_type_e;
+
+typedef enum {
+	CD_OFF = 0,
+	CD_USE_CAN1 = 1,
+	CD_USE_CAN2 = 2,
+
+	Internal_ForceMyEnumIntSize_can_device_mode = ENUM_32_BITS,
+} can_device_mode_e;
+
+typedef enum {
+	AC_OFF = 0,
+	/**
+	 * You would use this value if you want to see a detailed graph of your trigger events
+	 */
+	AC_TRIGGER = 1, AC_MAP = 2,
+
+	Internal_ForceMyEnumIntSize_analog_chart = ENUM_32_BITS,
+} analog_chart_e;
+
+typedef enum {
+	/**
+	 * This is the default mode in which ECU controls timing dynamically
+	 */
+	TM_DYNAMIC = 0,
+	/**
+	 * Fixed timing is useful while you are playing with a timing gun - you need to have fixed
+	 * timing if you want to install your distributor at some specific angle
+	 */
+	TM_FIXED = 1,
+
+	Internal_ForceMyEnumIntSize_timing_mode = ENUM_32_BITS,
+} timing_mode_e;
 
 #endif /* RUSEFI_ENUMS_H_ */

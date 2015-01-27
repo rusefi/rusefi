@@ -1,6 +1,8 @@
 #ifndef MAP_H_
 #define MAP_H_
 
+#include "engine_configuration.h"
+
 #ifdef __cplusplus
 extern "C"
 {

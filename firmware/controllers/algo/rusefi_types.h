@@ -8,6 +8,7 @@
 #define CONTROLLERS_ALGO_RUSEFI_TYPES_H_
 
 #include <stdint.h>
+#include "rusefi_enums.h"
 
 /**
  * integer time in milliseconds
@@ -35,5 +36,82 @@ typedef float angle_t;
 typedef float percent_t;
 
 typedef void (*Void)(void);
+
+#define INJECTION_PIN_COUNT 12
+#define IGNITION_PIN_COUNT 12
+
+#define MAX31855_CS_COUNT 8
+
+#define JOYSTICK_PIN_COUNT 5
+
+#define FUEL_RPM_COUNT 16
+#define FUEL_LOAD_COUNT 16
+
+#define LE_COMMAND_LENGTH 200
+#define LE_COMMAND_COUNT 16
+
+typedef char le_formula_t[LE_COMMAND_LENGTH];
+
+#define HW_MAX_ADC_INDEX 16
+
+typedef brain_pin_e egt_cs_array_t[MAX31855_CS_COUNT];
+
+#define MAP_ANGLE_SIZE 8
+#define MAP_WINDOW_SIZE 8
+
+/**
+ * @brief Thermistor curve parameters
+
+ */
+typedef struct {
+	/**
+	 * these values are in Celcuus
+	 * offset 0
+	 */
+	float tempC_1;
+	/**
+	 * offset 4
+	 */
+	float tempC_2;
+	/**
+	 * offset 8
+	 */
+	float tempC_3;
+	/**
+	 * offset 12
+	 */
+	float resistance_1;
+	/**
+	 * offset 16
+	 */
+	float resistance_2;
+	/**
+	 * offset 20
+	 */
+	float resistance_3;
+	/**
+	 * offset 24
+	 */
+	float bias_resistor;
+	/**
+	 * offset 28
+	 */
+	float s_h_a;
+	/**
+	 * offset 32
+	 */
+	float s_h_b;
+	/**
+	 * offset 36
+	 */
+	float s_h_c;
+	/** total size 40*/
+} ThermistorConf;
+
+
+typedef struct {
+	ThermistorConf *config;
+	adc_channel_e channel;
+} Thermistor;
 
 #endif /* CONTROLLERS_ALGO_RUSEFI_TYPES_H_ */
