@@ -78,6 +78,11 @@ public:
 
 class RpmCalculator;
 
+typedef struct {
+	ThermistorConf *config;
+	adc_channel_e channel;
+} Thermistor;
+
 class Engine {
 public:
 	Engine();
