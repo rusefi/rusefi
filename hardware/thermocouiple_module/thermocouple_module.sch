@@ -33,13 +33,13 @@ LIBS:max31855
 LIBS:thermocouple_module-cache
 EELAYER 27 0
 EELAYER END
-$Descr A4 11693 8268
+$Descr A 11000 8500
 encoding utf-8
 Sheet 1 1
-Title "Electronic Industrial Temperature Interface (EITI)"
-Date "28 may 2014"
-Rev ".001"
-Comp "Mrk Industries"
+Title "thermocouple break out board"
+Date "24 jan 2015"
+Rev "R.01"
+Comp "rusEFI by DAECU"
 Comment1 ""
 Comment2 ""
 Comment3 ""
@@ -110,10 +110,10 @@ Text Notes 5600 4900 0    30   ~ 0
 Datasheet:\nhttp://datasheets.maxim-ic.com/en/ds/MAX31855.pdf
 NoConn ~ 6500 4250
 $Comp
-L GND #PWR01
+L GND #PWR2
 U 1 1 4E13FFF9
 P 7000 4000
-F 0 "#PWR01" H 7000 4000 30  0001 C CNN
+F 0 "#PWR2" H 7000 4000 30  0001 C CNN
 F 1 "GND" H 7000 3930 30  0001 C CNN
 F 2 "" H 7000 4000 60  0001 C CNN
 F 3 "" H 7000 4000 60  0001 C CNN
@@ -134,10 +134,10 @@ F 3 "" H 7000 3800 60  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR02
+L GND #PWR1
 U 1 1 4E13FFDB
 P 5400 4250
-F 0 "#PWR02" H 5400 4250 30  0001 C CNN
+F 0 "#PWR1" H 5400 4250 30  0001 C CNN
 F 1 "GND" H 5400 4180 30  0001 C CNN
 F 2 "" H 5400 4250 60  0001 C CNN
 F 3 "" H 5400 4250 60  0001 C CNN
@@ -237,4 +237,30 @@ Text Label 6500 4450 2    40   ~ 0
 /CS
 Text Label 6500 4550 2    40   ~ 0
 SCK
+$Comp
+L CONN_1 P5
+U 1 1 54C4236A
+P 4950 3550
+F 0 "P5" H 5030 3550 40  0000 L CNN
+F 1 "CONN_1" H 4950 3605 30  0001 C CNN
+F 2 "SCREW_TERM_534-7693" H 4950 3550 60  0001 C CNN
+F 3 "" H 4950 3550 60  0000 C CNN
+	1    4950 3550
+	1    0    0    -1  
+$EndComp
+$Comp
+L CONN_1 P6
+U 1 1 54C42383
+P 4950 3750
+F 0 "P6" H 5030 3750 40  0000 L CNN
+F 1 "CONN_1" H 4950 3805 30  0001 C CNN
+F 2 "SCREW_TERM_534-7693" H 4950 3750 60  0001 C CNN
+F 3 "" H 4950 3750 60  0000 C CNN
+	1    4950 3750
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4700 3550 4800 3550
+Wire Wire Line
+	4700 3750 4800 3750
 $EndSCHEMATC

@@ -1,4 +1,4 @@
-update=5/28/2014 5:24:56 AM
+update=1/24/2015 6:17:02 PM
 version=1
 last_client=pcbnew
 [general]
@@ -83,3 +83,4 @@ LibName9=led
 LibName10=dip_sockets
 LibName11=TCPL_PCC-SMP
 LibName12=SM0805-SM0603
+LibName13=keystone_7693
