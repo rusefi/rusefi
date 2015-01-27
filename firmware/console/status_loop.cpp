@@ -426,10 +426,7 @@ extern engine_pins_s enginePins;
 
 static OutputPin *leds[] = { &warningPin, &runningPin, &enginePins.errorLedPin, &communicationPin, &checkEnginePin };
 
-/**
- * This method would blink all the LEDs just to test them
- */
-static void initialLedsBlink(void) {
+static void initStatisLeds() {
 #if EFI_PROD_CODE
 	outputPinRegister("communication status 1", &communicationPin, LED_COMMUNICATION_PORT, LED_COMMUNICATION_PIN);
 #endif
@@ -438,7 +435,12 @@ static void initialLedsBlink(void) {
 	outputPinRegister("warning", &warningPin, LED_WARNING_PORT, LED_WARNING_PIN);
 	outputPinRegister("is running status", &runningPin, LED_RUNNING_STATUS_PORT, LED_RUNNING_STATUS_PIN);
 #endif /* EFI_WARNING_LED */
+}
 
+/**
+ * This method would blink all the LEDs just to test them
+ */
+static void initialLedsBlink(void) {
 	int size = sizeof(leds) / sizeof(leds[0]);
 	for (int i = 0; i < size; i++)
 		leds[i]->setValue(1);
@@ -450,6 +452,9 @@ static void initialLedsBlink(void) {
 }
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
+/**
+ * this thread has a lower-then-usual stack size so we cannot afford *print* methods here
+ */
 static void blinkingThread(void *arg) {
 	(void) arg;
 	chRegSetThreadName("communication blinking");
@@ -616,6 +621,7 @@ void startStatusThreads(Engine *engine) {
 	chThdCreateStatic(lcdThreadStack, sizeof(lcdThreadStack), NORMALPRIO, (tfunc_t) lcdThread, engine);
 	chThdCreateStatic(tsThreadStack, sizeof(tsThreadStack), NORMALPRIO, (tfunc_t) tsStatusThread, engine);
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
+	initStatisLeds();
 	chThdCreateStatic(blinkingStack, sizeof(blinkingStack), NORMALPRIO, (tfunc_t) blinkingThread, NULL);
 #endif /* EFI_PROD_CODE */
 }
