@@ -76,8 +76,8 @@ void tunerStudioError(const char *msg) {
 int tunerStudioHandleCrcCommand(uint8_t *data, int incomingPacketSize) {
 	char command = data[0];
 	data++;
-	if (command == TS_HELLO_COMMAND) {
-		tunerStudioDebug("got CRC Query");
+	if (command == TS_HELLO_COMMAND || command == TS_HELLO_COMMAND_DEPRECATED) {
+		tunerStudioDebug("got Query command");
 		handleQueryCommand(TS_CRC);
 	} else if (command == TS_OUTPUT_COMMAND) {
 		handleOutputChannelsCommand(TS_CRC);
@@ -103,6 +103,11 @@ int tunerStudioHandleCrcCommand(uint8_t *data, int incomingPacketSize) {
 		handlePageReadCommand(TS_CRC, page, offset, count);
 	} else if (command == 't' || command == 'T') {
 		handleTestCommand();
+	} else if (command == 'Q') {
+		/**
+		 * 'Q' is the query command used for compatibility with older ECUs
+		 */
+		tunerStudioDebug("ignoring Q");
 	} else if (command == 'F') {
 		tunerStudioDebug("ignoring F");
 		/**
