@@ -206,7 +206,8 @@ void printAllCallbacksHistogram(void) {
 #endif
 }
 
-EXTERN_ENGINE;
+EXTERN_ENGINE
+;
 
 static void triggerShapeInfo(Engine *engine) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
@@ -229,15 +230,17 @@ void triggerInfo(Engine *engine) {
 
 	TriggerShape *ts = &engine->triggerShape;
 
-	scheduleMsg(logger, "Template %s (%d) trigger %s (%d)",
-			getConfigurationName(engineConfiguration->engineType),
-			engineConfiguration->engineType,
-			getTrigger_type_e(engineConfiguration->trigger.type),
+	scheduleMsg(logger, "Template %s (%d) trigger %s (%d)", getConfigurationName(engineConfiguration->engineType),
+			engineConfiguration->engineType, getTrigger_type_e(engineConfiguration->trigger.type),
 			engineConfiguration->trigger.type);
 
-	scheduleMsg(logger, "trigger event counters %d/%d/%d/%d", triggerCentral.getHwEventCounter(0),
-			triggerCentral.getHwEventCounter(1), triggerCentral.getHwEventCounter(2),
-			triggerCentral.getHwEventCounter(3));
+	scheduleMsg(logger, "trigger#1 event counters %d/%d", triggerCentral.getHwEventCounter(0),
+			triggerCentral.getHwEventCounter(1));
+
+	if (engineConfiguration->needSecondTriggerInput) {
+		scheduleMsg(logger, "trigger#2 event counters %d/%d", triggerCentral.getHwEventCounter(2),
+				triggerCentral.getHwEventCounter(3));
+	}
 	scheduleMsg(logger, "expected cycle events %d/%d/%d", ts->expectedEventCount[0],
 			engine->triggerShape.expectedEventCount[1], ts->expectedEventCount[2]);
 
@@ -266,21 +269,24 @@ void triggerInfo(Engine *engine) {
 	scheduleMsg(logger, "maxLockTime=%d / maxTriggerReentraint=%d", maxLockTime, maxTriggerReentraint);
 	scheduleMsg(logger, "maxEventQueueTime=%d", maxEventQueueTime);
 
+	scheduleMsg(logger, "primary trigger input: %s", hwPortname(boardConfiguration->triggerInputPins[0]));
 	scheduleMsg(logger, "primary trigger simulator: %s %s freq=%d",
 			hwPortname(boardConfiguration->triggerSimulatorPins[0]),
 			getPin_output_mode_e(boardConfiguration->triggerSimulatorPinModes[0]),
 			boardConfiguration->triggerSimulatorFrequency);
-	scheduleMsg(logger, "secondary trigger simulator: %s %s phase=%d",
-			hwPortname(boardConfiguration->triggerSimulatorPins[1]),
-			getPin_output_mode_e(boardConfiguration->triggerSimulatorPinModes[1]), triggerSignal.safe.phaseIndex);
-	scheduleMsg(logger, "3rd trigger simulator: %s %s", hwPortname(boardConfiguration->triggerSimulatorPins[2]),
-			getPin_output_mode_e(boardConfiguration->triggerSimulatorPinModes[2]));
+
+
+	if (engineConfiguration->needSecondTriggerInput) {
+		scheduleMsg(logger, "secondary trigger input: %s", hwPortname(boardConfiguration->triggerInputPins[1]));
+		scheduleMsg(logger, "secondary trigger simulator: %s %s phase=%d",
+				hwPortname(boardConfiguration->triggerSimulatorPins[1]),
+				getPin_output_mode_e(boardConfiguration->triggerSimulatorPinModes[1]), triggerSignal.safe.phaseIndex);
+	}
+//	scheduleMsg(logger, "3rd trigger simulator: %s %s", hwPortname(boardConfiguration->triggerSimulatorPins[2]),
+//			getPin_output_mode_e(boardConfiguration->triggerSimulatorPinModes[2]));
 
 	scheduleMsg(logger, "trigger error extra LED: %s %s", hwPortname(boardConfiguration->triggerErrorPin),
 			getPin_output_mode_e(boardConfiguration->triggerErrorPinMode));
-
-	scheduleMsg(logger, "primary trigger input: %s", hwPortname(boardConfiguration->triggerInputPins[0]));
-	scheduleMsg(logger, "secondary trigger input: %s", hwPortname(boardConfiguration->triggerInputPins[1]));
 	scheduleMsg(logger, "primary logic input: %s", hwPortname(boardConfiguration->logicAnalyzerPins[0]));
 	scheduleMsg(logger, "secondary logic input: %s", hwPortname(boardConfiguration->logicAnalyzerPins[1]));
 
@@ -308,8 +314,6 @@ void initTriggerCentral(Logging *sharedLogger, Engine *engine) {
 	addConsoleActionP("triggershapeinfo", (VoidPtr) triggerShapeInfo, engine);
 	addConsoleAction("reset_running_counters", resetRunningTriggerCounters);
 #endif
-
-
 
 #if EFI_HISTOGRAMS
 	initHistogram(&triggerCallback, "all callbacks");

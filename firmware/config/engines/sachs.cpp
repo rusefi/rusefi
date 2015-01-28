@@ -36,7 +36,7 @@ void setSachs(engine_configuration_s *engineConfiguration) {
 
 
 	// Frankenstein analog input #1: PA1 adc1
-	// Frankenstein analog input #2: PA3 adc3
+	// Frankenstein analog input #2: PA3 adc3 TPS
 	// Frankenstein analog input #3: PC3 adc13
 	// Frankenstein analog input #4: PC1 adc11
 	// Frankenstein analog input #5: PA0 adc0
