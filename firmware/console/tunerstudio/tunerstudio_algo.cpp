@@ -139,7 +139,7 @@ void tsSendResponse(ts_response_format_e mode, const uint8_t * buffer, int size)
  */
 void handleQueryCommand(ts_response_format_e mode) {
 	tsState.queryCommandCounter++;
-	tunerStudioDebug("got H (queryCommand)");
+	tunerStudioDebug("got S/H (queryCommand) mode=%d", mode);
 	tsSendResponse(mode, (const uint8_t *) TS_SIGNATURE, strlen(TS_SIGNATURE) + 1);
 }
 
