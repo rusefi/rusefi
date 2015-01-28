@@ -318,7 +318,7 @@ static TunerStudioReadRequest readRequest;
 static short int pageIn;
 
 static bool handlePlainCommand(uint8_t command) {
-	if (command == TS_HELLO_COMMAND) {
+	if (command == TS_HELLO_COMMAND || command == TS_HELLO_COMMAND_DEPRECATED) {
 		scheduleMsg(logger, "Got naked Query command");
 		handleQueryCommand(TS_PLAIN);
 		return true;
