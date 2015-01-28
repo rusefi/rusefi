@@ -15,6 +15,7 @@
 #include "engine.h"
 
 void updateTunerStudioState(Engine *engine, TunerStudioOutputChannels *tsOutputChannels);
+void printTsStats(void);
 
 void startTunerStudioConnectivity(Logging *sharedLogger);
 void syncTunerStudioCopy(void);
