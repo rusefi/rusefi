@@ -1,2 +1,2 @@
 
-java -jar ../java_tools/ConfigDefinition.jar .
+java -jar ../java_tools/ConfigDefinition.jar . controllers\algo

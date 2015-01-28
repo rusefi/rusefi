@@ -48,7 +48,7 @@ void setSachs(engine_configuration_s *engineConfiguration) {
 	// Frankenstein analog input #11: PC4 adc14
 	// Frankenstein analog input #12: PC5 adc15
 
-	engineConfiguration->tpsAdcChannel = EFI_ADC_1;
+	engineConfiguration->tpsAdcChannel = EFI_ADC_3;
 
 	/**
 	 * TPS 0% 0.9v
