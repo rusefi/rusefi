@@ -60,6 +60,11 @@
 
 #if EFI_TUNER_STUDIO
 
+#if EFI_TUNER_STUDIO_VERBOSE
+extern Logging *tsLogger;
+#include "tunerstudio.h"
+#endif
+
 TunerStudioState tsState;
 TunerStudioOutputChannels tsOutputChannels;
 /**
@@ -139,7 +144,10 @@ void tsSendResponse(ts_response_format_e mode, const uint8_t * buffer, int size)
  */
 void handleQueryCommand(ts_response_format_e mode) {
 	tsState.queryCommandCounter++;
-	tunerStudioDebug("got S/H (queryCommand) mode=%d", mode);
+#if EFI_TUNER_STUDIO_VERBOSE
+	scheduleMsg(tsLogger, "got S/H (queryCommand) mode=%d", mode);
+	printTsStats();
+#endif
 	tsSendResponse(mode, (const uint8_t *) TS_SIGNATURE, strlen(TS_SIGNATURE) + 1);
 }
 
