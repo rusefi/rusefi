@@ -40,7 +40,7 @@ void setMazdaMiataNbEngineConfiguration(engine_configuration_s *engineConfigurat
 	engineConfiguration->mafAdcChannel = EFI_ADC_1;
 	engineConfiguration->cltAdcChannel = EFI_ADC_11;
 	engineConfiguration->iatAdcChannel = EFI_ADC_13;
-	engineConfiguration->afrSensor.afrAdcChannel = EFI_ADC_2;
+	engineConfiguration->afr.hwChannel = EFI_ADC_2;
 
 	boardConfiguration->idleValvePin = GPIOE_0;
 	boardConfiguration->idleValvePinMode = OM_DEFAULT;

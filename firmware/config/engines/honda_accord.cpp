@@ -108,7 +108,7 @@ static void setHondaAccordConfigurationCommon(engine_configuration_s *engineConf
 	/**
 	 * D14/W10 O2 Sensor
 	 */
-	engineConfiguration->afrSensor.afrAdcChannel = EFI_ADC_13;
+	engineConfiguration->afr.hwChannel = EFI_ADC_13;
 
 	/**
 	 * VBatt
@@ -116,7 +116,7 @@ static void setHondaAccordConfigurationCommon(engine_configuration_s *engineConf
 	engineConfiguration->vbattAdcChannel = EFI_ADC_14;
 	engineConfiguration->vbattDividerCoeff = ((float) (8.2 + 33)) / 8.2 * 2;
 
-	//	todo engineConfiguration->afrSensor.afrAdcChannel = 14;
+	//	todo engineConfiguration->afr.hwChannel = 14;
 
 
 	/**
