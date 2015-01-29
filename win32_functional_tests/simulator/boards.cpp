@@ -37,7 +37,7 @@ static void setMafVoltage(float voltage) {
 }
 
 static void setAfrVoltage(float voltage) {
-	setVoltage(engineConfiguration->afrSensor.afrAdcChannel, voltage);
+	setVoltage(engineConfiguration->afr.hwChannel, voltage);
 }
 
 static void setTpsVoltage(float voltage) {
