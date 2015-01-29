@@ -234,11 +234,11 @@ void triggerInfo(Engine *engine) {
 			engineConfiguration->engineType, getTrigger_type_e(engineConfiguration->trigger.type),
 			engineConfiguration->trigger.type);
 
-	scheduleMsg(logger, "trigger#1 event counters %d/%d", triggerCentral.getHwEventCounter(0),
+	scheduleMsg(logger, "trigger#1 event counters up=%d/down=%d", triggerCentral.getHwEventCounter(0),
 			triggerCentral.getHwEventCounter(1));
 
 	if (engineConfiguration->needSecondTriggerInput) {
-		scheduleMsg(logger, "trigger#2 event counters %d/%d", triggerCentral.getHwEventCounter(2),
+		scheduleMsg(logger, "trigger#2 event counters up=%d/down=%d", triggerCentral.getHwEventCounter(2),
 				triggerCentral.getHwEventCounter(3));
 	}
 	scheduleMsg(logger, "expected cycle events %d/%d/%d", ts->expectedEventCount[0],
