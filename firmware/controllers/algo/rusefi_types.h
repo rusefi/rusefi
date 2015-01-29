@@ -83,4 +83,6 @@ typedef struct {
 	ignition_table_t map;
 } full_i_table_s;
 
+typedef int cylinders_count_t;
+
 #endif /* CONTROLLERS_ALGO_RUSEFI_TYPES_H_ */
