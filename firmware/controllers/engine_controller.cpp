@@ -261,7 +261,7 @@ static void printAnalogInfo(void) {
 		printAnalogChannelInfo("IAT", engineConfiguration->iatAdcChannel);
 	}
 	printAnalogChannelInfo("MAF", engineConfiguration->mafAdcChannel);
-	printAnalogChannelInfo("AFR", engineConfiguration->afrSensor.afrAdcChannel);
+	printAnalogChannelInfo("AFR", engineConfiguration->afr.hwChannel);
 	printAnalogChannelInfo("MAP", engineConfiguration->map.sensor.hwChannel);
 	if (engineConfiguration->hasBaroSensor) {
 		printAnalogChannelInfo("BARO", engineConfiguration->baroSensor.hwChannel);

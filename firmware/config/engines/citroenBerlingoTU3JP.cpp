@@ -175,7 +175,7 @@ void setCitroenBerlingoTU3JPConfiguration(engine_configuration_s *engineConfigur
 	/**
 	* WBO Innovate LC-1
 	*/
-	engineConfiguration->afrSensor.afrAdcChannel = EFI_ADC_12;
+	engineConfiguration->afr.hwChannel = EFI_ADC_12;
 	/**
 	* Other
 	*/

@@ -78,7 +78,7 @@ void setFordInline6(engine_configuration_s *engineConfiguration, board_configura
 	engineConfiguration->tpsAdcChannel = EFI_ADC_4;
 	engineConfiguration->iatAdcChannel = EFI_ADC_2;
 	engineConfiguration->cltAdcChannel = EFI_ADC_1;
-	engineConfiguration->afrSensor.afrAdcChannel = EFI_ADC_11;
+	engineConfiguration->afr.hwChannel = EFI_ADC_11;
 
 	engineConfiguration->map.sensor.type = MT_MPX4250;
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_15;

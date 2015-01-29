@@ -85,4 +85,6 @@ typedef struct {
 
 typedef int cylinders_count_t;
 
+typedef int32_t bool32_t;
+
 #endif /* CONTROLLERS_ALGO_RUSEFI_TYPES_H_ */

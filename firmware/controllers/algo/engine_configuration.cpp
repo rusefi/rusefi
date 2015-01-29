@@ -301,11 +301,11 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	engineConfiguration->cltAdcChannel = EFI_ADC_6;
 	engineConfiguration->iatAdcChannel = EFI_ADC_7;
 	engineConfiguration->mafAdcChannel = EFI_ADC_0;
-	engineConfiguration->afrSensor.afrAdcChannel = EFI_ADC_14;
+	engineConfiguration->afr.hwChannel = EFI_ADC_14;
 
 	engineConfiguration->cylinderBore = 87.5;
 
-	initEgoSensor(&engineConfiguration->afrSensor, ES_BPSX_D1);
+	initEgoSensor(&engineConfiguration->afr, ES_BPSX_D1);
 
 	engineConfiguration->globalFuelCorrection = 1;
 

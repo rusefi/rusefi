@@ -241,7 +241,7 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 	/**
 	 * PA4 Wideband O2 Sensor
 	 */
-	engineConfiguration->afrSensor.afrAdcChannel = EFI_ADC_4;
+	engineConfiguration->afr.hwChannel = EFI_ADC_4;
 
 	commonFrankensoAnalogInputs(engineConfiguration);
 	engineConfiguration->vbattDividerCoeff = ((float) (8.2 + 33)) / 8.2 * 2;

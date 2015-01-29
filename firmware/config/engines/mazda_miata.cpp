@@ -374,8 +374,8 @@ void setMiata1994_s(engine_configuration_s *engineConfiguration, board_configura
 
 	engineConfiguration->acSwitchAdc = EFI_ADC_1; // PA1, W50 on Frankenso
 
-	engineConfiguration->afrSensor.afrAdcChannel = EFI_ADC_3;
-	initEgoSensor(&engineConfiguration->afrSensor, ES_Innovate_MTX_L);
+	engineConfiguration->afr.hwChannel = EFI_ADC_3;
+	initEgoSensor(&engineConfiguration->afr, ES_Innovate_MTX_L);
 
 	/**
 	 * This board has PE0<>PD5 & PE1<>PD3 rewired in order to avoid Discovery issue
