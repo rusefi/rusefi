@@ -87,6 +87,8 @@ typedef int cylinders_count_t;
 
 typedef int32_t bool32_t;
 
+typedef int16_t fsio_pwm_freq_t;
+
 typedef fuel_table_t ve_table_t;
 typedef fuel_table_t afr_table_t;
 
