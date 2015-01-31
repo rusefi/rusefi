@@ -90,7 +90,8 @@ void setSingleCoilDwell(engine_configuration_s *engineConfiguration) {
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 OutputSignalList injectonSignals CCM_OPTIONAL;
 
-void initializeIgnitionActions(angle_t advance, angle_t dwellAngle, IgnitionEventList *list DECLARE_ENGINE_PARAMETER_S) {
+void initializeIgnitionActions(angle_t advance, angle_t dwellAngle,
+		IgnitionEventList *list DECLARE_ENGINE_PARAMETER_S) {
 	efiAssertVoid(engineConfiguration->cylindersCount > 0, "cylindersCount");
 
 	list->reset();
@@ -112,7 +113,8 @@ void initializeIgnitionActions(angle_t advance, angle_t dwellAngle, IgnitionEven
 	}
 }
 
-void FuelSchedule::registerInjectionEvent(NamedOutputPin *output, float angle, bool_t isSimultanious DECLARE_ENGINE_PARAMETER_S) {
+void FuelSchedule::registerInjectionEvent(NamedOutputPin *output, float angle,
+		bool_t isSimultanious DECLARE_ENGINE_PARAMETER_S) {
 	if (!isSimultanious && !isPinAssigned(output)) {
 		// todo: extact method for this index math
 		warning(OBD_PCM_Processor_Fault, "no_pin_inj #%s", output->name);
@@ -180,11 +182,14 @@ void FuelSchedule::addFuelEvents(injection_mode_e mode DECLARE_ENGINE_PARAMETER_
 					+ i * (float) engineConfiguration->engineCycle / engineConfiguration->cylindersCount;
 			registerInjectionEvent(&enginePins.injectors[index], angle, false PASS_ENGINE_PARAMETER);
 
-			/**
-			 * also fire the 2nd half of the injectors so that we can implement a batch mode on individual wires
-			 */
-			index = index + (engineConfiguration->cylindersCount / 2);
-			registerInjectionEvent(&enginePins.injectors[index], angle, false PASS_ENGINE_PARAMETER);
+			if (engineConfiguration->twoWireBatch) {
+
+				/**
+				 * also fire the 2nd half of the injectors so that we can implement a batch mode on individual wires
+				 */
+				index = index + (engineConfiguration->cylindersCount / 2);
+				registerInjectionEvent(&enginePins.injectors[index], angle, false PASS_ENGINE_PARAMETER);
+			}
 		}
 		break;
 	default:
@@ -327,7 +332,7 @@ void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_F) {
 	}
 
 	for (int angle = 0; angle < CONFIG(engineCycle); angle++) {
-		TRIGGER_SHAPE(triggerIndexByAngle[angle]) = findAngleIndex(angle PASS_ENGINE_PARAMETER);
+		TRIGGER_SHAPE(triggerIndexByAngle[angle])= findAngleIndex(angle PASS_ENGINE_PARAMETER);
 	}
 
 	injectonSignals.reset();
