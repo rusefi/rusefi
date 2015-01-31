@@ -11,9 +11,18 @@
 #include "engine_configuration.h"
 #include "map.h"
 #include "speed_density.h"
+#include "engine_test_helper.h"
+
+void testIgnitionPlanning(void) {
+	printf("*************************************************** testIgnitionPlanning\r\n");
+	EngineTestHelper eth(FORD_ESCORT_GT);
+	Engine * engine = &eth.engine;
+	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
+
+	assertEquals(IM_BATCH, engineConfiguration->injectionMode);
+}
 
 extern engine_configuration_s *engineConfiguration;
-extern engine_configuration2_s *engineConfiguration2;
 
 void testEngineMath(void) {
 	printf("*************************************************** testEngineMath\r\n");
@@ -32,7 +41,6 @@ void testEngineMath(void) {
 	assertEquals(312.5, getTCharge(4000, 0, 300, 350));
 	assertEquals(320.0833, getTCharge(4000, 50, 300, 350));
 	assertEquals(327.6667, getTCharge(4000, 100, 300, 350));
-
 }
 
 float getMap(void) {

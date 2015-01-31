@@ -102,7 +102,6 @@ void testFuelMap(void) {
 }
 
 extern engine_configuration_s *engineConfiguration;
-extern engine_configuration2_s *engineConfiguration2;
 
 static void confgiureFordAspireTriggerShape(TriggerShape * s) {
 	s->reset(FOUR_STROKE_CAM_SENSOR);

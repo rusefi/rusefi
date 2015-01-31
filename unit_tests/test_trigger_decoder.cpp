@@ -400,8 +400,6 @@ static void testRpmCalculator(void) {
 	Engine *engine = &eth.engine;
 	engine_configuration_s *engineConfiguration = &eth.persistentConfig.engineConfiguration;
 
-	engine_configuration2_s *ec2 = &eth.ec2;
-
 	engineConfiguration->trigger.customTotalToothCount = 8;
 	engineConfiguration->globalFuelCorrection = 3;
 	eth.initTriggerShapeAndRpmCalculator();

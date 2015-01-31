@@ -112,6 +112,7 @@ int main(void) {
 	testMisc();
 	testFuelMap();
 	testEngineMath();
+	testIgnitionPlanning();
 	testEventRegistry();
 	testSensors();
 	testCyclicBuffer();
