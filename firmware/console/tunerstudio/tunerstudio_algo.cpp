@@ -108,12 +108,12 @@ int tunerStudioHandleCrcCommand(uint8_t *data, int incomingPacketSize) {
 		handlePageReadCommand(TS_CRC, page, offset, count);
 	} else if (command == 't' || command == 'T') {
 		handleTestCommand();
-	} else if (command == 'Q') {
+	} else if (command == TS_LEGACY_HELLO_COMMAND) {
 		/**
 		 * 'Q' is the query command used for compatibility with older ECUs
 		 */
 		tunerStudioDebug("ignoring Q");
-	} else if (command == 'F') {
+	} else if (command == TS_COMMAND_F) {
 		tunerStudioDebug("ignoring F");
 		/**
 		 * http://www.msextra.com/forums/viewtopic.php?f=122&t=48327
@@ -124,9 +124,9 @@ int tunerStudioHandleCrcCommand(uint8_t *data, int incomingPacketSize) {
 		 */
 	} else {
 		tunerStudioError("ERROR: ignoring unexpected command");
-		return FALSE;
+		return false;
 	}
-	return TRUE;
+	return true;
 }
 
 void tsSendResponse(ts_response_format_e mode, const uint8_t * buffer, int size) {

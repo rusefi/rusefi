@@ -63,9 +63,11 @@ void tunerStudioError(const char *msg);
 
 #define TS_HELLO_COMMAND_DEPRECATED 'H'
 #define TS_HELLO_COMMAND 'S'
+#define TS_LEGACY_HELLO_COMMAND 'Q'
 #define TS_OUTPUT_COMMAND 'O'
 #define TS_READ_COMMAND 'R'
 #define TS_PAGE_COMMAND 'P'
+#define TS_COMMAND_F 'F'
 
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_CHUNK_WRITE_COMMAND 'C'

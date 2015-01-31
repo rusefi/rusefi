@@ -317,6 +317,9 @@ void handleBurnCommand(ts_response_format_e mode, uint16_t page) {
 static TunerStudioReadRequest readRequest;
 static short int pageIn;
 
+/**
+ * @return true if legacy command was processed, false otherwise
+ */
 static bool handlePlainCommand(uint8_t command) {
 	if (command == TS_HELLO_COMMAND || command == TS_HELLO_COMMAND_DEPRECATED) {
 		scheduleMsg(tsLogger, "Got naked Query command");
@@ -343,7 +346,10 @@ static bool handlePlainCommand(uint8_t command) {
 		//scheduleMsg(logger, "Got naked Channels???");
 		handleOutputChannelsCommand(TS_PLAIN);
 		return true;
-	} else if (command == 'F') {
+	} else if (command == TS_LEGACY_HELLO_COMMAND) {
+		tunerStudioDebug("ignoring LEGACY_HELLO_COMMAND");
+		return true;
+	} else if (command == TS_COMMAND_F) {
 		tunerStudioDebug("not ignoring F");
 		tunerStudioWriteData((const uint8_t *) PROTOCOL, strlen(PROTOCOL));
 		return true;
@@ -355,6 +361,7 @@ static bool handlePlainCommand(uint8_t command) {
 static bool isKnownCommand(char command) {
 	return command == TS_HELLO_COMMAND || command == TS_READ_COMMAND || command == TS_OUTPUT_COMMAND
 			|| command == TS_PAGE_COMMAND || command == TS_BURN_COMMAND || command == TS_SINGLE_WRITE_COMMAND
+			|| command == TS_LEGACY_HELLO_COMMAND
 			|| command == TS_CHUNK_WRITE_COMMAND;
 }
 
