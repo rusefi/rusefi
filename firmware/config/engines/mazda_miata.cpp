@@ -231,7 +231,8 @@ void setFordEscortGt(engine_configuration_s *engineConfiguration, board_configur
 
 	common079721_2351(engineConfiguration, boardConfiguration);
 	setFrankenso_01_LCD(boardConfiguration);
-
+	engineConfiguration->displacement = 1.839;
+	engineConfiguration->algorithm = LM_MAF;
 
 //	boardConfiguration->triggerInputPins[0] = GPIOC_6; // 2G YEL/BLU
 //	boardConfiguration->triggerInputPins[1] = GPIOA_5; // 2E White CKP
@@ -288,6 +289,7 @@ void setFordEscortGt(engine_configuration_s *engineConfiguration, board_configur
 	// Frankenso low out #10: PE1<>PD3
 	// Frankenso low out #11: PB8
 	// Frankenso low out #12: PB7
+	boardConfiguration->fanPin = GPIO_UNASSIGNED;
 
 	boardConfiguration->injectionPins[0] = GPIOD_5;
 	boardConfiguration->injectionPins[2] = GPIOE_2;
