@@ -292,7 +292,7 @@ void setFordEscortGt(engine_configuration_s *engineConfiguration, board_configur
 	boardConfiguration->fanPin = GPIO_UNASSIGNED;
 
 	boardConfiguration->injectionPins[0] = GPIOD_5;
-	boardConfiguration->injectionPins[2] = GPIOE_2;
+	boardConfiguration->injectionPins[1] = GPIOE_2;
 
 	// set_whole_fuel_map 3
 	setWholeFuelMap(engineConfiguration, 3);
