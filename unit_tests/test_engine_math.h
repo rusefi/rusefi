@@ -9,5 +9,6 @@
 #define TEST_ENGINE_MATH_H_
 
 void testEngineMath(void);
+void testIgnitionPlanning(void);
 
 #endif /* TEST_ENGINE_MATH_H_ */

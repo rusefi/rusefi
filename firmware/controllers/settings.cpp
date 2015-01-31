@@ -208,7 +208,8 @@ void printConfiguration(engine_configuration_s *engineConfiguration) {
 	scheduleMsg(&logger, "timingMode: %d", /*getTiming_mode_etodo*/(engineConfiguration->timingMode));
 	scheduleMsg(&logger, "fixedModeTiming: %d", (int) engineConfiguration->fixedModeTiming);
 	scheduleMsg(&logger, "ignitionOffset=%f", engineConfiguration->ignitionBaseAngle);
-	scheduleMsg(&logger, "injectionOffset=%f/enabled=%s", (double) engineConfiguration->injectionAngle,
+	scheduleMsg(&logger, "injection %s offset=%f/enabled=%s", getInjection_mode_e(engineConfiguration->injectionMode),
+			(double) engineConfiguration->injectionAngle,
 			boolToString(engineConfiguration->isInjectionEnabled));
 
 	scheduleMsg(&logger, "map_avg=%s/mil=%s/fp=%s/ts=%s/wa=%s/it=%s/fastAdc=%s",

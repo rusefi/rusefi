@@ -62,6 +62,8 @@ static MenuItem miTestInj4(&miBench, "test injector4");
 static MenuItem miVersion(&miAbout, LL_VERSION);
 static MenuItem miConfig(&miAbout, LL_CONFIG);
 static MenuItem miAlgo(&miAbout, LL_ALGORITHM);
+static MenuItem miInjection(&miAbout, LL_INJECTION);
+static MenuItem miIgnition(&miAbout, LL_IGNITION);
 
 #define DISP_LINES (engineConfiguration->HD44780height - 1)
 
@@ -202,6 +204,12 @@ static void showLine(lcd_line_e line) {
 		return;
 	case LL_ALGORITHM:
 		lcdPrintf(getEngine_load_mode_e(engineConfiguration->algorithm));
+		return;
+	case LL_INJECTION:
+		lcdPrintf(getInjection_mode_e(engineConfiguration->injectionMode));
+		return;
+	case LL_IGNITION:
+		lcdPrintf(getIgnition_mode_e(engineConfiguration->ignitionMode));
 		return;
 	case LL_TPS:
 		lcdPrintf("Throttle %f%%", getTPS());

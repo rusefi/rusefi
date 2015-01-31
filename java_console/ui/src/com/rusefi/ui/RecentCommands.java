@@ -29,6 +29,9 @@ public class RecentCommands {
 
     private boolean reentrant;
 
+    private final JScrollPane messagesScroll = new JScrollPane(content, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
+
     public RecentCommands() {
 
         CommandQueue.getInstance().addListener(new CommandQueue.CommandQueueListener() {
@@ -76,7 +79,7 @@ public class RecentCommands {
 
     private JComponent createButton(final Entry entry) {
         JButton button = new JButton(entry.command);
-        button.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        button.setBorder(BorderFactory.createEmptyBorder(3, 5, 0, 5));
 
         button.addActionListener(new ActionListener() {
             @Override
@@ -91,7 +94,7 @@ public class RecentCommands {
     }
 
     public Component getContent() {
-        return content;
+        return messagesScroll;
     }
 
     static class Entry {

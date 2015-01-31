@@ -3,6 +3,7 @@
  *
  * FORD_ESCORT_GT = 14
  * set_engine_type 14
+ * http://rusefi.com/wiki/index.php?title=Vehicle:Mazda_Protege_1993
  *
  * MIATA_1990 = 19
  * MIATA_1994_DEVIATOR = 20
@@ -229,6 +230,7 @@ void setFordEscortGt(engine_configuration_s *engineConfiguration, board_configur
 	engineConfiguration->trigger.type = TT_FORD_ESCORT_GT;
 
 	common079721_2351(engineConfiguration, boardConfiguration);
+	setFrankenso_01_LCD(boardConfiguration);
 
 
 //	boardConfiguration->triggerInputPins[0] = GPIOC_6; // 2G YEL/BLU
@@ -265,16 +267,42 @@ void setFordEscortGt(engine_configuration_s *engineConfiguration, board_configur
 	boardConfiguration->triggerSimulatorPinModes[1] = OM_OPENDRAIN;
 
 
-	boardConfiguration->ignitionPins[0] = GPIO_UNASSIGNED;
+	boardConfiguration->ignitionPins[0] = GPIOE_14; // Frankenso high side - pin 1G
 	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
 	boardConfiguration->ignitionPins[2] = GPIO_UNASSIGNED;
 	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
 	boardConfiguration->ignitionPinMode = OM_DEFAULT;
 
+	/**
+	 * Outputs
+	 */
+	// Frankenso low out #1: PE6
+	// Frankenso low out #2: PE5 MIL
+	// Frankenso low out #3:
+	// Frankenso low out #4:
+	// Frankenso low out #5: PE3
+	// Frankenso low out #6: PE4
+	// Frankenso low out #7: PE0<>PD5 INJ 1&3
+	// Frankenso low out #8: PE2 INJ
+	// Frankenso low out #9: PB9
+	// Frankenso low out #10: PE1<>PD3
+	// Frankenso low out #11: PB8
+	// Frankenso low out #12: PB7
+
+	boardConfiguration->injectionPins[0] = GPIOD_5;
+	boardConfiguration->injectionPins[2] = GPIOE_2;
+
 	// set_whole_fuel_map 3
 	setWholeFuelMap(engineConfiguration, 3);
 
 	setDefaultCrankingFuel(engineConfiguration);
+
+	boardConfiguration->malfunctionIndicatorPin = GPIOE_5;
+	boardConfiguration->malfunctionIndicatorPinMode = OM_DEFAULT;
+
+	boardConfiguration->tunerStudioSerialSpeed = 9600;
+
+	setFrankenso0_1_joystick(engineConfiguration);
 }
 
 static void setMiata1994_common(engine_configuration_s *engineConfiguration,
@@ -306,14 +334,14 @@ static void setMiata1994_common(engine_configuration_s *engineConfiguration,
 	/**
 	 * Outputs
 	 */
-	// Frankenso low out #:
-	// Frankenso low out #:
+	// Frankenso low out #: PE6
+	// Frankenso low out #: PE5
 	// Frankenso low out #:
 	// Frankenso low out #:
 	// Frankenso low out #5: PE3
 	// Frankenso low out #6: PE4
 	// Frankenso low out #7: PE1 (do not use with discovery!)
-	// Frankenso low out #:
+	// Frankenso low out #8:
 	// Frankenso low out #9: PB9
 	// Frankenso low out #10: PE0 (do not use with discovery!)
 	// Frankenso low out #11: PB8
@@ -400,6 +428,9 @@ void setMiata1994_s(engine_configuration_s *engineConfiguration, board_configura
 
 	engineConfiguration->tpsMin = 86;
 	engineConfiguration->tpsMax = 596;
+
+	boardConfiguration->malfunctionIndicatorPin = GPIOE_5;
+	boardConfiguration->malfunctionIndicatorPinMode = OM_DEFAULT;
 }
 
 /**
