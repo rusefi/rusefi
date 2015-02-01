@@ -16,5 +16,6 @@ void setSubaru2003Wrx(engine_configuration_s *engineConfiguration) {
 	board_configuration_s * boardConfiguration = &engineConfiguration->bc;
 
 	setFrankenso_01_LCD(boardConfiguration);
+	setFrankenso0_1_joystick(engineConfiguration);
 
 }

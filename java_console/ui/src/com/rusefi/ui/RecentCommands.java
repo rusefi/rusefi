@@ -58,6 +58,8 @@ public class RecentCommands {
 
         add("fuelpumpbench");
         add("fanbench");
+        add("milbench");
+
     }
 
     public void add(String command) {
