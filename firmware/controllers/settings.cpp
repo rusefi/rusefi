@@ -694,6 +694,16 @@ static void setLogicInputPin(const char *indexStr, const char *pinName) {
 	scheduleMsg(&logger, "setting logic input pin[%d] to %s please save&restart", index, hwPortname(pin));
 	boardConfiguration->logicAnalyzerPins[index] = pin;
 }
+
+static void showPinFunction(const char *pinName) {
+	brain_pin_e pin = parseBrainPin(pinName);
+	if (pin == GPIO_INVALID) {
+		scheduleMsg(&logger, "invalid pin name [%s]", pinName);
+		return;
+	}
+	scheduleMsg(&logger, "Pin %s: [%s]", pinName, getPinFunction(pin));
+}
+
 #endif /* EFI_PROD_CODE */
 
 static void setTimingMap(const char * rpmStr, const char *loadStr, const char *valueStr) {
@@ -921,6 +931,7 @@ void initSettings(engine_configuration_s *engineConfiguration) {
 	addConsoleActionFF("set_fan", setFanSetting);
 
 #if EFI_PROD_CODE
+	addConsoleActionS("showpin", showPinFunction);
 	addConsoleActionSS("set_injection_pin", setInjectionPin);
 	addConsoleActionSS("set_ignition_pin", setIgnitionPin);
 	addConsoleActionSS("set_trigger_input_pin", setTriggerInputPin);

@@ -427,10 +427,10 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	boardConfiguration->ignitionPins[11] = GPIO_UNASSIGNED;
 	boardConfiguration->ignitionPinMode = OM_DEFAULT;
 
-	boardConfiguration->malfunctionIndicatorPin = GPIOC_9;
+	boardConfiguration->malfunctionIndicatorPin = GPIO_UNASSIGNED;
 	boardConfiguration->malfunctionIndicatorPinMode = OM_DEFAULT;
 
-	boardConfiguration->fanPin = GPIOC_15;
+	boardConfiguration->fanPin = GPIO_UNASSIGNED;
 	boardConfiguration->fanPinMode = OM_DEFAULT;
 
 	boardConfiguration->clutchDownPin = GPIO_UNASSIGNED;
