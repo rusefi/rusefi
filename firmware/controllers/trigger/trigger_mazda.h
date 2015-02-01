@@ -15,6 +15,7 @@
 
 void initializeMazdaMiataNaShape(TriggerShape *s);
 void initializeMazdaMiataNbShape(TriggerShape *s);
+void configureMazdaProtegeSOHC(TriggerShape *s);
 void configureMazdaProtegeLx(TriggerShape *s);
 
 #endif /* TRIGGER_MAZDA_H_ */

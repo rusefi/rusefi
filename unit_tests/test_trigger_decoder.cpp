@@ -518,7 +518,7 @@ void testTriggerDecoder(void) {
 	test1995FordInline6TriggerDecoder();
 	testMazdaMianaNbDecoder();
 	testGY6_139QMB();
-	testTriggerDecoder2("testFordEscortGt", FORD_ESCORT_GT, 0, 0.6280, 0);
+	testTriggerDecoder2("testFordEscortGt", FORD_ESCORT_GT, 2, 0.9028, 0.3720);
 	testTriggerDecoder2("testMiniCooper", MINI_COOPER_R50, 121, 0.5222, 0.4959);
 	testTriggerDecoder2("testRoverV8", ROVER_V8, 0, 0.4861, 0);
 	testTriggerDecoder2("testCitroen", CITROEN_TU3JP, 0, 0.4833, 0);

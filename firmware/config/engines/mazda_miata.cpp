@@ -228,7 +228,7 @@ void setMiata1990(engine_configuration_s *engineConfiguration, board_configurati
 }
 
 void setFordEscortGt(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
-	engineConfiguration->trigger.type = TT_FORD_ESCORT_GT;
+	engineConfiguration->trigger.type = TT_FORD_ESCORT_GT_T;
 
 	common079721_2351(engineConfiguration, boardConfiguration);
 
@@ -246,9 +246,14 @@ void setFordEscortGt(engine_configuration_s *engineConfiguration, board_configur
 //	boardConfiguration->triggerInputPins[1] = GPIOA_5; // 2E White CKP
 
 	// in case of SOHC distributor we only have one signal
-	boardConfiguration->triggerInputPins[0] = GPIOA_5; // 2E White CKP
-	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
-	engineConfiguration->needSecondTriggerInput = false;
+//	boardConfiguration->triggerInputPins[0] = GPIOA_5; // 2E White CKP
+//	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
+//	engineConfiguration->needSecondTriggerInput = false;
+
+	// in case of SOHC distributor we only have one signal
+	boardConfiguration->triggerInputPins[0] = GPIOC_6;
+	boardConfiguration->triggerInputPins[1] = GPIOA_5; // 2E White CKP
+	engineConfiguration->needSecondTriggerInput = true;
 
 	engineConfiguration->map.sensor.type = MT_DENSO183;
 
