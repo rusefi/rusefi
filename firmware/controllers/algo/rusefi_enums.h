@@ -110,7 +110,7 @@ typedef enum {
 	TT_MAZDA_MIATA_NB = 4,
 	TT_GM_7X = 5,
 	TT_MINI_COOPER_R50 = 6,
-	TT_FORD_ESCORT_GT = 7,
+	TT_MAZDA_SOHC = 7,
 	TT_TOOTHED_WHEEL_60_2 = 8,
 	TT_TOOTHED_WHEEL_36_1 = 9,
 
@@ -123,6 +123,9 @@ typedef enum {
 	TT_HONDA_ACCORD_CD_DIP = 13,
 
 	TT_DODGE_NEON_2003 = 14,
+
+	TT_FORD_ESCORT_GT_T = 15,
+
 
 	Force_4b_trigger_type = ENUM_32_BITS,
 } trigger_type_e;
