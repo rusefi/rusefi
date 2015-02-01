@@ -156,6 +156,19 @@ iomode_t getInputMode(pin_input_mode_e mode) {
 	}
 }
 
+static int getIndex(ioportid_t port, ioportmask_t pin) {
+	int portIndex = getPortIndex(port);
+	return portIndex * 16 + pin;
+}
+
+const char * getPinFunction(brain_input_pin_e brainPin) {
+	ioportid_t port = getHwPort(brainPin);
+	ioportmask_t pin = getHwPin(brainPin);
+
+	int index = getIndex(port, pin);
+	return PIN_USED[index];
+}
+
 /**
  * This method would set an error condition if pin is already used
  */
@@ -172,8 +185,7 @@ void mySetPadMode(const char *msg, ioportid_t port, ioportmask_t pin, iomode_t m
 	appendPrintf(&logger, " on %s%d%s", portname(port), pin, DELIMETER);
 	printLine(&logger);
 
-	int portIndex = getPortIndex(port);
-	int index = portIndex * 16 + pin;
+	int index = getIndex(port, pin);
 
 	if (PIN_USED[index] != NULL) {
 		/**
@@ -193,8 +205,7 @@ void unmarkPin(brain_pin_e brainPin) {
 	ioportid_t port = getHwPort(brainPin);
 	ioportmask_t pin = getHwPin(brainPin);
 
-	int portIndex = getPortIndex(port);
-	int index = portIndex * 16 + pin;
+	int index = getIndex(port, pin);
 
 	if (PIN_USED[index] != NULL) {
 		PIN_USED[index] = NULL;
@@ -208,8 +219,7 @@ void unmarkPin(brain_pin_e brainPin) {
 void registedFundamentralIoPin(char *msg, ioportid_t port, ioportmask_t pin, iomode_t mode) {
 	efiAssertVoid(initialized, "repo not initialized");
 
-	int portIndex = getPortIndex(port);
-	int index = portIndex * 16 + pin;
+	int index = getIndex(port, pin);
 
 	if (PIN_USED[index] != NULL) {
 		print("!!!!!!!!!!!!! Already used [%s] %d\r\n", msg, pin);
