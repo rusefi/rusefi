@@ -9,6 +9,6 @@
 
 #include "engine_configuration.h"
 
-void setSubaru2003Wrx(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration);
+void setSubaru2003Wrx(engine_configuration_s *engineConfiguration);
 
 #endif /* SUBARU_H_ */
