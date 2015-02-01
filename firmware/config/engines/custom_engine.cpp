@@ -8,9 +8,11 @@
 #define CONFIG_ENGINES_CUSTOM_ENGINE_CPP_
 
 #include "custom_engine.h"
+#include "honda_accord.h"
 
 void setCustomEngineConfiguration(engine_configuration_s *engineConfiguration) {
 	board_configuration_s * boardConfiguration = &engineConfiguration->bc;
+	setFrankenso_01_LCD(boardConfiguration);
 
 	/**
 	 * Frankenso analog #1 PC2 ADC12
