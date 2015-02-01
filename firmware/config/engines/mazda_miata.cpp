@@ -233,6 +233,7 @@ void setFordEscortGt(engine_configuration_s *engineConfiguration, board_configur
 	setFrankenso_01_LCD(boardConfiguration);
 	engineConfiguration->displacement = 1.839;
 	engineConfiguration->algorithm = LM_MAF;
+	boardConfiguration->tunerStudioSerialSpeed = 9600;
 
 //	boardConfiguration->triggerInputPins[0] = GPIOC_6; // 2G YEL/BLU
 //	boardConfiguration->triggerInputPins[1] = GPIOA_5; // 2E White CKP
@@ -241,6 +242,8 @@ void setFordEscortGt(engine_configuration_s *engineConfiguration, board_configur
 	boardConfiguration->triggerInputPins[0] = GPIOA_5; // 2E White CKP
 	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
 	engineConfiguration->needSecondTriggerInput = false;
+
+	engineConfiguration->map.sensor.type = MT_DENSO183;
 
 
 	/**
