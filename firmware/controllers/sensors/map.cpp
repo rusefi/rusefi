@@ -15,6 +15,8 @@ extern engine_configuration_s * engineConfiguration;
  * -6.64kPa at zero volts
  * 182.78kPa at 5 volts
  *
+ * about 3 volts at 100kPa
+ *
  * @returns kPa value
  */
 static FastInterpolation denso183(0, -6.64, 5, 182.78);
