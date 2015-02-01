@@ -185,6 +185,7 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 		board_configuration_s *boardConfiguration) {
 	engineConfiguration->trigger.type = TT_DODGE_NEON_2003;
 	setFrankenso_01_LCD(boardConfiguration);
+	setFrankenso0_1_joystick(engineConfiguration);
 
 	// set_global_trigger_offset_angle 46
 	engineConfiguration->globalTriggerAngleOffset = 46;
@@ -383,8 +384,6 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 
 	boardConfiguration->tunerStudioSerialSpeed = 9600;
 	engineConfiguration->algorithm = LM_SPEED_DENSITY;
-
-	setFrankenso0_1_joystick(engineConfiguration);
 
 //	engineConfiguration->isCanEnabled = true;
 	boardConfiguration->canTxPin = GPIOB_6;
