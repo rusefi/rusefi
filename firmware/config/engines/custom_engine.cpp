@@ -48,6 +48,8 @@ void setCustomEngineConfiguration(engine_configuration_s *engineConfiguration) {
 
 	boardConfiguration->idleValvePin = GPIOC_13;
 
+	boardConfiguration->fanPin = GPIOE_5;
+
 	boardConfiguration->injectionPins[0] = GPIOB_9; // #1
 	boardConfiguration->injectionPins[1] = GPIOE_2; // #2
 	boardConfiguration->injectionPins[2] = GPIOB_8; // #3
