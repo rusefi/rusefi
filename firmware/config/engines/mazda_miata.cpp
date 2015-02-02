@@ -257,20 +257,8 @@ void setFordEscortGt(engine_configuration_s *engineConfiguration, board_configur
 
 	engineConfiguration->map.sensor.type = MT_DENSO183;
 
-
-	/**
-	 * W53 Frankenso input #3 / PA0 / ADC_0
-	 */
-	engineConfiguration->mafAdcChannel = EFI_ADC_0;
-	engineConfiguration->tpsAdcChannel = EFI_ADC_3;
-	/**
-	 * W55 Frankenso input #1 / PC2 / ADC_1
-	 */
-	engineConfiguration->cltAdcChannel = EFI_ADC_1;
-
-
-	// set_global_trigger_offset_angle 256
-	engineConfiguration->globalTriggerAngleOffset = 256;
+	// set_global_trigger_offset_angle 76
+	engineConfiguration->globalTriggerAngleOffset = 76;
 	// set_ignition_offset 170
 	engineConfiguration->ignitionBaseAngle = 170;
 	// set_injection_offset 510
@@ -281,7 +269,6 @@ void setFordEscortGt(engine_configuration_s *engineConfiguration, board_configur
 
 	boardConfiguration->triggerSimulatorPinModes[0] = OM_OPENDRAIN;
 	boardConfiguration->triggerSimulatorPinModes[1] = OM_OPENDRAIN;
-
 
 	boardConfiguration->ignitionPins[0] = GPIOE_14; // Frankenso high side - pin 1G
 	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
@@ -308,11 +295,13 @@ void setFordEscortGt(engine_configuration_s *engineConfiguration, board_configur
 	boardConfiguration->injectionPins[0] = GPIOD_5;
 	boardConfiguration->injectionPins[1] = GPIOE_2;
 
-	// set_whole_fuel_map 3
-	setWholeFuelMap(engineConfiguration, 3);
+	// set_whole_fuel_map 5
+	setWholeFuelMap(engineConfiguration, 5);
 
-	setDefaultCrankingFuel(engineConfiguration);
+	//setDefaultCrankingFuel(engineConfiguration);
+	engineConfiguration->cranking.baseFuel = 5;
 
+	// 40% idle is good default
 	boardConfiguration->idleSolenoidFrequency = 300;
 	boardConfiguration->idleValvePin = GPIOB_9;
 
@@ -332,6 +321,11 @@ void setFordEscortGt(engine_configuration_s *engineConfiguration, board_configur
 	engineConfiguration->mafAdcChannel = EFI_ADC_0;
 	engineConfiguration->cltAdcChannel = EFI_ADC_12;
 	engineConfiguration->iatAdcChannel = EFI_ADC_11;
+
+	// todo: 8.2 or 10k?
+	engineConfiguration->vbattDividerCoeff = ((float) (8.2 + 33)) / 8.2 * 2;
+
+	// end of Ford Escort GT config
 }
 
 static void setMiata1994_common(engine_configuration_s *engineConfiguration,
@@ -402,6 +396,7 @@ static void setMiata1994_common(engine_configuration_s *engineConfiguration,
 	engineConfiguration->mafAdcChannel = EFI_ADC_0;
 	engineConfiguration->cltAdcChannel = EFI_ADC_12;
 	engineConfiguration->iatAdcChannel = EFI_ADC_11;
+// end of 1994 commond
 }
 
 /**
