@@ -858,7 +858,7 @@ static void printAllInfo(void) {
 }
 
 static void setInjectorLag(float value) {
-	engineConfiguration->injectorLag = value;
+	engineConfiguration->injector.lag = value;
 }
 
 void initSettings(engine_configuration_s *engineConfiguration) {

@@ -108,11 +108,11 @@ float getRunningFuel(float baseFuelMs, int rpm DECLARE_ENGINE_PARAMETER_S) {
 float getInjectorLag(float vBatt DECLARE_ENGINE_PARAMETER_S) {
 	if (cisnan(vBatt)) {
 		warning(OBD_System_Voltage_Malfunction, "vBatt=%f", vBatt);
-		return engineConfiguration->injectorLag;
+		return engineConfiguration->injector.lag;
 	}
 	float vBattCorrection = interpolate2d(vBatt, engineConfiguration->battInjectorLagCorrBins,
 			engineConfiguration->battInjectorLagCorr, VBAT_INJECTOR_CURVE_SIZE);
-	return engineConfiguration->injectorLag + vBattCorrection;
+	return engineConfiguration->injector.lag + vBattCorrection;
 }
 
 /**

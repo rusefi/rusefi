@@ -9,7 +9,7 @@
 
 void setMazda323EngineConfiguration(engine_configuration_s *engineConfiguration) {
 	engineConfiguration->cylindersCount = 4;
-	engineConfiguration->displacement = 1.6;
+	engineConfiguration->specs.displacement = 1.6;
 
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
 

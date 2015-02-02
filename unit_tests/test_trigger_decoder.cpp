@@ -406,7 +406,7 @@ static void testRpmCalculator(void) {
 
 	// this is a very dirty and sad hack.  todo: eliminate
 //	engine.engineConfiguration = eth.engine.engineConfiguration;
-	eth.engine.engineConfiguration->injectorLag = 0.0;
+	eth.engine.engineConfiguration->injector.lag = 0.0;
 
 	timeNow = 0;
 	assertEquals(0, eth.engine.rpmCalculator.rpm(PASS_ENGINE_PARAMETER_F));

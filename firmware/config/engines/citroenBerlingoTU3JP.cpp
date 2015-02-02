@@ -64,7 +64,7 @@ void setCitroenBerlingoTU3JPConfiguration(engine_configuration_s *engineConfigur
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
 	engineConfiguration->globalTriggerAngleOffset = 114;
 	engineConfiguration->cylindersCount = 4;
-	engineConfiguration->displacement = 1.360;
+	engineConfiguration->specs.displacement = 1.360;
 	engineConfiguration->firingOrder = FO_1_THEN_3_THEN_4_THEN2;
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 	engineConfiguration->injectionMode = IM_BATCH;
@@ -104,7 +104,7 @@ void setCitroenBerlingoTU3JPConfiguration(engine_configuration_s *engineConfigur
 	// Frankenstein lo-side output #11: PB8
 	// Frankenstein lo-side output #12: PB9 Fuel pump
 
-	engineConfiguration->injectorFlow = 137; //SIEMENS DEKA VAZ20734
+	engineConfiguration->injector.flow = 137; //SIEMENS DEKA VAZ20734
 	boardConfiguration->injectionPins[0] = GPIOE_6;
 	boardConfiguration->injectionPins[1] = GPIOC_13;
 	boardConfiguration->injectionPins[2] = GPIO_UNASSIGNED;

@@ -236,7 +236,7 @@ void setFordEscortGt(engine_configuration_s *engineConfiguration) {
 	setFrankenso_01_LCD(boardConfiguration);
 	setFrankenso0_1_joystick(engineConfiguration);
 
-	engineConfiguration->displacement = 1.839;
+	engineConfiguration->specs.displacement = 1.839;
 	engineConfiguration->algorithm = LM_MAF;
 	boardConfiguration->tunerStudioSerialSpeed = 9600;
 
@@ -332,7 +332,7 @@ void setFordEscortGt(engine_configuration_s *engineConfiguration) {
 static void setMiata1994_common(engine_configuration_s *engineConfiguration,
 		board_configuration_s *boardConfiguration) {
 	commonMiataNa(engineConfiguration, boardConfiguration);
-	engineConfiguration->displacement = 1.839;
+	engineConfiguration->specs.displacement = 1.839;
 
 	// set_cranking_timing_angle 0
 	engineConfiguration->crankingTimingAngle = 0;
@@ -463,7 +463,7 @@ void setMiata1994_s(engine_configuration_s *engineConfiguration, board_configura
  */
 void setMiata1996(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
 	commonMiataNa(engineConfiguration, boardConfiguration);
-	engineConfiguration->displacement = 1.839;
+	engineConfiguration->specs.displacement = 1.839;
 
 	copyFuelTable(miata_maf_fuel_table, engineConfiguration->fuelTable);
 	copyTimingTable(miata_maf_advance_table, engineConfiguration->ignitionTable);

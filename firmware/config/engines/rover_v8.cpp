@@ -28,7 +28,7 @@ void setRoverv8(engine_configuration_s *engineConfiguration, board_configuration
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_36_1;
 
-	engineConfiguration->displacement = 3.528;
+	engineConfiguration->specs.displacement = 3.528;
 	engineConfiguration->cylindersCount = 8;
 	engineConfiguration->firingOrder = FO_1_8_4_3_6_5_7_2;
 
