@@ -229,7 +229,7 @@ void setMiata1990(engine_configuration_s *engineConfiguration, board_configurati
 
 void setFordEscortGt(engine_configuration_s *engineConfiguration) {
 	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
-	engineConfiguration->trigger.type = TT_FORD_ESCORT_GT_T;
+	engineConfiguration->trigger.type = TT_MAZDA_DOHC_1_4;
 
 	common079721_2351(engineConfiguration, boardConfiguration);
 

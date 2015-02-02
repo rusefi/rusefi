@@ -48,6 +48,11 @@ public:
 	float syncRatioTo;
 
 	/**
+	 * that's the angle distance from trigger event #0 and actual engine TDC
+	 */
+	float tdcPosition;
+
+	/**
 	 * Should we use falls or rises for gap ratio detection?
 	 */
 	bool_t useRiseEdge;

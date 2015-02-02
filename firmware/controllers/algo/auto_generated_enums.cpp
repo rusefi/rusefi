@@ -87,10 +87,10 @@ case TT_DODGE_NEON_2003:
   return "TT_DODGE_NEON_2003";
 case TT_FORD_ASPIRE:
   return "TT_FORD_ASPIRE";
-case TT_MAZDA_SOHC:
-  return "TT_MAZDA_SOHC";
-case TT_FORD_ESCORT_GT_T:
-  return "TT_FORD_ESCORT_GT_T";
+case TT_MAZDA_SOHC_4:
+  return "TT_MAZDA_SOHC_4";
+case TT_MAZDA_DOHC_1_4:
+  return "TT_MAZDA_DOHC_1_4";
 case TT_GM_7X:
   return "TT_GM_7X";
 case TT_HONDA_ACCORD_CD:
