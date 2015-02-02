@@ -158,6 +158,8 @@ const char* getConfigurationName(engine_type_e engineType) {
                 return "Test";
         case SACHS:
                 return "SACHS";
+    	case MAZDA_626:
+    		return "Mazda626";
 	default:
 		firmwareError("Unexpected: engineType %d", engineType);
 		return NULL;
@@ -305,13 +307,13 @@ static void setIdlePinMode(int value) {
 	doPrintConfiguration(engine);
 }
 
-static void setInjectionOffset(int value) {
+static void setInjectionOffset(float value) {
 	engineConfiguration->injectionAngle = value;
 	doPrintConfiguration(engine);
 	incrementGlobalConfigurationVersion();
 }
 
-static void setIgnitionOffset(int value) {
+static void setIgnitionOffset(float value) {
 	engineConfiguration->ignitionBaseAngle = value;
 	doPrintConfiguration(engine);
 	incrementGlobalConfigurationVersion();
@@ -440,7 +442,7 @@ static void setCrankingFuel(float timeMs) {
 	printTemperatureInfo();
 }
 
-static void setGlobalTriggerAngleOffset(int value) {
+static void setGlobalTriggerAngleOffset(float value) {
 	engineConfiguration->globalTriggerAngleOffset = value;
 	incrementGlobalConfigurationVersion();
 	doPrintConfiguration(engine);
@@ -867,9 +869,9 @@ void initSettings(engine_configuration_s *engineConfiguration) {
 	addConsoleAction("tpsinfo", printTPSInfo);
 	addConsoleAction("info", printAllInfo);
 
-	addConsoleActionI("set_ignition_offset", setIgnitionOffset);
-	addConsoleActionI("set_injection_offset", setInjectionOffset);
-	addConsoleActionI("set_global_trigger_offset_angle", setGlobalTriggerAngleOffset);
+	addConsoleActionF("set_ignition_offset", setIgnitionOffset);
+	addConsoleActionF("set_injection_offset", setInjectionOffset);
+	addConsoleActionF("set_global_trigger_offset_angle", setGlobalTriggerAngleOffset);
 	addConsoleActionI("set_analog_chart_mode", setAnalogChartMode);
 	addConsoleActionI("set_fixed_mode_timing", setFixedModeTiming);
 	addConsoleActionI("set_timing_mode", setTimingMode);
