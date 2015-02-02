@@ -26,6 +26,7 @@ public:
 	void addEventListener(ShaftPositionListener handler, const char *name, Engine *engine);
 	void handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PARAMETER_S);
 	int getHwEventCounter(int index);
+	void resetCounters();
 	TriggerState triggerState;
 	uint64_t nowNt;
 private:
