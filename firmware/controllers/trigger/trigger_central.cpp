@@ -101,6 +101,11 @@ int TriggerCentral::getHwEventCounter(int index) {
 	return hwEventCounters[index];
 }
 
+void TriggerCentral::resetCounters() {
+	memset(hwEventCounters, 0, sizeof(hwEventCounters));
+	triggerState.resetRunningCounters();
+}
+
 static char shaft_signal_msg_index[15];
 
 static ALWAYS_INLINE void reportEventToWaveChart(trigger_event_e ckpSignalType, int index) {
@@ -298,7 +303,8 @@ float getTriggerDutyCycle(int index) {
 }
 
 static void resetRunningTriggerCounters() {
-	triggerCentral.triggerState.resetRunningCounters();
+	triggerCentral.resetCounters();
+	triggerInfo(engine);
 }
 
 void initTriggerCentral(Logging *sharedLogger, Engine *engine) {

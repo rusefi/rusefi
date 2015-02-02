@@ -227,24 +227,24 @@ void chDbgStackOverflowPanic(Thread *otp) {
 extern engine_pins_s enginePins;
 
 // todo: why is this method here and not in error_handling.c ?
-void firmwareError(const char *fmt, ...) {
+void firmwareError(const char *errorMsg, ...) {
 	if (hasFirmwareErrorFlag)
 		return;
 	enginePins.errorLedPin.setValue(1);
 	turnAllPinsOff();
 	hasFirmwareErrorFlag = TRUE;
-	if (indexOf(fmt, '%') == -1) {
+	if (indexOf(errorMsg, '%') == -1) {
 		/**
 		 * in case of simple error message let's reduce stack usage
 		 * because chvprintf might be causing an error
 		 */
-		strcpy((char*) errorMessageBuffer, fmt);
+		strcpy((char*) errorMessageBuffer, errorMsg);
 
 	} else {
 		firmwareErrorMessageStream.eos = 0; // reset
 		va_list ap;
-		va_start(ap, fmt);
-		chvprintf((BaseSequentialStream *) &firmwareErrorMessageStream, fmt, ap);
+		va_start(ap, errorMsg);
+		chvprintf((BaseSequentialStream *) &firmwareErrorMessageStream, errorMsg, ap);
 		va_end(ap);
 
 		firmwareErrorMessageStream.buffer[firmwareErrorMessageStream.eos] = 0; // need to terminate explicitly
@@ -260,5 +260,5 @@ int getRusEfiVersion(void) {
 		return 1; // this is here to make the compiler happy about the unused array
 	if (UNUSED_CCM_SIZE == 0)
 		return 1; // this is here to make the compiler happy about the unused array
-	return 20150201;
+	return 20150202;
 }

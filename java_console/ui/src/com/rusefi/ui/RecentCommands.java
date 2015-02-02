@@ -56,6 +56,8 @@ public class RecentCommands {
         add("enable self_stimulation");
         add("disable self_stimulation");
 
+        add("sparkbench 5 400 2");
+        add("fuelbench 5 400 2");
         add("fuelpumpbench");
         add("fanbench");
         add("milbench");
