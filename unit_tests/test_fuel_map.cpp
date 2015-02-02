@@ -49,8 +49,8 @@ void testFuelMap(void) {
 	eth.engine.engineConfiguration->injector.lag = 0.5;
 
 	for (int i = 0; i < VBAT_INJECTOR_CURVE_SIZE; i++) {
-		eth.engine.engineConfiguration->battInjectorLagCorrBins[i] = i;
-		eth.engine.engineConfiguration->battInjectorLagCorr[i] = 2 * i;
+		eth.engine.engineConfiguration->injector.battLagCorrBins[i] = i;
+		eth.engine.engineConfiguration->injector.battLagCorr[i] = 2 * i;
 	}
 
 
