@@ -110,8 +110,8 @@ float getInjectorLag(float vBatt DECLARE_ENGINE_PARAMETER_S) {
 		warning(OBD_System_Voltage_Malfunction, "vBatt=%f", vBatt);
 		return engineConfiguration->injector.lag;
 	}
-	float vBattCorrection = interpolate2d(vBatt, engineConfiguration->battInjectorLagCorrBins,
-			engineConfiguration->battInjectorLagCorr, VBAT_INJECTOR_CURVE_SIZE);
+	float vBattCorrection = interpolate2d(vBatt, engineConfiguration->injector.battLagCorrBins,
+			engineConfiguration->injector.battLagCorr, VBAT_INJECTOR_CURVE_SIZE);
 	return engineConfiguration->injector.lag + vBattCorrection;
 }
 

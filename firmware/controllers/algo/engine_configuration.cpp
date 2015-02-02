@@ -168,8 +168,8 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	setTableValue(engineConfiguration->cltFuelCorrBins, engineConfiguration->cltFuelCorr, CLT_CURVE_SIZE, 70, 1.01);
 
 	for (int i = 0; i < VBAT_INJECTOR_CURVE_SIZE; i++) {
-		engineConfiguration->battInjectorLagCorrBins[i] = 12 - VBAT_INJECTOR_CURVE_SIZE / 2 + i;
-		engineConfiguration->battInjectorLagCorr[i] = 0; // zero extra time by default
+		engineConfiguration->injector.battLagCorrBins[i] = 12 - VBAT_INJECTOR_CURVE_SIZE / 2 + i;
+		engineConfiguration->injector.battLagCorr[i] = 0; // zero extra time by default
 	}
 
 	setConstantDwell(engineConfiguration, 4); // 4ms is global default dwell
