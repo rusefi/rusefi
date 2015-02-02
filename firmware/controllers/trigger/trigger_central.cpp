@@ -304,7 +304,9 @@ float getTriggerDutyCycle(int index) {
 
 static void resetRunningTriggerCounters() {
 	triggerCentral.resetCounters();
+#if EFI_PROD_CODE
 	triggerInfo(engine);
+#endif
 }
 
 void initTriggerCentral(Logging *sharedLogger, Engine *engine) {
