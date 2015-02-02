@@ -14,7 +14,7 @@
 
 #include "engine_configuration.h"
 
-void setFordEscortGt(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration);
+void setFordEscortGt(engine_configuration_s *engineConfiguration);
 void setMiata1990(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration);
 void setMiata1994_d(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration);
 void setMiata1994_s(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration);

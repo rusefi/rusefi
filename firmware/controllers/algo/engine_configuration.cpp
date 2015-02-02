@@ -608,7 +608,7 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType, Engine *e
 		setMiniCooperR50(engineConfiguration, boardConfiguration);
 		break;
 	case FORD_ESCORT_GT:
-		setFordEscortGt(engineConfiguration, boardConfiguration);
+		setFordEscortGt(engineConfiguration);
 		break;
 	case MIATA_1990:
 		setMiata1990(engineConfiguration, boardConfiguration);
