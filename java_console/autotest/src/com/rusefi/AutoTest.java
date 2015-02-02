@@ -22,12 +22,27 @@ public class AutoTest {
     private static void mainTestBody() {
         testFordAspire();
 
+        testMazdaProtege();
+
         testDodgeNeon();
 
         sendCommand("set_engine_type 7");
         testFord6();
 
         testFordFiesta();
+    }
+
+    private static void testMazdaProtege() {
+        sendCommand("set_engine_type 14");
+        WaveChart chart;
+        IoUtil.changeRpm(200);
+        String msg = "ProtegeLX";
+        chart = nextChart();
+        double x = 100;
+        assertWave(msg, chart, WaveChart.SPARK_1, 0.194433, x, x + 180, x + 360, x + 540);
+
+        IoUtil.changeRpm(2000);
+        assertWave(msg, chart, WaveChart.SPARK_1, 0.194433, x, x + 180, x + 360, x + 540);
     }
 
     private static void testDodgeNeon() {
