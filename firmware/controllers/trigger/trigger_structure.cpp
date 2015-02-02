@@ -40,6 +40,7 @@ TriggerShape::TriggerShape() :
 	gapBothDirections = false;
 	isSynchronizationNeeded = false;
 	invertOnAdd = false;
+	tdcPosition = 0;
 }
 
 int TriggerShape::getSize() const {

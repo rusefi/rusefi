@@ -303,11 +303,11 @@ void initializeTriggerShape(Logging *logger, engine_configuration_s const *engin
 		configureGmTriggerShape(triggerShape);
 		break;
 
-	case TT_FORD_ESCORT_GT_T:
+	case TT_MAZDA_DOHC_1_4:
 		configureMazdaProtegeLx(triggerShape);
 		break;
 
-	case TT_MAZDA_SOHC:
+	case TT_MAZDA_SOHC_4:
 		configureMazdaProtegeSOHC(triggerShape);
 		break;
 
