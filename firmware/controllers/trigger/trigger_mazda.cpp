@@ -114,49 +114,29 @@ void configureMazdaProtegeSOHC(TriggerShape *s) {
 }
 
 void configureMazdaProtegeLx(TriggerShape *s) {
-
 	// todo: move to into configuration definition s->needSecondTriggerInput = FALSE;
-
-
 	s->reset(FOUR_STROKE_CAM_SENSOR);
-//	s->initialState[0] = 1;
 
-//	float w = 720 / 4 * 0.215;
-	float a = 5;
-//	s->addEvent(a, T_SECONDARY, TV_LOW);
-//	s->addEvent(a + w, T_SECONDARY, TV_HIGH);
-//	a += 180;
-//	s->addEvent(a, T_SECONDARY, TV_LOW);
-//	s->addEvent(a + w, T_SECONDARY, TV_HIGH);
-//	a += 180;
-//	s->addEvent(a, T_SECONDARY, TV_LOW);
-//	s->addEvent(a + w, T_SECONDARY, TV_HIGH);
-//	a += 180;
-//	s->addEvent(a, T_SECONDARY, TV_LOW);
-//	s->addEvent(a + w, T_SECONDARY, TV_HIGH);
+	/**
+	 * based on https://svn.code.sf.net/p/rusefi/code/trunk/misc/logs/1993_escort_gt/MAIN_rfi_report_2015-02-01%2017_39.csv
+	 */
+	float off = 720 - 624.670746;
 
-	float z = 0.093; // 67 deg
+	s->addEvent(off, T_PRIMARY, TV_HIGH);
 
-	s->addEvent(100, T_PRIMARY, TV_HIGH);
+	s->addEvent(off + 14.876692, T_SECONDARY, TV_HIGH);
+	s->addEvent(off + 82.693557, T_SECONDARY, TV_LOW);
 
-	a = 180;
-	s->addEvent(a - z * 720, T_SECONDARY, TV_HIGH);
-	s->addEvent(a, T_SECONDARY, TV_LOW);
+	s->addEvent(off + 137.119154, T_PRIMARY, TV_LOW);
 
-	s->addEvent(a + 40, T_PRIMARY, TV_LOW);
+	s->addEvent(off + 192.378308, T_SECONDARY, TV_HIGH);
+	s->addEvent(off + 261.556418, T_SECONDARY, TV_LOW);
 
+	s->addEvent(off + 373.060597, T_SECONDARY, TV_HIGH);
+	s->addEvent(off + 443.503184, T_SECONDARY, TV_LOW);
 
-	a += 180;
-	s->addEvent(a - z * 720, T_SECONDARY, TV_HIGH);
-	s->addEvent(a, T_SECONDARY, TV_LOW);
-
-	a += 180;
-	s->addEvent(a - z * 720, T_SECONDARY, TV_HIGH);
-	s->addEvent(a, T_SECONDARY, TV_LOW);
-
-	a += 180;
-	s->addEvent(a - z * 720, T_SECONDARY, TV_HIGH);
-	s->addEvent(a, T_SECONDARY, TV_LOW);
+	s->addEvent(off + 555.349776, T_SECONDARY, TV_HIGH);
+	s->addEvent(720, T_SECONDARY, TV_LOW);
 
 	s->isSynchronizationNeeded = false;
 }
