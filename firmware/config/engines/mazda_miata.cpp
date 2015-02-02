@@ -227,7 +227,8 @@ void setMiata1990(engine_configuration_s *engineConfiguration, board_configurati
 // todo: idleValvePin
 }
 
-void setFordEscortGt(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
+void setFordEscortGt(engine_configuration_s *engineConfiguration) {
+	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 	engineConfiguration->trigger.type = TT_FORD_ESCORT_GT_T;
 
 	common079721_2351(engineConfiguration, boardConfiguration);
