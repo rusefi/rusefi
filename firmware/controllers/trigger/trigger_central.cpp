@@ -311,8 +311,8 @@ void initTriggerCentral(Logging *sharedLogger, Engine *engine) {
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	addConsoleActionP("triggerinfo", (VoidPtr) triggerInfo, engine);
-	addConsoleActionP("triggershapeinfo", (VoidPtr) triggerShapeInfo, engine);
-	addConsoleAction("reset_running_counters", resetRunningTriggerCounters);
+	addConsoleActionP("trigger_shape_info", (VoidPtr) triggerShapeInfo, engine);
+	addConsoleAction("reset_trigger", resetRunningTriggerCounters);
 #endif
 
 #if EFI_HISTOGRAMS

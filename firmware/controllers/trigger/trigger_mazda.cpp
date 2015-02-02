@@ -137,12 +137,13 @@ void configureMazdaProtegeLx(TriggerShape *s) {
 
 	float z = 0.093; // 67 deg
 
+	s->addEvent(100, T_PRIMARY, TV_HIGH);
+
 	a = 180;
 	s->addEvent(a - z * 720, T_SECONDARY, TV_HIGH);
 	s->addEvent(a, T_SECONDARY, TV_LOW);
 
-	s->addEvent(a + 10, T_PRIMARY, TV_HIGH);
-	s->addEvent(a + 80, T_PRIMARY, TV_LOW);
+	s->addEvent(a + 40, T_PRIMARY, TV_LOW);
 
 
 	a += 180;
