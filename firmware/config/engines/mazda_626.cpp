@@ -16,6 +16,10 @@ void setMazda626EngineConfiguration(engine_configuration_s *engineConfiguration)
 	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 	engineConfiguration->trigger.type = TT_FORD_ESCORT_GT_T;
 
+	// todo: introduce trigger offset parameter
+	// set_global_trigger_offset_angle 137.119154
+	engineConfiguration->globalTriggerAngleOffset = 137.119154;
+
 	setFrankenso_01_LCD(boardConfiguration);
 	setFrankenso0_1_joystick(engineConfiguration);
 
