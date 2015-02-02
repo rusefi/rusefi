@@ -520,7 +520,7 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 
 	boardConfiguration->hip9011Gain = 1;
 
-	boardConfiguration->isSdCardEnabled = false;
+	boardConfiguration->isSdCardEnabled = true;
 	boardConfiguration->isFastAdcEnabled = false;
 	boardConfiguration->isEngineControlEnabled = true;
 
