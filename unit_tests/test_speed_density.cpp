@@ -23,10 +23,10 @@ void testSpeedDensity(void) {
 	assertEqualsM("RPM", 1500, eth.engine.rpmCalculator.rpm(PASS_ENGINE_PARAMETER_F));
 
 	// 427 cubic inches, that's a LOT of engine
-	eth.ec->displacement = 6.99728;
+	eth.ec->specs.displacement = 6.99728;
 	eth.ec->cylindersCount = 8;
 
-	eth.ec->injectorFlow = gramm_second_to_cc_minute(5.303);
+	eth.ec->injector.flow = gramm_second_to_cc_minute(5.303);
 
 	// 0.01414 sec or 14.14 ms
 	assertEquals(0.01414, sdMath(eth.ec, 0.92, 98, 12.5, 293.16));

@@ -40,10 +40,10 @@ static void setHondaAccordConfigurationCommon(engine_configuration_s *engineConf
 	engineConfiguration->HD44780height = 4;
 
 	engineConfiguration->cylindersCount = 4;
-	engineConfiguration->displacement = 2.156;
+	engineConfiguration->specs.displacement = 2.156;
 
 	// Keihin 06164-P0A-A00
-	engineConfiguration->injectorFlow = 248;
+	engineConfiguration->injector.flow = 248;
 
 //	engineConfiguration->algorithm = LM_SPEED_DENSITY;
 	// I want to start with a simple Alpha-N

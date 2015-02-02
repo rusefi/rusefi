@@ -46,7 +46,7 @@ void testFuelMap(void) {
 	printf("*** getInjectorLag\r\n");
 	assertEquals(1.0, getInjectorLag(12 PASS_ENGINE_PARAMETER));
 
-	eth.engine.engineConfiguration->injectorLag = 0.5;
+	eth.engine.engineConfiguration->injector.lag = 0.5;
 
 	for (int i = 0; i < VBAT_INJECTOR_CURVE_SIZE; i++) {
 		eth.engine.engineConfiguration->battInjectorLagCorrBins[i] = i;
@@ -71,7 +71,7 @@ void testFuelMap(void) {
 		eth.engine.engineConfiguration->cltFuelCorrBins[i] = i;
 		eth.engine.engineConfiguration->cltFuelCorr[i] = 1;
 	}
-	eth.engine.engineConfiguration->injectorLag = 0;
+	eth.engine.engineConfiguration->injector.lag = 0;
 
 	assertEquals(NAN, getIntakeAirTemperature(&eth.engine));
 	float iatCorrection = getIatCorrection(-KELV PASS_ENGINE_PARAMETER);

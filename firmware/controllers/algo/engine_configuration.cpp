@@ -138,7 +138,7 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 
 	setDetaultVETable(engineConfiguration);
 
-	engineConfiguration->injectorLag = 1.0;
+	engineConfiguration->injector.lag = 1.0;
 
 	engineConfiguration->acCutoffLowRpm = 700;
 	engineConfiguration->acCutoffHighRpm = 5000;
@@ -279,11 +279,11 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
 	engineConfiguration->cylindersCount = 4;
-	engineConfiguration->displacement = 2;
+	engineConfiguration->specs.displacement = 2;
 	/**
 	 * By the way http://users.erols.com/srweiss/tableifc.htm has a LOT of data
 	 */
-	engineConfiguration->injectorFlow = 200;
+	engineConfiguration->injector.flow = 200;
 
 	engineConfiguration->displayMode = DM_HD44780;
 

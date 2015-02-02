@@ -194,7 +194,7 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
-	engineConfiguration->displacement = 1.996;
+	engineConfiguration->specs.displacement = 1.996;
 	engineConfiguration->cylindersCount = 4;
 
 	/**
@@ -229,7 +229,7 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 	 * bosch 4G1139
 	 * http://forum.2gn.org/viewtopic.php?t=21657
 	 */
-	engineConfiguration->injectorFlow = 199;
+	engineConfiguration->injector.flow = 199;
 
 	// I want to start with a simple Alpha-N
 	engineConfiguration->algorithm = LM_ALPHA_N;

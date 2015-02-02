@@ -13,7 +13,7 @@
 void setAcuraRSX(engine_configuration_s *engineConfiguration) {
 
 	// http://injectordynamics.com/injectors/id1300-2/
-	engineConfiguration->injectorFlow = 1300;
+	engineConfiguration->injector.flow = 1300;
 
 	engineConfiguration->cylindersCount = 4;
 }

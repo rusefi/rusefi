@@ -19,7 +19,7 @@ void setMitsubishiConfiguration(engine_configuration_s *engineConfiguration, boa
 	engineConfiguration->trigger.type = TT_MITSU;
 
 	engineConfiguration->cylindersCount = 4;
-	engineConfiguration->displacement = 1.800;
+	engineConfiguration->specs.displacement = 1.800;
 
 	// set_ignition_mode 2
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
