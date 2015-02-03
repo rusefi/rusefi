@@ -43,23 +43,21 @@ public class SimulatorHelper {
 
     }
 
-    public static JComponent createSimulatorComponent(final JFrame frame) {
+    public static JComponent createSimulatorComponent(final PortLookupFrame portSelector) {
         if (!SimulatorHelper.isBinaryHere())
             return new JLabel(SimulatorHelper.BINARY + " not found");
 
         if (TcpConnector.isTcpPortOpened())
             return new JLabel("Port " + TcpConnector.DEFAULT_PORT + " already busy. Simulator running?");
 
-
         JButton simulatorButton = new JButton("Start Simulator");
         simulatorButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
-                frame.dispose();
+                portSelector.disposeFrameAndProceed();
                 startSimulator();
             }
         });
-
 
         return simulatorButton;
     }
