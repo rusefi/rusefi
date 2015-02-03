@@ -11,6 +11,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -23,16 +26,37 @@ import java.util.List;
  *         2/14/14
  */
 public class PortLookupFrame {
+    // todo: figure out a better way to work with absolute path
+    public static final String APPICON_PNG = "../../appicon.png";
+    private static final String LINK_TEXT = "rusEfi (c) 2012-2015";
+    private static final String URI = "http://rusefi.com/?java_console";
 
-    public static final String RUS_EFI_C_2012_2014 = "rusEfi (c) 2012-2015";
-    public static final String URI = "http://rusefi.com/?java_console";
+    private final JFrame frame;
+    private boolean isProceeding;
 
-    public static void chooseSerialPort() {
+    public PortLookupFrame() {
+        frame = new JFrame(Launcher.CONSOLE_VERSION + ": Serial port selection");
+        frame.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent ev) {
+                if (!isProceeding)
+                    System.exit(0);
+            }
+        });
+        setAppIcon(frame);
+    }
+
+    public static void setAppIcon(JFrame frame) {
+        ImageIcon icon = loadIcon(APPICON_PNG);
+        if (icon != null)
+            frame.setIconImage(icon.getImage());
+    }
+
+    public void chooseSerialPort() {
         List<String> ports = new ArrayList<>();
         ports.addAll(Arrays.asList(SerialPortList.getPortNames()));
         ports.addAll(TcpConnector.getAvailablePorts());
-
-        final JFrame frame = new JFrame(Launcher.CONSOLE_VERSION + ": Serial port selection");
 
         JPanel content = new JPanel(new BorderLayout());
 
@@ -46,7 +70,7 @@ public class PortLookupFrame {
         buttonLogViewer.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                frame.dispose();
+                disposeFrameAndProceed();
                 new Launcher(LinkManager.LOG_VIEWER);
             }
         });
@@ -54,11 +78,11 @@ public class PortLookupFrame {
         upperPanel.add(buttonLogViewer);
 
         JPanel centerPanel = new JPanel(new FlowLayout());
-        centerPanel.add(SimulatorHelper.createSimulatorComponent(frame));
+        centerPanel.add(SimulatorHelper.createSimulatorComponent(this));
 
 
         JPanel lowerPanel = new JPanel(new FlowLayout());
-        lowerPanel.add(new URLLabel(RUS_EFI_C_2012_2014, URI));
+        lowerPanel.add(new URLLabel(LINK_TEXT, URI));
         content.add(upperPanel, BorderLayout.NORTH);
         content.add(centerPanel, BorderLayout.CENTER);
         content.add(lowerPanel, BorderLayout.SOUTH);
@@ -70,7 +94,12 @@ public class PortLookupFrame {
         UiUtils.centerWindow(frame);
     }
 
-    private static void addPortSelection(List<String> ports, final JFrame frame, JPanel panel) {
+    public void disposeFrameAndProceed() {
+        isProceeding = true;
+        frame.dispose();
+    }
+
+    private void addPortSelection(List<String> ports, final JFrame frame, JPanel panel) {
         final JComboBox<String> comboPorts = new JComboBox<>();
         for (final String port : ports)
             comboPorts.addItem(port);
@@ -81,9 +110,17 @@ public class PortLookupFrame {
         connect.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                frame.dispose();
+                disposeFrameAndProceed();
                 new Launcher(comboPorts.getSelectedItem().toString());
             }
         });
+    }
+
+    public static ImageIcon loadIcon(String strPath) {
+        URL imgURL = PortLookupFrame.class.getResource(strPath);
+        if (imgURL != null)
+            return new ImageIcon(imgURL);
+        else
+            return null;
     }
 }

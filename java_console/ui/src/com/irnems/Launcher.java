@@ -20,10 +20,11 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * 12/25/12
  * (c) Andrey Belomutskiy 2013-2015
  *
+ * @see PortLookupFrame
  * @see WavePanel
  */
 public class Launcher extends FrameHelper {
-    public static final int CONSOLE_VERSION = 20150130;
+    public static final int CONSOLE_VERSION = 20150203;
     public static final boolean SHOW_STIMULATOR = true;
     public static final String TAB_INDEX = "main_tab";
     private final String port;
@@ -67,6 +68,7 @@ public class Launcher extends FrameHelper {
             tabbedPane.setSelectedIndex(selectedIndex);
         }
 
+        PortLookupFrame.setAppIcon(frame);
         showFrame(tabbedPane);
     }
 
@@ -124,7 +126,7 @@ public class Launcher extends FrameHelper {
             } else {
                 for (String p : SerialPortList.getPortNames())
                     MessagesCentral.getInstance().postMessage(Launcher.class, "Available port: " + p);
-                PortLookupFrame.chooseSerialPort();
+                new PortLookupFrame().chooseSerialPort();
             }
 
         } catch (Throwable e) {
