@@ -59,6 +59,10 @@
 58)                  cheaper battery holder - through-hole (need to find out footprint)
 59)                  remove some/all EGT - expand prototyping area?
 60)                  idle valve SMD diode?
+61)                  better test pads silkscreen: 5V, GND, 12V
+62)                  LED for cam/crank signal. we can remove cam/crank test points if we need space
+63)                  why do we have W1002 & W1003 if these are usually there? Removing them would remove one point of failure
+64)                  JP04 & JP05 are defined on the main schematics sheet. if would be better to define then on Page 8 with the rest of cam/crank stuff
 
 
 For honda add-on / rewiring board
