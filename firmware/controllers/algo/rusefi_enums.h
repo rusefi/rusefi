@@ -126,6 +126,7 @@ typedef enum {
 
 	TT_MAZDA_DOHC_1_4 = 15,
 
+	TT_ONE_PLUS_ONE = 16,
 
 	Force_4b_trigger_type = ENUM_32_BITS,
 } trigger_type_e;
