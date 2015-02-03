@@ -230,7 +230,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, uint64_t now
 static void initializeSkippedToothTriggerShape(TriggerShape *s, int totalTeethCount, int skippedCount,
 		operation_mode_e operationMode) {
 	efiAssertVoid(s != NULL, "TriggerShape is NULL");
-	s->reset(operationMode);
+	s->reset(operationMode, false);
 
 	float toothWidth = 0.5;
 
@@ -256,7 +256,7 @@ void initializeSkippedToothTriggerShapeExt(TriggerShape *s, int totalTeethCount,
 }
 
 static void configureOnePlusOne(TriggerShape *s) {
-	s->reset(FOUR_STROKE_CAM_SENSOR);
+	s->reset(FOUR_STROKE_CAM_SENSOR, true);
 
 	s->addEvent(180, T_PRIMARY, TV_HIGH);
 	s->addEvent(360, T_PRIMARY, TV_LOW);

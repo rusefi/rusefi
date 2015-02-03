@@ -290,7 +290,6 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	engineConfiguration->logFormat = LF_NATIVE;
 	engineConfiguration->directSelfStimulation = false;
 
-	engineConfiguration->needSecondTriggerInput = true;
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
 
 	engineConfiguration->HD44780width = 20;

@@ -8,7 +8,7 @@
 #include "trigger_chrysler.h"
 
 void configureNeon2003TriggerShape(TriggerShape *s) {
-	s->reset(FOUR_STROKE_CAM_SENSOR);
+	s->reset(FOUR_STROKE_CAM_SENSOR, true);
 
 	// voodoo magic - we always need 720 at the end
 	int base = 10;
@@ -43,7 +43,7 @@ void configureNeon2003TriggerShape(TriggerShape *s) {
 }
 
 void configureNeon1995TriggerShape(TriggerShape *s) {
-	s->reset(FOUR_STROKE_CAM_SENSOR);
+	s->reset(FOUR_STROKE_CAM_SENSOR, true);
 
 	setTriggerSynchronizationGap(s, 0.72);
 

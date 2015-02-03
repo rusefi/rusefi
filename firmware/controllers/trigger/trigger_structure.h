@@ -32,6 +32,7 @@ class TriggerShape {
 public:
 	TriggerShape();
 	bool_t isSynchronizationNeeded;
+	bool_t needSecondTriggerInput;
 
 	int totalToothCount;
 	int skippedToothCount;
@@ -67,7 +68,7 @@ public:
 	uint32_t expectedEventCount[PWM_PHASE_MAX_WAVE_PER_PWM];
 
 	void addEvent(float angle, trigger_wheel_e const waveIndex, trigger_value_e const state);
-	void reset(operation_mode_e operationMode);
+	void reset(operation_mode_e operationMode, bool needSecondTriggerInput);
 	int getSize() const;
 	multi_wave_s wave;
 

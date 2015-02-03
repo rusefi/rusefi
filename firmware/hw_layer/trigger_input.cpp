@@ -21,6 +21,7 @@
 static WaveReaderHw primaryCrankInput;
 static WaveReaderHw secondaryCrankInput;
 
+EXTERN_ENGINE;
 extern engine_configuration_s *engineConfiguration;
 extern engine_configuration2_s *engineConfiguration2;
 extern board_configuration_s *boardConfiguration;
@@ -33,7 +34,7 @@ static void shaft_icu_width_callback(ICUDriver *icup) {
 // todo: support for 3rd trigger input channel
 // todo: start using real event time from HW event, not just software timer?
 	int isPrimary = icup == primaryCrankInput.driver;
-	if (!isPrimary && !engineConfiguration->needSecondTriggerInput) {
+	if (!isPrimary && !engine->triggerShape.needSecondTriggerInput) {
 		return;
 	}
 	//	icucnt_t last_width = icuGetWidth(icup); so far we are fine with system time
@@ -45,7 +46,7 @@ static void shaft_icu_width_callback(ICUDriver *icup) {
 
 static void shaft_icu_period_callback(ICUDriver *icup) {
 	int isPrimary = icup == primaryCrankInput.driver;
-	if (!isPrimary && !engineConfiguration->needSecondTriggerInput) {
+	if (!isPrimary && !engine->triggerShape.needSecondTriggerInput) {
 		return;
 	}
 
