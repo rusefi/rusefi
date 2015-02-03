@@ -25,7 +25,7 @@ void setSachs(engine_configuration_s *engineConfiguration) {
 	engineConfiguration->trigger.customTotalToothCount = 1;
 	engineConfiguration->trigger.customSkippedToothCount = 0;
 	engineConfiguration->trigger.customIsSynchronizationNeeded = false;
-	engineConfiguration->needSecondTriggerInput = false;
+	engineConfiguration->trigger.customNeedSecondTriggerInput = false;
 
 
 	engineConfiguration->hasIatSensor = false;

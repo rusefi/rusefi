@@ -242,7 +242,7 @@ void triggerInfo(Engine *engine) {
 	scheduleMsg(logger, "trigger#1 event counters up=%d/down=%d", triggerCentral.getHwEventCounter(0),
 			triggerCentral.getHwEventCounter(1));
 
-	if (engineConfiguration->needSecondTriggerInput) {
+	if (engine->triggerShape.needSecondTriggerInput) {
 		scheduleMsg(logger, "trigger#2 event counters up=%d/down=%d", triggerCentral.getHwEventCounter(2),
 				triggerCentral.getHwEventCounter(3));
 	}
@@ -250,7 +250,7 @@ void triggerInfo(Engine *engine) {
 			engine->triggerShape.expectedEventCount[1], ts->expectedEventCount[2]);
 
 	scheduleMsg(logger, "trigger type=%d/need2ndChannel=%s", engineConfiguration->trigger.type,
-			boolToString(engineConfiguration->needSecondTriggerInput));
+			boolToString(engine->triggerShape.needSecondTriggerInput));
 	scheduleMsg(logger, "expected duty #0=%f/#1=%f", ts->dutyCycle[0], ts->dutyCycle[1]);
 
 	scheduleMsg(logger, "isError %s/total errors=%d ord_err=%d/total revolutions=%d/self=%s",
@@ -281,7 +281,7 @@ void triggerInfo(Engine *engine) {
 			boardConfiguration->triggerSimulatorFrequency);
 
 
-	if (engineConfiguration->needSecondTriggerInput) {
+	if (engine->triggerShape.needSecondTriggerInput) {
 		scheduleMsg(logger, "secondary trigger input: %s", hwPortname(boardConfiguration->triggerInputPins[1]));
 		scheduleMsg(logger, "secondary trigger simulator: %s %s phase=%d",
 				hwPortname(boardConfiguration->triggerSimulatorPins[1]),

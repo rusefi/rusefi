@@ -34,7 +34,7 @@ trigger_shape_helper::trigger_shape_helper() {
 
 TriggerShape::TriggerShape() :
 		wave(switchTimesBuffer, NULL) {
-	reset(OM_NONE);
+	reset(OM_NONE, false);
 	wave.waves = h.waves;
 	useRiseEdge = false;
 	gapBothDirections = false;
@@ -75,7 +75,7 @@ void TriggerShape::setTriggerShapeSynchPointIndex(engine_configuration_s *engine
 	}
 }
 
-void TriggerShape::reset(operation_mode_e operationMode) {
+void TriggerShape::reset(operation_mode_e operationMode, bool needSecondTriggerInput) {
 	this->operationMode = operationMode;
 	size = 0;
 	triggerShapeSynchPointIndex = 0;
@@ -320,7 +320,7 @@ static float addAccordPair3(TriggerShape *s, float sb) {
  * http://forum.pgmfi.org/viewtopic.php?f=2&t=15570start=210#p139007
  */
 void configureHondaAccordCDDip(TriggerShape *s) {
-	s->reset(FOUR_STROKE_CAM_SENSOR);
+	s->reset(FOUR_STROKE_CAM_SENSOR, true);
 
 	s->initialState[T_SECONDARY] = TV_HIGH;
 	float sb = 0;
@@ -383,7 +383,7 @@ void configureHondaAccordCDDip(TriggerShape *s) {
 }
 
 void configureHondaAccordCD(TriggerShape *s, bool with3rdSignal) {
-	s->reset(FOUR_STROKE_CAM_SENSOR);
+	s->reset(FOUR_STROKE_CAM_SENSOR, true);
 
 	float sb = 5.0f;
 

@@ -16,8 +16,7 @@ static inline float addPair(TriggerShape *s, float a, float w) {
 }
 
 void configureMiniCooperTriggerShape(TriggerShape *s) {
-
-	s->reset(FOUR_STROKE_CAM_SENSOR);
+	s->reset(FOUR_STROKE_CAM_SENSOR, true);
 
 //	s->initialState[0] = 1;
 
