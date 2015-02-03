@@ -230,6 +230,8 @@ extern engine_pins_s enginePins;
 void firmwareError(const char *errorMsg, ...) {
 	if (hasFirmwareErrorFlag)
 		return;
+	// todo: extract a macro and use the same macro here and in
+	// the other place where we have palWritePad(LED_ERROR_PORT, LED_ERROR_PIN, 1);
 	enginePins.errorLedPin.setValue(1);
 	turnAllPinsOff();
 	hasFirmwareErrorFlag = TRUE;

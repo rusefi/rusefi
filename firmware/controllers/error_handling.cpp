@@ -37,6 +37,7 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 	/**
 	 * low-level function is used here to reduce stack usage
 	 */
+	// todo: extract a macro for this
 	palWritePad(LED_ERROR_PORT, LED_ERROR_PIN, 1);
 	turnAllPinsOff();
 #if EFI_HD44780_LCD
