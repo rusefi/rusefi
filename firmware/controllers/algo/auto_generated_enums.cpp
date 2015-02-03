@@ -91,6 +91,8 @@ case TT_MAZDA_SOHC_4:
   return "TT_MAZDA_SOHC_4";
 case TT_MAZDA_DOHC_1_4:
   return "TT_MAZDA_DOHC_1_4";
+case TT_ONE_PLUS_ONE:
+  return "TT_ONE_PLUS_ONE";
 case TT_GM_7X:
   return "TT_GM_7X";
 case TT_HONDA_ACCORD_CD:
