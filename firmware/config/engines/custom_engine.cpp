@@ -11,7 +11,7 @@
 #include "honda_accord.h"
 
 void setCustomEngineConfiguration(engine_configuration_s *engineConfiguration) {
-//	engineConfiguration->trigger.type =
+	engineConfiguration->trigger.type = TT_ONE_PLUS_ONE;
 
 	board_configuration_s * boardConfiguration = &engineConfiguration->bc;
 	setFrankenso_01_LCD(boardConfiguration);

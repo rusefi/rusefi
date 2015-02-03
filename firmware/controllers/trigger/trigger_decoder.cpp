@@ -255,6 +255,18 @@ void initializeSkippedToothTriggerShapeExt(TriggerShape *s, int totalTeethCount,
 	initializeSkippedToothTriggerShape(s, totalTeethCount, skippedCount, operationMode);
 }
 
+static void configureOnePlusOne(TriggerShape *s) {
+	s->reset(FOUR_STROKE_CAM_SENSOR);
+
+	s->addEvent(180, T_PRIMARY, TV_HIGH);
+	s->addEvent(360, T_PRIMARY, TV_LOW);
+
+	s->addEvent(540, T_SECONDARY, TV_HIGH);
+	s->addEvent(720, T_SECONDARY, TV_LOW);
+
+	s->isSynchronizationNeeded = false;
+}
+
 /**
  * External logger is needed because at this point our logger is not yet initialized
  */
@@ -305,6 +317,10 @@ void initializeTriggerShape(Logging *logger, engine_configuration_s const *engin
 
 	case TT_MAZDA_DOHC_1_4:
 		configureMazdaProtegeLx(triggerShape);
+		break;
+
+	case TT_ONE_PLUS_ONE:
+		configureOnePlusOne(triggerShape);
 		break;
 
 	case TT_MAZDA_SOHC_4:
