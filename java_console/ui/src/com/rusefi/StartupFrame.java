@@ -83,10 +83,13 @@ public class StartupFrame {
         startupOptions.add(buttonLogViewer);
         startupOptions.add(new HorizontalLine());
 
-        JPanel centerPanel = new JPanel(new FlowLayout());
-        centerPanel.add(SimulatorHelper.createSimulatorComponent(this));
+        startupOptions.add(SimulatorHelper.createSimulatorComponent(this));
 
-        startupOptions.add(centerPanel);
+        if (FirmwareFlasher.isWindows()) {
+            startupOptions.add(new HorizontalLine());
+            startupOptions.add(FirmwareFlasher.getContent());
+        }
+
         startupOptions.add(new HorizontalLine());
         startupOptions.add(new URLLabel(LINK_TEXT, URI));
 
