@@ -70,4 +70,7 @@ void setTimingLoadBin(engine_configuration_s *engineConfiguration, float l, floa
 
 void setSingleCoilDwell(engine_configuration_s *engineConfiguration);
 
+#define tdcPosition() \
+		(ENGINE(triggerShape.tdcPosition) + CONFIG(globalTriggerAngleOffset))
+
 #endif /* ENGINE_MATH_H_ */

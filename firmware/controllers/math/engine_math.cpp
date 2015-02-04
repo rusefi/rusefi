@@ -152,7 +152,7 @@ void FuelSchedule::addFuelEvents(injection_mode_e mode DECLARE_ENGINE_PARAMETER_
 	;
 	list->reset();
 
-	float baseAngle = engineConfiguration->globalTriggerAngleOffset + engineConfiguration->injectionAngle;
+	float baseAngle = tdcPosition() + engineConfiguration->injectionAngle;
 
 	switch (mode) {
 	case IM_SEQUENTIAL:
@@ -251,7 +251,7 @@ static int findAngleIndex(float angleOffset DECLARE_ENGINE_PARAMETER_S) {
 }
 
 void findTriggerPosition(event_trigger_position_s *position, angle_t angleOffset DECLARE_ENGINE_PARAMETER_S) {
-	angleOffset += CONFIG(globalTriggerAngleOffset);
+	angleOffset += tdcPosition();
 	fixAngle(angleOffset);
 
 	int index = TRIGGER_SHAPE(triggerIndexByAngle[(int)angleOffset]);
