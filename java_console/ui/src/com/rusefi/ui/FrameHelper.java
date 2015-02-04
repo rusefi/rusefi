@@ -14,14 +14,23 @@ public class FrameHelper {
     protected final JFrame frame = new JFrame();
     public static int defaultFontSize;
 
-    protected void showFrame(JComponent component) {
+    public JFrame getFrame() {
+        return frame;
+    }
+
+    public void showFrame(JComponent component) {
+        showFrame(component, true);
+    }
+
+    public void showFrame(JComponent component, final boolean maximizeOnStart) {
         frame.setSize(800, 500);
         frame.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowOpened(WindowEvent e) {
                 onWindowOpened();
-                frame.setExtendedState(frame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
+                if (maximizeOnStart)
+                    frame.setExtendedState(frame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
             }
 
             @Override

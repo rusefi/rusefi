@@ -3,7 +3,6 @@ package com.rusefi;
 import com.irnems.FileLog;
 import com.irnems.core.EngineState;
 import com.irnems.core.MessagesCentral;
-import com.rusefi.*;
 import com.rusefi.io.LinkManager;
 import com.rusefi.ui.*;
 import com.rusefi.ui.storage.Node;
@@ -24,7 +23,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * @see WavePanel
  */
 public class Launcher extends FrameHelper {
-    public static final int CONSOLE_VERSION = 20150203;
+    public static final int CONSOLE_VERSION = 20150204;
     public static final boolean SHOW_STIMULATOR = true;
     public static final String TAB_INDEX = "main_tab";
     private final String port;
