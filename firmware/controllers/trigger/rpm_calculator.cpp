@@ -200,7 +200,7 @@ static void tdcMarkCallback(trigger_event_e ckpSignalType, uint32_t index0 DECLA
 		int revIndex2 = engine->rpmCalculator.getRevolutionCounter() % 2;
 		int rpm = getRpm();
 		// todo: use event-based scheduling, not just time-based scheduling
-		scheduleByAngle(rpm, &tdcScheduler[revIndex2], engineConfiguration->globalTriggerAngleOffset,
+		scheduleByAngle(rpm, &tdcScheduler[revIndex2], tdcPosition(),
 				(schfunc_t) onTdcCallback, NULL);
 	}
 }

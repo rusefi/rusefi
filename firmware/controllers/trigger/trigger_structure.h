@@ -50,6 +50,7 @@ public:
 
 	/**
 	 * that's the angle distance from trigger event #0 and actual engine TDC
+	 * see also globalTriggerAngleOffset
 	 */
 	float tdcPosition;
 
