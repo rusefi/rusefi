@@ -6,7 +6,6 @@ import com.rusefi.*;
 import com.rusefi.io.LinkManager;
 import com.rusefi.ui.*;
 import com.rusefi.ui.storage.Node;
-import com.rusefi.ui.storage.PersistentConfiguration;
 import jssc.SerialPortList;
 
 import javax.swing.*;
@@ -20,7 +19,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * 12/25/12
  * (c) Andrey Belomutskiy 2013-2015
  *
- * @see PortLookupFrame
+ * @see StartupFrame
  * @see WavePanel
  */
 public class Launcher extends FrameHelper {
@@ -68,7 +67,7 @@ public class Launcher extends FrameHelper {
             tabbedPane.setSelectedIndex(selectedIndex);
         }
 
-        PortLookupFrame.setAppIcon(frame);
+        StartupFrame.setAppIcon(frame);
         showFrame(tabbedPane);
     }
 
@@ -126,7 +125,7 @@ public class Launcher extends FrameHelper {
             } else {
                 for (String p : SerialPortList.getPortNames())
                     MessagesCentral.getInstance().postMessage(Launcher.class, "Available port: " + p);
-                new PortLookupFrame().chooseSerialPort();
+                new StartupFrame().chooseSerialPort();
             }
 
         } catch (Throwable e) {

@@ -43,7 +43,7 @@ public class SimulatorHelper {
 
     }
 
-    public static JComponent createSimulatorComponent(final PortLookupFrame portSelector) {
+    public static JComponent createSimulatorComponent(final StartupFrame portSelector) {
         if (!SimulatorHelper.isBinaryHere())
             return new JLabel(SimulatorHelper.BINARY + " not found");
 
