@@ -6,6 +6,7 @@ import com.rusefi.io.tcp.TcpConnector;
 import com.rusefi.ui.UiUtils;
 import com.rusefi.ui.widgets.URLLabel;
 import jssc.SerialPortList;
+import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,7 +26,7 @@ import java.util.List;
  *         <p/>
  *         2/14/14
  */
-public class PortLookupFrame {
+public class StartupFrame {
     // todo: figure out a better way to work with absolute path
     public static final String APPICON_PNG = "../../appicon.png";
     private static final String LINK_TEXT = "rusEfi (c) 2012-2015";
@@ -34,7 +35,7 @@ public class PortLookupFrame {
     private final JFrame frame;
     private boolean isProceeding;
 
-    public PortLookupFrame() {
+    public StartupFrame() {
         frame = new JFrame(Launcher.CONSOLE_VERSION + ": Serial port selection");
         frame.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         frame.addWindowListener(new WindowAdapter() {
@@ -58,15 +59,19 @@ public class PortLookupFrame {
         ports.addAll(Arrays.asList(SerialPortList.getPortNames()));
         ports.addAll(TcpConnector.getAvailablePorts());
 
-        JPanel content = new JPanel(new BorderLayout());
+        JPanel startupOptions = new JPanel(new VerticalFlowLayout());
+        startupOptions.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10),
+                BorderFactory.createLineBorder(Color.darkGray)));
 
-        final JPanel upperPanel = new JPanel(new FlowLayout());
-
-        if (!ports.isEmpty())
-            addPortSelection(ports, frame, upperPanel);
+        if (!ports.isEmpty()) {
+            final JPanel connectPanel = new JPanel(new FlowLayout());
+            addPortSelection(ports, connectPanel);
+            startupOptions.add(connectPanel);
+            startupOptions.add(new HorizontalLine());
+        }
 
         final JButton buttonLogViewer = new JButton();
-        buttonLogViewer.setText("Use " + LinkManager.LOG_VIEWER);
+        buttonLogViewer.setText("Start " + LinkManager.LOG_VIEWER);
         buttonLogViewer.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -75,18 +80,19 @@ public class PortLookupFrame {
             }
         });
 
-        upperPanel.add(buttonLogViewer);
+        startupOptions.add(buttonLogViewer);
+        startupOptions.add(new HorizontalLine());
 
         JPanel centerPanel = new JPanel(new FlowLayout());
         centerPanel.add(SimulatorHelper.createSimulatorComponent(this));
 
+        startupOptions.add(centerPanel);
+        startupOptions.add(new HorizontalLine());
+        startupOptions.add(new URLLabel(LINK_TEXT, URI));
 
-        JPanel lowerPanel = new JPanel(new FlowLayout());
-        lowerPanel.add(new URLLabel(LINK_TEXT, URI));
-        content.add(upperPanel, BorderLayout.NORTH);
-        content.add(centerPanel, BorderLayout.CENTER);
-        content.add(lowerPanel, BorderLayout.SOUTH);
-
+        JPanel content = new JPanel(new BorderLayout());
+        content.add(startupOptions, BorderLayout.WEST);
+        content.add(new JLabel("Logo"), BorderLayout.EAST);
 
         frame.add(content);
         frame.pack();
@@ -99,7 +105,7 @@ public class PortLookupFrame {
         frame.dispose();
     }
 
-    private void addPortSelection(List<String> ports, final JFrame frame, JPanel panel) {
+    private void addPortSelection(List<String> ports, JPanel panel) {
         final JComboBox<String> comboPorts = new JComboBox<>();
         for (final String port : ports)
             comboPorts.addItem(port);
@@ -117,7 +123,7 @@ public class PortLookupFrame {
     }
 
     public static ImageIcon loadIcon(String strPath) {
-        URL imgURL = PortLookupFrame.class.getResource(strPath);
+        URL imgURL = StartupFrame.class.getResource(strPath);
         if (imgURL != null)
             return new ImageIcon(imgURL);
         else
