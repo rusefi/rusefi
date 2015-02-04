@@ -38,9 +38,14 @@
         <mkdir dir="build/jar"/>
 	<delete file="${jar_file}"/>
 	<echo message="Building ${jar_file}"/>
+		<copy todir="build/classes">
+		<fileset dir="ui/resources" includes="**/*.gif"/>
+		<fileset dir="ui/resources" includes="**/*.png"/>
+
+</copy>
         <jar destfile="${jar_file}" basedir="build/classes">
             <manifest>
-                <attribute name="Main-Class" value="com.irnems.Launcher"/>
+                <attribute name="Main-Class" value="com.rusefi.Launcher"/>
             </manifest>
 		<zipfileset src="lib/SteelSeries-3.9.30.jar" includes="**/*.class"/>
 		<zipfileset src="lib/trident-6.2.jar" includes="**/*.class"/>
@@ -56,7 +61,6 @@
 		<zipfileset src="lib/batik/batik-awt-util.jar" includes="**/*.class"/>
 		<zipfileset src="lib/batik/batik-util.jar" includes="**/*.class"/>
 
-		<zipfileset dir="build/classes" includes="**/*.class"/>
         </jar>
     </target>
 

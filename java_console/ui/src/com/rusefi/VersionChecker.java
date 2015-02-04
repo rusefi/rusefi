@@ -13,7 +13,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.irnems.Launcher.*;
+import static com.rusefi.Launcher.*;
 
 /**
  * This class checks the recommended versions numbers and compares them with current versions

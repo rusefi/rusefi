@@ -7,7 +7,7 @@ import java.awt.*;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
-import static com.irnems.Launcher.*;
+import static com.rusefi.Launcher.*;
 import static javax.swing.JOptionPane.OK_OPTION;
 
 /**

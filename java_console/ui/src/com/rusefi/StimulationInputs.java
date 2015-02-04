@@ -1,7 +1,5 @@
 package com.rusefi;
 
-import com.irnems.Launcher;
-
 import javax.swing.*;
 import java.awt.*;
 

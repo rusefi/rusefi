@@ -1,6 +1,5 @@
 package com.rusefi;
 
-import com.irnems.Launcher;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.tcp.TcpConnector;
 import com.rusefi.ui.UiUtils;
@@ -28,7 +27,8 @@ import java.util.List;
  */
 public class StartupFrame {
     // todo: figure out a better way to work with absolute path
-    public static final String APPICON_PNG = "../../appicon.png";
+    private static final String APPICON = "appicon.png";
+    private static final String LOGO = "logo.gif";
     private static final String LINK_TEXT = "rusEfi (c) 2012-2015";
     private static final String URI = "http://rusefi.com/?java_console";
 
@@ -49,7 +49,7 @@ public class StartupFrame {
     }
 
     public static void setAppIcon(JFrame frame) {
-        ImageIcon icon = loadIcon(APPICON_PNG);
+        ImageIcon icon = loadIcon(APPICON);
         if (icon != null)
             frame.setIconImage(icon.getImage());
     }
@@ -92,7 +92,13 @@ public class StartupFrame {
 
         JPanel content = new JPanel(new BorderLayout());
         content.add(startupOptions, BorderLayout.WEST);
-        content.add(new JLabel("Logo"), BorderLayout.EAST);
+
+        ImageIcon logoIcon = loadIcon(LOGO);
+        if (logoIcon != null) {
+            JLabel logo = new JLabel(logoIcon);
+            logo.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10));
+            content.add(logo, BorderLayout.EAST);
+        }
 
         frame.add(content);
         frame.pack();
