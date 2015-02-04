@@ -100,4 +100,13 @@ typedef Thread thread_t;
 #define EXTERN_ENGINE
 #endif
 
+
+/**
+ * low-level function is used here to reduce stack usage
+ */
+#define ON_FATAL_ERROR() \
+		palWritePad(LED_ERROR_PORT, LED_ERROR_PIN, 1); \
+		turnAllPinsOff();
+
+
 #endif /* GLOBAL_H_ */

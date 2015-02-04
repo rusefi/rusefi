@@ -230,10 +230,7 @@ extern engine_pins_s enginePins;
 void firmwareError(const char *errorMsg, ...) {
 	if (hasFirmwareErrorFlag)
 		return;
-	// todo: extract a macro and use the same macro here and in
-	// the other place where we have palWritePad(LED_ERROR_PORT, LED_ERROR_PIN, 1);
-	enginePins.errorLedPin.setValue(1);
-	turnAllPinsOff();
+	ON_FATAL_ERROR();
 	hasFirmwareErrorFlag = TRUE;
 	if (indexOf(errorMsg, '%') == -1) {
 		/**
@@ -262,5 +259,5 @@ int getRusEfiVersion(void) {
 		return 1; // this is here to make the compiler happy about the unused array
 	if (UNUSED_CCM_SIZE == 0)
 		return 1; // this is here to make the compiler happy about the unused array
-	return 20150202;
+	return 20150204;
 }
