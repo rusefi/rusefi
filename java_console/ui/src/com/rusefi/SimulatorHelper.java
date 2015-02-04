@@ -1,6 +1,5 @@
 package com.rusefi;
 
-import com.irnems.Launcher;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.tcp.TcpConnector;
 
