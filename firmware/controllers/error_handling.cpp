@@ -34,12 +34,7 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 	dbg_panic_msg = msg;
 #endif /* CH_DBG_SYSTEM_STATE_CHECK */
 
-	/**
-	 * low-level function is used here to reduce stack usage
-	 */
-	// todo: extract a macro for this
-	palWritePad(LED_ERROR_PORT, LED_ERROR_PIN, 1);
-	turnAllPinsOff();
+	ON_FATAL_ERROR();
 #if EFI_HD44780_LCD
 	lcdShowFatalMessage((char *) msg);
 #endif /* EFI_HD44780_LCD */
