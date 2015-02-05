@@ -18,7 +18,7 @@ void configureNeon2003TriggerShape(TriggerShape *s) {
 	s->gapBothDirections = true;
 
 	// are these non-default values really needed here now that the gap is finally precise?
-	setTriggerSynchronizationGap2(s, 0.8 * CHRYSLER_NGC_GAP, 1.55 * CHRYSLER_NGC_GAP);
+	s->setTriggerSynchronizationGap2(0.8 * CHRYSLER_NGC_GAP, 1.55 * CHRYSLER_NGC_GAP);
 
 	s->addEvent(base + 26, T_PRIMARY, TV_HIGH);
 	s->addEvent(base + 62, T_PRIMARY, TV_LOW);
@@ -45,7 +45,7 @@ void configureNeon2003TriggerShape(TriggerShape *s) {
 void configureNeon1995TriggerShape(TriggerShape *s) {
 	s->reset(FOUR_STROKE_CAM_SENSOR, true);
 
-	setTriggerSynchronizationGap(s, 0.72);
+	s->setTriggerSynchronizationGap(0.72);
 
 	s->useRiseEdge = false;
 

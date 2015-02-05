@@ -77,6 +77,8 @@ void TriggerShape::setTriggerShapeSynchPointIndex(engine_configuration_s *engine
 
 void TriggerShape::clear() {
 	tdcPosition = 0;
+	setTriggerSynchronizationGap(2);
+	useRiseEdge = true;
 }
 
 void TriggerShape::reset(operation_mode_e operationMode, bool needSecondTriggerInput) {
@@ -288,14 +290,14 @@ void setToothedWheelConfiguration(TriggerShape *s, int total, int skipped,
 #endif
 }
 
-void setTriggerSynchronizationGap2(TriggerShape *s, float syncGapFrom, float syncRatioTo) {
-	s->isSynchronizationNeeded = true;
-	s->syncRatioFrom = syncGapFrom;
-	s->syncRatioTo = syncRatioTo;
+void TriggerShape::setTriggerSynchronizationGap2(float syncRatioFrom, float syncRatioTo) {
+	isSynchronizationNeeded = true;
+	this->syncRatioFrom = syncRatioFrom;
+	this->syncRatioTo = syncRatioTo;
 }
 
-void setTriggerSynchronizationGap(TriggerShape *s, float synchGap) {
-	setTriggerSynchronizationGap2(s, synchGap * 0.75f, synchGap * 1.25f);
+void TriggerShape::setTriggerSynchronizationGap(float synchRatio) {
+	setTriggerSynchronizationGap2(synchRatio * 0.75f, synchRatio * 1.25f);
 }
 
 #define S24 (720.0f / 24 / 2)

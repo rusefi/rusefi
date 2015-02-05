@@ -279,9 +279,6 @@ void initializeTriggerShape(Logging *logger, engine_configuration_s const *engin
 
 	triggerShape->clear();
 
-	setTriggerSynchronizationGap(triggerShape, 2);
-	triggerShape->useRiseEdge = true;
-
 	switch (triggerConfig->type) {
 
 	case TT_TOOTHED_WHEEL:
@@ -335,7 +332,7 @@ void initializeTriggerShape(Logging *logger, engine_configuration_s const *engin
 
 	case TT_TOOTHED_WHEEL_60_2:
 		setToothedWheelConfiguration(triggerShape, 60, 2, engineConfiguration);
-		setTriggerSynchronizationGap(triggerShape, 3);
+		triggerShape->setTriggerSynchronizationGap(3);
 		break;
 
 	case TT_TOOTHED_WHEEL_36_1:
