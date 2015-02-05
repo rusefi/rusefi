@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Launcher &quot;log viewer&quot;" type="Application" factoryName="Application">
-    <option name="MAIN_CLASS_NAME" value="com.irnems.Launcher" />
+    <option name="MAIN_CLASS_NAME" value="com.rusefi.Launcher" />
     <option name="VM_PARAMETERS" value="" />
     <option name="PROGRAM_PARAMETERS" value="&quot;log viewer&quot; " />
     <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
@@ -16,6 +16,7 @@
       <option name="TRANSPORT" value="0" />
       <option name="LOCAL" value="true" />
     </RunnerSettings>
+    <RunnerSettings RunnerId="Profile " />
     <RunnerSettings RunnerId="Run" />
     <ConfigurationWrapper RunnerId="Debug" />
     <ConfigurationWrapper RunnerId="Run" />
