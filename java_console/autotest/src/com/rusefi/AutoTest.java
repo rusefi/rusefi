@@ -40,9 +40,17 @@ public class AutoTest {
         chart = nextChart();
         double x = 100;
         assertWave(msg, chart, WaveChart.SPARK_1, 0.194433, x, x + 180, x + 360, x + 540);
+        x = 135;
+        assertWave(msg, chart, WaveChart.INJECTOR_1, 0.00626666, x, x + 180, x + 360, x + 540);
+        assertWave(msg, chart, WaveChart.INJECTOR_2, 0.00626666, x, x + 180, x + 360, x + 540);
 
         IoUtil.changeRpm(2000);
-        assertWave(msg, chart, WaveChart.SPARK_1, 0.194433, x, x + 180, x + 360, x + 540);
+        chart = nextChart();
+        x = 121;
+        assertWave(msg, chart, WaveChart.SPARK_1, 0.13333333333333333, x, x + 180, x + 360, x + 540);
+        x = 135;
+        assertWave(msg, chart, WaveChart.INJECTOR_1, 0.11733333333333336, x, x + 360);
+        assertWave(msg, chart, WaveChart.INJECTOR_2, 0.11733333333333336, x + 180, x + 540);
     }
 
     private static void testDodgeNeon() {
