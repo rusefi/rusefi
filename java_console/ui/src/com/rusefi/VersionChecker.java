@@ -64,7 +64,7 @@ public class VersionChecker {
         }
 
 
-        final Integer javaVersion = TcpConnector.parseIntWithReason(map.get(JAVA_CONSOLE_TAG), "VC value");
+        final Integer javaVersion = parseNotNull(map.get(JAVA_CONSOLE_TAG), "VC value");
         System.out.println("Server recommends java_console version " + javaVersion + " or newer");
         showUpdateWarningIfNeeded("dev console", javaVersion, CONSOLE_VERSION);
         System.out.println("Server recommends firmware " + map.get(FIRMWARE_TAG) + " or newer");
@@ -76,6 +76,12 @@ public class VersionChecker {
             panel.add(new URLLabel(criticalUrl, criticalUrl), BorderLayout.CENTER);
             JOptionPane.showMessageDialog(getPaneParent(), panel);
         }
+    }
+
+    private int parseNotNull(String value, String reason) throws IOException {
+        if (value == null)
+            throw new IOException("Unexpected file format");
+        return TcpConnector.parseIntWithReason(value, reason);
     }
 
     private static void showUpdateWarningIfNeeded(final String componentName, final Integer latestVersion, final int currentVersion) {

@@ -138,5 +138,6 @@ void configureMazdaProtegeLx(TriggerShape *s) {
 	s->addEvent(off + 555.349776, T_SECONDARY, TV_HIGH);
 	s->addEvent(720, T_SECONDARY, TV_LOW);
 
+	s->tdcPosition = 137.119154;
 	s->isSynchronizationNeeded = false;
 }
