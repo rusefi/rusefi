@@ -226,7 +226,7 @@ static void reportWave(Logging *logging, int index) {
 		float oneDegreeUs = getOneDegreeTimeUs(getRpm());
 
 		appendPrintf(logging, "advance%d%s", index, DELIMETER);
-		float angle = (offsetUs / oneDegreeUs) - engineConfiguration->globalTriggerAngleOffset;
+		float angle = (offsetUs / oneDegreeUs) - tdcPosition();
 		fixAngle(angle);
 		appendFloat(logging, angle, 3);
 		appendPrintf(logging, "%s", DELIMETER);

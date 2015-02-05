@@ -6,7 +6,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 /**
  * (c) Andrey Belomutskiy 2013-2015
@@ -27,24 +30,66 @@ public class FirmwareFlasher {
                 FrameHelper f = new FrameHelper();
 
                 appendMsg("Executing " + OPEN_OCD_COMMAND);
-
                 f.showFrame(log, false);
-
+                StringBuffer output = new StringBuffer();
+                StringBuffer error = new StringBuffer();
                 try {
                     Process p = Runtime.getRuntime().exec(OPEN_OCD_COMMAND);
-                
-
+                    startStreamThread(p, p.getInputStream(), "output", output);
+                    startStreamThread(p, p.getErrorStream(), "error", error);
+                    p.waitFor();
                 } catch (IOException e) {
-                    appendMsg("Error: " + e);
+                    appendMsg("IOError: " + e);
+                } catch (InterruptedException e) {
+                    appendMsg("WaitError: " + e);
                 }
 
-
+                appendMsg("!!! FIRMWARE FLASH: DOES NOT LOOK RIGHT !!!");
             }
         });
     }
 
-    private void appendMsg(String s) {
-        log.append(s);
+    /**
+     * This method listens to a data stream from the process, appends messages to UI
+     * and accumulates output in a buffer
+     */
+    private void startStreamThread(final Process p, final InputStream stream, final String msg, final StringBuffer buffer) {
+        final Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    BufferedReader bis = new BufferedReader(new InputStreamReader(stream));
+                    while (isRunning(p)) {
+                        String line = bis.readLine();
+                        appendMsg(line);
+                        buffer.append(line);
+                    }
+                } catch (IOException e) {
+                    appendMsg("Stream " + e);
+                }
+                appendMsg("<EOS> " + msg);
+            }
+        });
+        t.setDaemon(true);
+        t.start();
+    }
+
+    private static boolean isRunning(Process p) {
+        try {
+            p.exitValue();
+            return false;
+        } catch (IllegalThreadStateException e) {
+            return true;
+        }
+    }
+
+    private void appendMsg(final String s) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                log.append(s + "\r\n");
+            }
+        });
     }
 
     public static boolean isWindows() {
