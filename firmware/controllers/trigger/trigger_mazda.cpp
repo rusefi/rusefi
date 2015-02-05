@@ -22,7 +22,7 @@
 
 void initializeMazdaMiataNaShape(TriggerShape *s) {
 	s->reset(FOUR_STROKE_CAM_SENSOR, true);
-	setTriggerSynchronizationGap(s, MIATA_NA_GAP);
+	s->setTriggerSynchronizationGap(MIATA_NA_GAP);
 	s->useRiseEdge = false;
 
 	s->isSynchronizationNeeded = true;
@@ -48,7 +48,7 @@ void initializeMazdaMiataNaShape(TriggerShape *s) {
 }
 
 void initializeMazdaMiataNbShape(TriggerShape *s) {
-	setTriggerSynchronizationGap(s, 0.11f);
+	s->setTriggerSynchronizationGap(0.11f);
 	s->useRiseEdge = false;
 
 	s->reset(FOUR_STROKE_CAM_SENSOR, true);

@@ -32,7 +32,7 @@ void initializeMitsubishi4g18(TriggerShape *s) {
 	s->reset(FOUR_STROKE_CAM_SENSOR, true);
 	s->useRiseEdge = false;
 
-	setTriggerSynchronizationGap(s, 1.6666);
+	s->setTriggerSynchronizationGap(1.6666);
 
 	int secondaryWidth = 70;
 
