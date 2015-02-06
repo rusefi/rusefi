@@ -1,4 +1,4 @@
-package com.rusefi;
+package com.rusefi.maintenance;
 
 import com.rusefi.ui.FrameHelper;
 
@@ -6,17 +6,24 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 
 /**
  * (c) Andrey Belomutskiy 2013-2015
  * 2/4/15
  */
 public class FirmwareFlasher {
-    private static final String OPEN_OCD_COMMAND = "openocd/bin/openocd-0.8.0.exe -f interface/stlink-v2.cfg -f board/stm32f4discovery.cfg -c init -c targets -c \"halt\" -c \"flash write_image erase rusefi.elf\" -c \"verify_image rusefi.elf\" -c \"reset run\" -c shutdown";
+    public static final String IMAGE_ELF = "rusefi.elf";
+    private static final String OPEN_OCD_COMMAND = "openocd/bin/openocd-0.8.0.exe " +
+            "-f interface/stlink-v2.cfg " +
+            "-f board/stm32f4discovery.cfg " +
+            "-c init " +
+            "-c targets " +
+            "-c \"halt\" " +
+            "-c \"flash write_image erase " + IMAGE_ELF + "\" " +
+            "-c \"verify_image " + IMAGE_ELF + "\" " +
+            "-c \"reset run\" " +
+            "-c shutdown";
 
     private final JButton button = new JButton("wip");
     private final JTextArea log = new JTextArea();
@@ -28,25 +35,34 @@ public class FirmwareFlasher {
             @Override
             public void actionPerformed(ActionEvent event) {
                 FrameHelper f = new FrameHelper();
-
-                appendMsg("Executing " + OPEN_OCD_COMMAND);
                 f.showFrame(log, false);
-                StringBuffer output = new StringBuffer();
-                StringBuffer error = new StringBuffer();
-                try {
-                    Process p = Runtime.getRuntime().exec(OPEN_OCD_COMMAND);
-                    startStreamThread(p, p.getInputStream(), "output", output);
-                    startStreamThread(p, p.getErrorStream(), "error", error);
-                    p.waitFor();
-                } catch (IOException e) {
-                    appendMsg("IOError: " + e);
-                } catch (InterruptedException e) {
-                    appendMsg("WaitError: " + e);
+
+                if (!new File(IMAGE_ELF).exists()) {
+                    appendMsg(IMAGE_ELF + " not found, cannot proceed !!!");
+                    return;
                 }
 
-                appendMsg("!!! FIRMWARE FLASH: DOES NOT LOOK RIGHT !!!");
+                doFlashFirmware();
             }
         });
+    }
+
+    private void doFlashFirmware() {
+        appendMsg("Executing " + OPEN_OCD_COMMAND);
+        StringBuffer output = new StringBuffer();
+        StringBuffer error = new StringBuffer();
+        try {
+            Process p = Runtime.getRuntime().exec(OPEN_OCD_COMMAND);
+            startStreamThread(p, p.getInputStream(), "output", output);
+            startStreamThread(p, p.getErrorStream(), "error", error);
+            p.waitFor();
+        } catch (IOException e) {
+            appendMsg("IOError: " + e);
+        } catch (InterruptedException e) {
+            appendMsg("WaitError: " + e);
+        }
+
+        appendMsg("!!! FIRMWARE FLASH: DOES NOT LOOK RIGHT !!!");
     }
 
     /**
