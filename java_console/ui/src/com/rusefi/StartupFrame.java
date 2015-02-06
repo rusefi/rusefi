@@ -2,6 +2,7 @@ package com.rusefi;
 
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.tcp.TcpConnector;
+import com.rusefi.maintenance.FirmwareFlasher;
 import com.rusefi.ui.UiUtils;
 import com.rusefi.ui.widgets.URLLabel;
 import jssc.SerialPortList;
