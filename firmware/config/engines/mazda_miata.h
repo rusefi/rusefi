@@ -15,9 +15,9 @@
 #include "engine_configuration.h"
 
 void setFordEscortGt(engine_configuration_s *engineConfiguration);
-void setMiata1990(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration);
-void setMiata1994_d(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration);
-void setMiata1994_s(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration);
-void setMiata1996(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration);
+void setMiata1990(engine_configuration_s *engineConfiguration);
+void setMiata1994_d(engine_configuration_s *engineConfiguration);
+void setMiata1994_s(engine_configuration_s *engineConfiguration);
+void setMiata1996(engine_configuration_s *engineConfiguration);
 
 #endif /* MAZDA_MIATA_H_ */

@@ -9,7 +9,7 @@
 
 #include "MiniCooperR50.h"
 
-void setMiniCooperR50(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
+void setMiniCooperR50(engine_configuration_s *engineConfiguration) {
 	engineConfiguration->trigger.type = TT_MINI_COOPER_R50;
 
 }

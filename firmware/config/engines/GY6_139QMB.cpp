@@ -9,25 +9,33 @@
 
 #include "main.h"
 #include "GY6_139QMB.h"
+#include "engine_math.h"
 
-void setGy6139qmbDefaultEngineConfiguration(engine_configuration_s *engineConfiguration) {
+void setGy6139qmbDefaultEngineConfiguration(
+		engine_configuration_s *engineConfiguration) {
+	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
+
 	engineConfiguration->rpmHardLimit = 9000;
-	engineConfiguration->cranking.rpm = 800;
+	engineConfiguration->cranking.rpm = 1100;
 	engineConfiguration->analogInputDividerCoefficient = 1.52;
 	engineConfiguration->algorithm = LM_MAP;
-	engineConfiguration->globalTriggerAngleOffset = 15;
+	engineConfiguration->globalTriggerAngleOffset = 45;
 	engineConfiguration->bc.analogChartMode = AC_MAP;
+	engineConfiguration->specs.displacement = 0.072; // 72cc
 	engineConfiguration->cylindersCount = 1;
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 
 	engineConfiguration->firingOrder = FO_ONE_CYLINDER;
 
 	/**
-	 * We treat the trigger as 1/0 toothed wheel
+	 * We treat the trigger as 8-1 toothed wheel
 	 */
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
-	engineConfiguration->trigger.customTotalToothCount = 1;
-	engineConfiguration->trigger.customSkippedToothCount = 0;
-	engineConfiguration->trigger.customIsSynchronizationNeeded = false;
+	engineConfiguration->trigger.customTotalToothCount = 8;
+	engineConfiguration->trigger.customSkippedToothCount = 1;
+	engineConfiguration->trigger.customIsSynchronizationNeeded = true;
 	engineConfiguration->trigger.customNeedSecondTriggerInput = false;
+
+	boardConfiguration->injectionPins[0] = GPIOC_9;
+	boardConfiguration->ignitionPins[0] = GPIOC_8;
 }

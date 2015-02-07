@@ -11,6 +11,6 @@
 #include "main.h"
 #include "engine_configuration.h"
 
-void setMiniCooperR50(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration);
+void setMiniCooperR50(engine_configuration_s *engineConfiguration);
 
 #endif /* MINICOOPERR50_H_ */

@@ -592,7 +592,7 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType, Engine *e
 		setGy6139qmbDefaultEngineConfiguration(engineConfiguration);
 		break;
 	case MAZDA_MIATA_NB:
-		setMazdaMiataNbEngineConfiguration(engineConfiguration, boardConfiguration);
+		setMazdaMiataNbEngineConfiguration(engineConfiguration);
 		break;
 	case MAZDA_323:
 		setMazda323EngineConfiguration(engineConfiguration);
@@ -604,28 +604,28 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType, Engine *e
 		setSaturnIonEngineConfiguration(engineConfiguration);
 		break;
 	case MINI_COOPER_R50:
-		setMiniCooperR50(engineConfiguration, boardConfiguration);
+		setMiniCooperR50(engineConfiguration);
 		break;
 	case FORD_ESCORT_GT:
 		setFordEscortGt(engineConfiguration);
 		break;
 	case MIATA_1990:
-		setMiata1990(engineConfiguration, boardConfiguration);
+		setMiata1990(engineConfiguration);
 		break;
 	case MIATA_1994_DEVIATOR:
-		setMiata1994_d(engineConfiguration, boardConfiguration);
+		setMiata1994_d(engineConfiguration);
 		break;
 	case MIATA_1994_SPAGS:
-		setMiata1994_s(engineConfiguration, boardConfiguration);
+		setMiata1994_s(engineConfiguration);
 		break;
 	case MIATA_1996:
-		setMiata1996(engineConfiguration, boardConfiguration);
+		setMiata1996(engineConfiguration);
 		break;
 	case CITROEN_TU3JP:
-		setCitroenBerlingoTU3JPConfiguration(engineConfiguration, boardConfiguration);
+		setCitroenBerlingoTU3JPConfiguration(engineConfiguration);
 		break;
 	case ROVER_V8:
-		setRoverv8(engineConfiguration, boardConfiguration);
+		setRoverv8(engineConfiguration);
 		break;
 	case SUBARU_2003_WRX:
 		setSubaru2003Wrx(engineConfiguration);
