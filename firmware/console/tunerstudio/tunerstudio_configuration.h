@@ -11,6 +11,8 @@
 #ifndef TUNERSTUDIO_CONFIGURATION_H_
 #define TUNERSTUDIO_CONFIGURATION_H_
 
+#include "rusefi_types.h"
+
 /**
  * this is used to confirm that firmware and TunerStudio are using the same rusefi.ini version
  */
@@ -18,8 +20,6 @@
 
 #define PAGE_0_SIZE 11832
 #define TS_OUTPUT_SIZE 116
-
-#define EGT_CHANNEL_COUNT 8
 
 typedef struct {
 	uint16_t values[EGT_CHANNEL_COUNT];
