@@ -23,7 +23,8 @@ void setFrankenstein_01_LCD(board_configuration_s *boardConfiguration) {
 	boardConfiguration->HD44780_db7 = GPIOB_13;
 }
 
-void setRoverv8(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
+void setRoverv8(engine_configuration_s *engineConfiguration) {
+	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_36_1;

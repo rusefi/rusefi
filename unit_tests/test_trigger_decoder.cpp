@@ -313,32 +313,6 @@ static void testTriggerDecoder3(const char *msg, engine_type_e type, int synchPo
 	printGapRatio = false;
 }
 
-void testGY6_139QMB(void) {
-	printf("*************************************************** testGY6_139QMB\r\n");
-
-	EngineTestHelper eth(GY6_139QMB);
-	engine_configuration_s *ec = eth.ec;
-	Engine *engine = &eth.engine;
-	engine_configuration_s *engineConfiguration = ec;
-
-	TriggerState state;
-	assertFalseM("shaft_is_synchronized", state.shaft_is_synchronized);
-
-	TriggerShape * shape = &eth.engine.triggerShape;
-
-	assertFalseM("shaft_is_synchronized", state.shaft_is_synchronized);
-	assertEquals(0, state.getCurrentIndex());
-
-	int now = 0;
-	state.decodeTriggerEvent(SHAFT_PRIMARY_UP, now++ PASS_ENGINE_PARAMETER);
-	assertTrueM("shaft_is_synchronized", state.shaft_is_synchronized);
-	assertEquals(0, state.getCurrentIndex());
-
-	state.decodeTriggerEvent(SHAFT_PRIMARY_DOWN, now++ PASS_ENGINE_PARAMETER);
-	assertTrueM("shaft_is_synchronized", state.shaft_is_synchronized);
-	assertEquals(1, state.getCurrentIndex());
-}
-
 extern EventQueue schedulingQueue;
 
 extern int mockTps;
@@ -517,7 +491,8 @@ void testTriggerDecoder(void) {
 
 	test1995FordInline6TriggerDecoder();
 	testMazdaMianaNbDecoder();
-	testGY6_139QMB();
+	testTriggerDecoder2("testGY6_139QMB", GY6_139QMB, 0, 0.4375, 0.0);
+
 	testTriggerDecoder2("testFordEscortGt", FORD_ESCORT_GT, 0, 0.8096, 0.3844);
 	testTriggerDecoder2("testMiniCooper", MINI_COOPER_R50, 121, 0.5222, 0.4959);
 	testTriggerDecoder2("testRoverV8", ROVER_V8, 0, 0.4861, 0);

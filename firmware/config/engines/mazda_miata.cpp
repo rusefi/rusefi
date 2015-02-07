@@ -198,7 +198,9 @@ static void common079721_2351(engine_configuration_s *engineConfiguration, board
 
 }
 
-void setMiata1990(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
+void setMiata1990(engine_configuration_s *engineConfiguration) {
+	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
+
 	common079721_2351(engineConfiguration, boardConfiguration);
 
 	commonMiataNa(engineConfiguration, boardConfiguration);
@@ -402,7 +404,8 @@ static void setMiata1994_common(engine_configuration_s *engineConfiguration,
  * Frankenso board
  * set_engine_type 20
  */
-void setMiata1994_d(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
+void setMiata1994_d(engine_configuration_s *engineConfiguration) {
+	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 	setMiata1994_common(engineConfiguration, boardConfiguration);
 	engineConfiguration->vbattDividerCoeff = ((float) (8.2 + 33)) / 8.2 * 2;
 	/**
@@ -417,7 +420,8 @@ void setMiata1994_d(engine_configuration_s *engineConfiguration, board_configura
 	boardConfiguration->idleValvePin = GPIO_UNASSIGNED;
 }
 
-void setMiata1994_s(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
+void setMiata1994_s(engine_configuration_s *engineConfiguration) {
+	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 	setMiata1994_common(engineConfiguration, boardConfiguration);
 	engineConfiguration->vbattDividerCoeff = ((float) (10.0 + 33)) / 10 * 2;
 
@@ -459,7 +463,8 @@ void setMiata1994_s(engine_configuration_s *engineConfiguration, board_configura
 /**
  * Tom tomiata, Frankenstein board
  */
-void setMiata1996(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
+void setMiata1996(engine_configuration_s *engineConfiguration) {
+	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 	commonMiataNa(engineConfiguration, boardConfiguration);
 	engineConfiguration->specs.displacement = 1.839;
 
