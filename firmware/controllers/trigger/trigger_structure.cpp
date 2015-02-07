@@ -84,6 +84,7 @@ void TriggerShape::clear() {
 void TriggerShape::reset(operation_mode_e operationMode, bool needSecondTriggerInput) {
 	this->operationMode = operationMode;
 	size = 0;
+	this->needSecondTriggerInput = needSecondTriggerInput;
 	triggerShapeSynchPointIndex = 0;
 	memset(initialState, 0, sizeof(initialState));
 	memset(switchTimesBuffer, 0, sizeof(switchTimesBuffer));
@@ -192,6 +193,8 @@ float TriggerShape::getAngle(int index) const {
 
 void TriggerShape::addEvent(float angle, trigger_wheel_e const waveIndex, trigger_value_e const stateParam) {
 	efiAssertVoid(operationMode != OM_NONE, "operationMode not set");
+
+	efiAssertVoid(waveIndex!= T_SECONDARY || needSecondTriggerInput, "secondary needed or not?");
 
 	trigger_value_e state;
 	if (invertOnAdd) {

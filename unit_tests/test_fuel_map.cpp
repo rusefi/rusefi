@@ -21,8 +21,10 @@ extern float testMafValue;
 void testFuelMap(void) {
 	printf("*************************************************** testFuelMap\r\n");
 
+	printf("Setting up FORD_ASPIRE_1996\r\n");
 	EngineTestHelper eth(FORD_ASPIRE_1996);
 
+	printf("Filling fuel map\r\n");
 	for (int k = 0; k < FUEL_LOAD_COUNT; k++) {
 		for (int r = 0; r < FUEL_RPM_COUNT; r++) {
 			eth.engine.engineConfiguration->fuelTable[k][r] = k * 200 + r;
