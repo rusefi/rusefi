@@ -40,7 +40,7 @@ typedef void (*Void)(void);
 #define INJECTION_PIN_COUNT 12
 #define IGNITION_PIN_COUNT 12
 
-#define MAX31855_CS_COUNT 8
+#define EGT_CHANNEL_COUNT 8
 
 #define JOYSTICK_PIN_COUNT 5
 
@@ -54,7 +54,7 @@ typedef char le_formula_t[LE_COMMAND_LENGTH];
 
 #define HW_MAX_ADC_INDEX 16
 
-typedef brain_pin_e egt_cs_array_t[MAX31855_CS_COUNT];
+typedef brain_pin_e egt_cs_array_t[EGT_CHANNEL_COUNT];
 
 #define MAP_ANGLE_SIZE 8
 #define MAP_WINDOW_SIZE 8

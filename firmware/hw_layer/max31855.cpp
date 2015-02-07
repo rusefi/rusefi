@@ -31,7 +31,7 @@ static SPIDriver *driver;
 
 static Logging* logger;
 
-static SPIConfig spiConfig[MAX31855_CS_COUNT];
+static SPIConfig spiConfig[EGT_CHANNEL_COUNT];
 
 EXTERN_ENGINE;
 
@@ -41,7 +41,7 @@ static void showEgtInfo(void) {
 
 	scheduleMsg(logger, "EGT spi: %d", boardConfiguration->max31855spiDevice);
 
-	for (int i = 0; i < MAX31855_CS_COUNT; i++) {
+	for (int i = 0; i < EGT_CHANNEL_COUNT; i++) {
 		if (boardConfiguration->max31855_cs[i] != GPIO_UNASSIGNED) {
 			scheduleMsg(logger, "%d ETG @ %s", i, hwPortname(boardConfiguration->max31855_cs[i]));
 		}
@@ -154,7 +154,7 @@ void initMax31855(Logging *sharedLogger, SPIDriver *drv, egt_cs_array_t max31855
 	turnOnSpi(SPI_DEVICE_3);
 #endif /* EFI_PROD_CODE */
 
-	for (int i = 0; i < MAX31855_CS_COUNT; i++) {
+	for (int i = 0; i < EGT_CHANNEL_COUNT; i++) {
 		if (max31855_cs[i] != GPIO_UNASSIGNED) {
 
 			initSpiCs(&spiConfig[i], max31855_cs[i]);

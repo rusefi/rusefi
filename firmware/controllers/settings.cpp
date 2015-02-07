@@ -631,7 +631,7 @@ static void setTriggerSimulatorMode(const char *indexStr, const char *modeCode) 
 
 static void setEgtCSPin(const char *indexStr, const char *pinName, board_configuration_s * board_configuration_s) {
 	int index = atoi(indexStr);
-	if (index < 0 || index >= MAX31855_CS_COUNT || absI(index) == ERROR_CODE)
+	if (index < 0 || index >= EGT_CHANNEL_COUNT || absI(index) == ERROR_CODE)
 		return;
 	brain_pin_e pin = parseBrainPin(pinName);
 	if (pin == GPIO_INVALID) {
