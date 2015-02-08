@@ -18,4 +18,9 @@ void setSubaru2003Wrx(engine_configuration_s *engineConfiguration) {
 	setFrankenso_01_LCD(boardConfiguration);
 	setFrankenso0_1_joystick(engineConfiguration);
 
+	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
+	engineConfiguration->trigger.customTotalToothCount = 5;
+	engineConfiguration->trigger.customSkippedToothCount = 1;
+
+
 }
