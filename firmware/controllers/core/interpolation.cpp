@@ -87,6 +87,9 @@ int findIndex(const float array[], int size, float value) {
 		efiAssert(size > 0, "Unexpected state in binary search", 0);
 #endif
 
+		// todo: compare current implementation with
+		// http://eigenjoy.com/2011/01/21/worlds-fastest-binary-search/
+		// ?
 		middle = (left + right) / 2;
 
 //		print("left=%d middle=%d right=%d: %f\r\n", left, middle, right, array[middle]);
