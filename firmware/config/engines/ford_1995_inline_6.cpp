@@ -44,7 +44,6 @@ void setFordInline6(engine_configuration_s *engineConfiguration, board_configura
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
 	engineConfiguration->trigger.customTotalToothCount = 6;
 	engineConfiguration->trigger.customSkippedToothCount = 0;
-	engineConfiguration->trigger.customIsSynchronizationNeeded = false;
 
 	engineConfiguration->globalTriggerAngleOffset = 0;
 	engineConfiguration->ignitionBaseAngle = 13;

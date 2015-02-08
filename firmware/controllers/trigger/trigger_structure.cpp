@@ -280,15 +280,11 @@ void multi_wave_s::checkSwitchTimes(int size) {
 
 void setToothedWheelConfiguration(TriggerShape *s, int total, int skipped,
 		engine_configuration_s const *engineConfiguration) {
-	s->isSynchronizationNeeded = (skipped != 0);
+#if EFI_ENGINE_CONTROL
 
-	s->totalToothCount = total;
-	s->skippedToothCount = skipped;
-	// todo: move to into configuration definition s->needSecondTriggerInput = false;
 	s->useRiseEdge = true;
 
-#if EFI_ENGINE_CONTROL
-	initializeSkippedToothTriggerShapeExt(s, s->totalToothCount, s->skippedToothCount,
+	initializeSkippedToothTriggerShapeExt(s, total, skipped,
 			getOperationMode(engineConfiguration));
 #endif
 }

@@ -227,8 +227,16 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, uint64_t now
 	toothed_previous_time = nowNt;
 }
 
-static void initializeSkippedToothTriggerShape(TriggerShape *s, int totalTeethCount, int skippedCount,
+void initializeSkippedToothTriggerShapeExt(TriggerShape *s, int totalTeethCount, int skippedCount,
 		operation_mode_e operationMode) {
+	efiAssertVoid(totalTeethCount > 0, "totalTeethCount is zero");
+
+	s->totalToothCount = totalTeethCount;
+	s->skippedToothCount = skippedCount;
+
+	s->setTriggerSynchronizationGap(skippedCount + 1);
+	s->isSynchronizationNeeded = (skippedCount != 0);
+
 	efiAssertVoid(s != NULL, "TriggerShape is NULL");
 	s->reset(operationMode, false);
 
@@ -244,15 +252,7 @@ static void initializeSkippedToothTriggerShape(TriggerShape *s, int totalTeethCo
 	float angleDown = 720.0 / totalTeethCount * (totalTeethCount - skippedCount - 1 + toothWidth);
 	s->addEvent(angleDown, T_PRIMARY, TV_HIGH);
 	s->addEvent(720, T_PRIMARY, TV_LOW);
-}
 
-void initializeSkippedToothTriggerShapeExt(TriggerShape *s, int totalTeethCount, int skippedCount,
-		operation_mode_e operationMode) {
-	efiAssertVoid(totalTeethCount > 0, "totalTeethCount is zero");
-
-	s->totalToothCount = totalTeethCount;
-	s->skippedToothCount = skippedCount;
-	initializeSkippedToothTriggerShape(s, totalTeethCount, skippedCount, operationMode);
 }
 
 static void configureOnePlusOne(TriggerShape *s) {
@@ -282,9 +282,6 @@ void initializeTriggerShape(Logging *logger, engine_configuration_s const *engin
 	switch (triggerConfig->type) {
 
 	case TT_TOOTHED_WHEEL:
-		// todo: for toothed wheel isSynchronizationNeeded is a function of customSkippedToothCount I guess
-		triggerShape->isSynchronizationNeeded = engineConfiguration->trigger.customIsSynchronizationNeeded;
-
 		initializeSkippedToothTriggerShapeExt(triggerShape, triggerConfig->customTotalToothCount,
 				triggerConfig->customSkippedToothCount, getOperationMode(engineConfiguration));
 		break;
@@ -331,8 +328,6 @@ void initializeTriggerShape(Logging *logger, engine_configuration_s const *engin
 
 	case TT_TOOTHED_WHEEL_60_2:
 		setToothedWheelConfiguration(triggerShape, 60, 2, engineConfiguration);
-		// todo: gap ratio is a function of skipped tooth I guess?
-		triggerShape->setTriggerSynchronizationGap(3);
 		break;
 
 	case TT_TOOTHED_WHEEL_36_1:
