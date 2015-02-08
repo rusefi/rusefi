@@ -96,4 +96,23 @@ typedef brain_pin_e brain_input_pin_e;
 typedef fuel_table_t ve_table_t;
 typedef fuel_table_t afr_table_t;
 
+typedef void (*VoidPtr)(void*);
+
+typedef void (*VoidInt)(int);
+typedef void (*VoidIntVoidPtr)(int, void*);
+typedef void (*VoidFloat)(float);
+typedef void (*VoidFloatFloat)(float, float);
+typedef void (*VoidFloatFloatVoidPtr)(float, float, void*);
+typedef void (*VoidIntInt)(int, int);
+typedef void (*VoidIntIntVoidPtr)(int, int, void*);
+
+typedef void (*VoidCharPtr)(const char *);
+typedef void (*VoidCharPtrVoidPtr)(const char *, void*);
+
+typedef void (*VoidCharPtrCharPtr)(const char *, const char *);
+typedef void (*VoidCharPtrCharPtrVoidPtr)(const char *, const char *, void*);
+
+typedef void (*VoidCharPtrCharPtrCharPtr)(const char *, const char *, const char *);
+typedef void (*VoidCharPtrCharPtrCharPtrCharPtrCharPtr)(const char *, const char *, const char *, const char *, const char *);
+
 #endif /* CONTROLLERS_ALGO_RUSEFI_TYPES_H_ */

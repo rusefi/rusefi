@@ -12,8 +12,6 @@
 
 #define MAX_INT_LISTENER_COUNT 15
 
-typedef void (*IntListener)(int value);
-typedef void (*IntIntListener)(int value1, int value2);
 // todo: reorder parameters for consistency?
 typedef void (*IntIntVoidListener)(int value1, int value2, void *arg);
 
@@ -21,14 +19,15 @@ typedef void (*IntIntVoidListener)(int value1, int value2, void *arg);
 typedef void (*ArgListener)(void *arg);
 typedef void (*ArgIntListener)(void *arg, int value);
 
+// todo: rename this class, that's not just 'callback(int param) anymore
 class IntListenerArray {
 public:
 	IntListenerArray();
-	void registerCallback(IntListener handler, void *arg);
+	void registerCallback(VoidInt handler, void *arg);
 	void registerCallback(Void listener);
 	void invokeJustArgCallbacks();
 	int currentListenersCount;
-	IntListener callbacks[MAX_INT_LISTENER_COUNT];
+	VoidInt callbacks[MAX_INT_LISTENER_COUNT];
 	void * args[MAX_INT_LISTENER_COUNT];
 };
 

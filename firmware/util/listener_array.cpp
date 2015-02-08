@@ -12,7 +12,7 @@ IntListenerArray::IntListenerArray() {
 	currentListenersCount = 0;
 }
 
-void IntListenerArray::registerCallback(IntListener handler, void *arg) {
+void IntListenerArray::registerCallback(VoidInt handler, void *arg) {
 	efiAssertVoid(currentListenersCount < MAX_INT_LISTENER_COUNT, "Too many callbacks");
 	int index = currentListenersCount++;
 	callbacks[index] = handler;
@@ -20,7 +20,7 @@ void IntListenerArray::registerCallback(IntListener handler, void *arg) {
 }
 
 void IntListenerArray::registerCallback(Void listener) {
-	registerCallback((IntListener)listener, NULL);
+	registerCallback((VoidInt)listener, NULL);
 }
 
 void invokeCallbacks(IntListenerArray *array, int value) {
@@ -30,7 +30,7 @@ void invokeCallbacks(IntListenerArray *array, int value) {
 
 void IntListenerArray::invokeJustArgCallbacks() {
 	for (int i = 0; i < currentListenersCount; i++) {
-		ArgListener listener = (ArgListener)callbacks[i];
+		VoidPtr listener = (VoidPtr)callbacks[i];
 		void *arg = args[i];
 		(listener)(arg);
 	}
@@ -46,7 +46,7 @@ void invokeArgIntCallbacks(IntListenerArray *array, int value) {
 
 void invokeIntIntCallbacks(IntListenerArray *array, int value, int value2) {
 	for (int i = 0; i < array->currentListenersCount; i++) {
-		IntIntListener listener = (IntIntListener)array->callbacks[i];
+		VoidIntInt listener = (VoidIntInt)array->callbacks[i];
 		(listener)(value, value2);
 	}
 }
