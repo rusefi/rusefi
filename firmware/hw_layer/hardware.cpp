@@ -202,7 +202,7 @@ void initHardware(Logging *l, Engine *engine) {
 	/**
 	 * This is so early because we want to init logger
 	 * which would be used while finding trigger synch index
-	 * while config read
+	 * while reading configuration
 	 */
 	initTriggerDecoderLogger(sharedLogger);
 #endif

@@ -282,8 +282,7 @@ void initializeTriggerShape(Logging *logger, engine_configuration_s const *engin
 	switch (triggerConfig->type) {
 
 	case TT_TOOTHED_WHEEL:
-		// todo: move to into configuration definition		engineConfiguration2->triggerShape.needSecondTriggerInput = false;
-
+		// todo: for toothed wheel isSynchronizationNeeded is a function of customSkippedToothCount I guess
 		triggerShape->isSynchronizationNeeded = engineConfiguration->trigger.customIsSynchronizationNeeded;
 
 		initializeSkippedToothTriggerShapeExt(triggerShape, triggerConfig->customTotalToothCount,
@@ -332,6 +331,7 @@ void initializeTriggerShape(Logging *logger, engine_configuration_s const *engin
 
 	case TT_TOOTHED_WHEEL_60_2:
 		setToothedWheelConfiguration(triggerShape, 60, 2, engineConfiguration);
+		// todo: gap ratio is a function of skipped tooth I guess?
 		triggerShape->setTriggerSynchronizationGap(3);
 		break;
 
@@ -428,9 +428,11 @@ static uint32_t doFindTrigger(TriggerStimulatorHelper *helper, TriggerShape * sh
 uint32_t findTriggerZeroEventIndex(TriggerShape * shape, trigger_config_s const*triggerConfig
 		DECLARE_ENGINE_PARAMETER_S) {
 
+	// todo: should this variable be declared 'static' to reduce stack usage?
 	TriggerState state;
 	errorDetection.clear();
 
+	// todo: should this variable be declared 'static' to reduce stack usage?
 	TriggerStimulatorHelper helper;
 
 	uint32_t index = doFindTrigger(&helper, shape, triggerConfig, &state PASS_ENGINE_PARAMETER);
@@ -458,10 +460,6 @@ uint32_t findTriggerZeroEventIndex(TriggerShape * shape, trigger_config_s const*
 	return index % shape->getSize();
 }
 
-#if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
-//static Logging logger;
-#endif
-
 void initTriggerDecoderLogger(Logging *sharedLogger) {
 	logger = sharedLogger;
 }
@@ -472,4 +470,4 @@ void initTriggerDecoder(void) {
 #endif
 }
 
-#endif
+#endif /* EFI_SHAFT_POSITION_INPUT */
