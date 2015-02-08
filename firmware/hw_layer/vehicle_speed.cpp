@@ -57,7 +57,7 @@ void initVehicleSpeed(Logging *l) {
 	initWaveAnalyzerDriver(&vehicleSpeedInput, engineConfiguration->vehicleSpeedSensorInputPin);
 	startInputDriver(&vehicleSpeedInput, true);
 
-	vehicleSpeedInput.widthListeners.registerCallback((IntListener) vsAnaWidthCallback, NULL);
+	vehicleSpeedInput.widthListeners.registerCallback((VoidInt) vsAnaWidthCallback, NULL);
 	addConsoleAction("speedinfo", speedInfo);
 }
 

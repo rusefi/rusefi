@@ -9,14 +9,8 @@
 #ifndef RFICONSOLE_LOGIC_H_
 #define RFICONSOLE_LOGIC_H_
 
-#include "datalogging.h"
-
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
-
 #include "efifeatures.h"
+#include "datalogging.h"
 #include "rusefi_types.h"
 
 typedef enum {
@@ -45,26 +39,13 @@ typedef struct {
 	void *param;
 } TokenCallback;
 
+
 int tokenLength(const char *msgp);
 
-typedef void (*VoidPtr)(void*);
-
-typedef void (*VoidInt)(int);
-typedef void (*VoidIntVoidPtr)(int, void*);
-typedef void (*VoidFloat)(float);
-typedef void (*VoidFloatFloat)(float, float);
-typedef void (*VoidFloatFloatVoidPtr)(float, float, void*);
-typedef void (*VoidIntInt)(int, int);
-typedef void (*VoidIntIntVoidPtr)(int, int, void*);
-
-typedef void (*VoidCharPtr)(const char *);
-typedef void (*VoidCharPtrVoidPtr)(const char *, void*);
-
-typedef void (*VoidCharPtrCharPtr)(const char *, const char *);
-typedef void (*VoidCharPtrCharPtrVoidPtr)(const char *, const char *, void*);
-
-typedef void (*VoidCharPtrCharPtrCharPtr)(const char *, const char *, const char *);
-typedef void (*VoidCharPtrCharPtrCharPtrCharPtrCharPtr)(const char *, const char *, const char *, const char *, const char *);
+#ifdef __cplusplus
+extern "C"
+{
+#endif /* __cplusplus */
 
 char *validateSecureLine(char *line);
 void resetConsoleActions(void);

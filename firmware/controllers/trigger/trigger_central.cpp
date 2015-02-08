@@ -50,7 +50,7 @@ uint64_t getStartOfRevolutionIndex() {
 
 void TriggerCentral::addEventListener(ShaftPositionListener listener, const char *name, Engine *engine) {
 	print("registerCkpListener: %s\r\n", name);
-	triggerListeneres.registerCallback((IntListener) listener, engine);
+	triggerListeneres.registerCallback((VoidInt) listener, engine);
 }
 
 /**
