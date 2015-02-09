@@ -315,7 +315,7 @@ static void printInfo(Engine *engine, systime_t nowSeconds) {
 	printOutPin(WA_CHANNEL_2, boardConfiguration->logicAnalyzerPins[1]);
 #endif
 
-	for (int i = 0; i < engineConfiguration->cylindersCount; i++) {
+	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 		printOutPin(enginePins.coils[i].name,
 				boardConfiguration->ignitionPins[i]);
 

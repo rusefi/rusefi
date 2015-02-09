@@ -24,7 +24,7 @@ void testSpeedDensity(void) {
 
 	// 427 cubic inches, that's a LOT of engine
 	eth.ec->specs.displacement = 6.99728;
-	eth.ec->cylindersCount = 8;
+	eth.ec->specs.cylindersCount = 8;
 
 	eth.ec->injector.flow = gramm_second_to_cc_minute(5.303);
 

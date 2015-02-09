@@ -13,10 +13,10 @@
 
 void setSachs(engine_configuration_s *engineConfiguration) {
 	engineConfiguration->specs.displacement = 0.1; // 100cc
-	engineConfiguration->cylindersCount = 1;
+	engineConfiguration->specs.cylindersCount = 1;
 	engineConfiguration->engineCycle = 360;
 
-	engineConfiguration->firingOrder = FO_ONE_CYLINDER;
+	engineConfiguration->specs.firingOrder = FO_ONE_CYLINDER;
 
 	/**
 	 * We treat the trigger as 1/0 toothed wheel

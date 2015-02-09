@@ -53,7 +53,6 @@ static const ignition_table_t tps_advance_table = {
 {/*15 engineLoad=100.00*/ /*0 800.0*/+12.00, /*1 1213.0*/+13.20, /*2 1626.0*/+14.40, /*3 2040.0*/+15.60, /*4 2453.0*/+16.80, /*5 2866.0*/+18.00, /*6 3280.0*/+19.20, /*7 3693.0*/+20.40, /*8 4106.0*/+21.60, /*9 4520.0*/+22.80, /*10 4933.0*/+24.00, /*11 5346.0*/+25.20, /*12 5760.0*/+26.40, /*13 6173.0*/+27.60, /*14 6586.0*/+28.80, /*15 7000.0*/+30.00}
 };
 
-
 void setCitroenBerlingoTU3JPConfiguration(engine_configuration_s *engineConfiguration) {
 	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 
@@ -65,9 +64,9 @@ void setCitroenBerlingoTU3JPConfiguration(engine_configuration_s *engineConfigur
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
 	engineConfiguration->globalTriggerAngleOffset = 114;
-	engineConfiguration->cylindersCount = 4;
+	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.displacement = 1.360;
-	engineConfiguration->firingOrder = FO_1_THEN_3_THEN_4_THEN2;
+	engineConfiguration->specs.firingOrder = FO_1_THEN_3_THEN_4_THEN2;
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 	engineConfiguration->injectionMode = IM_BATCH;
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;

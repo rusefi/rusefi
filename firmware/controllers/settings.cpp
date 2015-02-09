@@ -68,13 +68,13 @@ extern board_configuration_s *boardConfiguration;
 static void printOutputs(engine_configuration_s *engineConfiguration) {
 	// engine_configuration2_s *engineConfiguration2
 	scheduleMsg(&logger, "injectionPins: mode %s", getPin_output_mode_e(boardConfiguration->injectionPinMode));
-	for (int i = 0; i < engineConfiguration->cylindersCount; i++) {
+	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 		brain_pin_e brainPin = boardConfiguration->injectionPins[i];
 		scheduleMsg(&logger, "injection #%d @ %s", (1 + i), hwPortname(brainPin));
 	}
 
 	scheduleMsg(&logger, "ignitionPins: mode %s", getPin_output_mode_e(boardConfiguration->ignitionPinMode));
-	for (int i = 0; i < engineConfiguration->cylindersCount; i++) {
+	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 		brain_pin_e brainPin = boardConfiguration->ignitionPins[i];
 		scheduleMsg(&logger, "ignition #%d @ %s", (1 + i), hwPortname(brainPin));
 	}
@@ -431,7 +431,7 @@ static void setAlgorithm(int value) {
 }
 
 static void setFiringOrder(int value) {
-	engineConfiguration->firingOrder = (firing_order_e) value;
+	engineConfiguration->specs.firingOrder = (firing_order_e) value;
 	doPrintConfiguration(engine);
 }
 

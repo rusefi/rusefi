@@ -92,11 +92,11 @@ OutputSignalList injectonSignals CCM_OPTIONAL;
 
 void initializeIgnitionActions(angle_t advance, angle_t dwellAngle,
 		IgnitionEventList *list DECLARE_ENGINE_PARAMETER_S) {
-	efiAssertVoid(engineConfiguration->cylindersCount > 0, "cylindersCount");
+	efiAssertVoid(engineConfiguration->specs.cylindersCount > 0, "cylindersCount");
 
 	list->reset();
 
-	for (int i = 0; i < CONFIG(cylindersCount); i++) {
+	for (int i = 0; i < CONFIG(specs.cylindersCount); i++) {
 		float localAdvance = advance + ENGINE(angleExtra[i]);
 		NamedOutputPin *output = ENGINE(ignitionPin[i]);
 
@@ -156,17 +156,17 @@ void FuelSchedule::addFuelEvents(injection_mode_e mode DECLARE_ENGINE_PARAMETER_
 
 	switch (mode) {
 	case IM_SEQUENTIAL:
-		for (int i = 0; i < engineConfiguration->cylindersCount; i++) {
-			int index = getCylinderId(engineConfiguration->firingOrder, i) - 1;
+		for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
+			int index = getCylinderId(engineConfiguration->specs.firingOrder, i) - 1;
 			float angle = baseAngle
-					+ (float) engineConfiguration->engineCycle * i / engineConfiguration->cylindersCount;
+					+ (float) engineConfiguration->engineCycle * i / engineConfiguration->specs.cylindersCount;
 			registerInjectionEvent(&enginePins.injectors[index], angle, false PASS_ENGINE_PARAMETER);
 		}
 		break;
 	case IM_SIMULTANEOUS:
-		for (int i = 0; i < engineConfiguration->cylindersCount; i++) {
+		for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 			float angle = baseAngle
-					+ (float) engineConfiguration->engineCycle * i / engineConfiguration->cylindersCount;
+					+ (float) engineConfiguration->engineCycle * i / engineConfiguration->specs.cylindersCount;
 
 			/**
 			 * We do not need injector pin here because we will control all injectors
@@ -176,10 +176,10 @@ void FuelSchedule::addFuelEvents(injection_mode_e mode DECLARE_ENGINE_PARAMETER_
 		}
 		break;
 	case IM_BATCH:
-		for (int i = 0; i < engineConfiguration->cylindersCount; i++) {
-			int index = i % (engineConfiguration->cylindersCount / 2);
+		for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
+			int index = i % (engineConfiguration->specs.cylindersCount / 2);
 			float angle = baseAngle
-					+ i * (float) engineConfiguration->engineCycle / engineConfiguration->cylindersCount;
+					+ i * (float) engineConfiguration->engineCycle / engineConfiguration->specs.cylindersCount;
 			registerInjectionEvent(&enginePins.injectors[index], angle, false PASS_ENGINE_PARAMETER);
 
 			if (engineConfiguration->twoWireBatch) {
@@ -187,7 +187,7 @@ void FuelSchedule::addFuelEvents(injection_mode_e mode DECLARE_ENGINE_PARAMETER_
 				/**
 				 * also fire the 2nd half of the injectors so that we can implement a batch mode on individual wires
 				 */
-				index = index + (engineConfiguration->cylindersCount / 2);
+				index = index + (engineConfiguration->specs.cylindersCount / 2);
 				registerInjectionEvent(&enginePins.injectors[index], angle, false PASS_ENGINE_PARAMETER);
 			}
 		}
@@ -300,13 +300,13 @@ static NamedOutputPin * getIgnitionPinForIndex(int i DECLARE_ENGINE_PARAMETER_S)
 		return &enginePins.coils[0];
 		break;
 	case IM_WASTED_SPARK: {
-		int wastedIndex = i % (CONFIG(cylindersCount) / 2);
-		int id = getCylinderId(CONFIG(firingOrder), wastedIndex);
+		int wastedIndex = i % (CONFIG(specs.cylindersCount) / 2);
+		int id = getCylinderId(CONFIG(specs.firingOrder), wastedIndex);
 		return &enginePins.coils[ID2INDEX(id)];
 	}
 		break;
 	case IM_INDIVIDUAL_COILS:
-		return &enginePins.coils[ID2INDEX(getCylinderId(CONFIG(firingOrder), i))];
+		return &enginePins.coils[ID2INDEX(getCylinderId(CONFIG(specs.firingOrder), i))];
 		break;
 
 	default:
@@ -324,8 +324,8 @@ void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_F) {
 	// todo: move this reset into decoder
 	engine->triggerShape.calculateTriggerSynchPoint(engineConfiguration, engine);
 
-	for (int i = 0; i < CONFIG(cylindersCount); i++) {
-		ENGINE(angleExtra[i])= (float) CONFIG(engineCycle) * i / CONFIG(cylindersCount);
+	for (int i = 0; i < CONFIG(specs.cylindersCount); i++) {
+		ENGINE(angleExtra[i])= (float) CONFIG(engineCycle) * i / CONFIG(specs.cylindersCount);
 
 		ENGINE(ignitionPin[i]) = getIgnitionPinForIndex(i PASS_ENGINE_PARAMETER);
 
@@ -343,20 +343,20 @@ void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_F) {
 
 #endif
 
-void setFuelRpmBin(engine_configuration_s *engineConfiguration, float l, float r) {
-	setTableBin(engineConfiguration->fuelRpmBins, FUEL_RPM_COUNT, l, r);
+void setFuelRpmBin(engine_configuration_s *engineConfiguration, float from, float to) {
+	setTableBin(engineConfiguration->fuelRpmBins, FUEL_RPM_COUNT, from, to);
 }
 
-void setFuelLoadBin(engine_configuration_s *engineConfiguration, float l, float r) {
-	setTableBin(engineConfiguration->fuelLoadBins, FUEL_LOAD_COUNT, l, r);
+void setFuelLoadBin(engine_configuration_s *engineConfiguration, float from, float to) {
+	setTableBin(engineConfiguration->fuelLoadBins, FUEL_LOAD_COUNT, from, to);
 }
 
-void setTimingRpmBin(engine_configuration_s *engineConfiguration, float l, float r) {
-	setTableBin(engineConfiguration->ignitionRpmBins, IGN_RPM_COUNT, l, r);
+void setTimingRpmBin(engine_configuration_s *engineConfiguration, float from, float to) {
+	setTableBin(engineConfiguration->ignitionRpmBins, IGN_RPM_COUNT, from, to);
 }
 
-void setTimingLoadBin(engine_configuration_s *engineConfiguration, float l, float r) {
-	setTableBin(engineConfiguration->ignitionLoadBins, IGN_LOAD_COUNT, l, r);
+void setTimingLoadBin(engine_configuration_s *engineConfiguration, float from, float to) {
+	setTableBin(engineConfiguration->ignitionLoadBins, IGN_LOAD_COUNT, from, to);
 }
 
 int isInjectionEnabled(engine_configuration_s *engineConfiguration) {

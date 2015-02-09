@@ -30,8 +30,8 @@ void setRoverv8(engine_configuration_s *engineConfiguration) {
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_36_1;
 
 	engineConfiguration->specs.displacement = 3.528;
-	engineConfiguration->cylindersCount = 8;
-	engineConfiguration->firingOrder = FO_1_8_4_3_6_5_7_2;
+	engineConfiguration->specs.cylindersCount = 8;
+	engineConfiguration->specs.firingOrder = FO_1_8_4_3_6_5_7_2;
 
 	// set_rpm_hard_limit 4000
 	engineConfiguration->rpmHardLimit = 4000; // yes, 4k. let's play it safe for now

@@ -72,7 +72,7 @@ void setCustomEngineConfiguration(engine_configuration_s *engineConfiguration) {
 	/**
 	 * We want to initialize all outputs for test
 	 */
-	engineConfiguration->cylindersCount = 12;
+	engineConfiguration->specs.cylindersCount = 12;
 
 	engineConfiguration->displayMode = DM_NONE;
 #else
@@ -91,6 +91,8 @@ void setCustomEngineConfiguration(engine_configuration_s *engineConfiguration) {
 	boardConfiguration->ignitionPins[3] = GPIOE_1; // todo: update this value
 #endif
 
+	// todo: 8.2 or 10k?
+	engineConfiguration->vbattDividerCoeff = ((float) (10 + 33)) / 10 * 2;
 }
 
 #endif /* CONFIG_ENGINES_CUSTOM_ENGINE_CPP_ */

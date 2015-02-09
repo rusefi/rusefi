@@ -69,7 +69,7 @@ static bool stopPin(NamedOutputPin *output) {
 
 bool Engine::stopPins() {
 	bool result = false;
-	for (int i = 0; i < engineConfiguration->cylindersCount; i++) {
+	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 		result |= stopPin(&enginePins.coils[i]);
 		result |= stopPin(&enginePins.injectors[i]);
 	}
