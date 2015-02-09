@@ -22,10 +22,10 @@ void setGy6139qmbDefaultEngineConfiguration(
 	engineConfiguration->globalTriggerAngleOffset = 45;
 	engineConfiguration->bc.analogChartMode = AC_MAP;
 	engineConfiguration->specs.displacement = 0.072; // 72cc
-	engineConfiguration->cylindersCount = 1;
+	engineConfiguration->specs.cylindersCount = 1;
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 
-	engineConfiguration->firingOrder = FO_ONE_CYLINDER;
+	engineConfiguration->specs.firingOrder = FO_ONE_CYLINDER;
 
 	/**
 	 * We treat the trigger as 8-1 toothed wheel

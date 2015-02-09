@@ -70,4 +70,6 @@ void setMazda626EngineConfiguration(engine_configuration_s *engineConfiguration)
 
 	boardConfiguration->ignitionPins[0] = GPIOC_7;
 
+	// todo: 8.2 or 10k?
+	engineConfiguration->vbattDividerCoeff = ((float) (10 + 33)) / 10 * 2;
 }

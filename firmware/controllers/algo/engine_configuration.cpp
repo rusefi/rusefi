@@ -90,6 +90,7 @@ int getGlobalConfigurationVersion(void) {
 
 void incrementGlobalConfigurationVersion(void) {
 	globalConfigurationVersion++;
+	// todo invoke engine->configurationListeners.
 }
 
 /**
@@ -249,7 +250,7 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
 	engineConfiguration->baroSensor.hwChannel = EFI_ADC_4;
 
-	engineConfiguration->firingOrder = FO_1_THEN_3_THEN_4_THEN2;
+	engineConfiguration->specs.firingOrder = FO_1_THEN_3_THEN_4_THEN2;
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 
@@ -278,7 +279,7 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	engineConfiguration->canWriteEnabled = false;
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
-	engineConfiguration->cylindersCount = 4;
+	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.displacement = 2;
 	/**
 	 * By the way http://users.erols.com/srweiss/tableifc.htm has a LOT of data

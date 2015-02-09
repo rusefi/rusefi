@@ -44,8 +44,8 @@ void Table2D::preCalc(float *bin, float *values) {
 	}
 }
 
-void setTableBin(float array[], int size, float l, float r) {
-	setTableBin2(array, size, l, r, 0.01);
+void setTableBin(float array[], int size, float from, float to) {
+	setTableBin2(array, size, from, to, 0.01);
 }
 
 void setRpmTableBin(float array[], int size) {

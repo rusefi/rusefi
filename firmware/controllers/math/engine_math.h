@@ -63,10 +63,10 @@ float getSparkDwellMsT(int rpm DECLARE_ENGINE_PARAMETER_S);
 
 int getCylinderId(firing_order_e firingOrder, int index);
 
-void setFuelRpmBin(engine_configuration_s *engineConfiguration, float l, float r);
-void setFuelLoadBin(engine_configuration_s *engineConfiguration, float l, float r);
-void setTimingRpmBin(engine_configuration_s *engineConfiguration, float l, float r);
-void setTimingLoadBin(engine_configuration_s *engineConfiguration, float l, float r);
+void setFuelRpmBin(engine_configuration_s *engineConfiguration, float from, float to);
+void setFuelLoadBin(engine_configuration_s *engineConfiguration, float from, float to);
+void setTimingRpmBin(engine_configuration_s *engineConfiguration, float from, float to);
+void setTimingLoadBin(engine_configuration_s *engineConfiguration, float from, float to);
 
 void setSingleCoilDwell(engine_configuration_s *engineConfiguration);
 

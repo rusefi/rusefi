@@ -18,12 +18,12 @@ void setMitsubishiConfiguration(engine_configuration_s *engineConfiguration, boa
 
 	engineConfiguration->trigger.type = TT_MITSU;
 
-	engineConfiguration->cylindersCount = 4;
+	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.displacement = 1.800;
 
 	// set_ignition_mode 2
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
-	engineConfiguration->firingOrder = FO_1_THEN_3_THEN_4_THEN2;
+	engineConfiguration->specs.firingOrder = FO_1_THEN_3_THEN_4_THEN2;
 
 	// set_global_trigger_offset_angle 671
 	engineConfiguration->globalTriggerAngleOffset = 671;

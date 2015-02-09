@@ -60,11 +60,11 @@ float getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_S) {
 static int getNumberOfInjections(engine_configuration_s const *engineConfiguration, injection_mode_e mode) {
 	switch (mode) {
 	case IM_SIMULTANEOUS:
-		return engineConfiguration->cylindersCount;
+		return engineConfiguration->specs.cylindersCount;
 	case IM_SEQUENTIAL:
 		return 1;
 	case IM_BATCH:
-		return engineConfiguration->cylindersCount / 2;
+		return engineConfiguration->specs.cylindersCount / 2;
 	default:
 		firmwareError("Unexpected getFuelMultiplier %d", mode);
 		return 1;

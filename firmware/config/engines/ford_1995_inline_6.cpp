@@ -23,12 +23,12 @@
  * @brief Default values for persistent properties
  */
 void setFordInline6(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
-	engineConfiguration->cylindersCount = 6;
+	engineConfiguration->specs.cylindersCount = 6;
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
 
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
-	engineConfiguration->firingOrder = FO_1_THEN_5_THEN_3_THEN_6_THEN_2_THEN_4;
+	engineConfiguration->specs.firingOrder = FO_1_THEN_5_THEN_3_THEN_6_THEN_2_THEN_4;
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_BATCH;
 	engineConfiguration->twoWireBatch = true;

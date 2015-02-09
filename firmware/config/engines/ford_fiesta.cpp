@@ -23,7 +23,7 @@ void setFordFiestaDefaultEngineConfiguration(engine_configuration_s *engineConfi
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_36_1;
 
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
-	engineConfiguration->firingOrder = FO_1_THEN_3_THEN_4_THEN2;
+	engineConfiguration->specs.firingOrder = FO_1_THEN_3_THEN_4_THEN2;
 }
 
 #endif /* EFI_SUPPORT_FORD_FIESTA */

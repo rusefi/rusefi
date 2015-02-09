@@ -88,13 +88,13 @@ static Logging *logger;
 //#endif
 
 static void startSimultaniousInjection(Engine *engine) {
-	for (int i = 0; i < engine->engineConfiguration->cylindersCount; i++) {
+	for (int i = 0; i < engine->engineConfiguration->specs.cylindersCount; i++) {
 		turnPinHigh(&enginePins.injectors[i]);
 	}
 }
 
 static void endSimultaniousInjection(Engine *engine) {
-	for (int i = 0; i < engine->engineConfiguration->cylindersCount; i++) {
+	for (int i = 0; i < engine->engineConfiguration->specs.cylindersCount; i++) {
 		turnPinLow(&enginePins.injectors[i]);
 	}
 }
@@ -357,7 +357,7 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECL
 		float maxAllowedDwellAngle = (int)(engineConfiguration->engineCycle / 2); // the cast is about making Coverity happy
 
 		if (engineConfiguration->ignitionMode == IM_ONE_COIL) {
-			maxAllowedDwellAngle = engineConfiguration->engineCycle / engineConfiguration->cylindersCount / 1.1;
+			maxAllowedDwellAngle = engineConfiguration->engineCycle / engineConfiguration->specs.cylindersCount / 1.1;
 		}
 
 		if (engine->dwellAngle > maxAllowedDwellAngle) {

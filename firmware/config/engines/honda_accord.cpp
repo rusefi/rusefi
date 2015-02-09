@@ -39,7 +39,7 @@ static void setHondaAccordConfigurationCommon(engine_configuration_s *engineConf
 
 	engineConfiguration->HD44780height = 4;
 
-	engineConfiguration->cylindersCount = 4;
+	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.displacement = 2.156;
 
 	// Keihin 06164-P0A-A00

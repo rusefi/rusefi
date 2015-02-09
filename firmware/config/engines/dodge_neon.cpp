@@ -123,7 +123,7 @@ void setDodgeNeon1995EngineConfiguration(engine_configuration_s *engineConfigura
 	// set_ignition_mode 2
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 	// set_firing_order 2
-	engineConfiguration->firingOrder = FO_1_THEN_3_THEN_4_THEN2;
+	engineConfiguration->specs.firingOrder = FO_1_THEN_3_THEN_4_THEN2;
 
 	// set_global_trigger_offset_angle 497
 	engineConfiguration->globalTriggerAngleOffset = 497;
@@ -194,7 +194,7 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 	engineConfiguration->specs.displacement = 1.996;
-	engineConfiguration->cylindersCount = 4;
+	engineConfiguration->specs.cylindersCount = 4;
 
 	/**
 	 * that's NGC config

@@ -45,7 +45,7 @@ static int is_injector_enabled[MAX_INJECTOR_COUNT];
 extern engine_pins_s enginePins;
 
 void initIgnitionCentral(void) {
-	for (int i = 0; i < engineConfiguration->cylindersCount; i++) {
+	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 		NamedOutputPin *output = &enginePins.coils[i];
 		outputPinRegisterExt2(output->name, output, boardConfiguration->ignitionPins[i], &boardConfiguration->ignitionPinMode);
 	}
@@ -56,7 +56,7 @@ bool_t isRunningBenchTest(void) {
 }
 
 void assertCylinderId(int cylinderId, const char *msg) {
-	int isValid = cylinderId >= 1 && cylinderId <= engineConfiguration->cylindersCount;
+	int isValid = cylinderId >= 1 && cylinderId <= engineConfiguration->specs.cylindersCount;
 	if (!isValid) {
 		// we are here only in case of a fatal issue - at this point it is fine to make some blocking i-o
 		//scheduleSimpleMsg(&logger, "cid=", cylinderId);
@@ -74,7 +74,7 @@ int isInjectorEnabled(int cylinderId) {
 }
 
 static void printStatus(void) {
-	for (int id = 1; id <= engineConfiguration->cylindersCount; id++) {
+	for (int id = 1; id <= engineConfiguration->specs.cylindersCount; id++) {
 		resetLogging(&logger);
 
 		appendPrintf(&logger, "injector%d%s", id, DELIMETER);
@@ -85,7 +85,7 @@ static void printStatus(void) {
 }
 
 static void setInjectorEnabled(int id, int value) {
-	efiAssertVoid(id >= 0 && id < engineConfiguration->cylindersCount, "injector id");
+	efiAssertVoid(id >= 0 && id < engineConfiguration->specs.cylindersCount, "injector id");
 	is_injector_enabled[id] = value;
 	printStatus();
 }
@@ -140,7 +140,7 @@ static void pinbench(const char *delayStr, const char *onTimeStr, const char *of
 static void fuelbench2(const char *delayStr, const char *indexStr, const char * onTimeStr, const char *offTimeStr,
 		const char *countStr) {
 	int index = atoi(indexStr);
-	if (index < 1 || index > engineConfiguration->cylindersCount) {
+	if (index < 1 || index > engineConfiguration->specs.cylindersCount) {
 		scheduleMsg(&logger, "Invalid index: %d", index);
 		return;
 	}
@@ -173,7 +173,7 @@ static void fuelbench(const char * onTimeStr, const char *offTimeStr, const char
 static void sparkbench2(const char *delayStr, const char *indexStr, const char * onTimeStr, const char *offTimeStr,
 		const char *countStr) {
 	int index = atoi(indexStr);
-	if (index < 1 || index > engineConfiguration->cylindersCount) {
+	if (index < 1 || index > engineConfiguration->specs.cylindersCount) {
 		scheduleMsg(&logger, "Invalid index: %d", index);
 		return;
 	}
@@ -211,12 +211,12 @@ void initInjectorCentral(Engine *engine) {
 	initLogging(&logger, "InjectorCentral");
 	chThdCreateStatic(benchThreadStack, sizeof(benchThreadStack), NORMALPRIO, (tfunc_t) benchThread, NULL);
 
-	for (int i = 0; i < engineConfiguration->cylindersCount; i++) {
+	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 		is_injector_enabled[i] = true;
 	}
 
 	// todo: should we move this code closer to the injection logic?
-	for (int i = 0; i < engineConfiguration->cylindersCount; i++) {
+	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 		NamedOutputPin *output = &enginePins.injectors[i];
 
 		outputPinRegisterExt2(output->name, output, boardConfiguration->injectionPins[i],
