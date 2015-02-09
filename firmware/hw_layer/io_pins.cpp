@@ -23,7 +23,7 @@
 
 extern board_configuration_s *boardConfiguration;
 
-static LoggingWithStorage logger;
+static LoggingWithStorage logger("io_pins");
 
 static OutputPin sdCsPin;
 
@@ -97,8 +97,6 @@ void initPrimaryPins(void) {
 }
 
 void initOutputPins(void) {
-	initLogging(&logger, "io_pins");
-
 	/**
 	 * want to make sure it's all zeros so that we can compare in initOutputPinExt() method
 	 */

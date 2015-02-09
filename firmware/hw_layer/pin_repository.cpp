@@ -20,7 +20,7 @@
 const char *PIN_USED[PIN_REPO_SIZE];
 static int initialized = FALSE;
 
-static LoggingWithStorage logger;
+static LoggingWithStorage logger("pin repos");
 static int totalPinsUsed = 0;
 
 /**
@@ -125,7 +125,6 @@ void initPinRepository(void) {
 	/**
 	 * this method cannot use console because this method is invoked before console is initialized
 	 */
-	initLogging(&logger, "pin repos");
 
 	msObjectInit(&portNameStream, (uint8_t*) portNameBuffer, sizeof(portNameBuffer), 0);
 

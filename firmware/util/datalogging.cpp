@@ -174,10 +174,6 @@ int isInitialized(Logging *logging) {
 	return logging->isInitialized == MAGIC_LOGGING_FLAG;
 }
 
-void initLogging(LoggingWithStorage *logging, const char *name) {
-	initLoggingExt(logging, name, logging->DEFAULT_BUFFER, sizeof(logging->DEFAULT_BUFFER));
-}
-
 void debugInt(Logging *logging, const char *caption, int value) {
 	append(logging, caption);
 	append(logging, DELIMETER);
@@ -389,10 +385,8 @@ void initIntermediateLoggingBuffer(void) {
 
 #endif /* ! EFI_UNIT_TEST */
 
-// todo: eliminate this constructor
-LoggingWithStorage::LoggingWithStorage() {
-}
-
 LoggingWithStorage::LoggingWithStorage(const char *name) {
-	initLogging(this, name);
+#if ! EFI_UNIT_TEST
+	initLoggingExt(this, name, DEFAULT_BUFFER, sizeof(DEFAULT_BUFFER));
+#endif /* ! EFI_UNIT_TEST */
 }

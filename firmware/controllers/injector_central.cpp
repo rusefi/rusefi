@@ -34,7 +34,7 @@
 #include "pin_repository.h"
 #include "efiGpio.h"
 
-static LoggingWithStorage logger;
+static LoggingWithStorage logger("InjectorCentral");
 EXTERN_ENGINE
 ;
 
@@ -208,7 +208,6 @@ static msg_t benchThread(int param) {
 }
 
 void initInjectorCentral(Engine *engine) {
-	initLogging(&logger, "InjectorCentral");
 	chThdCreateStatic(benchThreadStack, sizeof(benchThreadStack), NORMALPRIO, (tfunc_t) benchThread, NULL);
 
 	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {

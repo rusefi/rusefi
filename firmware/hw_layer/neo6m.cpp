@@ -29,7 +29,7 @@
 extern board_configuration_s *boardConfiguration;
 extern engine_configuration_s *engineConfiguration;
 
-static LoggingWithStorage logging;
+static LoggingWithStorage logging("uart gps");
 
 static SerialConfig GPSserialConfig = { GPS_SERIAL_SPEED, 0, USART_CR2_STOP1_BITS | USART_CR2_LINEN, 0 };
 static THD_WORKING_AREA(gpsThreadStack, UTILITY_THREAD_STACK_SIZE);
@@ -108,7 +108,6 @@ void initGps(void) {
 	if(!engineConfiguration->isGpsEnabled)
 		return;
 
-	initLogging(&logging, "uart gps");
 
 	sdStart(GPS_SERIAL_DEVICE, &GPSserialConfig);
 //  GPS we have USART1: PB7 -> USART1_RX and PB6 -> USART1_TX

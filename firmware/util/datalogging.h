@@ -37,7 +37,6 @@ public:
 
 class LoggingWithStorage : public Logging {
 public:
-	LoggingWithStorage();
 	LoggingWithStorage(const char *name);
 	char DEFAULT_BUFFER[200];
 };
@@ -57,7 +56,6 @@ uint32_t remainingSize(Logging *logging);
 
 int isInitialized(Logging *logging);
 
-void initLogging(LoggingWithStorage *logging, const char *name);
 void initLoggingExt(Logging *logging, const char *name, char *buffer, int bufferSize);
 
 void debugInt(Logging *logging, const char *caption, int value);

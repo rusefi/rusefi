@@ -273,7 +273,7 @@ static char LOGGING_BUFFER[700];
 volatile int needToReportStatus = FALSE;
 static int prevCkpEventCounter = -1;
 
-static LoggingWithStorage logger2;
+static LoggingWithStorage logger2("main event handler");
 
 static void printStatus(void) {
 	needToReportStatus = TRUE;
@@ -640,7 +640,6 @@ void initStatusLoop(Engine *engine) {
 	addConsoleActionI("warn", setWarningEnabled);
 
 #if EFI_PROD_CODE
-	initLogging(&logger2, "main event handler");
 
 #if EFI_ENGINE_CONTROL
 	addConsoleActionFFP("fuelinfo2", (VoidFloatFloatVoidPtr) showFuelInfo2,
