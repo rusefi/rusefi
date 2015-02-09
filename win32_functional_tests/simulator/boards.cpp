@@ -10,7 +10,7 @@
 #include "engine_configuration.h"
 #include "adc_math.h"
 
-static LoggingWithStorage logger;
+static LoggingWithStorage logger("simulator board");
 extern engine_configuration_s *engineConfiguration;
 
 static float fakeAdcValues[16];
@@ -49,7 +49,6 @@ static void setMapVoltage(float voltage) {
 }
 
 void initFakeBoard(void) {
-	initLogging(&logger, "simulator board");
 
 	addConsoleActionF("set_mock_clt_voltage", setCltVoltage);
 	addConsoleActionF("set_mock_iat_voltage", setIatVoltage);

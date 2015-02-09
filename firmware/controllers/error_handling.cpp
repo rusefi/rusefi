@@ -15,7 +15,7 @@
 #endif /* EFI_HD44780_LCD */
 
 static time_t timeOfPreviousWarning = -10;
-static LoggingWithStorage logger;
+static LoggingWithStorage logger("error handling");
 
 #define WARNING_PREFIX "WARNING: "
 
@@ -104,6 +104,5 @@ void onUnlockHook(void) {
 }
 
 void initErrorHandling(void) {
-	initLogging(&logger, "error handling");
 	msObjectInit(&warningStream, (uint8_t *) warningBuffer, WARNING_BUFFER_SIZE, 0);
 }

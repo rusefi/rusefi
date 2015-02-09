@@ -1,15 +1,12 @@
 package com.rusefi.io;
 
 import com.irnems.core.MessagesCentral;
-import com.rusefi.io.tcp.TcpConnector;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-
-import static com.rusefi.io.tcp.TcpConnector.parseIntWithReason;
 
 /**
  * This class keeps re-sending a command till a proper confirmation is received
@@ -97,6 +94,10 @@ public class CommandQueue {
         });
     }
 
+    /**
+     * this method handles command confirmations packed as
+     * TODO: add example, todo: refactor method and add unit test
+     */
     private void handleConfirmationMessage(String message, MessagesCentral mc) {
         String confirmation = message.substring(CONFIRMATION_PREFIX.length());
         int index = confirmation.indexOf(":");
@@ -104,7 +105,14 @@ public class CommandQueue {
             mc.postMessage(CommandQueue.class, "Broken confirmation: " + confirmation);
             return;
         }
-        int length = parseIntWithReason(confirmation.substring(index + 1), "CQ confirmation");
+        String number = confirmation.substring(index + 1);
+        int length;
+        try {
+            length = Integer.parseInt(number);
+        } catch (NumberFormatException e) {
+            mc.postMessage(CommandQueue.class, "Broken confirmation length: " + confirmation);
+            return;
+        }
         if (length != index) {
             mc.postMessage(CommandQueue.class, "Broken confirmation length: " + confirmation);
             return;

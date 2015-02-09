@@ -165,8 +165,6 @@ void initializeConsole(Logging *sharedLogger) {
 
 	startConsole(&handleConsoleLine);
 
-	initLogging(&logger, "console");
-
 	sayHello();
 	addConsoleAction("test", sayNothing);
 	addConsoleAction("hello", sayHello);

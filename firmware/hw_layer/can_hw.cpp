@@ -30,7 +30,7 @@ EXTERN_ENGINE
 static int canReadCounter = 0;
 static int can_write_ok = 0;
 static int can_write_not_ok = 0;
-static LoggingWithStorage logger;
+static LoggingWithStorage logger("CAN driver");
 static THD_WORKING_AREA(canTreadStack, UTILITY_THREAD_STACK_SIZE);
 
 /*
@@ -251,8 +251,6 @@ void initCan(void) {
 	if (!engineConfiguration->isCanEnabled)
 		return;
 #endif /* EFI_PROD_CODE */
-
-	initLogging(&logger, "CAN driver");
 
 #if STM32_CAN_USE_CAN2
 	// CAN1 is required for CAN2

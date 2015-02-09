@@ -117,7 +117,7 @@
 #include "engine_emulator.h"
 #endif /* EFI_ENGINE_EMULATOR */
 
-static LoggingWithStorage sharedLogger;
+static LoggingWithStorage sharedLogger("main");
 
 bool_t main_loop_started = false;
 
@@ -156,7 +156,6 @@ void runRusEfi(void) {
 	 * Next we should initialize serial port console, it's important to know what's going on
 	 */
 	initializeConsole(&sharedLogger);
-	initLogging(&sharedLogger, "main");
 
 	engine->init();
 
@@ -259,5 +258,5 @@ int getRusEfiVersion(void) {
 		return 1; // this is here to make the compiler happy about the unused array
 	if (UNUSED_CCM_SIZE == 0)
 		return 1; // this is here to make the compiler happy about the unused array
-	return 20150208;
+	return 20150209;
 }

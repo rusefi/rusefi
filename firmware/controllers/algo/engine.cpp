@@ -21,7 +21,7 @@
 #define isRunningBenchTest() true
 #endif
 
-static LoggingWithStorage logger;
+static LoggingWithStorage logger("engine");
 
 extern engine_pins_s enginePins;
 
@@ -55,7 +55,6 @@ void Engine::precalc(engine_configuration_s *engineConfiguration) {
 }
 
 void Engine::init() {
-	initLogging(&logger, "engine");
 }
 
 static bool stopPin(NamedOutputPin *output) {

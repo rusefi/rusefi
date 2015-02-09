@@ -62,7 +62,7 @@ int waveChartUsedSize;
 static Logging debugLogging;
 #endif /* DEBUG_WAVE */
 
-static LoggingWithStorage logger;
+static LoggingWithStorage logger("wave info");
 
 void WaveChart::resetWaveChart() {
 #if DEBUG_WAVE
@@ -220,7 +220,6 @@ void showWaveChartHistogram(void) {
 }
 
 void initWaveChart(WaveChart *chart) {
-	initLogging(&logger, "wave info");
 
 	if (!engineConfiguration->isDigitalChartEnabled) {
 		printMsg(&logger, "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! chart disabled");

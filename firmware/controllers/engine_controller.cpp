@@ -73,7 +73,7 @@ board_configuration_s *boardConfiguration = &persistentState.persistentConfigura
 
 static VirtualTimer everyMsTimer;
 
-static LoggingWithStorage logger;
+static LoggingWithStorage logger("Engine Controller");
 
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 static engine_configuration2_s ec2 CCM_OPTIONAL;
@@ -337,7 +337,6 @@ void initEngineContoller(Logging *sharedLogger, Engine *engine) {
 	if (hasFirmwareError()) {
 		return;
 	}
-	initLogging(&logger, "Engine Controller");
 
 	initSensors(engine);
 

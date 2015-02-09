@@ -41,7 +41,7 @@ bool isInsideTriggerHandler;
 persistent_config_container_s persistentState;
 static engine_configuration2_s ec2;
 
-static LoggingWithStorage sharedLogger;
+static LoggingWithStorage sharedLogger("simulator");
 
 engine_configuration_s * engineConfiguration = &persistentState.persistentConfiguration.engineConfiguration;
 board_configuration_s *boardConfiguration = &persistentState.persistentConfiguration.engineConfiguration.bc;
@@ -66,11 +66,9 @@ float getMap(void) {
 }
 
 void rusEfiFunctionalTest(void) {
-	initLogging(&sharedLogger, "simulator");
 	initializeConsole(&sharedLogger);
 
 	initFakeBoard();
-
 
 	initStatusLoop(engine);
 	initDataStructures(PASS_ENGINE_PARAMETER_F);
