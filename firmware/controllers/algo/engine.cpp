@@ -50,7 +50,15 @@ Engine::Engine() {
 }
 
 void Engine::precalc(engine_configuration_s *engineConfiguration) {
-	sparkTable.preCalc(engineConfiguration->sparkDwellBins, engineConfiguration->sparkDwell);
+	sparkTable.preCalc(engineConfiguration->sparkDwellBins,
+			engineConfiguration->sparkDwell);
+
+	for (int i = 0; i < MAF_DECODING_CACHE_SIZE; i++) {
+		float volts = i / MAF_DECODING_CACHE_MULT;
+		float maf = interpolate2d(volts, mafDecodingBins, mafDecoding,
+				MAF_DECODING_COUNT);
+	}
+
 }
 
 void Engine::init() {
@@ -110,7 +118,8 @@ StartupFuelPumping::StartupFuelPumping() {
 	pumpsCounter = 0;
 }
 
-void StartupFuelPumping::setPumpsCounter(engine_configuration_s *engineConfiguration, int newValue) {
+void StartupFuelPumping::setPumpsCounter(
+		engine_configuration_s *engineConfiguration, int newValue) {
 	if (pumpsCounter != newValue) {
 		pumpsCounter = newValue;
 
