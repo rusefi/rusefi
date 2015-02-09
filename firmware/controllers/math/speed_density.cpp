@@ -45,7 +45,7 @@ float getTCharge(int rpm, float tps, float coolantTemp, float airTemp) {
 #define GAS_R 0.28705
 
 /**
- * @return value in seconds
+ * @return per cylinder injection time, in seconds
  */
 float sdMath(engine_configuration_s *engineConfiguration, float VE, float MAP, float AFR, float tempK) {
 	if (MAP < 0.001 || cisnan(MAP)) {
@@ -54,12 +54,13 @@ float sdMath(engine_configuration_s *engineConfiguration, float VE, float MAP, f
 	}
 
 	float injectorFlowRate = cc_minute_to_gramm_second(engineConfiguration->injector.flow);
+	// todo: pre-calculate cylinder displacement to save one division
 	float Vol = engineConfiguration->specs.displacement / engineConfiguration->cylindersCount;
 	return (Vol * VE * MAP) / (AFR * injectorFlowRate * GAS_R * tempK);
 }
 
 /**
- * @return value in Milliseconds
+ * @return per cylinder injection time, in Milliseconds
  */
 float getSpeedDensityFuel(Engine *engine, int rpm) {
 	//int rpm = engine->rpmCalculator->rpm();
