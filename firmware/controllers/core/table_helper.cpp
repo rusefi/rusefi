@@ -20,30 +20,6 @@ void setTableBin2(float array[], int size, float l, float r, float precision) {
 	}
 }
 
-void Table2D::init(int size, float *aTable, float *bTable) {
-	this->size = size;
-	this->aTable = aTable;
-	this->bTable = bTable;
-}
-
-void Table2D::preCalc(float *bin, float *values) {
-	this->bin = bin;
-	for (int i = 0; i < size - 1; i++) {
-		float x1 = bin[i];
-		float x2 = bin[i + 1];
-		if (x1 == x2) {
-			firmwareError("Same x1 and x2 in interpolate: %f/%f", x1, x2);
-			return;
-		}
-
-		float y1 = values[i];
-		float y2 = values[i + 1];
-
-		aTable[i] = INTERPOLATION_A(x1, y1, x2, y2);
-		bTable[i] = y1 - aTable[i] * x1;
-	}
-}
-
 void setTableBin(float array[], int size, float from, float to) {
 	setTableBin2(array, size, from, to, 0.01);
 }

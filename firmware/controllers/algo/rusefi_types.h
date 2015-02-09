@@ -50,6 +50,8 @@ typedef void (*Void)(void);
 #define LE_COMMAND_LENGTH 200
 #define LE_COMMAND_COUNT 16
 
+#define MAF_DECODING_COUNT 256
+
 typedef char le_formula_t[LE_COMMAND_LENGTH];
 
 #define HW_MAX_ADC_INDEX 16
