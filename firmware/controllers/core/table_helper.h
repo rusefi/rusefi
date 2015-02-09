@@ -25,15 +25,34 @@ private:
 	int initialized;
 };
 
+template<int SIZE>
 class Table2D {
 public:
-	void init(int size, float *aTable, float *bTable);
 	void preCalc(float *bin, float *values);
-	int size;
-	float *aTable;
-	float *bTable;
+	float aTable[SIZE];
+	float bTable[SIZE];
 	float *bin;
 };
+
+template<int SIZE>
+void Table2D<SIZE>::preCalc(float *bin, float *values) {
+	this->bin = bin;
+	for (int i = 0; i < SIZE - 1; i++) {
+		float x1 = bin[i];
+		float x2 = bin[i + 1];
+		if (x1 == x2) {
+			firmwareError("Same x1 and x2 in interpolate: %f/%f", x1, x2);
+			return;
+		}
+
+		float y1 = values[i];
+		float y2 = values[i + 1];
+
+		aTable[i] = INTERPOLATION_A(x1, y1, x2, y2);
+		bTable[i] = y1 - aTable[i] * x1;
+	}
+}
+
 
 template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE>
 void Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE>::init(float table[RPM_BIN_SIZE][LOAD_BIN_SIZE]) {

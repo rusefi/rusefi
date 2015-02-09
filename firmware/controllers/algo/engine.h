@@ -83,6 +83,10 @@ typedef struct {
 	adc_channel_e channel;
 } Thermistor;
 
+#define MAF_DECODING_CACHE_SIZE 256
+
+#define MAF_DECODING_CACHE_MULT (MAF_DECODING_CACHE_SIZE / 5.0)
+
 class Engine {
 public:
 	Engine();
@@ -112,6 +116,11 @@ public:
 
 	TriggerShape triggerShape;
 
+	/**
+	 * pre-calculated offset for given sequence index within engine cycle
+	 * not cylinder ID
+	 * todo: better name?
+	 */
 	float angleExtra[IGNITION_PIN_COUNT];
 	NamedOutputPin *ignitionPin[IGNITION_PIN_COUNT];
 
@@ -142,10 +151,22 @@ public:
 	uint32_t beforeIgnitionSch;
 	uint32_t ignitionSchTime;
 
-	float sparkAtable[DWELL_CURVE_SIZE];
-	float sparkBtable[DWELL_CURVE_SIZE];
+	/**
+	 * fast spark dwell time interpolation helper
+	 * todo: finish the implementation and
+	 */
+	Table2D<DWELL_CURVE_SIZE> sparkTable;
 
-	Table2D sparkTable;
+	/**
+	 * fast MAF decoding lookup table with ~0.2 volt step
+	 * This table is build based on MAF decoding curve
+	 */
+	float mafDecodingLookup[MAF_DECODING_CACHE_SIZE];
+
+	float mafDecoding[MAF_DECODING_COUNT];
+	float mafDecodingBins[MAF_DECODING_COUNT];
+
+
 	void precalc(engine_configuration_s *engineConfiguration);
 
 	void updateSlowSensors();

@@ -50,7 +50,6 @@ Engine::Engine() {
 }
 
 void Engine::precalc(engine_configuration_s *engineConfiguration) {
-	sparkTable.init(DWELL_CURVE_SIZE, sparkAtable, sparkBtable);
 	sparkTable.preCalc(engineConfiguration->sparkDwellBins, engineConfiguration->sparkDwell);
 }
 
