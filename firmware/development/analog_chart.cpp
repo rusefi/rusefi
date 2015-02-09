@@ -26,13 +26,24 @@ void acAddData(float angle, float value) {
 		return; // this is possible because of initialization sequence
 	}
 
-	if (engineConfiguration->analogChartFrequency < 1) {
+	if (engineConfiguration->analogChartFrequency < 2) {
+		/**
+		 * analog chart frequency cannot be 1 because of the way
+		 * data flush is implemented, see below
+		 */
 		//todofirmwareError()
 		return;
 	}
 
 	if (getRevolutionCounter() % engineConfiguration->analogChartFrequency != 0) {
+		/**
+		 * We are here if we do NOT need to add an event to the analog chart
+		 */
 		if (pendingData) {
+			/**
+			 * We are here if that's the first time we do not need to add
+			 * data after we have added some data - meaning it's time to flush
+			 */
 			// message terminator
 			appendPrintf(&logging, DELIMETER);
 			// output pending data

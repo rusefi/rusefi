@@ -22,5 +22,5 @@ void setSubaru2003Wrx(engine_configuration_s *engineConfiguration) {
 	engineConfiguration->trigger.customTotalToothCount = 5;
 	engineConfiguration->trigger.customSkippedToothCount = 1;
 
-
+	engineConfiguration->analogChartFrequency = 2;
 }
