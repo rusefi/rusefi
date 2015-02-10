@@ -48,6 +48,7 @@ public:
 	float getRpmAcceleration();
 	/**
 	 * This is public because sometimes we cannot afford to call isRunning() and the value is good enough
+	 * Zero if engine is not running
 	 */
 	volatile int rpmValue;
 	int previousRpmValue;

@@ -57,7 +57,7 @@ float getEngineLoadT(DECLARE_ENGINE_PARAMETER_F) {
 	efiAssert(engine!=NULL, "engine 2NULL", NAN);
 	efiAssert(engineConfiguration!=NULL, "engineConfiguration 2NULL", NAN);
 	switch (engineConfiguration->algorithm) {
-	case LM_MAF:
+	case LM_PLAIN_MAF:
 		return getMafT(engineConfiguration);
 	case LM_SPEED_DENSITY:
 		// SD engine load is used for timing lookup but not for fuel calculation

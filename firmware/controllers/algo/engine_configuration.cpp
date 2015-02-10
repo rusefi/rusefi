@@ -261,7 +261,7 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	engineConfiguration->overrideCrankingIgnition = true;
 	engineConfiguration->analogChartFrequency = 20;
 
-	engineConfiguration->algorithm = LM_MAF;
+	engineConfiguration->algorithm = LM_PLAIN_MAF;
 
 	engineConfiguration->vbattDividerCoeff = ((float) (15 + 65)) / 15;
 
