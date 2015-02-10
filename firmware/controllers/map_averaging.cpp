@@ -49,11 +49,19 @@ static volatile int perRevolutionCounter = 0;
  * Number of measurements in previous shaft revolution
  */
 static volatile int perRevolution = 0;
+
+/**
+ * In this lock-free imlementation 'readIndex'
+ */
+static int readIndex = 0;
+static float accumulators[2];
+static int counters[2];
+
+
 /**
  * Running MAP accumulator
- * v_ for Voltage
  */
-static volatile float v_mapAccumulator = 0;
+static volatile float mapAccumulator = 0;
 /**
  * Running counter of measurements to consider for averaging
  */
@@ -69,14 +77,21 @@ EXTERN_ENGINE;
 static scheduling_s startTimer[2];
 static scheduling_s endTimer[2];
 
+/**
+ * that's a performance optimization: let's not bother averaging
+ * if we are outside of of the window
+ */
+static bool_t isAveraging = false;
+
 static void startAveraging(void *arg) {
 	(void) arg;
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#9");
 	bool wasLocked = lockAnyContext();
 	;
 	// with locking we would have a consistent state
-	v_mapAccumulator = 0;
+	mapAccumulator = 0;
 	mapMeasurementsCounter = 0;
+	isAveraging = true;
 	if (!wasLocked)
 		chSysUnlockFromIsr()
 	;
@@ -87,25 +102,30 @@ static void startAveraging(void *arg) {
  * @note This method is invoked OFTEN, this method is a potential bottle-next - the implementation should be
  * as fast as possible
  */
-void mapAveragingCallback(adcsample_t value) {
+void mapAveragingCallback(adcsample_t adcValue) {
+	if(!isAveraging && boardConfiguration->analogChartMode != AC_MAP) {
+		return;
+	}
+
 	/* Calculates the average values from the ADC samples.*/
 	perRevolutionCounter++;
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#9a");
 
-	float voltage = adcToVoltsDivided(value);
-	float currentPressure = getMapByVoltage(voltage);
 
 #if EFI_ANALOG_CHART
 	if (boardConfiguration->analogChartMode == AC_MAP)
-		if (perRevolutionCounter % FAST_MAP_CHART_SKIP_FACTOR == 0)
+		if (perRevolutionCounter % FAST_MAP_CHART_SKIP_FACTOR == 0) {
+			float voltage = adcToVoltsDivided(adcValue);
+			float currentPressure = getMapByVoltage(voltage);
 			acAddData(getCrankshaftAngleNt(getTimeNowNt() PASS_ENGINE_PARAMETER), currentPressure);
+		}
 #endif /* EFI_ANALOG_CHART */
 
 	chSysLockFromIsr()
 	;
 	// with locking we would have a consistent state
 
-	v_mapAccumulator += voltage;
+	mapAccumulator += adcValue;
 	mapMeasurementsCounter++;
 	chSysUnlockFromIsr()
 	;
@@ -114,8 +134,9 @@ void mapAveragingCallback(adcsample_t value) {
 static void endAveraging(void *arg) {
 	(void) arg;
 	bool wasLocked = lockAnyContext();
+	isAveraging = false;
 	// with locking we would have a consistent state
-	v_averagedMapValue = v_mapAccumulator / mapMeasurementsCounter;
+	v_averagedMapValue = adcToVoltsDivided(mapAccumulator / mapMeasurementsCounter);
 	if (!wasLocked)
 		chSysUnlockFromIsr()
 	;

@@ -18,6 +18,7 @@ void setTableValue(float bins[], float values[], int size, float key, float valu
 
 class FastInterpolation {
 public:
+	FastInterpolation();
 	FastInterpolation(float x1, float y1, float x2, float y2);
 	void init(float x1, float y1, float x2, float y2);
 	float getValue(float x);

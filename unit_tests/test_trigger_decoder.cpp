@@ -369,10 +369,10 @@ static void testRpmCalculator(void) {
 
 	efiAssertVoid(eth.engine.engineConfiguration!=NULL, "null config in engine");
 
-	initThermistors(&eth.engine);
-
 	Engine *engine = &eth.engine;
 	engine_configuration_s *engineConfiguration = &eth.persistentConfig.engineConfiguration;
+
+	initThermistors(PASS_ENGINE_PARAMETER_F);
 
 	engineConfiguration->trigger.customTotalToothCount = 8;
 	engineConfiguration->globalFuelCorrection = 3;

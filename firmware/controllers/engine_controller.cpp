@@ -338,7 +338,7 @@ void initEngineContoller(Logging *sharedLogger, Engine *engine) {
 		return;
 	}
 
-	initSensors(engine);
+	initSensors(PASS_ENGINE_PARAMETER_F);
 
 	initPwmGenerator();
 

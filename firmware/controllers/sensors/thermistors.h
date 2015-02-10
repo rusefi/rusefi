@@ -16,10 +16,6 @@
 #include "sensor_types.h"
 #include "engine.h"
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
 /**
  * Vout=r2/(r1+r2)*Vin
  */
@@ -51,9 +47,14 @@ void prepareThermistorCurve(ThermistorConf * config);
 
 class Engine;
 
-void initThermistors(Engine *engine);
+void initThermistors(DECLARE_ENGINE_PARAMETER_F);
 
 void setCommonNTCSensor(ThermistorConf *thermistorConf);
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif /* __cplusplus */
 
 #ifdef __cplusplus
 }
