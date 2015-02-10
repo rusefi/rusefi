@@ -7,10 +7,12 @@
  * @author Andrey Belomutskiy, (c) 2012-2015
  */
 
+#include "engine.h"
 #include "allsensors.h"
 
-void initSensors(Engine *engine) {
-	initThermistors(engine);
+void initSensors(DECLARE_ENGINE_PARAMETER_F) {
+	initThermistors(PASS_ENGINE_PARAMETER_F);
+	initMapDecoder(PASS_ENGINE_PARAMETER_F);
 }
 
 // todo: move this somewhere else? maybe.

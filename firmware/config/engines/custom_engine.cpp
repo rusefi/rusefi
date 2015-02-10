@@ -41,7 +41,7 @@ void setCustomEngineConfiguration(engine_configuration_s *engineConfiguration) {
 	// Frankenso low out #3: PD7 Main Relay
 	// Frankenso low out #4: PC13 Idle valve solenoid
 	// Frankenso low out #5: PE3
-	// Frankenso low out #6: PE4
+	// Frankenso low out #6: PE4 fuel pump relay
 	// Frankenso low out #7: PE1 (do not use with discovery!)
 	// Frankenso low out #8: PE2 injector #2
 	// Frankenso low out #9: PB9 injector #1
@@ -49,6 +49,7 @@ void setCustomEngineConfiguration(engine_configuration_s *engineConfiguration) {
 	// Frankenso low out #11: PB8 injector #3
 	// Frankenso low out #12: PB7 injector #4
 
+	boardConfiguration->fuelPumpPin = GPIOE_4;
 	boardConfiguration->mainRelayPin = GPIOD_7;
 	boardConfiguration->idleValvePin = GPIOC_13;
 

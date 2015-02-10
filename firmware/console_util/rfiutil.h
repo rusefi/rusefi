@@ -12,14 +12,21 @@
 #include "global.h"
 #include "histogram.h"
 
+#define isLocked() (dbg_lock_cnt > 0)
+
+	/**
+	 * Unfortunately ChibiOS has two versions of methods for different
+	 * contexts.
+	 */
+
+#define isIsrContext() (dbg_isr_cnt > 0)
+
 #ifdef __cplusplus
 extern "C"
 {
 #endif /* __cplusplus */
 
-char hexC(int v);
-int isIsrContext(void);
-int isLocked(void);
+//char hexC(int v);
 void chVTSetAny(virtual_timer_t *vtp, systime_t time, vtfunc_t vtfunc, void *par);
 
 #ifdef __cplusplus

@@ -42,7 +42,7 @@ void testFuelMap(void) {
 	Engine *engine = &eth.engine;
 	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
 
-	initThermistors(engine);
+	initThermistors(PASS_ENGINE_PARAMETER_F);
 
 
 	printf("*** getInjectorLag\r\n");

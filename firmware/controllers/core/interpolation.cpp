@@ -17,6 +17,10 @@
 
 int needInterpolationLogging = TRUE;
 
+FastInterpolation::FastInterpolation() {
+	init(0, 0, 1, 1);
+}
+
 FastInterpolation::FastInterpolation(float x1, float y1, float x2, float y2) {
 	init(x1, y1, x2, y2);
 }

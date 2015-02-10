@@ -182,7 +182,7 @@ void setCommonNTCSensor(ThermistorConf *thermistorConf) {
 	setThermistorConfiguration(thermistorConf, -20, 18000, 23.8889, 2100, 120.0, 100.0);
 }
 
-void initThermistors(Engine *engine) {
+void initThermistors(DECLARE_ENGINE_PARAMETER_F) {
 	efiAssertVoid(engine!=NULL, "e NULL initThermistors");
 	efiAssertVoid(engine->engineConfiguration2!=NULL, "e2 NULL initThermistors");
 	initThermistorCurve(&engine->clt, &engine->engineConfiguration->clt,

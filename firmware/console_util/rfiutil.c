@@ -54,19 +54,6 @@ char hexChar(int v) {
 	return 'A' - 10 + v;
 }
 */
-// todo: make this a macro?
-int isIsrContext(void) {
-	/**
-	 * Unfortunately ChibiOS has two versions of methods for different
-	 * contexts.
-	 */
-	return dbg_isr_cnt > 0;
-}
-
-// todo: make this a macro?
-int isLocked(void) {
-	return dbg_lock_cnt > 0;
-}
 
 void chVTSetAny(virtual_timer_t *vtp, systime_t time, vtfunc_t vtfunc, void *par) {
 	if (isIsrContext()) {
