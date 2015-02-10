@@ -129,6 +129,12 @@ public:
 	uint64_t lastTriggerEventTimeNt;
 
 	/**
+	 * this value depends on a slow-changing VBatt value, so
+	 * we update it once in a while
+	 */
+	float injectorLagMs;
+
+	/**
 	 * This coefficient translates ADC value directly into voltage adjusted according to
 	 * voltage divider configuration. This is a future (?) performance optimization.
 	 */

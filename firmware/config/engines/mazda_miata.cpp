@@ -239,7 +239,7 @@ void setFordEscortGt(engine_configuration_s *engineConfiguration) {
 	setFrankenso0_1_joystick(engineConfiguration);
 
 	engineConfiguration->specs.displacement = 1.839;
-	engineConfiguration->algorithm = LM_MAF;
+	engineConfiguration->algorithm = LM_PLAIN_MAF;
 	boardConfiguration->tunerStudioSerialSpeed = 9600;
 
 	setFuelLoadBin(engineConfiguration, 1.2, 4.4);

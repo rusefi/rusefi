@@ -99,7 +99,7 @@ float RpmCalculator::getRpmAcceleration() {
  *
  * @return -1 in case of isNoisySignal(), current RPM otherwise
  */
-// todo: migrate to float return result or add a float verion? this would have with calculations
+// todo: migrate to float return result or add a float version? this would have with calculations
 // todo: add a version which does not check time & saves time? need to profile
 int RpmCalculator::rpm(DECLARE_ENGINE_PARAMETER_F) {
 #if !EFI_PROD_CODE

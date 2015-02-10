@@ -51,7 +51,8 @@ static volatile int perRevolutionCounter = 0;
 static volatile int perRevolution = 0;
 
 /**
- * In this lock-free imlementation 'readIndex'
+ * In this lock-free imlementation 'readIndex' is always pointing
+ * to the consistent copy of accumulator and counter pair
  */
 static int readIndex = 0;
 static float accumulators[2];
@@ -121,6 +122,18 @@ void mapAveragingCallback(adcsample_t adcValue) {
 		}
 #endif /* EFI_ANALOG_CHART */
 
+	/**
+	 * Local copy is now safe, but it's an overkill: we only
+	 * have one writing thread anyway
+	 */
+	int readIndexLocal = readIndex;
+	int writeIndex = readIndexLocal ^ 1;
+	accumulators[writeIndex] = accumulators[readIndexLocal] + adcValue;
+	counters[writeIndex] = counters[readIndexLocal] + 1;
+	// this would commit the new pair of values
+	readIndex = writeIndex;
+
+	// todo: migrate to the lock-free implementation
 	chSysLockFromIsr()
 	;
 	// with locking we would have a consistent state
@@ -151,7 +164,7 @@ static void mapAveragingCallback(trigger_event_e ckpEventType, uint32_t index DE
 	if (index != 0)
 		return;
 
-	int rpm = getRpmE(engine);
+	int rpm = engine->rpmCalculator.rpmValue;
 	if (!isValidRpm(rpm))
 		return;
 
@@ -186,7 +199,7 @@ float getMapVoltage(void) {
  * @return Manifold Absolute Pressure, in kPa
  */
 float getMap(void) {
-	if (getRpm() == 0)
+	if (!isValidRpm(engine->rpmCalculator.rpmValue))
 		return getRawMap(); // maybe return NaN in case of stopped engine?
 	return getMapByVoltage(v_averagedMapValue);
 }

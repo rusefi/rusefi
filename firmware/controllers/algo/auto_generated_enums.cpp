@@ -174,8 +174,8 @@ case Force_4b_engine_load_mode:
   return "Force_4b_engine_load_mode";
 case LM_ALPHA_N:
   return "LM_ALPHA_N";
-case LM_MAF:
-  return "LM_MAF";
+case LM_PLAIN_MAF:
+  return "LM_PLAIN_MAF";
 case LM_MAP:
   return "LM_MAP";
 case LM_SPEED_DENSITY:

@@ -14,6 +14,7 @@
 #include "engine_state.h"
 #include "efiGpio.h"
 #include "trigger_central.h"
+#include "fuel_math.h"
 
 #if EFI_PROD_CODE
 #include "injector_central.h"
@@ -34,6 +35,9 @@ EXTERN_ENGINE
 void Engine::updateSlowSensors() {
 	engineState.iat = getIntakeAirTemperature(this);
 	engineState.clt = getCoolantTemperature(this);
+
+	Engine *engine = this;
+	injectorLagMs = getInjectorLag(getVBatt(engineConfiguration) PASS_ENGINE_PARAMETER);
 }
 
 void Engine::onTriggerEvent(uint64_t nowNt) {

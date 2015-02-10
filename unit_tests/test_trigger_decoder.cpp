@@ -373,6 +373,7 @@ static void testRpmCalculator(void) {
 	engine_configuration_s *engineConfiguration = &eth.persistentConfig.engineConfiguration;
 
 	initThermistors(PASS_ENGINE_PARAMETER_F);
+	engine->updateSlowSensors();
 
 	engineConfiguration->trigger.customTotalToothCount = 8;
 	engineConfiguration->globalFuelCorrection = 3;
@@ -382,6 +383,7 @@ static void testRpmCalculator(void) {
 //	engine.engineConfiguration = eth.engine.engineConfiguration;
 	eth.engine.engineConfiguration->injector.lag = 0.0;
 
+	engine->updateSlowSensors();
 	timeNow = 0;
 	assertEquals(0, eth.engine.rpmCalculator.rpm(PASS_ENGINE_PARAMETER_F));
 
