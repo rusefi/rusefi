@@ -16,10 +16,12 @@ uint64_t getTimeNowUs(void) {
 	return chTimeNow() * (1000000 / CH_FREQUENCY);
 }
 
+// todo; reduce code duplication with prod code?
 efitimems_t currentTimeMillis(void) {
 	return getTimeNowUs() / 1000;
 }
 
+// todo; reduce code duplication with prod code?
 int getTimeNowSeconds(void) {
 	return chTimeNow() / CH_FREQUENCY;
 }

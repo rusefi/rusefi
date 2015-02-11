@@ -27,9 +27,15 @@
 #include "engine.h"
 #include "tunerstudio.h"
 #include "trigger_emulator.h"
+#include "engine_controller.h"
 
-static Engine _engine;
-Engine *engine = &_engine;
+// todo: reuse the instance from engine_controller?
+
+//static Engine _engine;
+//Engine *engine = &_engine;
+
+EXTERN_ENGINE;
+extern engine_configuration2_s * engineConfiguration2;
 
 extern WaveChart waveChart;
 
@@ -38,14 +44,14 @@ uint32_t maxLockTime = 0;
 // todo: move this field to trigger_central
 bool isInsideTriggerHandler;
 
-persistent_config_container_s persistentState;
-static engine_configuration2_s ec2;
+//persistent_config_container_s persistentState;
+//static engine_configuration2_s ec2;
 
 static LoggingWithStorage sharedLogger("simulator");
 
-engine_configuration_s * engineConfiguration = &persistentState.persistentConfiguration.engineConfiguration;
-board_configuration_s *boardConfiguration = &persistentState.persistentConfiguration.engineConfiguration.bc;
-engine_configuration2_s *engineConfiguration2 = &ec2;
+//engine_configuration_s * engineConfiguration = &persistentState.persistentConfiguration.engineConfiguration;
+//board_configuration_s *boardConfiguration = &persistentState.persistentConfiguration.engineConfiguration.bc;
+//engine_configuration2_s *engineConfiguration2 = &ec2;
 
 void outputPinRegisterExt2(const char *msg, OutputPin *output, brain_pin_e brainPin, pin_output_mode_e *outputMode) {
 }
@@ -76,15 +82,19 @@ void rusEfiFunctionalTest(void) {
 	engine->engineConfiguration = engineConfiguration;
 	engine->engineConfiguration2 = engineConfiguration2;
 
+	// todo: reduce code duplication with initEngineContoller
 
 	resetConfigurationExt(NULL, FORD_ASPIRE_1996, engine);
 	prepareShapes(engine);
 
-	initThermistors(PASS_ENGINE_PARAMETER_F);
+	initSensors(PASS_ENGINE_PARAMETER_F);
+
 	initAlgo(engineConfiguration);
 	initRpmCalculator(engine);
 
+#if EFI_ANALOG_CHART
 	initAnalogChart();
+#endif /* EFI_ANALOG_CHART */
 
 	initTriggerEmulator(&sharedLogger, engine);
 
@@ -93,7 +103,14 @@ void rusEfiFunctionalTest(void) {
 	initTriggerCentral(&sharedLogger, engine);
 
 	startStatusThreads(engine);
-	startTunerStudioConnectivity(&sharedLogger);
+
+#if EFI_TUNER_STUDIO
+	if (engineConfiguration->isTunerStudioEnabled) {
+		startTunerStudioConnectivity(&sharedLogger);
+	}
+#endif
+
+	initPeriodicEvents(engine);
 }
 
 void printPendingMessages(void) {

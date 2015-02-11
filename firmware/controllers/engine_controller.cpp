@@ -44,16 +44,18 @@
 #include "malfunction_indicator.h"
 #include "map_averaging.h"
 #include "malfunction_central.h"
-#include "pin_repository.h"
+#include "engine.h"
+#include "algo.h"
+
+#if EFI_PROD_CODE
 #include "pwm_generator.h"
 #include "adc_inputs.h"
-#include "algo.h"
 #include "efilib2.h"
 #include "PwmTester.h"
-#include "engine.h"
-#include "pin_repository.h"
 #include "pwm_generator.h"
 #include "lcd_controller.h"
+#include "pin_repository.h"
+#endif
 
 extern bool hasFirmwareErrorFlag;
 
@@ -152,6 +154,7 @@ static void updateErrorCodes(void) {
 //	}
 //}
 
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 Overflow64Counter halTime;
 
 //todo: macro to save method invocation
@@ -173,6 +176,8 @@ int getTimeNowSeconds(void) {
 	return chTimeNow() / CH_FREQUENCY;
 }
 
+#endif /* EFI_PROD_CODE */
+
 static void cylinderCleanupControl(Engine *engine) {
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 	bool newValue;
@@ -189,6 +194,7 @@ static void cylinderCleanupControl(Engine *engine) {
 }
 
 static void onEvenyGeneralMilliseconds(Engine *engine) {
+#if EFI_PROD_CODE
 	/**
 	 * We need to push current value into the 64 bit counter often enough so that we do not miss an overflow
 	 */
@@ -197,8 +203,9 @@ static void onEvenyGeneralMilliseconds(Engine *engine) {
 	if (!alreadyLocked) {
 		unlockAnyContext();
 	}
+#endif
 
-#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
+#if (EFI_PROD_CODE && EFI_ENGINE_CONTROL )|| defined(__DOXYGEN__)
 	if (!engine->rpmCalculator.isRunning())
 		writeToFlashIfPending();
 #endif
@@ -206,7 +213,7 @@ static void onEvenyGeneralMilliseconds(Engine *engine) {
 	engine->watchdog();
 	engine->updateSlowSensors();
 
-#if EFI_FSIO || defined(__DOXYGEN__)
+#if (EFI_PROD_CODE && EFI_FSIO) || defined(__DOXYGEN__)
 	runFsio();
 #endif
 
@@ -219,7 +226,7 @@ static void onEvenyGeneralMilliseconds(Engine *engine) {
 			(vtfunc_t) &onEvenyGeneralMilliseconds, engine);
 }
 
-static void initPeriodicEvents(Engine *engine) {
+void initPeriodicEvents(Engine *engine) {
 	// schedule first invocation
 	chVTSetAny(&everyMsTimer, boardConfiguration->generalPeriodicThreadPeriod * TICKS_IN_MS,
 			(vtfunc_t) &onEvenyGeneralMilliseconds, engine);
@@ -340,7 +347,9 @@ void initEngineContoller(Logging *sharedLogger, Engine *engine) {
 
 	initSensors(PASS_ENGINE_PARAMETER_F);
 
+#if EFI_PROD_CODE
 	initPwmGenerator();
+#endif
 
 #if EFI_ANALOG_CHART
 	initAnalogChart();
@@ -373,7 +382,7 @@ void initEngineContoller(Logging *sharedLogger, Engine *engine) {
 
 	chThdCreateStatic(csThreadStack, sizeof(csThreadStack), LOWPRIO, (tfunc_t) csThread, NULL);
 
-#if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
+#if (EFI_PROD_CODE && EFI_ENGINE_CONTROL) || defined(__DOXYGEN__)
 	initInjectorCentral(engine);
 	initIgnitionCentral();
 	/**
@@ -429,7 +438,7 @@ void initEngineContoller(Logging *sharedLogger, Engine *engine) {
 	addConsoleActionI("get_int", getInt);
 	addConsoleActionI("get_short", getShort);
 
-#if EFI_FSIO || defined(__DOXYGEN__)
+#if (EFI_PROD_CODE && EFI_FSIO) || defined(__DOXYGEN__)
 	initFsioImpl(sharedLogger, engine);
 #endif
 
