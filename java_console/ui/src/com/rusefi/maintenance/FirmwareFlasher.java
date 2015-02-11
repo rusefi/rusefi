@@ -1,6 +1,8 @@
 package com.rusefi.maintenance;
 
 import com.rusefi.ui.FrameHelper;
+import com.rusefi.ui.UiUtils;
+import com.rusefi.ui.widgets.UpDownImage;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,9 +26,16 @@ public class FirmwareFlasher {
             "-c \"verify_image " + IMAGE_ELF + "\" " +
             "-c \"reset run\" " +
             "-c shutdown";
+    public static final String SUCCESS_MESSAGE_TAG = "shutdown command invoked";
 
-    private final JButton button = new JButton("wip");
+    private final JButton button = new JButton("Program Firmware");
     private final JTextArea log = new JTextArea();
+    private final JScrollPane messagesScroll = new JScrollPane(log, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED) {
+        @Override
+        public Dimension getPreferredSize() {
+            return new Dimension(400, 400);
+        }
+    };
 
     public FirmwareFlasher() {
         log.setLineWrap(true);
@@ -35,19 +44,28 @@ public class FirmwareFlasher {
             @Override
             public void actionPerformed(ActionEvent event) {
                 FrameHelper f = new FrameHelper();
-                f.showFrame(log, false);
+                f.getFrame().setTitle("rusEfi Firmware Flasher");
+                f.showFrame(messagesScroll, false);
+                UiUtils.centerWindow(f.getFrame());
+                log.setText(""); // let's remove stuff from previous invocation
 
-                if (!new File(IMAGE_ELF).exists()) {
-                    appendMsg(IMAGE_ELF + " not found, cannot proceed !!!");
-                    return;
-                }
-
-                doFlashFirmware();
+                Thread openOcdThread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        doFlashFirmware();
+                    }
+                });
+                openOcdThread.setDaemon(true);
+                openOcdThread.start();
             }
         });
     }
 
     private void doFlashFirmware() {
+        if (!new File(IMAGE_ELF).exists()) {
+            appendMsg(IMAGE_ELF + " not found, cannot proceed !!!");
+            return;
+        }
         appendMsg("Executing " + OPEN_OCD_COMMAND);
         StringBuffer output = new StringBuffer();
         StringBuffer error = new StringBuffer();
@@ -61,8 +79,11 @@ public class FirmwareFlasher {
         } catch (InterruptedException e) {
             appendMsg("WaitError: " + e);
         }
-
-        appendMsg("!!! FIRMWARE FLASH: DOES NOT LOOK RIGHT !!!");
+        if (error.toString().contains(SUCCESS_MESSAGE_TAG)) {
+            appendMsg("!!! Looks good!!!");
+        } else {
+            appendMsg("!!! FIRMWARE FLASH: DOES NOT LOOK RIGHT !!!");
+        }
     }
 
     /**
@@ -77,13 +98,15 @@ public class FirmwareFlasher {
                     BufferedReader bis = new BufferedReader(new InputStreamReader(stream));
                     while (isRunning(p)) {
                         String line = bis.readLine();
+                        if (line == null)
+                            break;
                         appendMsg(line);
                         buffer.append(line);
                     }
                 } catch (IOException e) {
                     appendMsg("Stream " + e);
                 }
-                appendMsg("<EOS> " + msg);
+//                appendMsg("<EOS> " + msg);
             }
         });
         t.setDaemon(true);
@@ -104,6 +127,7 @@ public class FirmwareFlasher {
             @Override
             public void run() {
                 log.append(s + "\r\n");
+                UpDownImage.trueLayout(log);
             }
         });
     }
