@@ -249,9 +249,9 @@ void firmwareError(const char *errorMsg, ...) {
 	}
 }
 
-static char UNUSED_RAM_SIZE[12500];
+static char UNUSED_RAM_SIZE[9999];
 
-static char UNUSED_CCM_SIZE[8000] CCM_OPTIONAL;
+static char UNUSED_CCM_SIZE[4900] CCM_OPTIONAL;
 
 int getRusEfiVersion(void) {
 	if (UNUSED_RAM_SIZE == 0)
