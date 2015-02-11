@@ -31,7 +31,6 @@ public class RecentCommands {
 
     private final JScrollPane messagesScroll = new JScrollPane(content, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
-
     public RecentCommands() {
 
         CommandQueue.getInstance().addListener(new CommandQueue.CommandQueueListener() {
