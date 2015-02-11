@@ -86,10 +86,10 @@ void setCustomEngineConfiguration(engine_configuration_s *engineConfiguration) {
 	boardConfiguration->injectionPins[10] = GPIO_UNASSIGNED;
 	boardConfiguration->injectionPins[11] = GPIO_UNASSIGNED;
 
-	boardConfiguration->ignitionPins[0] = GPIOC_7;
-	boardConfiguration->ignitionPins[1] = GPIOE_4; // todo: update this value
-	boardConfiguration->ignitionPins[2] = GPIOE_0; // todo: update this value
-	boardConfiguration->ignitionPins[3] = GPIOE_1; // todo: update this value
+	boardConfiguration->ignitionPins[0] = GPIOE_14;
+	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED; // todo: update this value
+	boardConfiguration->ignitionPins[2] = GPIOC_7;
+	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED; // todo: update this value
 #endif
 
 	// todo: 8.2 or 10k?
