@@ -258,5 +258,5 @@ int getRusEfiVersion(void) {
 		return 1; // this is here to make the compiler happy about the unused array
 	if (UNUSED_CCM_SIZE == 0)
 		return 1; // this is here to make the compiler happy about the unused array
-	return 20150210;
+	return 20150211;
 }
