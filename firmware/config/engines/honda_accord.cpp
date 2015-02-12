@@ -65,7 +65,7 @@ static void setHondaAccordConfigurationCommon(engine_configuration_s *engineConf
 	// set_cranking_charge_angle 35
 	engineConfiguration->crankingChargeAngle = 70;
 	// set_cranking_timing_angle 0
-	engineConfiguration->crankingTimingAngle = 45;
+	engineConfiguration->crankingTimingAngle = -45;
 
 	// set_global_trigger_offset_angle 34
 	engineConfiguration->globalTriggerAngleOffset = 34;

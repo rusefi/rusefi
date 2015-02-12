@@ -36,7 +36,7 @@ public class AutoTest {
         sendCommand("set_engine_type 14");
         WaveChart chart;
         IoUtil.changeRpm(200);
-        String msg = "ProtegeLX";
+        String msg = "ProtegeLX cranking";
         chart = nextChart();
         double x = 100;
         assertWave(msg, chart, WaveChart.SPARK_1, 0.194433, x, x + 180, x + 360, x + 540);
@@ -44,6 +44,7 @@ public class AutoTest {
         assertWave(msg, chart, WaveChart.INJECTOR_1, 0.00626666, x, x + 180, x + 360, x + 540);
         assertWave(msg, chart, WaveChart.INJECTOR_2, 0.00626666, x, x + 180, x + 360, x + 540);
 
+        msg = "ProtegeLX running";
         IoUtil.changeRpm(2000);
         chart = nextChart();
         x = 121;
@@ -134,17 +135,17 @@ public class AutoTest {
         IoUtil.changeRpm(200);
 
         sendCommand("set_cranking_charge_angle 65");
-        sendCommand("set_cranking_timing_angle 31");
+        sendCommand("set_cranking_timing_angle -31");
 
         chart = nextChart();
         x = 55;
-        assertWave("aspire", chart, WaveChart.SPARK_1, 0.18, x, x + 180, x + 360, x + 540);
+        assertWave("aspire cranking", chart, WaveChart.SPARK_1, 0.18, x, x + 180, x + 360, x + 540);
 
-        sendCommand("set_cranking_timing_angle 40");
+        sendCommand("set_cranking_timing_angle -40");
         chart = nextChart();
         x = 64;
         assertWave("aspire", chart, WaveChart.SPARK_1, 0.18, x, x + 180, x + 360, x + 540);
-        sendCommand("set_cranking_timing_angle -149");
+        sendCommand("set_cranking_timing_angle 149");
 
         sendCommand("set_cranking_charge_angle 40");
         chart = nextChart();
