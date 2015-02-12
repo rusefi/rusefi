@@ -265,8 +265,11 @@ void triggerInfo(Engine *engine) {
 #endif
 
 #if EFI_PROD_CODE
-	scheduleMsg(logger, "sn=%s ignitionMathTime=%d schTime=%d triggerMaxDuration=%d",
-			boolToString(ts->isSynchronizationNeeded), engine->ignitionMathTime, engine->ignitionSchTime,
+	scheduleMsg(logger, "sn=%s ignitionMathTime=%d schTime=%d injectonSchTime=%d triggerMaxDuration=%d",
+			boolToString(ts->isSynchronizationNeeded),
+			engine->m.ignitionMathTime,
+			engine->m.ignitionSchTime,
+			engine->m.injectonSchTime,
 			triggerMaxDuration);
 
 	triggerMaxDuration = 0;

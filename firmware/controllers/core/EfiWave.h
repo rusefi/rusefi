@@ -9,7 +9,10 @@
 
 #include "engine_configuration.h"
 
-#define PWM_PHASE_MAX_COUNT 250
+/**
+ * this value should be dividable by four, see FuelSchedule.hasEvents
+ */
+#define PWM_PHASE_MAX_COUNT 252
 #define PWM_PHASE_MAX_WAVE_PER_PWM 3
 
 /**

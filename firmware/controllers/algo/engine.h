@@ -91,6 +91,17 @@ typedef struct {
 
 #define MAF_DECODING_CACHE_MULT (MAF_DECODING_CACHE_SIZE / 5.0)
 
+typedef struct {
+	uint32_t beforeIgnitionMath;
+	uint32_t ignitionMathTime;
+
+	uint32_t beforeIgnitionSch;
+	uint32_t ignitionSchTime;
+
+	uint32_t beforeInjectonSch;
+	uint32_t injectonSchTime;
+} monitoring_timestamps_s;
+
 class Engine {
 public:
 	Engine();
@@ -159,12 +170,6 @@ public:
 	 */
 	int engineCycleEventCount;
 
-	uint32_t beforeIgnitionMath;
-	uint32_t ignitionMathTime;
-
-	uint32_t beforeIgnitionSch;
-	uint32_t ignitionSchTime;
-
 	/**
 	 * fast spark dwell time interpolation helper
 	 * todo: finish the implementation and
@@ -183,6 +188,8 @@ public:
 	void watchdog();
 
 	IntListenerArray configurationListeners;
+
+	monitoring_timestamps_s m;
 
 private:
 	/**
