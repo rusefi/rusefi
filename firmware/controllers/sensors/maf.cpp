@@ -32,6 +32,7 @@ void setBosch0280218037(engine_configuration_s *engineConfiguration) {
 
 	while (i < MAF_DECODING_COUNT) {
 		engineConfiguration->mafDecoding[i] = 738;
-		engineConfiguration->mafDecodingBins[i++] = 4.98046875 + i;
+		engineConfiguration->mafDecodingBins[i] = 4.98046875 + i;
+		i++;
 	}
 }

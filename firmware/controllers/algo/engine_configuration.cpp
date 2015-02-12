@@ -139,6 +139,8 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 
 	setDetaultVETable(engineConfiguration);
 
+	setBosch0280218037(engineConfiguration);
+
 	engineConfiguration->injector.lag = 1.0;
 
 	engineConfiguration->acCutoffLowRpm = 700;

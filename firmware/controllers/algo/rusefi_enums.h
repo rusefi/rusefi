@@ -185,6 +185,11 @@ typedef enum {
 	 */
 	LM_SPEED_DENSITY = 3,
 
+	/**
+	 * MAF with a known kg/hour function
+	 */
+	LM_REAL_MAF = 4,
+
 	Force_4b_engine_load_mode = ENUM_32_BITS,
 } engine_load_mode_e;
 
