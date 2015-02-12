@@ -153,9 +153,9 @@ void FuelSchedule::clear() {
 }
 
 void FuelSchedule::addFuelEvents(OutputSignalList *sourceList, injection_mode_e mode DECLARE_ENGINE_PARAMETER_S) {
-	ActuatorEventList *list = &events;
-	;
-	list->reset();
+	sourceList->reset();
+
+	events.reset();
 
 	float baseAngle = engineConfiguration->injectionAngle;
 
@@ -340,7 +340,6 @@ void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_F) {
 		TRIGGER_SHAPE(triggerIndexByAngle[angle])= findAngleIndex(angle PASS_ENGINE_PARAMETER);
 	}
 
-	injectonSignals.reset();
 	engineConfiguration2->crankingInjectionEvents.addFuelEvents(
 			&crankingInjectonSignals,
 			engineConfiguration->crankingInjectionMode PASS_ENGINE_PARAMETER);
