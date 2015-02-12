@@ -92,7 +92,8 @@ void setSingleCoilDwell(engine_configuration_s *engineConfiguration) {
 }
 
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
-OutputSignalList injectonSignals CCM_OPTIONAL;
+OutputSignalList runningInjectonSignals CCM_OPTIONAL;
+OutputSignalList crankingInjectonSignals CCM_OPTIONAL;
 
 void initializeIgnitionActions(angle_t advance, angle_t dwellAngle,
 		IgnitionEventList *list DECLARE_ENGINE_PARAMETER_S) {
@@ -117,7 +118,7 @@ void initializeIgnitionActions(angle_t advance, angle_t dwellAngle,
 	}
 }
 
-void FuelSchedule::registerInjectionEvent(NamedOutputPin *output, float angle,
+void FuelSchedule::registerInjectionEvent(OutputSignalList *sourceList, NamedOutputPin *output, float angle,
 		bool_t isSimultanious DECLARE_ENGINE_PARAMETER_S) {
 	if (!isSimultanious && !isPinAssigned(output)) {
 		// todo: extact method for this index math
@@ -130,7 +131,7 @@ void FuelSchedule::registerInjectionEvent(NamedOutputPin *output, float angle,
 		return;
 	}
 
-	OutputSignal *actuator = injectonSignals.add();
+	OutputSignal *actuator = sourceList->add();
 	actuator->output = output;
 
 	ev->isSimultanious = isSimultanious;
@@ -151,7 +152,7 @@ void FuelSchedule::clear() {
 	memset(hasEvents, 0, sizeof(hasEvents));
 }
 
-void FuelSchedule::addFuelEvents(injection_mode_e mode DECLARE_ENGINE_PARAMETER_S) {
+void FuelSchedule::addFuelEvents(OutputSignalList *sourceList, injection_mode_e mode DECLARE_ENGINE_PARAMETER_S) {
 	ActuatorEventList *list = &events;
 	;
 	list->reset();
@@ -164,7 +165,7 @@ void FuelSchedule::addFuelEvents(injection_mode_e mode DECLARE_ENGINE_PARAMETER_
 			int index = getCylinderId(engineConfiguration->specs.firingOrder, i) - 1;
 			float angle = baseAngle
 					+ (float) engineConfiguration->engineCycle * i / engineConfiguration->specs.cylindersCount;
-			registerInjectionEvent(&enginePins.injectors[index], angle, false PASS_ENGINE_PARAMETER);
+			registerInjectionEvent(sourceList, &enginePins.injectors[index], angle, false PASS_ENGINE_PARAMETER);
 		}
 		break;
 	case IM_SIMULTANEOUS:
@@ -176,7 +177,7 @@ void FuelSchedule::addFuelEvents(injection_mode_e mode DECLARE_ENGINE_PARAMETER_
 			 * We do not need injector pin here because we will control all injectors
 			 * simultaniously
 			 */
-			registerInjectionEvent(NULL, angle, true PASS_ENGINE_PARAMETER);
+			registerInjectionEvent(sourceList, NULL, angle, true PASS_ENGINE_PARAMETER);
 		}
 		break;
 	case IM_BATCH:
@@ -184,7 +185,7 @@ void FuelSchedule::addFuelEvents(injection_mode_e mode DECLARE_ENGINE_PARAMETER_
 			int index = i % (engineConfiguration->specs.cylindersCount / 2);
 			float angle = baseAngle
 					+ i * (float) engineConfiguration->engineCycle / engineConfiguration->specs.cylindersCount;
-			registerInjectionEvent(&enginePins.injectors[index], angle, false PASS_ENGINE_PARAMETER);
+			registerInjectionEvent(sourceList, &enginePins.injectors[index], angle, false PASS_ENGINE_PARAMETER);
 
 			if (engineConfiguration->twoWireBatch) {
 
@@ -192,7 +193,7 @@ void FuelSchedule::addFuelEvents(injection_mode_e mode DECLARE_ENGINE_PARAMETER_
 				 * also fire the 2nd half of the injectors so that we can implement a batch mode on individual wires
 				 */
 				index = index + (engineConfiguration->specs.cylindersCount / 2);
-				registerInjectionEvent(&enginePins.injectors[index], angle, false PASS_ENGINE_PARAMETER);
+				registerInjectionEvent(sourceList, &enginePins.injectors[index], angle, false PASS_ENGINE_PARAMETER);
 			}
 		}
 		break;
@@ -341,8 +342,10 @@ void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_F) {
 
 	injectonSignals.reset();
 	engineConfiguration2->crankingInjectionEvents.addFuelEvents(
+			&crankingInjectonSignals,
 			engineConfiguration->crankingInjectionMode PASS_ENGINE_PARAMETER);
-	engineConfiguration2->injectionEvents.addFuelEvents(engineConfiguration->injectionMode PASS_ENGINE_PARAMETER);
+	engineConfiguration2->injectionEvents.addFuelEvents(&runningInjectonSignals,
+			engineConfiguration->injectionMode PASS_ENGINE_PARAMETER);
 }
 
 #endif
