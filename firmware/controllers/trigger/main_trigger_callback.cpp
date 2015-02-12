@@ -158,7 +158,7 @@ static ALWAYS_INLINE void handleFuel(uint32_t eventIndex, int rpm DECLARE_ENGINE
 	 */
 	FuelSchedule *fs =
 	isCrankingR(rpm) ?
-			&engine->engineConfiguration2->crankingInjectionEvents : &engine->engineConfiguration2->injectionEvents;
+			&ENGINE(engineConfiguration2)->crankingInjectionEvents : &engine->engineConfiguration2->injectionEvents;
 
 	ActuatorEventList *source = &fs->events;
 
@@ -295,6 +295,9 @@ static void ignitionCalc(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	engine->dwellAngle = dwellMs / getOneDegreeTimeMs(rpm);
 }
 
+extern OutputSignalList runningInjectonSignals CCM_OPTIONAL;
+extern OutputSignalList crankingInjectonSignals CCM_OPTIONAL;
+
 /**
  * This is the main trigger event handler.
  * Both injection and ignition are controlled from this method.
@@ -339,14 +342,14 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECL
 	}
 
 	if (eventIndex == engineConfiguration->ignMathCalculateAtIndex) {
-		engine->beforeIgnitionMath = GET_TIMESTAMP();
+		engine->m.beforeIgnitionMath = GET_TIMESTAMP();
 		ignitionCalc(rpm PASS_ENGINE_PARAMETER);
-		engine->ignitionMathTime = GET_TIMESTAMP() - engine->beforeIgnitionMath;
+		engine->m.ignitionMathTime = GET_TIMESTAMP() - engine->m.beforeIgnitionMath;
 	}
 
 	if (eventIndex == 0) {
 
-		engine->beforeIgnitionSch = GET_TIMESTAMP();
+		engine->m.beforeIgnitionSch = GET_TIMESTAMP();
 		/**
 		 * TODO: warning. there is a bit of a hack here, todo: improve.
 		 * currently output signals/times signalTimerUp from the previous revolutions could be
@@ -372,7 +375,19 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECL
 		}
 		initializeIgnitionActions(engine->advance, engine->dwellAngle,
 				&engine->engineConfiguration2->ignitionEvents[revolutionIndex] PASS_ENGINE_PARAMETER);
-		engine->ignitionSchTime = GET_TIMESTAMP() - engine->beforeIgnitionSch;
+		engine->m.ignitionSchTime = GET_TIMESTAMP() - engine->m.beforeIgnitionSch;
+
+		engine->m.beforeInjectonSch = GET_TIMESTAMP();
+
+		if(isCrankingR(rpm)) {
+			ENGINE(engineConfiguration2)->crankingInjectionEvents.addFuelEvents(
+				&crankingInjectonSignals,
+				engineConfiguration->crankingInjectionMode PASS_ENGINE_PARAMETER);
+		} else {
+			ENGINE(engineConfiguration2)->injectionEvents.addFuelEvents(&runningInjectonSignals,
+				engineConfiguration->injectionMode PASS_ENGINE_PARAMETER);
+		}
+		engine->m.injectonSchTime = GET_TIMESTAMP() - engine->m.beforeInjectonSch;
 	}
 
 //	triggerEventsQueue.executeAll(getCrankEventCounter());

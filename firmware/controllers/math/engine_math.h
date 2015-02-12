@@ -40,6 +40,7 @@ void initializeIgnitionActions(angle_t advance, angle_t dwellAngle,
 
 /**
  * @return float, time needed to rotate crankshaft by one degree, in microseconds.
+ * See also engine->rpmCalculator.oneDegreeUs
  */
 #define getOneDegreeTimeUs(rpm) (1000000.0f * 60 / 360 / (rpm))
 
