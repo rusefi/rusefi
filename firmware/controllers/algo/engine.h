@@ -122,10 +122,14 @@ public:
 
 	/**
 	 * pre-calculated offset for given sequence index within engine cycle
-	 * not cylinder ID
+	 * (not cylinder ID)
 	 * todo: better name?
 	 */
-	float angleExtra[IGNITION_PIN_COUNT];
+	angle_t angleExtra[IGNITION_PIN_COUNT];
+	/**
+	 * pre-calculated reference to which output pin should be used for
+	 * given sequence index within engine cycle
+	 */
 	NamedOutputPin *ignitionPin[IGNITION_PIN_COUNT];
 
 	void onTriggerEvent(uint64_t nowNt);

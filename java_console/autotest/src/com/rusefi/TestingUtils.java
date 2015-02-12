@@ -49,6 +49,14 @@ public class TestingUtils {
     }
 
     static void assertWave(String msg, WaveChart chart, String key, double width, double... expectedAngles) {
+        assertWave(true, msg, chart, key, width, expectedAngles);
+    }
+
+    static void assertWaveFall(String msg, WaveChart chart, String key, double width, double... expectedAngles) {
+        assertWave(false, msg, chart, key, width, expectedAngles);
+    }
+
+    static void assertWave(boolean rise, String msg, WaveChart chart, String key, double width, double... expectedAngles) {
         RevolutionLog revolutionLog = chart.getRevolutionsLog();
         if (revolutionLog.keySet().isEmpty())
             throw new IllegalStateException(msg + " Empty revolutions in " + chart);
@@ -58,8 +66,9 @@ public class TestingUtils {
         List<WaveReport.UpDown> wr = WaveReport.parse(events.toString());
         assertTrue(msg + " waves for " + key, !wr.isEmpty());
         for (WaveReport.UpDown ud : wr) {
-            double angleByTime = revolutionLog.getCrankAngleByTime(ud.upTime);
-            assertCloseEnough(msg + " angle for " + key + "@" + ud.upTime, angleByTime, expectedAngles);
+            int eventTime = rise ? ud.upTime : ud.downTime;
+            double angleByTime = revolutionLog.getCrankAngleByTime(eventTime);
+            assertCloseEnough(msg + " angle for " + key + "@" + eventTime, angleByTime, expectedAngles);
 
             assertCloseEnough(msg + "width for " + key, ud.getDutyCycle(revolutionLog), width);
         }
