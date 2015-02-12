@@ -385,8 +385,14 @@ void initIntermediateLoggingBuffer(void) {
 
 #endif /* ! EFI_UNIT_TEST */
 
-LoggingWithStorage::LoggingWithStorage(const char *name) {
+Logging::Logging() {
+}
+
+Logging::Logging(char const *name, char *buffer, int bufferSize) {
 #if ! EFI_UNIT_TEST
-	initLoggingExt(this, name, DEFAULT_BUFFER, sizeof(DEFAULT_BUFFER));
+	initLoggingExt(this, "settings control", buffer, bufferSize);
 #endif /* ! EFI_UNIT_TEST */
+}
+
+LoggingWithStorage::LoggingWithStorage(const char *name) : Logging(name, DEFAULT_BUFFER, sizeof(DEFAULT_BUFFER))   {
 }

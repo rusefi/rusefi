@@ -59,8 +59,8 @@ void Engine::precalc(engine_configuration_s *engineConfiguration) {
 
 	for (int i = 0; i < MAF_DECODING_CACHE_SIZE; i++) {
 		float volts = i / MAF_DECODING_CACHE_MULT;
-		float maf = interpolate2d(volts, mafDecodingBins, mafDecoding,
-				MAF_DECODING_COUNT);
+		float maf = interpolate2d(volts, engineConfiguration->mafDecodingBins,
+				engineConfiguration->mafDecoding, MAF_DECODING_COUNT);
 	}
 
 }

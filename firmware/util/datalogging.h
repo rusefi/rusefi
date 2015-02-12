@@ -18,6 +18,8 @@
 // size of buffers?
 class Logging {
 public:
+	Logging();
+	Logging(const char *name, char *buffer, int bufferSize);
 	const char *name;
 	char SMALL_BUFFER[40];
 	/**
