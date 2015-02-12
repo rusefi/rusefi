@@ -14,10 +14,6 @@
 #include "table_helper.h"
 #include "engine.h"
 
-#define OUTPUT_SIGNAL_MAX_SIZE 90
-
-typedef ArrayList<OutputSignal, OUTPUT_SIGNAL_MAX_SIZE> OutputSignalList;
-
 void findTriggerPosition(
 		event_trigger_position_s *position, angle_t angleOffset DECLARE_ENGINE_PARAMETER_S);
 
