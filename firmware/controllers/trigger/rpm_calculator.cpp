@@ -51,6 +51,7 @@ RpmCalculator::RpmCalculator() {
 	revolutionCounterSinceBoot = 0;
 
 	lastRpmEventTimeNt = 0;
+	oneDegreeUs = NAN;
 }
 
 /**
