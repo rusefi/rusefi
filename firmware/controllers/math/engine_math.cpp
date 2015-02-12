@@ -65,6 +65,10 @@ float getEngineLoadT(DECLARE_ENGINE_PARAMETER_F) {
 		return getMap();
 	case LM_ALPHA_N:
 		return getTPS(PASS_ENGINE_PARAMETER_F);
+	case LM_REAL_MAF: {
+		int mafAdc = getAdcValue(engineConfiguration->mafAdcChannel);
+		return getMafT(engineConfiguration);
+	}
 	default:
 		firmwareError("Unexpected engine load parameter: %d", engineConfiguration->algorithm);
 		return -1;
@@ -152,7 +156,7 @@ void FuelSchedule::addFuelEvents(injection_mode_e mode DECLARE_ENGINE_PARAMETER_
 	;
 	list->reset();
 
-	float baseAngle = tdcPosition() + engineConfiguration->injectionAngle;
+	float baseAngle = engineConfiguration->injectionAngle;
 
 	switch (mode) {
 	case IM_SEQUENTIAL:

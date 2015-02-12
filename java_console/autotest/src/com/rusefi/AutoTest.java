@@ -24,7 +24,7 @@ public class AutoTest {
 
         testMazdaProtege();
 
-        testDodgeNeon();
+        test1995DodgeNeon();
 
         sendCommand("set_engine_type 7");
         testFord6();
@@ -54,7 +54,7 @@ public class AutoTest {
         assertWave(msg, chart, WaveChart.INJECTOR_2, 0.11733333333333336, x + 180, x + 540);
     }
 
-    private static void testDodgeNeon() {
+    private static void test1995DodgeNeon() {
         sendCommand("set_engine_type 2");
         WaveChart chart;
         sendCommand("set_whole_fuel_map 3");
@@ -62,7 +62,7 @@ public class AutoTest {
         sendCommand("set_ignition_mode 1");
         chart = nextChart();
 
-        String msg = "Neon";
+        String msg = "1995 Neon";
         float x = 110;
         assertWave(msg, chart, WaveChart.INJECTOR_4, 0.133, x + 540);
         assertWave(msg, chart, WaveChart.INJECTOR_2, 0.133, x);
@@ -164,10 +164,12 @@ public class AutoTest {
 
         chart = nextChart();
 
-        assertWave(chart, WaveChart.INJECTOR_1, 0.086, 238.75);
-        assertWave(chart, WaveChart.INJECTOR_2, 0.086, 53.04);
-        assertWave(chart, WaveChart.INJECTOR_3, 0.086, 417.04);
-        assertWave(chart, WaveChart.INJECTOR_4, 0.086, 594.04);
+        msg = "aspire running";
+
+        assertWave(msg, chart, WaveChart.INJECTOR_1, 0.086, 238.75);
+        assertWave(msg, chart, WaveChart.INJECTOR_2, 0.086, 53.04);
+        assertWave(msg, chart, WaveChart.INJECTOR_3, 0.086, 417.04);
+        assertWave(msg, chart, WaveChart.INJECTOR_4, 0.086, 594.04);
 
         x = 22;
         assertWave(chart, WaveChart.SPARK_1, 0.133, x, x + 180, x + 360, x + 540);
@@ -191,6 +193,7 @@ public class AutoTest {
         assertNull("chart for " + WaveChart.SPARK_2, chart.get(WaveChart.SPARK_2));
 
         sendCommand("set_global_trigger_offset_angle 130");
+        sendCommand("set_injection_offset 189");
         chart = nextChart();
         x = 580;
         assertWave(chart, WaveChart.SPARK_1, 0.133, x, x + 180, x + 360, x + 540);

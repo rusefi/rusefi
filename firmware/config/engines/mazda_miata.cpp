@@ -263,7 +263,7 @@ void setFordEscortGt(engine_configuration_s *engineConfiguration) {
 	// set_ignition_offset 170
 	engineConfiguration->ignitionBaseAngle = 0;
 	// set_injection_offset 510
-	engineConfiguration->injectionAngle = 0;
+	engineConfiguration->injectionAngle = 135;
 
 	engineConfiguration->crankingTimingAngle = 10;
 	engineConfiguration->crankingChargeAngle = 70;

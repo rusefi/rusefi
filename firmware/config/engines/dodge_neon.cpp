@@ -130,7 +130,7 @@ void setDodgeNeon1995EngineConfiguration(engine_configuration_s *engineConfigura
 	// set_ignition_offset 350
 	engineConfiguration->ignitionBaseAngle = 350;
 	 // set_injection_offset 510
-	engineConfiguration->injectionAngle = 510;
+	engineConfiguration->injectionAngle = 510 + 497;
 
 	/**
 	 * that's 1995 config
@@ -189,6 +189,7 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 
 	// set_global_trigger_offset_angle 46
 	engineConfiguration->globalTriggerAngleOffset = 46;
+	engineConfiguration->injectionAngle = 46;
 
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
