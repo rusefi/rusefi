@@ -118,14 +118,14 @@ int getRevolutionCounter(void);
  * @param	dwell	the number of ticks of output duration
  *
  */
-void scheduleOutput(OutputSignal *signal, efitimeus_t nowUs, float delayMs, float durationMs) {
+void scheduleOutput(OutputSignal *signal, efitimeus_t nowUs, float delayUs, float durationUs) {
 #if EFI_GPIO
-	if (durationMs < 0) {
-		firmwareError("duration cannot be negative: %d", durationMs);
+	if (durationUs < 0) {
+		firmwareError("duration cannot be negative: %d", durationUs);
 		return;
 	}
-	if (cisnan(durationMs)) {
-		firmwareError("NaN in scheduleOutput", durationMs);
+	if (cisnan(durationUs)) {
+		firmwareError("NaN in scheduleOutput", durationUs);
 		return;
 	}
 
@@ -134,7 +134,7 @@ void scheduleOutput(OutputSignal *signal, efitimeus_t nowUs, float delayMs, floa
 	scheduling_s * sUp = &signal->signalTimerUp[index];
 	scheduling_s * sDown = &signal->signalTimerDown[index];
 
-	scheduleByTime("out up", sUp, nowUs + (int) MS2US(delayMs), (schfunc_t) &turnPinHigh, signal->output);
-	scheduleByTime("out down", sDown, nowUs + (int) MS2US(delayMs + durationMs), (schfunc_t) &turnPinLow, signal->output);
+	scheduleByTime("out up", sUp, nowUs + (int) delayUs, (schfunc_t) &turnPinHigh, signal->output);
+	scheduleByTime("out down", sDown, nowUs + (int) (delayUs + durationUs), (schfunc_t) &turnPinLow, signal->output);
 #endif
 }

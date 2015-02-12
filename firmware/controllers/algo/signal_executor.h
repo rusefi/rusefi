@@ -39,7 +39,7 @@ struct OutputSignal_struct {
 	scheduling_s signalTimerDown[2];
 };
 
-void scheduleOutput(OutputSignal *signal, efitimeus_t nowUs, float delayMs, float durationMs);
+void scheduleOutput(OutputSignal *signal, efitimeus_t nowUs, float delayUs, float durationUs);
 void initSignalExecutor(void);
 
 void scheduleByAngle(int rpm, scheduling_s *timer, angle_t angle, schfunc_t callback, void *param);

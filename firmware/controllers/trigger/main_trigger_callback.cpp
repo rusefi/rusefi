@@ -100,10 +100,7 @@ static void endSimultaniousInjection(Engine *engine) {
 }
 
 static ALWAYS_INLINE void handleFuelInjectionEvent(InjectionEvent *event, int rpm DECLARE_ENGINE_PARAMETER_S) {
-	/**
-	 * todo: we do not really need to calculate fuel for each individual cylinder
-	 */
-	float fuelMs = getFuelMs(rpm PASS_ENGINE_PARAMETER) * engineConfiguration->globalFuelCorrection;
+	float fuelMs = ENGINE(fuelMs);
 	if (cisnan(fuelMs)) {
 		warning(OBD_PCM_Processor_Fault, "NaN injection pulse");
 		return;
@@ -116,7 +113,7 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(InjectionEvent *event, int rp
 	if (engine->isCylinderCleanupMode)
 		return;
 
-	float delayMs = getOneDegreeTimeMs(rpm) * event->position.angleOffset;
+	float delayUs = ENGINE(rpmCalculator.oneDegreeUs) * event->position.angleOffset;
 
 	if (event->isSimultanious) {
 		if (fuelMs < 0) {
@@ -138,11 +135,11 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(InjectionEvent *event, int rp
 		scheduling_s * sUp = &signal->signalTimerUp[index];
 		scheduling_s * sDown = &signal->signalTimerDown[index];
 
-		scheduleTask("out up", sUp, (int) MS2US(delayMs), (schfunc_t) &startSimultaniousInjection, engine);
-		scheduleTask("out down", sDown, (int) MS2US(delayMs) + MS2US(fuelMs), (schfunc_t) &endSimultaniousInjection, engine);
+		scheduleTask("out up", sUp, (int) delayUs, (schfunc_t) &startSimultaniousInjection, engine);
+		scheduleTask("out down", sDown, (int) delayUs + MS2US(fuelMs), (schfunc_t) &endSimultaniousInjection, engine);
 
 	} else {
-		scheduleOutput(event->actuator, getTimeNowUs(), delayMs, fuelMs);
+		scheduleOutput(event->actuator, getTimeNowUs(), delayUs, MS2US(fuelMs));
 	}
 }
 
@@ -348,6 +345,10 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECL
 	}
 
 	if (eventIndex == 0) {
+		engine->m.beforeFuelCalc = GET_TIMESTAMP();
+		ENGINE(fuelMs) = getFuelMs(rpm PASS_ENGINE_PARAMETER) * engineConfiguration->globalFuelCorrection;
+		engine->m.fuelCalcTime = GET_TIMESTAMP() - engine->m.beforeFuelCalc;
+
 
 		engine->m.beforeIgnitionSch = GET_TIMESTAMP();
 		/**
