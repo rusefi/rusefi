@@ -134,6 +134,8 @@ static void testMath(const int count) {
 	}
 	time = currentTimeMillis() - start;
 	if (tempi == 0) {
+		// 11ms is 1848000 ticks
+		// 18.48 ticks per iteration
 		// Finished 100000 iterations of uint32_t summation in 11ms
 		scheduleMsg(logger, "Finished %d iterations of uint32_t summation in %dms", count, time);
 	}
@@ -184,10 +186,25 @@ static void testMath(const int count) {
 	start = currentTimeMillis();
 	tempf = 1;
 	for (int i = 0; i < count; i++) {
+		tempf += tempf * 130.0f;
+	}
+	time = currentTimeMillis() - start;
+	if (tempf != 0) {
+		//  ms =  ticks
+		//  ticks per iteration
+		// Finished 100000 iterations of float division in ms
+		scheduleMsg(logger, "Finished %d iterations of float multiplication in %dms", count, time);
+	}
+
+	start = currentTimeMillis();
+	tempf = 1;
+	for (int i = 0; i < count; i++) {
 		tempf += (tempf + 100) / 130.0;
 	}
 	time = currentTimeMillis() - start;
 	if (tempf != 0) {
+		// 65 ms = 10920000 ticks
+		// 109.2 ticks per iteration
 		// Finished 100000 iterations of float division in 65ms
 		scheduleMsg(logger, "Finished %d iterations of float division in %dms", count, time);
 	}
