@@ -159,9 +159,16 @@ void FuelSchedule::addFuelEvents(OutputSignalList *sourceList, injection_mode_e 
 
 	efiAssertVoid(engine!=NULL, "engine is NULL");
 
-//	float baseAngle = engineConfiguration->injectionAngle - MS2US(engine->fuelMs) / engine->rpmCalculator.oneDegreeUs;
-	float baseAngle = engineConfiguration->injectionAngle - engine->fuelMs;
+	if (cisnan(engine->rpmCalculator.oneDegreeUs))
+		return;
 
+	efiAssertVoid(!cisnan(engine->rpmCalculator.oneDegreeUs), "NAN one deg");
+
+	/**
+	 * injection phase is scheduled by injection end, so we need to step the angle back
+	 * for the duration of the injection
+	 */
+	float baseAngle = engineConfiguration->injectionAngle - MS2US(engine->fuelMs) / engine->rpmCalculator.oneDegreeUs;
 
 	switch (mode) {
 	case IM_SEQUENTIAL:
@@ -303,7 +310,8 @@ int getCylinderId(firing_order_e firingOrder, int index) {
 	return -1;
 }
 
-static NamedOutputPin * getIgnitionPinForIndex(int i DECLARE_ENGINE_PARAMETER_S) {
+static NamedOutputPin * getIgnitionPinForIndex(int i DECLARE_ENGINE_PARAMETER_S
+) {
 	switch (CONFIG(ignitionMode)) {
 	case IM_ONE_COIL:
 		return &enginePins.coils[0];
@@ -344,8 +352,7 @@ void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_F) {
 		TRIGGER_SHAPE(triggerIndexByAngle[angle])= findAngleIndex(angle PASS_ENGINE_PARAMETER);
 	}
 
-	engineConfiguration2->crankingInjectionEvents.addFuelEvents(
-			&crankingInjectonSignals,
+	engineConfiguration2->crankingInjectionEvents.addFuelEvents(&crankingInjectonSignals,
 			engineConfiguration->crankingInjectionMode PASS_ENGINE_PARAMETER);
 	engineConfiguration2->injectionEvents.addFuelEvents(&runningInjectonSignals,
 			engineConfiguration->injectionMode PASS_ENGINE_PARAMETER);
