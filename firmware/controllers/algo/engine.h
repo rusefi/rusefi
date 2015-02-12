@@ -100,6 +100,12 @@ typedef struct {
 
 	uint32_t beforeInjectonSch;
 	uint32_t injectonSchTime;
+
+	uint32_t beforeZeroTest;
+	uint32_t zeroTestTime;
+
+	uint32_t beforeAdvance;
+	uint32_t advanceTime;
 } monitoring_timestamps_s;
 
 class Engine {
