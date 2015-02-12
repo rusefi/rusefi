@@ -109,7 +109,7 @@ void setFordAspireEngineConfiguration(engine_configuration_s *engineConfiguratio
 	// set_cranking_charge_angle 70
 	engineConfiguration->crankingChargeAngle = 70;
 	// set_cranking_timing_angle 37
-	engineConfiguration->crankingTimingAngle = 37;
+	engineConfiguration->crankingTimingAngle = -37;
 
 	setSingleCoilDwell(engineConfiguration);
 	engineConfiguration->ignitionMode = IM_ONE_COIL;

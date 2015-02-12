@@ -33,7 +33,7 @@ void setMitsubishiConfiguration(engine_configuration_s *engineConfiguration, boa
 	// set_cranking_charge_angle 70
 	engineConfiguration->crankingChargeAngle = 70;
 	// set_cranking_timing_angle 715
-	engineConfiguration->crankingTimingAngle = 715;
+	engineConfiguration->crankingTimingAngle = -715;
 
 	// set_whole_fuel_map 3
 	setWholeFuelMap(engineConfiguration, 3);
