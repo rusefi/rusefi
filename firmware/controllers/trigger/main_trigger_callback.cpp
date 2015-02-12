@@ -278,7 +278,7 @@ void showMainHistogram(void) {
 #endif
 }
 
-static void doSomeCalc(int rpm DECLARE_ENGINE_PARAMETER_S) {
+static void ignitionCalc(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	/**
 	 * Within one engine cycle all cylinders are fired with same timing advance.
 	 * todo: one day we can control cylinders individually?
@@ -340,7 +340,7 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECL
 
 	if (eventIndex == engineConfiguration->ignMathCalculateAtIndex) {
 		engine->beforeIgnitionMath = GET_TIMESTAMP();
-		doSomeCalc(rpm PASS_ENGINE_PARAMETER);
+		ignitionCalc(rpm PASS_ENGINE_PARAMETER);
 		engine->ignitionMathTime = GET_TIMESTAMP() - engine->beforeIgnitionMath;
 	}
 
