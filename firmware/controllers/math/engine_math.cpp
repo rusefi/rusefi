@@ -157,7 +157,11 @@ void FuelSchedule::addFuelEvents(OutputSignalList *sourceList, injection_mode_e 
 
 	events.reset();
 
-	float baseAngle = engineConfiguration->injectionAngle;
+	efiAssertVoid(engine!=NULL, "engine is NULL");
+
+//	float baseAngle = engineConfiguration->injectionAngle - MS2US(engine->fuelMs) / engine->rpmCalculator.oneDegreeUs;
+	float baseAngle = engineConfiguration->injectionAngle - engine->fuelMs;
+
 
 	switch (mode) {
 	case IM_SEQUENTIAL:

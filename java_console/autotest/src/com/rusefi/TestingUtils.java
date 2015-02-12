@@ -52,6 +52,10 @@ public class TestingUtils {
         assertWave(true, msg, chart, key, width, expectedAngles);
     }
 
+    static void assertWaveFall(WaveChart chart, String key, double width, double... expectedAngles) {
+        assertWaveFall("", chart, key, width, expectedAngles);
+    }
+
     static void assertWaveFall(String msg, WaveChart chart, String key, double width, double... expectedAngles) {
         assertWave(false, msg, chart, key, width, expectedAngles);
     }
