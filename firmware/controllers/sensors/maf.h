@@ -14,5 +14,6 @@
 
 #define getMafT(ec) (getVoltageDivided(ec->mafAdcChannel))
 float getMaf(void);
+void setBosch0280218037(engine_configuration_s *engineConfiguration);
 
 #endif

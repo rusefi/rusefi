@@ -73,7 +73,7 @@ float getEngineLoadT(DECLARE_ENGINE_PARAMETER_F) {
 
 void setSingleCoilDwell(engine_configuration_s *engineConfiguration) {
 	for (int i = 0; i < DWELL_CURVE_SIZE; i++) {
-		engineConfiguration->sparkDwellBins[i] = 0;
+		engineConfiguration->sparkDwellBins[i] = -10 + i;
 		engineConfiguration->sparkDwell[i] = -1;
 	}
 
