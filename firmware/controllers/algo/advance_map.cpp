@@ -21,9 +21,7 @@
 #include "main.h"
 #include "advance_map.h"
 #include "interpolation.h"
-// that's for 'max' function
-#include "idle_controller.h"
-
+#include "efilib2.h"
 #include "engine_configuration.h"
 #include "engine_math.h"
 
@@ -38,8 +36,14 @@ float getBaseAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_S) {
 	}
 	efiAssert(!cisnan(engineLoad), "invalid el", NAN);
 	efiAssert(!cisnan(engineLoad), "invalid rpm", NAN);
-	return advanceMap.getValue(engineLoad, engineConfiguration->ignitionLoadBins, (float) rpm,
+	engine->m.beforeZeroTest = GET_TIMESTAMP();
+	engine->m.zeroTestTime = GET_TIMESTAMP() - engine->m.beforeZeroTest;
+
+	engine->m.beforeAdvance = GET_TIMESTAMP();
+	float result = advanceMap.getValue(engineLoad, engineConfiguration->ignitionLoadBins, (float) rpm,
 			engineConfiguration->ignitionRpmBins);
+	engine->m.advanceTime = GET_TIMESTAMP() - engine->m.beforeAdvance;
+	return result;
 }
 
 float getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_S) {
