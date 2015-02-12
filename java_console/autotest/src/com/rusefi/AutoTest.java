@@ -6,9 +6,7 @@ import com.rusefi.waves.WaveChart;
 
 import static com.rusefi.IoUtil.nextChart;
 import static com.rusefi.IoUtil.sendCommand;
-import static com.rusefi.TestingUtils.assertNull;
-import static com.rusefi.TestingUtils.assertTrue;
-import static com.rusefi.TestingUtils.assertWave;
+import static com.rusefi.TestingUtils.*;
 
 /**
  * rusEfi firmware simulator functional test suite
@@ -41,8 +39,8 @@ public class AutoTest {
         double x = 100;
         assertWave(msg, chart, WaveChart.SPARK_1, 0.194433, x, x + 180, x + 360, x + 540);
         x = 135;
-        assertWave(msg, chart, WaveChart.INJECTOR_1, 0.00626666, x, x + 180, x + 360, x + 540);
-        assertWave(msg, chart, WaveChart.INJECTOR_2, 0.00626666, x, x + 180, x + 360, x + 540);
+        assertWaveFall(msg, chart, WaveChart.INJECTOR_1, 0.00626666, x, x + 180, x + 360, x + 540);
+        assertWaveFall(msg, chart, WaveChart.INJECTOR_2, 0.00626666, x, x + 180, x + 360, x + 540);
 
         msg = "ProtegeLX running";
         IoUtil.changeRpm(2000);
@@ -50,8 +48,8 @@ public class AutoTest {
         x = 121;
         assertWave(msg, chart, WaveChart.SPARK_1, 0.13333333333333333, x, x + 180, x + 360, x + 540);
         x = 135;
-        assertWave(msg, chart, WaveChart.INJECTOR_1, 0.11733333333333336, x, x + 360);
-        assertWave(msg, chart, WaveChart.INJECTOR_2, 0.11733333333333336, x + 180, x + 540);
+        assertWaveFall(msg, chart, WaveChart.INJECTOR_1, 0.11733333333333336, x, x + 360);
+        assertWaveFall(msg, chart, WaveChart.INJECTOR_2, 0.11733333333333336, x + 180, x + 540);
     }
 
     private static void test1995DodgeNeon() {
@@ -64,10 +62,10 @@ public class AutoTest {
 
         String msg = "1995 Neon";
         float x = 110;
-        assertWave(msg, chart, WaveChart.INJECTOR_4, 0.133, x + 540);
-        assertWave(msg, chart, WaveChart.INJECTOR_2, 0.133, x);
-        assertWave(msg, chart, WaveChart.INJECTOR_1, 0.133, x + 180);
-        assertWave(msg, chart, WaveChart.INJECTOR_3, 0.133, x + 360);
+        assertWaveFall(msg, chart, WaveChart.INJECTOR_4, 0.133, x + 540);
+        assertWaveFall(msg, chart, WaveChart.INJECTOR_2, 0.133, x);
+        assertWaveFall(msg, chart, WaveChart.INJECTOR_1, 0.133, x + 180);
+        assertWaveFall(msg, chart, WaveChart.INJECTOR_3, 0.133, x + 360);
 
         x = 106;
         assertWave(msg, chart, WaveChart.SPARK_4, 0.13333, x + 540);
@@ -80,7 +78,7 @@ public class AutoTest {
         sendCommand("set_algorithm 3");
         chart = nextChart();
         x = 110;
-        assertWave(msg, chart, WaveChart.INJECTOR_4, 0.463, x + 540);
+        assertWaveFall(msg, chart, WaveChart.INJECTOR_4, 0.463, x + 540);
     }
 
     private static void testFordFiesta() {
@@ -166,10 +164,10 @@ public class AutoTest {
 
         msg = "aspire running";
 
-        assertWave(msg, chart, WaveChart.INJECTOR_1, 0.086, 238.75);
-        assertWave(msg, chart, WaveChart.INJECTOR_2, 0.086, 53.04);
-        assertWave(msg, chart, WaveChart.INJECTOR_3, 0.086, 417.04);
-        assertWave(msg, chart, WaveChart.INJECTOR_4, 0.086, 594.04);
+        assertWaveFall(msg, chart, WaveChart.INJECTOR_1, 0.086, 238.75);
+        assertWaveFall(msg, chart, WaveChart.INJECTOR_2, 0.086, 53.04);
+        assertWaveFall(msg, chart, WaveChart.INJECTOR_3, 0.086, 417.04);
+        assertWaveFall(msg, chart, WaveChart.INJECTOR_4, 0.086, 594.04);
 
         x = 22;
         assertWave(chart, WaveChart.SPARK_1, 0.133, x, x + 180, x + 360, x + 540);
@@ -183,10 +181,10 @@ public class AutoTest {
         sendCommand("set_global_trigger_offset_angle 175");
         chart = nextChart();
 
-        assertWave(chart, WaveChart.INJECTOR_1, 0.555, 238.75);
-        assertWave(chart, WaveChart.INJECTOR_2, 0.555, 53.04);
-        assertWave(chart, WaveChart.INJECTOR_3, 0.555, 417.04);
-        assertWave(chart, WaveChart.INJECTOR_4, 0.555, 594.04);
+        assertWaveFall(chart, WaveChart.INJECTOR_1, 0.555, 238.75);
+        assertWaveFall(chart, WaveChart.INJECTOR_2, 0.555, 53.04);
+        assertWaveFall(chart, WaveChart.INJECTOR_3, 0.555, 417.04);
+        assertWaveFall(chart, WaveChart.INJECTOR_4, 0.555, 594.04);
 
         x = 41;
         assertWave(chart, WaveChart.SPARK_1, 0.133, x, x + 180, x + 360, x + 540);
@@ -215,9 +213,9 @@ public class AutoTest {
         sendCommand("set_algorithm 3");
         chart = nextChart();
         x = 8.88;
-        assertWave(msg, chart, WaveChart.INJECTOR_1, 0.329, x + 180);
-        assertWave(msg, chart, WaveChart.INJECTOR_2, 0.329, x);
-        assertWave(msg, chart, WaveChart.INJECTOR_4, 0.329, x + 540);
+        assertWaveFall(msg, chart, WaveChart.INJECTOR_1, 0.329, x + 180);
+        assertWaveFall(msg, chart, WaveChart.INJECTOR_2, 0.329, x);
+        assertWaveFall(msg, chart, WaveChart.INJECTOR_4, 0.329, x + 540);
 
         // above hard limit
         IoUtil.changeRpm(10000);
