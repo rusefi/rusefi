@@ -82,7 +82,8 @@ extern board_configuration_s *boardConfiguration;
 extern bool hasFirmwareErrorFlag;
 #define FULL_LOGGING_KEY "fl"
 
-static Logging logger;
+static char LOGGING_BUFFER[700];
+static Logging logger("status loop", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
 
 static void setWarningEnabled(int value) {
 	warningEnabled = value;
@@ -267,8 +268,6 @@ static void printState(Engine *engine) {
 
 #define INITIAL_FULL_LOG TRUE
 //#define INITIAL_FULL_LOG FALSE
-
-static char LOGGING_BUFFER[700];
 
 volatile int needToReportStatus = FALSE;
 static int prevCkpEventCounter = -1;
@@ -630,11 +629,6 @@ static void unsubscribe(int outputOrdinal) {
 }
 
 void initStatusLoop(Engine *engine) {
-#if EFI_PROD_CODE || EFI_SIMULATOR
-	initLoggingExt(&logger, "status loop", LOGGING_BUFFER,
-			sizeof(LOGGING_BUFFER));
-#endif /* EFI_PROD_CODE || EFI_SIMULATOR */
-
 	setFullLog(INITIAL_FULL_LOG);
 	addConsoleActionI(FULL_LOGGING_KEY, setFullLog);
 	addConsoleActionI("warn", setWarningEnabled);

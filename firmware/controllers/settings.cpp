@@ -32,9 +32,8 @@
 #include "flash_main.h"
 #endif /* EFI_INTERNAL_FLASH */
 
-static Logging logger;
-
 static char LOGGING_BUFFER[1000];
+static Logging logger("settings control", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
 
 extern int maxNesting;
 extern engine_pins_s enginePins;
@@ -865,8 +864,6 @@ static void setInjectorLag(float value) {
 }
 
 void initSettings(engine_configuration_s *engineConfiguration) {
-	initLoggingExt(&logger, "settings control", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
-
 	addConsoleActionP("showconfig", (VoidPtr) doPrintConfiguration, &engine);
 	addConsoleAction("tempinfo", printTemperatureInfo);
 	addConsoleAction("tpsinfo", printTPSInfo);

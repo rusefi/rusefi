@@ -18,4 +18,7 @@ void setMazda626EngineConfiguration(engine_configuration_s *engineConfiguration)
 
 	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 	engineConfiguration->trigger.type = TT_MAZDA_DOHC_1_4;
+
+	boardConfiguration->analogChartMode = AC_TRIGGER;
+	engineConfiguration->analogChartFrequency = 2;
 }

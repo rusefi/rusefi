@@ -52,7 +52,7 @@ AdcDevice::AdcDevice(ADCConversionGroup* hwConfig) {
 #define ADC_FAST_DEVICE ADCD2
 
 static char LOGGING_BUFFER[500];
-static Logging logger;
+static Logging logger("ADC", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
 static int adcCallbackCounter_slow = 0;
 
 static int adcDebugReporting = FALSE;
@@ -454,8 +454,6 @@ static void adc_callback_slow(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 }
 
 void initAdcInputs(bool boardTestMode) {
-
-	initLoggingExt(&logger, "ADC", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
 	printMsg(&logger, "initAdcInputs()");
 
 	printStatus();

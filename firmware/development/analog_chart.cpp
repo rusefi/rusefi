@@ -14,7 +14,7 @@
 #if EFI_ANALOG_CHART || defined(__DOXYGEN__)
 
 static char LOGGING_BUFFER[5000];
-static Logging logging;
+static Logging logging("analog chart", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
 
 static int pendingData = FALSE;
 static int initialized = FALSE;
@@ -71,8 +71,6 @@ static void setAnalogChartFrequency(int value) {
 }
 
 void initAnalogChart(void) {
-	initLoggingExt(&logging, "analog chart", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
-
 	addConsoleActionI("set_analog_chart_freq", setAnalogChartFrequency);
 
 	initialized = true;
