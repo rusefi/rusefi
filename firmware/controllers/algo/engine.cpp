@@ -53,7 +53,7 @@ Engine::Engine() {
 	isRunningPwmTest = false;
 }
 
-void Engine::precalc(engine_configuration_s *engineConfiguration) {
+void Engine::precalc() {
 	sparkTable.preCalc(engineConfiguration->sparkDwellBins,
 			engineConfiguration->sparkDwell);
 
@@ -61,8 +61,8 @@ void Engine::precalc(engine_configuration_s *engineConfiguration) {
 		float volts = i / MAF_DECODING_CACHE_MULT;
 		float maf = interpolate2d(volts, engineConfiguration->mafDecodingBins,
 				engineConfiguration->mafDecoding, MAF_DECODING_COUNT);
+		mafDecodingLookup[i] = maf;
 	}
-
 }
 
 void Engine::init() {

@@ -169,7 +169,7 @@ public:
 	 */
 	float mafDecodingLookup[MAF_DECODING_CACHE_SIZE];
 
-	void precalc(engine_configuration_s *engineConfiguration);
+	void precalc();
 
 	void updateSlowSensors();
 	void watchdog();

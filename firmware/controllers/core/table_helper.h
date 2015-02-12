@@ -41,7 +41,7 @@ void Table2D<SIZE>::preCalc(float *bin, float *values) {
 		float x1 = bin[i];
 		float x2 = bin[i + 1];
 		if (x1 == x2) {
-			firmwareError("Same x1 and x2 in interpolate: %f/%f", x1, x2);
+			firmwareError("preCalc: Same x1 and x2 in interpolate: %f/%f", x1, x2);
 			return;
 		}
 

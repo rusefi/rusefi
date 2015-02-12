@@ -142,6 +142,7 @@ int main(void) {
 	testIdleController();
 
 	testMenuTree();
+	testMafLookup();
 
 	//	resizeMap();
 	printf("Success 20150207\r\n");

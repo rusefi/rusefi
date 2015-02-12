@@ -10,5 +10,6 @@
 
 void testEngineMath(void);
 void testIgnitionPlanning(void);
+void testMafLookup(void);
 
 #endif /* TEST_ENGINE_MATH_H_ */

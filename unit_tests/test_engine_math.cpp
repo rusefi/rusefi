@@ -12,6 +12,7 @@
 #include "map.h"
 #include "speed_density.h"
 #include "engine_test_helper.h"
+#include "maf.h"
 
 void testIgnitionPlanning(void) {
 	printf("*************************************************** testIgnitionPlanning\r\n");
@@ -22,10 +23,12 @@ void testIgnitionPlanning(void) {
 	assertEquals(IM_BATCH, engineConfiguration->injectionMode);
 }
 
-extern engine_configuration_s *engineConfiguration;
-
 void testEngineMath(void) {
 	printf("*************************************************** testEngineMath\r\n");
+
+	EngineTestHelper eth(FORD_ESCORT_GT);
+	Engine * engine = &eth.engine;
+	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
 
 	engineConfiguration->rpmMultiplier = 0.5;
 
@@ -41,6 +44,22 @@ void testEngineMath(void) {
 	assertEquals(312.5, getTCharge(4000, 0, 300, 350));
 	assertEquals(320.0833, getTCharge(4000, 50, 300, 350));
 	assertEquals(327.6667, getTCharge(4000, 100, 300, 350));
+}
+
+void testMafLookup(void) {
+	printf("*************************************************** testMafLookup\r\n");
+
+	EngineTestHelper eth(FORD_ESCORT_GT);
+	Engine * engine = &eth.engine;
+	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
+	setBosch0280218037(engineConfiguration);
+	engine->precalc();
+
+	assertEqualsM("@0", -34.5000, engine->mafDecodingLookup[0]);
+	assertEqualsM("@1", -33.7875, engine->mafDecodingLookup[1]);
+	assertEqualsM("@2", -33.0750, engine->mafDecodingLookup[2]);
+	assertEqualsM("@200", 313.8826, engine->mafDecodingLookup[200]);
+	assertEqualsM("@255", 738, engine->mafDecodingLookup[255]);
 }
 
 float getMap(void) {
