@@ -48,8 +48,8 @@ public class AutoTest {
         x = 121;
         assertWave(msg, chart, WaveChart.SPARK_1, 0.13333333333333333, x, x + 180, x + 360, x + 540);
         x = 135;
-        assertWaveFall(msg, chart, WaveChart.INJECTOR_1, 0.11733333333333336, x, x + 360);
-        assertWaveFall(msg, chart, WaveChart.INJECTOR_2, 0.11733333333333336, x + 180, x + 540);
+        assertWaveFall(msg, chart, WaveChart.INJECTOR_1, 0.11733333333333336, x + 180, x + 540);
+        assertWaveFall(msg, chart, WaveChart.INJECTOR_2, 0.11733333333333336, x, x + 360);
     }
 
     private static void test1995DodgeNeon() {
@@ -61,9 +61,9 @@ public class AutoTest {
         chart = nextChart();
 
         String msg = "1995 Neon";
-        float x = 110;
+        float x = -70;
         assertWaveFall(msg, chart, WaveChart.INJECTOR_4, 0.133, x + 540);
-        assertWaveFall(msg, chart, WaveChart.INJECTOR_2, 0.133, x);
+        assertWaveFall(msg, chart, WaveChart.INJECTOR_2, 0.133, x + 720);
         assertWaveFall(msg, chart, WaveChart.INJECTOR_1, 0.133, x + 180);
         assertWaveFall(msg, chart, WaveChart.INJECTOR_3, 0.133, x + 360);
 
@@ -77,7 +77,7 @@ public class AutoTest {
         sendCommand("set_mock_map_voltage 1");
         sendCommand("set_algorithm 3");
         chart = nextChart();
-        x = 110;
+        x = -70;
         assertWaveFall(msg, chart, WaveChart.INJECTOR_4, 0.463, x + 540);
     }
 
@@ -191,7 +191,7 @@ public class AutoTest {
         assertNull("chart for " + WaveChart.SPARK_2, chart.get(WaveChart.SPARK_2));
 
         sendCommand("set_global_trigger_offset_angle 130");
-        sendCommand("set_injection_offset 189");
+        sendCommand("set_injection_offset 369");
         chart = nextChart();
         x = 580;
         assertWave(chart, WaveChart.SPARK_1, 0.133, x, x + 180, x + 360, x + 540);

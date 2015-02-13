@@ -50,3 +50,7 @@ void setBosch0280218037(engine_configuration_s *engineConfiguration) {
 		i++;
 	}
 }
+
+void setBosch0280218004(engine_configuration_s *engineConfiguration) {
+
+}

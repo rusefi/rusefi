@@ -193,7 +193,7 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	setWholeVEMap(engineConfiguration, 0.8);
 	setMap(engineConfiguration->afrTable, 14.7);
 
-	setMap(engineConfiguration->injectionPhase, 0);
+	setMap(engineConfiguration->injectionPhase, -180);
 	setRpmTableBin(engineConfiguration->injPhaseRpmBins, FUEL_RPM_COUNT);
 	setTableBin2(engineConfiguration->injPhaseLoadBins, FUEL_LOAD_COUNT, 10, 300, 1);
 
