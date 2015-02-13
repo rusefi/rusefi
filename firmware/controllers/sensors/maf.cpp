@@ -10,6 +10,17 @@ float getMaf(DECLARE_ENGINE_PARAMETER_F) {
 	return getMafT(engineConfiguration);
 }
 
+/**
+ * @return kg/hour value
+ */
+float getRealMaf(DECLARE_ENGINE_PARAMETER_F) {
+	int mafAdc = getAdcValue(engineConfiguration->mafAdcChannel);
+	/**
+	 * here we drop from 12 bit ADC to 8 bit index
+	 */
+	return engine->mafDecodingLookup[mafAdc >> 4];
+}
+
 void setBosch0280218037(engine_configuration_s *engineConfiguration) {
 	int i = 0;
 	engineConfiguration->mafDecoding[i] = -34.5;

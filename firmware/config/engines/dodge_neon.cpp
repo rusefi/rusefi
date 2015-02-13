@@ -192,8 +192,6 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 	// set_injection_offset 0
 	engineConfiguration->injectionAngle = 0;
 
-	setMap(engineConfiguration->fuelTable, -180);
-
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
@@ -395,6 +393,8 @@ void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfigurat
 	engineConfiguration->canReadEnabled = false;
 	engineConfiguration->canNbcType = CAN_BUS_NBC_BMW;
 //	engineConfiguration->canNbcType = CAN_BUS_MAZDA_RX8;
+
+	setMap(engineConfiguration->injectionPhase, -180);
 }
 
 #endif /* EFI_SUPPORT_DODGE_NEON */
