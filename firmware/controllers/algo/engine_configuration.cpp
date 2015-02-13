@@ -139,13 +139,13 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 
 	setDetaultVETable(engineConfiguration);
 
+	boardConfiguration->mafSensorType = Bosch0280218037;
 	setBosch0280218037(engineConfiguration);
 
 	engineConfiguration->injector.lag = 1.0;
 
 	engineConfiguration->acCutoffLowRpm = 700;
 	engineConfiguration->acCutoffHighRpm = 5000;
-
 
 	for (int i = 0; i < IAT_CURVE_SIZE; i++) {
 		engineConfiguration->iatFuelCorrBins[i] = -40 + i * 10;
