@@ -131,7 +131,7 @@ float interpolate2d(float value, float bin[], float values[], int size) {
  * @brief	Two-dimensional table lookup with linear interpolation
  */
 float interpolate3d(float x, float xBin[], int xBinSize, float y, float yBin[], int yBinSize, float* map[]) {
-	if (cisnan(y)) {
+	if (cisnan(x)) {
 		warning(OBD_PCM_Processor_Fault, "%f: x is NaN in interpolate3d", x);
 		return NAN;
 	}
