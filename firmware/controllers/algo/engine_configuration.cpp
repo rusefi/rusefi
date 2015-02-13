@@ -192,7 +192,10 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	setWholeFuelMap(engineConfiguration, 3);
 	setWholeVEMap(engineConfiguration, 0.8);
 	setMap(engineConfiguration->afrTable, 14.7);
+
 	setMap(engineConfiguration->injectionPhase, 0);
+	setRpmTableBin(engineConfiguration->injPhaseRpmBins, FUEL_RPM_COUNT);
+	setTableBin2(engineConfiguration->injPhaseLoadBins, FUEL_LOAD_COUNT, 10, 300, 1);
 
 	setThermistorConfiguration(&engineConfiguration->clt, 0, 9500, 23.8889, 2100, 48.8889, 1000);
 	engineConfiguration->clt.bias_resistor = 1500;

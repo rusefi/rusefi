@@ -44,6 +44,7 @@
 EXTERN_ENGINE;
 
 static Map3D1616 fuelMap;
+static Map3D1616 fuelPhaseMap;
 
 float getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	if (engine->engineConfiguration->algorithm == LM_SPEED_DENSITY) {
@@ -119,8 +120,9 @@ float getInjectorLag(float vBatt DECLARE_ENGINE_PARAMETER_S) {
  * @note this method has nothing to do with fuel map VALUES - it's job
  * is to prepare the fuel map data structure for 3d interpolation
  */
-void prepareFuelMap(engine_configuration_s *engineConfiguration) {
-	fuelMap.init(engineConfiguration->fuelTable);
+void prepareFuelMap(engine_configuration_s *e) {
+	fuelMap.init(e->fuelTable, e->fuelLoadBins, e->fuelRpmBins);
+	fuelPhaseMap.init(e->injectionPhase, e->injPhaseLoadBins, e->injPhaseRpmBins);
 }
 
 /**
@@ -146,8 +148,7 @@ float getBaseTableFuel(engine_configuration_s *engineConfiguration, int rpm, flo
 		warning(OBD_PCM_Processor_Fault, "NaN engine load");
 		return NAN;
 	}
-	return fuelMap.getValue(engineLoad, engineConfiguration->fuelLoadBins, rpm,
-			engineConfiguration->fuelRpmBins);
+	return fuelMap.getValue(engineLoad, rpm);
 }
 
 #if EFI_ENGINE_CONTROL

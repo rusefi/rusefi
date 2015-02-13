@@ -40,8 +40,7 @@ float getBaseAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_S) {
 	engine->m.zeroTestTime = GET_TIMESTAMP() - engine->m.beforeZeroTest;
 
 	engine->m.beforeAdvance = GET_TIMESTAMP();
-	float result = advanceMap.getValue(engineLoad, engineConfiguration->ignitionLoadBins, (float) rpm,
-			engineConfiguration->ignitionRpmBins);
+	float result = advanceMap.getValue(engineLoad, (float) rpm);
 	engine->m.advanceTime = GET_TIMESTAMP() - engine->m.beforeAdvance;
 	return result;
 }
@@ -59,5 +58,6 @@ float getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_S) {
 }
 
 void prepareTimingMap(DECLARE_ENGINE_PARAMETER_F) {
-	advanceMap.init(engineConfiguration->ignitionTable);
+	advanceMap.init(engineConfiguration->ignitionTable, engineConfiguration->ignitionLoadBins,
+			engineConfiguration->ignitionRpmBins);
 }
