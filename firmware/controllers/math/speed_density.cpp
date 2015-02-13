@@ -85,10 +85,8 @@ float getSpeedDensityFuel(Engine *engine, int rpm) {
 	float intakeC = engine->engineState.iat;
 	float tChargeK = convertCelsiusToKelvin(getTCharge(rpm, tps, coolantC, intakeC));
 	float map = getMap();
-	float VE = veMap.getValue(map, engineConfiguration->veLoadBins, rpm,
-			engineConfiguration->veRpmBins);
-	float AFR = afrMap.getValue(map, engineConfiguration->afrLoadBins, rpm,
-			engineConfiguration->afrRpmBins);
+	float VE = veMap.getValue(map, rpm);
+	float AFR = afrMap.getValue(map, rpm);
 
 	return sdMath(engine->engineConfiguration, VE, map, AFR, tChargeK) * 1000;
 }
@@ -104,7 +102,8 @@ void setDetaultVETable(engine_configuration_s *engineConfiguration) {
 	afrMap.setAll(14.7);
 }
 
-void initSpeedDensity(engine_configuration_s *engineConfiguration) {
-	veMap.init(engineConfiguration->veTable);
-	afrMap.init(engineConfiguration->afrTable);
+void initSpeedDensity(engine_configuration_s *e) {
+	veMap.init(e->veTable, e->veLoadBins, e->veRpmBins);
+	veMap.init(e->ve2Table, e->ve2LoadBins, e->ve2RpmBins);
+	afrMap.init(e->afrTable, e->afrLoadBins, e->afrRpmBins);
 }
