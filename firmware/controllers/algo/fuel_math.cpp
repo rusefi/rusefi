@@ -55,6 +55,11 @@ float getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	}
 }
 
+float getInjectionAngle(int rpm DECLARE_ENGINE_PARAMETER_S) {
+	float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_F);
+	return fuelPhaseMap.getValue(engineLoad, rpm);
+}
+
 /**
  * Number of injections into each cylinder per engine cycle
  */

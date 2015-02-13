@@ -28,20 +28,13 @@
 #include "trigger_decoder.h"
 #include "event_registry.h"
 #include "efiGpio.h"
+#include "fuel_math.h"
 
 EXTERN_ENGINE
 ;
 
 extern engine_pins_s enginePins;
 
-/*
- * default Volumetric Efficiency
- */
-//float getDefaultVE(int rpm) {
-//	if (rpm > 5000)
-//		return interpolate(5000, 1.1, 8000, 1, rpm);
-//	return interpolate(500, 0.5, 5000, 1.1, rpm);
-//}
 /**
  * @return number of milliseconds in one crankshaft revolution
  */
@@ -66,8 +59,7 @@ float getEngineLoadT(DECLARE_ENGINE_PARAMETER_F) {
 	case LM_ALPHA_N:
 		return getTPS(PASS_ENGINE_PARAMETER_F);
 	case LM_REAL_MAF: {
-		int mafAdc = getAdcValue(engineConfiguration->mafAdcChannel);
-		return getMafT(engineConfiguration);
+		return getRealMaf(PASS_ENGINE_PARAMETER_F);
 	}
 	default:
 		firmwareError("Unexpected engine load parameter: %d", engineConfiguration->algorithm);
@@ -168,7 +160,8 @@ void FuelSchedule::addFuelEvents(OutputSignalList *sourceList, injection_mode_e 
 	 * injection phase is scheduled by injection end, so we need to step the angle back
 	 * for the duration of the injection
 	 */
-	float baseAngle = engineConfiguration->injectionAngle - MS2US(engine->fuelMs) / engine->rpmCalculator.oneDegreeUs;
+	float baseAngle = getInjectionAngle(engine->rpmCalculator.rpmValue PASS_ENGINE_PARAMETER) +
+			engineConfiguration->injectionAngle - MS2US(engine->fuelMs) / engine->rpmCalculator.oneDegreeUs;
 
 	switch (mode) {
 	case IM_SEQUENTIAL:
