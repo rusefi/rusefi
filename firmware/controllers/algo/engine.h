@@ -191,7 +191,7 @@ public:
 	Table2D<DWELL_CURVE_SIZE> sparkTable;
 
 	/**
-	 * fast MAF decoding lookup table with ~0.2 volt step
+	 * fast kg/hour MAF decoding lookup table with ~0.2 volt step
 	 * This table is build based on MAF decoding curve
 	 */
 	float mafDecodingLookup[MAF_DECODING_CACHE_SIZE];
