@@ -545,6 +545,7 @@ typedef enum {
 	CUSTOM = 0,
 	Bosch0280218037 = 1,
 	Bosch0280218004 = 2,
+	DensoTODO = 3,
 	Internal_ForceMyEnumIntSize_maf_sensor = ENUM_32_BITS,
 } maf_sensor_type_e;
 
