@@ -21,36 +21,51 @@ float getRealMaf(DECLARE_ENGINE_PARAMETER_F) {
 	return engine->mafDecodingLookup[mafAdc >> 4];
 }
 
-void setBosch0280218037(engine_configuration_s *engineConfiguration) {
-	int i = 0;
-	engineConfiguration->mafDecoding[i] = -34.5;
-	engineConfiguration->mafDecodingBins[i++] = 0;
-
-	engineConfiguration->mafDecoding[i] = -6;
-	engineConfiguration->mafDecodingBins[i++] = 0.78125;
-
-	engineConfiguration->mafDecoding[i] = 10.5;
-	engineConfiguration->mafDecodingBins[i++] = 1.38671875;
-
-	engineConfiguration->mafDecoding[i] = 105.3;
-	engineConfiguration->mafDecodingBins[i++] = 2.91015625;
-
-	engineConfiguration->mafDecoding[i] = 387.5;
-	engineConfiguration->mafDecodingBins[i++] = 4.2578125;
-
-	engineConfiguration->mafDecoding[i] = 738;
-	engineConfiguration->mafDecodingBins[i++] = 4.98046875;
-
+static void fillTheRest(engine_configuration_s *e, int i) {
 	/**
 	 * unrealistic values just to make binary search happy
 	 */
 	while (i < MAF_DECODING_COUNT) {
-		engineConfiguration->mafDecoding[i] = 200;
-		engineConfiguration->mafDecodingBins[i] = 10 + i;
+		e->mafDecoding[i] = 200;
+		e->mafDecodingBins[i] = 10 + i;
 		i++;
 	}
 }
 
-void setBosch0280218004(engine_configuration_s *engineConfiguration) {
+static int addMafPoint(engine_configuration_s *e, int i, float kgHrValue, float voltage) {
+	e->mafDecoding[i] = kgHrValue;
+	e->mafDecodingBins[i] = voltage;
+	return i + 1;
+}
 
+void setBosch0280218037(engine_configuration_s *e) {
+	int i = 0;
+	i = addMafPoint(e, i, -34.5, 0);
+	i = addMafPoint(e, i, -6, 0.78125);
+
+	e->mafDecoding[i] = 10.5;
+	e->mafDecodingBins[i++] = 1.38671875;
+
+	e->mafDecoding[i] = 105.3;
+	e->mafDecodingBins[i++] = 2.91015625;
+
+	e->mafDecoding[i] = 387.5;
+	e->mafDecodingBins[i++] = 4.2578125;
+
+	e->mafDecoding[i] = 738;
+	e->mafDecodingBins[i++] = 4.98046875;
+
+	fillTheRest(e, i);
+}
+
+void setBosch0280218004(engine_configuration_s *e) {
+	int i = 0;
+
+	fillTheRest(e, i);
+}
+
+void setDensoTODO(engine_configuration_s *e) {
+	int i = 0;
+
+	fillTheRest(e, i);
 }
