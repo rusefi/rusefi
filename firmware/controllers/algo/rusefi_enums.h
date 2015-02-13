@@ -257,12 +257,16 @@ typedef enum {
 	FO_1_THEN_3_THEN_4_THEN2 = 1,
 	FO_1_THEN_2_THEN_4_THEN3 = 2,
 	FO_1_THEN_3_THEN_2_THEN4 = 3,
-	// 6 cylinder
-	FO_1_THEN_5_THEN_3_THEN_6_THEN_2_THEN_4 = 4,
 	// 8 cylinder
 	FO_1_8_4_3_6_5_7_2 = 5,
 	// 5 cylinder
 	FO_1_2_4_5_3 = 6,
+
+	// 6 cylinder
+	FO_1_THEN_5_THEN_3_THEN_6_THEN_2_THEN_4 = 4,
+	FO_1_THEN_4_THEN_2_THEN_5_THEN_3_THEN_6 = 7,
+
+
 	Force_4b_firing_order = ENUM_32_BITS,
 } firing_order_e;
 

@@ -25,6 +25,9 @@ public enum Sensor {
     TPS("throttle", SensorCategory.SENSOR_INPUTS, "%", 100),
     VSS("Speed", SensorCategory.SENSOR_INPUTS, "kph", 100),
 
+    CLT_F("Coolant F", SensorCategory.SENSOR_INPUTS, "temperature, F", -40, 500),
+    IAT_F("Intake Air F", SensorCategory.SENSOR_INPUTS, "temperature, F", -40, 350),
+
     TRG_0_DUTY("trg0 duty", SensorCategory.SENSOR_INPUTS, "%", 100),
     TRG_1_DUTY("trg1 duty", SensorCategory.SENSOR_INPUTS, "%", 100),
 

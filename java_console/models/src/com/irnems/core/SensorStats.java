@@ -1,6 +1,7 @@
 package com.irnems.core;
 
 import com.rusefi.CyclicBuffer;
+import com.rusefi.SensorConversion;
 import com.rusefi.waves.WaveReport;
 
 /**
@@ -9,7 +10,6 @@ import com.rusefi.waves.WaveReport;
  */
 public class SensorStats {
     public static void start(final Sensor source, final Sensor destination) {
-
         SensorCentral.getInstance().addListener(source, new SensorCentral.SensorListener() {
 
             int counter;
@@ -34,8 +34,6 @@ public class SensorStats {
                 }
             }
         });
-
-
     }
 
     /**
@@ -58,12 +56,21 @@ public class SensorStats {
     }
 
     public static void startDelta(Sensor input1, final Sensor input2, final Sensor destination) {
-        final CyclicBuffer cb = new CyclicBuffer(30);
         SensorCentral.getInstance().addListener(input1, new SensorCentral.SensorListener() {
             @Override
             public void onSensorUpdate(double value) {
                 double valueMs = 1.0 * (value - SensorCentral.getInstance().getValueOrNan(input2)) / WaveReport.SYS_TICKS_PER_MS;
                 SensorCentral.getInstance().setValue(valueMs, destination);
+            }
+        });
+    }
+
+    public static void startConversion(final Sensor source, final Sensor destination, final SensorConversion conversion) {
+        SensorCentral.getInstance().addListener(source, new SensorCentral.SensorListener() {
+            @Override
+            public void onSensorUpdate(double value) {
+                double converted = conversion.convertValue(value);
+                SensorCentral.getInstance().setValue(converted, destination);
             }
         });
     }
