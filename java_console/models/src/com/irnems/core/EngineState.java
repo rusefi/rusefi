@@ -1,6 +1,7 @@
 package com.irnems.core;
 
 import com.irnems.FileLog;
+import com.rusefi.SensorConversion;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -75,6 +76,9 @@ public class EngineState {
         SensorStats.startStandardDeviation(Sensor.DWELL0, Sensor.DWELL0_SD);
         SensorStats.startDelta(Sensor.INJECTOR_1_DWELL, Sensor.INJECTOR_2_DWELL, Sensor.INJ_1_2_DELTA);
         SensorStats.startDelta(Sensor.INJECTOR_3_DWELL, Sensor.INJECTOR_4_DWELL, Sensor.INJ_3_4_DELTA);
+
+        SensorStats.startConversion(Sensor.CLT, Sensor.CLT_F, SensorConversion.C_TO_F);
+        SensorStats.startConversion(Sensor.IAT, Sensor.IAT_F, SensorConversion.C_TO_F);
 
         registerStringValueAction("adcfast_co", NOTHING);
         registerStringValueAction("adcfast_max", NOTHING);

@@ -24,10 +24,10 @@ import java.util.Hashtable;
 public class SensorGauge {
 
     public static Component createGauge(final Sensor sensor) {
-        return createGauge2(sensor, null);
+        return createGauge(sensor, null);
     }
 
-    private static Component createGauge2(Sensor sensor, GaugeChangeListener listener) {
+    private static Component createGauge(Sensor sensor, GaugeChangeListener listener) {
         JPanel wrapper = new JPanel(new BorderLayout());
 
         createGaugeBody(sensor, wrapper, listener);
@@ -105,7 +105,7 @@ public class SensorGauge {
                 ds.onChange(sensor);
             }
         };
-        ds.content.add(createGauge2(sensor, listener), BorderLayout.CENTER);
+        ds.content.add(createGauge(sensor, listener), BorderLayout.CENTER);
         ds.content.add(ds.mockControlPanel, BorderLayout.SOUTH);
 
 
@@ -113,7 +113,7 @@ public class SensorGauge {
         ds.show(e);
     }
 
-    final static Hashtable<Integer, JComponent> SLIDER_LABELS = new Hashtable<Integer, JComponent>();
+    final static Hashtable<Integer, JComponent> SLIDER_LABELS = new Hashtable<>();
 
     static {
         Format f = new DecimalFormat("0.0");
