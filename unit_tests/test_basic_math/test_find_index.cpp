@@ -13,60 +13,65 @@
 
 void testFindIndex(void) {
 	printf("*************************************************** testFindIndex\r\n");
-
-	float array[] = { 1, 2, 3, 4, 5 };
-	int size = 4;
 	int result;
 
-	printf("To the left\r\n");
-	result = findIndex(array, size, -1.0);
-	assertEquals(-1, result);
+	{
+		// in real life we only use powers of 2 for sizes
+		float array5[] = { 1, 2, 3, 4, 5 };
+		const int size5 = 5;
+		printf("To the right5\r\n");
+		result = findIndex(array5, size5, 10.0);
+		assertEquals(4, result);
 
-	printf("To the right4\r\n");
-	result = findIndex(array, size, 10.0);
-	assertEquals(3, result);
+		printf("Middle2\r\n");
+		result = findIndex(array5, size5, 4);
+		assertEquals(3, result);
 
-	printf("To the right5\r\n");
-	result = findIndex(array, 5, 10.0);
-	assertEquals(4, result);
+		printf("Middle2\r\n");
+		result = findIndex(array5, size5, 3.1);
+		assertEquals(2, result);
 
-	printf("On the edge\r\n");
-	result = findIndex(array, size, 4.0);
-	assertEquals(3, result);
+	}
+	{
+		float array4[] = { 1, 2, 3, 4 };
+		const int size4 = 4;
 
-	printf("Another1\r\n");
-	result = findIndex(array, size, 3.9);
-	assertEquals(2, result);
+		printf("To the left\r\n");
+		result = findIndex(array4, size4, -1.0);
+		assertEquals(-1, result);
 
-	printf("Another2\r\n");
-	result = findIndex(array, size, 4.1);
-	assertEquals(3, result);
+		printf("To the right4\r\n");
+		result = findIndex(array4, size4, 10.0);
+		assertEquals(3, result);
 
-	printf("Another3\r\n");
-	result = findIndex(array, size, 2);
-	assertEquals(1, result);
+		printf("On the edge\r\n");
+		result = findIndex(array4, size4, 4.0);
+		assertEquals(3, result);
 
-	printf("Left edge1\r\n");
-	result = findIndex(array, size, 1);
-	assertEquals(0, result);
+		printf("Another1\r\n");
+		result = findIndex(array4, size4, 3.9);
+		assertEquals(2, result);
 
-	printf("Left edge2\r\n");
-	result = findIndex(array, size, 1.1);
-	assertEquals(0, result);
+		printf("Another2\r\n");
+		result = findIndex(array4, size4, 4.1);
+		assertEquals(3, result);
 
-	printf("Middle\r\n");
-	result = findIndex(array, size, 3);
-	assertEquals(2, result);
+		printf("Another3\r\n");
+		result = findIndex(array4, size4, 2);
+		assertEquals(1, result);
 
-	size = 5; // now test with off array size
+		printf("Left edge1\r\n");
+		result = findIndex(array4, size4, 1);
+		assertEquals(0, result);
 
-	printf("Middle2\r\n");
-	result = findIndex(array, size, 4);
-	assertEquals(3, result);
+		printf("Left edge2\r\n");
+		result = findIndex(array4, size4, 1.1);
+		assertEquals(0, result);
 
-	printf("Middle2\r\n");
-	result = findIndex(array, size, 3.1);
-	assertEquals(2, result);
+		printf("Middle\r\n");
+		result = findIndex(array4, size4, 3);
+		assertEquals(2, result);
+	}
 }
 
 //static float getValue2(float key, float maf) {
