@@ -97,12 +97,16 @@ static float getPrimatyRawTPS(DECLARE_ENGINE_PARAMETER_F) {
 
 // todo: static float getSecondaryRawTPS
 
+#define NO_TPS_MAGIC_VALUE 66.6
+
 /*
  * In case of dual TPS this function would return logical TPS position
  *
  * @return Current TPS position, percent of WOT. 0 means idle and 100 means Wide Open Throttle
  */
 float getTPS(DECLARE_ENGINE_PARAMETER_F) {
+	if(!engineConfiguration->hasTpsSensor)
+		return NO_TPS_MAGIC_VALUE;
 	// todo: if (config->isDualTps)
 	// todo: blah blah
 	// todo: if two TPS do not match - show OBD code via malfunction_central.c

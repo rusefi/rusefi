@@ -384,6 +384,11 @@ static void printMAPInfo(void) {
 
 static void printTPSInfo(void) {
 #if (EFI_PROD_CODE && HAL_USE_ADC) || defined(__DOXYGEN__)
+	if(!engineConfiguration->hasTpsSensor) {
+		scheduleMsg(&logger, "NO TPS SENSOR");
+		return;
+	}
+
 	GPIO_TypeDef* port = getAdcChannelPort(engineConfiguration->tpsAdcChannel);
 	int pin = getAdcChannelPin(engineConfiguration->tpsAdcChannel);
 

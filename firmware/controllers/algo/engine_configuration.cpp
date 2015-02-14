@@ -526,7 +526,7 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	boardConfiguration->hip9011Gain = 1;
 
 	boardConfiguration->isSdCardEnabled = true;
-	boardConfiguration->isFastAdcEnabled = false;
+	boardConfiguration->isFastAdcEnabled = true;
 	boardConfiguration->isEngineControlEnabled = true;
 
 	boardConfiguration->tunerStudioSerialSpeed = TS_DEFAULT_SPEED;
