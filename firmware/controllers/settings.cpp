@@ -536,6 +536,11 @@ static void setWholeTimingMap(float value) {
 	}
 }
 
+static void setWholePhaseMapCmd(float value) {
+	scheduleMsg(&logger, "Setting whole injection phase map to %f", value);
+	setMap(engineConfiguration->injectionPhase, value);
+}
+
 static void setWholeTimingMapCmd(float value) {
 	scheduleMsg(&logger, "Setting whole timing advance map to %f", value);
 	setWholeTimingMap(value);
@@ -900,6 +905,7 @@ void initSettings(engine_configuration_s *engineConfiguration) {
 	addConsoleActionI("set_cranking_injection_mode", setCrankingInjectionMode);
 	addConsoleActionI("set_injection_mode", setInjectionMode);
 
+	addConsoleActionF("set_whole_phase_map", setWholePhaseMapCmd);
 	addConsoleActionF("set_whole_timing_map", setWholeTimingMapCmd);
 	addConsoleActionF("set_whole_fuel_map", setWholeFuelMapCmd);
 	addConsoleActionSSS("set_fuel_map", setFuelMap);
