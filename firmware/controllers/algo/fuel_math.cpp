@@ -45,10 +45,35 @@ EXTERN_ENGINE;
 
 static Map3D1616 fuelMap;
 static Map3D1616 fuelPhaseMap;
+extern Map3D1616 ve2Map;
+extern Map3D1616 afrMap;
+
+/**
+ * @return total duration of fuel injection per engine cycle, in milliseconds
+ */
+float getRealMafFuel(float airSpeed, int rpm DECLARE_ENGINE_PARAMETER_S) {
+	// duration of engine cycle, in hours
+	float engineCycleDurationHr = 1.0 / 60 / rpm;
+
+	float airMassKg = airSpeed * engineCycleDurationHr;
+
+	/**
+	 * todo: pre-calculate gramm/second injector flow to save one multiplication
+	 * open question if that's needed since that's just a multiplication
+	 */
+	float injectorFlowRate = cc_minute_to_gramm_second(engineConfiguration->injector.flow);
+
+	float afr = afrMap.getValue(airSpeed, rpm);
+	float fuelMassGramm = airMassKg / afr * 1000;
+
+	return 1000 * fuelMassGramm / injectorFlowRate;
+}
 
 float getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	if (engine->engineConfiguration->algorithm == LM_SPEED_DENSITY) {
 		return getSpeedDensityFuel(engine, rpm);
+	} else if (engine->engineConfiguration->algorithm == LM_REAL_MAF) {
+		return getRealMafFuel(getRealMaf(PASS_ENGINE_PARAMETER_F), rpm PASS_ENGINE_PARAMETER);
 	} else {
 		float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_F);
 		return getBaseTableFuel(engine->engineConfiguration, rpm, engineLoad);

@@ -143,9 +143,10 @@ int main(void) {
 
 	testMenuTree();
 	testMafLookup();
+	testMafFuelMath();
 
 	//	resizeMap();
-	printf("Success 20150207\r\n");
+	printf("Success 20150213\r\n");
 	return EXIT_SUCCESS;
 }
 
