@@ -45,7 +45,10 @@ static MenuItem miIat(&miSensors, LL_IAT_TEMPERATURE);
 static MenuItem miTps(&miSensors, LL_TPS);
 static MenuItem miVBatt(&miSensors, LL_VBATT);
 static MenuItem miMap(&miSensors, LL_MAP);
+static MenuItem miAfr(&miSensors, LL_AFR);
 static MenuItem miBaro(&miSensors, LL_BARO);
+static MenuItem miMapV(&miSensors, LL_MAF_V);
+static MenuItem miMapKgHr(&miSensors, LL_MAF_KG_HR);
 
 static MenuItem miStopEngine(&miBench, "stop engine", stopEngine);
 static MenuItem miTestFan(&miBench, "test fan", fanBench);
@@ -64,6 +67,7 @@ static MenuItem miConfig(&miAbout, LL_CONFIG);
 static MenuItem miAlgo(&miAbout, LL_ALGORITHM);
 static MenuItem miInjection(&miAbout, LL_INJECTION);
 static MenuItem miIgnition(&miAbout, LL_IGNITION);
+static MenuItem miInjFlow(&miAbout, LL_ING_FLOW);
 
 #define DISP_LINES (engineConfiguration->HD44780height - 1)
 
@@ -208,6 +212,9 @@ static void showLine(lcd_line_e line) {
 	case LL_INJECTION:
 		lcdPrintf(getInjection_mode_e(engineConfiguration->injectionMode));
 		return;
+	case LL_ING_FLOW:
+		lcdPrintf("Inj %fcc", engineConfiguration->injector.flow);
+		return;
 	case LL_IGNITION:
 		lcdPrintf(getIgnition_mode_e(engineConfiguration->ignitionMode));
 		return;
@@ -219,16 +226,37 @@ static void showLine(lcd_line_e line) {
 		return;
 	case LL_BARO:
 		if (engineConfiguration->hasBaroSensor) {
-			lcdPrintf("Baro: none");
-		} else {
 			lcdPrintf("Baro: %f", getBaroPressure());
+		} else {
+			lcdPrintf("Baro: none");
+		}
+		return;
+	case LL_AFR:
+		if (engineConfiguration->hasAfrSensor) {
+			lcdPrintf("AFR: %f", getAfr());
+		} else {
+			lcdPrintf("AFR: none");
 		}
 		return;
 	case LL_MAP:
 		if (engineConfiguration->hasMapSensor) {
-			lcdPrintf("MAP: none");
+			lcdPrintf("MAP %f", getMap());
 		} else {
-			lcdPrintf("MAP %s", getMap());
+			lcdPrintf("MAP: none");
+		}
+		return;
+	case LL_MAF_V:
+		if (engineConfiguration->hasMafSensor) {
+			lcdPrintf("MAF: %fv", getMaf());
+		} else {
+			lcdPrintf("MAF: none");
+		}
+		return;
+	case LL_MAF_KG_HR:
+		if (engineConfiguration->hasMafSensor) {
+			lcdPrintf("MAF: %f kg/hr", getRealMaf());
+		} else {
+			lcdPrintf("MAF: none");
 		}
 		return;
 	case LL_TRIGGER_ERRORS:
