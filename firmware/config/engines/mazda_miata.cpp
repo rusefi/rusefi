@@ -256,6 +256,11 @@ void setFordEscortGt(engine_configuration_s *engineConfiguration) {
 	boardConfiguration->triggerInputPins[0] = GPIOC_6;
 	boardConfiguration->triggerInputPins[1] = GPIOA_5; // 2E White CKP
 
+	// Denso 195500-2180
+	engineConfiguration->injector.flow = 265;
+
+	engineConfiguration->hasBaroSensor = false;
+	engineConfiguration->hasMapSensor = true;
 	engineConfiguration->map.sensor.type = MT_DENSO183;
 
 	// set_global_trigger_offset_angle 659

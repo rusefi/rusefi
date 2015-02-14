@@ -6,6 +6,9 @@
 EXTERN_ENGINE
 ;
 
+/**
+ * @return MAF sensor voltage
+ */
 float getMaf(DECLARE_ENGINE_PARAMETER_F) {
 	return getMafT(engineConfiguration);
 }
