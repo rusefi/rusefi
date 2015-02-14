@@ -70,5 +70,12 @@ void setBosch0280218004(engine_configuration_s *e) {
 void setDensoTODO(engine_configuration_s *e) {
 	int i = 0;
 
+	i = addMafPoint(e, i, 0, 3);
+	i = addMafPoint(e, i, 23.8, 1.83);
+	i = addMafPoint(e, i, 32.5, 1.60);
+	i = addMafPoint(e, i, 40.5, 1.4);
+	i = addMafPoint(e, i, 76.3, 1.04);
+	i = addMafPoint(e, i, 116.3, 0.8);
+
 	fillTheRest(e, i);
 }
