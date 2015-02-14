@@ -8,17 +8,9 @@
 #ifndef TEST_FUEL_MAP_H_
 #define TEST_FUEL_MAP_H_
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
-
 void testFuelMap(void);
+void testMafFuelMath(void);
 void testAngleResolver(void);
 void testPinHelper(void);
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
 
 #endif /* TEST_FUEL_MAP_H_ */

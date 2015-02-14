@@ -12,6 +12,7 @@
 
 void prepareFuelMap(engine_configuration_s *engineConfiguration);
 
+float getRealMafFuel(float airMass, int rpm DECLARE_ENGINE_PARAMETER_S);
 float getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_S);
 float getInjectionAngle(int rpm DECLARE_ENGINE_PARAMETER_S);
 float getBaseTableFuel(engine_configuration_s *engineConfiguration, int rpm, float engineLoad);
