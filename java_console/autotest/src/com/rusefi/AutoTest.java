@@ -19,14 +19,9 @@ import static com.rusefi.TestingUtils.*;
 public class AutoTest {
     private static void mainTestBody() {
         testFordAspire();
-
         testMazdaProtege();
-
         test1995DodgeNeon();
-
-        sendCommand("set_engine_type 7");
         testFord6();
-
         testFordFiesta();
     }
 
@@ -36,20 +31,20 @@ public class AutoTest {
         IoUtil.changeRpm(200);
         String msg = "ProtegeLX cranking";
         chart = nextChart();
-        double x = 100;
+        double x = 107;
         assertWave(msg, chart, WaveChart.SPARK_1, 0.194433, x, x + 180, x + 360, x + 540);
-        x = 135;
-        assertWaveFall(msg, chart, WaveChart.INJECTOR_1, 0.00626666, x, x + 180, x + 360, x + 540);
-        assertWaveFall(msg, chart, WaveChart.INJECTOR_2, 0.00626666, x, x + 180, x + 360, x + 540);
+        x = 0;
+        assertWaveFall(msg, chart, WaveChart.INJECTOR_1, 0.004666666666, x, x + 180, x + 360, x + 540);
+        assertWaveFall(msg, chart, WaveChart.INJECTOR_2, 0.004666666666, x, x + 180, x + 360, x + 540);
 
         msg = "ProtegeLX running";
         IoUtil.changeRpm(2000);
         chart = nextChart();
         x = 121;
         assertWave(msg, chart, WaveChart.SPARK_1, 0.13333333333333333, x, x + 180, x + 360, x + 540);
-        x = 135;
-        assertWaveFall(msg, chart, WaveChart.INJECTOR_1, 0.11733333333333336, x + 180, x + 540);
-        assertWaveFall(msg, chart, WaveChart.INJECTOR_2, 0.11733333333333336, x, x + 360);
+        x = 0;
+        assertWaveFall(msg, chart, WaveChart.INJECTOR_1, 0.09766666666666689, x + 180, x + 540);
+        assertWaveFall(msg, chart, WaveChart.INJECTOR_2, 0.09766666666666689, x, x + 360);
     }
 
     private static void test1995DodgeNeon() {
@@ -96,6 +91,7 @@ public class AutoTest {
     }
 
     private static void testFord6() {
+        sendCommand("set_engine_type 7");
         WaveChart chart;
         IoUtil.changeRpm(2000);
         chart = nextChart();
@@ -113,7 +109,8 @@ public class AutoTest {
     }
 
     private static void testFordAspire() {
-        String msg = "Aspire";
+        sendCommand("set_engine_type 3");
+        String msg;
         WaveChart chart;
         // todo: interesting changeRpm(100);
         sendCommand("set_cranking_rpm 500");

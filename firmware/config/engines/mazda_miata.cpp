@@ -229,6 +229,10 @@ void setMiata1990(engine_configuration_s *engineConfiguration) {
 // todo: idleValvePin
 }
 
+
+/**
+ * pin 1I/W9 - extra +5v
+ */
 void setFordEscortGt(engine_configuration_s *engineConfiguration) {
 	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 	engineConfiguration->trigger.type = TT_MAZDA_DOHC_1_4;
@@ -238,8 +242,13 @@ void setFordEscortGt(engine_configuration_s *engineConfiguration) {
 	setFrankenso_01_LCD(boardConfiguration);
 	setFrankenso0_1_joystick(engineConfiguration);
 
+	setDensoTODO(engineConfiguration);
+
+	engineConfiguration->globalFuelCorrection = 0.75;
 	engineConfiguration->specs.displacement = 1.839;
-	engineConfiguration->algorithm = LM_PLAIN_MAF;
+//	engineConfiguration->algorithm = LM_PLAIN_MAF;
+	engineConfiguration->algorithm = LM_SPEED_DENSITY;
+//	engineConfiguration->algorithm = LM_REAL_MAF;
 	boardConfiguration->tunerStudioSerialSpeed = 9600;
 
 	setFuelLoadBin(engineConfiguration, 1.2, 4.4);
@@ -260,21 +269,30 @@ void setFordEscortGt(engine_configuration_s *engineConfiguration) {
 	engineConfiguration->injector.flow = 265;
 
 	engineConfiguration->hasBaroSensor = false;
+
 	engineConfiguration->hasMapSensor = true;
+	boardConfiguration->isFastAdcEnabled = true;
 	engineConfiguration->map.sensor.type = MT_DENSO183;
+	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
 
-	// set_global_trigger_offset_angle 659
-	engineConfiguration->globalTriggerAngleOffset = 0;
-	// set_ignition_offset 170
+	initEgoSensor(&engineConfiguration->afr, ES_BPSX_D1);
+	engineConfiguration->afr.hwChannel = EFI_ADC_2;
+
+
+	// set_global_trigger_offset_angle -40
+	engineConfiguration->globalTriggerAngleOffset = -40;
+	// set_ignition_offset 0
 	engineConfiguration->ignitionBaseAngle = 0;
-	// set_injection_offset 510
-	engineConfiguration->injectionAngle = 135;
+	// set_injection_offset 0
+	engineConfiguration->injectionAngle = 0;
 
-	engineConfiguration->crankingTimingAngle = 10;
+	// set_cranking_timing_angle 3
+	engineConfiguration->crankingTimingAngle = 3;
 	engineConfiguration->crankingChargeAngle = 70;
 
 	setWholeTimingTable(engineConfiguration, 10);
-
+	// set_whole_fuel_map 5
+	setWholeFuelMap(engineConfiguration, 5);
 
 	setSingleCoilDwell(engineConfiguration);
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
@@ -297,18 +315,16 @@ void setFordEscortGt(engine_configuration_s *engineConfiguration) {
 	// Frankenso low out #4:
 	// Frankenso low out #5: PE3
 	// Frankenso low out #6: PE4
-	// Frankenso low out #7: PE0<>PD5 INJ 1&3
+	// Frankenso low out #7: PE0<>PD5
 	// Frankenso low out #8: PE2 INJ
 	// Frankenso low out #9: PB9 IDLE
-	// Frankenso low out #10: PE1<>PD3
+	// Frankenso low out #10: PE1<>PD3 INJ 1&3
 	// Frankenso low out #11: PB8
 	// Frankenso low out #12: PB7
 
-	boardConfiguration->injectionPins[0] = GPIOD_5;
+	boardConfiguration->injectionPins[0] = GPIOD_3;
 	boardConfiguration->injectionPins[1] = GPIOE_2;
 
-	// set_whole_fuel_map 5
-	setWholeFuelMap(engineConfiguration, 5);
 
 	//setDefaultCrankingFuel(engineConfiguration);
 	engineConfiguration->cranking.baseFuel = 5;
@@ -328,7 +344,8 @@ void setFordEscortGt(engine_configuration_s *engineConfiguration) {
 	setCommonNTCSensor(&engineConfiguration->iat);
 	engineConfiguration->iat.bias_resistor = 2700;
 
-	engineConfiguration->tpsAdcChannel = EFI_ADC_2;
+	engineConfiguration->hasTpsSensor = false;
+	engineConfiguration->tpsAdcChannel = EFI_ADC_NONE;
 //	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
 	engineConfiguration->mafAdcChannel = EFI_ADC_0;
 	engineConfiguration->cltAdcChannel = EFI_ADC_12;
