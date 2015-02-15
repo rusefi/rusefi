@@ -136,6 +136,24 @@ char *getFirmwareError(void) {
 	return (char*) errorMessageBuffer;
 }
 
+
+void swo_init()
+{
+	// todo: make SWO work
+//     uint32_t SWOSpeed = 2000000; //2000kbps, default for ST-LINK
+//     // todo: use a macro to access clock speed
+//     uint32_t SWOPrescaler = (168000000 / SWOSpeed) - 1; // SWOSpeed in Hz, note that F_CPU is expected to be 96000000 in this case
+//     CoreDebug->DEMCR = CoreDebug_DEMCR_TRCENA_Msk;
+//     *((volatile unsigned *)(ITM_BASE + 0x400F0)) = 0x00000002; // "Selected PIN Protocol Register": Select which protocol to use for trace output (2: SWO)
+//     *((volatile unsigned *)(ITM_BASE + 0x40010)) = SWOPrescaler; // "Async Clock Prescaler Register". Scale the baud rate of the asynchronous output
+//     *((volatile unsigned *)(ITM_BASE + 0x00FB0)) = 0xC5ACCE55; // ITM Lock Access Register, C5ACCE55 enables more write access to Control Register 0xE00 :: 0xFFC
+//     ITM->TCR = ITM_TCR_TraceBusID_Msk | ITM_TCR_SWOENA_Msk | ITM_TCR_SYNCENA_Msk | ITM_TCR_ITMENA_Msk; // ITM Trace Control Register
+//     ITM->TPR = ITM_TPR_PRIVMASK_Msk; // ITM Trace Privilege Register
+//     ITM->TER = 0x00000001; // ITM Trace Enable Register. Enabled tracing on stimulus ports. One bit per stimulus port.
+//     *((volatile unsigned *)(ITM_BASE + 0x01000)) = 0x400003FE; // DWT_CTRL
+//     *((volatile unsigned *)(ITM_BASE + 0x40304)) = 0x00000100; // Formatter and Flush Control Register
+}
+
 void runRusEfi(void) {
 	msObjectInit(&firmwareErrorMessageStream, errorMessageBuffer, sizeof(errorMessageBuffer), 0);
 
@@ -146,6 +164,8 @@ void runRusEfi(void) {
 #endif
 
 	initErrorHandling();
+
+	swo_init();
 
 	/**
 	 * First data structure keeps track of which hardware I/O pins are used by whom
