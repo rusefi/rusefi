@@ -22,6 +22,7 @@ public enum Sensor {
     IAT("Intake Air", SensorCategory.SENSOR_INPUTS, "temperature, C", -40, 150),
     AFR("A/F ratio", SensorCategory.SENSOR_INPUTS, "", 0, 20),
     MAF("MAF", SensorCategory.SENSOR_INPUTS, "Volts", 4),
+    MAFR("MAFR", SensorCategory.SENSOR_INPUTS, "kg/hr", 4),
     TPS("throttle", SensorCategory.SENSOR_INPUTS, "%", 100),
     VSS("Speed", SensorCategory.SENSOR_INPUTS, "kph", 100),
 

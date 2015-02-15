@@ -84,7 +84,7 @@ void rusEfiFunctionalTest(void) {
 
 	// todo: reduce code duplication with initEngineContoller
 
-	resetConfigurationExt(NULL, FORD_ASPIRE_1996, engine);
+	resetConfigurationExt(NULL, FORD_ESCORT_GT, engine);
 	prepareShapes(engine);
 
 	initSensors(PASS_ENGINE_PARAMETER_F);

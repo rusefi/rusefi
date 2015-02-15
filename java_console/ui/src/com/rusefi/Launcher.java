@@ -23,7 +23,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * @see WavePanel
  */
 public class Launcher extends FrameHelper {
-    public static final int CONSOLE_VERSION = 20150212;
+    public static final int CONSOLE_VERSION = 20150214;
     public static final boolean SHOW_STIMULATOR = true;
     public static final String TAB_INDEX = "main_tab";
     private final String port;

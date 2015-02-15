@@ -386,7 +386,8 @@ static void showFuelInfo2(float rpm, float engineLoad, Engine *engine) {
 	scheduleMsg(&logger2, "algo=%s/pump=%s", getEngine_load_mode_e(engineConfiguration->algorithm),
 			boolToString(enginePins.fuelPumpRelay.getLogicValue()));
 
-	scheduleMsg(&logger2, "phase=%f", getInjectionAngle(rpm));
+	scheduleMsg(&logger2, "phase=%f correction=%f", getInjectionAngle(rpm),
+			engineConfiguration->globalFuelCorrection);
 
 #if EFI_ENGINE_CONTROL
 	scheduleMsg(&logger2, "cranking fuel: %f", getCrankingFuel(engine));

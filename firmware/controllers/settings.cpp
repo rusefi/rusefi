@@ -209,12 +209,28 @@ void printConfiguration(engine_configuration_s *engineConfiguration) {
 
 	scheduleMsg(&logger, "ignitionMode: %s/enabled=%s", getIgnition_mode_e(engineConfiguration->ignitionMode),
 			boolToString(engineConfiguration->isIgnitionEnabled));
+	scheduleMsg(&logger, "globalTriggerAngleOffset=%f", engineConfiguration->globalTriggerAngleOffset);
 	scheduleMsg(&logger, "timingMode: %d", /*getTiming_mode_etodo*/(engineConfiguration->timingMode));
 	scheduleMsg(&logger, "fixedModeTiming: %d", (int) engineConfiguration->fixedModeTiming);
 	scheduleMsg(&logger, "ignitionOffset=%f", engineConfiguration->ignitionBaseAngle);
 	scheduleMsg(&logger, "injection %s offset=%f/enabled=%s", getInjection_mode_e(engineConfiguration->injectionMode),
 			(double) engineConfiguration->injectionAngle,
 			boolToString(engineConfiguration->isInjectionEnabled));
+
+	if (engineConfiguration->useConstantDwellDuringCranking) {
+		scheduleMsg(&logger, "ignitionDwellForCrankingMs=%f", engineConfiguration->ignitionDwellForCrankingMs);
+	} else {
+		scheduleMsg(&logger, "cranking charge charge angle=%f fire at %f", engineConfiguration->crankingChargeAngle,
+				engineConfiguration->crankingTimingAngle);
+	}
+
+//	scheduleMsg(&logger, "analogChartMode: %d", engineConfiguration->analogChartMode);
+
+	scheduleMsg(&logger, "crankingRpm: %d", engineConfiguration->cranking.rpm);
+
+	scheduleMsg(&logger, "analogInputDividerCoefficient: %f", engineConfiguration->analogInputDividerCoefficient);
+
+	printOutputs(engineConfiguration);
 
 	scheduleMsg(&logger, "map_avg=%s/mil=%s/fp=%s/ts=%s/wa=%s/it=%s/fastAdc=%s",
 			boolToString(engineConfiguration->isMapAveragingEnabled), boolToString(engineConfiguration->isMilEnabled),
@@ -226,22 +242,6 @@ void printConfiguration(engine_configuration_s *engineConfiguration) {
 	scheduleMsg(&logger, "isManualSpinningMode=%s/isCylinderCleanupEnabled=%s",
 			boolToString(engineConfiguration->isManualSpinningMode),
 			boolToString(engineConfiguration->isCylinderCleanupEnabled));
-
-	if (engineConfiguration->useConstantDwellDuringCranking) {
-		scheduleMsg(&logger, "ignitionDwellForCrankingMs=%f", engineConfiguration->ignitionDwellForCrankingMs);
-	} else {
-		scheduleMsg(&logger, "crankingChargeAngle=%f", engineConfiguration->crankingChargeAngle);
-		scheduleMsg(&logger, "crankingTimingAngle=%f", engineConfiguration->crankingTimingAngle);
-	}
-	scheduleMsg(&logger, "globalTriggerAngleOffset=%f", engineConfiguration->globalTriggerAngleOffset);
-
-//	scheduleMsg(&logger, "analogChartMode: %d", engineConfiguration->analogChartMode);
-
-	scheduleMsg(&logger, "crankingRpm: %d", engineConfiguration->cranking.rpm);
-
-	scheduleMsg(&logger, "analogInputDividerCoefficient: %f", engineConfiguration->analogInputDividerCoefficient);
-
-	printOutputs(engineConfiguration);
 
 	scheduleMsg(&logger, "clutchUp@%s: %s", hwPortname(engineConfiguration->clutchUpPin), boolToString(engine->clutchUpState));
 	scheduleMsg(&logger, "clutchDown@%s: %s", hwPortname(boardConfiguration->clutchDownPin), boolToString(engine->clutchDownState));
