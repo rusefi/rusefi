@@ -79,6 +79,12 @@ public class EngineState {
 
         SensorStats.startConversion(Sensor.CLT, Sensor.CLT_F, SensorConversion.C_TO_F);
         SensorStats.startConversion(Sensor.IAT, Sensor.IAT_F, SensorConversion.C_TO_F);
+        SensorStats.startConversion(Sensor.MAFR, Sensor.MAFR_CFM, new SensorConversion() {
+                    @Override
+                    public double convertValue(double value) {
+                        return value / 2.081989116;
+                    }
+                });
 
         registerStringValueAction("adcfast_co", NOTHING);
         registerStringValueAction("adcfast_max", NOTHING);
