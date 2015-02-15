@@ -32,10 +32,10 @@ typedef struct {
 	// primary instrument cluster gauges
 	int rpm; // size 4, offset 0
 	float coolant_temperature; // size 4, offset 4
-	float intake_air_temperature; // size 4, offset 8
-	float throttle_positon; // size 4, offset 12
-	float mass_air_flow; // size 4, offset 16
-	float air_fuel_ratio; // size 4, offset 20
+	float intakeAirTemperature; // size 4, offset 8
+	float throttlePositon; // size 4, offset 12
+	float massAirFlowVoltage; // size 4, offset 16
+	float airFuelRatio; // size 4, offset 20
 	float engineLoad; // size 4, offset 24
 	float v_batt; // size 4, offset 28
 	short int tpsADC; // size 2, offset 32
@@ -81,7 +81,8 @@ typedef struct {
 	int tsConfigVersion;
 	egt_values_s egtValues;
 	float rpmAcceleration;
-	int unused3[2];
+	float massAirFlowValue;
+	int unused3[1];
 } TunerStudioOutputChannels;
 
 #endif /* TUNERSTUDIO_CONFIGURATION_H_ */

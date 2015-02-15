@@ -763,7 +763,7 @@ static void setSpiMode(int index, bool mode) {
 		scheduleMsg(&logger, "invalid spi index %d", index);
 		return;
 	}
-	scheduleMsg(&logger, "spi %d mode: %s", index, boolToString(mode));
+	printSpiState(&logger, boardConfiguration);
 }
 
 static void enableOrDisable(const char *param, bool isEnabled) {
