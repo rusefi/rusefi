@@ -162,6 +162,7 @@ void helpCommand(void) {
 		scheduleMsg(logging, "  %s: %d parameters", current->token, getParameterCount(current->parameterType));
 	}
 #endif
+	scheduleMsg(logging, "For more visit http://rusefi.com/wiki/index.php?title=Manual:Software:dev_console_commands");
 }
 
 /**
