@@ -8,18 +8,9 @@
 #ifndef ALGO_H_
 #define ALGO_H_
 
+#include "main.h"
 #include "engine_configuration.h"
-
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
-
 void initDataStructures(DECLARE_ENGINE_PARAMETER_F);
-void initAlgo(engine_configuration_s *engineConfiguration);
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+void initAlgo(Logging *sharedLogger, engine_configuration_s *engineConfiguration);
 
 #endif /* ALGO_H_ */

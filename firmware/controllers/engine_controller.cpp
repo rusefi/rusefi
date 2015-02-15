@@ -355,7 +355,7 @@ void initEngineContoller(Logging *sharedLogger, Engine *engine) {
 	initAnalogChart();
 #endif /* EFI_ANALOG_CHART */
 
-	initAlgo(engineConfiguration);
+	initAlgo(sharedLogger, engineConfiguration);
 
 #if EFI_WAVE_ANALYZER
 	if (engineConfiguration->isWaveAnalyzerEnabled) {
