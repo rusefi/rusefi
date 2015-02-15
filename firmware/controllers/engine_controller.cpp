@@ -47,6 +47,10 @@
 #include "engine.h"
 #include "algo.h"
 
+#if HAL_USE_ADC || defined(__DOXYGEN__)
+#include "AdcConfiguration.h"
+#endif
+
 #if EFI_PROD_CODE
 #include "pwm_generator.h"
 #include "adc_inputs.h"
@@ -244,8 +248,16 @@ char * getPinNameByAdcChannel(adc_channel_e hwChannel, char *buffer) {
 
 static char pinNameBuffer[16];
 
+#if HAL_USE_ADC || defined(__DOXYGEN__)
+extern AdcDevice fastAdc;
+#endif
+
 static void printAnalogChannelInfoExt(const char *name, adc_channel_e hwChannel, float adcVoltage) {
 #if HAL_USE_ADC || defined(__DOXYGEN__)
+	if(fastAdc.isHwUsed(hwChannel)) {
+		scheduleMsg(&logger, "fast enabled=%s", boolToString(boardConfiguration->isFastAdcEnabled));
+	}
+
 	float voltage = adcVoltage * engineConfiguration->analogInputDividerCoefficient;
 	scheduleMsg(&logger, "%s ADC%d %s %s rawValue=%f/divided=%fv", name, hwChannel, getAdcMode(hwChannel),
 			getPinNameByAdcChannel(hwChannel, pinNameBuffer), adcVoltage, voltage);
@@ -267,9 +279,13 @@ static void printAnalogInfo(void) {
 	if (engineConfiguration->hasIatSensor) {
 		printAnalogChannelInfo("IAT", engineConfiguration->iatAdcChannel);
 	}
-	printAnalogChannelInfo("MAF", engineConfiguration->mafAdcChannel);
+	if (engineConfiguration->hasMafSensor) {
+		printAnalogChannelInfo("MAF", engineConfiguration->mafAdcChannel);
+	}
 	printAnalogChannelInfo("AFR", engineConfiguration->afr.hwChannel);
-	printAnalogChannelInfo("MAP", engineConfiguration->map.sensor.hwChannel);
+	if (engineConfiguration->hasMapSensor) {
+		printAnalogChannelInfo("MAP", engineConfiguration->map.sensor.hwChannel);
+	}
 	if (engineConfiguration->hasBaroSensor) {
 		printAnalogChannelInfo("BARO", engineConfiguration->baroSensor.hwChannel);
 	}
@@ -286,8 +302,8 @@ static void setShort(const int offset, const int value) {
 	if (isOutOfBounds(offset))
 		return;
 	uint16_t *ptr = (uint16_t *) (&((char *) engine->engineConfiguration)[offset]);
-	*ptr = (uint16_t)value;
-	scheduleMsg(&logger, "setting short @%d to %d", offset, (uint16_t)value);
+	*ptr = (uint16_t) value;
+	scheduleMsg(&logger, "setting short @%d to %d", offset, (uint16_t) value);
 }
 
 static void getShort(int offset) {

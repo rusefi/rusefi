@@ -116,6 +116,7 @@ public class SensorCentral {
         addDoubleSensor(Sensor.VREF, es);
         addDoubleSensor(Sensor.VBATT, es);
         addDoubleSensor(Sensor.MAF, es);
+        addDoubleSensor(Sensor.MAFR, es);
         addDoubleSensor("period0", Sensor.PERIOD0, es);
         addDoubleSensor("period1", Sensor.PERIOD0, es);
         addDoubleSensor("duty0", Sensor.DUTY0, es);

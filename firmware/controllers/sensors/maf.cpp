@@ -41,6 +41,9 @@ static int addMafPoint(engine_configuration_s *e, int i, float kgHrValue, float 
 	return i + 1;
 }
 
+/**
+ * Hot-film air-mass meter, Type HFM 5
+ */
 void setBosch0280218037(engine_configuration_s *e) {
 	int i = 0;
 	i = addMafPoint(e, i, -34.5, 0);
@@ -70,12 +73,16 @@ void setBosch0280218004(engine_configuration_s *e) {
 void setDensoTODO(engine_configuration_s *e) {
 	int i = 0;
 
-	i = addMafPoint(e, i, 0, 3);
-	i = addMafPoint(e, i, 23.8, 1.83);
-	i = addMafPoint(e, i, 32.5, 1.60);
-	i = addMafPoint(e, i, 40.5, 1.4);
-	i = addMafPoint(e, i, 76.3, 1.04);
 	i = addMafPoint(e, i, 116.3, 0.8);
+	i = addMafPoint(e, i, 76.3, 1.04);
+	i = addMafPoint(e, i, 40.5, 1.4);
+	i = addMafPoint(e, i, 32.5, 1.60);
+	i = addMafPoint(e, i, 23.8, 1.83);
+	i = addMafPoint(e, i, 0, 3);
 
-	fillTheRest(e, i);
+	while (i < MAF_DECODING_COUNT) {
+		e->mafDecoding[i] = 0;
+		e->mafDecodingBins[i] = 10 + i;
+		i++;
+	}
 }
