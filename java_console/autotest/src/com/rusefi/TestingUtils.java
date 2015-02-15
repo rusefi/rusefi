@@ -29,7 +29,7 @@ public class TestingUtils {
     }
 
     private static double fixAngle(double angle) {
-        while (angle > 720)
+        while (angle >= 720)
             angle -= 720;
         return angle;
     }
@@ -72,7 +72,7 @@ public class TestingUtils {
         for (WaveReport.UpDown ud : wr) {
             int eventTime = rise ? ud.upTime : ud.downTime;
             double angleByTime = revolutionLog.getCrankAngleByTime(eventTime);
-            assertCloseEnough(msg + " angle for " + key + "@" + eventTime, angleByTime, expectedAngles);
+            assertCloseEnough(msg + " angle for " + key + "@" + eventTime, fixAngle(angleByTime), expectedAngles);
 
             assertCloseEnough(msg + "width for " + key, ud.getDutyCycle(revolutionLog), width);
         }
