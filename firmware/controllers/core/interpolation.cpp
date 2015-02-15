@@ -4,6 +4,7 @@
  *
  * @date Oct 17, 2013
  * @author Andrey Belomutskiy, (c) 2012-2015
+ * @author Dmitry Sidin, (c) 2015
  */
 
 #if DEBUG_FUEL
@@ -13,9 +14,58 @@
 #include <math.h>
 
 #include "main.h"
+#include "efilib2.h"
 #include "interpolation.h"
 
-int needInterpolationLogging = TRUE;
+int needInterpolationLogging = true;
+
+#define BINARY_PERF true
+
+Logging * logger;
+
+#if BINARY_PERF
+
+#define COUNT 10000
+
+float array16[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 };
+
+static void testBinary(void) {
+	const int size16 = 16;
+
+	uint32_t totalOld = 0;
+	uint32_t totalNew = 0;
+
+	for (int v = 0; v <= 16; v++) {
+		uint32_t timeOld;
+		{
+			uint32_t start = GET_TIMESTAMP();
+			int temp = 0;
+			for (int i = 0; i < COUNT; i++) {
+				temp += findIndex(array16, size16, v);
+			}
+			timeOld = GET_TIMESTAMP() - start;
+		}
+		uint32_t timeNew;
+		{
+			uint32_t start = GET_TIMESTAMP();
+			int temp = 0;
+			for (int i = 0; i < COUNT; i++) {
+				temp += findIndex2(array16, size16, v);
+			}
+			timeNew = GET_TIMESTAMP() - start;
+		}
+		scheduleMsg(logger, "for v=%d old=%d ticks", v, timeOld);
+		scheduleMsg(logger, "for v=%d new=%d ticks", v, timeNew);
+
+		totalOld += timeOld;
+		totalNew += timeNew;
+	}
+	scheduleMsg(logger, "totalOld=%d ticks", totalOld);
+	scheduleMsg(logger, "totalNew=%d ticks", totalNew);
+
+}
+
+#endif
 
 FastInterpolation::FastInterpolation() {
 	init(0, 0, 1, 1);
@@ -166,13 +216,13 @@ float interpolate3d(float x, float xBin[], int xBinSize, float y, float yBin[], 
 	int xIndex = findIndex(xBin, xBinSize, x);
 #if	DEBUG_INTERPOLATION
 	if (needInterpolationLogging)
-		printf("X index=%d\r\n", xIndex);
+	printf("X index=%d\r\n", xIndex);
 #endif
 	int yIndex = findIndex(yBin, yBinSize, y);
 	if (xIndex < 0 && yIndex < 0) {
 #if	DEBUG_INTERPOLATION
 		if (needInterpolationLogging)
-			printf("X and Y are smaller than smallest cell in table: %d\r\n", xIndex);
+		printf("X and Y are smaller than smallest cell in table: %d\r\n", xIndex);
 #endif
 		return map[0][0];
 	}
@@ -180,7 +230,7 @@ float interpolate3d(float x, float xBin[], int xBinSize, float y, float yBin[], 
 	if (xIndex < 0) {
 #if	DEBUG_INTERPOLATION
 		if (needInterpolationLogging)
-			printf("X is smaller than smallest cell in table: %dr\n", xIndex);
+		printf("X is smaller than smallest cell in table: %dr\n", xIndex);
 #endif
 		// no interpolation should be fine here.
 		return map[0][yIndex];
@@ -189,7 +239,7 @@ float interpolate3d(float x, float xBin[], int xBinSize, float y, float yBin[], 
 	if (yIndex < 0) {
 #if	DEBUG_INTERPOLATION
 		if (needInterpolationLogging)
-			printf("Y is smaller than smallest cell in table: %d\r\n", yIndex);
+		printf("Y is smaller than smallest cell in table: %d\r\n", yIndex);
 #endif
 		// no interpolation should be fine here.
 		return map[xIndex][0];
@@ -198,7 +248,7 @@ float interpolate3d(float x, float xBin[], int xBinSize, float y, float yBin[], 
 	if (xIndex == xBinSize - 1 && yIndex == yBinSize - 1) {
 #if	DEBUG_INTERPOLATION
 		if (needInterpolationLogging)
-			printf("X and Y are larger than largest cell in table: %d %d\r\n", xIndex, yIndex);
+		printf("X and Y are larger than largest cell in table: %d %d\r\n", xIndex, yIndex);
 #endif
 		return map[xBinSize - 1][yBinSize - 1];
 	}
@@ -206,7 +256,7 @@ float interpolate3d(float x, float xBin[], int xBinSize, float y, float yBin[], 
 	if (xIndex == xBinSize - 1) {
 #if	DEBUG_INTERPOLATION
 		if (needInterpolationLogging)
-			printf("TODO BETTER LOGGING x overflow %d\r\n", yIndex);
+		printf("TODO BETTER LOGGING x overflow %d\r\n", yIndex);
 #endif
 		// todo: implement better handling - y interpolation
 		return map[xBinSize - 1][yIndex];
@@ -215,7 +265,7 @@ float interpolate3d(float x, float xBin[], int xBinSize, float y, float yBin[], 
 	if (yIndex == yBinSize - 1) {
 #if	DEBUG_INTERPOLATION
 		if (needInterpolationLogging)
-			printf("Y is larger than largest cell in table: %d\r\n", yIndex);
+		printf("Y is larger than largest cell in table: %d\r\n", yIndex);
 #endif
 		// todo: implement better handling - x interpolation
 		return map[xIndex][yBinSize - 1];
@@ -266,3 +316,10 @@ void setTableValue(float bins[], float values[], int size, float key, float valu
 	values[index] = value;
 }
 
+void initInterpolation(Logging *sharedLogger) {
+	logger = sharedLogger;
+#if BINARY_PERF && ! EFI_UNIT_TEST
+	addConsoleAction("binarytest", testBinary);
+#endif
+
+}

@@ -35,7 +35,8 @@ void initDataStructures(DECLARE_ENGINE_PARAMETER_F) {
 	initSpeedDensity(engineConfiguration);
 }
 
-void initAlgo(engine_configuration_s *engineConfiguration) {
+void initAlgo(Logging *sharedLogger, engine_configuration_s *engineConfiguration) {
+	initInterpolation(sharedLogger);
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	initSettings(engineConfiguration);
 	initSignalExecutor();
