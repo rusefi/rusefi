@@ -1,7 +1,7 @@
 package com.rusefi.io.serial;
 
 import com.rusefi.FileLog;
-import com.irnems.core.EngineState;
+import com.rusefi.core.EngineState;
 import com.rusefi.io.DataListener;
 import jssc.SerialPort;
 import jssc.SerialPortException;

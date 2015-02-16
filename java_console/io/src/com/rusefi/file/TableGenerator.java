@@ -1,7 +1,7 @@
 package com.rusefi.file;
 
-import com.irnems.models.XYData;
-import com.irnems.models.XYDataReader;
+import com.rusefi.models.XYData;
+import com.rusefi.models.XYDataReader;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;

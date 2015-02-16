@@ -1,9 +1,8 @@
 package com.rusefi;
 
-import com.rusefi.FileLog;
-import com.irnems.core.EngineState;
-import com.irnems.core.Sensor;
-import com.irnems.core.SensorCentral;
+import com.rusefi.core.EngineState;
+import com.rusefi.core.Sensor;
+import com.rusefi.core.SensorCentral;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.io.InvocationConfirmationListener;
 import com.rusefi.io.LinkManager;

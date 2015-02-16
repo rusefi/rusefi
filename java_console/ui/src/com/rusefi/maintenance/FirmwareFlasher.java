@@ -1,6 +1,6 @@
 package com.rusefi.maintenance;
 
-import com.rusefi.ui.FrameHelper;
+import com.rusefi.ui.util.FrameHelper;
 import com.rusefi.ui.util.UiUtils;
 
 import javax.swing.*;

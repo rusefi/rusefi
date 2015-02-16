@@ -1,7 +1,7 @@
 package com.rusefi.io.serial;
 
 import com.rusefi.FileLog;
-import com.irnems.core.MessagesCentral;
+import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.DataListener;
 import com.rusefi.io.LinkManager;
 

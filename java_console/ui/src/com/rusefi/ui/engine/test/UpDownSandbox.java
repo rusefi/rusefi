@@ -2,7 +2,7 @@ package com.rusefi.ui.engine.test;
 
 import com.rusefi.waves.WaveReport;
 import com.rusefi.waves.test.WaveReportTest;
-import com.rusefi.ui.FrameHelper;
+import com.rusefi.ui.util.FrameHelper;
 import com.rusefi.ui.engine.UpDownImage;
 
 import javax.swing.*;

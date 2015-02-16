@@ -1,6 +1,7 @@
 package com.rusefi.ui;
 
-import com.irnems.core.Sensor;
+import com.rusefi.core.Sensor;
+import com.rusefi.ui.util.FrameHelper;
 import com.rusefi.ui.widgets.MafCommand;
 import com.rusefi.ui.widgets.RpmCommand;
 import com.rusefi.ui.widgets.SensorGauge;

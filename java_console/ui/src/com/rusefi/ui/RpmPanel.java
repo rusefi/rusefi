@@ -1,7 +1,7 @@
 package com.rusefi.ui;
 
-import com.irnems.core.EngineTimeListener;
-import com.irnems.core.Sensor;
+import com.rusefi.core.EngineTimeListener;
+import com.rusefi.core.Sensor;
 import com.rusefi.ui.storage.Node;
 import com.rusefi.ui.widgets.*;
 import com.rusefi.io.LinkManager;

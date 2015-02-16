@@ -1,7 +1,8 @@
 package com.rusefi.ui;
 
 import com.rusefi.file.BaseMap;
-import com.irnems.models.XYData;
+import com.rusefi.models.XYData;
+import com.rusefi.ui.util.FrameHelper;
 
 import javax.swing.*;
 

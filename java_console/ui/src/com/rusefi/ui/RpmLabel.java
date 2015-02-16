@@ -1,16 +1,11 @@
 package com.rusefi.ui;
 
-import com.rusefi.io.LinkManager;
-import com.irnems.core.EngineTimeListener;
-
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * Digital RPM gauge which stays green while rusEfi is connected
- *
+ * <p/>
  * 9/17/13
  * (c) Andrey Belomutskiy
  */
@@ -39,23 +34,15 @@ public class RpmLabel {
             }
         });
 
-        final Timer timer1 = new Timer(2000, new ActionListener() {
+        ConnectionStatus.INSTANCE.addListener(new ConnectionStatus.Listener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                rpmValue.setText(NO_CONNECTION);
-                rpmValue.setForeground(Color.red);
-            }
-        });
-
-
-        LinkManager.engineState.timeListeners.add(new EngineTimeListener() {
-            @Override
-            public void onTime(double time) {
-                rpmValue.setForeground(Color.green);
-                /**
-                 * this timer will catch engine inactivity and display a warning
-                 */
-                timer1.restart();
+            public void onConnectionStatus(boolean isConnected) {
+                if (isConnected) {
+                    rpmValue.setForeground(Color.green);
+                } else {
+                    rpmValue.setText(NO_CONNECTION);
+                    rpmValue.setForeground(Color.red);
+                }
             }
         });
     }

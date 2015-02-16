@@ -1,7 +1,7 @@
 package com.rusefi.waves.test;
 
 import com.rusefi.waves.WaveReport;
-import com.irnems.waves.ZoomProvider;
+import com.rusefi.waves.ZoomProvider;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;

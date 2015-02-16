@@ -10,7 +10,6 @@ public class ValueRangeControl {
     private final JPanel panel = new JPanel(new FlowLayout());
     private final double increment;
 
-
     public ValueRangeControl(String title, double min, double increment, double max) {
         this.increment = increment;
         minSpinner = new JSpinner(new SpinnerNumberModel(min, min, max, increment));

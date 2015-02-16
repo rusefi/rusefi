@@ -1,7 +1,7 @@
 package com.rusefi.ui.widgets;
 
 import com.rusefi.EcuStimulator;
-import com.irnems.core.Sensor;
+import com.rusefi.core.Sensor;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;

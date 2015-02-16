@@ -1,7 +1,7 @@
 package com.rusefi.ui.test;
 
-import com.rusefi.ui.FlexibleControls;
-import com.rusefi.ui.FrameHelper;
+import com.rusefi.ui.fsio.FlexibleControls;
+import com.rusefi.ui.util.FrameHelper;
 
 /**
  * (c) Andrey Belomutskiy
