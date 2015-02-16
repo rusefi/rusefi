@@ -4,6 +4,7 @@ import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.io.serial.PortHolder;
 import com.rusefi.ui.storage.Node;
+import com.rusefi.ui.util.LocalizedMessages;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.widgets.AnyCommand;
 
@@ -14,6 +15,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import static com.rusefi.ui.util.LocalizedMessages.CLEAR;
+import static com.rusefi.ui.util.LocalizedMessages.PAUSE;
 
 /**
  * This panel displays plain-text 'msg' plain-text debug messages
@@ -64,7 +68,7 @@ public class MessagesPanel {
             }
         });
 
-        JButton resetButton = new JButton("clear");
+        JButton resetButton = new JButton(CLEAR.getMessage());
         resetButton.setMnemonic('c');
         resetButton.addActionListener(new ActionListener() {
             @Override
@@ -74,7 +78,7 @@ public class MessagesPanel {
             }
         });
 
-        final JButton pauseButton = new JButton("pause");
+        final JButton pauseButton = new JButton(PAUSE.getMessage());
         pauseButton.setMnemonic('p');
         pauseButton.addActionListener(new ActionListener() {
             @Override
