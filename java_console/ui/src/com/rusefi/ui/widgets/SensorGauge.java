@@ -3,6 +3,7 @@ package com.rusefi.ui.widgets;
 import com.irnems.core.Sensor;
 import com.irnems.core.SensorCategory;
 import com.irnems.core.SensorCentral;
+import com.rusefi.ui.util.UiUtils;
 import eu.hansolo.steelseries.gauges.Radial;
 import eu.hansolo.steelseries.tools.ColorDef;
 
@@ -42,7 +43,7 @@ public class SensorGauge {
     private static void createGaugeBody(final Sensor sensor, final JPanel wrapper, final GaugeChangeListener listener) {
         final Radial gauge = createRadial(sensor.getName(), sensor.getUnits(), sensor.getMaxValue(), sensor.getMinValue());
 
-        UpDownImage.setTwoLineToolTip(gauge, "Double-click to detach", "Right-click to change");
+        UiUtils.setTwoLineToolTip(gauge, "Double-click to detach", "Right-click to change");
 
         gauge.setBackgroundColor(sensor.getColor());
 
@@ -65,8 +66,8 @@ public class SensorGauge {
         });
         wrapper.removeAll();
         wrapper.add(gauge, BorderLayout.CENTER);
-        UpDownImage.trueRepaint(wrapper.getParent());
-        UpDownImage.trueLayout(wrapper.getParent());
+        UiUtils.trueRepaint(wrapper.getParent());
+        UiUtils.trueLayout(wrapper.getParent());
     }
 
     private static void showPopupMenu(MouseEvent e, JPanel wrapper, GaugeChangeListener listener) {

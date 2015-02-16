@@ -1,13 +1,11 @@
 package com.rusefi;
 
-import com.irnems.FileLog;
 import com.rusefi.config.Fields;
 import com.rusefi.ui.RpmModel;
-import com.rusefi.ui.UiUtils;
-import com.rusefi.ui.WavePanel;
+import com.rusefi.ui.util.UiUtils;
+import com.rusefi.ui.engine.EngineSnifferPanel;
 import com.rusefi.ui.config.ConfigField;
-import com.rusefi.ui.widgets.URLLabel;
-import com.rusefi.ui.widgets.UpDownImage;
+import com.rusefi.ui.util.URLLabel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -45,14 +43,14 @@ public class AnalogChartPanel {
 //                MessagesCentral.getConfig().postMessage(AnalogChartPanel.class, "chart arrived, len=" + message.length());
 
                 processValues();
-                UpDownImage.trueRepaint(analogChart);
+                UiUtils.trueRepaint(analogChart);
 
             }
         });
 
         final JPanel upperPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
 
-        JButton imageButton = new JButton(WavePanel.SAVE_IMAGE);
+        JButton imageButton = new JButton(EngineSnifferPanel.SAVE_IMAGE);
         imageButton.setMnemonic('s');
         upperPanel.add(imageButton);
         imageButton.addActionListener(new
@@ -71,7 +69,7 @@ public class AnalogChartPanel {
         final JButton pauseButton = new JButton("Pause");
         upperPanel.add(pauseButton);
 
-        upperPanel.add(new URLLabel(WavePanel.HELP_TEXT, HELP_URL));
+        upperPanel.add(new URLLabel(EngineSnifferPanel.HELP_TEXT, HELP_URL));
         pauseButton.addActionListener(new
                                               ActionListener() {
                                                   @Override

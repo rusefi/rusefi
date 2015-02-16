@@ -1,6 +1,6 @@
 package com.rusefi.ui;
 
-import com.irnems.file.BaseMap;
+import com.rusefi.file.BaseMap;
 import com.irnems.models.XYData;
 
 import javax.swing.*;

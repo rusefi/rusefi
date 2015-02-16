@@ -1,9 +1,10 @@
 package com.rusefi.ui;
 
-import com.irnems.FileLog;
+import com.rusefi.FileLog;
 import com.irnems.core.EngineState;
-import com.irnems.file.FileUtils;
-import com.rusefi.ui.widgets.UpDownImage;
+import com.rusefi.file.FileUtils;
+import com.rusefi.ui.engine.EngineSnifferPanel;
+import com.rusefi.ui.util.UiUtils;
 import com.rusefi.FIleItem;
 import com.rusefi.io.LinkManager;
 
@@ -36,16 +37,16 @@ public class LogViewer extends JPanel {
     private final JLabel fileLabel = new JLabel();
     private final DefaultListModel<FIleItem> fileListModel = new DefaultListModel<FIleItem>();
     private final JList<FIleItem> fileList = new JList<FIleItem>(fileListModel);
-    private final WavePanel wavePanel;
+    private final EngineSnifferPanel engineSnifferPanel;
     private String currentFolder;
     private static JPanel descPanel = new JPanel();
 
 
 //    int currentChartIndex = 0;
 
-    public LogViewer(WavePanel wavePanel) {
+    public LogViewer(EngineSnifferPanel engineSnifferPanel) {
         super(new BorderLayout());
-        this.wavePanel = wavePanel;
+        this.engineSnifferPanel = engineSnifferPanel;
 
         setBackground(Color.green);
 
@@ -101,7 +102,7 @@ public class LogViewer extends JPanel {
         descPanel.removeAll();
         descPanel.add(new JLabel("Total digital charts: "));
         descPanel.add(new JLabel("" + ChartRepository.getInstance().getSize()));
-        UpDownImage.trueRepaint(descPanel);
+        UiUtils.trueRepaint(descPanel);
     }
 
     private void openFolder(String folderName) {
@@ -173,7 +174,7 @@ public class LogViewer extends JPanel {
         FileUtils.readFile2(filename, engineState);
 
         if (ChartRepository.getInstance().getSize() > 0)
-            wavePanel.reloadFile();
+            engineSnifferPanel.reloadFile();
         refreshCountPanel();
     }
 }

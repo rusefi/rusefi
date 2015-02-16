@@ -1,4 +1,4 @@
-package com.irnems.core.test;
+package com.rusefi.waves.test;
 
 import com.rusefi.waves.WaveReport;
 import com.irnems.waves.ZoomProvider;

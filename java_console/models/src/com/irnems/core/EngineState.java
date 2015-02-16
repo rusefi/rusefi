@@ -1,6 +1,6 @@
 package com.irnems.core;
 
-import com.irnems.FileLog;
+import com.rusefi.FileLog;
 import com.rusefi.SensorConversion;
 import org.jetbrains.annotations.NotNull;
 

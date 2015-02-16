@@ -1,5 +1,6 @@
 package com.irnems;
 
+import com.rusefi.FileLog;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.FieldPosition;
@@ -18,7 +19,7 @@ public final class Histograms {
 
     // ======= Initialization =======
 
-    private final HashMap<String, StatisticsGroup> total_stats = new HashMap<String, StatisticsGroup>();
+    private final HashMap<String, StatisticsGroup> total_stats = new HashMap<>();
     private final long start_time = System.currentTimeMillis();
     public final ThreadLocal<LocalStats> local_stats = new ThreadLocal<LocalStats>() {
         @Override
@@ -26,7 +27,7 @@ public final class Histograms {
             return new LocalStats();
         }
     };
-    private final HashSet<LocalStats> all_local_stats = new HashSet<LocalStats>();
+    private final HashSet<LocalStats> all_local_stats = new HashSet<>();
 
     private long last_dump = System.currentTimeMillis();
 
@@ -39,7 +40,7 @@ public final class Histograms {
     @NotNull
     public List<String> dumpStats() {
         Collection<StatisticsGroup> values = takeAndResetSnapshot();
-        List<StatisticsGroup> al = new ArrayList<StatisticsGroup>();
+        List<StatisticsGroup> al = new ArrayList<>();
         al.addAll(values);
         synchronized (total_stats) {
             for (StatisticsGroup source : values) {
@@ -59,10 +60,11 @@ public final class Histograms {
      *
      * @see #dumpStats()
      */
+    @SuppressWarnings("UnusedDeclaration")
     @NotNull
     public List<String> getCurrentStatistics() {
         Collection<StatisticsGroup> snapshot = getCurrentSnapshot();
-        return sortAndAddTimes(new ArrayList<StatisticsGroup>(snapshot));
+        return sortAndAddTimes(new ArrayList<>(snapshot));
     }
 
     private List<String> sortAndAddTimes(List<StatisticsGroup> al) {
@@ -72,7 +74,7 @@ public final class Histograms {
             }
         });
         long time = System.currentTimeMillis();
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         for (StatisticsGroup sg : al)
             result.add(toString(sg, time - (sg.type.endsWith(".TOTAL") ? start_time : last_dump)));
         last_dump = time;
@@ -178,7 +180,7 @@ public final class Histograms {
         boolean create;
         create = ls.stats == null;
         if (create)
-            ls.stats = new HashMap<ValueType, StatisticsGroup>();
+            ls.stats = new HashMap<>();
         StatisticsGroup sg = ls.stats.get(t);
         if (sg == null)
             ls.stats.put(t, sg = new StatisticsGroup(type));
@@ -194,7 +196,7 @@ public final class Histograms {
      */
     private Collection<StatisticsGroup> getCurrentSnapshot() {
         List<LocalStats> lss = getLocalStats(false);
-        HashMap<String, StatisticsGroup> snapshot = new HashMap<String, StatisticsGroup>();
+        HashMap<String, StatisticsGroup> snapshot = new HashMap<>();
         for (LocalStats ls : lss) {
             // in case of a snapshot without reset, we have to merge under the lock
             mergeStats(snapshot, ls.stats);
@@ -207,7 +209,7 @@ public final class Histograms {
      */
     private Collection<StatisticsGroup> takeAndResetSnapshot() {
         List<LocalStats> lss = getLocalStats(true);
-        HashMap<String, StatisticsGroup> snapshot = new HashMap<String, StatisticsGroup>();
+        HashMap<String, StatisticsGroup> snapshot = new HashMap<>();
         for (LocalStats ls : lss) {
             HashMap<ValueType, StatisticsGroup> stats;
             stats = ls.stats;
@@ -235,7 +237,7 @@ public final class Histograms {
     private List<LocalStats> getLocalStats(boolean reset) {
         List<LocalStats> lss;
         synchronized (all_local_stats) {
-            lss = new ArrayList<LocalStats>(all_local_stats);
+            lss = new ArrayList<>(all_local_stats);
             if (reset)
                 all_local_stats.clear();
         }
@@ -443,7 +445,7 @@ public final class Histograms {
 
         private StatisticsGroup(String type) {
             this.type = type;
-            this.data = new HashMap<String, Statistics>();
+            this.data = new HashMap<>();
         }
 
         public void add(String name, int index, long value) {

@@ -1,4 +1,4 @@
-package com.rusefi.ui;
+package com.rusefi.ui.util;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -53,5 +53,37 @@ public class UiUtils {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Dimension frameSize = w.getSize();
         w.setLocation((screenSize.width - frameSize.width) / 2, (screenSize.height - frameSize.height) / 2);
+    }
+
+    /**
+     * This does not make any sense :( That's an attempt
+     * to hack http://rusefi.com/forum/viewtopic.php?f=2&t=631&p=10083#p10081
+     */
+    public static void trueRepaint(JComponent control) {
+        control.invalidate();
+        control.repaint();
+    }
+
+    public static void trueRepaint(Container control) {
+        trueLayout(control);
+//        if (control == null)
+//            return;
+//        control.invalidate();
+//        control.repaint();
+    }
+
+    /**
+     * todo: one 'trueXXX' method should be enough, which one?
+     */
+    public static void trueLayout(Component component) {
+        if (component == null)
+            return;
+        component.invalidate();
+        component.validate();
+        component.repaint();
+    }
+
+    public static void setTwoLineToolTip(JComponent component, String line1, String line2) {
+        component.setToolTipText("<html>" + line1 + "<br>" + line2 + "</html>");
     }
 }

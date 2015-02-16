@@ -25,12 +25,12 @@ public class MessagesPane {
 
         content.add(middlePanel, BorderLayout.CENTER);
 
-        messagesPanel.getButtonPanel().add(new RpmControl().getContent());
+        messagesPanel.getButtonPanel().add(new RpmLabel().getContent());
         content.add(messagesPanel.getButtonPanel(), BorderLayout.NORTH);
 
         JPanel statsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
-        statsPanel.add(new RpmControl().getContent());
+        statsPanel.add(new RpmLabel().getContent());
         statsPanel.add(new IdleLabel());
         statsPanel.add(new WarningPanel().getPanel());
 

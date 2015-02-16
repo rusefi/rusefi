@@ -1,6 +1,6 @@
 package com.rusefi.ui.storage;
 
-import com.irnems.FileLog;
+import com.rusefi.FileLog;
 
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
