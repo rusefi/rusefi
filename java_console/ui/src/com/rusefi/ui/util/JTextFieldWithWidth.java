@@ -10,6 +10,10 @@ import java.awt.*;
 public class JTextFieldWithWidth extends JTextField {
     private int width;
 
+    public JTextFieldWithWidth(int width) {
+        this("", width);
+    }
+
     public JTextFieldWithWidth() {
         this("", 200);
     }
