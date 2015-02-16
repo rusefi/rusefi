@@ -1,6 +1,6 @@
 package com.rusefi.ui;
 
-import com.irnems.core.MessagesCentral;
+import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.io.serial.PortHolder;
 import com.rusefi.ui.storage.Node;

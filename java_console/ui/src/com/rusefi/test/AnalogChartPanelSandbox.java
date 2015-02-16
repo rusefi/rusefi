@@ -1,7 +1,7 @@
 package com.rusefi.test;
 
 import com.rusefi.AnalogChartPanel;
-import com.rusefi.ui.FrameHelper;
+import com.rusefi.ui.util.FrameHelper;
 
 /**
  * 2/16/15

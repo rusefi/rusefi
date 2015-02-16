@@ -1,11 +1,11 @@
 package com.rusefi.ui.engine;
 
-import com.irnems.core.Sensor;
-import com.irnems.core.SensorCentral;
-import com.irnems.waves.TimeAxisTranslator;
+import com.rusefi.core.Sensor;
+import com.rusefi.core.SensorCentral;
+import com.rusefi.waves.TimeAxisTranslator;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.waves.WaveReport;
-import com.irnems.waves.ZoomProvider;
+import com.rusefi.waves.ZoomProvider;
 import com.rusefi.waves.RevolutionLog;
 
 import javax.swing.*;

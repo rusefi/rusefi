@@ -1,6 +1,6 @@
 package com.rusefi;
 
-import com.irnems.core.MessagesCentral;
+import com.rusefi.core.MessagesCentral;
 
 import javax.swing.*;
 import java.awt.*;

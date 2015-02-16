@@ -1,14 +1,13 @@
 package com.rusefi;
 
-import com.rusefi.FileLog;
-import com.irnems.core.MessagesCentral;
-import com.irnems.core.Sensor;
-import com.irnems.core.EngineTimeListener;
-import com.irnems.core.SensorCentral;
+import com.rusefi.core.MessagesCentral;
+import com.rusefi.core.Sensor;
+import com.rusefi.core.EngineTimeListener;
+import com.rusefi.core.SensorCentral;
 import com.rusefi.file.TableGenerator;
-import com.irnems.models.Point3D;
-import com.irnems.models.Range;
-import com.irnems.models.XYData;
+import com.rusefi.models.Point3D;
+import com.rusefi.models.Range;
+import com.rusefi.models.XYData;
 import com.rusefi.test.EcuStimulatorSandbox;
 import com.rusefi.ui.ChartHelper;
 import com.rusefi.ui.RpmModel;

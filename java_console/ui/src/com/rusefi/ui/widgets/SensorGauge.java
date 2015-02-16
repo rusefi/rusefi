@@ -1,8 +1,8 @@
 package com.rusefi.ui.widgets;
 
-import com.irnems.core.Sensor;
-import com.irnems.core.SensorCategory;
-import com.irnems.core.SensorCentral;
+import com.rusefi.core.Sensor;
+import com.rusefi.core.SensorCategory;
+import com.rusefi.core.SensorCentral;
 import com.rusefi.ui.util.UiUtils;
 import eu.hansolo.steelseries.gauges.Radial;
 import eu.hansolo.steelseries.tools.ColorDef;

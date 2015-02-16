@@ -1,7 +1,7 @@
 package com.rusefi.test;
 
 import com.rusefi.EcuStimulator;
-import com.rusefi.ui.FrameHelper;
+import com.rusefi.ui.util.FrameHelper;
 
 /**
  * 8/13/14

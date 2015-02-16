@@ -1,6 +1,6 @@
 package com.rusefi.io;
 
-import com.irnems.core.MessagesCentral;
+import com.rusefi.core.MessagesCentral;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;

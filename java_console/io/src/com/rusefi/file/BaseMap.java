@@ -1,9 +1,9 @@
 package com.rusefi.file;
 
 import com.rusefi.FileLog;
-import com.irnems.core.EngineState;
-import com.irnems.models.Point3D;
-import com.irnems.models.XYData;
+import com.rusefi.core.EngineState;
+import com.rusefi.models.Point3D;
+import com.rusefi.models.XYData;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,8 +1,8 @@
 package com.rusefi.ui;
 
 import com.rusefi.FileLog;
-import com.irnems.models.Range;
-import com.irnems.models.XYData;
+import com.rusefi.models.Range;
+import com.rusefi.models.XYData;
 import com.rusefi.ui.engine.EngineSnifferPanel;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.util.JTextFieldWithWidth;

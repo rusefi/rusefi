@@ -1,6 +1,6 @@
 package com.rusefi.ui.engine;
 
-import com.irnems.waves.ZoomProvider;
+import com.rusefi.waves.ZoomProvider;
 import com.rusefi.KeyStrokeShortcut;
 
 import javax.swing.*;

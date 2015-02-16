@@ -1,7 +1,7 @@
 package com.rusefi.ui;
 
-import com.irnems.core.Sensor;
-import com.irnems.core.SensorCentral;
+import com.rusefi.core.Sensor;
+import com.rusefi.core.SensorCentral;
 import com.rusefi.OutputChannel;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.io.InvocationConfirmationListener;

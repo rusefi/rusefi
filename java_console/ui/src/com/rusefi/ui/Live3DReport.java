@@ -1,10 +1,10 @@
 package com.rusefi.ui;
 
 import com.rusefi.EcuStimulator;
-import com.irnems.core.MessagesCentral;
-import com.irnems.models.Point3D;
-import com.irnems.models.Range;
-import com.irnems.models.XYData;
+import com.rusefi.core.MessagesCentral;
+import com.rusefi.models.Point3D;
+import com.rusefi.models.Range;
+import com.rusefi.models.XYData;
 import net.ericaro.surfaceplotter.DefaultSurfaceModel;
 
 import javax.swing.*;

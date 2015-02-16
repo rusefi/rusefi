@@ -1,7 +1,5 @@
 package com.rusefi.waves;
 
-import com.irnems.waves.TimeAxisTranslator;
-import com.irnems.waves.ZoomProvider;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;

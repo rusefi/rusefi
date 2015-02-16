@@ -1,6 +1,6 @@
 package com.rusefi.ui.widgets;
 
-import com.irnems.core.Sensor;
+import com.rusefi.core.Sensor;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.io.LinkManager;
 import com.rusefi.ui.util.UiUtils;

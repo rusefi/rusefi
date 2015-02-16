@@ -1,8 +1,8 @@
 package com.rusefi.ui.widgets;
 
-import com.irnems.core.MessagesCentral;
-import com.irnems.core.Sensor;
-import com.irnems.core.SensorCentral;
+import com.rusefi.core.MessagesCentral;
+import com.rusefi.core.Sensor;
+import com.rusefi.core.SensorCentral;
 import com.rusefi.EcuStimulator;
 import com.rusefi.io.CommandQueue;
 
