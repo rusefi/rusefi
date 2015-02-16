@@ -9,6 +9,9 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+import static com.rusefi.ui.util.LocalizedMessages.PAUSE;
+import static com.rusefi.ui.util.LocalizedMessages.RESUME;
+
 /**
  * 7/7/13
  * (c) Andrey Belomutskiy
@@ -45,7 +48,7 @@ public class UiUtils {
     }
 
     public static void setPauseButtonText(JButton pauseButton, boolean isPaused) {
-        pauseButton.setText(isPaused ? "resume" : "pause");
+        pauseButton.setText(isPaused ? RESUME.getMessage() : PAUSE.getMessage());
     }
 
     public static void centerWindow(Window w) {

@@ -1,7 +1,7 @@
 package com.rusefi.ui.config;
 
+import com.rusefi.FileLog;
 import com.rusefi.config.Field;
-import com.rusefi.config.FieldType;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Pair;
 import com.rusefi.io.CommandQueue;
@@ -10,6 +10,8 @@ import com.rusefi.ui.util.JTextFieldWithWidth;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class ConfigField {
     private final Field field;
@@ -21,15 +23,21 @@ public class ConfigField {
     public ConfigField(final Field field, String topLabel) {
         this.field = field;
 
+        /**
+         * This would request initial value
+         */
         ConnectionStatus.INSTANCE.addListener(new ConnectionStatus.Listener() {
             @Override
             public void onConnectionStatus(boolean isConnected) {
-                CommandQueue.getInstance().write(field.getType().getCommand() + " " + field.getOffset());
+                CommandQueue.getInstance().write(field.getType().getLoadCommand() + " " + field.getOffset());
             }
         });
 
         JPanel center = new JPanel(new FlowLayout());
 
+        /**
+         * I guess a nice status enum is coming soon
+         */
         center.add(status);
         status.setToolTipText("Pending...");
 
@@ -43,13 +51,26 @@ public class ConfigField {
         MessagesCentral.getInstance().addListener(new MessagesCentral.MessageListener() {
             @Override
             public void onMessage(Class clazz, String message) {
-                if (Field.isIntValueMessage(message) || Field.isFloatValueMessage(message) ) {
+                if (Field.isIntValueMessage(message) || Field.isFloatValueMessage(message)) {
                     Pair<Integer, ?> p = Field.parseResponse(message);
                     if (p != null && p.first == field.getOffset()) {
                         view.setText("" + p.second);
                         status.setText("");
                         status.setToolTipText(null);
                     }
+                }
+            }
+        });
+
+        view.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    String msg = field.getType().getStoreCommand() + " " + field.getOffset() + " " + view.getText();
+                    FileLog.MAIN.logLine("Sending " + msg);
+                    CommandQueue.getInstance().write(msg);
+                    status.setText("S");
+                    status.setToolTipText("Storing...");
                 }
             }
         });

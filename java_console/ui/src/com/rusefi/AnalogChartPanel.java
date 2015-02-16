@@ -14,6 +14,10 @@ import java.awt.event.ActionListener;
 import java.util.*;
 import java.util.List;
 
+import static com.rusefi.ui.util.LocalizedMessages.CLEAR;
+import static com.rusefi.ui.util.LocalizedMessages.PAUSE;
+import static com.rusefi.ui.util.LocalizedMessages.RESUME;
+
 /**
  * Date: 12/21/13
  * Andrey Belomutskiy (c) 2012-2013
@@ -22,7 +26,7 @@ public class AnalogChartPanel {
     private static final String HELP_URL = "http://rusefi.com/wiki/index.php?title=Manual:DevConsole#Analog_Chart";
 
     private final TreeMap<Double, Double> values = new TreeMap<>();
-    private final AnalogChart analogChart = new AnalogChart();
+    private final AnalogChartCanvas canvas = new AnalogChartCanvas();
 
     private double minX;
     private double maxX;
@@ -39,16 +43,26 @@ public class AnalogChartPanel {
             @Override
             public void onAnalogChart(String message) {
                 unpackValues(values, message);
-
-//                MessagesCentral.getConfig().postMessage(AnalogChartPanel.class, "chart arrived, len=" + message.length());
-
-                processValues();
-                UiUtils.trueRepaint(analogChart);
+                if (!paused) {
+                    processValues();
+                    UiUtils.trueRepaint(canvas);
+                }
 
             }
         });
 
         final JPanel upperPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
+
+        JButton clearButton = new JButton(CLEAR.getMessage());
+        clearButton.setMnemonic('c');
+        clearButton.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                clear();
+                UiUtils.trueRepaint(canvas);
+            }
+        });
+        upperPanel.add(clearButton);
 
         JButton imageButton = new JButton(EngineSnifferPanel.SAVE_IMAGE);
         imageButton.setMnemonic('s');
@@ -61,12 +75,12 @@ public class AnalogChartPanel {
                                                       int rpm = RpmModel.getInstance().getValue();
                                                       String fileName = FileLog.getDate() + "rpm_" + rpm + "_analog" + ".png";
 
-                                                      UiUtils.saveImageWithPrompt(fileName, upperPanel, analogChart);
+                                                      UiUtils.saveImageWithPrompt(fileName, upperPanel, canvas);
                                                   }
                                               }
         );
 
-        final JButton pauseButton = new JButton("Pause");
+        final JButton pauseButton = new JButton(PAUSE.getMessage());
         upperPanel.add(pauseButton);
 
         upperPanel.add(new URLLabel(EngineSnifferPanel.HELP_TEXT, HELP_URL));
@@ -75,7 +89,7 @@ public class AnalogChartPanel {
                                                   @Override
                                                   public void actionPerformed(ActionEvent e) {
                                                       paused = !paused;
-                                                      pauseButton.setText(paused ? "Resume" : "Pause");
+                                                      pauseButton.setText(paused ? RESUME.getMessage() : PAUSE.getMessage());
                                                   }
                                               }
         );
@@ -83,7 +97,7 @@ public class AnalogChartPanel {
         upperPanel.setBorder(BorderFactory.createLineBorder(Color.white));
         content.add(upperPanel, BorderLayout.NORTH);
 
-        content.add(analogChart, BorderLayout.CENTER);
+        content.add(canvas, BorderLayout.CENTER);
 
         final JPanel lowerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
         lowerPanel.setBorder(BorderFactory.createLineBorder(Color.white));
@@ -93,6 +107,11 @@ public class AnalogChartPanel {
         lowerPanel.add(new ConfigField(Fields.ANALOGCHARTFREQUENCY, "Every XXX engine cycles").getContent());
         lowerPanel.add(new ConfigField(Fields.globalFuelCorrection, "Global Fuel Correction").getContent());
         lowerPanel.add(new ConfigField(Fields.digitalChartSize, "Engine Sniffer size").getContent());
+    }
+
+    private void clear() {
+        minX = maxX = minY = maxY = 0;
+        values.clear();
     }
 
     private void processValues() {
@@ -113,12 +132,10 @@ public class AnalogChartPanel {
         return content;
     }
 
-    private class AnalogChart extends JComponent {
+    private class AnalogChartCanvas extends JComponent {
         @Override
         public void paint(Graphics g) {
             super.paint(g);
-            //Graphics2D g2 = (Graphics2D) g;
-
             Dimension size = getSize();
 
             g.drawString("X range from " + minX + " to " + maxX, 4, 20);

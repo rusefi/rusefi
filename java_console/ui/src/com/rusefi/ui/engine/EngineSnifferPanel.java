@@ -22,6 +22,9 @@ import java.awt.event.ActionListener;
 import java.util.*;
 import java.util.List;
 
+import static com.rusefi.ui.util.LocalizedMessages.CLEAR;
+import static com.rusefi.ui.util.LocalizedMessages.PAUSE;
+
 /**
  * Engine Sniffer control consists of a set of {@link UpDownImage}
  * <p/>
@@ -85,7 +88,7 @@ public class EngineSnifferPanel {
 
         statusPanel.setWaveReport(crank.createTranslator());
 
-        JButton clearButton = new JButton("clear");
+        JButton clearButton = new JButton(CLEAR.getMessage());
         clearButton.setMnemonic('c');
         clearButton.addActionListener(new ActionListener() {
             @Override
@@ -104,7 +107,7 @@ public class EngineSnifferPanel {
             }
         });
 
-        final JButton pauseButton = new JButton("pause");
+        final JButton pauseButton = new JButton(PAUSE.getMessage());
         pauseButton.setMnemonic('p');
         pauseButton.addActionListener(new ActionListener() {
             @Override

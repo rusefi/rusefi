@@ -298,28 +298,23 @@ static THD_WORKING_AREA(csThreadStack, UTILITY_THREAD_STACK_SIZE);	// declare th
 
 #define isOutOfBounds(offset) ((offset<0) || (offset) >= sizeof(engine_configuration_s))
 
-static void setShort(const int offset, const int value) {
-	if (isOutOfBounds(offset))
-		return;
-	uint16_t *ptr = (uint16_t *) (&((char *) engine->engineConfiguration)[offset]);
-	*ptr = (uint16_t) value;
-	scheduleMsg(&logger, "setting short @%d to %d", offset, (uint16_t) value);
-}
-
 static void getShort(int offset) {
 	if (isOutOfBounds(offset))
 		return;
 	uint16_t *ptr = (uint16_t *) (&((char *) engine->engineConfiguration)[offset]);
 	uint16_t value = *ptr;
+	/**
+	 * this response is part of dev console API
+	 */
 	scheduleMsg(&logger, "short @%d is %d", offset, value);
 }
 
-static void setInt(const int offset, const int value) {
+static void setShort(const int offset, const int value) {
 	if (isOutOfBounds(offset))
 		return;
-	int *ptr = (int *) (&((char *) engine->engineConfiguration)[offset]);
-	*ptr = value;
-	scheduleMsg(&logger, "setting int @%d to %d", offset, value);
+	uint16_t *ptr = (uint16_t *) (&((char *) engine->engineConfiguration)[offset]);
+	*ptr = (uint16_t) value;
+	getShort(offset);
 }
 
 static void getInt(int offset) {
@@ -327,7 +322,18 @@ static void getInt(int offset) {
 		return;
 	int *ptr = (int *) (&((char *) engine->engineConfiguration)[offset]);
 	int value = *ptr;
+	/**
+	 * this response is part of dev console API
+	 */
 	scheduleMsg(&logger, "int @%d is %d", offset, value);
+}
+
+static void setInt(const int offset, const int value) {
+	if (isOutOfBounds(offset))
+		return;
+	int *ptr = (int *) (&((char *) engine->engineConfiguration)[offset]);
+	*ptr = value;
+	getInt(offset);
 }
 
 static void getFloat(int offset) {
@@ -335,6 +341,9 @@ static void getFloat(int offset) {
 		return;
 	float *ptr = (float *) (&((char *) engine->engineConfiguration)[offset]);
 	float value = *ptr;
+	/**
+	 * this response is part of dev console API
+	 */
 	scheduleMsg(&logger, "float @%d is %f", offset, value);
 }
 
@@ -353,7 +362,7 @@ static void setFloat(const char *offsetStr, const char *valueStr) {
 	}
 	float *ptr = (float *) (&((char *) engine->engineConfiguration)[offset]);
 	*ptr = value;
-	scheduleMsg(&logger, "setting float @%d to %f", offset, value);
+	getFloat(offset);
 }
 
 void initEngineContoller(Logging *sharedLogger, Engine *engine) {
