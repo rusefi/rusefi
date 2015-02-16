@@ -23,7 +23,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * @see WavePanel
  */
 public class Launcher extends FrameHelper {
-    public static final int CONSOLE_VERSION = 20150214;
+    public static final int CONSOLE_VERSION = 20150216;
     public static final boolean SHOW_STIMULATOR = true;
     public static final String TAB_INDEX = "main_tab";
     private final String port;
@@ -47,8 +47,8 @@ public class Launcher extends FrameHelper {
         RpmPanel mainGauges = new RpmPanel(getConfig().getRoot().getChild("main_gauges"));
         tabbedPane.addTab("Main", mainGauges.createRpmPanel());
         tabbedPane.addTab("Gauges", new GaugesPanel().getContent());
-        tabbedPane.addTab("Digital Sniffer", wavePanel.getPanel());
-        tabbedPane.addTab("Analog Sniffer", new AnalogChartPanel());
+        tabbedPane.addTab("Engine Sniffer", wavePanel.getPanel());
+        tabbedPane.addTab("Analog Sniffer", new AnalogChartPanel().getPanel());
 
         tabbedPane.addTab("LE controls", new FlexibleControls().getPanel());
 

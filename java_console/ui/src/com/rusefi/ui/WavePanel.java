@@ -23,7 +23,7 @@ import java.util.*;
 import java.util.List;
 
 /**
- * Digital Sniffer control consists of a set of {@link UpDownImage}
+ * Engine Sniffer control consists of a set of {@link UpDownImage}
  * <p/>
  * <p/>
  * Date: 6/23/13

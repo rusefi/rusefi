@@ -1,11 +1,11 @@
 package com.rusefi;
 
 import com.irnems.FileLog;
-import com.irnems.core.EngineState;
-import com.rusefi.io.LinkManager;
+import com.rusefi.config.Fields;
 import com.rusefi.ui.RpmModel;
 import com.rusefi.ui.UiUtils;
 import com.rusefi.ui.WavePanel;
+import com.rusefi.ui.config.ConfigField;
 import com.rusefi.ui.widgets.URLLabel;
 import com.rusefi.ui.widgets.UpDownImage;
 
@@ -20,11 +20,10 @@ import java.util.List;
  * Date: 12/21/13
  * Andrey Belomutskiy (c) 2012-2013
  */
-public class AnalogChartPanel extends JPanel {
-    private static final String KEY = "analog_chart";
+public class AnalogChartPanel {
     private static final String HELP_URL = "http://rusefi.com/wiki/index.php?title=Manual:DevConsole#Analog_Chart";
 
-    private final TreeMap<Double, Double> values = new TreeMap<Double, Double>();
+    private final TreeMap<Double, Double> values = new TreeMap<>();
     private final AnalogChart analogChart = new AnalogChart();
 
     private double minX;
@@ -32,25 +31,24 @@ public class AnalogChartPanel extends JPanel {
     private double minY;
     private double maxY;
 
+    private final JPanel content = new JPanel(new BorderLayout());
+
     private boolean paused = false;
 
     public AnalogChartPanel() {
-        super(new BorderLayout());
 
-        LinkManager.engineState.registerStringValueAction(KEY, new EngineState.ValueCallback<String>() {
-                    @Override
-                    public void onUpdate(String message) {
-
-                        unpackValues(values, message);
+        AnalogChartCentral.listeners.add(new AnalogChartCentral.AnalogChartListener() {
+            @Override
+            public void onAnalogChart(String message) {
+                unpackValues(values, message);
 
 //                MessagesCentral.getConfig().postMessage(AnalogChartPanel.class, "chart arrived, len=" + message.length());
 
-                        processValues();
-                        UpDownImage.trueRepaint(analogChart);
+                processValues();
+                UpDownImage.trueRepaint(analogChart);
 
-                    }
-                }
-        );
+            }
+        });
 
         final JPanel upperPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
 
@@ -75,7 +73,6 @@ public class AnalogChartPanel extends JPanel {
 
         upperPanel.add(new URLLabel(WavePanel.HELP_TEXT, HELP_URL));
         pauseButton.addActionListener(new
-
                                               ActionListener() {
                                                   @Override
                                                   public void actionPerformed(ActionEvent e) {
@@ -85,23 +82,34 @@ public class AnalogChartPanel extends JPanel {
                                               }
         );
 
-        add(upperPanel, BorderLayout.NORTH);
+        upperPanel.setBorder(BorderFactory.createLineBorder(Color.white));
+        content.add(upperPanel, BorderLayout.NORTH);
 
-        add(analogChart, BorderLayout.CENTER);
+        content.add(analogChart, BorderLayout.CENTER);
+
+        final JPanel lowerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
+        lowerPanel.setBorder(BorderFactory.createLineBorder(Color.white));
+        content.add(lowerPanel, BorderLayout.SOUTH);
+
+        lowerPanel.add(new ConfigField(Fields.ANALOGCHARTFREQUENCY).getContent());
     }
 
     private void processValues() {
-        List<Double> keys = new ArrayList<Double>(values.keySet());
+        List<Double> keys = new ArrayList<>(values.keySet());
         minX = keys.get(0);
         maxX = keys.get(keys.size() - 1);
         FileLog.rlog("Analog chart from " + minX + " to " + maxX);
 
-        TreeSet<Double> sortedValues = new TreeSet<Double>();
+        TreeSet<Double> sortedValues = new TreeSet<>();
         sortedValues.addAll(values.values());
-        List<Double> values = new ArrayList<Double>(sortedValues);
+        List<Double> values = new ArrayList<>(sortedValues);
 
         minY = values.get(0);
         maxY = values.get(values.size() - 1);
+    }
+
+    public JComponent getPanel() {
+        return content;
     }
 
     private class AnalogChart extends JComponent {
