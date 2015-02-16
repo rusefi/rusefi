@@ -1,6 +1,6 @@
 package com.rusefi.io.tcp;
 
-import com.irnems.FileLog;
+import com.rusefi.FileLog;
 import com.rusefi.io.LinkConnector;
 import com.rusefi.io.LinkManager;
 

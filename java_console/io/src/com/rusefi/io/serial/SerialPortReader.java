@@ -1,6 +1,6 @@
 package com.rusefi.io.serial;
 
-import com.irnems.FileLog;
+import com.rusefi.FileLog;
 import com.rusefi.io.DataListener;
 import jssc.SerialPort;
 import jssc.SerialPortEvent;

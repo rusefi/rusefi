@@ -1,9 +1,9 @@
-package com.rusefi.ui.widgets;
+package com.rusefi.ui.engine;
 
 import com.irnems.core.Sensor;
 import com.irnems.core.SensorCentral;
 import com.irnems.waves.TimeAxisTranslator;
-import com.rusefi.ui.WavePanel;
+import com.rusefi.ui.util.UiUtils;
 import com.rusefi.waves.WaveReport;
 import com.irnems.waves.ZoomProvider;
 import com.rusefi.waves.RevolutionLog;
@@ -22,7 +22,7 @@ import java.util.TreeMap;
  * Date: 6/23/13
  * (c) Andrey Belomutskiy
  *
- * @see WavePanel
+ * @see EngineSnifferPanel
  */
 public class UpDownImage extends JPanel {
     private static final SimpleDateFormat FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
@@ -54,43 +54,11 @@ public class UpDownImage extends JPanel {
     }
 
     public void setToolTip() {
-        setTwoLineToolTip(this, "Channel " + name, "Physical pin: " + pin);
-    }
-
-    public static void setTwoLineToolTip(JComponent component, String line1, String line2) {
-        component.setToolTipText("<html>" + line1 + "<br>" + line2 + "</html>");
+        UiUtils.setTwoLineToolTip(this, "Channel " + name, "Physical pin: " + pin);
     }
 
     public void setZoomProvider(ZoomProvider zoomProvider) {
         this.zoomProvider = zoomProvider;
-    }
-
-    /**
-     * This does not make any sense :( That's an attempt
-     * to hack http://rusefi.com/forum/viewtopic.php?f=2&t=631&p=10083#p10081
-     */
-    public static void trueRepaint(JComponent control) {
-        control.invalidate();
-        control.repaint();
-    }
-
-    public static void trueRepaint(Container control) {
-        trueLayout(control);
-//        if (control == null)
-//            return;
-//        control.invalidate();
-//        control.repaint();
-    }
-
-    /**
-     * todo: one 'trueXXX' method should be enough, which one?
-     */
-    public static void trueLayout(Component component) {
-        if (component == null)
-            return;
-        component.invalidate();
-        component.validate();
-        component.repaint();
     }
 
     public UpDownImage(WaveReport wr, String name) {
@@ -134,7 +102,7 @@ public class UpDownImage extends JPanel {
         propagateDwellIntoSensor(wr);
         this.revolutions = revolutions;
         lastUpdateTime = System.currentTimeMillis();
-        trueRepaint(this);
+        UiUtils.trueRepaint(this);
     }
 
     private void propagateDwellIntoSensor(WaveReport wr) {

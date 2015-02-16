@@ -1,6 +1,6 @@
 package com.rusefi;
 
-import com.irnems.FileLog;
+import com.rusefi.FileLog;
 import com.irnems.core.EngineState;
 import com.irnems.core.Sensor;
 import com.irnems.core.SensorCentral;

@@ -1,6 +1,6 @@
 package com.rusefi;
 
-import com.irnems.FileLog;
+import com.rusefi.FileLog;
 import com.rusefi.waves.RevolutionLog;
 import com.rusefi.waves.WaveChart;
 import com.rusefi.waves.WaveReport;

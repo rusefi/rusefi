@@ -1,6 +1,6 @@
 package com.rusefi.ui;
 
-import com.irnems.FileLog;
+import com.rusefi.FileLog;
 
 import javax.swing.*;
 import java.awt.event.WindowAdapter;

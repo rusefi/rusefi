@@ -1,6 +1,6 @@
 package com.rusefi.waves;
 
-import com.irnems.FileLog;
+import com.rusefi.FileLog;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,6 +1,6 @@
 package com.rusefi;
 
-import com.irnems.FileLog;
+import com.rusefi.FileLog;
 import org.apache.commons.math3.stat.descriptive.moment.Mean;
 import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
 

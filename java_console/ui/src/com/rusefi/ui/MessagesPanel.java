@@ -4,6 +4,7 @@ import com.irnems.core.MessagesCentral;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.io.serial.PortHolder;
 import com.rusefi.ui.storage.Node;
+import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.widgets.AnyCommand;
 
 import javax.swing.*;

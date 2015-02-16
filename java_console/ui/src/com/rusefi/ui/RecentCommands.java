@@ -2,7 +2,7 @@ package com.rusefi.ui;
 
 import com.rusefi.StimulationInputs;
 import com.rusefi.io.CommandQueue;
-import com.rusefi.ui.widgets.UpDownImage;
+import com.rusefi.ui.util.UiUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -73,8 +73,8 @@ public class RecentCommands {
                 for (Entry entry : entries.keySet()) {
                     content.add(createButton(entry));
                 }
-                UpDownImage.trueRepaint(content.getParent());
-                UpDownImage.trueLayout(content.getParent());
+                UiUtils.trueRepaint(content.getParent());
+                UiUtils.trueLayout(content.getParent());
             }
         });
 

@@ -37,11 +37,11 @@ public class ChartRepository {
         charts.clear();
     }
 
-    public interface CRListener {
+    public interface ChartRepositoryListener {
         public void onDigitalChart(String chart);
     }
 
-    public ChartScrollControl createControls(final CRListener listener) {
+    public ChartScrollControl createControls(final ChartRepositoryListener listener) {
         return new ChartScrollControl(listener);
     }
 }

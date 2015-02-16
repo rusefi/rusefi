@@ -1,6 +1,6 @@
 package com.rusefi;
 
-import com.irnems.FileLog;
+import com.rusefi.FileLog;
 
 import java.io.BufferedReader;
 import java.io.File;

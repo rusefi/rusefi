@@ -1,6 +1,6 @@
 package com.rusefi.io;
 
-import com.irnems.FileLog;
+import com.rusefi.FileLog;
 import com.irnems.core.EngineState;
 import com.rusefi.io.serial.SerialConnector;
 import com.rusefi.io.tcp.TcpConnector;

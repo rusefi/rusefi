@@ -1,9 +1,9 @@
-package com.irnems.ui.test;
+package com.rusefi.ui.engine.test;
 
 import com.rusefi.waves.WaveReport;
-import com.irnems.core.test.WaveReportTest;
+import com.rusefi.waves.test.WaveReportTest;
 import com.rusefi.ui.FrameHelper;
-import com.rusefi.ui.widgets.UpDownImage;
+import com.rusefi.ui.engine.UpDownImage;
 
 import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;

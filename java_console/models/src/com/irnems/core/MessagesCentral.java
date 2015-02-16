@@ -1,6 +1,6 @@
 package com.irnems.core;
 
-import com.irnems.FileLog;
+import com.rusefi.FileLog;
 import com.rusefi.io.serial.PortHolder;
 import com.rusefi.io.serial.PortHolderListener;
 

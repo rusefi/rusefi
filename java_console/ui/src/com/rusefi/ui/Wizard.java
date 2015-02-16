@@ -6,8 +6,7 @@ import com.rusefi.OutputChannel;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.io.InvocationConfirmationListener;
 import com.rusefi.trigger.TriggerShapeHolder;
-import com.rusefi.ui.widgets.UpDownImage;
-import com.sun.awt.AWTUtilities;
+import com.rusefi.ui.util.UiUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -113,7 +112,7 @@ public class Wizard {
         Component newContent = getContent(step);
         content.removeAll();
         content.add(newContent);
-        UpDownImage.trueLayout(content);
+        UiUtils.trueLayout(content);
     }
 
     private Component getContent(WizardStep step) {

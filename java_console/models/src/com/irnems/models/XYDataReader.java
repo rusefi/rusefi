@@ -1,6 +1,6 @@
 package com.irnems.models;
 
-import com.irnems.FileLog;
+import com.rusefi.FileLog;
 
 import java.io.*;
 

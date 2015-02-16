@@ -1,5 +1,4 @@
-package com.rusefi.ui.widgets;
-
+package com.rusefi.ui.util;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,8 +9,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 public class URLLabel extends JLabel {
-
-    private static final long serialVersionUID = 8273875024682878518L;
     private String text;
     private URI uri;
 
@@ -63,10 +60,6 @@ public class URLLabel extends JLabel {
         super.setText("<html><span style=\"color: #000099;\">" +
                 link + "</span></html>");
         this.text = text;
-    }
-
-    public String getRawText() {
-        return text;
     }
 
     private static void open(URI uri) {

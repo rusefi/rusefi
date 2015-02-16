@@ -1,6 +1,6 @@
 package com.irnems.models;
 
-import com.irnems.FileLog;
+import com.rusefi.FileLog;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,7 +15,7 @@ import java.util.TreeMap;
  * Date: 3/24/13
  * (c) Andrey Belomutskiy
  *
- * @see TableGenerator
+ * @see com.rusefi.file.TableGenerator
  */
 public class XYData {
     @NotNull

@@ -1,4 +1,4 @@
-package com.rusefi.ui;
+package com.rusefi.ui.engine;
 
 import com.irnems.waves.ZoomProvider;
 import com.rusefi.KeyStrokeShortcut;
@@ -13,7 +13,7 @@ import java.awt.event.KeyEvent;
  * 7/7/13
  * (c) Andrey Belomutskiy
  */
-public class ZoomControl extends JPanel {
+class ZoomControl extends JPanel {
     private final JLabel currentValue = new JLabel();
     private double value;
     public ZoomControlListener listener = null;

@@ -19,7 +19,7 @@ import java.awt.event.ActionListener;
  */
 public class RpmPanel {
     private final Node config;
-    private RpmControl rpmControl = new RpmControl();
+    private RpmLabel rpmLabel = new RpmLabel();
     // that's for CKP signal emulation
     public final WaveInfoPanel wave0 = new WaveInfoPanel(0);
     public final WaveInfoPanel wave1 = new WaveInfoPanel(1);
@@ -27,7 +27,7 @@ public class RpmPanel {
 
     public RpmPanel(Node config) {
         this.config = config;
-        rpmControl.setSize(15);
+        rpmLabel.setSize(15);
     }
 
     public JComponent createRpmPanel() {
@@ -57,7 +57,7 @@ public class RpmPanel {
         JComponent rpmPanel = new JPanel(new BorderLayout());
         rpmPanel.setBorder(BorderFactory.createLineBorder(Color.white));
 
-        rpmPanel.add(rpmControl.getContent(), BorderLayout.NORTH);
+        rpmPanel.add(rpmLabel.getContent(), BorderLayout.NORTH);
         rpmPanel.add(controls, BorderLayout.WEST);
         rpmPanel.add(gauges, BorderLayout.CENTER);
         rpmPanel.add(msgPanel, BorderLayout.EAST);

@@ -1,8 +1,7 @@
 package com.rusefi.maintenance;
 
 import com.rusefi.ui.FrameHelper;
-import com.rusefi.ui.UiUtils;
-import com.rusefi.ui.widgets.UpDownImage;
+import com.rusefi.ui.util.UiUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -127,7 +126,7 @@ public class FirmwareFlasher {
             @Override
             public void run() {
                 log.append(s + "\r\n");
-                UpDownImage.trueLayout(log);
+                UiUtils.trueLayout(log);
             }
         });
     }

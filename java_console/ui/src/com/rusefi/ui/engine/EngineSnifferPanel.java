@@ -1,21 +1,21 @@
-package com.rusefi.ui;
+package com.rusefi.ui.engine;
 
-import com.irnems.FileLog;
+import com.rusefi.FileLog;
 import com.irnems.core.EngineState;
 import com.irnems.core.Sensor;
 import com.irnems.core.SensorCentral;
 import com.rusefi.io.LinkManager;
+import com.rusefi.ui.*;
 import com.rusefi.ui.storage.Node;
+import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.widgets.AnyCommand;
-import com.rusefi.ui.widgets.URLLabel;
-import com.rusefi.ui.widgets.UpDownImage;
+import com.rusefi.ui.util.URLLabel;
 import com.rusefi.waves.RevolutionLog;
 import com.rusefi.waves.WaveChart;
 import com.rusefi.waves.WaveChartParser;
 import com.rusefi.waves.WaveReport;
 
 import javax.swing.*;
-import javax.xml.bind.JAXBContext;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -29,9 +29,9 @@ import java.util.List;
  * Date: 6/23/13
  * Andrey Belomutskiy (c) 2012-2013
  *
- * @see ChartStatusPanel status bar
+ * @see EngineSnifferStatusPanel status bar
  */
-public class WavePanel {
+public class EngineSnifferPanel {
     private static final int EFI_DEFAULT_CHART_SIZE = 180;
     public static final String CRANK1 = "c1";
     public static final Comparator<String> INSTANCE = new ImageOrderComparator();
@@ -61,13 +61,13 @@ public class WavePanel {
     JScrollPane pane = new JScrollPane(imagePanel, JScrollPane.VERTICAL_SCROLLBAR_NEVER, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 
     private final ZoomControl zoomControl = new ZoomControl();
-    private final ChartStatusPanel statusPanel = new ChartStatusPanel(zoomControl.getZoomProvider());
+    private final EngineSnifferStatusPanel statusPanel = new EngineSnifferStatusPanel(zoomControl.getZoomProvider());
     private final UpDownImage crank = createImage(CRANK1);
     private ChartScrollControl scrollControl;
 
     private boolean isPaused;
 
-    public WavePanel(Node config) {
+    public EngineSnifferPanel(Node config) {
         LinkManager.engineState.registerStringValueAction("outpin", new EngineState.ValueCallback<String>() {
             @Override
             public void onUpdate(String value) {
@@ -118,14 +118,14 @@ public class WavePanel {
         buttonPanel.add(clearButton);
         buttonPanel.add(saveImageButton);
         buttonPanel.add(pauseButton);
-        buttonPanel.add(new RpmControl().setSize(2).getContent());
+        buttonPanel.add(new RpmLabel().setSize(2).getContent());
 
         JComponent command = new AnyCommand(config, "chartsize " + EFI_DEFAULT_CHART_SIZE).getContent();
         buttonPanel.add(command);
 
         buttonPanel.add(zoomControl);
 
-        scrollControl = ChartRepository.getInstance().createControls(new ChartRepository.CRListener() {
+        scrollControl = ChartRepository.getInstance().createControls(new ChartRepository.ChartRepositoryListener() {
             @Override
             public void onDigitalChart(String chart) {
                 displayChart(chart);
@@ -142,7 +142,7 @@ public class WavePanel {
         zoomControl.listener = new ZoomControl.ZoomControlListener() {
             @Override
             public void onZoomChange() {
-                UpDownImage.trueRepaint(imagePanel);
+                UiUtils.trueRepaint(imagePanel);
             }
         };
 
@@ -204,7 +204,7 @@ public class WavePanel {
         /**
          * this is to fix the UI glitch when images tab shows a tiny square
          */
-        UpDownImage.trueRepaint(chartPanel.getParent());
+        UiUtils.trueRepaint(chartPanel.getParent());
     }
 
     public JPanel getPanel() {

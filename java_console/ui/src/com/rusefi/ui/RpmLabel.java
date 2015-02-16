@@ -14,14 +14,14 @@ import java.awt.event.ActionListener;
  * 9/17/13
  * (c) Andrey Belomutskiy
  */
-public class RpmControl {
+public class RpmLabel {
     private static final String NO_CONNECTION = "N/C";
     private final JPanel content = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
 
     private final JLabel rpmValue = new JLabel(NO_CONNECTION);
     private final JLabel rpmCaption = new JLabel("RPM:");
 
-    public RpmControl() {
+    public RpmLabel() {
         rpmCaption.setBorder(BorderFactory.createLineBorder(Color.white));
         rpmValue.setForeground(Color.red);
 
@@ -64,7 +64,7 @@ public class RpmControl {
         return content;
     }
 
-    public RpmControl setSize(int size) {
+    public RpmLabel setSize(int size) {
         Font f = rpmCaption.getFont();
         int fontSize = size * f.getSize();
         Font font = new Font(f.getName(), f.getStyle(), fontSize);

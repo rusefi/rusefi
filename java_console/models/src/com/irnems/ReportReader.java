@@ -4,6 +4,7 @@ import com.irnems.models.Factory;
 import com.irnems.models.MafValue;
 import com.irnems.models.RpmValue;
 import com.irnems.models.Utils;
+import com.rusefi.FileLog;
 
 import java.io.*;
 import java.util.*;
@@ -27,7 +28,7 @@ public class ReportReader {
     public static TreeMap<Integer, TreeMap<Integer, ReportLine>> readMap(String filename) {
         if (!new File(filename).exists()) {
             FileLog.rlog("Error: not found " + filename);
-            return new TreeMap<Integer, TreeMap<Integer, ReportLine>>();
+            return new TreeMap<>();
         }
         List<ReportLine> lines = read(filename);
         FileLog.rlog("Got " + lines.size() + " lines");
@@ -43,7 +44,7 @@ public class ReportReader {
         /**
          * map of maps by RPM. inner map is by MAF
          */
-        TreeMap<Integer, TreeMap<Integer, ReportLine>> rpm2mapByMaf = new TreeMap<Integer, TreeMap<Integer, ReportLine>>();
+        TreeMap<Integer, TreeMap<Integer, ReportLine>> rpm2mapByMaf = new TreeMap<>();
         for (ReportLine cur : lines) {
             int rpmKey = cur.getRpm().getValue();
 
@@ -52,7 +53,7 @@ public class ReportReader {
 
             TreeMap<Integer, ReportLine> maf2line = Utils.getOrCreate(rpm2mapByMaf, rpmKey, new Factory<Integer, TreeMap<Integer, ReportLine>>() {
                 public TreeMap<Integer, ReportLine> create(Integer key) {
-                    return new TreeMap<Integer, ReportLine>();
+                    return new TreeMap<>();
                 }
             });
             maf2line.put(cur.getMaf().getValue(), cur);
@@ -78,7 +79,7 @@ public class ReportReader {
     }
 
     private static List<ReportLine> filter(List<ReportLine> lines) {
-        List<ReportLine> result = new ArrayList<ReportLine>();
+        List<ReportLine> result = new ArrayList<>();
         int maxValidDiff = 0;
         int originalCount = lines.size();
         int removedCount = 0;
@@ -110,7 +111,7 @@ public class ReportReader {
     }
 
     private static List<ReportLine> read(String filename) {
-        List<ReportLine> result = new LinkedList<ReportLine>();
+        List<ReportLine> result = new LinkedList<>();
         try {
             BufferedReader reader = new BufferedReader(new FileReader(filename));
             String line;
@@ -120,8 +121,6 @@ public class ReportReader {
                 if (rl != null)
                     result.add(rl);
             }
-        } catch (FileNotFoundException e) {
-            throw new IllegalStateException(e);
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
