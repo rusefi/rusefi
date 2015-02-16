@@ -53,7 +53,7 @@ public class Launcher extends FrameHelper {
         tabbedPane.addTab("LE controls", new FlexibleControls().getPanel());
 
 //        tabbedPane.addTab("ADC", new AdcPanel(new BooleanInputsModel()).createAdcPanel());
-        if (SHOW_STIMULATOR && !LinkManager.isStimulationMode) {
+        if (SHOW_STIMULATOR && !LinkManager.isStimulationMode && !LinkManager.isLogViewerMode(port)) {
             EcuStimulator stimulator = EcuStimulator.getInstance();
             tabbedPane.add("ECU stimulation", stimulator.getPanel());
         }

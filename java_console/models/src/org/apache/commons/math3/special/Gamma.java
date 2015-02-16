@@ -636,7 +636,7 @@ public class Gamma {
 
 
     /**
-     * Returns the value of Γ(x). Based on the <em>NSWC Library of
+     * Returns the value of Gamma(x). Based on the <em>NSWC Library of
      * Mathematics Subroutines</em> double precision implementation,
      * {@code DGAMMA}.
      *
