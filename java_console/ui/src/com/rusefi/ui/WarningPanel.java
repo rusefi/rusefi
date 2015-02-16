@@ -14,7 +14,7 @@ public class WarningPanel {
     private final JPanel panel = new JPanel(new BorderLayout());
 
     private final JLabel label = new JLabel();
-    private final JButton reset = new JButton("reset");
+    private final JButton reset = new JButton("clear warning");
 
     public WarningPanel() {
         label.setForeground(Color.red);
