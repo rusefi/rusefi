@@ -90,7 +90,6 @@ int getGlobalConfigurationVersion(void) {
 
 void incrementGlobalConfigurationVersion(void) {
 	globalConfigurationVersion++;
-	// todo invoke engine->configurationListeners.
 }
 
 /**

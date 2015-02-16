@@ -46,6 +46,7 @@
 #include "malfunction_central.h"
 #include "engine.h"
 #include "algo.h"
+#include "LocalVersionHolder.h"
 
 #if HAL_USE_ADC || defined(__DOXYGEN__)
 #include "AdcConfiguration.h"
@@ -197,6 +198,8 @@ static void cylinderCleanupControl(Engine *engine) {
 #endif
 }
 
+static LocalVersionHolder versionForConfigurationListeners;
+
 static void onEvenyGeneralMilliseconds(Engine *engine) {
 #if EFI_PROD_CODE
 	/**
@@ -213,6 +216,15 @@ static void onEvenyGeneralMilliseconds(Engine *engine) {
 	if (!engine->rpmCalculator.isRunning())
 		writeToFlashIfPending();
 #endif
+
+	if (versionForConfigurationListeners.isOld()) {
+		/**
+		 * version change could happen for multiple reason and on different threads
+		 * in order to be sure which thread (and which stack) invokes the potentially heavy
+		 * listeners we invoke them from here.
+		 */
+		engine->configurationListeners.invokeJustArgCallbacks();
+	}
 
 	engine->watchdog();
 	engine->updateSlowSensors();
@@ -254,7 +266,7 @@ extern AdcDevice fastAdc;
 
 static void printAnalogChannelInfoExt(const char *name, adc_channel_e hwChannel, float adcVoltage) {
 #if HAL_USE_ADC || defined(__DOXYGEN__)
-	if(fastAdc.isHwUsed(hwChannel)) {
+	if (fastAdc.isHwUsed(hwChannel)) {
 		scheduleMsg(&logger, "fast enabled=%s", boolToString(boardConfiguration->isFastAdcEnabled));
 	}
 

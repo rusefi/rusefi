@@ -53,7 +53,7 @@ void testMafLookup(void) {
 	Engine * engine = &eth.engine;
 	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
 	setBosch0280218037(engineConfiguration);
-	engine->precalc();
+	engine->preCalculate();
 
 	assertEqualsM("@0", -34.5000, engine->mafDecodingLookup[0]);
 	assertEqualsM("@1", -33.7875, engine->mafDecodingLookup[1]);
