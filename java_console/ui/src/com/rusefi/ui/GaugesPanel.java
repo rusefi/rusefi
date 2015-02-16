@@ -87,7 +87,6 @@ public class GaugesPanel  {
     private Component createControls() {
         JPanel controls = new JPanel(new GridLayout(2, 1));
         controls.add(new RpmCommand());
-        controls.add(new MafCommand());
         return controls;
     }
 

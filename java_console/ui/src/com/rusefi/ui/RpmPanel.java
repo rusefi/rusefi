@@ -97,8 +97,6 @@ public class RpmPanel {
 //        controls.add(new PotCommand(0).panel, "grow, wrap");
 //        controls.add(new PotCommand(1).panel, "grow, wrap");
 
-        controls.add(new MafCommand(), "grow, wrap");
-
         controls.add(wave0.getControl(), "grow, wrap");
         controls.add(wave1.getControl(), "grow, wrap");
         controls.add(wave2.getControl(), "grow, wrap");

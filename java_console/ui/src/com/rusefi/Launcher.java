@@ -53,7 +53,7 @@ public class Launcher extends FrameHelper {
         tabbedPane.addTab("Main", mainGauges.createRpmPanel());
         tabbedPane.addTab("Gauges", new GaugesPanel().getContent());
         tabbedPane.addTab("Engine Sniffer", engineSnifferPanel.getPanel());
-        tabbedPane.addTab("Analog Sniffer", new AnalogChartPanel().getPanel());
+        tabbedPane.addTab("Sensor Sniffer", new AnalogChartPanel().getPanel());
 
         tabbedPane.addTab("LE controls", new FlexibleControls().getPanel());
 
