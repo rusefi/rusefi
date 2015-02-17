@@ -16,10 +16,10 @@
 /**
  * this is used to confirm that firmware and TunerStudio are using the same rusefi.ini version
  */
-#define TS_FILE_VERSION 20150211
+#define TS_FILE_VERSION 20150216
 
 #define PAGE_0_SIZE 15160
-#define TS_OUTPUT_SIZE 116
+#define TS_OUTPUT_SIZE 196
 
 typedef struct {
 	uint16_t values[EGT_CHANNEL_COUNT];
@@ -82,7 +82,8 @@ typedef struct {
 	egt_values_s egtValues;
 	float rpmAcceleration;
 	float massAirFlowValue;
-	int unused3[1];
+	float veValue;
+	int unused3[20];
 } TunerStudioOutputChannels;
 
 #endif /* TUNERSTUDIO_CONFIGURATION_H_ */
