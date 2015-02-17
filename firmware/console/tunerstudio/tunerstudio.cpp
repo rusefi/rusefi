@@ -112,9 +112,15 @@ void printTsStats(void) {
 				portname(TS_SERIAL_TX_PORT), TS_SERIAL_TX_PIN, boardConfiguration->tunerStudioSerialSpeed);
 	}
 #endif /* EFI_PROD_CODE */
-	scheduleMsg(tsLogger, "TunerStudio total/error counter=%d/%d H=%d / O counter=%d size=%d / P=%d / B=%d", tsCounter, tsState.errorCounter, tsState.queryCommandCounter, tsState.outputChannelsCommandCounter,
-			sizeof(tsOutputChannels), tsState.readPageCommandsCounter, tsState.burnCommandCounter);
-	scheduleMsg(tsLogger, "TunerStudio W counter=%d / C = %d / P = %d / current page %d", tsState.writeValueCommandCounter, tsState.writeChunkCommandCounter,
+	scheduleMsg(tsLogger, "TunerStudio size=%d / total=%d / errors=%d / H=%d / O=%d / P=%d / B=%d",
+			sizeof(tsOutputChannels),
+			tsCounter,
+			tsState.errorCounter,
+			tsState.queryCommandCounter,
+			tsState.outputChannelsCommandCounter,
+			tsState.readPageCommandsCounter,
+			tsState.burnCommandCounter);
+	scheduleMsg(tsLogger, "TunerStudio W=%d / C=%d / P=%d / page=%d", tsState.writeValueCommandCounter, tsState.writeChunkCommandCounter,
 			tsState.pageCommandCounter, tsState.currentPageId);
 	scheduleMsg(tsLogger, "page size=%d", sizeof(engine_configuration_s));
 
@@ -124,14 +130,14 @@ void printTsStats(void) {
 //	int fuelMapOffset = (int) (&engineConfiguration->fuelTable) - (int) engineConfiguration;
 //	scheduleMsg(logger, "fuelTable %d", fuelMapOffset);
 //
-	int offset = (int) (&boardConfiguration->hip9011Gain) - (int) engineConfiguration;
-	scheduleMsg(tsLogger, "hip9011Gain %d", offset);
+//	int offset = (int) (&boardConfiguration->hip9011Gain) - (int) engineConfiguration;
+//	scheduleMsg(tsLogger, "hip9011Gain %d", offset);
 //
-	offset = (int) (&engineConfiguration->crankingCycleBins) - (int) engineConfiguration;
-	scheduleMsg(tsLogger, "crankingCycleBins %d", offset);
-
-	offset = (int) (&engineConfiguration->engineCycle) - (int) engineConfiguration;
-	scheduleMsg(tsLogger, "engineCycle %d", offset);
+//	offset = (int) (&engineConfiguration->crankingCycleBins) - (int) engineConfiguration;
+//	scheduleMsg(tsLogger, "crankingCycleBins %d", offset);
+//
+//	offset = (int) (&engineConfiguration->engineCycle) - (int) engineConfiguration;
+//	scheduleMsg(tsLogger, "engineCycle %d", offset);
 }
 
 static void setTsSpeed(int value) {
