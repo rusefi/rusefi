@@ -2,6 +2,7 @@ package com.rusefi;
 
 
 import com.rusefi.waves.WaveChart;
+import com.rusefi.waves.WaveReport;
 
 import static com.rusefi.IoUtil.nextChart;
 import static com.rusefi.IoUtil.sendCommand;
@@ -35,24 +36,37 @@ public class AutoTest {
 
         chart = nextChart();
         double x = 100;
-        assertWave(true, msg, chart, WaveChart.SPARK_1, 0.194433, 0.005, x + 180, x + 540);
+        assertWave(true, msg, chart, WaveChart.SPARK_1, 0.194433, 0.005, WaveReport.RATIO, x + 180, x + 540);
         assertWaveNull(msg, chart, WaveChart.SPARK_2);
-        assertWave(true, msg, chart, WaveChart.SPARK_3, 0.194433, 0.005, x, x + 360);
+        assertWave(true, msg, chart, WaveChart.SPARK_3, 0.194433, 0.005, WaveReport.RATIO, x, x + 360);
         assertWaveNull(msg, chart, WaveChart.SPARK_4);
+
+        x = 176.856;
+        assertWave(true, msg, chart, WaveChart.INJECTOR_1, 0.008199999999, 0.01, 0.1, x, x + 180, x + 360, x + 540);
+        assertWave(true, msg, chart, WaveChart.INJECTOR_2, 0.008199999999, 0.01, 0.1, x, x + 180, x + 360, x + 540);
+        assertWave(true, msg, chart, WaveChart.INJECTOR_3, 0.008199999999, 0.01, 0.1, x, x + 180, x + 360, x + 540);
+        assertWave(true, msg, chart, WaveChart.INJECTOR_4, 0.008199999999, 0.01, 0.1, x, x + 180, x + 360, x + 540);
 
         msg = "2003 Neon running";
         IoUtil.changeRpm(2000);
         chart = nextChart();
         x = 120;
-        assertWave(true, msg, chart, WaveChart.SPARK_1, 0.13299999999999998, 0.005, x + 180, x + 540);
+        assertWave(true, msg, chart, WaveChart.SPARK_1, 0.13299999999999998, 0.005, WaveReport.RATIO, x + 180, x + 540);
         assertWaveNull(msg, chart, WaveChart.SPARK_2);
-        assertWave(true, msg, chart, WaveChart.SPARK_3, 0.13299999999999998, 0.005, x, x + 360);
+        assertWave(true, msg, chart, WaveChart.SPARK_3, 0.13299999999999998, 0.005, WaveReport.RATIO, x, x + 360);
         assertWaveNull(msg, chart, WaveChart.SPARK_4);
+
+        x = 168.12;
+        assertWave(true, msg, chart, WaveChart.INJECTOR_1, 0.03333333333333302, 0.01, 0.1, x + 360);
+        assertWave(true, msg, chart, WaveChart.INJECTOR_2, 0.03333333333333302, 0.01, 0.1, x + 180);
+        assertWave(true, msg, chart, WaveChart.INJECTOR_3, 0.03333333333333302, 0.01, 0.1, x + 540);
+        assertWave(true, msg, chart, WaveChart.INJECTOR_4, 0.03333333333333302, 0.01, 0.1, x);
     }
 
     private static void testMazdaProtege() {
         sendCommand("set_engine_type 14");
         WaveChart chart;
+        nextChart(); // a bit of extra time to change engine type
         IoUtil.changeRpm(200);
         String msg = "ProtegeLX cranking";
         chart = nextChart();
