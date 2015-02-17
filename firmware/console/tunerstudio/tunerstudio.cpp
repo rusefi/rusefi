@@ -50,7 +50,8 @@ extern SerialUSBDriver SDU1;
 static SerialConfig tsSerialConfig = { 0, 0, USART_CR2_STOP1_BITS | USART_CR2_LINEN, 0 };
 #endif /* EFI_PROD_CODE */
 
-EXTERN_ENGINE;
+EXTERN_ENGINE
+;
 
 #define MAX_PAGE_ID 0
 
@@ -113,15 +114,10 @@ void printTsStats(void) {
 	}
 #endif /* EFI_PROD_CODE */
 	scheduleMsg(tsLogger, "TunerStudio size=%d / total=%d / errors=%d / H=%d / O=%d / P=%d / B=%d",
-			sizeof(tsOutputChannels),
-			tsCounter,
-			tsState.errorCounter,
-			tsState.queryCommandCounter,
-			tsState.outputChannelsCommandCounter,
-			tsState.readPageCommandsCounter,
-			tsState.burnCommandCounter);
-	scheduleMsg(tsLogger, "TunerStudio W=%d / C=%d / P=%d / page=%d", tsState.writeValueCommandCounter, tsState.writeChunkCommandCounter,
-			tsState.pageCommandCounter, tsState.currentPageId);
+			sizeof(tsOutputChannels), tsCounter, tsState.errorCounter, tsState.queryCommandCounter,
+			tsState.outputChannelsCommandCounter, tsState.readPageCommandsCounter, tsState.burnCommandCounter);
+	scheduleMsg(tsLogger, "TunerStudio W=%d / C=%d / P=%d / page=%d", tsState.writeValueCommandCounter,
+			tsState.writeChunkCommandCounter, tsState.pageCommandCounter, tsState.currentPageId);
 	scheduleMsg(tsLogger, "page size=%d", sizeof(engine_configuration_s));
 
 //	scheduleMsg(logger, "analogChartFrequency %d",
@@ -146,7 +142,10 @@ static void setTsSpeed(int value) {
 }
 
 void tunerStudioWriteData(const uint8_t * buffer, int size) {
-	chSequentialStreamWrite(getTsSerialDevice(), buffer, size);
+	int transferred = chSequentialStreamWrite(getTsSerialDevice(), buffer, size);
+	if (transferred != size) {
+		scheduleMsg(tsLogger, "!!! NOT ACCEPTED %d out of %d !!!", transferred, size);
+	}
 }
 
 void tunerStudioDebug(const char *msg) {
@@ -200,7 +199,7 @@ void handlePageSelectCommand(ts_response_format_e mode, uint16_t pageId) {
 void handleWriteChunkCommand(ts_response_format_e mode, short offset, short count, void *content) {
 	tsState.writeChunkCommandCounter++;
 
-	scheduleMsg(tsLogger, "receiving page %d chunk offset %d size %d", tsState.currentPageId, offset, count);
+	scheduleMsg(tsLogger, "%d receiving page %d chunk offset %d size %d", mode, tsState.currentPageId, offset, count);
 
 	if (offset > getTunerStudioPageSize(tsState.currentPageId)) {
 		scheduleMsg(tsLogger, "ERROR offset %d", offset);
@@ -218,6 +217,7 @@ void handleWriteChunkCommand(ts_response_format_e mode, short offset, short coun
 	memcpy(addr, content, count);
 
 	tsSendResponse(mode, NULL, 0);
+	printTsStats();
 }
 
 /**
@@ -266,7 +266,8 @@ void handlePageReadCommand(ts_response_format_e mode, uint16_t pageId, uint16_t 
 	tsState.currentPageId = pageId;
 
 #if EFI_TUNER_STUDIO_VERBOSE
-	scheduleMsg(tsLogger, "Page requested: page %d offset=%d count=%d", (int)tsState.currentPageId, offset, count);
+	scheduleMsg(tsLogger, "%d: Page requested: page %d offset=%d count=%d", mode, (int) tsState.currentPageId, offset,
+			count);
 #endif
 
 	if (tsState.currentPageId > MAX_PAGE_ID) {
@@ -335,13 +336,13 @@ static bool handlePlainCommand(uint8_t command) {
 		handleTestCommand();
 		return true;
 	} else if (command == TS_PAGE_COMMAND) {
-		int recieved = chSequentialStreamRead(getTsSerialDevice(), (uint8_t *)&pageIn, sizeof(pageIn));
+		int recieved = chSequentialStreamRead(getTsSerialDevice(), (uint8_t * )&pageIn, sizeof(pageIn));
 		// todo: validate 'recieved' value
 		handlePageSelectCommand(TS_PLAIN, pageIn);
 		return true;
 	} else if (command == TS_READ_COMMAND) {
 		//scheduleMsg(logger, "Got naked READ PAGE???");
-		int recieved = chSequentialStreamRead(getTsSerialDevice(), (uint8_t *)&readRequest, sizeof(readRequest));
+		int recieved = chSequentialStreamRead(getTsSerialDevice(), (uint8_t * )&readRequest, sizeof(readRequest));
 		if (recieved != sizeof(readRequest)) {
 			// todo: handler error
 			return true;
@@ -367,8 +368,7 @@ static bool handlePlainCommand(uint8_t command) {
 static bool isKnownCommand(char command) {
 	return command == TS_HELLO_COMMAND || command == TS_READ_COMMAND || command == TS_OUTPUT_COMMAND
 			|| command == TS_PAGE_COMMAND || command == TS_BURN_COMMAND || command == TS_SINGLE_WRITE_COMMAND
-			|| command == TS_LEGACY_HELLO_COMMAND
-			|| command == TS_CHUNK_WRITE_COMMAND;
+			|| command == TS_LEGACY_HELLO_COMMAND || command == TS_CHUNK_WRITE_COMMAND;
 }
 
 static uint8_t firstByte;
@@ -464,8 +464,8 @@ static msg_t tsThreadEntryPoint(void *arg) {
 
 //		scheduleMsg(logger, "TunerStudio: reading %d+4 bytes(s)", incomingPacketSize);
 
-		recieved = chnReadTimeout(getTsSerialDevice(), (uint8_t * ) (crcIoBuffer + 1), incomingPacketSize + CRC_VALUE_SIZE - 1,
-				MS2ST(TS_READ_TIMEOUT));
+		recieved = chnReadTimeout(getTsSerialDevice(), (uint8_t * ) (crcIoBuffer + 1),
+				incomingPacketSize + CRC_VALUE_SIZE - 1, MS2ST(TS_READ_TIMEOUT));
 		int expectedSize = incomingPacketSize + CRC_VALUE_SIZE - 1;
 		if (recieved != expectedSize) {
 			scheduleMsg(tsLogger, "got ONLY %d for packet size %d/%d for command %c", recieved, incomingPacketSize,
