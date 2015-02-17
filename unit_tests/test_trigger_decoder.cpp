@@ -309,7 +309,7 @@ static void testTriggerDecoder2(const char *msg, engine_type_e type, int synchPo
 static void testTriggerDecoder3(const char *msg, engine_type_e type, int synchPointIndex, float channel1duty, float channel2duty, float expectedGap) {
 	printGapRatio = true;
 	testTriggerDecoder2(msg, type, synchPointIndex, channel1duty, channel2duty);
-	assertEqualsM("actual gap ratio", expectedGap, actualSynchGap);
+	assertEqualsM2("actual gap ratio", expectedGap, actualSynchGap, 0.001);
 	printGapRatio = false;
 }
 
@@ -512,7 +512,7 @@ void testTriggerDecoder(void) {
 	testTriggerDecoder3("miata 1994", MIATA_1994_DEVIATOR, 11, 0.2985, 0.3890, MIATA_NA_GAP);
 	testTriggerDecoder3("citroen", CITROEN_TU3JP, 0, 0.4833, 0.0, 2.9994);
 
-	testTriggerDecoder3("neon NGC", DODGE_NEON_2003, 5, 0.4861, 0.0, CHRYSLER_NGC_GAP);
+	testTriggerDecoder3("neon NGC", DODGE_NEON_2003, 0, 0.4786, 0.0, CHRYSLER_NGC_GAP);
 	testTriggerDecoder2("sachs", SACHS, 0, 0.5000, 0.000);
 
 	testMazda323();
