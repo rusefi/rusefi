@@ -1,5 +1,6 @@
 package com.rusefi.ui;
 
+import com.rusefi.AverageAnglePanel;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.OutputChannel;
@@ -95,6 +96,8 @@ public class Wizard {
         panel.add(button, BorderLayout.NORTH);
 
         panel.add(content, BorderLayout.CENTER);
+
+        panel.add(new AverageAnglePanel().getPanel(), BorderLayout.SOUTH);
 
         button.addActionListener(new AbstractAction() {
             @Override

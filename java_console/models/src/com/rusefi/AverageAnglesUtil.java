@@ -53,7 +53,7 @@ public class AverageAnglesUtil {
             System.out.println(line);
         }
 
-        aa.printReport();
+        aa.printReport(System.out);
 
    }
 }

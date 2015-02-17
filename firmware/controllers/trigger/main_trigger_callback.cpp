@@ -58,7 +58,7 @@ EXTERN_ENGINE
 ;
 extern bool hasFirmwareErrorFlag;
 
-static LocalVersionHolder localVersion;
+static LocalVersionHolder triggerVersion;
 
 extern engine_pins_s enginePins;
 static MainTriggerCallback mainTriggerCallbackInstance;
@@ -334,7 +334,7 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECL
 	int revolutionIndex = engine->rpmCalculator.getRevolutionCounter() % 2;
 
 	if (eventIndex == 0) {
-		if (localVersion.isOld())
+		if (triggerVersion.isOld())
 			prepareOutputSignals(PASS_ENGINE_PARAMETER_F);
 	}
 

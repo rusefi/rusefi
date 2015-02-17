@@ -4,6 +4,7 @@ public enum LocalizedMessages {
     CLEAR("clear"),
     PAUSE("pause"),
     RESUME("resume"),
+    RESET("reset"),
     ;
     private final String message;
 

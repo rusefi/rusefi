@@ -39,7 +39,7 @@ public class AnalogChartPanel {
 
     public AnalogChartPanel() {
 
-        AnalogChartCentral.listeners.add(new AnalogChartCentral.AnalogChartListener() {
+        AnalogChartCentral.addListener(new AnalogChartCentral.AnalogChartListener() {
             @Override
             public void onAnalogChart(String message) {
                 unpackValues(values, message);
@@ -47,7 +47,6 @@ public class AnalogChartPanel {
                     processValues();
                     UiUtils.trueRepaint(canvas);
                 }
-
             }
         });
 
@@ -67,17 +66,15 @@ public class AnalogChartPanel {
         JButton imageButton = new JButton(EngineSnifferPanel.SAVE_IMAGE);
         imageButton.setMnemonic('s');
         upperPanel.add(imageButton);
-        imageButton.addActionListener(new
+        imageButton.addActionListener(new ActionListener() {
+                                          @Override
+                                          public void actionPerformed(ActionEvent e) {
+                                              int rpm = RpmModel.getInstance().getValue();
+                                              String fileName = FileLog.getDate() + "rpm_" + rpm + "_sensor" + ".png";
 
-                                              ActionListener() {
-                                                  @Override
-                                                  public void actionPerformed(ActionEvent e) {
-                                                      int rpm = RpmModel.getInstance().getValue();
-                                                      String fileName = FileLog.getDate() + "rpm_" + rpm + "_analog" + ".png";
-
-                                                      UiUtils.saveImageWithPrompt(fileName, upperPanel, canvas);
-                                                  }
-                                              }
+                                              UiUtils.saveImageWithPrompt(fileName, upperPanel, canvas);
+                                          }
+                                      }
         );
 
         final JButton pauseButton = new JButton(PAUSE.getMessage());
