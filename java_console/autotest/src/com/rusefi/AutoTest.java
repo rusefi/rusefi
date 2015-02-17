@@ -1,7 +1,6 @@
 package com.rusefi;
 
 
-import com.rusefi.FileLog;
 import com.rusefi.waves.WaveChart;
 
 import static com.rusefi.IoUtil.nextChart;
@@ -18,11 +17,25 @@ import static com.rusefi.TestingUtils.*;
  */
 public class AutoTest {
     private static void mainTestBody() {
+        test2003DodgeNeon();
         testFordAspire();
         testMazdaProtege();
         test1995DodgeNeon();
         testFord6();
         testFordFiesta();
+    }
+
+    private static void test2003DodgeNeon() {
+//        sendCommand("set_engine_type 23");
+        // let's give some time to change engine type
+//        nextChart();
+//        nextChart();
+//        WaveChart chart;
+//        String msg = "2003 Neon cranking";
+//        IoUtil.changeRpm(200);
+//        chart = nextChart();
+//        double x = 107;
+//        assertWave(msg, chart, WaveChart.SPARK_1, 0.194433, x, x + 180, x + 360, x + 540);
     }
 
     private static void testMazdaProtege() {
