@@ -22,6 +22,7 @@ public class WaveReport implements TimeAxisTranslator {
      * number of ChibiOS systicks per ms
      */
     public static final double SYS_TICKS_PER_MS = 100;
+    public static final double RATIO = 0.05;
     public static final int mult = (int) (100 * SYS_TICKS_PER_MS); // 100ms
     private static final String WC_DOWN = "d";
     private static final String WC_UP = "u";
@@ -46,10 +47,14 @@ public class WaveReport implements TimeAxisTranslator {
     }
 
     public static boolean isCloseEnough(double v1, double v2) {
+        return isCloseEnough(v1, v2, RATIO);
+    }
+
+    public static boolean isCloseEnough(double v1, double v2, double th) {
         if (v2 == 0)
             return v1 == 0;
         double ratio = v1 / v2;
-        return Math.abs(1 - ratio) < 0.05;
+        return Math.abs(1 - ratio) < th;
     }
 
     public List<UpDown> getList() {

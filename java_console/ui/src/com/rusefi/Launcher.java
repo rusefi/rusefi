@@ -69,7 +69,8 @@ public class Launcher extends FrameHelper {
 
         if (!LinkManager.isLogViewerMode(port)) {
             int selectedIndex = getConfig().getRoot().getIntProperty("main_tab", 2);
-            tabbedPane.setSelectedIndex(selectedIndex);
+            if (selectedIndex < tabbedPane.getTabCount())
+                tabbedPane.setSelectedIndex(selectedIndex);
         }
 
         StartupFrame.setAppIcon(frame);
