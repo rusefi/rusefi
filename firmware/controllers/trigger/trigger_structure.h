@@ -68,30 +68,12 @@ public:
 	 */
 	uint32_t expectedEventCount[PWM_PHASE_MAX_WAVE_PER_PWM];
 
-	void addEvent(float angle, trigger_wheel_e const waveIndex, trigger_value_e const state);
-
-	// todo: these two methods here, something could be improved
-	void clear();
-	void reset(operation_mode_e operationMode, bool needSecondTriggerInput);
-	void setTriggerSynchronizationGap2(float syncRatioFrom, float syncRatioTo);
-	void setTriggerSynchronizationGap(float synchRatio);
-	int getSize() const;
 	multi_wave_s wave;
-
-	/**
-	 * this one is per CRANKshaft revolution
-	 */
-	uint32_t getLength() const;
 
 	// todo: add a runtime validation which would verify that this field was set properly
 	// tood: maybe even automate this flag calculation?
 	int initialState[PWM_PHASE_MAX_WAVE_PER_PWM];
 
-	int getTriggerShapeSynchPointIndex();
-
-	void calculateTriggerSynchPoint(engine_configuration_s *engineConfiguration, Engine *engine);
-
-	void setTriggerShapeSynchPointIndex(engine_configuration_s *engineConfiguration, int triggerShapeSynchPointIndex, Engine *engine);
 	/**
 	 * These angles are in event coordinates - with synchronization point located at angle zero.
 	 * These values are pre-calculated for performance reasons.
@@ -105,6 +87,25 @@ public:
 	 * TODO with eliminating RPM_MULT magic constant
 	 */
 	int size;
+
+	void addEvent(float angle, trigger_wheel_e const waveIndex, trigger_value_e const state);
+
+	// todo: these two methods here, something could be improved
+	void clear();
+	void reset(operation_mode_e operationMode, bool needSecondTriggerInput);
+	void setTriggerSynchronizationGap2(float syncRatioFrom, float syncRatioTo);
+	void setTriggerSynchronizationGap(float synchRatio);
+	/**
+	 * this one is per CRANKshaft revolution
+	 */
+	uint32_t getLength() const;
+	int getSize() const;
+
+	int getTriggerShapeSynchPointIndex();
+
+	void calculateTriggerSynchPoint(engine_configuration_s *engineConfiguration, Engine *engine);
+
+	void setTriggerShapeSynchPointIndex(engine_configuration_s *engineConfiguration, int triggerShapeSynchPointIndex, Engine *engine);
 private:
 
 	trigger_shape_helper h;
