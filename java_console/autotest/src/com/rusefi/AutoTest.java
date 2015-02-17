@@ -33,6 +33,7 @@ public class AutoTest {
         nextChart();
         String msg = "2003 Neon cranking";
         IoUtil.changeRpm(200);
+        nextChart();
 
         chart = nextChart();
         double x = 100;
@@ -42,10 +43,10 @@ public class AutoTest {
         assertWaveNull(msg, chart, WaveChart.SPARK_4);
 
         x = 176.856;
-        assertWave(true, msg, chart, WaveChart.INJECTOR_1, 0.008199999999, 0.01, 0.1, x, x + 180, x + 360, x + 540);
-        assertWave(true, msg, chart, WaveChart.INJECTOR_2, 0.008199999999, 0.01, 0.1, x, x + 180, x + 360, x + 540);
-        assertWave(true, msg, chart, WaveChart.INJECTOR_3, 0.008199999999, 0.01, 0.1, x, x + 180, x + 360, x + 540);
-        assertWave(true, msg, chart, WaveChart.INJECTOR_4, 0.008199999999, 0.01, 0.1, x, x + 180, x + 360, x + 540);
+        assertWave(true, msg, chart, WaveChart.INJECTOR_1, 0.006266666666, 0.01, 0.04, x, x + 180, x + 360, x + 540);
+        assertWave(true, msg, chart, WaveChart.INJECTOR_2, 0.006266666666, 0.01, 0.04, x, x + 180, x + 360, x + 540);
+        assertWave(true, msg, chart, WaveChart.INJECTOR_3, 0.006266666666, 0.01, 0.04, x, x + 180, x + 360, x + 540);
+        assertWave(true, msg, chart, WaveChart.INJECTOR_4, 0.006266666666, 0.01, 0.04, x, x + 180, x + 360, x + 540);
 
         msg = "2003 Neon running";
         IoUtil.changeRpm(2000);

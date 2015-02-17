@@ -12,14 +12,15 @@ void configureNeon2003TriggerShape(TriggerShape *s) {
 
 	// voodoo magic - we always need 720 at the end
 	int base = 10;
+	float b = 0;
 	s->useRiseEdge = true;
-	s->invertOnAdd = true;
 
 	s->gapBothDirections = true;
 
 	// are these non-default values really needed here now that the gap is finally precise?
 	s->setTriggerSynchronizationGap2(0.8 * CHRYSLER_NGC_GAP, 1.55 * CHRYSLER_NGC_GAP);
 
+	/*
 	s->addEvent(base + 26, T_PRIMARY, TV_HIGH);
 	s->addEvent(base + 62, T_PRIMARY, TV_LOW);
 
@@ -40,6 +41,29 @@ void configureNeon2003TriggerShape(TriggerShape *s) {
 
 	s->addEvent(base + 674, T_PRIMARY, TV_HIGH);
 	s->addEvent(base + 710, T_PRIMARY, TV_LOW);
+	 *
+	 */
+
+	s->addEvent(143.0712499, T_PRIMARY, TV_HIGH);
+	s->addEvent(182.684791, T_PRIMARY, TV_LOW);
+
+	s->addEvent(215.424166, T_PRIMARY, TV_HIGH);
+	s->addEvent(256.247395, T_PRIMARY, TV_LOW);
+
+	s->addEvent(288.659999, T_PRIMARY, TV_HIGH);
+	s->addEvent(326.778229, T_PRIMARY, TV_LOW);
+
+	s->addEvent(361.522083, T_PRIMARY, TV_HIGH);
+	s->addEvent(508.960416, T_PRIMARY, TV_LOW);
+
+	s->addEvent(545.635, T_PRIMARY, TV_HIGH);
+	s->addEvent(582.98864, T_PRIMARY, TV_LOW);
+
+	s->addEvent(617.22989, T_PRIMARY, TV_HIGH);
+	s->addEvent(653.38625, T_PRIMARY, TV_LOW);
+
+	s->addEvent(684.1080, T_PRIMARY, TV_HIGH);
+	s->addEvent(720, T_PRIMARY, TV_LOW);
 }
 
 void configureNeon1995TriggerShape(TriggerShape *s) {
