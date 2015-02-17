@@ -43,4 +43,15 @@ public class WaveChart {
     public StringBuilder get(String key) {
         return map.get(key);
     }
+
+    @Override
+    public String toString() {
+        return "WaveChart{" +
+                "size=" + map.size() +
+                '}';
+    }
+
+    public Map<String, StringBuilder> getMap() {
+        return map;
+    }
 }

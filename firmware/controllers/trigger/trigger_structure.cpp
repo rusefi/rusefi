@@ -79,6 +79,9 @@ void TriggerShape::clear() {
 	tdcPosition = 0;
 	setTriggerSynchronizationGap(2);
 	useRiseEdge = true;
+
+	invertOnAdd = false;
+	gapBothDirections = false;
 }
 
 void TriggerShape::reset(operation_mode_e operationMode, bool needSecondTriggerInput) {

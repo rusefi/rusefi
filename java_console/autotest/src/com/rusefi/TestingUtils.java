@@ -1,6 +1,5 @@
 package com.rusefi;
 
-import com.rusefi.FileLog;
 import com.rusefi.waves.RevolutionLog;
 import com.rusefi.waves.WaveChart;
 import com.rusefi.waves.WaveReport;
@@ -20,9 +19,9 @@ public class TestingUtils {
             fail("Not true: " + msg);
     }
 
-    static void assertCloseEnough(String msg, double current, double... expectations) {
+    static void assertCloseEnough(String msg, double current, double ratio, double... expectations) {
         for (double expected : expectations) {
-            if (isCloseEnough(fixAngle(expected), current))
+            if (isCloseEnough(fixAngle(expected), current, ratio))
                 return;
         }
         fail(msg + ": Got " + current + " while expecting " + Arrays.toString(expectations));
@@ -49,7 +48,7 @@ public class TestingUtils {
     }
 
     static void assertWave(String msg, WaveChart chart, String key, double width, double... expectedAngles) {
-        assertWave(true, msg, chart, key, width, expectedAngles);
+        assertWave(true, msg, chart, key, width, WaveReport.RATIO, expectedAngles);
     }
 
     static void assertWaveFall(WaveChart chart, String key, double width, double... expectedAngles) {
@@ -57,10 +56,10 @@ public class TestingUtils {
     }
 
     static void assertWaveFall(String msg, WaveChart chart, String key, double width, double... expectedAngles) {
-        assertWave(false, msg, chart, key, width, expectedAngles);
+        assertWave(false, msg, chart, key, width, WaveReport.RATIO, expectedAngles);
     }
 
-    static void assertWave(boolean rise, String msg, WaveChart chart, String key, double width, double... expectedAngles) {
+    static void assertWave(boolean rise, String msg, WaveChart chart, String key, double width, double angleRatio, double... expectedAngles) {
         RevolutionLog revolutionLog = chart.getRevolutionsLog();
         if (revolutionLog.keySet().isEmpty())
             throw new IllegalStateException(msg + " Empty revolutions in " + chart);
@@ -72,9 +71,9 @@ public class TestingUtils {
         for (WaveReport.UpDown ud : wr) {
             int eventTime = rise ? ud.upTime : ud.downTime;
             double angleByTime = revolutionLog.getCrankAngleByTime(eventTime);
-            assertCloseEnough(msg + " angle for " + key + "@" + eventTime, fixAngle(angleByTime), expectedAngles);
+            assertCloseEnough(msg + " angle for " + key + "@" + eventTime, fixAngle(angleByTime), angleRatio, expectedAngles);
 
-            assertCloseEnough(msg + "width for " + key, ud.getDutyCycle(revolutionLog), width);
+            assertCloseEnough(msg + "width for " + key, ud.getDutyCycle(revolutionLog), WaveReport.RATIO, width);
         }
     }
 

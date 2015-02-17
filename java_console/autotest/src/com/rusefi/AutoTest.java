@@ -26,16 +26,28 @@ public class AutoTest {
     }
 
     private static void test2003DodgeNeon() {
-//        sendCommand("set_engine_type 23");
-        // let's give some time to change engine type
-//        nextChart();
-//        nextChart();
-//        WaveChart chart;
-//        String msg = "2003 Neon cranking";
-//        IoUtil.changeRpm(200);
-//        chart = nextChart();
-//        double x = 107;
-//        assertWave(msg, chart, WaveChart.SPARK_1, 0.194433, x, x + 180, x + 360, x + 540);
+        sendCommand("set_engine_type 23");
+        WaveChart chart;
+        // time to change engine type
+        nextChart();
+        String msg = "2003 Neon cranking";
+        IoUtil.changeRpm(200);
+
+        chart = nextChart();
+        double x = 100;
+        assertWave(true, msg, chart, WaveChart.SPARK_1, 0.194433, 0.005, x + 180, x + 540);
+        assertWaveNull(msg, chart, WaveChart.SPARK_2);
+        assertWave(true, msg, chart, WaveChart.SPARK_3, 0.194433, 0.005, x, x + 360);
+        assertWaveNull(msg, chart, WaveChart.SPARK_4);
+
+        msg = "2003 Neon running";
+        IoUtil.changeRpm(2000);
+        chart = nextChart();
+        x = 120;
+        assertWave(true, msg, chart, WaveChart.SPARK_1, 0.13299999999999998, 0.005, x + 180, x + 540);
+        assertWaveNull(msg, chart, WaveChart.SPARK_2);
+        assertWave(true, msg, chart, WaveChart.SPARK_3, 0.13299999999999998, 0.005, x, x + 360);
+        assertWaveNull(msg, chart, WaveChart.SPARK_4);
     }
 
     private static void testMazdaProtege() {
@@ -98,9 +110,9 @@ public class AutoTest {
         String msg = "Fiesta";
         double x = 312;
         assertWave("wasted spark #1 with Fiesta", chart, WaveChart.SPARK_1, 0.1333333, x, x + 360);
-        assertNull(msg, chart.get(WaveChart.SPARK_2));
+        assertWaveNull(chart, WaveChart.SPARK_2);
         assertWave("wasted spark #3 with Fiesta", chart, WaveChart.SPARK_3, 0.1333333, x + 180, x + 540);
-        assertNull(msg, chart.get(WaveChart.SPARK_4));
+        assertWaveNull(msg, chart, WaveChart.SPARK_4);
     }
 
     private static void testFord6() {
@@ -114,11 +126,10 @@ public class AutoTest {
         int x = 7;
         assertWave(msg, chart, WaveChart.SPARK_1, 0.01666, x, x + 120, x + 240, x + 360, x + 480, x + 600);
 
-        assertNull(msg, chart.get(WaveChart.TRIGGER_2));
+        assertWaveNull(msg, chart, WaveChart.TRIGGER_2);
         sendCommand("set_trigger_type 1"); // TT_FORD_ASPIRE
         chart = nextChart();
         assertTrue(msg, chart.get(WaveChart.TRIGGER_2) != null);
-
     }
 
     private static void testFordAspire() {
@@ -198,7 +209,7 @@ public class AutoTest {
 
         x = 41;
         assertWave(chart, WaveChart.SPARK_1, 0.133, x, x + 180, x + 360, x + 540);
-        assertNull("chart for " + WaveChart.SPARK_2, chart.get(WaveChart.SPARK_2));
+        assertWaveNull(chart, WaveChart.SPARK_2);
 
         sendCommand("set_global_trigger_offset_angle 130");
         sendCommand("set_injection_offset 369");
@@ -230,7 +241,15 @@ public class AutoTest {
         // above hard limit
         IoUtil.changeRpm(10000);
         chart = nextChart();
-        assertNull("hard limit check", chart.get(WaveChart.INJECTOR_1));
+        assertWaveNull("hard limit check", chart, WaveChart.INJECTOR_1);
+    }
+
+    private static void assertWaveNull(WaveChart chart, String key) {
+        assertWaveNull("", chart, key);
+    }
+
+    private static void assertWaveNull(String msg, WaveChart chart, String key) {
+        assertNull(msg + "chart for " + key, chart.get(key));
     }
 
     public static void main(String[] args) throws InterruptedException {

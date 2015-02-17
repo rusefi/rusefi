@@ -187,7 +187,7 @@ public class EngineSnifferPanel {
         /**
          * First let's create images for new keys
          */
-        for (String imageName : map.map.keySet())
+        for (String imageName : map.getMap().keySet())
             createSecondaryImage(imageName);
 
 
@@ -196,7 +196,7 @@ public class EngineSnifferPanel {
             if (image == null)
                 throw new IllegalStateException("image not found for " + imageName);
 
-            StringBuilder sb = map.map.get(imageName);
+            StringBuilder sb = map.getMap().get(imageName);
             String report = sb == null ? "" : sb.toString();
 
             image.setRevolutions(revolutions);
