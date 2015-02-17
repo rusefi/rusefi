@@ -1,7 +1,7 @@
-Index: boards/ST_STM32F4_DISCOVERY/board.h
+Index: chibios/boards/ST_STM32F4_DISCOVERY/board.h
 ===================================================================
---- boards/ST_STM32F4_DISCOVERY/board.h	(revision 2723)
-+++ boards/ST_STM32F4_DISCOVERY/board.h	(working copy)
+--- chibios/boards/ST_STM32F4_DISCOVERY/board.h	(revision 6923)
++++ chibios/boards/ST_STM32F4_DISCOVERY/board.h	(working copy)
 @@ -27,6 +27,7 @@
  #define BOARD_ST_STM32F4_DISCOVERY
  #define BOARD_NAME                  "STMicroelectronics STM32F4-Discovery"
@@ -10,10 +10,65 @@ Index: boards/ST_STM32F4_DISCOVERY/board.h
  
  /*
   * Board oscillators-related settings.
-Index: os/kernel/src/chdebug.c
+Index: chibios/os/hal/platforms/STM32F4xx/adc_lld.c
 ===================================================================
---- os/kernel/src/chdebug.c	(revision 2723)
-+++ os/kernel/src/chdebug.c	(working copy)
+--- chibios/os/hal/platforms/STM32F4xx/adc_lld.c	(revision 6923)
++++ chibios/os/hal/platforms/STM32F4xx/adc_lld.c	(working copy)
+@@ -67,6 +67,8 @@
+ /* Driver local functions.                                                   */
+ /*===========================================================================*/
+ 
++#include "error_handling.h"
++
+ /**
+  * @brief   ADC DMA ISR service routine.
+  *
+@@ -75,6 +77,8 @@
+  */
+ static void adc_lld_serve_rx_interrupt(ADCDriver *adcp, uint32_t flags) {
+ 
++	efiAssertVoid(getRemainingStack(chThdSelf()) > 64, "sys_adc");
++
+   /* DMA errors handling.*/
+   if ((flags & (STM32_DMA_ISR_TEIF | STM32_DMA_ISR_DMEIF)) != 0) {
+     /* DMA, this could help only if the DMA tries to access an unmapped
+Index: chibios/os/kernel/include/chdebug.h
+===================================================================
+--- chibios/os/kernel/include/chdebug.h	(revision 6923)
++++ chibios/os/kernel/include/chdebug.h	(working copy)
+@@ -59,6 +59,17 @@
+ #define CH_TRACE_BUFFER_SIZE        64
+ #endif
+ 
++#ifdef __cplusplus
++extern "C"
++{
++#endif /* __cplusplus */
++
++void chDbgPanic3(const char *msg, const char * file, int line);
++
++#ifdef __cplusplus
++}
++#endif /* __cplusplus */
++
+ /**
+  * @brief   Fill value for thread stack area in debug mode.
+  */
+@@ -98,8 +109,8 @@
+ #define chDbgCheckClassI()
+ #define chDbgCheckClassS()
+ #else
+-#define dbg_enter_lock() (dbg_lock_cnt = 1)
+-#define dbg_leave_lock() (dbg_lock_cnt = 0)
++#define dbg_enter_lock() {dbg_lock_cnt = 1;ON_LOCK_HOOK;}
++#define dbg_leave_lock() {dbg_lock_cnt = 0;ON_UNLOCK_HOOK;}
+ #endif
+ 
+ /*===========================================================================*/
+Index: chibios/os/kernel/src/chdebug.c
+===================================================================
+--- chibios/os/kernel/src/chdebug.c	(revision 6923)
++++ chibios/os/kernel/src/chdebug.c	(working copy)
 @@ -114,7 +114,7 @@
  void dbg_check_lock(void) {
  
@@ -32,7 +87,32 @@ Index: os/kernel/src/chdebug.c
    dbg_enter_lock();
  }
  
-@@ -193,7 +193,7 @@
+@@ -154,6 +154,10 @@
+   dbg_leave_lock();
+ }
+ 
++void firmwareError(const char *fmt, ...);
++
++extern int maxNesting;
++
+ /**
+  * @brief   Guard code for @p CH_IRQ_PROLOGUE().
+  *
+@@ -160,11 +164,12 @@
+  * @notapi
+  */
+ void dbg_check_enter_isr(void) {
+-
+   port_lock_from_isr();
+   if ((dbg_isr_cnt < 0) || (dbg_lock_cnt != 0))
+     chDbgPanic("SV#8");
+   dbg_isr_cnt++;
++  if (dbg_isr_cnt > maxNesting)
++	  maxNesting = dbg_isr_cnt;
+   port_unlock_from_isr();
+ }
+ 
+@@ -193,7 +198,7 @@
  void chDbgCheckClassI(void) {
  
    if ((dbg_isr_cnt < 0) || (dbg_lock_cnt <= 0))
@@ -41,12 +121,12 @@ Index: os/kernel/src/chdebug.c
  }
  
  /**
-@@ -268,10 +268,11 @@
+@@ -268,10 +273,11 @@
   *
   * @param[in] msg       the pointer to the panic message string
   */
 +
-+void chDbgPanic3(const char *msg, char * file, int line);
++void chDbgPanic3(const char *msg, const char * file, int line);
 +
  void chDbgPanic(const char *msg) {
 -
@@ -56,51 +136,149 @@ Index: os/kernel/src/chdebug.c
  }
  #endif /* CH_DBG_ENABLED */
  
-Index: os/ports/GCC/ARMCMx/chcore_v7m.h
+Index: chibios/os/kernel/src/chvt.c
 ===================================================================
---- os/ports/GCC/ARMCMx/chcore_v7m.h	(revision 2723)
-+++ os/ports/GCC/ARMCMx/chcore_v7m.h	(working copy)
-@@ -36,6 +36,8 @@
- #ifndef _CHCORE_V7M_H_
- #define _CHCORE_V7M_H_
+--- chibios/os/kernel/src/chvt.c	(revision 6923)
++++ chibios/os/kernel/src/chvt.c	(working copy)
+@@ -77,6 +77,9 @@
+   VirtualTimer *p;
  
-+#include "chdebug.h"
+   chDbgCheckClassI();
++  chDbgCheck(vtp != NULL, "chVTSetI 1");
++  chDbgCheck(vtfunc != NULL, "chVTSetI 2");
++  chDbgCheck(time != TIME_IMMEDIATE, "chVTSetI 3");
+   chDbgCheck((vtp != NULL) && (vtfunc != NULL) && (time != TIME_IMMEDIATE),
+              "chVTSetI");
+ 
+Index: chibios/os/ports/GCC/ARMCMx/chcore_v6m.h
+===================================================================
+--- chibios/os/ports/GCC/ARMCMx/chcore_v6m.h	(revision 6923)
++++ chibios/os/ports/GCC/ARMCMx/chcore_v6m.h	(working copy)
+@@ -270,6 +270,8 @@
+  */
+ #define PORT_FAST_IRQ_HANDLER(id) void id(void)
+ 
++int getRemainingStack(Thread *otp);
 +
- /*===========================================================================*/
- /* Port constants.                                                           */
- /*===========================================================================*/
-@@ -486,6 +488,8 @@
+ /**
+  * @brief   Port-related initialization code.
+  */
+Index: chibios/os/ports/GCC/ARMCMx/chcore_v7m.h
+===================================================================
+--- chibios/os/ports/GCC/ARMCMx/chcore_v7m.h	(revision 6923)
++++ chibios/os/ports/GCC/ARMCMx/chcore_v7m.h	(working copy)
+@@ -486,6 +486,10 @@
  #define port_wait_for_interrupt()
  #endif
  
 +void chDbgStackOverflowPanic(Thread *otp);
 +
++int getRemainingStack(Thread *otp);
++
  /**
   * @brief   Performs a context switch between two threads.
   * @details This is the most critical code in any port, this function
-@@ -502,7 +506,7 @@
+@@ -500,9 +504,8 @@
+ #define port_switch(ntp, otp) _port_switch(ntp, otp)
+ #else
  #define port_switch(ntp, otp) {                                             \
-   register struct intctx *r13 asm ("r13");                                  \
-   if ((stkalign_t *)(r13 - 1) < otp->p_stklimit)                            \
+-  register struct intctx *r13 asm ("r13");                                  \
+-  if ((stkalign_t *)(r13 - 1) < otp->p_stklimit)                            \
 -    chDbgPanic("stack overflow");                                           \
++  if (getRemainingStack(otp) < 0)                                           \
 +    chDbgStackOverflowPanic(otp);                                           \
    _port_switch(ntp, otp);                                                   \
  }
  #endif
-Index: os/ports/GCC/ARMCMx/rules.mk
+Index: chibios/os/ports/GCC/ARMCMx/rules.mk
 ===================================================================
---- os/ports/GCC/ARMCMx/rules.mk	(revision 2723)
-+++ os/ports/GCC/ARMCMx/rules.mk	(working copy)
-@@ -60,7 +60,7 @@
+--- chibios/os/ports/GCC/ARMCMx/rules.mk	(revision 6923)
++++ chibios/os/ports/GCC/ARMCMx/rules.mk	(working copy)
+@@ -1,45 +1,5 @@
+ # ARM Cortex-Mx common makefile scripts and rules.
+ 
+-##############################################################################
+-# Processing options coming from the upper Makefile.
+-#
+-
+-# Compiler options
+-OPT = $(USE_OPT)
+-COPT = $(USE_COPT)
+-CPPOPT = $(USE_CPPOPT)
+-
+-# Garbage collection
+-ifeq ($(USE_LINK_GC),yes)
+-  OPT += -ffunction-sections -fdata-sections -fno-common
+-  LDOPT := ,--gc-sections
+-else
+-  LDOPT :=
+-endif
+-
+-# Linker extra options
+-ifneq ($(USE_LDOPT),)
+-  LDOPT := $(LDOPT),$(USE_LDOPT)
+-endif
+-
+-# Link time optimizations
+-ifeq ($(USE_LTO),yes)
+-  OPT += -flto
+-endif
+-
+-# FPU-related options
+-ifeq ($(USE_FPU),)
+-  USE_FPU = no
+-endif
+-ifneq ($(USE_FPU),no)
+-  OPT += -mfloat-abi=$(USE_FPU) -mfpu=fpv4-sp-d16 -fsingle-precision-constant
+-  DDEFS += -DCORTEX_USE_FPU=TRUE
+-  DADEFS += -DCORTEX_USE_FPU=TRUE
+-else
+-  DDEFS += -DCORTEX_USE_FPU=FALSE
+-  DADEFS += -DCORTEX_USE_FPU=FALSE
+-endif
+-
+ # Output directory and files
+ ifeq ($(BUILDDIR),)
+   BUILDDIR = build
+@@ -50,6 +10,14 @@
+ OUTFILES = $(BUILDDIR)/$(PROJECT).elf $(BUILDDIR)/$(PROJECT).hex \
+            $(BUILDDIR)/$(PROJECT).bin $(BUILDDIR)/$(PROJECT).dmp
+ 
++# Automatic compiler options
++OPT = $(USE_OPT)
++COPT = $(USE_COPT)
++CPPOPT = $(USE_CPPOPT)
++ifeq ($(USE_LINK_GC),yes)
++  OPT += -ffunction-sections -fdata-sections -fno-common
++endif
++
+ # Source files groups and paths
+ ifeq ($(USE_THUMB),yes)
+   TCSRC += $(CSRC)
+@@ -92,8 +60,12 @@
  ASFLAGS   = $(MCFLAGS) -Wa,-amhls=$(LSTDIR)/$(notdir $(<:.s=.lst)) $(ADEFS)
  ASXFLAGS  = $(MCFLAGS) -Wa,-amhls=$(LSTDIR)/$(notdir $(<:.S=.lst)) $(ADEFS)
  CFLAGS    = $(MCFLAGS) $(OPT) $(COPT) $(CWARN) -Wa,-alms=$(LSTDIR)/$(notdir $(<:.c=.lst)) $(DEFS)
 -CPPFLAGS  = $(MCFLAGS) $(OPT) $(CPPOPT) $(CPPWARN) -Wa,-alms=$(LSTDIR)/$(notdir $(<:.cpp=.lst)) $(DEFS)
+-LDFLAGS   = $(MCFLAGS) $(OPT) -nostartfiles $(LLIBDIR) -Wl,-Map=$(BUILDDIR)/$(PROJECT).map,--cref,--no-warn-mismatch,--library-path=$(RULESPATH),--script=$(LDSCRIPT)$(LDOPT)
 +CPPFLAGS  = $(MCFLAGS) $(CPPOPT) $(CPPWARN) -Wa,-alms=$(LSTDIR)/$(notdir $(<:.cpp=.lst)) $(DEFS)
- ifeq ($(USE_LINK_GC),yes)
-   LDFLAGS = $(MCFLAGS) -nostartfiles -T$(LDSCRIPT) -Wl,-Map=$(BUILDDIR)/$(PROJECT).map,--cref,--no-warn-mismatch,--gc-sections $(LLIBDIR)
- else
-@@ -113,7 +113,7 @@
++ifeq ($(USE_LINK_GC),yes)
++  LDFLAGS = $(MCFLAGS) -nostartfiles -T$(LDSCRIPT) -Wl,-Map=$(BUILDDIR)/$(PROJECT).map,--cref,--no-warn-mismatch,--gc-sections $(LLIBDIR)
++else
++  LDFLAGS = $(MCFLAGS) -nostartfiles -T$(LDSCRIPT) -Wl,-Map=$(BUILDDIR)/$(PROJECT).map,--cref,--no-warn-mismatch $(LLIBDIR)
++endif
+ 
+ # Thumb interwork enabled only if needed because it kills performance.
+ ifneq ($(TSRC),)
+@@ -122,7 +94,6 @@
+ endif
+ 
+ # Generate dependency information
+-ASFLAGS  += -MD -MP -MF .dep/$(@F).d
+ CFLAGS   += -MD -MP -MF .dep/$(@F).d
+ CPPFLAGS += -MD -MP -MF .dep/$(@F).d
+ 
+@@ -142,7 +113,7 @@
  $(BUILDDIR) $(OBJDIR) $(LSTDIR):
  ifneq ($(USE_VERBOSE_COMPILE),yes)
  	@echo Compiler Options
@@ -109,3 +287,289 @@ Index: os/ports/GCC/ARMCMx/rules.mk
  	@echo
  endif
  	mkdir -p $(OBJDIR)
+@@ -195,7 +166,7 @@
+ 
+ $(ASMXOBJS) : $(OBJDIR)/%.o : %.S Makefile
+ ifeq ($(USE_VERBOSE_COMPILE),yes)
+-	@echo
++	@echo 
+ 	$(CC) -c $(ASXFLAGS) $(TOPT) -I. $(IINCDIR) $< -o $@
+ else
+ 	@echo Compiling $(<F)
+@@ -233,9 +204,6 @@
+ else
+ 	@echo Creating $@
+ 	@$(OD) $(ODFLAGS) $< > $@
+-	@echo
+-	@$(SZ) $<
+-	@echo
+ 	@echo Done
+ endif
+ 
+@@ -242,7 +210,6 @@
+ clean:
+ 	@echo Cleaning
+ 	-rm -fR .dep $(BUILDDIR)
+-	@echo
+ 	@echo Done
+ 
+ #
+Index: chibios/os/ports/IAR/ARMCMx/chcore_v7m.h
+===================================================================
+--- chibios/os/ports/IAR/ARMCMx/chcore_v7m.h	(revision 6923)
++++ chibios/os/ports/IAR/ARMCMx/chcore_v7m.h	(working copy)
+@@ -470,6 +470,8 @@
+ #define port_wait_for_interrupt()
+ #endif
+ 
++int getRemainingStack(Thread *otp);
++
+ /**
+  * @brief   Performs a context switch between two threads.
+  * @details This is the most critical code in any port, this function
+@@ -484,7 +486,7 @@
+ #define port_switch(ntp, otp) _port_switch(ntp, otp)
+ #else
+ #define port_switch(ntp, otp) {                                             \
+-  if ((stkalign_t *)(__get_SP() - sizeof(struct intctx)) < otp->p_stklimit) \
++  if (getRemainingStack(otp) < 0)                                           \
+     chDbgPanic("stack overflow");                                           \
+   _port_switch(ntp, otp);                                                   \
+ }
+Index: chibios/os/ports/IAR/ARMCMx/chcoreasm_v7m.s
+===================================================================
+--- chibios/os/ports/IAR/ARMCMx/chcoreasm_v7m.s	(revision 6923)
++++ chibios/os/ports/IAR/ARMCMx/chcoreasm_v7m.s	(working copy)
+@@ -34,7 +34,7 @@
+  * Imports the Cortex-Mx configuration headers.
+  */
+ #define _FROM_ASM_
+-#include "chconf.h"
++#include "config\stm32f4ems\chconf.h"
+ #include "chcore.h"
+ 
+ CONTEXT_OFFSET  SET 12
+Index: chibios/os/ports/IAR/ARMCMx/cstartup.s
+===================================================================
+--- chibios/os/ports/IAR/ARMCMx/cstartup.s	(revision 6923)
++++ chibios/os/ports/IAR/ARMCMx/cstartup.s	(working copy)
+@@ -37,6 +37,8 @@
+ 
+         SECTION .intvec:CODE:NOROOT(3)
+ 
++	SECTION .ccm:CODE:NOROOT(2)
++
+         SECTION CSTACK:DATA:NOROOT(3)
+         PUBLIC  __main_thread_stack_base__
+ __main_thread_stack_base__:
+Index: chibios/os/various/chprintf.c
+===================================================================
+--- chibios/os/various/chprintf.c	(revision 6923)
++++ chibios/os/various/chprintf.c	(working copy)
+@@ -29,11 +29,13 @@
+ 
+ #include "ch.h"
+ #include "chprintf.h"
+-#include "memstreams.h"
+ 
+ #define MAX_FILLER 11
+-#define FLOAT_PRECISION 100000
+-
++/**
++ * That's out default %f precision here. Two digits should be fine?
++ * That's important on the lcd screen
++ */
++#define FLOAT_PRECISION 100
+ static char *long_to_string_with_divisor(char *p,
+                                          long num,
+                                          unsigned radix,
+@@ -73,10 +75,22 @@
+ }
+ 
+ #if CHPRINTF_USE_FLOAT
+-static char *ftoa(char *p, double num) {
++char *ftoa(char *p, double num, unsigned long precision) {
++    if (num < 0) {
++      *p++ = '-';
++      return ftoa(p, -num, precision);
++    }
+   long l;
+-  unsigned long precision = FLOAT_PRECISION;
++  if (isnan(num)) {
++    *p++ = 'N';
++    *p++ = 'a';
++    *p++ = 'N';
++    return p;
++  }
+ 
++  if (precision == 0)
++    precision = FLOAT_PRECISION;
++
+   l = (long)num;
+   p = long_to_string_with_divisor(p, l, 10, 0);
+   *p++ = '.';
+@@ -85,6 +99,9 @@
+ }
+ #endif
+ 
++#include "error_handling.h"
++int getRemainingStack(Thread *otp);
++
+ /**
+  * @brief   System formatted output function.
+  * @details This function implements a minimal @p vprintf()-like functionality
+@@ -121,6 +138,9 @@
+   char tmpbuf[MAX_FILLER + 1];
+ #endif
+ 
++  efiAssertVoid(getRemainingStack(chThdSelf()) > 64, "lowstck#1c");
++
++
+   while (TRUE) {
+     c = *fmt++;
+     if (c == 0)
+@@ -129,6 +149,7 @@
+       chSequentialStreamPut(chp, (uint8_t)c);
+       continue;
+     }
++    // we are here if c == '%' meaning we have a control sequence
+     p = tmpbuf;
+     s = tmpbuf;
+     left_align = FALSE;
+@@ -211,7 +232,7 @@
+         *p++ = '-';
+         f = -f;
+       }
+-      p = ftoa(p, f);
++      p = ftoa(p, f, precision);
+       break;
+ #endif
+     case 'X':
+@@ -250,8 +271,8 @@
+         chSequentialStreamPut(chp, (uint8_t)filler);
+       } while (++width != 0);
+     }
+-    while (--i >= 0)
+-      chSequentialStreamPut(chp, (uint8_t)*s++);
++    chSequentialStreamWrite(chp, (uint8_t*)s, i);
++    s += i;
+ 
+     while (width) {
+       chSequentialStreamPut(chp, (uint8_t)filler);
+@@ -260,48 +281,4 @@
+   }
+ }
+ 
+-/**
+- * @brief   System formatted output function.
+- * @details This function implements a minimal @p vprintf()-like functionality
+- *          with output on a @p BaseSequentialStream.
+- *          The general parameters format is: %[-][width|*][.precision|*][l|L]p.
+- *          The following parameter types (p) are supported:
+- *          - <b>x</b> hexadecimal integer.
+- *          - <b>X</b> hexadecimal long.
+- *          - <b>o</b> octal integer.
+- *          - <b>O</b> octal long.
+- *          - <b>d</b> decimal signed integer.
+- *          - <b>D</b> decimal signed long.
+- *          - <b>u</b> decimal unsigned integer.
+- *          - <b>U</b> decimal unsigned long.
+- *          - <b>c</b> character.
+- *          - <b>s</b> string.
+- *          .
+- *
+- * @param[in] str       pointer to a buffer
+- * @param[in] size      maximum size of the buffer
+- * @param[in] fmt       formatting string
+- * @return              The size of the generated string.
+- *
+- * @api
+- */
+-int chsnprintf(char *str, size_t size, const char *fmt, ...) {
+-  va_list ap;
+-  MemoryStream ms;
+-  BaseSequentialStream *chp;
+-
+-  /* Memory stream object to be used as a string writer.*/
+-  msObjectInit(&ms, (uint8_t *)str, size, 0);
+-
+-  /* Performing the print operation using the common code.*/
+-  chp = (BaseSequentialStream *)&ms;
+-  va_start(ap, fmt);
+-  chvprintf(chp, fmt, ap);
+-  va_end(ap);
+-
+-  /* Final zero and size return.*/
+-  chSequentialStreamPut(chp, 0);
+-  return ms.eos - 1;
+-}
+-
+ /** @} */
+Index: chibios/os/various/chprintf.h
+===================================================================
+--- chibios/os/various/chprintf.h	(revision 6923)
++++ chibios/os/various/chprintf.h	(working copy)
+@@ -26,6 +26,7 @@
+ #define _CHPRINTF_H_
+ 
+ #include <stdarg.h>
++#include <math.h>
+ 
+ /**
+  * @brief   Float type support.
+@@ -38,7 +39,7 @@
+ extern "C" {
+ #endif
+   void chvprintf(BaseSequentialStream *chp, const char *fmt, va_list ap);
+-  int chsnprintf(char *str, size_t size, const char *fmt, ...);
++  char *ftoa(char *p, double num, unsigned long precision);
+ #ifdef __cplusplus
+ }
+ #endif
+@@ -66,7 +67,7 @@
+  *
+  * @api
+  */
+-static INLINE void chprintf(BaseSequentialStream *chp, const char *fmt, ...) {
++static inline void chprintf(BaseSequentialStream *chp, const char *fmt, ...) {
+   va_list ap;
+ 
+   va_start(ap, fmt);
+Index: chibios/os/various/fatfs_bindings/fatfs_diskio.c
+===================================================================
+--- chibios/os/various/fatfs_bindings/fatfs_diskio.c	(revision 6923)
++++ chibios/os/various/fatfs_bindings/fatfs_diskio.c	(working copy)
+@@ -5,11 +5,12 @@
+ /* disk I/O modules and attach it to FatFs module with common interface. */
+ /*-----------------------------------------------------------------------*/
+ 
+-#include "ch.h"
+-#include "hal.h"
++#include "main.h"
+ #include "ffconf.h"
+ #include "diskio.h"
+ 
++#if EFI_FILE_LOGGING || defined(__DOXYGEN__)
++
+ #if HAL_USE_MMC_SPI && HAL_USE_SDC
+ #error "cannot specify both MMC_SPI and SDC drivers"
+ #endif
+@@ -250,5 +251,5 @@
+ #endif
+ }
+ 
++#endif
+ 
+-
+Index: chibios/readme.txt
+===================================================================
+--- chibios/readme.txt	(revision 6921)
++++ chibios/readme.txt	(working copy)
+@@ -1,4 +1,5 @@
+ 
+-In this folder we have ChibiOS 2.6.1 with rusefi_chibios.patch applied
++In this folder we have ChibiOS 2.6.6 with rusefi_chibios.patch applied.
++http://chibios.org/
+ 
+ rusefi_chibios.patch is only about minor improvements to fatal error message - like __FILE__ info and maybe better messages.
+\ No newline at end of file
