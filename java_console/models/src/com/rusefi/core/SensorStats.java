@@ -59,7 +59,7 @@ public class SensorStats {
         SensorCentral.getInstance().addListener(input1, new SensorCentral.SensorListener() {
             @Override
             public void onSensorUpdate(double value) {
-                double valueMs = 1.0 * (value - SensorCentral.getInstance().getValueOrNan(input2)) / WaveReport.SYS_TICKS_PER_MS;
+                double valueMs = 1.0 * (value - SensorCentral.getInstance().getValue(input2)) / WaveReport.SYS_TICKS_PER_MS;
                 SensorCentral.getInstance().setValue(valueMs, destination);
             }
         });

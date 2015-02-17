@@ -11,7 +11,10 @@ int getGlobalConfigurationVersion(void);
 
 //ctor
 LocalVersionHolder::LocalVersionHolder() {
-	localVersion = 0;
+	/**
+	 * we want local version to be 'old' on instantiation
+	 */
+	localVersion = -1;
 }
 
 int LocalVersionHolder::getVersion() {

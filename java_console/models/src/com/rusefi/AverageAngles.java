@@ -3,6 +3,7 @@ package com.rusefi;
 import org.apache.commons.math3.stat.descriptive.moment.Mean;
 import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
 
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -49,9 +50,10 @@ public class AverageAngles {
         }
     }
 
-    public void printReport() {
+    public void printReport(PrintStream stream) {
         List<Double> angles = new ArrayList<>();
 
+        stream.println("index,average,stdev");
 
         for (Map.Entry<Integer, List<Double>> e : angleData.entrySet()) {
             int k = e.getKey();
@@ -68,16 +70,15 @@ public class AverageAngles {
 
             angles.add(mean);
 
-            System.out.println("i " + k + " average=" + mean + " dev=" + sdv);
+            stream.println(k + "," + mean + "," + sdv);
         }
         if (angleData.isEmpty())
             return;
         Double lastValue = angles.get(angles.size() - 1);
-        System.out.println("Last value = " + lastValue);
+        stream.println("Last value = " + lastValue);
         double delta = 720 - lastValue;
         for (double v : angles) {
-            System.out.println((delta + v));
+            stream.println((delta + v));
         }
-
     }
 }

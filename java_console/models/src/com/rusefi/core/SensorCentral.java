@@ -27,20 +27,10 @@ public class SensorCentral {
     private SensorCentral() {
     }
 
-    public double getValueOrNan(Sensor sensor) {
-        Double value = values.get(sensor);
-        if (value == null)
-            return Double.NaN;
-        return value;
-    }
-
-    /**
-     * todo: migrate to getValueOrNan implementation?
-     */
     public double getValue(Sensor sensor) {
         Double value = values.get(sensor);
         if (value == null)
-            throw new NullPointerException("No value for sensor: " + sensor);
+            return Double.NaN;
         return value;
     }
 

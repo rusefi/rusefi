@@ -9,7 +9,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class AnalogChartCentral {
     private static final String KEY = "analog_chart";
 
-    static List<AnalogChartListener> listeners = new CopyOnWriteArrayList<>();
+    private static List<AnalogChartListener> listeners = new CopyOnWriteArrayList<>();
 
     static {
         LinkManager.engineState.registerStringValueAction(KEY, new EngineState.ValueCallback<String>() {
@@ -20,6 +20,10 @@ public class AnalogChartCentral {
                     }
                 }
         );
+    }
+
+    public static void addListener(AnalogChartListener listener) {
+        listeners.add(listener);
     }
 
     interface AnalogChartListener {

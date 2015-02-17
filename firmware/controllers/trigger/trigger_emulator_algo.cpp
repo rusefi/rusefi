@@ -69,7 +69,7 @@ static int stopEmulationAtIndex = DO_NOT_STOP;
 static bool isEmulating = true;
 
 static Logging *logger;
-static LocalVersionHolder localVersion;
+static LocalVersionHolder emulatorConfigVersion;
 
 EXTERN_ENGINE;
 
@@ -89,8 +89,8 @@ void setTriggerEmulatorRPM(int rpm, Engine *engine) {
 }
 
 static void updateTriggerShapeIfNeeded(PwmConfig *state) {
-	if (localVersion.isOld()) {
-		scheduleMsg(logger, "Stimulator: updating trigger shape: %d/%d %d", localVersion.getVersion(),
+	if (emulatorConfigVersion.isOld()) {
+		scheduleMsg(logger, "Stimulator: updating trigger shape: %d/%d %d", emulatorConfigVersion.getVersion(),
 				getGlobalConfigurationVersion(), currentTimeMillis());
 
 		applyNonPersistentConfiguration(logger, engine);
