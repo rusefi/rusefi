@@ -24,6 +24,8 @@ public class TestingUtils {
             if (isCloseEnough(fixAngle(expected), current, ratio))
                 return;
         }
+        if (expectations.length == 1)
+            fail(msg + ": Got " + current + " while expecting " + Arrays.toString(expectations) + " ratio=" + Math.abs(1 - expectations[0] / current));
         fail(msg + ": Got " + current + " while expecting " + Arrays.toString(expectations));
     }
 
@@ -48,7 +50,7 @@ public class TestingUtils {
     }
 
     static void assertWave(String msg, WaveChart chart, String key, double width, double... expectedAngles) {
-        assertWave(true, msg, chart, key, width, WaveReport.RATIO, expectedAngles);
+        assertWave(true, msg, chart, key, width, WaveReport.RATIO, WaveReport.RATIO, expectedAngles);
     }
 
     static void assertWaveFall(WaveChart chart, String key, double width, double... expectedAngles) {
@@ -56,10 +58,10 @@ public class TestingUtils {
     }
 
     static void assertWaveFall(String msg, WaveChart chart, String key, double width, double... expectedAngles) {
-        assertWave(false, msg, chart, key, width, WaveReport.RATIO, expectedAngles);
+        assertWave(false, msg, chart, key, width, WaveReport.RATIO, WaveReport.RATIO, expectedAngles);
     }
 
-    static void assertWave(boolean rise, String msg, WaveChart chart, String key, double width, double angleRatio, double... expectedAngles) {
+    static void assertWave(boolean rise, String msg, WaveChart chart, String key, double width, double angleRatio, double widthRatio, double... expectedAngles) {
         RevolutionLog revolutionLog = chart.getRevolutionsLog();
         if (revolutionLog.keySet().isEmpty())
             throw new IllegalStateException(msg + " Empty revolutions in " + chart);
@@ -73,7 +75,7 @@ public class TestingUtils {
             double angleByTime = revolutionLog.getCrankAngleByTime(eventTime);
             assertCloseEnough(msg + " angle for " + key + "@" + eventTime, fixAngle(angleByTime), angleRatio, expectedAngles);
 
-            assertCloseEnough(msg + "width for " + key, ud.getDutyCycle(revolutionLog), WaveReport.RATIO, width);
+            assertCloseEnough(msg + "width for " + key, ud.getDutyCycle(revolutionLog), widthRatio, width);
         }
     }
 

@@ -1,6 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Launcher 29001" type="Application" factoryName="Application">
-    <option name="MAIN_CLASS_NAME" value="com.irnems.Launcher" />
+    <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+    <option name="MAIN_CLASS_NAME" value="com.rusefi.Launcher" />
     <option name="VM_PARAMETERS" value="" />
     <option name="PROGRAM_PARAMETERS" value="29001" />
     <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
