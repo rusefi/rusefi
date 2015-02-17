@@ -22,7 +22,7 @@
 #define rpmMin 500
 #define rpmMax 8000
 
-static Map3D1616 veMap;
+Map3D1616 veMap;
 Map3D1616 ve2Map;
 Map3D1616 afrMap;
 

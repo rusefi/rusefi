@@ -517,6 +517,8 @@ static THD_WORKING_AREA(tsThreadStack, UTILITY_THREAD_STACK_SIZE);
 
 #if EFI_TUNER_STUDIO
 
+extern Map3D1616 veMap;
+
 void updateTunerStudioState(Engine *engine, TunerStudioOutputChannels *tsOutputChannels) {
 #if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
 	int rpm = getRpmE(engine);
@@ -543,6 +545,7 @@ void updateTunerStudioState(Engine *engine, TunerStudioOutputChannels *tsOutputC
 	tsOutputChannels->throttlePositon = tps;
 	tsOutputChannels->massAirFlowVoltage = getMaf();
 	tsOutputChannels->massAirFlowValue = getRealMaf();
+	tsOutputChannels->massAirFlowValue = veMap.getValue(getMap(), rpm);
 	tsOutputChannels->airFuelRatio = getAfr();
 	tsOutputChannels->v_batt = getVBatt(engineConfiguration);
 	tsOutputChannels->tpsADC = getTPS10bitAdc(PASS_ENGINE_PARAMETER_F);
