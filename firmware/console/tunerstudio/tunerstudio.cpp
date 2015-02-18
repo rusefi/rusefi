@@ -80,6 +80,13 @@ extern persistent_config_container_s persistentState;
 
 static efitimems_t previousWriteReportMs = 0;
 
+/**
+ * we use 'blockingFactor = 256' in rusefi.ini
+ * todo: should we just do (256 + CRC_WRAPPING_SIZE) ?
+ */
+
+static uint8_t crcIoBuffer[300];
+
 static int ts_serial_ready(void) {
 #if EFI_PROD_CODE
 	if (isSerialOverUart()) {
@@ -104,7 +111,19 @@ static int tsCounter = 0;
 
 extern TunerStudioOutputChannels tsOutputChannels;
 
-extern TunerStudioState tsState;
+extern tunerstudio_counters_s tsState;
+
+static void resetTs(void) {
+
+}
+
+/**
+ * For some reason I could not get the 'pages' feature of Tuner Studio working - as
+ * a workaround the whole configuration is just one page
+ *
+ * this field is in the end to simply aligning situation
+ */
+static short currentPageId;
 
 void printTsStats(void) {
 #if EFI_PROD_CODE
@@ -117,7 +136,7 @@ void printTsStats(void) {
 			sizeof(tsOutputChannels), tsCounter, tsState.errorCounter, tsState.queryCommandCounter,
 			tsState.outputChannelsCommandCounter, tsState.readPageCommandsCounter, tsState.burnCommandCounter);
 	scheduleMsg(tsLogger, "TunerStudio W=%d / C=%d / P=%d / page=%d", tsState.writeValueCommandCounter,
-			tsState.writeChunkCommandCounter, tsState.pageCommandCounter, tsState.currentPageId);
+			tsState.writeChunkCommandCounter, tsState.pageCommandCounter, currentPageId);
 	scheduleMsg(tsLogger, "page size=%d", sizeof(engine_configuration_s));
 
 //	scheduleMsg(logger, "analogChartFrequency %d",
@@ -187,8 +206,8 @@ int getTunerStudioPageSize(int pageIndex) {
 void handlePageSelectCommand(ts_response_format_e mode, uint16_t pageId) {
 	tsState.pageCommandCounter++;
 
-	tsState.currentPageId = pageId;
-	scheduleMsg(tsLogger, "page %d selected", tsState.currentPageId);
+	currentPageId = pageId;
+	scheduleMsg(tsLogger, "page %d selected", currentPageId);
 	tsSendResponse(mode, NULL, 0);
 }
 
@@ -199,21 +218,21 @@ void handlePageSelectCommand(ts_response_format_e mode, uint16_t pageId) {
 void handleWriteChunkCommand(ts_response_format_e mode, short offset, short count, void *content) {
 	tsState.writeChunkCommandCounter++;
 
-	scheduleMsg(tsLogger, "%d receiving page %d chunk offset %d size %d", mode, tsState.currentPageId, offset, count);
+	scheduleMsg(tsLogger, "%d receiving page %d chunk offset %d size %d", mode, currentPageId, offset, count);
 
-	if (offset > getTunerStudioPageSize(tsState.currentPageId)) {
+	if (offset > getTunerStudioPageSize(currentPageId)) {
 		scheduleMsg(tsLogger, "ERROR offset %d", offset);
 		tunerStudioError("ERROR: out of range");
 		offset = 0;
 	}
 
-	if (count > getTunerStudioPageSize(tsState.currentPageId)) {
+	if (count > getTunerStudioPageSize(currentPageId)) {
 		tunerStudioError("ERROR: unexpected count");
 		scheduleMsg(tsLogger, "ERROR count %d", count);
 		count = 0;
 	}
 
-	uint8_t * addr = (uint8_t *) (getWorkingPageAddr(tsState.currentPageId) + offset);
+	uint8_t * addr = (uint8_t *) (getWorkingPageAddr(currentPageId) + offset);
 	memcpy(addr, content, count);
 
 	tsSendResponse(mode, NULL, 0);
@@ -227,7 +246,7 @@ void handleWriteChunkCommand(ts_response_format_e mode, short offset, short coun
 void handleWriteValueCommand(ts_response_format_e mode, uint16_t page, uint16_t offset, uint8_t value) {
 	tsState.writeValueCommandCounter++;
 
-	tsState.currentPageId = page;
+	currentPageId = page;
 
 //tunerStudioDebug("got W (Write)"); // we can get a lot of these
 
@@ -238,7 +257,7 @@ void handleWriteValueCommand(ts_response_format_e mode, uint16_t page, uint16_t 
 //	int size = sizeof(TunerStudioWriteValueRequest);
 //	scheduleMsg(logger, "Reading %d\r\n", size);
 
-	if (offset > getTunerStudioPageSize(tsState.currentPageId)) {
+	if (offset > getTunerStudioPageSize(currentPageId)) {
 		tunerStudioError("ERROR: out of range2");
 		scheduleMsg(tsLogger, "ERROR offset %d", offset);
 		offset = 0;
@@ -248,10 +267,10 @@ void handleWriteValueCommand(ts_response_format_e mode, uint16_t page, uint16_t 
 	efitimems_t nowMs = currentTimeMillis();
 	if (nowMs - previousWriteReportMs > 5) {
 		previousWriteReportMs = nowMs;
-		scheduleMsg(tsLogger, "page %d offset %d: value=%d", tsState.currentPageId, offset, value);
+		scheduleMsg(tsLogger, "page %d offset %d: value=%d", currentPageId, offset, value);
 	}
 
-	getWorkingPageAddr(tsState.currentPageId)[offset] = value;
+	getWorkingPageAddr(currentPageId)[offset] = value;
 
 //	scheduleMsg(logger, "va=%d", configWorkingCopy.boardConfiguration.idleValvePin);
 }
@@ -263,23 +282,23 @@ static void sendErrorCode(void) {
 void handlePageReadCommand(ts_response_format_e mode, uint16_t pageId, uint16_t offset, uint16_t count) {
 	tsState.readPageCommandsCounter++;
 	tunerStudioDebug("got R (Read page)");
-	tsState.currentPageId = pageId;
+	currentPageId = pageId;
 
 #if EFI_TUNER_STUDIO_VERBOSE
-	scheduleMsg(tsLogger, "%d: Page requested: page %d offset=%d count=%d", mode, (int) tsState.currentPageId, offset,
+	scheduleMsg(tsLogger, "%d: Page requested: page %d offset=%d count=%d", mode, (int) currentPageId, offset,
 			count);
 #endif
 
-	if (tsState.currentPageId > MAX_PAGE_ID) {
-		scheduleMsg(tsLogger, "invalid Page number %x", tsState.currentPageId);
+	if (currentPageId > MAX_PAGE_ID) {
+		scheduleMsg(tsLogger, "invalid Page number %x", currentPageId);
 
 		// something is not right here
-		tsState.currentPageId = 0;
+		currentPageId = 0;
 		tunerStudioError("ERROR: invalid page");
 		return;
 	}
 
-	int size = getTunerStudioPageSize(tsState.currentPageId);
+	int size = getTunerStudioPageSize(currentPageId);
 
 	if (size < offset + count) {
 		scheduleMsg(tsLogger, "invalid offset/count %d/%d", offset, count);
@@ -287,7 +306,7 @@ void handlePageReadCommand(ts_response_format_e mode, uint16_t pageId, uint16_t 
 		return;
 	}
 
-	const uint8_t *addr = (const uint8_t *) (getWorkingPageAddr(tsState.currentPageId) + offset);
+	const uint8_t *addr = (const uint8_t *) (getWorkingPageAddr(currentPageId) + offset);
 	tsSendResponse(mode, addr, count);
 #if EFI_TUNER_STUDIO_VERBOSE
 	scheduleMsg(tsLogger, "Sending %d done", count);
@@ -303,11 +322,11 @@ void handleBurnCommand(ts_response_format_e mode, uint16_t page) {
 
 	tunerStudioDebug("got B (Burn)");
 
-	tsState.currentPageId = page;
+	currentPageId = page;
 
 #if EFI_TUNER_STUDIO_VERBOSE
 	// pointless since we only have one page now
-//	scheduleMsg(logger, "Page number %d", tsState.currentPageId);
+//	scheduleMsg(logger, "Page number %d", currentPageId);
 #endif
 
 // todo: how about some multi-threading?
@@ -322,6 +341,7 @@ void handleBurnCommand(ts_response_format_e mode, uint16_t page) {
 }
 
 static TunerStudioReadRequest readRequest;
+static TunerStudioWriteChunkRequest writeChunkRequest;
 static short int pageIn;
 
 /**
@@ -340,11 +360,40 @@ static bool handlePlainCommand(uint8_t command) {
 		// todo: validate 'recieved' value
 		handlePageSelectCommand(TS_PLAIN, pageIn);
 		return true;
+	} else if (command == TS_BURN_COMMAND) {
+		scheduleMsg(tsLogger, "Got naked BURN");
+		uint16_t page;
+		int recieved = chSequentialStreamRead(getTsSerialDevice(), (uint8_t * )&page,
+				sizeof(page));
+		if (recieved != sizeof(page)) {
+			tunerStudioError("ERROR: Not enough for plain burn");
+			return true;
+		}
+		handleBurnCommand(TS_PLAIN, page);
+		return true;
+	} else if (command == TS_CHUNK_WRITE_COMMAND) {
+		scheduleMsg(tsLogger, "Got naked CHUNK_WRITE");
+		int recieved = chSequentialStreamRead(getTsSerialDevice(), (uint8_t * )&writeChunkRequest,
+				sizeof(writeChunkRequest));
+		if (recieved != sizeof(writeChunkRequest)) {
+			scheduleMsg(tsLogger, "ERROR: Not enough for plain chunk write header: %d", recieved);
+			tsState.errorCounter++;
+			return true;
+		}
+		recieved = chSequentialStreamRead(getTsSerialDevice(), (uint8_t * )&crcIoBuffer, writeChunkRequest.count);
+		if (recieved != writeChunkRequest.count) {
+			scheduleMsg(tsLogger, "ERROR: Not enough for plain chunk write content: %d while expecting %d", recieved, writeChunkRequest.count);
+			tsState.errorCounter++;
+			return true;
+		}
+
+		handleWriteChunkCommand(TS_PLAIN, writeChunkRequest.offset, writeChunkRequest.count, (uint8_t * )&crcIoBuffer);
+		return true;
 	} else if (command == TS_READ_COMMAND) {
 		//scheduleMsg(logger, "Got naked READ PAGE???");
 		int recieved = chSequentialStreamRead(getTsSerialDevice(), (uint8_t * )&readRequest, sizeof(readRequest));
 		if (recieved != sizeof(readRequest)) {
-			// todo: handler error
+			tunerStudioError("Not enough for plain read header");
 			return true;
 		}
 		handlePageReadCommand(TS_PLAIN, readRequest.page, readRequest.offset, readRequest.count);
@@ -377,13 +426,6 @@ static uint8_t secondByte;
 #define CRC_VALUE_SIZE 4
 // todo: double-check this
 #define CRC_WRAPPING_SIZE 7
-
-/**
- * we use 'blockingFactor = 256' in rusefi.ini
- * todo: should we just do (256 + CRC_WRAPPING_SIZE) ?
- */
-
-static uint8_t crcIoBuffer[300];
 
 static msg_t tsThreadEntryPoint(void *arg) {
 	(void) arg;
@@ -444,7 +486,7 @@ static msg_t tsThreadEntryPoint(void *arg) {
 
 		if (incomingPacketSize == 0 || incomingPacketSize > (sizeof(crcIoBuffer) - CRC_WRAPPING_SIZE)) {
 			scheduleMsg(tsLogger, "TunerStudio: invalid size: %d", incomingPacketSize);
-			tunerStudioError("ERROR: size");
+			tunerStudioError("ERROR: CRC header size");
 			sendErrorCode();
 			continue;
 		}
@@ -538,6 +580,7 @@ void startTunerStudioConnectivity(Logging *sharedLogger) {
 	syncTunerStudioCopy();
 
 	addConsoleAction("tsinfo", printTsStats);
+	addConsoleAction("reset_ts", resetTs);
 	addConsoleActionI("set_ts_speed", setTsSpeed);
 
 	chThdCreateStatic(tsThreadStack, sizeof(tsThreadStack), NORMALPRIO, tsThreadEntryPoint, NULL);

@@ -136,6 +136,21 @@ char *getFirmwareError(void) {
 	return (char*) errorMessageBuffer;
 }
 
+// todo: move this into a hw-specific file
+static void rebootNow(void) {
+	NVIC_SystemReset();
+}
+
+/**
+ * Some configuration changes require full firmware reset.
+ * Once day we will write graceful shutdown, but that would be one day.
+ */
+static void scheduleReboot(void) {
+	scheduleMsg(&sharedLogger, "Rebooting in 5 seconds...");
+	lockAnyContext();
+	chVTSetI(&resetTimer, 5 * CH_FREQUENCY, (vtfunc_t) rebootNow, NULL);
+	unlockAnyContext();
+}
 
 void swo_init()
 {
@@ -179,7 +194,7 @@ void runRusEfi(void) {
 
 	engine->init();
 
-	addConsoleAction("reset", scheduleReset);
+	addConsoleAction("reboot", scheduleReboot);
 
 	/**
 	 * Initialize hardware drivers
@@ -218,21 +233,6 @@ void runRusEfi(void) {
 
 		chThdSleepMilliseconds(boardConfiguration->consoleLoopPeriod);
 	}
-}
-
-// todo: move this into a hw-specific file
-static void rebootNow(void) {
-	NVIC_SystemReset();
-}
-/**
- * Some configuration changes require full firmware reset.
- * Once day we will write graceful shutdown, but that would be one day.
- */
-void scheduleReset(void) {
-	scheduleMsg(&sharedLogger, "Rebooting in 5 seconds...");
-	lockAnyContext();
-	chVTSetI(&resetTimer, 5 * CH_FREQUENCY, (vtfunc_t) rebootNow, NULL);
-	unlockAnyContext();
 }
 
 void chDbgStackOverflowPanic(Thread *otp) {
