@@ -65,7 +65,7 @@ extern Logging *tsLogger;
 #include "tunerstudio.h"
 #endif
 
-TunerStudioState tsState;
+tunerstudio_counters_s tsState;
 TunerStudioOutputChannels tsOutputChannels;
 /**
  * this is a local copy of the configuration. Any changes to this copy

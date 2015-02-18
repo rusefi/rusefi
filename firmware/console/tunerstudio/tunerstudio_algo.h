@@ -32,14 +32,7 @@ typedef struct {
 	int writeValueCommandCounter;
 	int writeChunkCommandCounter;
 	int errorCounter;
-	/**
-	 * For some reason I could not get the 'pages' feature of Tuner Studio working - as
-	 * a workaround the whole configuration is just one page
-	 *
-	 * this field is in the end to simply aligning situation
-	 */
-	short currentPageId;
-} TunerStudioState;
+} tunerstudio_counters_s;
 
 int tunerStudioHandleCrcCommand(uint8_t *data, int incomingPacketSize);
 

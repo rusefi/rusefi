@@ -9,6 +9,5 @@
 #define RUSEFI_H_
 
 void runRusEfi(void);
-void scheduleReset(void);
 
 #endif /* RUSEFI_H_ */

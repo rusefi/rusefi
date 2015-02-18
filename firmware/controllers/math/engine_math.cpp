@@ -160,8 +160,8 @@ void FuelSchedule::addFuelEvents(OutputSignalList *sourceList, injection_mode_e 
 	 * injection phase is scheduled by injection end, so we need to step the angle back
 	 * for the duration of the injection
 	 */
-	float baseAngle = getInjectionAngle(engine->rpmCalculator.rpmValue PASS_ENGINE_PARAMETER) +
-			engineConfiguration->injectionAngle - MS2US(engine->fuelMs) / engine->rpmCalculator.oneDegreeUs;
+	float baseAngle = getInjectionAngle(engine->rpmCalculator.rpmValue PASS_ENGINE_PARAMETER)
+			+ engineConfiguration->injectionAngle - MS2US(engine->fuelMs) / engine->rpmCalculator.oneDegreeUs;
 
 	switch (mode) {
 	case IM_SEQUENTIAL:
@@ -276,10 +276,11 @@ void findTriggerPosition(event_trigger_position_s *position, angle_t angleOffset
 }
 
 static int order_1_THEN_3_THEN_4_THEN2[] = { 1, 3, 4, 2 };
+static int order_1_THEN_2_THEN_4_THEN3[] = { 1, 2, 4, 3 };
+static int order_1_THEN_3_THEN_2_THEN4[] = { 1, 3, 2, 4 };
 
 static int order_1_THEN_5_THEN_3_THEN_6_THEN_2_THEN_4[] = { 1, 5, 3, 6, 2, 4 };
-
-static int order_1_THEN_4_THEN_2_THEN_5_THEN_3_THEN_6[] = {1, 4, 2, 5, 3, 6};
+static int order_1_THEN_4_THEN_2_THEN_5_THEN_3_THEN_6[] = { 1, 4, 2, 5, 3, 6 };
 
 static int order_1_8_4_3_6_5_7_2[] = { 1, 8, 4, 3, 6, 5, 7, 2 };
 
@@ -294,6 +295,10 @@ int getCylinderId(firing_order_e firingOrder, int index) {
 		return 1;
 	case FO_1_THEN_3_THEN_4_THEN2:
 		return order_1_THEN_3_THEN_4_THEN2[index];
+	case FO_1_THEN_2_THEN_4_THEN3:
+		return order_1_THEN_2_THEN_4_THEN3[index];
+	case FO_1_THEN_3_THEN_2_THEN4:
+		return order_1_THEN_3_THEN_2_THEN4[index];
 	case FO_1_THEN_5_THEN_3_THEN_6_THEN_2_THEN_4:
 		return order_1_THEN_5_THEN_3_THEN_6_THEN_2_THEN_4[index];
 	case FO_1_THEN_4_THEN_2_THEN_5_THEN_3_THEN_6:
