@@ -397,6 +397,7 @@ static void showFuelInfo2(float rpm, float engineLoad, Engine *engine) {
 			engineConfiguration->globalFuelCorrection);
 
 #if EFI_ENGINE_CONTROL
+	scheduleMsg(&logger, "base cranking fuel %f", engineConfiguration->cranking.baseFuel);
 	scheduleMsg(&logger2, "cranking fuel: %f", getCrankingFuel(engine));
 
 	if (engine->rpmCalculator.isRunning()) {

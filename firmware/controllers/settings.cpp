@@ -351,16 +351,12 @@ static void printThermistor(const char *msg, Thermistor *thermistor) {
 	float t = getTemperatureC(thermistor);
 
 	scheduleMsg(&logger, "%s v=%f C=%f R=%f on channel %d", msg, voltage, t, r, adcChannel);
-	scheduleMsg(&logger, "bias=%f A=%f B=%f C=%f", thermistor->config->bias_resistor, thermistor->config->s_h_a,
-			thermistor->config->s_h_b, thermistor->config->s_h_c);
-#if EFI_ANALOG_INPUTS
 	scheduleMsg(&logger, "@%s", getPinNameByAdcChannel(adcChannel, pinNameBuffer));
-
-	float value = getResistance(thermistor);
-
-	scheduleMsg(&logger, "%s R=%f on channel %d@%s", msg, value, adcChannel,
-			getPinNameByAdcChannel(adcChannel, pinNameBuffer));
-#endif
+	scheduleMsg(&logger, "bias=%f A=%..100000f B=%..100000f C=%..100000f", thermistor->config->bias_resistor, thermistor->config->s_h_a,
+			thermistor->config->s_h_b, thermistor->config->s_h_c);
+//#if EFI_ANALOG_INPUTS
+	scheduleMsg(&logger, "==============================");
+//#endif
 }
 
 #if EFI_PROD_CODE
@@ -417,10 +413,6 @@ static void printTemperatureInfo(void) {
 	scheduleMsg(&logger, "A/C relay=%s @ %s", boolToString(enginePins.acRelay.getLogicValue()),
 			hwPortname(boardConfiguration->acRelayPin));
 
-
-#if EFI_ANALOG_INPUTS
-	scheduleMsg(&logger, "base cranking fuel %f", engineConfiguration->cranking.baseFuel);
-#endif /* EFI_ANALOG_INPUTS */
 #endif
 }
 
