@@ -32,6 +32,7 @@ typedef struct {
 	int writeValueCommandCounter;
 	int writeChunkCommandCounter;
 	int errorCounter;
+	int tsCounter;
 } tunerstudio_counters_s;
 
 int tunerStudioHandleCrcCommand(uint8_t *data, int incomingPacketSize);

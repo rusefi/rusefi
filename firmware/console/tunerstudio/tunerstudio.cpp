@@ -104,17 +104,12 @@ static int ts_serial_ready(void) {
 // this thread wants a bit extra stack
 static THD_WORKING_AREA(tsThreadStack, UTILITY_THREAD_STACK_SIZE + 200);
 
-static int tsCounter = 0;
-
-//static TunerStudioWriteValueRequest writeValueRequest;
-//static TunerStudioWriteChunkRequest writeChunkRequest;
-
 extern TunerStudioOutputChannels tsOutputChannels;
 
 extern tunerstudio_counters_s tsState;
 
 static void resetTs(void) {
-
+	memset(&tsState, sizeof(tsState), 0);
 }
 
 /**
@@ -133,7 +128,7 @@ void printTsStats(void) {
 	}
 #endif /* EFI_PROD_CODE */
 	scheduleMsg(tsLogger, "TunerStudio size=%d / total=%d / errors=%d / H=%d / O=%d / P=%d / B=%d",
-			sizeof(tsOutputChannels), tsCounter, tsState.errorCounter, tsState.queryCommandCounter,
+			sizeof(tsOutputChannels), tsState.tsCounter, tsState.errorCounter, tsState.queryCommandCounter,
 			tsState.outputChannelsCommandCounter, tsState.readPageCommandsCounter, tsState.burnCommandCounter);
 	scheduleMsg(tsLogger, "TunerStudio W=%d / C=%d / P=%d / page=%d", tsState.writeValueCommandCounter,
 			tsState.writeChunkCommandCounter, tsState.pageCommandCounter, currentPageId);
@@ -464,7 +459,7 @@ static msg_t tsThreadEntryPoint(void *arg) {
 //			scheduleSimpleMsg(&logger, "ts channel is now ready ", hTimeNow());
 		}
 
-		tsCounter++;
+		tsState.tsCounter++;
 
 		int recieved = chSequentialStreamRead(getTsSerialDevice(), &firstByte, 1);
 		if (recieved != 1) {
