@@ -17,6 +17,7 @@
 #include "trigger_structure.h"
 #include "table_helper.h"
 #include "listener_array.h"
+#include "accel_enrichment.h"
 
 #define OUTPUT_SIGNAL_MAX_SIZE 45
 
@@ -130,6 +131,8 @@ public:
 
 	Thermistor iat;
 	Thermistor clt;
+
+	AccelEnrichmemnt accelEnrichment;
 
 	/**
 	 * Fuel injection duration for current engine cycle

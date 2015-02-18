@@ -18,6 +18,9 @@ public:
 	void updateDiffEnrichment(engine_configuration_s *engineConfiguration,
 			float engineLoad);
 	float getDiffEnrichment(void);
+
+	void onEngineCycle(DECLARE_ENGINE_PARAMETER_F);
+
 private:
 	float engineLoadD[4];
 	float diffEnrichment;
