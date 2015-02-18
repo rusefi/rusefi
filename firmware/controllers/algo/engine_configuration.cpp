@@ -325,6 +325,7 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	engineConfiguration->hasMafSensor = true;
 	engineConfiguration->hasTpsSensor = true;
 	engineConfiguration->hasAfrSensor = true;
+	engineConfiguration->hasIatSensor = true;
 	engineConfiguration->hasCltSensor = true;
 	engineConfiguration->hasBaroSensor = false;
 	engineConfiguration->isDigitalChartEnabled = true;
