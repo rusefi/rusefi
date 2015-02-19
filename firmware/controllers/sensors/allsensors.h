@@ -25,7 +25,7 @@
 #include "adc_math.h"
 #endif
 
-void initSensors(DECLARE_ENGINE_PARAMETER_F);
+void initSensors(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S);
 
 bool getAcToggle(Engine *engine);
 

@@ -87,7 +87,7 @@ void rusEfiFunctionalTest(void) {
 	resetConfigurationExt(NULL, FORD_ESCORT_GT, engine);
 	prepareShapes(engine);
 
-	initSensors(PASS_ENGINE_PARAMETER_F);
+	initSensors(&sharedLogger PASS_ENGINE_PARAMETER);
 
 	initAlgo(&sharedLogger, engineConfiguration);
 	initRpmCalculator(engine);
