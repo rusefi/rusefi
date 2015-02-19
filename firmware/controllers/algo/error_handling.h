@@ -60,8 +60,8 @@ int getRusEfiVersion(void);
   #define efiAssert(condition, message, result) { if (!(condition)) { firmwareError(message); return result; } }
   #define efiAssertVoid(condition, message) { if (!(condition)) { firmwareError(message); return; } }
 #else /* EFI_ENABLE_ASSERTS */
-  #define efiAssert(condition, message, result) { (void)(condition); }
-  #define efiAssertVoid(condition, message) { (void)(condition); }
+  #define efiAssert(condition, message, result) { }
+  #define efiAssertVoid(condition, message) { }
 #endif /* EFI_ENABLE_ASSERTS */
 
 #ifdef __cplusplus
