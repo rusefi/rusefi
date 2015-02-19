@@ -308,6 +308,13 @@ void handlePageReadCommand(ts_response_format_e mode, uint16_t pageId, uint16_t 
 #endif
 }
 
+void requestBurn(void) {
+#if EFI_INTERNAL_FLASH
+	setNeedToWriteConfiguration();
+#endif
+	incrementGlobalConfigurationVersion();
+}
+
 /**
  * 'Burn' command is a command to commit the changes
  */
@@ -327,10 +334,7 @@ void handleBurnCommand(ts_response_format_e mode, uint16_t page) {
 // todo: how about some multi-threading?
 	memcpy(&persistentState.persistentConfiguration, &configWorkingCopy, sizeof(persistent_config_s));
 
-#if EFI_INTERNAL_FLASH
-	setNeedToWriteConfiguration();
-#endif
-	incrementGlobalConfigurationVersion();
+	requestBurn();
 	tunerStudioWriteCrcPacket(TS_RESPONSE_BURN_OK, NULL, 0);
 	scheduleMsg(tsLogger, "burned in (ms): %d", currentTimeMillis() - nowMs);
 }
