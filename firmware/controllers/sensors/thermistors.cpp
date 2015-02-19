@@ -23,6 +23,8 @@
 EXTERN_ENGINE
 ;
 
+static Logging *logger;
+
 static bool initialized = false;
 
 /**
@@ -131,24 +133,36 @@ void setThermistorConfiguration(ThermistorConf * tc, float tempC1, float r1, flo
 }
 
 void prepareThermistorCurve(ThermistorConf * config) {
+    efiAssertVoid(config!=NULL, "therm config");
 	float T1 = config->tempC_1 + KELV;
 	float T2 = config->tempC_2 + KELV;
 	float T3 = config->tempC_3 + KELV;
+	scheduleMsg(logger, "T1=%..100000f/T2=%..100000f/T3=%..100000f", T1, T2, T3);
 
 	float L1 = logf(config->resistance_1);
 	float L2 = logf(config->resistance_2);
 	float L3 = logf(config->resistance_3);
+	scheduleMsg(logger, "R1=%..100000f/R2=%..100000f/R3=%..100000f", config->resistance_1, config->resistance_2, config->resistance_3);
+	scheduleMsg(logger, "L1=%..100000f/L2=%..100000f/L3=%..100000f", L1, L2, L3);
 
 	float Y1 = 1 / T1;
 	float Y2 = 1 / T2;
 	float Y3 = 1 / T3;
 
+	scheduleMsg(logger, "Y1=%..100000f/Y2=%..100000f/Y3=%..100000f", Y1, Y2, Y3);
+
 	float U2 = (Y2 - Y1) / (L2 - L1);
 	float U3 = (Y3 - Y1) / (L3 - L1);
+
+	scheduleMsg(logger, "U2=%..100000f/U3=%..100000f", U2, U3);
+
 
 	config->s_h_c = (U3 - U2) / (L3 - L2) * pow(L1 + L2 + L3, -1);
 	config->s_h_b = U2 - config->s_h_c * (L1 * L1 + L1 * L2 + L2 * L2);
 	config->s_h_a = Y1 - (config->s_h_b + L1 * L1 * config->s_h_c) * L1;
+
+	scheduleMsg(logger, "s_h_c=%..100000f/s_h_b=%..100000f/s_h_a=%..100000f", config->s_h_c, config->s_h_b, config->s_h_a);
+
 }
 
 /**
@@ -183,17 +197,19 @@ void setCommonNTCSensor(ThermistorConf *thermistorConf) {
 	setThermistorConfiguration(thermistorConf, -20, 18000, 23.8889, 2100, 120.0, 100.0);
 }
 
-static Logging *logger;
-
 #if EFI_PROD_CODE
 static void testCltByR(float resistance) {
 	Thermistor *thermistor = &engine->clt;
 	float kTemp = getKelvinTemperature(resistance, thermistor->config);
 	scheduleMsg(logger, "for R=%f we have %f", resistance, (kTemp - KELV));
+
+	initThermistorCurve(&engine->clt, &engine->engineConfiguration->clt, engine->engineConfiguration->cltAdcChannel);
+
 }
 #endif
 
 void initThermistors(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
+	logger = sharedLogger;
 	efiAssertVoid(engine!=NULL, "e NULL initThermistors");
 	efiAssertVoid(engine->engineConfiguration2!=NULL, "e2 NULL initThermistors");
 	initThermistorCurve(&engine->clt, &engine->engineConfiguration->clt, engine->engineConfiguration->cltAdcChannel);

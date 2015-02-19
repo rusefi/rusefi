@@ -356,7 +356,7 @@ static void getFloat(int offset) {
 	/**
 	 * this response is part of dev console API
 	 */
-	scheduleMsg(&logger, "float @%d is %f", offset, value);
+	scheduleMsg(&logger, "float @%d is %..100000f", offset, value);
 }
 
 static void setFloat(const char *offsetStr, const char *valueStr) {

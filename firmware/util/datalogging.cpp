@@ -298,6 +298,7 @@ void printMsg(Logging *logger, const char *fmt, ...) {
  * in order to reduce memory usage
  */
 void scheduleMsg(Logging *logging, const char *fmt, ...) {
+	efiAssertVoid(logging != NULL, "logging NULL");
 	int wasLocked = lockAnyContext();
 	resetLogging(logging); // todo: is 'reset' really needed here?
 	appendMsgPrefix(logging);
