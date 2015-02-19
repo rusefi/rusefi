@@ -11,7 +11,7 @@
 #include "main.h"
 
 #define _5_VOLTS 5.0
-#define KELV 273.15
+#define KELV 273.15f
 
 #include "sensor_types.h"
 #include "engine.h"
