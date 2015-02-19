@@ -20,7 +20,8 @@
 #define LIMPING_MODE_IAT_TEMPERATURE 30.0f
 #define LIMPING_MODE_CLT_TEMPERATURE 70.0f
 
-EXTERN_ENGINE;
+EXTERN_ENGINE
+;
 
 static bool initialized = false;
 
@@ -182,12 +183,25 @@ void setCommonNTCSensor(ThermistorConf *thermistorConf) {
 	setThermistorConfiguration(thermistorConf, -20, 18000, 23.8889, 2100, 120.0, 100.0);
 }
 
-void initThermistors(DECLARE_ENGINE_PARAMETER_F) {
+static Logging *logger;
+
+#if EFI_PROD_CODE
+static void testCltByR(float resistance) {
+	Thermistor *thermistor = &engine->clt;
+	float kTemp = getKelvinTemperature(resistance, thermistor->config);
+	scheduleMsg(logger, "for R=%f we have %f", resistance, (kTemp - KELV));
+}
+#endif
+
+void initThermistors(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 	efiAssertVoid(engine!=NULL, "e NULL initThermistors");
 	efiAssertVoid(engine->engineConfiguration2!=NULL, "e2 NULL initThermistors");
-	initThermistorCurve(&engine->clt, &engine->engineConfiguration->clt,
-			engine->engineConfiguration->cltAdcChannel);
-	initThermistorCurve(&engine->iat, &engine->engineConfiguration->iat,
-			engine->engineConfiguration->iatAdcChannel);
+	initThermistorCurve(&engine->clt, &engine->engineConfiguration->clt, engine->engineConfiguration->cltAdcChannel);
+	initThermistorCurve(&engine->iat, &engine->engineConfiguration->iat, engine->engineConfiguration->iatAdcChannel);
+
+#if EFI_PROD_CODE
+	addConsoleActionF("test_clt_by_r", testCltByR);
+#endif
+
 	initialized = true;
 }

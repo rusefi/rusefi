@@ -372,7 +372,7 @@ static void testRpmCalculator(void) {
 	Engine *engine = &eth.engine;
 	engine_configuration_s *engineConfiguration = &eth.persistentConfig.engineConfiguration;
 
-	initThermistors(PASS_ENGINE_PARAMETER_F);
+	initThermistors(NULL PASS_ENGINE_PARAMETER);
 	engine->updateSlowSensors();
 
 	engineConfiguration->trigger.customTotalToothCount = 8;

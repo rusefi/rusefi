@@ -10,8 +10,8 @@
 #include "engine.h"
 #include "allsensors.h"
 
-void initSensors(DECLARE_ENGINE_PARAMETER_F) {
-	initThermistors(PASS_ENGINE_PARAMETER_F);
+void initSensors(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
+	initThermistors(sharedLogger PASS_ENGINE_PARAMETER);
 	initMapDecoder(PASS_ENGINE_PARAMETER_F);
 }
 

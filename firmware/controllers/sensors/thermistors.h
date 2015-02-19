@@ -47,17 +47,8 @@ void prepareThermistorCurve(ThermistorConf * config);
 
 class Engine;
 
-void initThermistors(DECLARE_ENGINE_PARAMETER_F);
+void initThermistors(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S);
 
 void setCommonNTCSensor(ThermistorConf *thermistorConf);
-
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
 
 #endif /* THERMISTORS_H_ */

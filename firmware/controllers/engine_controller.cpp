@@ -382,7 +382,7 @@ void initEngineContoller(Logging *sharedLogger, Engine *engine) {
 		return;
 	}
 
-	initSensors(PASS_ENGINE_PARAMETER_F);
+	initSensors(sharedLogger PASS_ENGINE_PARAMETER_F);
 
 #if EFI_PROD_CODE
 	initPwmGenerator();

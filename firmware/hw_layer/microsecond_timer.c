@@ -88,7 +88,7 @@ static void usTimerWatchDog(void) {
 
 	msg = isTimerPending ? "No_cb too long" : "Timer not awhile";
 	// 2 seconds of inactivity would not look right
-	efiAssert(getTimeNowNt() < lastSetTimerTimeNt + 2 * CORE_CLOCK, msg, -1);
+	efiAssertVoid(getTimeNowNt() < lastSetTimerTimeNt + 2 * CORE_CLOCK, msg);
 
 }
 
