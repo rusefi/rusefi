@@ -283,7 +283,7 @@ void setEngineType(int value) {
 	engineConfiguration->engineType = (engine_type_e) value;
 	resetConfigurationExt(&logger, (engine_type_e) value, engine);
 #if EFI_INTERNAL_FLASH
-	writeToFlash();
+	writeToFlashNow();
 //	scheduleReset();
 #endif /* EFI_PROD_CODE */
 	incrementGlobalConfigurationVersion();

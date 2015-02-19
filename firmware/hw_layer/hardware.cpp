@@ -230,7 +230,7 @@ void initHardware(Logging *l, Engine *engine) {
 	if (SHOULD_INGORE_FLASH()) {
 		engineConfiguration->engineType = DEFAULT_ENGINE_TYPE;
 		resetConfigurationExt(sharedLogger, engineConfiguration->engineType, engine);
-		writeToFlash();
+		writeToFlashNow();
 	} else {
 		readFromFlash();
 	}

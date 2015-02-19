@@ -16,6 +16,7 @@
 
 void updateTunerStudioState(Engine *engine, TunerStudioOutputChannels *tsOutputChannels);
 void printTsStats(void);
+void requestBurn(void);
 
 void startTunerStudioConnectivity(Logging *sharedLogger);
 void syncTunerStudioCopy(void);
