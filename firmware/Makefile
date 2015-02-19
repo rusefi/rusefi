@@ -293,8 +293,8 @@ ULIBS = -lm
 ##############################################################################
 
 ifeq ($(USE_FPU),yes)
-  USE_OPT    += -mfloat-abi=hard -mfpu=fpv4-sp-d16 -fsingle-precision-constant
-  USE_CPPOPT += -mfloat-abi=hard -mfpu=fpv4-sp-d16 -fsingle-precision-constant
+  USE_OPT    += -mfloat-abi=softfp -mfpu=fpv4-sp-d16
+  USE_CPPOPT += -mfloat-abi=softfp -mfpu=fpv4-sp-d16
   DDEFS += -DCORTEX_USE_FPU=TRUE
 else
   DDEFS += -DCORTEX_USE_FPU=FALSE
