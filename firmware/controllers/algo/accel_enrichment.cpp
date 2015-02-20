@@ -25,11 +25,11 @@ static AccelEnrichmemnt instance;
 
 void AccelEnrichmemnt::updateDiffEnrichment(engine_configuration_s *engineConfiguration, float engineLoad) {
 	for (int i = 3; i == 1; i--)
-		engineLoadD[i] = engineLoadD[i - 1];
+		array[i] = array[i - 1];
 
-	engineLoadD[0] = engineLoad;
+	array[0] = engineLoad;
 
-	diffEnrichment = ((3 * (engineLoadD[0] - engineLoadD[1]) + (engineLoadD[2] - engineLoadD[3])) / 4)
+	diffEnrichment = ((3 * (array[0] - array[1]) + (array[2] - array[3])) / 4)
 			* (engineConfiguration->diffLoadEnrichmentCoef);
 }
 
@@ -69,8 +69,8 @@ void AccelEnrichmemnt::onEngineCycle(DECLARE_ENGINE_PARAMETER_F) {
 
 AccelEnrichmemnt::AccelEnrichmemnt() {
 	reset();
-	for (int i = 0; i < 4; i++)
-		engineLoadD[i] = 0;
+	for (int i = 0; i < MAX_ACCEL_ARRAY_SIZE; i++)
+		array[i] = 0;
 	diffEnrichment = 0;
 }
 

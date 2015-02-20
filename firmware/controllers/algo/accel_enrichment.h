@@ -12,6 +12,8 @@
 
 #include "engine_configuration.h"
 
+#define MAX_ACCEL_ARRAY_SIZE 64
+
 class AccelEnrichmemnt {
 public:
 	AccelEnrichmemnt();
@@ -28,7 +30,7 @@ public:
 	float delta;
 
 private:
-	float engineLoadD[4];
+	float array[MAX_ACCEL_ARRAY_SIZE];
 	float diffEnrichment;
 };
 
