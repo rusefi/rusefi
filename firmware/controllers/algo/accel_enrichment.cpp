@@ -14,7 +14,8 @@
 #include "engine_math.h"
 #include "signal_executor.h"
 
-EXTERN_ENGINE;
+EXTERN_ENGINE
+;
 
 //#if EFI_PROD_CODE
 //static THD_WORKING_AREA(aeThreadStack, UTILITY_THREAD_STACK_SIZE);
@@ -32,23 +33,50 @@ void AccelEnrichmemnt::updateDiffEnrichment(engine_configuration_s *engineConfig
 			* (engineConfiguration->diffLoadEnrichmentCoef);
 }
 
-float AccelEnrichmemnt::getDiffEnrichment() {
-	return diffEnrichment;
+//float AccelEnrichmemnt::getDiffEnrichment() {
+//	return diffEnrichment;
+//}
+
+float AccelEnrichmemnt::getEnrichment(DECLARE_ENGINE_PARAMETER_F) {
+	float d = delta;
+	if (d > engineConfiguration->accelEnrichmentThreshold) {
+		return d * engineConfiguration->accelEnrichmentMultiplier;
+	}
+	if (d < engineConfiguration->deaccelEnrichmentThreshold) {
+		return d * engineConfiguration->deaccelEnrichmentMultiplier;
+	}
+	return 0;
+}
+
+void AccelEnrichmemnt::reset() {
+	maxDelta = 0;
+	minDelta = 0;
+	delta = 0;
+	currentEngineLoad = NAN;
 }
 
 void AccelEnrichmemnt::onEngineCycle(DECLARE_ENGINE_PARAMETER_F) {
+	float currentEngineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_F);
 
+	if (!cisnan(this->currentEngineLoad)) {
+		delta = currentEngineLoad - this->currentEngineLoad;
+		maxDelta = maxF(maxDelta, delta);
+		minDelta = minF(minDelta, delta);
+	}
+
+	this->currentEngineLoad = currentEngineLoad;
 }
 
 AccelEnrichmemnt::AccelEnrichmemnt() {
+	reset();
 	for (int i = 0; i < 4; i++)
 		engineLoadD[i] = 0;
 	diffEnrichment = 0;
 }
 
-float getAccelEnrichment(void) {
-	return instance.getDiffEnrichment();
-}
+//float getAccelEnrichment(void) {
+//	return instance.getDiffEnrichment();
+//}
 
 //#if EFI_PROD_CODE
 //

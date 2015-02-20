@@ -377,6 +377,12 @@ static void setFloat(const char *offsetStr, const char *valueStr) {
 	getFloat(offset);
 }
 
+#if EFI_PROD_CODE
+static void resetAccel(void) {
+	engine->accelEnrichment.reset();
+}
+#endif
+
 void initEngineContoller(Logging *sharedLogger, Engine *engine) {
 	if (hasFirmwareError()) {
 		return;
@@ -474,6 +480,9 @@ void initEngineContoller(Logging *sharedLogger, Engine *engine) {
 	addConsoleActionI("get_float", getFloat);
 	addConsoleActionI("get_int", getInt);
 	addConsoleActionI("get_short", getShort);
+#if EFI_PROD_CODE
+	addConsoleAction("reset_accel", resetAccel);
+#endif
 
 #if (EFI_PROD_CODE && EFI_FSIO) || defined(__DOXYGEN__)
 	initFsioImpl(sharedLogger, engine);

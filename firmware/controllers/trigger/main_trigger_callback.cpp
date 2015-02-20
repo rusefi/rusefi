@@ -345,6 +345,7 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECL
 	}
 
 	if (eventIndex == 0) {
+		engine->accelEnrichment.onEngineCycle(PASS_ENGINE_PARAMETER_F);
 		engine->m.beforeFuelCalc = GET_TIMESTAMP();
 		ENGINE(fuelMs) = getFuelMs(rpm PASS_ENGINE_PARAMETER) * engineConfiguration->globalFuelCorrection;
 		engine->m.fuelCalcTime = GET_TIMESTAMP() - engine->m.beforeFuelCalc;
