@@ -21,4 +21,31 @@ void setMazda626EngineConfiguration(engine_configuration_s *engineConfiguration)
 
 	boardConfiguration->analogChartMode = AC_TRIGGER;
 	engineConfiguration->analogChartFrequency = 2;
+
+	// set_global_trigger_offset_angle -40
+	engineConfiguration->globalTriggerAngleOffset = -40;
+
+	// set_cranking_timing_angle 15
+	engineConfiguration->crankingTimingAngle = 15;
+	engineConfiguration->crankingChargeAngle = 70;
+
+	setWholeTimingTable(engineConfiguration, 10);
+
+	setCommonNTCSensor(&engineConfiguration->clt);
+	engineConfiguration->clt.bias_resistor = 2700;
+	setCommonNTCSensor(&engineConfiguration->iat);
+	engineConfiguration->iat.bias_resistor = 2700;
+
+
+	commonFrankensoAnalogInputs(engineConfiguration);
+	engineConfiguration->hasTpsSensor = false;
+	engineConfiguration->tpsAdcChannel = EFI_ADC_NONE;
+//	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
+	engineConfiguration->mafAdcChannel = EFI_ADC_0;
+	engineConfiguration->cltAdcChannel = EFI_ADC_12;
+	engineConfiguration->iatAdcChannel = EFI_ADC_11;
+
+	// todo: 8.2 or 10k?
+	engineConfiguration->vbattDividerCoeff = ((float) (10 + 33)) / 10 * 2;
+
 }

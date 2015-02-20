@@ -232,6 +232,7 @@ void setMiata1990(engine_configuration_s *engineConfiguration) {
 
 /**
  * pin 1I/W9 - extra +5v
+ * set_engine_type 14
  */
 void setFordEscortGt(engine_configuration_s *engineConfiguration) {
 	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
@@ -286,6 +287,7 @@ void setFordEscortGt(engine_configuration_s *engineConfiguration) {
 	// set_injection_offset 0
 	engineConfiguration->injectionAngle = 0;
 
+	// todo: change to 15?
 	// set_cranking_timing_angle 3
 	engineConfiguration->crankingTimingAngle = 3;
 	engineConfiguration->crankingChargeAngle = 70;
