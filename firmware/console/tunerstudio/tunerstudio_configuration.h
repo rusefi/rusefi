@@ -83,7 +83,9 @@ typedef struct {
 	float rpmAcceleration;
 	float massAirFlowValue;
 	float veValue;
-	int unused3[20];
+	float maxDelta;
+	float minDelta;
+	int unused3[18];
 } TunerStudioOutputChannels;
 
 #endif /* TUNERSTUDIO_CONFIGURATION_H_ */

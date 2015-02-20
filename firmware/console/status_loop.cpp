@@ -546,7 +546,7 @@ void updateTunerStudioState(Engine *engine, TunerStudioOutputChannels *tsOutputC
 	tsOutputChannels->throttlePositon = tps;
 	tsOutputChannels->massAirFlowVoltage = getMaf();
 	tsOutputChannels->massAirFlowValue = getRealMaf();
-	tsOutputChannels->massAirFlowValue = veMap.getValue(getMap(), rpm);
+	tsOutputChannels->veValue = veMap.getValue(getMap(), rpm);
 	tsOutputChannels->airFuelRatio = getAfr();
 	tsOutputChannels->v_batt = getVBatt(engineConfiguration);
 	tsOutputChannels->tpsADC = getTPS10bitAdc(PASS_ENGINE_PARAMETER_F);
