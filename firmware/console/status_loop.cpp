@@ -554,6 +554,8 @@ void updateTunerStudioState(Engine *engine, TunerStudioOutputChannels *tsOutputC
 	tsOutputChannels->manifold_air_pressure = getMap();
 	tsOutputChannels->engineLoad = engineLoad;
 	tsOutputChannels->rpmAcceleration = engine->rpmCalculator.getRpmAcceleration();
+	tsOutputChannels->maxDelta = engine->accelEnrichment.maxDelta;
+	tsOutputChannels->minDelta = engine->accelEnrichment.minDelta;
 
 	tsOutputChannels->checkEngine = hasErrorCodes();
 #if EFI_PROD_CODE
