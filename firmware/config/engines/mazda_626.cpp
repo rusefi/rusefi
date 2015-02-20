@@ -12,6 +12,7 @@
 #include "engine_math.h"
 #include "honda_accord.h"
 #include "custom_engine.h"
+#include "thermistors.h"
 
 void setMazda626EngineConfiguration(engine_configuration_s *engineConfiguration) {
 	setCustomEngineConfiguration(engineConfiguration);
@@ -29,13 +30,16 @@ void setMazda626EngineConfiguration(engine_configuration_s *engineConfiguration)
 	engineConfiguration->crankingTimingAngle = 15;
 	engineConfiguration->crankingChargeAngle = 70;
 
+	// set_whole_fuel_map 9
+	setWholeFuelMap(engineConfiguration, 9);
+
+// set_whole_timing_map 10
 	setWholeTimingTable(engineConfiguration, 10);
 
 	setCommonNTCSensor(&engineConfiguration->clt);
 	engineConfiguration->clt.bias_resistor = 2700;
 	setCommonNTCSensor(&engineConfiguration->iat);
 	engineConfiguration->iat.bias_resistor = 2700;
-
 
 	commonFrankensoAnalogInputs(engineConfiguration);
 	engineConfiguration->hasTpsSensor = false;
