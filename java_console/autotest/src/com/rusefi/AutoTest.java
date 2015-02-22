@@ -18,6 +18,7 @@ import static com.rusefi.TestingUtils.*;
  */
 public class AutoTest {
     private static void mainTestBody() {
+        testCitroenBerlingo();
         testMazda626();
         test2003DodgeNeon();
         testFordAspire();
@@ -27,18 +28,25 @@ public class AutoTest {
         testFordFiesta();
     }
 
+    private static void testCitroenBerlingo() {
+        sendCommand("set_engine_type 15");
+        // time to change engine type
+        nextChart();
+        String msg = "Citroen";
+        // todo: add more content
+    }
+
     private static void testMazda626() {
         sendCommand("set_engine_type 28");
         WaveChart chart;
         // time to change engine type
         nextChart();
-        String msg = "Mazda 626";
+        String msg = "mazda 626 default cranking";
         IoUtil.changeRpm(200);
         chart = nextChart();
 
         double x = 275;
-        assertWave("aspire default cranking ", chart, WaveChart.SPARK_1, 0.1944, x, x + 180, x + 360, x + 540);
-
+        assertWave(msg, chart, WaveChart.SPARK_1, 0.1944, x, x + 180, x + 360, x + 540);
     }
 
     private static void test2003DodgeNeon() {

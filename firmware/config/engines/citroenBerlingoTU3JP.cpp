@@ -1,7 +1,8 @@
 /**
  * @file	citroenBerlingoTU3JP.cpp
  *
- * CITROEN_TU3JP: engine_type 15
+ * CITROEN_TU3JP
+ * set_engine_type 15
  * Board pin out for Frankenstein
  *
  * This config overrides some values of the default configuration which is set by setDefaultConfiguration() method
@@ -53,6 +54,9 @@ static const ignition_table_t tps_advance_table = {
 {/*15 engineLoad=100.00*/ /*0 800.0*/+12.00, /*1 1213.0*/+13.20, /*2 1626.0*/+14.40, /*3 2040.0*/+15.60, /*4 2453.0*/+16.80, /*5 2866.0*/+18.00, /*6 3280.0*/+19.20, /*7 3693.0*/+20.40, /*8 4106.0*/+21.60, /*9 4520.0*/+22.80, /*10 4933.0*/+24.00, /*11 5346.0*/+25.20, /*12 5760.0*/+26.40, /*13 6173.0*/+27.60, /*14 6586.0*/+28.80, /*15 7000.0*/+30.00}
 };
 
+static const float rpmSteps[16] = {800, 1200, 1600, 2000, 2500, 2800,
+		3280, 3693.0, 4106.0, 4520.0, 4933.0, 5346.0, 5760.0, 6173.0, 6586.0, 7000.0};
+
 void setCitroenBerlingoTU3JPConfiguration(engine_configuration_s *engineConfiguration) {
 	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 
@@ -72,6 +76,8 @@ void setCitroenBerlingoTU3JPConfiguration(engine_configuration_s *engineConfigur
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->rpmHardLimit = 5000;
 	engineConfiguration->cranking.rpm = 600;
+
+	memcpy(engineConfiguration->ve2RpmBins, rpmSteps, sizeof(rpmSteps));
 
 	/**
 	* Cranking fuel setting
