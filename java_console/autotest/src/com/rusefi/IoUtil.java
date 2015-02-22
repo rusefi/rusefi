@@ -59,11 +59,17 @@ public class IoUtil {
         return result;
     }
 
+    /**
+     * This method is blocking and waits for the next wave chart to arrive
+     *
+     * @return next wave chart in the I/O pipeline
+     */
     private static String getWaveChart() {
         final CountDownLatch waveChartLatch = new CountDownLatch(1);
 
-        final AtomicReference<String> result = new AtomicReference<String>();
+        final AtomicReference<String> result = new AtomicReference<>();
 
+        FileLog.MAIN.logLine("waiting for next chart");
         LinkManager.engineState.registerStringValueAction(WaveReport.WAVE_CHART, new EngineState.ValueCallback<String>() {
             @Override
             public void onUpdate(String value) {
@@ -72,7 +78,9 @@ public class IoUtil {
             }
         });
         int timeout = 60;
+        long waitStartTime = System.currentTimeMillis();
         wait(waveChartLatch, timeout);
+        FileLog.MAIN.logLine("got next chart in " + (System.currentTimeMillis() - waitStartTime) + "ms");
         LinkManager.engineState.removeAction(WaveReport.WAVE_CHART);
         if (result.get() == null)
             throw new IllegalStateException("Chart timeout: " + timeout);
@@ -157,5 +165,13 @@ public class IoUtil {
         LinkManager.open();
 
         waitForFirstResponse();
+    }
+
+    static void sleep(int seconds) {
+        try {
+            Thread.sleep(seconds * 1000L);
+        } catch (InterruptedException e) {
+            throw new IllegalStateException(e);
+        }
     }
 }
