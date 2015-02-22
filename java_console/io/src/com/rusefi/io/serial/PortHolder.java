@@ -5,6 +5,7 @@ import com.rusefi.core.EngineState;
 import com.rusefi.io.DataListener;
 import jssc.SerialPort;
 import jssc.SerialPortException;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -21,8 +22,6 @@ public class PortHolder {
     private static final int MINUTE = 60 * SECOND;
     private static PortHolder instance = new PortHolder();
     private final Object portLock = new Object();
-
-    public static long startedAt = System.currentTimeMillis();
 
     public PortHolderListener listener = PortHolderListener.VOID;
 
@@ -45,7 +44,7 @@ public class PortHolder {
             FileLog.MAIN.logLine("Opening " + port + " @ " + BAUD_RATE);
             boolean opened = serialPort.openPort();//Open serial port
             if (!opened)
-                FileLog.MAIN.logLine("opened: " + opened);
+                FileLog.MAIN.logLine("not opened!");
             serialPort.setParams(BAUD_RATE, 8, 1, 0);//Set params.
             int mask = SerialPort.MASK_RXCHAR;
             //Set the prepared mask
@@ -55,7 +54,7 @@ public class PortHolder {
             FileLog.rlog("ERROR " + e.getMessage());
             return false;
         }
-
+        FileLog.rlog("PortHolder: Sleeping a bit");
         try {
             // todo: why is this delay here? add a comment
             Thread.sleep(200);
@@ -69,6 +68,7 @@ public class PortHolder {
         }
 
         try {
+            FileLog.rlog("PortHolder: test command");
             /**
              * Let's make sure we have not connected to Tuner Studio port?
              * @see EngineState#TS_PROTOCOL_TAG
@@ -119,7 +119,9 @@ public class PortHolder {
         }
     }
 
-    private void doWriteCommand(String command) throws SerialPortException {
+    private void doWriteCommand(@NotNull String command) throws SerialPortException {
+        if (serialPort == null)
+            throw new NullPointerException("serialPort");
         serialPort.writeString(command + "\r\n");
     }
 

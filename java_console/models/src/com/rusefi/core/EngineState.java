@@ -16,13 +16,13 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class EngineState {
     public static final String SEPARATOR = ",";
-    public static final int SNIFFED_ADC_COUNT = 16;
     public static final ValueCallback<String> NOTHING = new ValueCallback<String>() {
         @Override
         public void onUpdate(String value) {
         }
     };
     public static final String PACKING_DELIMITER = ":";
+    public static final String RUS_EFI_VERSION_TAG = "rusEfiVersion";
     /**
      * If we get this tag we have probably connected to the wrong port
      */
@@ -43,11 +43,11 @@ public class EngineState {
         }
     }
 
-    public final List<EngineTimeListener> timeListeners = new CopyOnWriteArrayList<EngineTimeListener>();
+    public final List<EngineTimeListener> timeListeners = new CopyOnWriteArrayList<>();
 
     private final ResponseBuffer buffer;
-    private final List<StringActionPair> actions = new ArrayList<StringActionPair>();
-    private final Set<String> keys = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
+    private final List<StringActionPair> actions = new ArrayList<>();
+    private final Set<String> keys = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
 
     public EngineState(@NotNull final EngineStateListener listener) {
         buffer = new ResponseBuffer(new ResponseBuffer.ResponseListener() {
@@ -285,6 +285,13 @@ public class EngineState {
     }
 
     public interface ValueCallback<V> {
+        static final ValueCallback<?> VOID = new ValueCallback() {
+            @Override
+            public void onUpdate(Object value) {
+
+            }
+        };
+
         void onUpdate(V value);
     }
 

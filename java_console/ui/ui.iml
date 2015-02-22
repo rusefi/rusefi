@@ -17,6 +17,6 @@
     <orderEntry type="library" name="batik" level="project" />
     <orderEntry type="module" module-name="models" />
     <orderEntry type="library" name="SteelSeries" level="project" />
+    <orderEntry type="module" module-name="autotest" />
   </component>
 </module>
-
