@@ -28,7 +28,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * @see com.rusefi.ui.engine.EngineSnifferPanel
  */
 public class Launcher extends FrameHelper {
-    public static final int CONSOLE_VERSION = 20150216;
+    public static final int CONSOLE_VERSION = 20150222;
     public static final boolean SHOW_STIMULATOR = true;
     public static final String TAB_INDEX = "main_tab";
     private final String port;
@@ -84,7 +84,7 @@ public class Launcher extends FrameHelper {
 
         LinkManager.open();
 
-        LinkManager.engineState.registerStringValueAction("rusEfiVersion", new EngineState.ValueCallback<String>() {
+        LinkManager.engineState.registerStringValueAction(EngineState.RUS_EFI_VERSION_TAG, new EngineState.ValueCallback<String>() {
             @Override
             public void onUpdate(String firmwareVersion) {
                 setTitle(firmwareVersion);

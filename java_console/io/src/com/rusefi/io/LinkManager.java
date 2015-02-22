@@ -4,6 +4,7 @@ import com.rusefi.FileLog;
 import com.rusefi.core.EngineState;
 import com.rusefi.io.serial.SerialConnector;
 import com.rusefi.io.tcp.TcpConnector;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -16,7 +17,7 @@ import java.util.concurrent.ThreadFactory;
 public class LinkManager {
     public final static Executor IO_EXECUTOR = Executors.newSingleThreadExecutor(new ThreadFactory() {
         @Override
-        public Thread newThread(Runnable r) {
+        public Thread newThread(@NotNull Runnable r) {
             Thread t = new Thread(r);
             t.setName("IO executor thread");
             t.setDaemon(true);  // need daemon thread so that COM thread is also daemon
@@ -57,6 +58,7 @@ public class LinkManager {
     public static boolean isStimulationMode;
 
     public static void start(String port) {
+        FileLog.MAIN.logLine("Starting " + port);
         if (isLogViewerMode(port)) {
             connector = LinkManager.VOID;
         } else if (TcpConnector.isTcpPort(port)) {
@@ -75,6 +77,9 @@ public class LinkManager {
         return connector == LinkManager.VOID;
     }
 
+    /**
+     * todo: should this be merged into {@link #start(String)} ?
+     */
     public static void open() {
         if (connector == null)
             throw new NullPointerException("connector");
