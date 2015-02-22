@@ -23,8 +23,8 @@ void setMazda626EngineConfiguration(engine_configuration_s *engineConfiguration)
 	boardConfiguration->analogChartMode = AC_TRIGGER;
 	engineConfiguration->analogChartFrequency = 2;
 
-	// set_global_trigger_offset_angle -40
-	engineConfiguration->globalTriggerAngleOffset = -40;
+	// set_global_trigger_offset_angle -42
+	engineConfiguration->globalTriggerAngleOffset = -42;
 
 	// set_cranking_timing_angle 15
 	engineConfiguration->crankingTimingAngle = 15;

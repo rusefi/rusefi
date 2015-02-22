@@ -164,7 +164,6 @@ void printSensors(Logging *log, bool fileFormat, Engine *engine) {
 		reportSensorF(log, fileFormat, "mafr", "kg/hr", getRealMaf(), 2);
 	}
 
-
 #if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
 	if (engineConfiguration->hasMapSensor) {
 		reportSensorF(log, fileFormat, "MAP", "kPa", getMap(), 2);
@@ -225,7 +224,6 @@ static void printState(Engine *engine) {
 //	for(int i=0;i<strlen(msg);i++) {
 //		ITM_SendChar(msg[i]);
 //	}
-
 
 	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
 
@@ -393,8 +391,7 @@ static void showFuelInfo2(float rpm, float engineLoad, Engine *engine) {
 	scheduleMsg(&logger2, "algo=%s/pump=%s", getEngine_load_mode_e(engineConfiguration->algorithm),
 			boolToString(enginePins.fuelPumpRelay.getLogicValue()));
 
-	scheduleMsg(&logger2, "phase=%f correction=%f", getInjectionAngle(rpm),
-			engineConfiguration->globalFuelCorrection);
+	scheduleMsg(&logger2, "phase=%f correction=%f", getInjectionAngle(rpm), engineConfiguration->globalFuelCorrection);
 
 #if EFI_ENGINE_CONTROL
 	scheduleMsg(&logger, "base cranking fuel %f", engineConfiguration->cranking.baseFuel);
@@ -468,6 +465,16 @@ static void initialLedsBlink(void) {
 		leds[i]->setValue(0);
 }
 
+int blinkingPeriod = 33;
+
+/**
+ * this is useful to test connectivity
+ */
+static void setBlinkingPeriod(int value) {
+	if (value > 0)
+		blinkingPeriod = value;
+}
+
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 /**
  * this thread has a lower-then-usual stack size so we cannot afford *print* methods here
@@ -482,9 +489,9 @@ static void blinkingThread(void *arg) {
 		int delay;
 
 		if (getNeedToWriteConfiguration()) {
-			delay = isConsoleReady() ? 200 : 66;
+			delay = isConsoleReady() ? 6 * blinkingPeriod : 2 * blinkingPeriod;
 		} else {
-			delay = isConsoleReady() ? 100 : 33;
+			delay = isConsoleReady() ? 3 * blinkingPeriod : blinkingPeriod;
 		}
 
 		communicationPin.setValue(0);
@@ -630,6 +637,7 @@ void initStatusLoop(Engine *engine) {
 
 	addConsoleActionI("subscribe", subscribe);
 	addConsoleActionI("unsubscribe", unsubscribe);
+	addConsoleActionI("set_led_blinking_period", setBlinkingPeriod);
 
 	addConsoleAction("status", printStatus);
 #endif /* EFI_PROD_CODE */
