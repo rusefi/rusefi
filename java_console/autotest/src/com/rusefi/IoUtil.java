@@ -64,7 +64,6 @@ public class IoUtil {
         // we need to skip TWO because spark could have been scheduled a while ago and happen now
         // todo: improve this logic, compare times
         getWaveChart();
-        getWaveChart();
         // we want to wait for the 2nd chart to see same same RPM across the whole chart
         String result = getWaveChart();
         FileLog.MAIN.logLine("current chart: " + result);
@@ -129,6 +128,7 @@ public class IoUtil {
 
         if (!isCloseEnough(rpm, actualRpm))
             throw new IllegalStateException("rpm change did not happen: " + rpm + ", actual " + actualRpm);
+        sendCommand("reset_wave_chart");
     }
 
     static void waitForFirstResponse() throws InterruptedException {
