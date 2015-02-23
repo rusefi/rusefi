@@ -38,18 +38,18 @@ void setMazda626EngineConfiguration(engine_configuration_s *engineConfiguration)
 
 	setCommonNTCSensor(&engineConfiguration->clt);
 	engineConfiguration->clt.bias_resistor = 2700;
-	setCommonNTCSensor(&engineConfiguration->iat);
-	engineConfiguration->iat.bias_resistor = 2700;
-
+//	setCommonNTCSensor(&engineConfiguration->iat);
+//	engineConfiguration->iat.bias_resistor = 2700;
+//
 	commonFrankensoAnalogInputs(engineConfiguration);
-	engineConfiguration->hasTpsSensor = false;
-	engineConfiguration->tpsAdcChannel = EFI_ADC_NONE;
-//	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
-	engineConfiguration->mafAdcChannel = EFI_ADC_0;
-	engineConfiguration->cltAdcChannel = EFI_ADC_12;
-	engineConfiguration->iatAdcChannel = EFI_ADC_11;
-
-	// todo: 8.2 or 10k?
-	engineConfiguration->vbattDividerCoeff = ((float) (10 + 33)) / 10 * 2;
+//	engineConfiguration->hasTpsSensor = false;
+//	engineConfiguration->tpsAdcChannel = EFI_ADC_NONE;
+////	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
+//	engineConfiguration->mafAdcChannel = EFI_ADC_0;
+//	engineConfiguration->cltAdcChannel = EFI_ADC_12;
+//	engineConfiguration->iatAdcChannel = EFI_ADC_11;
+//
+//	// todo: 8.2 or 10k?
+//	engineConfiguration->vbattDividerCoeff = ((float) (10 + 33)) / 10 * 2;
 
 }
