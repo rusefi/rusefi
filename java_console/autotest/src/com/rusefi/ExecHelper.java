@@ -1,7 +1,5 @@
 package com.rusefi;
 
-import com.rusefi.FileLog;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;

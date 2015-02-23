@@ -71,7 +71,7 @@ public class EngineSnifferPanel {
     private boolean isPaused;
 
     public EngineSnifferPanel(Node config) {
-        LinkManager.engineState.registerStringValueAction("outpin", new EngineState.ValueCallback<String>() {
+        LinkManager.engineState.registerStringValueAction(EngineState.OUTPIN_TAG, new EngineState.ValueCallback<String>() {
             @Override
             public void onUpdate(String value) {
                 String pinInfo[] = value.split("@");
