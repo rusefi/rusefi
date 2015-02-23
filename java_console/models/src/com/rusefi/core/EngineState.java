@@ -23,6 +23,7 @@ public class EngineState {
     };
     public static final String PACKING_DELIMITER = ":";
     public static final String RUS_EFI_VERSION_TAG = "rusEfiVersion";
+    public static final String OUTPIN_TAG = "outpin";
     /**
      * If we get this tag we have probably connected to the wrong port
      */

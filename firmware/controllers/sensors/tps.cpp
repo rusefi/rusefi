@@ -83,6 +83,8 @@ int getTPS10bitAdc(DECLARE_ENGINE_PARAMETER_F) {
 	if (mockTps != MOCK_UNDEFINED)
 		return mockTps;
 #endif
+	if(engineConfiguration->tpsAdcChannel==EFI_ADC_NONE)
+		return -1;
 	int adc = getAdcValue(engineConfiguration->tpsAdcChannel);
 	return (int) adc / 4; // Only for TunerStudio compatibility. Max TS adc value in 1023
 }

@@ -115,7 +115,7 @@ ADC_TwoSamplingDelay_5Cycles,   // cr1
 		ADC_CR2_SWSTART, // cr2
 
 		0, // sample times for channels 10...18
-		// todo: IS SOMETHING MISSING HERE?
+		   // todo: IS SOMETHING MISSING HERE?
 		ADC_SMPR2_SMP_AN0(MY_SAMPLING_FAST), // In this field must be specified the sample times for channels 0...9
 
 		0, // Conversion group sequence 13...16 + sequence length
@@ -181,6 +181,11 @@ static void pwmpcb_fast(PWMDriver *pwmp) {
 }
 
 int getInternalAdcValue(adc_channel_e hwChannel) {
+	if (hwChannel == EFI_ADC_NONE) {
+		firmwareError("should not be asking for NONE");
+		return -1;
+	}
+
 	if (boardConfiguration->adcHwChannelEnabled[hwChannel] == ADC_FAST) {
 		int internalIndex = fastAdc.internalAdcIndexByHardwareIndex[hwChannel];
 		return fastAdc.samples[internalIndex];
