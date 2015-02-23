@@ -83,7 +83,9 @@ public class CommandQueue {
     }
 
     private CommandQueue() {
-        new Thread(runnable, "Commands Queue").start();
+        Thread thread = new Thread(runnable, "Commands Queue");
+        thread.setDaemon(true);
+        thread.start();
         final MessagesCentral mc = MessagesCentral.getInstance();
         mc.addListener(new MessagesCentral.MessageListener() {
             @Override
@@ -139,22 +141,22 @@ public class CommandQueue {
     /**
      * Non-blocking command request
      */
-    public void write(String command, int timeout, InvocationConfirmationListener listener) {
+    public void write(String command, int timeoutMs, InvocationConfirmationListener listener) {
 
         for (CommandQueueListener cql : commandListeners)
             cql.onCommand(command);
 
-        pendingCommands.add(new MethodInvocation(command, timeout, listener));
+        pendingCommands.add(new MethodInvocation(command, timeoutMs, listener));
     }
 
     static class MethodInvocation {
         private final String text;
-        private final int timeout;
+        private final int timeoutMs;
         private final InvocationConfirmationListener listener;
 
-        MethodInvocation(String text, int timeout, InvocationConfirmationListener listener) {
+        MethodInvocation(String text, int timeoutMs, InvocationConfirmationListener listener) {
             this.text = text;
-            this.timeout = timeout;
+            this.timeoutMs = timeoutMs;
             this.listener = listener;
         }
 
@@ -163,7 +165,7 @@ public class CommandQueue {
         }
 
         public int getTimeout() {
-            return timeout;
+            return timeoutMs;
         }
     }
 

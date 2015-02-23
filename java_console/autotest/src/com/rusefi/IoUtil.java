@@ -10,6 +10,7 @@ import com.rusefi.io.tcp.TcpConnector;
 import com.rusefi.waves.WaveChart;
 import com.rusefi.waves.WaveChartParser;
 import com.rusefi.waves.WaveReport;
+import jssc.SerialPortList;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -30,12 +31,16 @@ public class IoUtil {
      * @throws IllegalStateException if command was not confirmed
      */
     static void sendCommand(String command) {
+        sendCommand(command, CommandQueue.DEFAULT_TIMEOUT);
+    }
+
+    static void sendCommand(String command, int timeoutMs) {
         final CountDownLatch responseLatch = new CountDownLatch(1);
         long time = System.currentTimeMillis();
         if (LinkManager.hasError())
             throw new IllegalStateException("IO error");
         FileLog.MAIN.logLine("Sending command [" + command + "]");
-        CommandQueue.getInstance().write(command, CommandQueue.DEFAULT_TIMEOUT, new InvocationConfirmationListener() {
+        CommandQueue.getInstance().write(command, timeoutMs, new InvocationConfirmationListener() {
             @Override
             public void onCommandConfirmation() {
                 responseLatch.countDown();
@@ -77,7 +82,7 @@ public class IoUtil {
         final AtomicReference<String> result = new AtomicReference<>();
 
         FileLog.MAIN.logLine("waiting for next chart");
-        LinkManager.engineState.registerStringValueAction(WaveReport.WAVE_CHART, new EngineState.ValueCallback<String>() {
+        LinkManager.engineState.replaceStringValueAction(WaveReport.WAVE_CHART, new EngineState.ValueCallback<String>() {
             @Override
             public void onUpdate(String value) {
                 waveChartLatch.countDown();
@@ -88,7 +93,7 @@ public class IoUtil {
         long waitStartTime = System.currentTimeMillis();
         wait(waveChartLatch, timeout);
         FileLog.MAIN.logLine("got next chart in " + (System.currentTimeMillis() - waitStartTime) + "ms");
-        LinkManager.engineState.removeAction(WaveReport.WAVE_CHART);
+        LinkManager.engineState.replaceStringValueAction(WaveReport.WAVE_CHART, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
         if (result.get() == null)
             throw new IllegalStateException("Chart timeout: " + timeout);
         return result.get();
@@ -181,5 +186,27 @@ public class IoUtil {
         } catch (InterruptedException e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    /**
+     * @return null if no port located
+     */
+    static String getDefaultPort() {
+        String[] ports = SerialPortList.getPortNames();
+        if (ports.length == 0) {
+            System.out.println("Port not specified and no ports found");
+            return null;
+        }
+        String port = ports[ports.length - 1];
+        System.out.println("Using last of " + ports.length + " port(s)");
+        return port;
+    }
+
+    static void realHardwareConnect(String port) {
+        LinkManager.start(port);
+        LinkManager.open();
+        LinkManager.engineState.registerStringValueAction(EngineState.RUS_EFI_VERSION_TAG, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
+        LinkManager.engineState.registerStringValueAction(EngineState.OUTPIN_TAG, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
+        LinkManager.engineState.registerStringValueAction(AverageAnglesUtil.KEY, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
     }
 }

@@ -2,6 +2,7 @@ package com.rusefi.core;
 
 import com.rusefi.FileLog;
 import com.rusefi.SensorConversion;
+import com.rusefi.waves.WaveReport;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -29,6 +30,11 @@ public class EngineState {
      */
     private static final CharSequence TS_PROTOCOL_TAG = "ts_p_al";
     private final Object lock = new Object();
+
+    public void replaceStringValueAction(String key, ValueCallback<String> callback) {
+        removeAction(key);
+        registerStringValueAction(key, callback);
+    }
 
     private static class StringActionPair extends Pair<String, ValueCallback<String>> {
         public final String prefix;
