@@ -150,6 +150,12 @@ public:
 
 	bool_t isRunningPwmTest;
 
+	/**
+	 * are we running any kind of functional test? this affect
+	 * some areas
+	 */
+	bool_t isTestMode;
+
 	TriggerShape triggerShape;
 
 	/**
