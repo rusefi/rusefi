@@ -123,8 +123,11 @@ public class AutoTest {
         setEngineType(2);
         WaveChart chart;
         sendCommand("set_whole_fuel_map 3");
-        IoUtil.changeRpm(2000);
         sendCommand("set_ignition_mode 1");
+        /**
+         * note that command order matters - RPM change resets wave chart
+         */
+        IoUtil.changeRpm(2000);
         chart = nextChart();
 
         String msg = "1995 Neon";

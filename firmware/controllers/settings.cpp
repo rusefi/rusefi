@@ -22,15 +22,22 @@
 #include "engine.h"
 #include "efiGpio.h"
 
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 #include "rusefi.h"
 #include "pin_repository.h"
 #include "hardware.h"
 #endif /* EFI_PROD_CODE */
 
-#if EFI_INTERNAL_FLASH
+#if EFI_INTERNAL_FLASH || defined(__DOXYGEN__)
 #include "flash_main.h"
 #endif /* EFI_INTERNAL_FLASH */
+
+#if EFI_WAVE_CHART || defined(__DOXYGEN__)
+#include "wave_chart.h"
+extern int waveChartUsedSize;
+extern WaveChart waveChart;
+#endif /* EFI_WAVE_CHART */
+
 
 static char LOGGING_BUFFER[1000];
 static Logging logger("settings control", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
@@ -93,15 +100,16 @@ static void printOutputs(engine_configuration_s *engineConfiguration) {
 			hwPortname(boardConfiguration->mainRelayPin));
 }
 
-EXTERN_ENGINE;
+EXTERN_ENGINE
+;
 
 /**
  * These should be not very long because these are displayed on the LCD as is
  */
 const char* getConfigurationName(engine_type_e engineType) {
 	switch (engineType) {
-        case CUSTOM_ENGINE:
-          return "CUSTOM";
+	case CUSTOM_ENGINE:
+		return "CUSTOM";
 #if EFI_SUPPORT_DODGE_NEON
 	case DODGE_NEON_1995:
 		return "Neon95";
@@ -156,12 +164,12 @@ const char* getConfigurationName(engine_type_e engineType) {
 		return "MX596";
 	case BMW_E34:
 		return "BMWe34";
-        case TEST_ENGINE:
-                return "Test";
-        case SACHS:
-                return "SACHS";
-    	case MAZDA_626:
-    		return "Mazda626";
+	case TEST_ENGINE:
+		return "Test";
+	case SACHS:
+		return "SACHS";
+	case MAZDA_626:
+		return "Mazda626";
 	default:
 		firmwareError("Unexpected: engineType %d", engineType);
 		return NULL;
@@ -214,8 +222,7 @@ void printConfiguration(engine_configuration_s *engineConfiguration) {
 	scheduleMsg(&logger, "fixedModeTiming: %d", (int) engineConfiguration->fixedModeTiming);
 	scheduleMsg(&logger, "ignitionOffset=%f", engineConfiguration->ignitionBaseAngle);
 	scheduleMsg(&logger, "injection %s offset=%f/enabled=%s", getInjection_mode_e(engineConfiguration->injectionMode),
-			(double) engineConfiguration->injectionAngle,
-			boolToString(engineConfiguration->isInjectionEnabled));
+			(double) engineConfiguration->injectionAngle, boolToString(engineConfiguration->isInjectionEnabled));
 
 	if (engineConfiguration->useConstantDwellDuringCranking) {
 		scheduleMsg(&logger, "ignitionDwellForCrankingMs=%f", engineConfiguration->ignitionDwellForCrankingMs);
@@ -243,11 +250,13 @@ void printConfiguration(engine_configuration_s *engineConfiguration) {
 			boolToString(engineConfiguration->isManualSpinningMode),
 			boolToString(engineConfiguration->isCylinderCleanupEnabled));
 
-	scheduleMsg(&logger, "clutchUp@%s: %s", hwPortname(engineConfiguration->clutchUpPin), boolToString(engine->clutchUpState));
-	scheduleMsg(&logger, "clutchDown@%s: %s", hwPortname(boardConfiguration->clutchDownPin), boolToString(engine->clutchDownState));
+	scheduleMsg(&logger, "clutchUp@%s: %s", hwPortname(engineConfiguration->clutchUpPin),
+			boolToString(engine->clutchUpState));
+	scheduleMsg(&logger, "clutchDown@%s: %s", hwPortname(boardConfiguration->clutchDownPin),
+			boolToString(engine->clutchDownState));
 
-	scheduleMsg(&logger, "boardTestModeJumperPin: %s/nesting=%d", hwPortname(boardConfiguration->boardTestModeJumperPin),
-			maxNesting);
+	scheduleMsg(&logger, "boardTestModeJumperPin: %s/nesting=%d",
+			hwPortname(boardConfiguration->boardTestModeJumperPin), maxNesting);
 
 	scheduleMsg(&logger, "digitalPotentiometerSpiDevice %d", boardConfiguration->digitalPotentiometerSpiDevice);
 
@@ -266,7 +275,6 @@ static void doPrintConfiguration(Engine *engine) {
 	printConfiguration(engineConfiguration);
 }
 
-
 static void setFixedModeTiming(int value) {
 	engineConfiguration->fixedModeTiming = value;
 	doPrintConfiguration(engine);
@@ -282,6 +290,11 @@ static void setTimingMode(int value) {
 void setEngineType(int value) {
 	engineConfiguration->engineType = (engine_type_e) value;
 	resetConfigurationExt(&logger, (engine_type_e) value, engine);
+#if EFI_WAVE_CHART || defined(__DOXYGEN__)
+	if (engine->isTestMode)
+		waveChart.resetWaveChart();
+#endif
+
 #if EFI_INTERNAL_FLASH
 	writeToFlashNow();
 //	scheduleReset();
@@ -332,7 +345,7 @@ static void setMalfunctionIndicatorPinMode(int value) {
 }
 
 static void setAnalogChartMode(int value) {
-	boardConfiguration->analogChartMode = (analog_chart_e)value;
+	boardConfiguration->analogChartMode = (analog_chart_e) value;
 	doPrintConfiguration(engine);
 }
 
@@ -352,8 +365,8 @@ static void printThermistor(const char *msg, Thermistor *thermistor) {
 
 	scheduleMsg(&logger, "%s v=%f C=%f R=%f on channel %d", msg, voltage, t, r, adcChannel);
 	scheduleMsg(&logger, "@%s", getPinNameByAdcChannel(adcChannel, pinNameBuffer));
-	scheduleMsg(&logger, "bias=%f A=%..100000f B=%..100000f C=%..100000f", thermistor->config->bias_resistor, thermistor->config->s_h_a,
-			thermistor->config->s_h_b, thermistor->config->s_h_c);
+	scheduleMsg(&logger, "bias=%f A=%..100000f B=%..100000f C=%..100000f", thermistor->config->bias_resistor,
+			thermistor->config->s_h_a, thermistor->config->s_h_b, thermistor->config->s_h_c);
 //#if EFI_ANALOG_INPUTS
 	scheduleMsg(&logger, "==============================");
 //#endif
@@ -362,8 +375,7 @@ static void printThermistor(const char *msg, Thermistor *thermistor) {
 #if EFI_PROD_CODE
 static void printMAPInfo(void) {
 #if EFI_ANALOG_INPUTS
-	scheduleMsg(&logger, "map type=%d raw=%f MAP=%f", engineConfiguration->map.sensor.type, getRawMap(),
-			getMap());
+	scheduleMsg(&logger, "map type=%d raw=%f MAP=%f", engineConfiguration->map.sensor.type, getRawMap(), getMap());
 	if (engineConfiguration->map.sensor.type == MT_CUSTOM) {
 		scheduleMsg(&logger, "at0=%f at5=%f", engineConfiguration->map.sensor.valueAt0,
 				engineConfiguration->map.sensor.valueAt5);
@@ -380,7 +392,7 @@ static void printMAPInfo(void) {
 
 static void printTPSInfo(void) {
 #if (EFI_PROD_CODE && HAL_USE_ADC) || defined(__DOXYGEN__)
-	if(!engineConfiguration->hasTpsSensor) {
+	if (!engineConfiguration->hasTpsSensor) {
 		scheduleMsg(&logger, "NO TPS SENSOR");
 		return;
 	}
@@ -394,7 +406,6 @@ static void printTPSInfo(void) {
 	scheduleMsg(&logger, "current 10bit=%d value=%f rate=%f", getTPS10bitAdc(), getTPS(PASS_ENGINE_PARAMETER_F),
 			getTpsRateOfChange());
 }
-
 
 static void printTemperatureInfo(void) {
 #if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
@@ -502,7 +513,7 @@ static void setCltBias(float value) {
 }
 
 static void setFanSetting(float onTempC, float offTempC) {
-	if(onTempC <= offTempC) {
+	if (onTempC <= offTempC) {
 		scheduleMsg(&logger, "ON temp [%f] should be above OFF temp [%f]", onTempC, offTempC);
 		return;
 	}
@@ -846,10 +857,6 @@ void stopEngine(void) {
 	engine->stopEngineRequestTimeNt = getTimeNowNt();
 }
 
-#if EFI_WAVE_CHART
-extern int waveChartUsedSize;
-#endif
-
 static void printAllInfo(void) {
 	printTemperatureInfo();
 	printTPSInfo();
@@ -910,7 +917,7 @@ void initSettings(engine_configuration_s *engineConfiguration) {
 	addConsoleActionI("set_rpm_hard_limit", setRpmHardLimit);
 	addConsoleActionI("set_firing_order", setFiringOrder);
 	addConsoleActionI("set_algorithm", setAlgorithm);
-	addConsoleAction("stopengine", (Void)stopEngine);
+	addConsoleAction("stopengine", (Void) stopEngine);
 
 	// todo: refactor this - looks like all boolean flags should be controlled with less code duplication
 	addConsoleAction("enable_injection", enableInjection);

@@ -64,6 +64,14 @@ static Logging debugLogging;
 
 static LoggingWithStorage logger("wave info");
 
+#if ! EFI_UNIT_TEST
+extern WaveChart waveChart;
+static void resetWaveChartNow(void) {
+	waveChart.resetWaveChart();
+}
+#endif
+
+
 void WaveChart::resetWaveChart() {
 #if DEBUG_WAVE
 	scheduleSimpleMsg(&debugLogging, "reset while at ", counter);
@@ -242,6 +250,9 @@ void initWaveChart(WaveChart *chart) {
 
 	addConsoleActionI("chartsize", setChartSize);
 	addConsoleActionI("chart", setChartActive);
+#if ! EFI_UNIT_TEST
+	addConsoleAction("reset_wave_chart", resetWaveChartNow);
+#endif
 }
 
 #endif /* EFI_WAVE_CHART */

@@ -30,7 +30,7 @@ public class TestingUtils {
     }
 
     private static String printRange(double current, double ratio) {
-        return " expected range from " + current * (1 - ratio) + " to " + current + (1 + ratio);
+        return " expected range from " + current * (1 - ratio) + " to " + current * (1 + ratio);
     }
 
     private static double fixAngle(double angle) {
