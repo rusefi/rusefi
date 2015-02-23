@@ -46,7 +46,8 @@ void TriggerEmulatorHelper::handleEmulatorCallback(PwmConfig *state, int stateIn
 	//	print("hello %d\r\n", chTimeNow());
 }
 
-EXTERN_ENGINE;
+EXTERN_ENGINE
+;
 
 /*
  * todo: should we simply re-use instances used by trigger_decoder?
@@ -71,7 +72,13 @@ static bool isEmulating = true;
 static Logging *logger;
 static LocalVersionHolder emulatorConfigVersion;
 
-EXTERN_ENGINE;
+EXTERN_ENGINE
+;
+
+#if EFI_WAVE_CHART
+#include "wave_chart.h"
+extern WaveChart waveChart;
+#endif /* EFI_WAVE_CHART */
 
 void setTriggerEmulatorRPM(int rpm, Engine *engine) {
 	engineConfiguration->bc.triggerSimulatorFrequency = rpm;
@@ -85,6 +92,11 @@ void setTriggerEmulatorRPM(int rpm, Engine *engine) {
 		float gRpm = rpm * engineConfiguration->rpmMultiplier / 60.0; // per minute converted to per second
 		triggerSignal.periodNt = US2NT(frequency2periodUs(gRpm));
 	}
+#if EFI_WAVE_CHART
+	if (engine->isTestMode)
+		waveChart.resetWaveChart();
+#endif /* EFI_WAVE_CHART */
+
 	scheduleMsg(logger, "Emulating position sensor(s). RPM=%d", rpm);
 }
 
@@ -142,8 +154,8 @@ void initTriggerEmulatorLogic(Logging *sharedLogger, Engine *engine) {
 	triggerSignal.weComplexInit("position sensor", s->getSize(), s->wave.switchTimes, PWM_PHASE_MAX_WAVE_PER_PWM,
 			pinStates, updateTriggerShapeIfNeeded, emulatorApplyPinState);
 
-	addConsoleActionIP("rpm", (VoidIntVoidPtr)setTriggerEmulatorRPM, engine);
-	addConsoleActionIP("stop_stimulator_at_index", (VoidIntVoidPtr)setEmulatorAtIndex, engine);
+	addConsoleActionIP("rpm", (VoidIntVoidPtr) setTriggerEmulatorRPM, engine);
+	addConsoleActionIP("stop_stimulator_at_index", (VoidIntVoidPtr) setEmulatorAtIndex, engine);
 	addConsoleActionP("resume_stimulator", (VoidPtr) resumeStimulator, engine);
 }
 #endif

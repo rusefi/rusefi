@@ -16,6 +16,15 @@
 #include "thermistors.h"
 #include "citroenBerlingoTU3JP.h"
 
+void setLCD(board_configuration_s *boardConfiguration) {
+	boardConfiguration->HD44780_rs = GPIOE_7;
+	boardConfiguration->HD44780_e = GPIOE_9;
+	boardConfiguration->HD44780_db4 = GPIOE_11;
+	boardConfiguration->HD44780_db5 = GPIOE_13;
+	boardConfiguration->HD44780_db6 = GPIOE_15;
+	boardConfiguration->HD44780_db7 = GPIOB_10;
+}
+
 static const fuel_table_t tps_fuel_table = {
 {/*0  engineLoad=0.00*/   /*0 800.0*/4.00,  /*1 1213.0*/4.00,  /*2 1626.0*/4.00,  /*3 2040.0*/4.00,  /*4 2453.0*/4.00,  /*5 2866.0*/4.00,  /*6 3280.0*/4.00,  /*7 3693.0*/4.00,  /*8 4106.0*/4.00,  /*9 4520.0*/4.00,  /*10 4933.0*/4.00,  /*11 5346.0*/4.00,  /*12 5760.0*/4.00,  /*13 6173.0*/4.00,  /*14 6586.0*/4.00,  /*15 7000.0*/4.00},
 {/*1  engineLoad=6.66*/   /*0 800.0*/5.07,  /*1 1213.0*/5.07,  /*2 1626.0*/5.07,  /*3 2040.0*/5.07,  /*4 2453.0*/5.07,  /*5 2866.0*/5.07,  /*6 3280.0*/5.07,  /*7 3693.0*/5.07,  /*8 4106.0*/5.07,  /*9 4520.0*/5.07,  /*10 4933.0*/5.07,  /*11 5346.0*/5.07,  /*12 5760.0*/5.07,  /*13 6173.0*/5.07,  /*14 6586.0*/5.07,  /*15 7000.0*/5.07},
@@ -125,6 +134,8 @@ void setCitroenBerlingoTU3JPConfiguration(engine_configuration_s *engineConfigur
 	boardConfiguration->fuelPumpPin = GPIOB_9;
 	boardConfiguration->fuelPumpPinMode = OM_DEFAULT;
 
+	setLCD(boardConfiguration);
+
 	boardConfiguration->fanPin = GPIO_UNASSIGNED;
 //	boardConfiguration->fanPinMode = OM_DEFAULT;
 
@@ -178,7 +189,7 @@ void setCitroenBerlingoTU3JPConfiguration(engine_configuration_s *engineConfigur
 	 * vBatt
 	 */
 	engineConfiguration->vbattAdcChannel = EFI_ADC_0;
-	engineConfiguration->vbattDividerCoeff = ((float) (2.6 + 11)) / 2.6 * 2;
+	engineConfiguration->vbattDividerCoeff = ((float) (2.6 + 10.1)) / 2.6 * 2;
 	/**
 	* WBO Innovate LC-1
 	*/
