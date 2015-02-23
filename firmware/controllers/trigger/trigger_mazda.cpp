@@ -120,22 +120,20 @@ void configureMazdaProtegeLx(TriggerShape *s) {
 	/**
 	 * based on https://svn.code.sf.net/p/rusefi/code/trunk/misc/logs/1993_escort_gt/MAIN_rfi_report_2015-02-01%2017_39.csv
 	 */
-	float off = 720 - 624.670746;
+	s->addEvent(95.329254, T_PRIMARY, TV_HIGH);
 
-	s->addEvent(off, T_PRIMARY, TV_HIGH);
+	s->addEvent(95.329254 + 14.876692, T_SECONDARY, TV_HIGH);
+	s->addEvent(95.329254 + 82.693557, T_SECONDARY, TV_LOW);
 
-	s->addEvent(off + 14.876692, T_SECONDARY, TV_HIGH);
-	s->addEvent(off + 82.693557, T_SECONDARY, TV_LOW);
+	s->addEvent(95.329254 + 137.119154, T_PRIMARY, TV_LOW);
 
-	s->addEvent(off + 137.119154, T_PRIMARY, TV_LOW);
+	s->addEvent(95.329254 + 192.378308, T_SECONDARY, TV_HIGH);
+	s->addEvent(95.329254 + 261.556418, T_SECONDARY, TV_LOW);
 
-	s->addEvent(off + 192.378308, T_SECONDARY, TV_HIGH);
-	s->addEvent(off + 261.556418, T_SECONDARY, TV_LOW);
+	s->addEvent(95.329254 + 373.060597, T_SECONDARY, TV_HIGH);
+	s->addEvent(95.329254 + 443.503184, T_SECONDARY, TV_LOW);
 
-	s->addEvent(off + 373.060597, T_SECONDARY, TV_HIGH);
-	s->addEvent(off + 443.503184, T_SECONDARY, TV_LOW);
-
-	s->addEvent(off + 555.349776, T_SECONDARY, TV_HIGH);
+	s->addEvent(95.329254 + 555.349776, T_SECONDARY, TV_HIGH);
 	s->addEvent(720, T_SECONDARY, TV_LOW);
 
 	s->tdcPosition = 137.119154;
