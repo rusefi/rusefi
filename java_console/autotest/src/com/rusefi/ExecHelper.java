@@ -28,7 +28,9 @@ public class ExecHelper {
 
             BufferedReader input =
                     new BufferedReader(new InputStreamReader(ExecHelper.simulatorProcess.getInputStream()));
-            new Thread(createErrorStreamEcho()).start();
+            Thread thread = new Thread(createErrorStreamEcho());
+            thread.setDaemon(true);
+            thread.start();
 
             String line;
             while ((line = input.readLine()) != null) {
