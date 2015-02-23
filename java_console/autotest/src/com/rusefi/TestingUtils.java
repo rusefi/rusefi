@@ -25,8 +25,12 @@ public class TestingUtils {
                 return;
         }
         if (expectations.length == 1)
-            fail(msg + ": Got " + current + " while expecting " + Arrays.toString(expectations) + " ratio=" + Math.abs(1 - expectations[0] / current));
-        fail(msg + ": Got " + current + " while expecting " + Arrays.toString(expectations));
+            fail(msg + ": Got " + current + " while expecting " + Arrays.toString(expectations) + " ratio=" + Math.abs(1 - expectations[0] / current) + printRange(current, ratio));
+        fail(msg + ": Got " + current + " while expecting " + Arrays.toString(expectations) + printRange(current, ratio));
+    }
+
+    private static String printRange(double current, double ratio) {
+        return " expected range from " + current * (1 - ratio) + " to " + current + (1 + ratio);
     }
 
     private static double fixAngle(double angle) {

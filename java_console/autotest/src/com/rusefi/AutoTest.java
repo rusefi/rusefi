@@ -67,9 +67,9 @@ public class AutoTest {
 
         chart = nextChart();
         double x = 100;
-        assertWave(true, msg, chart, WaveChart.SPARK_1, 0.194433, 0.005, WaveReport.RATIO, x + 180, x + 540);
+        assertWave(true, msg, chart, WaveChart.SPARK_1, 0.194433, 0.01, WaveReport.RATIO, x + 180, x + 540);
         assertWaveNull(msg, chart, WaveChart.SPARK_2);
-        assertWave(true, msg, chart, WaveChart.SPARK_3, 0.194433, 0.005, WaveReport.RATIO, x, x + 360);
+        assertWave(true, msg, chart, WaveChart.SPARK_3, 0.194433, 0.01, WaveReport.RATIO, x, x + 360);
         assertWaveNull(msg, chart, WaveChart.SPARK_4);
 
         x = 176.856;
