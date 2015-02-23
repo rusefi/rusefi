@@ -2,6 +2,7 @@
 rm -rf .dep/
 
 rm -rf build\rusefi.hex
+rm -rf build\rusefi.bin
 
 call update_version.bat
 
@@ -39,7 +40,8 @@ cd ..
 arm-none-eabi-size  --format=berkeley "build\rusefi.elf"
 
 rem file, let's program the board right away
-flash.bat
+cd build
+../flash_openocd
 exit
 
 :error

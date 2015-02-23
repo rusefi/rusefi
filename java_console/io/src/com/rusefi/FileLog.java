@@ -56,12 +56,12 @@ public enum FileLog {
     }
 
     public synchronized void logLine(String fullLine) {
+        System.out.println(fullLine);
         if (fileLog == null)
             return;
         try {
             fileLog.write((new Date() + END_OF_TIMESTAND_TAG + fullLine + "\r\n").getBytes());
             fileLog.flush();
-            System.out.println(fullLine);
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }

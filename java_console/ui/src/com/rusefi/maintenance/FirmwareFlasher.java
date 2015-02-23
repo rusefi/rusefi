@@ -14,17 +14,10 @@ import java.io.*;
  * 2/4/15
  */
 public class FirmwareFlasher {
-    public static final String IMAGE_ELF = "rusefi.elf";
-    private static final String OPEN_OCD_COMMAND = "openocd/bin/openocd-0.8.0.exe " +
-            "-f interface/stlink-v2.cfg " +
-            "-f board/stm32f4discovery.cfg " +
-            "-c init " +
-            "-c targets " +
-            "-c \"halt\" " +
-            "-c \"flash write_image erase " + IMAGE_ELF + "\" " +
-            "-c \"verify_image " + IMAGE_ELF + "\" " +
-            "-c \"reset run\" " +
-            "-c shutdown";
+    public static final String IMAGE_FILE = "rusefi.bin";
+    private static final String OPEN_OCD_COMMAND = "openocd-0.8.0.exe -f interface/stlink-v2.cfg -f board/stm32f4discovery.cfg -c \"program " +
+            IMAGE_FILE +
+            " verify reset exit 0x08000000\"";
     public static final String SUCCESS_MESSAGE_TAG = "shutdown command invoked";
 
     private final JButton button = new JButton("Program Firmware");
@@ -61,8 +54,8 @@ public class FirmwareFlasher {
     }
 
     private void doFlashFirmware() {
-        if (!new File(IMAGE_ELF).exists()) {
-            appendMsg(IMAGE_ELF + " not found, cannot proceed !!!");
+        if (!new File(IMAGE_FILE).exists()) {
+            appendMsg(IMAGE_FILE + " not found, cannot proceed !!!");
             return;
         }
         appendMsg("Executing " + OPEN_OCD_COMMAND);
@@ -70,8 +63,8 @@ public class FirmwareFlasher {
         StringBuffer error = new StringBuffer();
         try {
             Process p = Runtime.getRuntime().exec(OPEN_OCD_COMMAND);
-            startStreamThread(p, p.getInputStream(), "output", output);
-            startStreamThread(p, p.getErrorStream(), "error", error);
+            startStreamThread(p, p.getInputStream(), output);
+            startStreamThread(p, p.getErrorStream(), error);
             p.waitFor();
         } catch (IOException e) {
             appendMsg("IOError: " + e);
@@ -89,7 +82,7 @@ public class FirmwareFlasher {
      * This method listens to a data stream from the process, appends messages to UI
      * and accumulates output in a buffer
      */
-    private void startStreamThread(final Process p, final InputStream stream, final String msg, final StringBuffer buffer) {
+    private void startStreamThread(final Process p, final InputStream stream, final StringBuffer buffer) {
         final Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -105,7 +98,6 @@ public class FirmwareFlasher {
                 } catch (IOException e) {
                     appendMsg("Stream " + e);
                 }
-//                appendMsg("<EOS> " + msg);
             }
         });
         t.setDaemon(true);

@@ -75,12 +75,7 @@ int isInjectorEnabled(int cylinderId) {
 
 static void printStatus(void) {
 	for (int id = 1; id <= engineConfiguration->specs.cylindersCount; id++) {
-		resetLogging(&logger);
-
-		appendPrintf(&logger, "injector%d%s", id, DELIMETER);
-		appendPrintf(&logger, "%d", isInjectorEnabled(id));
-		appendPrintf(&logger, DELIMETER);
-		scheduleLogging(&logger);
+		scheduleMsg(&logger, "injector_%d_%d", isInjectorEnabled(id));
 	}
 }
 
