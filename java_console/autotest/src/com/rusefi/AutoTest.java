@@ -31,8 +31,6 @@ public class AutoTest {
 
     private static void testCitroenBerlingo() {
         setEngineType(15);
-        // time to change engine type
-        nextChart();
         String msg = "Citroen";
         // todo: add more content
     }
@@ -45,11 +43,9 @@ public class AutoTest {
 
     private static void testMazda626() {
         setEngineType(28);
-        WaveChart chart;
-        // time to change engine type
-        nextChart();
         String msg = "mazda 626 default cranking";
         IoUtil.changeRpm(200);
+        WaveChart chart;
         chart = nextChart();
 
         double x = 275;
@@ -59,11 +55,8 @@ public class AutoTest {
     private static void test2003DodgeNeon() {
         setEngineType(23);
         WaveChart chart;
-        // time to change engine type
-        nextChart();
         String msg = "2003 Neon cranking ";
         IoUtil.changeRpm(200);
-        nextChart();
 
         chart = nextChart();
         double x = 100;
@@ -99,7 +92,6 @@ public class AutoTest {
     private static void testMazdaProtege() {
         setEngineType(14);
         WaveChart chart;
-        nextChart(); // a bit of extra time to change engine type
         IoUtil.changeRpm(200);
         String msg = "ProtegeLX cranking";
         chart = nextChart();
