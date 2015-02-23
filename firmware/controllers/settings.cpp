@@ -767,6 +767,8 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		boardConfiguration->isSdCardEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "can")) {
 		engineConfiguration->isCanEnabled = isEnabled;
+	} else if (strEqualCaseInsensitive(param, "test_mode")) {
+		engine->isTestMode = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "can_read")) {
 		engineConfiguration->canReadEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "can_write")) {

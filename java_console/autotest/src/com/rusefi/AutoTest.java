@@ -300,6 +300,7 @@ public class AutoTest {
     }
 
     public static void main(String[] args) throws InterruptedException {
+        long start = System.currentTimeMillis();
         FileLog.SIMULATOR_CONSOLE.start();
         FileLog.MAIN.start();
 
@@ -318,6 +319,8 @@ public class AutoTest {
         FileLog.MAIN.logLine("*******************************************************************************");
         FileLog.MAIN.logLine("************************************  Looks good! *****************************");
         FileLog.MAIN.logLine("*******************************************************************************");
+        long time = (System.currentTimeMillis() - start) / 1000;
+        FileLog.MAIN.logLine("Done in " + time + "secs");
         System.exit(0); // this is a safer method eliminating the issue of non-daemon threads
     }
 }

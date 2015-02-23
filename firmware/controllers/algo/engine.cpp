@@ -59,6 +59,7 @@ Engine::Engine() {
 	engineCycleEventCount = 0;
 	stopEngineRequestTimeNt = 0;
 	isRunningPwmTest = false;
+	isTestMode = false;
 
 	addConfigurationListener(invokeEnginePreCalculate);
 }
