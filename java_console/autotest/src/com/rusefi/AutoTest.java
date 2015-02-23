@@ -4,7 +4,7 @@ package com.rusefi;
 import com.rusefi.waves.WaveChart;
 import com.rusefi.waves.WaveReport;
 
-import static com.rusefi.IoUtil.nextChart;
+import static com.rusefi.TestingUtils.nextChart;
 import static com.rusefi.IoUtil.sendCommand;
 import static com.rusefi.IoUtil.sleep;
 import static com.rusefi.TestingUtils.*;
@@ -18,6 +18,8 @@ import static com.rusefi.TestingUtils.*;
  *         3/5/14
  */
 public class AutoTest {
+    static int currentEngineType;
+
     static void mainTestBody() {
         testCitroenBerlingo();
         testMazda626();
@@ -36,6 +38,7 @@ public class AutoTest {
     }
 
     private static void setEngineType(int type) {
+        currentEngineType = type;
         sendCommand("set_engine_type " + type, 10000);
         sleep(5);
         sendCommand("enable self_stimulation");

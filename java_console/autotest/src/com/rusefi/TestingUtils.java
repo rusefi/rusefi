@@ -1,11 +1,16 @@
 package com.rusefi;
 
+import com.rusefi.core.EngineState;
+import com.rusefi.io.LinkManager;
 import com.rusefi.waves.RevolutionLog;
 import com.rusefi.waves.WaveChart;
+import com.rusefi.waves.WaveChartParser;
 import com.rusefi.waves.WaveReport;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static com.rusefi.waves.WaveReport.isCloseEnough;
 
@@ -85,5 +90,47 @@ public class TestingUtils {
 
     static void assertNull(String msg, Object value) {
         assertTrue(msg, value == null);
+    }
+
+    static WaveChart nextChart() {
+        return WaveChartParser.unpackToMap(getNextWaveChart());
+    }
+
+    static String getNextWaveChart() {
+        // we need to skip TWO because spark could have been scheduled a while ago and happen now
+        // todo: improve this logic, compare times
+        getWaveChart();
+        // we want to wait for the 2nd chart to see same same RPM across the whole chart
+        String result = getWaveChart();
+        FileLog.MAIN.logLine("current chart: " + result);
+        return result;
+    }
+
+    /**
+     * This method is blocking and waits for the next wave chart to arrive
+     *
+     * @return next wave chart in the I/O pipeline
+     */
+    private static String getWaveChart() {
+        final CountDownLatch waveChartLatch = new CountDownLatch(1);
+
+        final AtomicReference<String> result = new AtomicReference<>();
+
+        FileLog.MAIN.logLine("waiting for next chart");
+        LinkManager.engineState.replaceStringValueAction(WaveReport.WAVE_CHART, new EngineState.ValueCallback<String>() {
+            @Override
+            public void onUpdate(String value) {
+                waveChartLatch.countDown();
+                result.set(value);
+            }
+        });
+        int timeout = 60;
+        long waitStartTime = System.currentTimeMillis();
+        IoUtil.wait(waveChartLatch, timeout);
+        FileLog.MAIN.logLine("got next chart in " + (System.currentTimeMillis() - waitStartTime) + "ms for engine_type " + AutoTest.currentEngineType);
+        LinkManager.engineState.replaceStringValueAction(WaveReport.WAVE_CHART, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
+        if (result.get() == null)
+            throw new IllegalStateException("Chart timeout: " + timeout);
+        return result.get();
     }
 }
