@@ -15,7 +15,8 @@ import java.util.*;
  */
 public class AverageAnglesUtil {
 
-    public static final String ANALOG_CHART = "analog_chart,";
+    public static final String KEY = "analog_chart";
+    public static final String ANALOG_CHART = KEY + ",";
 
     private static int currentRpm = -1;
 

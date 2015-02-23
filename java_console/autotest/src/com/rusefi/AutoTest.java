@@ -6,6 +6,7 @@ import com.rusefi.waves.WaveReport;
 
 import static com.rusefi.IoUtil.nextChart;
 import static com.rusefi.IoUtil.sendCommand;
+import static com.rusefi.IoUtil.sleep;
 import static com.rusefi.TestingUtils.*;
 
 /**
@@ -17,7 +18,7 @@ import static com.rusefi.TestingUtils.*;
  *         3/5/14
  */
 public class AutoTest {
-    private static void mainTestBody() {
+    static void mainTestBody() {
         testCitroenBerlingo();
         testMazda626();
         test2003DodgeNeon();
@@ -29,15 +30,21 @@ public class AutoTest {
     }
 
     private static void testCitroenBerlingo() {
-        sendCommand("set_engine_type 15");
+        setEngineType(15);
         // time to change engine type
         nextChart();
         String msg = "Citroen";
         // todo: add more content
     }
 
+    private static void setEngineType(int type) {
+        sendCommand("set_engine_type " + type, 10000);
+        sleep(5);
+        sendCommand("enable self_stimulation");
+    }
+
     private static void testMazda626() {
-        sendCommand("set_engine_type 28");
+        setEngineType(28);
         WaveChart chart;
         // time to change engine type
         nextChart();
@@ -50,7 +57,7 @@ public class AutoTest {
     }
 
     private static void test2003DodgeNeon() {
-        sendCommand("set_engine_type 23");
+        setEngineType(23);
         WaveChart chart;
         // time to change engine type
         nextChart();
@@ -90,7 +97,7 @@ public class AutoTest {
     }
 
     private static void testMazdaProtege() {
-        sendCommand("set_engine_type 14");
+        setEngineType(14);
         WaveChart chart;
         nextChart(); // a bit of extra time to change engine type
         IoUtil.changeRpm(200);
@@ -113,7 +120,7 @@ public class AutoTest {
     }
 
     private static void test1995DodgeNeon() {
-        sendCommand("set_engine_type 2");
+        setEngineType(2);
         WaveChart chart;
         sendCommand("set_whole_fuel_map 3");
         IoUtil.changeRpm(2000);
@@ -142,7 +149,7 @@ public class AutoTest {
     }
 
     private static void testFordFiesta() {
-        sendCommand("set_engine_type 4");
+        setEngineType(4);
         WaveChart chart;
         IoUtil.changeRpm(2000);
         chart = nextChart();
@@ -156,7 +163,7 @@ public class AutoTest {
     }
 
     private static void testFord6() {
-        sendCommand("set_engine_type 7");
+        setEngineType(7);
         WaveChart chart;
         IoUtil.changeRpm(2000);
         chart = nextChart();
@@ -173,7 +180,7 @@ public class AutoTest {
     }
 
     private static void testFordAspire() {
-        sendCommand("set_engine_type 3");
+        setEngineType(3);
         String msg;
         WaveChart chart;
         // todo: interesting changeRpm(100);
