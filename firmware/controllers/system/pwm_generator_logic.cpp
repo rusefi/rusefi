@@ -26,7 +26,8 @@ SimplePwm::SimplePwm() {
 PwmConfig::PwmConfig() {
 	memset(&scheduling, 0, sizeof(scheduling));
 	scheduling.name = "PwmConfig";
-	periodNt = phaseCount = 0;
+	periodNt = NAN;
+	phaseCount = 0;
 	cycleCallback = NULL;
 	stateChangeCallback = NULL;
 }
@@ -98,9 +99,9 @@ static efitimeus_t togglePwmState(PwmConfig *state) {
 
 	if (cisnan(state->periodNt)) {
 		/**
-		 * zero period means PWM is paused
+		 * NaN period means PWM is paused
 		 */
-		return 1;
+		return MS2US(1);
 	}
 
 	state->handleCycleStart();
