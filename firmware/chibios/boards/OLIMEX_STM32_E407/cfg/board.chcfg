@@ -49,7 +49,7 @@
             <pin7 ID="ETH_RMII_CRS_DV" Type="PushPull" Speed="Maximum"
                 Resistor="Floating" Level="High" Mode="Alternate" Alternate="11" />
             <pin8 ID="USB_HS_BUSON" Type="PushPull" Speed="Maximum"
-                Resistor="Floating" Level="High" Mode="Output" Alternate="0" />
+                Resistor="Floating" Level="Low" Mode="Output" Alternate="0" />
             <pin9 ID="OTG_FS_VBUS" Type="PushPull" Speed="Maximum" Resistor="PullDown"
                 Level="High" Mode="Input" Alternate="0" />
             <pin10 ID="OTG_FS_ID" Type="PushPull" Speed="Maximum" Resistor="Floating"
@@ -67,7 +67,7 @@
         </GPIOA>
         <GPIOB>
             <pin0 ID="USB_FS_BUSON" Type="PushPull" Speed="Maximum"
-                Resistor="Floating" Level="High" Mode="Output" Alternate="0" />
+                Resistor="Floating" Level="Low" Mode="Output" Alternate="0" />
             <pin1 ID="USB_HS_FAULT" Type="PushPull" Speed="Maximum"
                 Resistor="Floating" Level="High" Mode="Input" Alternate="0" />
             <pin2 ID="BOOT1" Type="PushPull" Speed="Maximum" Resistor="Floating"

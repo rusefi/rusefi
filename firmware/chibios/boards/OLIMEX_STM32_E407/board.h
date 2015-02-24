@@ -325,7 +325,7 @@
                                      PIN_ODR_HIGH(GPIOA_PIN5) |             \
                                      PIN_ODR_HIGH(GPIOA_PIN6) |             \
                                      PIN_ODR_HIGH(GPIOA_ETH_RMII_CRS_DV) |  \
-                                     PIN_ODR_HIGH(GPIOA_USB_HS_BUSON) |     \
+                                     PIN_ODR_LOW(GPIOA_USB_HS_BUSON) |      \
                                      PIN_ODR_HIGH(GPIOA_OTG_FS_VBUS) |      \
                                      PIN_ODR_HIGH(GPIOA_OTG_FS_ID) |        \
                                      PIN_ODR_HIGH(GPIOA_OTG_FS_DM) |        \
@@ -434,7 +434,7 @@
                                      PIN_PUPDR_PULLDOWN(GPIOB_OTG_HS_VBUS) |\
                                      PIN_PUPDR_FLOATING(GPIOB_OTG_HS_DM) |  \
                                      PIN_PUPDR_FLOATING(GPIOB_OTG_HS_DP))
-#define VAL_GPIOB_ODR               (PIN_ODR_HIGH(GPIOB_USB_FS_BUSON) |     \
+#define VAL_GPIOB_ODR               (PIN_ODR_LOW(GPIOB_USB_FS_BUSON) |      \
                                      PIN_ODR_HIGH(GPIOB_USB_HS_FAULT) |     \
                                      PIN_ODR_HIGH(GPIOB_BOOT1) |            \
                                      PIN_ODR_HIGH(GPIOB_JTAG_TDO) |         \

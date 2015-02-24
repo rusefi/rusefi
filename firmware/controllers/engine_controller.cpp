@@ -201,6 +201,7 @@ static void cylinderCleanupControl(Engine *engine) {
 static LocalVersionHolder versionForConfigurationListeners;
 
 static void onEvenyGeneralMilliseconds(Engine *engine) {
+	efiAssertVoid(getRemainingStack(chThdSelf()) > 64, "lowStckOnEv");
 #if EFI_PROD_CODE
 	/**
 	 * We need to push current value into the 64 bit counter often enough so that we do not miss an overflow
