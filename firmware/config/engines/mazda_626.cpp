@@ -38,10 +38,10 @@ void setMazda626EngineConfiguration(engine_configuration_s *engineConfiguration)
 // set_whole_timing_map 10
 	setWholeTimingTable(engineConfiguration, 10);
 
+	// http://i.imgur.com/fclVzvu.jpg
 	setCommonNTCSensor(&engineConfiguration->clt);
-	engineConfiguration->clt.bias_resistor = 2700;
-	setCommonNTCSensor(&engineConfiguration->iat);
-	engineConfiguration->iat.bias_resistor = 2700;
+	// http://i.imgur.com/2hI67yW.jpg
+	setThermistorConfiguration(&engineConfiguration->iat, 20, 33000, 50, 9000, 90.0, 2700);
 
 	commonFrankensoAnalogInputs(engineConfiguration);
 	engineConfiguration->hasTpsSensor = false;
