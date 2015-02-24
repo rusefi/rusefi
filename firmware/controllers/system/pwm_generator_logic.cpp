@@ -24,12 +24,15 @@ SimplePwm::SimplePwm() {
 }
 
 PwmConfig::PwmConfig() {
+	memset(&scheduling, 0, sizeof(scheduling));
 	scheduling.name = "PwmConfig";
+	periodNt = phaseCount = 0;
+	cycleCallback = NULL;
+	stateChangeCallback = NULL;
 }
 
-PwmConfig::PwmConfig(float *st, single_wave_s *waves) {
+PwmConfig::PwmConfig(float *st, single_wave_s *waves) : PwmConfig() {
 	multiWave.init(st, waves);
-	scheduling.name = "PwmConfig";
 }
 
 void PwmConfig::init(float *st, single_wave_s *waves) {
@@ -191,7 +194,6 @@ void PwmConfig::weComplexInit(const char *msg, int phaseCount, float *switchTime
 	safe.phaseIndex = 0;
 	safe.periodNt = -1;
 	safe.iteration = -1;
-	name = msg;
 
 	// let's start the indefinite callback loop of PWM generation
 	timerCallback(this);

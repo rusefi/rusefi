@@ -56,7 +56,6 @@ public:
 
 	OutputPin *outputPins[PWM_PHASE_MAX_WAVE_PER_PWM];
 	multi_wave_s multiWave;
-	const char *name;
 	/**
 	 * float value of PWM period
 	 * PWM generation is not happening while this value is zero
