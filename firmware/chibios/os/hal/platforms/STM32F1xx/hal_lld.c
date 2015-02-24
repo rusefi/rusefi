@@ -152,10 +152,18 @@ void stm32_clock_init(void) {
   RCC->CR |= RCC_CR_HSION;                  /* Make sure HSI is ON.         */
   while (!(RCC->CR & RCC_CR_HSIRDY))
     ;                                       /* Wait until HSI is stable.    */
+
+  /* HSI is selected as new source without touching the other fields in
+     CFGR. Clearing the register has to be postponed after HSI is the
+     new source.*/
+  RCC->CFGR &= ~RCC_CFGR_SW;                /* Reset SW */
+  RCC->CFGR |= RCC_CFGR_SWS_HSI;            /* Select HSI as internal*/
+  while ((RCC->CFGR & RCC_CFGR_SWS) != RCC_CFGR_SWS_HSI)
+    ;                                       /* Wait until HSI is selected.  */
+
+  /* Registers finally cleared to reset values.*/
   RCC->CR &= RCC_CR_HSITRIM | RCC_CR_HSION; /* CR Reset value.              */
   RCC->CFGR = 0;                            /* CFGR reset value.            */
-  while ((RCC->CFGR & RCC_CFGR_SWS) != RCC_CFGR_SWS_HSI)
-    ;                                       /* Waits until HSI is selected. */
 
 #if STM32_HSE_ENABLED
 #if defined(STM32_HSE_BYPASS)

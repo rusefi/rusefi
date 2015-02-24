@@ -161,7 +161,7 @@ void _port_irq_epilogue(void) {
 #if CORTEX_USE_FPU
     /* Enforcing a lazy FPU state save. Note, it goes in the original
        context because the FPCAR register has not been modified.*/
-      (void)__get_FPSCR();
+    (void)__get_FPSCR();
 #endif
 
     /* Current PSP value.*/

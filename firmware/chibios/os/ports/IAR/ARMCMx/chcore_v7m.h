@@ -172,11 +172,11 @@
 
 /**
  * @brief   PendSV priority level.
- * @note    This priority is enforced to be equal to @p CORTEX_BASEPRI_KERNEL,
- *          this handler always have the highest priority that cannot preempt
- *          the kernel.
+ * @note    This priority is enforced to be equal to
+ *          @p CORTEX_MAX_KERNEL_PRIORITY, this handler always have the
+ *          highest priority that cannot preempt the kernel.
  */
-#define CORTEX_PRIORITY_PENDSV          CORTEX_BASEPRI_KERNEL
+#define CORTEX_PRIORITY_PENDSV          CORTEX_MAX_KERNEL_PRIORITY
 
 /*===========================================================================*/
 /* Port exported info.                                                       */

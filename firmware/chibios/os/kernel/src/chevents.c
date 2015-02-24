@@ -358,7 +358,7 @@ eventmask_t chEvtWaitOne(eventmask_t mask) {
     chSchGoSleepS(THD_STATE_WTOREVT);
     m = ctp->p_epending & mask;
   }
-  m &= -m;
+  m ^= m & (m - 1);
   ctp->p_epending &= ~m;
 
   chSysUnlock();
@@ -461,7 +461,7 @@ eventmask_t chEvtWaitOneTimeout(eventmask_t mask, systime_t time) {
     }
     m = ctp->p_epending & mask;
   }
-  m &= -m;
+  m ^= m & (m - 1);
   ctp->p_epending &= ~m;
 
   chSysUnlock();

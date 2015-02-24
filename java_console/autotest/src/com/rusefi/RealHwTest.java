@@ -10,24 +10,10 @@ import static com.rusefi.AutoTest.*;
 public class RealHwTest {
     public static void main(String[] args) {
         long start = System.currentTimeMillis();
-        /**
-         * with real hardware we have noise on all analog inputs which gives us random sensor data, we cannot really
-         * test exact numbers yet
-         */
-        TestingUtils.isRealHardware = true;
-        FileLog.MAIN.start();
-        String port;
-        if (args.length == 1) {
-            port = args[0];
-        } else if (args.length == 0) {
-            port = IoUtil.getDefaultPort();
-            if (port == null)
-                return;
+        String port = startRealHardwareTest(args);
 
-        } else {
-            System.out.println("Only one optional argument expected: port number");
+        if (port == null)
             return;
-        }
         boolean failed = false;
         try {
             runRealHardwareTest(port);
@@ -43,6 +29,25 @@ public class RealHwTest {
         long time = (System.currentTimeMillis() - start) / 1000;
         FileLog.MAIN.logLine("Done in " + time + "secs");
         System.exit(0); // this is a safer method eliminating the issue of non-daemon threads
+    }
+
+    static String startRealHardwareTest(String[] args) {
+        /**
+         * with real hardware we have noise on all analog inputs which gives us random sensor data, we cannot really
+         * test exact numbers yet
+         */
+        TestingUtils.isRealHardware = true;
+        FileLog.MAIN.start();
+        String port;
+        if (args.length == 1) {
+            port = args[0];
+        } else if (args.length == 0) {
+            port = IoUtil.getDefaultPort();
+        } else {
+            System.out.println("Only one optional argument expected: port number");
+            port = null;
+        }
+        return port;
     }
 
     private static void runRealHardwareTest(String port) {

@@ -399,7 +399,6 @@ void pwm_lld_init(void) {
 void pwm_lld_start(PWMDriver *pwmp) {
   uint32_t psc;
   uint32_t ccer;
-  uint32_t dier;
 
   if (pwmp->state == PWM_STOP) {
     /* Clock activation and timer reset.*/

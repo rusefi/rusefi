@@ -190,12 +190,12 @@ void adc_lld_start(ADCDriver *adcp) {
       rccEnableADC1(FALSE);
 #if STM32_ADCSW == STM32_ADCSW_HSI14
       /* Clock from HSI14, no need for jitter removal.*/
-      ADC1->CFGR2 = 0x00001000;
+      ADC1->CFGR2 = 0;
 #else
 #if STM32_ADCPRE == STM32_ADCPRE_DIV2
-      ADC1->CFGR2 = 0x00001000 | ADC_CFGR2_JITOFFDIV2;
+      ADC1->CFGR2 = ADC_CFGR2_JITOFFDIV2;
 #else
-      ADC1->CFGR2 = 0x00001000 | ADC_CFGR2_JITOFFDIV4;
+      ADC1->CFGR2 = ADC_CFGR2_JITOFFDIV4;
 #endif
 #endif
     }

@@ -224,6 +224,7 @@ CH_IRQ_HANDLER(OTG_FS_WKUP_IRQHandler) {
   CH_IRQ_EPILOGUE();
 }
 
+#if !defined(STM32F401xx)
 /**
  * @brief   EXTI[19] interrupt handler (ETH_WKUP).
  *
@@ -239,7 +240,6 @@ CH_IRQ_HANDLER(ETH_WKUP_IRQHandler) {
   CH_IRQ_EPILOGUE();
 }
 
-#if !defined(STM32F401xx)
 /**
  * @brief   EXTI[20] interrupt handler (OTG_HS_WKUP).
  *

@@ -642,7 +642,8 @@ static void usb_lld_serve_interrupt(USBDriver *usbp) {
   stm32_otg_t *otgp = usbp->otg;
   uint32_t sts, src;
 
-  sts = otgp->GINTSTS & otgp->GINTMSK;
+  sts  = otgp->GINTSTS;
+  sts &= otgp->GINTMSK;
   otgp->GINTSTS = sts;
 
   /* Reset interrupt handling.*/
@@ -765,7 +766,7 @@ static msg_t usb_lld_pump(void *p) {
     }
     chSysLock();
   }
-  chSysUnlock();
+  // we are never here but GCC cannot figure this out
   return 0;
 }
 
@@ -835,7 +836,7 @@ void usb_lld_init(void) {
                     (uint8_t *)wsp + sizeof(Thread),
                     CH_THREAD_FILL_VALUE);
     _thread_memfill((uint8_t *)wsp + sizeof(Thread),
-                    (uint8_t *)wsp + sizeof(USBD1.wa_pump) - sizeof(Thread),
+                    (uint8_t *)wsp + sizeof(USBD1.wa_pump),
                     CH_STACK_FILL_VALUE);
   }
 #endif
@@ -857,7 +858,7 @@ void usb_lld_init(void) {
                     (uint8_t *)wsp + sizeof(Thread),
                     CH_THREAD_FILL_VALUE);
     _thread_memfill((uint8_t *)wsp + sizeof(Thread),
-                    (uint8_t *)wsp + sizeof(USBD2.wa_pump) - sizeof(Thread),
+                    (uint8_t *)wsp + sizeof(USBD2.wa_pump),
                     CH_STACK_FILL_VALUE);
   }
 #endif
