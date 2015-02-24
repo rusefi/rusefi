@@ -21,6 +21,7 @@ public class AutoTest {
     static int currentEngineType;
 
     static void mainTestBody() {
+        sendCommand("fl 1"); // just in case it was disabled
         testCitroenBerlingo();
         testMazda626();
         test2003DodgeNeon();
@@ -39,8 +40,8 @@ public class AutoTest {
 
     private static void setEngineType(int type) {
         currentEngineType = type;
-        sendCommand("set_engine_type " + type, 10000);
-        sleep(5);
+        sendCommand("set_engine_type " + type, 10000, 600);
+        sleep(10);
         sendCommand("enable self_stimulation");
     }
 

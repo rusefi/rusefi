@@ -7,14 +7,10 @@ import com.rusefi.io.CommandQueue;
 import com.rusefi.io.InvocationConfirmationListener;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.tcp.TcpConnector;
-import com.rusefi.waves.WaveChart;
-import com.rusefi.waves.WaveChartParser;
-import com.rusefi.waves.WaveReport;
 import jssc.SerialPortList;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicReference;
 
 import static com.rusefi.waves.WaveReport.isCloseEnough;
 
@@ -31,22 +27,26 @@ public class IoUtil {
      * @throws IllegalStateException if command was not confirmed
      */
     static void sendCommand(String command) {
-        sendCommand(command, CommandQueue.DEFAULT_TIMEOUT);
+        sendCommand(command, CommandQueue.DEFAULT_TIMEOUT, CMD_TIMEOUT);
     }
 
-    static void sendCommand(String command, int timeoutMs) {
+    static void sendCommand(String command, int retryTimeoutMs, int totalTimeoutSeconds) {
         final CountDownLatch responseLatch = new CountDownLatch(1);
         long time = System.currentTimeMillis();
         if (LinkManager.hasError())
             throw new IllegalStateException("IO error");
         FileLog.MAIN.logLine("Sending command [" + command + "]");
-        CommandQueue.getInstance().write(command, timeoutMs, new InvocationConfirmationListener() {
+        final long begin = System.currentTimeMillis();
+        CommandQueue.getInstance().write(command, retryTimeoutMs, new InvocationConfirmationListener() {
             @Override
             public void onCommandConfirmation() {
                 responseLatch.countDown();
+                FileLog.MAIN.logLine("Got confirmation in " + (System.currentTimeMillis() - begin) + "ms");
             }
         });
-        wait(responseLatch, CMD_TIMEOUT);
+        wait(responseLatch, totalTimeoutSeconds);
+        if (responseLatch.getCount() > 0)
+            FileLog.MAIN.logLine("No confirmation in " + retryTimeoutMs);
         if (LinkManager.hasError())
             throw new IllegalStateException("IO error");
         FileLog.MAIN.logLine("Command [" + command + "] executed in " + (System.currentTimeMillis() - time));
@@ -139,6 +139,7 @@ public class IoUtil {
 
     @SuppressWarnings("UnusedDeclaration")
     static void sleep(int seconds) {
+        FileLog.MAIN.logLine("Sleeping " + seconds + " seconds");
         try {
             Thread.sleep(seconds * 1000L);
         } catch (InterruptedException e) {
