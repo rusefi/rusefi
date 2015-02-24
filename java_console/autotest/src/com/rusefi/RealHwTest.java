@@ -9,11 +9,12 @@ import static com.rusefi.AutoTest.*;
  */
 public class RealHwTest {
     public static void main(String[] args) {
+        long start = System.currentTimeMillis();
         /**
          * with real hardware we have noise on all analog inputs which gives us random sensor data, we cannot really
          * test exact numbers yet
          */
-        TestingUtils.skipWaveCheck = true;
+        TestingUtils.isRealHardware = true;
         FileLog.MAIN.start();
         String port;
         if (args.length == 1) {
@@ -27,7 +28,21 @@ public class RealHwTest {
             System.out.println("Only one optional argument expected: port number");
             return;
         }
-        runRealHardwareTest(port);
+        boolean failed = false;
+        try {
+            runRealHardwareTest(port);
+        } catch (Throwable e) {
+            e.printStackTrace();
+            failed = true;
+        }
+        if (failed)
+            System.exit(-1);
+        FileLog.MAIN.logLine("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+        FileLog.MAIN.logLine("++++++++++++++++++++++++++++++++++++  Real Hardware Test Passed +++++++++++++++");
+        FileLog.MAIN.logLine("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+        long time = (System.currentTimeMillis() - start) / 1000;
+        FileLog.MAIN.logLine("Done in " + time + "secs");
+        System.exit(0); // this is a safer method eliminating the issue of non-daemon threads
     }
 
     private static void runRealHardwareTest(String port) {

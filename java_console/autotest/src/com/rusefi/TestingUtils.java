@@ -19,7 +19,7 @@ import static com.rusefi.waves.WaveReport.isCloseEnough;
  *         3/19/14.
  */
 public class TestingUtils {
-    static boolean skipWaveCheck;
+    static boolean isRealHardware;
 
     static void assertTrue(String msg, boolean b) {
         if (!b)
@@ -75,7 +75,7 @@ public class TestingUtils {
     }
 
     static void assertWave(boolean rise, String msg, WaveChart chart, String key, double expectedWidth, double angleRatio, double widthRatio, double... expectedAngles) {
-        if(skipWaveCheck)
+        if(isRealHardware)
             return;
         RevolutionLog revolutionLog = chart.getRevolutionsLog();
         if (revolutionLog.keySet().isEmpty())

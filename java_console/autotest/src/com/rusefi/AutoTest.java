@@ -18,6 +18,7 @@ import static com.rusefi.TestingUtils.*;
  *         3/5/14
  */
 public class AutoTest {
+    public static final int COMPLEX_COMMAND_RETRY = 10000;
     static int currentEngineType;
 
     static void mainTestBody() {
@@ -49,7 +50,7 @@ public class AutoTest {
 
     private static void setEngineType(int type) {
         currentEngineType = type;
-        sendCommand("set_engine_type " + type, 10000, 600);
+        sendCommand("set_engine_type " + type, COMPLEX_COMMAND_RETRY, 600);
         sleep(10);
         sendCommand("enable self_stimulation");
     }
@@ -192,7 +193,7 @@ public class AutoTest {
         String msg;
         WaveChart chart;
         // todo: interesting changeRpm(100);
-        sendCommand("set_cranking_rpm 500");
+        sendComplexCommand("set_cranking_rpm 500");
         IoUtil.changeRpm(200);
 
         double x;
@@ -228,7 +229,7 @@ public class AutoTest {
         sendCommand("set_cranking_charge_angle 65");
 
         IoUtil.changeRpm(600);
-        sendCommand("set_cranking_rpm 700");
+        sendComplexCommand("set_cranking_rpm 700");
         chart = nextChart();
         x = 55;
         assertWave("cranking@600", chart, WaveChart.SPARK_1, 0.18, x, x + 180, x + 360, x + 540);
@@ -253,8 +254,9 @@ public class AutoTest {
         sendCommand("set_fuel_map 2200 4.2 15.66");
         sendCommand("set_fuel_map 2000 4.2 15.66");
         // mock 2 means 4 on the gauge because of the divider. should we simplify this?
-        sendCommand("set_mock_maf_voltage 2");
-        sendCommand("set_global_trigger_offset_angle 175");
+        if (!TestingUtils.isRealHardware)
+            sendCommand("set_mock_maf_voltage 2");
+        sendComplexCommand("set_global_trigger_offset_angle 175");
         chart = nextChart();
 
         assertWaveFall(chart, WaveChart.INJECTOR_1, 0.555, 238.75);
@@ -266,14 +268,14 @@ public class AutoTest {
         assertWave(chart, WaveChart.SPARK_1, 0.133, x, x + 180, x + 360, x + 540);
         assertWaveNull(chart, WaveChart.SPARK_2);
 
-        sendCommand("set_global_trigger_offset_angle 130");
-        sendCommand("set_injection_offset 369");
+        sendComplexCommand("set_global_trigger_offset_angle 130");
+        sendComplexCommand("set_injection_offset 369");
         chart = nextChart();
         x = 580;
         assertWave(chart, WaveChart.SPARK_1, 0.133, x, x + 180, x + 360, x + 540);
 
         // let's enable more channels dynamically
-        sendCommand("set_ignition_mode 1");
+        sendComplexCommand("set_ignition_mode 1");
         chart = nextChart();
         assertWave("Switching Aspire into INDIVIDUAL_COILS mode", chart, WaveChart.SPARK_2, 0.133, x);
         assertWave(chart, WaveChart.SPARK_3, 0.133, x + 360);
@@ -285,8 +287,10 @@ public class AutoTest {
 
 
         // switching to Speed Density
+        if (!TestingUtils.isRealHardware)
+            sendCommand("set_mock_maf_voltage 2");
         sendCommand("set_mock_map_voltage 1");
-        sendCommand("set_algorithm 3");
+        sendComplexCommand("set_algorithm 3");
         chart = nextChart();
         x = 8.88;
         assertWaveFall(msg, chart, WaveChart.INJECTOR_1, 0.329, x + 180);
@@ -297,6 +301,10 @@ public class AutoTest {
         IoUtil.changeRpm(10000);
         chart = nextChart();
         assertWaveNull("hard limit check", chart, WaveChart.INJECTOR_1);
+    }
+
+    private static void sendComplexCommand(String command) {
+        sendCommand(command, COMPLEX_COMMAND_RETRY, IoUtil.CMD_TIMEOUT);
     }
 
     private static void assertWaveNull(WaveChart chart, String key) {
