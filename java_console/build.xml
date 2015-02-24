@@ -75,6 +75,11 @@
 
     </target>
 
+    <target name="realtest" depends="jar">
+	<java classpath="${jar_file}" classname="com.rusefi.RealHwTest" failonerror="true"> 
+	</java>  
+
+    </target>
 
 
 </project>

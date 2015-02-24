@@ -128,8 +128,8 @@ public class AutoTest {
     private static void test1995DodgeNeon() {
         setEngineType(2);
         WaveChart chart;
-        sendCommand("set_whole_fuel_map 3");
-        sendCommand("set_ignition_mode 1");
+        sendComplexCommand("set_whole_fuel_map 3");
+        sendComplexCommand("set_ignition_mode 1");
         /**
          * note that command order matters - RPM change resets wave chart
          */
@@ -150,8 +150,9 @@ public class AutoTest {
         assertWave(msg, chart, WaveChart.SPARK_3, 0.13333, x + 360);
 
         // switching to Speed Density
-        sendCommand("set_mock_map_voltage 1");
-        sendCommand("set_algorithm 3");
+        if (!TestingUtils.isRealHardware)
+            sendCommand("set_mock_map_voltage 1");
+        sendComplexCommand("set_algorithm 3");
         chart = nextChart();
         x = -70;
         assertWaveFall(msg, chart, WaveChart.INJECTOR_4, 0.463, x + 540);
@@ -183,7 +184,7 @@ public class AutoTest {
         assertWave(msg, chart, WaveChart.SPARK_1, 0.01666, x, x + 120, x + 240, x + 360, x + 480, x + 600);
 
         assertWaveNull(msg, chart, WaveChart.TRIGGER_2);
-        sendCommand("set_trigger_type 1"); // TT_FORD_ASPIRE
+        sendComplexCommand("set_trigger_type 1"); // TT_FORD_ASPIRE
         chart = nextChart();
         assertTrue(msg, chart.get(WaveChart.TRIGGER_2) != null);
     }
@@ -289,7 +290,8 @@ public class AutoTest {
         // switching to Speed Density
         if (!TestingUtils.isRealHardware)
             sendCommand("set_mock_maf_voltage 2");
-        sendCommand("set_mock_map_voltage 1");
+        if (!TestingUtils.isRealHardware)
+            sendCommand("set_mock_map_voltage 1");
         sendComplexCommand("set_algorithm 3");
         chart = nextChart();
         x = 8.88;
