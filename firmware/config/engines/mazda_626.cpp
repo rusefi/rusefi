@@ -12,7 +12,7 @@
 #include "engine_math.h"
 #include "honda_accord.h"
 #include "custom_engine.h"
-#include "thermistors.h"
+#include "allsensors.h"
 
 void setMazda626EngineConfiguration(engine_configuration_s *engineConfiguration) {
 	setCustomEngineConfiguration(engineConfiguration);
