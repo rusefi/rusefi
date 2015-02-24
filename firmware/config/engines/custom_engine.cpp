@@ -94,6 +94,11 @@ void setCustomEngineConfiguration(engine_configuration_s *engineConfiguration) {
 
 	// todo: 8.2 or 10k?
 	engineConfiguration->vbattDividerCoeff = ((float) (10 + 33)) / 10 * 2;
+
+	engineConfiguration->tpsAdcChannel = EFI_ADC_NONE;
+	engineConfiguration->cltAdcChannel = EFI_ADC_12;
+	engineConfiguration->iatAdcChannel = EFI_ADC_11;
+
 }
 
 #endif /* CONFIG_ENGINES_CUSTOM_ENGINE_CPP_ */
