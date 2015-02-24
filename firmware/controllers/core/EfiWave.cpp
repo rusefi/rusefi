@@ -22,9 +22,10 @@ void single_wave_s::init(pin_state_t *pinStates) {
 }
 
 multi_wave_s::multi_wave_s() {
+	reset();
 }
 
-multi_wave_s::multi_wave_s(float *switchTimes, single_wave_s *waves) {
+multi_wave_s::multi_wave_s(float *switchTimes, single_wave_s *waves) : multi_wave_s() {
 	init(switchTimes, waves);
 }
 

@@ -25,12 +25,9 @@ static LENameOrdinalPair leVBatt(LE_METHOD_VBATT, "vbatt");
 static LENameOrdinalPair leFan(LE_METHOD_FAN, "fan");
 static LENameOrdinalPair leCoolant(LE_METHOD_COOLANT, "coolant");
 static LENameOrdinalPair leAcToggle(LE_METHOD_AC_TOGGLE, "ac_on_switch");
-static LENameOrdinalPair leFanOnSetting(LE_METHOD_FAN_ON_SETTING,
-		"fan_on_setting");
-static LENameOrdinalPair leFanOffSetting(LE_METHOD_FAN_OFF_SETTING,
-		"fan_off_setting");
-static LENameOrdinalPair leTimeSinceBoot(LE_METHOD_TIME_SINCE_BOOT,
-		"time_since_boot");
+static LENameOrdinalPair leFanOnSetting(LE_METHOD_FAN_ON_SETTING, "fan_on_setting");
+static LENameOrdinalPair leFanOffSetting(LE_METHOD_FAN_OFF_SETTING, "fan_off_setting");
+static LENameOrdinalPair leTimeSinceBoot(LE_METHOD_TIME_SINCE_BOOT, "time_since_boot");
 static LENameOrdinalPair leFsioSsetting(LE_METHOD_FSIO_SETTING, "fsio_setting");
 
 #define LE_EVAL_POOL_SIZE 32
@@ -115,17 +112,19 @@ static void setFsioPin(const char *indexStr, const char *pinName) {
 }
 #endif
 
-void setFsioExt(engine_configuration_s *engineConfiguration, int index,
-		brain_pin_e pin, const char * exp, int freq) {
+void setFsioExt(engine_configuration_s *engineConfiguration, int index, brain_pin_e pin, const char * exp, int freq) {
 	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 
 	boardConfiguration->fsioPins[index] = pin;
+	int len = strlen(exp);
+	if (len >= LE_COMMAND_LENGTH) {
+		return;
+	}
 	strcpy(boardConfiguration->le_formulas[index], exp);
 	boardConfiguration->fsioFrequency[index] = freq;
 }
 
-void setFsio(engine_configuration_s *engineConfiguration, int index,
-		brain_pin_e pin, const char * exp) {
+void setFsio(engine_configuration_s *engineConfiguration, int index, brain_pin_e pin, const char * exp) {
 	setFsioExt(engineConfiguration, index, pin, exp, 0);
 }
 
@@ -214,8 +213,7 @@ static void handleFsio(Engine *engine, int index) {
 	}
 }
 
-static void setPinState(const char * msg, OutputPin *pin, LEElement *element,
-		Engine *engine) {
+static void setPinState(const char * msg, OutputPin *pin, LEElement *element, Engine *engine) {
 	if (element == NULL) {
 		warning(OBD_PCM_Processor_Fault, "invalid expression for %s", msg);
 	} else {
@@ -233,16 +231,14 @@ static void showFsio(const char *msg, LEElement *element) {
 	if (msg != NULL)
 		scheduleMsg(logger, "%s:", msg);
 	while (element != NULL) {
-		scheduleMsg(logger, "action %d: fValue=%f iValue=%d", element->action,
-				element->fValue, element->iValue);
+		scheduleMsg(logger, "action %d: fValue=%f iValue=%d", element->action, element->fValue, element->iValue);
 		element = element->next;
 	}
 	scheduleMsg(logger, "<end>");
 }
 
 static void showFsioInfo(void) {
-	scheduleMsg(logger, "sys used %d/user used %d", sysPool.getSize(),
-			userPool.getSize());
+	scheduleMsg(logger, "sys used %d/user used %d", sysPool.getSize(), userPool.getSize());
 	showFsio("a/c", acRelayLogic);
 	showFsio("fuel", fuelPumpLogic);
 	showFsio("fan", radiatorFanLogic);
@@ -256,8 +252,7 @@ static void showFsioInfo(void) {
 			 * is the fact that the target audience is more software developers
 			 */
 			scheduleMsg(logger, "FSIO #%d [%s] at %s@%dHz value=%f", i, exp,
-					hwPortname(boardConfiguration->fsioPins[i]),
-					boardConfiguration->fsioFrequency[i],
+					hwPortname(boardConfiguration->fsioPins[i]), boardConfiguration->fsioFrequency[i],
 					engineConfiguration2->fsioLastValue[i]);
 //			scheduleMsg(logger, "user-defined #%d value=%f", i, engine->engineConfiguration2->fsioLastValue[i]);
 			showFsio(NULL, fsioLogics[i]);
@@ -291,12 +286,10 @@ static void setFsioFrequency(int index, int frequency) {
 		return;
 	}
 	boardConfiguration->fsioFrequency[index] = frequency;
-	scheduleMsg(logger, "Setting FSIO frequency %d on #%d", frequency,
-			index + 1);
+	scheduleMsg(logger, "Setting FSIO frequency %d on #%d", frequency, index + 1);
 }
 
-static void setUserOutput(const char *indexStr, const char *quotedLine,
-		Engine *engine) {
+static void setUserOutput(const char *indexStr, const char *quotedLine, Engine *engine) {
 	int index = atoi(indexStr) - 1;
 	if (index < 0 || index >= LE_COMMAND_COUNT) {
 		scheduleMsg(logger, "invalid index %d", index);
@@ -334,8 +327,7 @@ void runFsio(void) {
 	}
 
 #if EFI_FUEL_PUMP
-	if (boardConfiguration->fuelPumpPin != GPIO_UNASSIGNED
-			&& engineConfiguration->isFuelPumpEnabled) {
+	if (boardConfiguration->fuelPumpPin != GPIO_UNASSIGNED && engineConfiguration->isFuelPumpEnabled) {
 		setPinState("pump", &enginePins.fuelPumpRelay, fuelPumpLogic, engine);
 	}
 #endif
@@ -353,8 +345,7 @@ void runFsio(void) {
 	}
 
 	if (boardConfiguration->alternatorControlPin != GPIO_UNASSIGNED) {
-		setPinState("alternator", &enginePins.alternatorField, alternatorLogic,
-				engine);
+		setPinState("alternator", &enginePins.alternatorField, alternatorLogic, engine);
 	}
 
 	if (boardConfiguration->fanPin != GPIO_UNASSIGNED) {
@@ -384,11 +375,9 @@ void initFsioImpl(Logging *sharedLogger, Engine *engine) {
 		if (brainPin != GPIO_UNASSIGNED) {
 			int frequency = boardConfiguration->fsioFrequency[i];
 			if (frequency == 0) {
-				outputPinRegisterExt2(getGpioPinName(i), &fsioOutputs[i],
-						boardConfiguration->fsioPins[i], &defa);
+				outputPinRegisterExt2(getGpioPinName(i), &fsioOutputs[i], boardConfiguration->fsioPins[i], &defa);
 			} else {
-				startSimplePwmExt(&fsioPwm[i], "FSIO", brainPin, &fsioOutputs[i],
-						frequency, 0.5f, applyPinState);
+				startSimplePwmExt(&fsioPwm[i], "FSIO", brainPin, &fsioOutputs[i], frequency, 0.5f, applyPinState);
 			}
 		}
 	}
@@ -397,16 +386,14 @@ void initFsioImpl(Logging *sharedLogger, Engine *engine) {
 		brain_pin_e inputPin = engineConfiguration->fsioInputs[i];
 
 		if (inputPin != GPIO_UNASSIGNED) {
-			mySetPadMode2("FSIO input", inputPin,
-					getInputMode(engineConfiguration->fsioInputModes[i]));
+			mySetPadMode2("FSIO input", inputPin, getInputMode(engineConfiguration->fsioInputModes[i]));
 
 		}
 	}
 
 #endif /* EFI_PROD_CODE */
 
-	addConsoleActionSSP("set_fsio", (VoidCharPtrCharPtrVoidPtr) setUserOutput,
-			engine);
+	addConsoleActionSSP("set_fsio", (VoidCharPtrCharPtrVoidPtr) setUserOutput, engine);
 	addConsoleActionSS("set_fsio_pin", (VoidCharPtrCharPtr) setFsioPin);
 	addConsoleActionII("set_fsio_frequency", (VoidIntInt) setFsioFrequency);
 	addConsoleActionFF("set_fsio_setting", setFsioSetting);

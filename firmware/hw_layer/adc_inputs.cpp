@@ -129,6 +129,8 @@ ADC_TwoSamplingDelay_5Cycles,   // cr1
 AdcDevice fastAdc(&adcgrpcfg_fast);
 
 static void pwmpcb_slow(PWMDriver *pwmp) {
+	efiAssertVoid(getRemainingStack(chThdSelf())> 32, "lwStAdcSlow");
+
 #if EFI_INTERNAL_ADC
 	(void) pwmp;
 
@@ -154,6 +156,7 @@ static void pwmpcb_slow(PWMDriver *pwmp) {
 }
 
 static void pwmpcb_fast(PWMDriver *pwmp) {
+	efiAssertVoid(getRemainingStack(chThdSelf())> 32, "lwStAdcFast");
 #if EFI_INTERNAL_ADC
 	(void) pwmp;
 

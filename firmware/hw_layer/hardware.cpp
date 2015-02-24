@@ -144,6 +144,8 @@ static int hipSampleIndex;
  * This method is not in the adc* lower-level file because it is more business logic then hardware.
  */
 void adc_callback_fast(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
+	efiAssertVoid(getRemainingStack(chThdSelf()) > 64, "lowstck12a");
+
 	(void) buffer;
 	(void) n;
 	/**
