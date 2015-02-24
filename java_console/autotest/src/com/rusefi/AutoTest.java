@@ -22,6 +22,7 @@ public class AutoTest {
 
     static void mainTestBody() {
         sendCommand("fl 1"); // just in case it was disabled
+        testMitsu();
         testCitroenBerlingo();
         testMazda626();
         test2003DodgeNeon();
@@ -32,9 +33,17 @@ public class AutoTest {
         testFordFiesta();
     }
 
+    private static void testMitsu() {
+        setEngineType(16);
+        String msg = "Mitsubishi";
+        IoUtil.changeRpm(1200);
+        // todo: add more content
+    }
+
     private static void testCitroenBerlingo() {
         setEngineType(15);
         String msg = "Citroen";
+        IoUtil.changeRpm(1200);
         // todo: add more content
     }
 

@@ -83,4 +83,11 @@ public enum FileLog {
     public static void rlog(String msg) {
         System.out.println("r " + msg);
     }
+
+    public void log(IllegalStateException exception) {
+        if (fileLog == null)
+            throw new NullPointerException("fileLog");
+        OutputStreamWriter os = new OutputStreamWriter(fileLog);
+        exception.printStackTrace(new PrintWriter(os));
+    }
 }

@@ -33,6 +33,7 @@ import static com.rusefi.ui.util.LocalizedMessages.PAUSE;
  * Andrey Belomutskiy (c) 2012-2013
  *
  * @see EngineSnifferStatusPanel status bar
+ * @see com.rusefi.ui.test.WavePanelSandbox
  */
 public class EngineSnifferPanel {
     private static final int EFI_DEFAULT_CHART_SIZE = 180;

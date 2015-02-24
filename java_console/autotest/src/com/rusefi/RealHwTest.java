@@ -9,6 +9,11 @@ import static com.rusefi.AutoTest.*;
  */
 public class RealHwTest {
     public static void main(String[] args) {
+        /**
+         * with real hardware we have noise on all analog inputs which gives us random sensor data, we cannot really
+         * test exact numbers yet
+         */
+        TestingUtils.skipWaveCheck = true;
         FileLog.MAIN.start();
         String port;
         if (args.length == 1) {
