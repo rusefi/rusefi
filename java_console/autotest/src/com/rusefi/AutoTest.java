@@ -48,7 +48,7 @@ public class AutoTest {
         // todo: add more content
     }
 
-    private static void setEngineType(int type) {
+    static void setEngineType(int type) {
         currentEngineType = type;
         sendCommand("set_engine_type " + type, COMPLEX_COMMAND_RETRY, 600);
         sleep(10);

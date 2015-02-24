@@ -359,6 +359,9 @@ typedef enum {
 
 typedef enum {
 	ES_BPSX_D1 = 0,
+	/**
+	 * same as innovate LC2
+	 */
 	ES_Innovate_MTX_L = 1,
 	ES_14Point7_Free = 2,
 
