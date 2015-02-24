@@ -19,6 +19,8 @@ import static com.rusefi.waves.WaveReport.isCloseEnough;
  *         3/19/14.
  */
 public class TestingUtils {
+    static boolean skipWaveCheck;
+
     static void assertTrue(String msg, boolean b) {
         if (!b)
             fail("Not true: " + msg);
@@ -35,7 +37,7 @@ public class TestingUtils {
     }
 
     private static String printRange(double current, double ratio) {
-        return " expected range from " + current * (1 - ratio) + " to " + current * (1 + ratio);
+        return " expected range from " + current * (1 - ratio) + " to " + current * (1 + ratio) + " with ratio " + ratio;
     }
 
     private static double fixAngle(double angle) {
@@ -46,7 +48,9 @@ public class TestingUtils {
 
     private static void fail(String message) {
         FileLog.MAIN.logLine("FAILURE: " + message);
-        throw new IllegalStateException(message);
+        IllegalStateException exception = new IllegalStateException(message);
+        FileLog.MAIN.log(exception);
+        throw exception;
     }
 
     static void assertTrue(boolean b) {
@@ -70,7 +74,9 @@ public class TestingUtils {
         assertWave(false, msg, chart, key, width, WaveReport.RATIO, WaveReport.RATIO, expectedAngles);
     }
 
-    static void assertWave(boolean rise, String msg, WaveChart chart, String key, double width, double angleRatio, double widthRatio, double... expectedAngles) {
+    static void assertWave(boolean rise, String msg, WaveChart chart, String key, double expectedWidth, double angleRatio, double widthRatio, double... expectedAngles) {
+        if(skipWaveCheck)
+            return;
         RevolutionLog revolutionLog = chart.getRevolutionsLog();
         if (revolutionLog.keySet().isEmpty())
             throw new IllegalStateException(msg + " Empty revolutions in " + chart);
@@ -84,7 +90,13 @@ public class TestingUtils {
             double angleByTime = revolutionLog.getCrankAngleByTime(eventTime);
             assertCloseEnough(msg + " angle for " + key + "@" + eventTime, fixAngle(angleByTime), angleRatio, expectedAngles);
 
-            assertCloseEnough(msg + "width for " + key, ud.getDutyCycle(revolutionLog), widthRatio, width);
+            double actualWidth = ud.getDutyCycle(revolutionLog);
+            if (!isCloseEnough(fixAngle(actualWidth), expectedWidth, widthRatio)) {
+                System.out.println("f " + revolutionLog.getCrankAngleByTime(ud.downTime));
+                System.out.println("t " + revolutionLog.getCrankAngleByTime(ud.upTime));
+            }
+            assertCloseEnough(msg + "width for " + key, actualWidth, widthRatio, expectedWidth);
+
         }
     }
 
@@ -99,6 +111,7 @@ public class TestingUtils {
     static String getNextWaveChart() {
         // we need to skip TWO because spark could have been scheduled a while ago and happen now
         // todo: improve this logic, compare times
+        getWaveChart();
         getWaveChart();
         // we want to wait for the 2nd chart to see same same RPM across the whole chart
         String result = getWaveChart();
