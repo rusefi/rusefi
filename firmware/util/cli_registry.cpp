@@ -35,6 +35,7 @@ static int consoleActionCount = 0;
 static TokenCallback consoleActions[CONSOLE_MAX_ACTIONS];
 
 #define SECURE_LINE_PREFIX "sec!"
+#define SECURE_LINE_PREFIX_LENGTH 4
 
 void resetConsoleActions(void) {
 	consoleActionCount = 0;
@@ -400,11 +401,11 @@ void initConsoleLogic(Logging *sharedLogger) {
 char *validateSecureLine(char *line) {
 	if (line == NULL)
 		return NULL;
-	if (strncmp(SECURE_LINE_PREFIX, line, 4) == 0) {
+	if (strncmp(SECURE_LINE_PREFIX, line, SECURE_LINE_PREFIX_LENGTH) == 0) {
 		// COM protocol looses bytes, this is a super-naive error detection
 
 //		print("Got secure mode request header [%s]\r\n", line);
-		line += 4;
+		line += SECURE_LINE_PREFIX_LENGTH;
 //		print("Got secure mode request command [%s]\r\n", line);
 
 		char *divider = line;

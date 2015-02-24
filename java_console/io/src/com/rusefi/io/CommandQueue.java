@@ -1,5 +1,6 @@
 package com.rusefi.io;
 
+import com.rusefi.FileLog;
 import com.rusefi.core.MessagesCentral;
 import org.jetbrains.annotations.NotNull;
 
@@ -34,6 +35,7 @@ public class CommandQueue {
                 try {
                     sendPendingCommand();
                 } catch (InterruptedException e) {
+                    FileLog.MAIN.logLine("CommandQueue error");
                     e.printStackTrace();
                     throw new IllegalStateException(e);
                 }
@@ -140,6 +142,9 @@ public class CommandQueue {
 
     /**
      * Non-blocking command request
+     * Command is placed in the queue where it would be until it is confirmed
+     * @param command dev console command
+     * @param timeoutMs retry timeout
      */
     public void write(String command, int timeoutMs, InvocationConfirmationListener listener) {
 
