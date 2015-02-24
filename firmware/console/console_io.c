@@ -23,9 +23,9 @@
 #include "rfiutil.h"
 
 #if HAL_USE_SERIAL_USB || defined(__DOXYGEN__)
- #include "usbcfg.h"
- #include "usbconsole.h"
- extern SerialUSBDriver SDU1;
+#include "usbcfg.h"
+#include "usbconsole.h"
+extern SerialUSBDriver SDU1;
 #endif
 
 int lastWriteSize;
@@ -82,7 +82,7 @@ static bool getConsoleLine(BaseSequentialStream *chp, char *line, unsigned size)
 
 		if (c < 0 || c == 4) {
 			return TRUE;
-                }
+		}
 		if (c == 8) {
 			if (p != line) {
 				// backspace
@@ -101,7 +101,7 @@ static bool getConsoleLine(BaseSequentialStream *chp, char *line, unsigned size)
 		}
 		if (c < 0x20) {
 			continue;
-                }
+		}
 		if (p < line + size - 1) {
 			consolePutChar((uint8_t) c);
 			*p++ = (char) c;
