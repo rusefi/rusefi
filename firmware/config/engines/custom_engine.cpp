@@ -9,6 +9,7 @@
 
 #include "custom_engine.h"
 #include "honda_accord.h"
+#include "allsensors.h"
 
 void setCustomEngineConfiguration(engine_configuration_s *engineConfiguration) {
 	engineConfiguration->trigger.type = TT_ONE_PLUS_ONE;
@@ -18,19 +19,28 @@ void setCustomEngineConfiguration(engine_configuration_s *engineConfiguration) {
 	setFrankenso0_1_joystick(engineConfiguration);
 
 	/**
-	 * Frankenso analog #1 PC2 ADC12
-	 * Frankenso analog #2 PC1 ADC11
-	 * Frankenso analog #3
-	 * Frankenso analog #4 PC3 ADC13
-	 * Frankenso analog #5
-	 * Frankenso analog #6
+	 * Frankenso analog #1 PC2 ADC12 CLT
+	 * Frankenso analog #2 PC1 ADC11 IAT
+	 * Frankenso analog #3 PA0 ADC0
+	 * Frankenso analog #4 PC3 ADC13 WBO / O2
+	 * Frankenso analog #5 PA2 ADC2 TPS
+	 * Frankenso analog #6 PA1 ADC1
 	 * Frankenso analog #7 PA4 ADC4
-	 * Frankenso analog #8
-	 * Frankenso analog #9
+	 * Frankenso analog #8 PA3 ADC3
+	 * Frankenso analog #9 PA7 ADC7
 	 * Frankenso analog #10 PA6 ADC6
 	 * Frankenso analog #11 PC5 ADC15
 	 * Frankenso analog #12 VBatt
 	 */
+	engineConfiguration->tpsAdcChannel = EFI_ADC_2;
+	engineConfiguration->cltAdcChannel = EFI_ADC_12;
+	engineConfiguration->iatAdcChannel = EFI_ADC_11;
+	engineConfiguration->afr.hwChannel = EFI_ADC_13;
+
+	setCommonNTCSensor(&engineConfiguration->clt);
+	engineConfiguration->clt.bias_resistor = 2700;
+	setCommonNTCSensor(&engineConfiguration->iat);
+	engineConfiguration->iat.bias_resistor = 2700;
 
 
 	/**
@@ -94,10 +104,6 @@ void setCustomEngineConfiguration(engine_configuration_s *engineConfiguration) {
 
 	// todo: 8.2 or 10k?
 	engineConfiguration->vbattDividerCoeff = ((float) (10 + 33)) / 10 * 2;
-
-	engineConfiguration->tpsAdcChannel = EFI_ADC_NONE;
-	engineConfiguration->cltAdcChannel = EFI_ADC_12;
-	engineConfiguration->iatAdcChannel = EFI_ADC_11;
 
 }
 
