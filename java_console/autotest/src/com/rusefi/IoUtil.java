@@ -19,7 +19,7 @@ import static com.rusefi.waves.WaveReport.isCloseEnough;
  *         3/19/14.
  */
 public class IoUtil {
-    private static final int CMD_TIMEOUT = 20;
+    protected static final int CMD_TIMEOUT = 20;
 
     /**
      * Send a command and wait for the confirmation
