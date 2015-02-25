@@ -90,7 +90,7 @@ public:
 	void reset(LEElement *element);
 
 private:
-	void doJob(Engine *engine, LEElement *element);
+	bool_t doJob(Engine *engine, LEElement *element);
 	float pop(le_action_e action);
 	LEElement *first;
 	calc_stack_t stack;

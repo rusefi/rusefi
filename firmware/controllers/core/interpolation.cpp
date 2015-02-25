@@ -101,7 +101,10 @@ float FastInterpolation::getValue(float x) {
 float interpolate(float x1, float y1, float x2, float y2, float x) {
 	// todo: double comparison using EPS
 	if (x1 == x2) {
-		firmwareError("interpolate: Same x1 and x2 in interpolate: %f/%f", x1, x2);
+		/**
+		 * we could end up here for example while resetting bins while changing engine type
+		 */
+		warning(OBD_PCM_Processor_Fault, "interpolate: Same x1 and x2 in interpolate: %f/%f", x1, x2);
 		return NAN;
 	}
 

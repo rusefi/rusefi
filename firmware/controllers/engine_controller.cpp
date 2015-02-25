@@ -200,6 +200,17 @@ static void cylinderCleanupControl(Engine *engine) {
 
 static LocalVersionHolder versionForConfigurationListeners;
 
+static void onEvenyGeneralMilliseconds(Engine *engine);
+
+static void scheduleNextInvocation(void) {
+	// schedule next invocation
+	int period = boardConfiguration->generalPeriodicThreadPeriod;
+	if (period == 0)
+		period = 50; // this might happen while resetting config
+	chVTSetAny(&everyMsTimer, period * TICKS_IN_MS, (vtfunc_t) &onEvenyGeneralMilliseconds, engine);
+
+}
+
 static void onEvenyGeneralMilliseconds(Engine *engine) {
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 64, "lowStckOnEv");
 #if EFI_PROD_CODE
@@ -238,15 +249,11 @@ static void onEvenyGeneralMilliseconds(Engine *engine) {
 
 	cylinderCleanupControl(engine);
 
-	// schedule next invocation
-	chVTSetAny(&everyMsTimer, boardConfiguration->generalPeriodicThreadPeriod * TICKS_IN_MS,
-			(vtfunc_t) &onEvenyGeneralMilliseconds, engine);
+	scheduleNextInvocation();
 }
 
 void initPeriodicEvents(Engine *engine) {
-	// schedule first invocation
-	chVTSetAny(&everyMsTimer, boardConfiguration->generalPeriodicThreadPeriod * TICKS_IN_MS,
-			(vtfunc_t) &onEvenyGeneralMilliseconds, engine);
+	scheduleNextInvocation();
 }
 
 char * getPinNameByAdcChannel(adc_channel_e hwChannel, char *buffer) {

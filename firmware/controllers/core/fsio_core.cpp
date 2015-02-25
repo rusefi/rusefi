@@ -112,7 +112,7 @@ float LECalculator::pop(le_action_e action) {
 	return stack.pop();
 }
 
-void LECalculator::doJob(Engine *engine, LEElement *element) {
+bool_t LECalculator::doJob(Engine *engine, LEElement *element) {
 	switch (element->action) {
 
 	case LE_NUMERIC_VALUE:
@@ -232,11 +232,12 @@ void LECalculator::doJob(Engine *engine, LEElement *element) {
 	}
 		break;
 	case LE_UNDEFINED:
-		firmwareError("FSIO undefined action");
-		break;
+		warning(OBD_PCM_Processor_Fault, "FSIO undefined action");
+		return true;
 	default:
 		stack.push(getLEValue(engine, &stack, element->action));
 	}
+	return false;
 }
 
 float LECalculator::getValue2(LEElement *element, Engine *engine) {
@@ -254,7 +255,11 @@ float LECalculator::getValue(Engine *engine) {
 	stack.reset();
 
 	while (element != NULL) {
-		doJob(engine, element);
+		bool_t isError = doJob(engine, element);
+		if (isError) {
+			// error already reported
+			return NAN;
+		}
 		element = element->next;
 	}
 	if (stack.size() != 1) {
