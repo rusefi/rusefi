@@ -27,18 +27,9 @@ typedef struct {
 	IntListenerArray periodListeners;
 } WaveReaderHw;
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
-
 void initWaveAnalyzerDriver(WaveReaderHw *hw, brain_pin_e brainPin);
 void startInputDriver(WaveReaderHw *hw, bool isActiveHigh);
 ICUDriver * getInputCaptureDriver(brain_pin_e hwPin);
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
 
 #endif
 

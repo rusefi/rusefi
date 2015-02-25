@@ -11,7 +11,7 @@
 
 #include "global.h"
 
-#if EFI_WAVE_CHART
+#if EFI_WAVE_CHART || defined(__DOXYGEN__)
 #include "datalogging.h"
 
 /**
