@@ -106,7 +106,7 @@ static bool float2bool(float v) {
 
 float LECalculator::pop(le_action_e action) {
 	if (stack.size() == 0) {
-		firmwareError("empty stack for %d", action);
+		warning(OBD_PCM_Processor_Fault, "empty stack for %d", action);
 		return NAN;
 	}
 	return stack.pop();

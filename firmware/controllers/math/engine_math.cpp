@@ -62,7 +62,7 @@ float getEngineLoadT(DECLARE_ENGINE_PARAMETER_F) {
 		return getRealMaf(PASS_ENGINE_PARAMETER_F);
 	}
 	default:
-		firmwareError("Unexpected engine load parameter: %d", engineConfiguration->algorithm);
+		warning(OBD_PCM_Processor_Fault, "Unexpected engine load parameter: %d", engineConfiguration->algorithm);
 		return -1;
 	}
 }
@@ -202,7 +202,7 @@ void FuelSchedule::addFuelEvents(OutputSignalList *sourceList, injection_mode_e 
 		}
 		break;
 	default:
-		firmwareError("Unexpected injection mode %d", mode);
+		warning(OBD_PCM_Processor_Fault, "Unexpected injection mode %d", mode);
 	}
 }
 
@@ -266,7 +266,7 @@ void findTriggerPosition(event_trigger_position_s *position, angle_t angleOffset
 	int index = TRIGGER_SHAPE(triggerIndexByAngle[(int)angleOffset]);
 	angle_t eventAngle = TRIGGER_SHAPE(eventAngles[index]);
 	if (angleOffset < eventAngle) {
-		firmwareError("angle constraint violation in registerActuatorEventExt(): %f/%f", angleOffset, eventAngle);
+		warning(OBD_PCM_Processor_Fault, "angle constraint violation in registerActuatorEventExt(): %f/%f", angleOffset, eventAngle);
 		return;
 	}
 
@@ -307,9 +307,9 @@ int getCylinderId(firing_order_e firingOrder, int index) {
 		return order_1_8_4_3_6_5_7_2[index];
 
 	default:
-		firmwareError("getCylinderId not supported for %d", firingOrder);
+		warning(OBD_PCM_Processor_Fault, "getCylinderId not supported for %d", firingOrder);
 	}
-	return -1;
+	return 1;
 }
 
 static NamedOutputPin * getIgnitionPinForIndex(int i DECLARE_ENGINE_PARAMETER_S
@@ -329,7 +329,7 @@ static NamedOutputPin * getIgnitionPinForIndex(int i DECLARE_ENGINE_PARAMETER_S
 		break;
 
 	default:
-		firmwareError("unsupported ignitionMode %d in initializeIgnitionActions()", engineConfiguration->ignitionMode);
+		warning(OBD_PCM_Processor_Fault, "unsupported ignitionMode %d in initializeIgnitionActions()", engineConfiguration->ignitionMode);
 		return &enginePins.coils[0];
 	}
 }

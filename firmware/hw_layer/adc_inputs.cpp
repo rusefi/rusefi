@@ -185,7 +185,7 @@ static void pwmpcb_fast(PWMDriver *pwmp) {
 
 int getInternalAdcValue(adc_channel_e hwChannel) {
 	if (hwChannel == EFI_ADC_NONE) {
-		firmwareError("should not be asking for NONE");
+		warning(OBD_PCM_Processor_Fault, "ADC: should not be asking for NONE");
 		return -1;
 	}
 

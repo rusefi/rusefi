@@ -23,7 +23,7 @@ public class CommandQueue {
     private String latestConfirmation;
 
     private static final CommandQueue instance = new CommandQueue();
-    private final BlockingQueue<MethodInvocation> pendingCommands = new LinkedBlockingQueue<MethodInvocation>();
+    private final BlockingQueue<MethodInvocation> pendingCommands = new LinkedBlockingQueue<>();
     private final List<CommandQueueListener> commandListeners = new ArrayList<>();
 
     private final Runnable runnable = new Runnable() {
