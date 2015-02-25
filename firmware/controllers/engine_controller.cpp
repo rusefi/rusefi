@@ -41,9 +41,9 @@
 #include "allsensors.h"
 #include "analog_chart.h"
 #include "electronic_throttle.h"
-#include "malfunction_indicator.h"
 #include "map_averaging.h"
 #include "malfunction_central.h"
+#include "malfunction_indicator.h"
 #include "engine.h"
 #include "algo.h"
 #include "LocalVersionHolder.h"
@@ -386,7 +386,7 @@ static void setFloat(const char *offsetStr, const char *valueStr) {
 	getFloat(offset);
 }
 
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 static void resetAccel(void) {
 	engine->accelEnrichment.reset();
 }
@@ -399,17 +399,17 @@ void initEngineContoller(Logging *sharedLogger, Engine *engine) {
 
 	initSensors(sharedLogger PASS_ENGINE_PARAMETER_F);
 
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 	initPwmGenerator();
 #endif
 
-#if EFI_ANALOG_CHART
+#if EFI_ANALOG_CHART || defined(__DOXYGEN__)
 	initAnalogChart();
 #endif /* EFI_ANALOG_CHART */
 
 	initAlgo(sharedLogger, engineConfiguration);
 
-#if EFI_WAVE_ANALYZER
+#if EFI_WAVE_ANALYZER || defined(__DOXYGEN__)
 	if (engineConfiguration->isWaveAnalyzerEnabled) {
 		initWaveAnalyzer(sharedLogger);
 	}
@@ -423,7 +423,7 @@ void initEngineContoller(Logging *sharedLogger, Engine *engine) {
 	initRpmCalculator(engine);
 #endif /* EFI_SHAFT_POSITION_INPUT */
 
-#if EFI_TUNER_STUDIO
+#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 	if (engineConfiguration->isTunerStudioEnabled) {
 		startTunerStudioConnectivity(sharedLogger);
 	}
@@ -444,13 +444,13 @@ void initEngineContoller(Logging *sharedLogger, Engine *engine) {
 	prepareShapes(engine);
 #endif
 
-#if EFI_PWM_TESTER
+#if EFI_PWM_TESTER || defined(__DOXYGEN__)
 	initPwmTester();
 #endif
 
 	initMalfunctionCentral();
 
-#if EFI_ELECTRONIC_THROTTLE_BODY
+#if EFI_ELECTRONIC_THROTTLE_BODY || defined(__DOXYGEN__)
 	initElectronicThrottle();
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 

@@ -14,10 +14,10 @@
 #include "main.h"
 #include "engine.h"
 
-#if EFI_MALFUNCTIONAL_INDICATOR
+#if EFI_MALFUNCTION_INDICATOR || defined(__DOXYGEN__)
 
 void initMalfunctionIndicator(Engine *engine);
 
-#endif /* EFI_MALFUNCTIONAL_INDICATOR */
+#endif /* EFI_MALFUNCTION_INDICATOR */
 
 #endif /* MALFUNCTION_INDICATOR_H_ */

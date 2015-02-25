@@ -113,10 +113,6 @@
 #define EFI_PROD_CODE TRUE
 
 /**
- * Do we need Malfunction Indicator blinking logic?
- */
-#define EFI_MALFUNCTIONAL_INDICATOR TRUE
-/**
  * Do we need file logging (like SD card) logic?
  */
 #define EFI_FILE_LOGGING TRUE
@@ -155,6 +151,9 @@
 //#define EFI_ELECTRONIC_THROTTLE_BODY TRUE
 #define EFI_ELECTRONIC_THROTTLE_BODY FALSE
 
+/**
+ * Do we need Malfunction Indicator blinking logic?
+ */
 #define EFI_MALFUNCTION_INDICATOR TRUE
 //#define EFI_MALFUNCTION_INDICATOR FALSE
 
