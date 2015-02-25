@@ -296,7 +296,10 @@ bool isNumeric(const char* line) {
 	return line[0] >= '0' && line[0] <= '9';
 }
 
-const char *getNextToken(const char *line, char *buffer) {
+/**
+ * @return pointer at the position after the consumed token, null if no token consumed
+ */
+const char *getNextToken(const char *line, char *buffer, const int bufferSize) {
 	while (line[0] != 0 && line[0] == ' ') {
 		line++;
 	}
@@ -306,9 +309,9 @@ const char *getNextToken(const char *line, char *buffer) {
 	int tokenLen = indexOf(line, ' ');
 	if (tokenLen == -1) {
 		// no space - the whole remaining line is the token
-		strcpy(buffer, line);
-		return line + strlen(buffer);
+		tokenLen = strlen(line);
 	}
+	efiAssert(tokenLen < bufferSize, "token overflow", NULL);
 	strncpy(buffer, line, tokenLen);
 	buffer[tokenLen] = 0;
 	line += tokenLen;
@@ -334,7 +337,7 @@ LEElement *LEElementPool::parseExpression(const char * line) {
 	LEElement *last = NULL;
 
 	while (true) {
-		line = getNextToken(line, parsingBuffer);
+		line = getNextToken(line, parsingBuffer, sizeof(parsingBuffer));
 
 		if (line == NULL) {
 			/**

@@ -109,7 +109,7 @@ public:
  *
  * @return pointer after the token
  */
-const char *getNextToken(const char *line, char *buffer);
+const char *getNextToken(const char *line, char *buffer, const int bufferSize);
 bool isNumeric(const char* line);
 le_action_e parseAction(const char * line);
 

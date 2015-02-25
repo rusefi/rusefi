@@ -32,7 +32,9 @@ EXTERN_ENGINE;
 #define CHART_RESET_DELAY 1
 #define MAX_ICU_COUNT 5
 
+#if EFI_WAVE_CHART || defined(__DOXYGEN__)
 extern WaveChart waveChart;
+#endif
 extern bool hasFirmwareErrorFlag;
 
 /**

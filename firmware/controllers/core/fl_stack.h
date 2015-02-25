@@ -9,6 +9,7 @@
 #ifndef FL_STACK_H_
 #define FL_STACK_H_
 
+#include "main.h"
 #include "error_handling.h"
 
 template<typename T, int MAXSIZE>
@@ -43,6 +44,11 @@ void FLStack<T, MAXSIZE>::reset() {
 
 template<typename T, int MAXSIZE>
 void FLStack<T, MAXSIZE>::push(T value) {
+	if(index >= MAXSIZE) {
+		firmwareError("FLstack overflow");
+		return;
+		//warning()
+	}
 	values[index++] = value;
 }
 
@@ -56,6 +62,7 @@ T FLStack<T, MAXSIZE>::pop() {
 
 template<typename T, int MAXSIZE>
 T FLStack<T, MAXSIZE>::get(int index) {
+	efiAssert(index >= 0 && index < MAXSIZE, "FLget", values[0]);
 	return values[index];
 }
 
