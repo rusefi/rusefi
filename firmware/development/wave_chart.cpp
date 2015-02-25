@@ -27,7 +27,7 @@
 #include "main.h"
 #include "wave_chart.h"
 
-#if EFI_WAVE_CHART
+#if EFI_WAVE_CHART || defined(__DOXYGEN__)
 
 #include "engine_configuration.h"
 #include "eficonsole.h"

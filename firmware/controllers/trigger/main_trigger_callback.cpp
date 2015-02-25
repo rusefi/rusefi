@@ -403,14 +403,14 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECL
 #endif /* EFI_HISTOGRAMS */
 }
 
-#if EFI_PROD_CODE
+#if EFI_WAVE_CHART || defined(__DOXYGEN__)
 #include "wave_chart.h"
 #endif
 
 static void showTriggerHistogram(void) {
 	printAllCallbacksHistogram();
 	showMainHistogram();
-#if EFI_PROD_CODE
+#if EFI_WAVE_CHART || defined(__DOXYGEN__)
 	showWaveChartHistogram();
 #endif
 }

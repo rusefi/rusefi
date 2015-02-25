@@ -31,7 +31,7 @@
 #include "malfunction_indicator.h"
 #include "efiGpio.h"
 
-#if EFI_MALFUNCTION_INDICATOR
+#if EFI_MALFUNCTION_INDICATOR || defined(__DOXYGEN__)
 
 #define MFI_LONG_BLINK	1500
 #define MFI_SHORT_BLINK	400
@@ -110,7 +110,6 @@ void initMalfunctionIndicator(Engine *engine) {
 	chThdCreateStatic(mfiThreadStack, sizeof(mfiThreadStack), LOWPRIO, (tfunc_t) mfiThread, NULL);
 
 	addConsoleAction("testmil", testMil);
-
 }
 
 #endif /* EFI_MALFUNCTION_INDICATOR */
