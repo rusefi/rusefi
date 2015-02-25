@@ -557,7 +557,9 @@ void updateTunerStudioState(Engine *engine, TunerStudioOutputChannels *tsOutputC
 	tsOutputChannels->airFuelRatio = getAfr();
 	tsOutputChannels->v_batt = getVBatt(engineConfiguration);
 	tsOutputChannels->tpsADC = getTPS10bitAdc(PASS_ENGINE_PARAMETER_F);
+#if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
 	tsOutputChannels->atmospherePressure = getBaroPressure();
+#endif /* EFI_ANALOG_SENSORS */
 	tsOutputChannels->manifold_air_pressure = getMap();
 	tsOutputChannels->engineLoad = engineLoad;
 	tsOutputChannels->rpmAcceleration = engine->rpmCalculator.getRpmAcceleration();
@@ -565,9 +567,12 @@ void updateTunerStudioState(Engine *engine, TunerStudioOutputChannels *tsOutputC
 	tsOutputChannels->minDelta = engine->accelEnrichment.minDelta;
 
 	tsOutputChannels->checkEngine = hasErrorCodes();
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+
+#if EFI_MAX_31855 || defined(__DOXYGEN__)
 	for (int i = 0; i < EGT_CHANNEL_COUNT; i++)
 		tsOutputChannels->egtValues.values[i] = getEgtValue(i);
+#endif /* EFI_MAX_31855 */
 
 	tsOutputChannels->needBurn = getNeedToWriteConfiguration();
 	tsOutputChannels->hasSdCard = isSdCardAlive();
@@ -579,10 +584,13 @@ void updateTunerStudioState(Engine *engine, TunerStudioOutputChannels *tsOutputC
 	tsOutputChannels->cylinder_cleanup_enabled = engineConfiguration->isCylinderCleanupEnabled;
 	tsOutputChannels->cylinder_cleanup_activated = engine->isCylinderCleanupMode;
 	tsOutputChannels->secondTriggerChannelEnabled = engineConfiguration->secondTriggerChannelEnabled;
+#if EFI_VEHICLE_SPEED || defined(__DOXYGEN__)
 	tsOutputChannels->vehicleSpeedKph = getVehicleSpeed();
+#endif /* EFI_VEHICLE_SPEED */
 	tsOutputChannels->isCltError = !isValidCoolantTemperature(getCoolantTemperature(engine));
 	tsOutputChannels->isIatError = !isValidIntakeAirTemperature(getIntakeAirTemperature(engine));
-#endif
+#endif /* EFI_PROD_CODE */
+
 	tsOutputChannels->clutchUpState = engine->clutchUpState;
 	tsOutputChannels->clutchDownState = engine->clutchDownState;
 	tsOutputChannels->tCharge = getTCharge(rpm, tps, coolant, intake);

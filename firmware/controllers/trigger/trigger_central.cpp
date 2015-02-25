@@ -288,9 +288,11 @@ void triggerInfo(Engine *engine) {
 
 	if (engine->triggerShape.needSecondTriggerInput) {
 		scheduleMsg(logger, "secondary trigger input: %s", hwPortname(boardConfiguration->triggerInputPins[1]));
+#if EFI_EMULATE_POSITION_SENSORS || defined(__DOXYGEN__)
 		scheduleMsg(logger, "secondary trigger simulator: %s %s phase=%d",
 				hwPortname(boardConfiguration->triggerSimulatorPins[1]),
 				getPin_output_mode_e(boardConfiguration->triggerSimulatorPinModes[1]), triggerSignal.safe.phaseIndex);
+#endif /* EFI_EMULATE_POSITION_SENSORS */
 	}
 //	scheduleMsg(logger, "3rd trigger simulator: %s %s", hwPortname(boardConfiguration->triggerSimulatorPins[2]),
 //			getPin_output_mode_e(boardConfiguration->triggerSimulatorPinModes[2]));

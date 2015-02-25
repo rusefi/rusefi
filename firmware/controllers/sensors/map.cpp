@@ -110,4 +110,9 @@ void initMapDecoder(DECLARE_ENGINE_PARAMETER_F) {
 	//engine->configurationListeners.registerCallback(applyConfiguration);
 }
 
-#endif
+#else
+
+void initMapDecoder(DECLARE_ENGINE_PARAMETER_F) {
+}
+
+#endif /* EFI_ANALOG_SENSORS */

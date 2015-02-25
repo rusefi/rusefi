@@ -65,8 +65,6 @@
  */
 #define EFI_SHAFT_POSITION_INPUT TRUE
 
-#define EFI_ANALOG_INPUTS TRUE
-
 /**
  * Maybe we are just sniffing what's going on?
  */
