@@ -109,7 +109,7 @@ extern TunerStudioOutputChannels tsOutputChannels;
 extern tunerstudio_counters_s tsState;
 
 static void resetTs(void) {
-	memset(&tsState, sizeof(tsState), 0);
+	memset(&tsState, 0, sizeof(tsState));
 }
 
 /**

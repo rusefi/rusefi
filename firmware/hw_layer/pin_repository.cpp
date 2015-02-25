@@ -89,7 +89,7 @@ brain_pin_e parseBrainPin(const char *str) {
 	if (strEqual(str, "none"))
 		return GPIO_UNASSIGNED;
 	// todo: create method toLowerCase?
-	if (str[0] != 'p' && str[0] != 'p') {
+	if (str[0] != 'p' && str[0] != 'P') {
 		return GPIO_INVALID;
 	}
 	char port = str[1];
