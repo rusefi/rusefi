@@ -121,11 +121,11 @@ int getRevolutionCounter(void);
 void scheduleOutput(OutputSignal *signal, efitimeus_t nowUs, float delayUs, float durationUs) {
 #if EFI_GPIO
 	if (durationUs < 0) {
-		firmwareError("duration cannot be negative: %d", durationUs);
+		warning(OBD_PCM_Processor_Fault, "duration cannot be negative: %d", durationUs);
 		return;
 	}
 	if (cisnan(durationUs)) {
-		firmwareError("NaN in scheduleOutput", durationUs);
+		warning(OBD_PCM_Processor_Fault, "NaN in scheduleOutput", durationUs);
 		return;
 	}
 

@@ -16,7 +16,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class MessagesCentral {
     private static final MessagesCentral INSTANCE = new MessagesCentral();
-    private final List<MessageListener> listeners = new CopyOnWriteArrayList<MessageListener>();
+    private final List<MessageListener> listeners = new CopyOnWriteArrayList<>();
 
     private MessagesCentral() {
         PortHolder.getInstance().listener = new PortHolderListener() {
