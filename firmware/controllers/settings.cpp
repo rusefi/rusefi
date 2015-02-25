@@ -367,14 +367,12 @@ static void printThermistor(const char *msg, Thermistor *thermistor) {
 	scheduleMsg(&logger, "@%s", getPinNameByAdcChannel(adcChannel, pinNameBuffer));
 	scheduleMsg(&logger, "bias=%f A=%..100000f B=%..100000f C=%..100000f", thermistor->config->bias_resistor,
 			thermistor->config->s_h_a, thermistor->config->s_h_b, thermistor->config->s_h_c);
-//#if EFI_ANALOG_INPUTS
 	scheduleMsg(&logger, "==============================");
-//#endif
 }
 
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 static void printMAPInfo(void) {
-#if EFI_ANALOG_INPUTS
+#if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
 	scheduleMsg(&logger, "map type=%d raw=%f MAP=%f", engineConfiguration->map.sensor.type, getRawMap(), getMap());
 	if (engineConfiguration->map.sensor.type == MT_CUSTOM) {
 		scheduleMsg(&logger, "at0=%f at5=%f", engineConfiguration->map.sensor.valueAt0,
@@ -386,7 +384,7 @@ static void printMAPInfo(void) {
 		scheduleMsg(&logger, "min=%f max=%f", engineConfiguration->baroSensor.valueAt0,
 				engineConfiguration->baroSensor.valueAt5);
 	}
-#endif
+#endif /* EFI_ANALOG_SENSORS */
 }
 #endif /* EFI_PROD_CODE */
 

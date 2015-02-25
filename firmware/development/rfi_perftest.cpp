@@ -280,7 +280,7 @@ static void timeInfo(void) {
 static void runChibioTest(void) {
 	print("EFI_SHAFT_POSITION_INPUT=%d\r\n", EFI_SHAFT_POSITION_INPUT);
 	print("EFI_EMULATE_POSITION_SENSORS=%d\r\n", EFI_EMULATE_POSITION_SENSORS);
-	print("EFI_ANALOG_INPUTS=%d\r\n", EFI_ANALOG_INPUTS);
+	print("EFI_ANALOG_SENSORS=%d\r\n", EFI_ANALOG_SENSORS);
 	print("EFI_INTERNAL_ADC=%d\r\n", EFI_INTERNAL_ADC);
 	print("EFI_HD44780_LCD=%d\r\n", EFI_HD44780_LCD);
 	print("EFI_MAP_AVERAGING=%d\r\n", EFI_MAP_AVERAGING);

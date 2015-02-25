@@ -219,7 +219,11 @@ void initMapAveraging(Logging *sharedLogger, Engine *engine) {
 #else
 
 float getMap(void) {
+#if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
 	return getRawMap();
+#else
+	return NAN;
+#endif /* EFI_ANALOG_SENSORS */
 }
 
 #endif /* EFI_MAP_AVERAGING */

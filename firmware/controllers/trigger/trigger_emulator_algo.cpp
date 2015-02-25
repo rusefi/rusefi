@@ -72,9 +72,6 @@ static bool isEmulating = true;
 static Logging *logger;
 static LocalVersionHolder emulatorConfigVersion;
 
-EXTERN_ENGINE
-;
-
 #if EFI_WAVE_CHART
 #include "wave_chart.h"
 extern WaveChart waveChart;
