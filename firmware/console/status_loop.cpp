@@ -486,13 +486,13 @@ static void blinkingThread(void *arg) {
 	initialLedsBlink();
 
 	while (true) {
-		int delay;
+		int delay = isConsoleReady() ? 3 * blinkingPeriod : blinkingPeriod;
 
+#if EFI_INTERNAL_FLASH || defined(__DOXYGEN__)
 		if (getNeedToWriteConfiguration()) {
-			delay = isConsoleReady() ? 6 * blinkingPeriod : 2 * blinkingPeriod;
-		} else {
-			delay = isConsoleReady() ? 3 * blinkingPeriod : blinkingPeriod;
+			delay = 2 * delay;
 		}
+#endif
 
 		communicationPin.setValue(0);
 		warningPin.setValue(0);
@@ -574,7 +574,9 @@ void updateTunerStudioState(Engine *engine, TunerStudioOutputChannels *tsOutputC
 		tsOutputChannels->egtValues.values[i] = getEgtValue(i);
 #endif /* EFI_MAX_31855 */
 
+#if EFI_INTERNAL_FLASH || defined(__DOXYGEN__)
 	tsOutputChannels->needBurn = getNeedToWriteConfiguration();
+#endif
 	tsOutputChannels->hasSdCard = isSdCardAlive();
 	tsOutputChannels->isFuelPumpOn = enginePins.fuelPumpRelay.getLogicValue();
 	tsOutputChannels->isFanOn = enginePins.fanRelay.getLogicValue();

@@ -224,9 +224,10 @@ static void onEvenyGeneralMilliseconds(Engine *engine) {
 	}
 #endif
 
-#if (EFI_PROD_CODE && EFI_ENGINE_CONTROL )|| defined(__DOXYGEN__)
-	if (!engine->rpmCalculator.isRunning())
+#if (EFI_PROD_CODE && EFI_ENGINE_CONTROL && EFI_INTERNAL_FLASH) || defined(__DOXYGEN__)
+	if (!engine->rpmCalculator.isRunning()) {
 		writeToFlashIfPending();
+	}
 #endif
 
 	if (versionForConfigurationListeners.isOld()) {
