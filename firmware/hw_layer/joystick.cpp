@@ -50,6 +50,9 @@ static void extCallback(EXTDriver *extp, expchannel_t channel) {
 	} else if (channel == getHwPin(boardConfiguration->joystickDPin)) {
 		joyD++;
 		button = JB_BUTTON_D;
+	} else {
+		// unexpected channel
+		return;
 	}
 #if EFI_HD44780_LCD || defined(__DOXYGEN__)
 	onJoystick(button);

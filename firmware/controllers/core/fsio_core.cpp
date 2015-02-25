@@ -57,6 +57,8 @@ LENameOrdinalPair::LENameOrdinalPair(le_action_e action, const char *name) {
 LEElement::LEElement() {
 	action = LE_UNDEFINED;
 	next = NULL;
+	fValue = NAN;
+	iValue = 0;
 }
 
 //void LEElement::init(le_action_e action, int iValue) {
@@ -260,13 +262,17 @@ float LECalculator::getValue(Engine *engine) {
 
 	stack.reset();
 
+	int counter = 0;
 	while (element != NULL) {
+		efiAssert(counter < 200, "FSIOcount", NAN); // just in case
+
 		bool_t isError = doJob(engine, element);
 		if (isError) {
 			// error already reported
 			return NAN;
 		}
 		element = element->next;
+		counter++;
 	}
 	if (stack.size() != 1) {
 		warning(OBD_PCM_Processor_Fault, "unexpected FSIO stack size: %d", stack.size());
@@ -277,7 +283,7 @@ float LECalculator::getValue(Engine *engine) {
 
 LEElementPool::LEElementPool(LEElement *pool, int size) {
 	this->pool = pool;
-	this->capacity = capacity;
+	this->size = size;
 	reset();
 }
 
@@ -290,7 +296,7 @@ int LEElementPool::getSize() {
 }
 
 LEElement *LEElementPool::next() {
-	if (index == capacity - 1) {
+	if (index >= size) {
 		// todo: this should not be a fatal error, just an error
 		firmwareError("LE_ELEMENT_POOL_SIZE overflow");
 		return NULL;
@@ -353,6 +359,9 @@ LEElement *LEElementPool::parseExpression(const char * line) {
 		}
 
 		LEElement *n = next();
+		if (n == NULL) {
+			return first;
+		}
 
 		if (isNumeric(parsingBuffer)) {
 			n->init(LE_NUMERIC_VALUE, atoff(parsingBuffer));

@@ -72,7 +72,7 @@ public:
 	int getSize();
 private:
 	int index;
-	int capacity;
+	int size;
 };
 
 

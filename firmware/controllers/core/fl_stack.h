@@ -74,11 +74,18 @@ int FLStack<T, MAXSIZE>::size() {
 template <class Type, int Dimention>
 class ArrayList {
 public:
+	ArrayList();
 	int size;
 	Type elements[Dimention];
 	void reset(void);
 	Type *add(void);
 };
+
+template <class Type, int Dimention>
+ArrayList< Type, Dimention>::ArrayList(void) {
+	memset(&elements, 0, sizeof(elements));
+	reset();
+}
 
 template <class Type, int Dimention>
 void ArrayList< Type, Dimention>::reset(void) {

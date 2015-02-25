@@ -31,6 +31,7 @@ static msg_t stThread(StepperMotor *motor) {
 		motor->pulse();
 	}
 
+	return 0;
 }
 
 void StepperMotor::pulse() {
