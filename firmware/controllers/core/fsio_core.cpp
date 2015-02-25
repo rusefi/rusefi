@@ -112,7 +112,13 @@ float LECalculator::pop(le_action_e action) {
 	return stack.pop();
 }
 
+/**
+ * @return true in case of error, false otherwise
+ */
 bool_t LECalculator::doJob(Engine *engine, LEElement *element) {
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+	efiAssert(getRemainingStack(chThdSelf()) > 64, "FSIO logic", false);
+#endif
 	switch (element->action) {
 
 	case LE_NUMERIC_VALUE:
