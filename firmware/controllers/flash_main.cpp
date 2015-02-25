@@ -18,7 +18,7 @@
 #include "tunerstudio.h"
 #endif
 
-#if EFI_INTERNAL_FLASH
+#if EFI_INTERNAL_FLASH || defined(__DOXYGEN__)
 
 #include "engine_controller.h"
 

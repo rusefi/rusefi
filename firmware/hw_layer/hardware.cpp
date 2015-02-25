@@ -238,7 +238,7 @@ void initHardware(Logging *l, Engine *engine) {
 	}
 #else
 	engineConfiguration->engineType = DEFAULT_ENGINE_TYPE;
-	resetConfigurationExt(logger, engineConfiguration->engineType, engine);
+	resetConfigurationExt(sharedLogger, engineConfiguration->engineType, engine);
 #endif /* EFI_INTERNAL_FLASH */
 
 	if (hasFirmwareError()) {
