@@ -15,6 +15,9 @@
 #include "bmw_e34.h"
 
 void setBmwE34(engine_configuration_s *engineConfiguration) {
+	board_configuration_s * boardConfiguration = &engineConfiguration->bc;
+
+	boardConfiguration->tunerStudioThreadPeriod = 50;
 	engineConfiguration->rpmHardLimit = 6000;
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 
@@ -64,6 +67,17 @@ void setBmwE34(engine_configuration_s *engineConfiguration) {
 	bc->injectionPins[5] = GPIO_UNASSIGNED; // #6
 
 	bc->triggerErrorPin = GPIOE_3;
+
+	engineConfiguration->clutchUpPin = GPIOD_3;
+	engineConfiguration->clutchUpPinMode = PI_PULLUP;
+
+	boardConfiguration->idleValvePin = GPIOC_13;
+	boardConfiguration->idleSolenoidFrequency = 300;
+
+	// turbocharger boost control solenoid: TODO output: GPIOE_6
+	// water injection #1 TODO GPIOD_7
+	// water injection #2 TODO GPIOE_2
+
 
 	/**
 	 * emulating the 60-0 trigger takes some resources, let's keep it slow by default

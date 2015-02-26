@@ -75,7 +75,8 @@ static void setDefaultAspireMaps(engine_configuration_s *engineConfiguration) {
 	copyTimingTable(default_aspire_timing_table, engineConfiguration->ignitionTable);
 }
 
-void setFordAspireEngineConfiguration(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
+void setFordAspireEngineConfiguration(engine_configuration_s *engineConfiguration) {
+	board_configuration_s * boardConfiguration = &engineConfiguration->bc;
 	engineConfiguration->tpsMin = 100;
 	engineConfiguration->tpsMax = 750;
 

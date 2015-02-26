@@ -90,8 +90,8 @@ static float dodge_map_advance_table[16][16] = {
 };
 
 
-void setDodgeNeon1995EngineConfiguration(engine_configuration_s *engineConfiguration,
-		board_configuration_s *boardConfiguration) {
+void setDodgeNeon1995EngineConfiguration(engine_configuration_s *engineConfiguration) {
+	board_configuration_s * boardConfiguration = &engineConfiguration->bc;
 
 	engineConfiguration->trigger.type = TT_DODGE_NEON_1995;
 
@@ -181,8 +181,8 @@ void setDodgeNeon1995EngineConfiguration(engine_configuration_s *engineConfigura
 	engineConfiguration->analogChartFrequency = 7;
 }
 
-void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfiguration,
-		board_configuration_s *boardConfiguration) {
+void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfiguration) {
+	board_configuration_s * boardConfiguration = &engineConfiguration->bc;
 	engineConfiguration->trigger.type = TT_DODGE_NEON_2003;
 	setFrankenso_01_LCD(boardConfiguration);
 	setFrankenso0_1_joystick(engineConfiguration);
