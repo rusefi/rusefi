@@ -6,10 +6,11 @@ import static com.rusefi.RealHwTest.startRealHardwareTest;
 
 public class EnduranceTest {
 
-    private static final int COUNT = 200;
+    private static final int COUNT = 2000;
 
     public static void main(String[] args) {
         long start = System.currentTimeMillis();
+        FileLog.MAIN.logLine("Running " + COUNT + " cycles");
         try {
             String port = startRealHardwareTest(args);
 
@@ -36,6 +37,8 @@ public class EnduranceTest {
         FileLog.MAIN.logLine("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
         FileLog.MAIN.logLine("++++++++++++++++++++++++++++++++++++  YES YES YES " + COUNT + "   +++++++++++++++");
         FileLog.MAIN.logLine("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-        FileLog.MAIN.logLine("In " + (System.currentTimeMillis() - start) + "ms");
+        long totalTime = System.currentTimeMillis() - start;
+        long minutes = totalTime / 1000 / 60;
+        FileLog.MAIN.logLine("In " + minutes + " minutes");
     }
 }
