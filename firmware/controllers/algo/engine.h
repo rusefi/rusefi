@@ -190,7 +190,7 @@ public:
 	 * This field is true if we are in 'cylinder cleanup' state right now
 	 * see isCylinderCleanupEnabled
 	 */
-	bool isCylinderCleanupMode;
+	bool_t isCylinderCleanupMode;
 
 	/**
 	 * pre-calculating this value is a performance optimization
@@ -230,8 +230,8 @@ private:
 	 * 'running' means RPM are above crankingRpm
 	 * 'spinning' means the engine is not stopped
 	 */
-	bool isSpinning;
-	bool stopPins();
+	bool_t isSpinning;
+	bool_t stopPins();
 };
 
 /**

@@ -23,6 +23,7 @@ AdcDevice::AdcDevice(ADCConversionGroup* hwConfig) {
 	this->hwConfig = hwConfig;
 	channelCount = 0;
 	conversionCount = 0;
+	errorsCount = 0;
 
 	hwConfig->sqr1 = 0;
 	hwConfig->sqr2 = 0;

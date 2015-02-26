@@ -93,6 +93,7 @@ void hwHandleShaftSignal(trigger_event_e signal) {
 #endif /* EFI_PROD_CODE */
 
 TriggerCentral::TriggerCentral() {
+	nowNt = 0;
 	memset(hwEventCounters, 0, sizeof(hwEventCounters));
 	clearCallbacks(&triggerListeneres);
 }
