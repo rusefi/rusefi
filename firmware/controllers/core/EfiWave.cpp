@@ -22,6 +22,8 @@ void single_wave_s::init(pin_state_t *pinStates) {
 }
 
 multi_wave_s::multi_wave_s() {
+	waves = NULL;
+	switchTimes = NULL;
 	reset();
 }
 

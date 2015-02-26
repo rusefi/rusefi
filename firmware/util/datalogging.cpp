@@ -387,6 +387,10 @@ void initIntermediateLoggingBuffer(void) {
 #endif /* ! EFI_UNIT_TEST */
 
 Logging::Logging() {
+	name = NULL;
+	buffer = linePointer = NULL;
+	bufferSize = 0;
+	isInitialized = false;
 }
 
 Logging::Logging(char const *name, char *buffer, int bufferSize) {

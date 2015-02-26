@@ -41,6 +41,8 @@ TriggerShape::TriggerShape() :
 	isSynchronizationNeeded = false;
 	invertOnAdd = false;
 	tdcPosition = 0;
+	skippedToothCount = totalToothCount = 0;
+	syncRatioFrom = syncRatioTo = 0;
 }
 
 int TriggerShape::getSize() const {

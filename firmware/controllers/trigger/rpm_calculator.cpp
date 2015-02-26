@@ -43,6 +43,7 @@ RpmCalculator::RpmCalculator() {
 #if !EFI_PROD_CODE
 	mockRpm = MOCK_UNDEFINED;
 #endif
+	rpmValue = 0;
 	setRpmValue(0);
 
 	// we need this initial to have not_running at first invocation

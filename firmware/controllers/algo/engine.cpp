@@ -60,6 +60,11 @@ Engine::Engine() {
 	stopEngineRequestTimeNt = 0;
 	isRunningPwmTest = false;
 	isTestMode = false;
+	isSpinning = false;
+
+	injectorLagMs = advance = dwellAngle = fuelMs = 0;
+	clutchDownState = clutchUpState = false;
+	memset(&m, 0, sizeof(m));
 
 	addConfigurationListener(invokeEnginePreCalculate);
 }
@@ -95,7 +100,7 @@ static bool stopPin(NamedOutputPin *output) {
 	return false;
 }
 
-bool Engine::stopPins() {
+bool_t Engine::stopPins() {
 	bool result = false;
 	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 		result |= stopPin(&enginePins.coils[i]);

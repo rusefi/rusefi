@@ -59,7 +59,8 @@ MenuItem::MenuItem(MenuItem * parent, const char *text) {
 
 MenuItem::MenuItem(MenuItem * parent, lcd_line_e lcdLine) {
 	this->lcdLine = lcdLine;
-	this->text = NULL;
+	text = NULL;
+	topOfTheList = NULL;
 	init(parent, NULL);
 }
 
