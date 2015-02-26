@@ -61,6 +61,17 @@ Engine::Engine() {
 	isRunningPwmTest = false;
 	isTestMode = false;
 	isSpinning = false;
+	adcToVoltageInputDividerCoefficient = NAN;
+	engineConfiguration = NULL;
+	engineConfiguration2 = NULL;
+	engineState.iat = engineState.clt = NAN;
+	memset(&ignitionPin, 0, sizeof(ignitionPin));
+
+	iat.config = NULL;
+	iat.channel = EFI_ADC_NONE;
+
+	clt.config = NULL;
+	clt.channel = EFI_ADC_NONE;
 
 	injectorLagMs = advance = dwellAngle = fuelMs = 0;
 	clutchDownState = clutchUpState = false;

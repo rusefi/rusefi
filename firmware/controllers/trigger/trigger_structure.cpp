@@ -131,6 +131,11 @@ TriggerState::TriggerState() {
 	totalRevolutionCounter = 0;
 	totalTriggerErrorCounter = 0;
 	orderingErrorCounter = 0;
+	currentDuration = 0;
+	curSignal = SHAFT_PRIMARY_DOWN;
+	prevSignal = SHAFT_PRIMARY_DOWN;
+	prevCycleDuration = 0;
+	startOfCycleNt = 0;
 
 	resetRunningCounters();
 	clear();

@@ -388,12 +388,13 @@ void initIntermediateLoggingBuffer(void) {
 
 Logging::Logging() {
 	name = NULL;
-	buffer = linePointer = NULL;
+	buffer = NULL;
+	linePointer = NULL;
 	bufferSize = 0;
 	isInitialized = false;
 }
 
-Logging::Logging(char const *name, char *buffer, int bufferSize) {
+Logging::Logging(char const *name, char *buffer, int bufferSize) : Logging() {
 #if ! EFI_UNIT_TEST
 	initLoggingExt(this, "settings control", buffer, bufferSize);
 #endif /* ! EFI_UNIT_TEST */

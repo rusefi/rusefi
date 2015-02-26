@@ -27,6 +27,8 @@ EXTERN_ENGINE
 IdleValveState::IdleValveState() {
 	value = DEFAULT_IDLE_DUTY;
 	timeOfLastIdleChange = 0;
+	time = 0;
+	targetRpmRangeLeft = targetRpmRangeRight = 0;
 }
 
 void IdleValveState::init(DECLARE_ENGINE_PARAMETER_F) {

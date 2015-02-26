@@ -41,7 +41,8 @@
 #include "accel_enrichment.h"
 #endif /* EFI_ACCEL_ENRICHMENT */
 
-EXTERN_ENGINE;
+EXTERN_ENGINE
+;
 
 static Map3D1616 fuelMap;
 static Map3D1616 fuelPhaseMap;
@@ -52,6 +53,8 @@ extern Map3D1616 afrMap;
  * @return total duration of fuel injection per engine cycle, in milliseconds
  */
 float getRealMafFuel(float airSpeed, int rpm DECLARE_ENGINE_PARAMETER_S) {
+	if (rpm == 0)
+		return 0;
 	// duration of engine cycle, in hours
 	float engineCycleDurationHr = 1.0 / 60 / rpm;
 
@@ -102,18 +105,19 @@ static int getNumberOfInjections(engine_configuration_s const *engineConfigurati
 	}
 }
 
-
 /**
  * @returns	Length of fuel injection, in milliseconds
  */
 float getFuelMs(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	float theoreticalInjectionLength;
 	if (isCrankingR(rpm)) {
-		theoreticalInjectionLength = getCrankingFuel(engine) / getNumberOfInjections(engineConfiguration, engineConfiguration->crankingInjectionMode);
+		theoreticalInjectionLength = getCrankingFuel(engine)
+				/ getNumberOfInjections(engineConfiguration, engineConfiguration->crankingInjectionMode);
 	} else {
 		float baseFuel = getBaseFuel(rpm PASS_ENGINE_PARAMETER);
 		float fuelPerCycle = getRunningFuel(baseFuel, rpm PASS_ENGINE_PARAMETER);
-		theoreticalInjectionLength = fuelPerCycle / getNumberOfInjections(engineConfiguration, engine->engineConfiguration->injectionMode);
+		theoreticalInjectionLength = fuelPerCycle
+				/ getNumberOfInjections(engineConfiguration, engine->engineConfiguration->injectionMode);
 	}
 	return theoreticalInjectionLength + ENGINE(injectorLagMs);
 }
@@ -187,8 +191,7 @@ float getBaseTableFuel(engine_configuration_s *engineConfiguration, int rpm, flo
  */
 float getCrankingFuel(Engine *engine) {
 	return getCrankingFuel3(engine->engineConfiguration, getCoolantTemperature(engine),
-			engine->rpmCalculator.getRevolutionCounterSinceStart()
-		);
+			engine->rpmCalculator.getRevolutionCounterSinceStart());
 }
 #endif
 
@@ -198,12 +201,9 @@ float getCrankingFuel3(engine_configuration_s *engineConfiguration, float coolan
 	float baseCrankingFuel = engineConfiguration->cranking.baseFuel;
 	if (cisnan(coolantTemperature))
 		return baseCrankingFuel;
-	float durationCoef = interpolate2d(revolutionCounterSinceStart,
-			engineConfiguration->crankingCycleBins,
+	float durationCoef = interpolate2d(revolutionCounterSinceStart, engineConfiguration->crankingCycleBins,
 			engineConfiguration->crankingCycleCoef, CRANKING_CURVE_SIZE);
 
 	return interpolate2d(coolantTemperature, engineConfiguration->crankingFuelBins,
-			engineConfiguration->crankingFuelCoef, CRANKING_CURVE_SIZE)
-			* baseCrankingFuel
-			* durationCoef;
+			engineConfiguration->crankingFuelCoef, CRANKING_CURVE_SIZE) * baseCrankingFuel * durationCoef;
 }
