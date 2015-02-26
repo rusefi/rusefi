@@ -27,7 +27,6 @@ const char *getIgnition_mode_e(ignition_mode_e value);
 const char *getInjection_mode_e(injection_mode_e value);
 const char *getCranking_ignition_mode_e(cranking_ignition_mode_e value);
 const char *getSpi_device_e(spi_device_e value);
-const char *getInternal_error_e(internal_error_e value);
 const char *getAdc_channel_e(adc_channel_e value);
 const char *getEgo_sensor_e(ego_sensor_e value);
 const char *getBrain_pin_e(brain_pin_e value);

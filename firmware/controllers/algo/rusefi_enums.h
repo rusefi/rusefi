@@ -253,6 +253,10 @@ typedef enum {
 
 typedef enum {
 	FO_ONE_CYLINDER = 0,
+
+	// 2 cylinder
+	FO_1_THEN_2 = 8,
+
 	// 4 cylinder
 	FO_1_THEN_3_THEN_4_THEN2 = 1,
 	FO_1_THEN_2_THEN_4_THEN3 = 2,
@@ -323,13 +327,6 @@ typedef enum {
 
 	Force_4b_spi_device = ENUM_32_BITS,
 } spi_device_e;
-
-typedef enum {
-	IE_NO_ERROR = 0,
-	IE_UNEXPECTED_FIRING_ORDER = 1,
-
-	Force_4b_cranking_internal_error = ENUM_32_BITS,
-} internal_error_e;
 
 typedef enum {
 	EFI_ADC_0 = 0,

@@ -259,6 +259,8 @@ const char *getFiring_order_e(firing_order_e value){
 switch(value) {
 case FO_1_2_4_5_3:
   return "FO_1_2_4_5_3";
+case FO_1_THEN_2:
+  return "FO_1_THEN_2";
 case FO_1_8_4_3_6_5_7_2:
   return "FO_1_8_4_3_6_5_7_2";
 case FO_1_THEN_2_THEN_4_THEN3:
@@ -342,17 +344,6 @@ case SPI_DEVICE_4:
   return "SPI_DEVICE_4";
 case SPI_NONE:
   return "SPI_NONE";
-  }
- return NULL;
-}
-const char *getInternal_error_e(internal_error_e value){
-switch(value) {
-case Force_4b_cranking_internal_error:
-  return "Force_4b_cranking_internal_error";
-case IE_NO_ERROR:
-  return "IE_NO_ERROR";
-case IE_UNEXPECTED_FIRING_ORDER:
-  return "IE_UNEXPECTED_FIRING_ORDER";
   }
  return NULL;
 }
