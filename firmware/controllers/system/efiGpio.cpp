@@ -9,6 +9,9 @@
 #if EFI_GPIO
 #include "efiGpio.h"
 #include "io_pins.h"
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#include "gpio_helper.h"
+#endif
 
 pin_output_mode_e OUTPUT_MODE_DEFAULT = OM_DEFAULT;
 
@@ -16,11 +19,16 @@ pin_output_mode_e OUTPUT_MODE_DEFAULT = OM_DEFAULT;
 engine_pins_s enginePins;
 
 NamedOutputPin::NamedOutputPin() : OutputPin() {
-
+	name = NULL;
 }
 
 OutputPin::OutputPin() {
 	modePtr = &OUTPUT_MODE_DEFAULT;
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+	port = NULL;
+	pin = 0;
+	currentLogicValue = INITIAL_PIN_STATE;
+#endif
 }
 
 void OutputPin::setValue(int logicValue) {

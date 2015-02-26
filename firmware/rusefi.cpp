@@ -274,9 +274,9 @@ static char UNUSED_RAM_SIZE[9999];
 static char UNUSED_CCM_SIZE[4900] CCM_OPTIONAL;
 
 int getRusEfiVersion(void) {
-	if (UNUSED_RAM_SIZE == 0)
+	if (UNUSED_RAM_SIZE[0]== 0)
 		return 1; // this is here to make the compiler happy about the unused array
-	if (UNUSED_CCM_SIZE == 0)
+	if (UNUSED_CCM_SIZE[0] == 0)
 		return 1; // this is here to make the compiler happy about the unused array
 	return 20150226;
 }

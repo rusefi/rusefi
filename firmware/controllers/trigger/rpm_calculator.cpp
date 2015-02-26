@@ -225,7 +225,8 @@ float getCrankshaftAngleNt(uint64_t timeNt DECLARE_ENGINE_PARAMETER_S) {
 	 * compiler is not smart enough to figure out that "A / ( B / C)" could be optimized into
 	 * "A * C / B" in order to replace a slower division with a faster multiplication.
 	 */
-	return timeSinceZeroAngleNt / getOneDegreeTimeNt(engine->rpmCalculator.rpm(PASS_ENGINE_PARAMETER_F));
+	int rpm = engine->rpmCalculator.rpm(PASS_ENGINE_PARAMETER_F);
+	return rpm == 0 ? NAN : timeSinceZeroAngleNt / getOneDegreeTimeNt(rpm);
 }
 
 void initRpmCalculator(Engine *engine) {

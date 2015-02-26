@@ -12,6 +12,8 @@
 MenuTree::MenuTree(MenuItem *root) {
 	this->root = root;
 	current = NULL;
+	linesCount = 0;
+	topVisible = NULL;
 }
 
 void MenuTree::init(MenuItem *first, int linesCount) {
@@ -45,38 +47,32 @@ void MenuTree::nextItem(void) {
 		topVisible = topVisible->next;
 }
 
-MenuItem::MenuItem(MenuItem * parent, const char *text, VoidCallback callback) {
-	lcdLine = LL_STRING;
-	this->text = text;
-	init(parent, callback);
+MenuItem::MenuItem(MenuItem * parent, const char *text, VoidCallback callback) : MenuItem(parent, LL_STRING, text, callback) {
 }
 
-MenuItem::MenuItem(MenuItem * parent, const char *text) {
-	lcdLine = LL_STRING;
-	this->text = text;
-	init(parent, NULL);
+MenuItem::MenuItem(MenuItem * parent, const char *text) : MenuItem(parent, LL_STRING, text, NULL) {
 }
 
-MenuItem::MenuItem(MenuItem * parent, lcd_line_e lcdLine) {
-	this->lcdLine = lcdLine;
-	text = NULL;
-	topOfTheList = NULL;
-	init(parent, NULL);
+MenuItem::MenuItem(MenuItem * parent, lcd_line_e lcdLine) : MenuItem(parent, lcdLine, NULL, NULL) {
 }
 
-void MenuItem::init(MenuItem * parent, VoidCallback callback) {
+MenuItem::MenuItem(MenuItem * parent, lcd_line_e lcdLine, const char *text, VoidCallback callback) {
 	this->parent = parent;
+	this->lcdLine = lcdLine;
+	this->text = text;
+	this->callback = callback;
+
 	firstChild = NULL;
 	lastChild = NULL;
+	topOfTheList = NULL;
 	next = NULL;
-	this->callback = callback;
+	index = 0;
 
 	// root element has NULL parent
 	if (parent != NULL) {
 		if (parent->firstChild == NULL) {
-			parent->firstChild = this;
-			index = 0;
 			topOfTheList = this;
+			parent->firstChild = this;
 		}
 		if (parent->lastChild != NULL) {
 			index = parent->lastChild->index + 1;

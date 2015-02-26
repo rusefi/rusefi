@@ -28,7 +28,7 @@ PwmConfig::PwmConfig() {
 	memset(&safe, 0, sizeof(safe));
 	scheduling.name = "PwmConfig";
 	periodNt = NAN;
-// todo	outputPins = NULL;
+	memset(&outputPins, 0, sizeof(outputPins));
 	phaseCount = 0;
 	cycleCallback = NULL;
 	stateChangeCallback = NULL;

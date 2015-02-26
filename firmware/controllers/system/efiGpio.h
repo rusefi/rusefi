@@ -24,7 +24,7 @@ public:
 	void setValue(int logicValue);
 	void setDefaultPinState(pin_output_mode_e *defaultState);
 	bool_t getLogicValue();
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 	GPIO_TypeDef *port;
 	int pin;
 #endif /* EFI_PROD_CODE */

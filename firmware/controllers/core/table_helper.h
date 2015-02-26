@@ -30,11 +30,18 @@ private:
 template<int SIZE>
 class Table2D {
 public:
+	Table2D();
 	void preCalc(float *bin, float *values);
 	float aTable[SIZE];
 	float bTable[SIZE];
 	float *bin;
 };
+
+template<int SIZE>
+Table2D<SIZE>::Table2D() {
+	bin = NULL;
+}
+
 
 template<int SIZE>
 void Table2D<SIZE>::preCalc(float *bin, float *values) {
