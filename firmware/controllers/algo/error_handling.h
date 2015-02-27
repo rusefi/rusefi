@@ -17,6 +17,8 @@ extern "C"
 #include "efifeatures.h"
 #include "stdbool.h"
 
+void assertVtList(void);
+
 /**
  * Something is wrong, but we can live with it: some minor sensor is disconnected
  * or something like that
