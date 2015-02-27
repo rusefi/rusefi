@@ -19,6 +19,6 @@ float sdMath(engine_configuration_s *engineConfiguration, float VE, float MAP, f
 
 void setDetaultVETable(engine_configuration_s *engineConfiguration);
 void initSpeedDensity(engine_configuration_s *engineConfiguration);
-float getSpeedDensityFuel(Engine *engine, int rpm);
+float getSpeedDensityFuel(int rpm DECLARE_ENGINE_PARAMETER_S);
 
 #endif /* SPEED_DENSITY_H_ */

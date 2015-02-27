@@ -102,7 +102,7 @@ static void updateTriggerShapeIfNeeded(PwmConfig *state) {
 		scheduleMsg(logger, "Stimulator: updating trigger shape: %d/%d %d", emulatorConfigVersion.getVersion(),
 				getGlobalConfigurationVersion(), currentTimeMillis());
 
-		applyNonPersistentConfiguration(logger, engine);
+		applyNonPersistentConfiguration(logger PASS_ENGINE_PARAMETER);
 
 		TriggerShape *s = &engine->triggerShape;
 		pin_state_t *pinStates[PWM_PHASE_MAX_WAVE_PER_PWM] = { s->wave.waves[0].pinStates, s->wave.waves[1].pinStates,
