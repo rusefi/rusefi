@@ -289,7 +289,7 @@ static void setTimingMode(int value) {
 
 void setEngineType(int value) {
 	engineConfiguration->engineType = (engine_type_e) value;
-	resetConfigurationExt(&logger, (engine_type_e) value, engine);
+	resetConfigurationExt(&logger, (engine_type_e) value PASS_ENGINE_PARAMETER);
 #if EFI_WAVE_CHART || defined(__DOXYGEN__)
 	if (engine->isTestMode)
 		waveChart.resetWaveChart();
@@ -408,11 +408,11 @@ static void printTPSInfo(void) {
 static void printTemperatureInfo(void) {
 #if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
 	printThermistor("CLT", &engine->clt);
-	if (!isValidCoolantTemperature(getCoolantTemperature(engine))) {
+	if (!isValidCoolantTemperature(getCoolantTemperature(PASS_ENGINE_PARAMETER_F))) {
 		scheduleMsg(&logger, "CLT sensing error");
 	}
 	printThermistor("IAT", &engine->iat);
-	if (!isValidIntakeAirTemperature(getIntakeAirTemperature(engine))) {
+	if (!isValidIntakeAirTemperature(getIntakeAirTemperature(PASS_ENGINE_PARAMETER_F))) {
 		scheduleMsg(&logger, "IAT sensing error");
 	}
 

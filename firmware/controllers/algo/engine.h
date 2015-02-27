@@ -250,8 +250,7 @@ private:
 };
 
 void prepareShapes(Engine *engine);
-void resetConfigurationExt(Logging * logger, engine_type_e engineType,
-		Engine *engine);
+void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_ENGINE_PARAMETER_S);
 void applyNonPersistentConfiguration(Logging * logger, Engine *engine);
 void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_F);
 

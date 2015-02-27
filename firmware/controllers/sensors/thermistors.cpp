@@ -108,11 +108,11 @@ bool isValidIntakeAirTemperature(float temperature) {
 /**
  * @return coolant temperature, in Celsius
  */
-float getCoolantTemperature(Engine * engine) {
+float getCoolantTemperature(DECLARE_ENGINE_PARAMETER_F) {
 	float temperature = getTemperatureC(&engine->clt);
 	if (!isValidCoolantTemperature(temperature)) {
-		efiAssert(engine->engineConfiguration!=NULL, "NULL engineConfiguration", NAN);
-		if (engine->engineConfiguration->hasCltSensor) {
+		efiAssert(engineConfiguration!=NULL, "NULL engineConfiguration", NAN);
+		if (engineConfiguration->hasCltSensor) {
 			warning(OBD_PCM_Processor_Fault, "unrealistic CLT %f", temperature);
 		}
 		return LIMPING_MODE_CLT_TEMPERATURE;
@@ -172,11 +172,11 @@ void prepareThermistorCurve(ThermistorConf * config) {
 /**
  * @return Celsius value
  */
-float getIntakeAirTemperature(Engine * engine) {
+float getIntakeAirTemperature(DECLARE_ENGINE_PARAMETER_F) {
 	float temperature = getTemperatureC(&engine->iat);
 	if (!isValidIntakeAirTemperature(temperature)) {
-		efiAssert(engine->engineConfiguration!=NULL, "NULL engineConfiguration", NAN);
-		if (engine->engineConfiguration->hasIatSensor) {
+		efiAssert(engineConfiguration!=NULL, "NULL engineConfiguration", NAN);
+		if (engineConfiguration->hasIatSensor) {
 			warning(OBD_PCM_Processor_Fault, "unrealistic IAT %f", temperature);
 		}
 		return LIMPING_MODE_IAT_TEMPERATURE;
@@ -216,8 +216,8 @@ void initThermistors(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 	logger = sharedLogger;
 	efiAssertVoid(engine!=NULL, "e NULL initThermistors");
 	efiAssertVoid(engine->engineConfiguration2!=NULL, "e2 NULL initThermistors");
-	initThermistorCurve(&engine->clt, &engine->engineConfiguration->clt, engine->engineConfiguration->cltAdcChannel);
-	initThermistorCurve(&engine->iat, &engine->engineConfiguration->iat, engine->engineConfiguration->iatAdcChannel);
+	initThermistorCurve(&engine->clt, &engineConfiguration->clt, engineConfiguration->cltAdcChannel);
+	initThermistorCurve(&engine->iat, &engineConfiguration->iat, engineConfiguration->iatAdcChannel);
 
 #if EFI_PROD_CODE
 	addConsoleActionF("test_clt_by_r", testCltByR);

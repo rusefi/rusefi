@@ -34,9 +34,9 @@ float convertFtoCelcius(float tempF);
 float getKelvinTemperature(float resistance, ThermistorConf *thermistor);
 float getResistance(Thermistor *thermistor);
 float getTemperatureC(Thermistor *thermistor);
-float getCoolantTemperature(Engine * engine);
+float getCoolantTemperature(DECLARE_ENGINE_PARAMETER_F);
 bool isValidCoolantTemperature(float temperature);
-float getIntakeAirTemperature(Engine * engine);
+float getIntakeAirTemperature(DECLARE_ENGINE_PARAMETER_F);
 bool isValidIntakeAirTemperature(float temperature);
 
 float convertResistanceToKelvinTemperature(float resistance,

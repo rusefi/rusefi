@@ -54,6 +54,8 @@
 #include "test_engine.h"
 #include "sachs.h"
 
+EXTERN_ENGINE;
+
 #if EFI_TUNER_STUDIO
 #include "tunerstudio.h"
 #endif
@@ -132,7 +134,8 @@ void setWholeTimingTable(engine_configuration_s *engineConfiguration, float valu
  * This method sets the default global engine configuration. These values are later overridden by engine-specific defaults
  * and the settings saves in flash memory.
  */
-void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
+void setDefaultConfiguration(engine_configuration_s *engineConfiguration) {
+	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 	memset(engineConfiguration, 0, sizeof(engine_configuration_s));
 	memset(boardConfiguration, 0, sizeof(board_configuration_s));
 
@@ -532,18 +535,19 @@ void setDefaultConfiguration(engine_configuration_s *engineConfiguration, board_
 	boardConfiguration->tunerStudioSerialSpeed = TS_DEFAULT_SPEED;
 }
 
-void resetConfigurationExt(Logging * logger, engine_type_e engineType, Engine *engine) {
-	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
-	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
+void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_ENGINE_PARAMETER_S) {
 	/**
 	 * Let's apply global defaults first
 	 */
-	setDefaultConfiguration(engineConfiguration, boardConfiguration);
+	setDefaultConfiguration(engineConfiguration);
 #if EFI_SIMULATOR
 	engineConfiguration->directSelfStimulation = true;
 #endif /* */
 	engineConfiguration->engineType = engineType;
 	engineConfiguration->headerMagicValue = HEADER_MAGIC_NUMBER;
+
+	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
+
 	/**
 	 * And override them with engine-specific defaults
 	 */
