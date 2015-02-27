@@ -106,3 +106,18 @@ void onUnlockHook(void) {
 void initErrorHandling(void) {
 	msObjectInit(&warningStream, (uint8_t *) warningBuffer, WARNING_BUFFER_SIZE, 0);
 }
+
+extern VTList vtlist;
+extern bool_t main_loop_started;
+
+void assertVtList(void) {
+	if(!main_loop_started)
+		return;
+	VirtualTimer          *first = vtlist.vt_next;
+	VirtualTimer          *cur = first->vt_next;
+	int c = 0;
+	while(c++ < 20 && cur != first) {
+		cur = cur->vt_next;
+	}
+	efiAssertVoid(c > 3, "VT list?");
+}
