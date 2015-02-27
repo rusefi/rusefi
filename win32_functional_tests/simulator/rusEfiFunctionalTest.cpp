@@ -90,6 +90,8 @@ void rusEfiFunctionalTest(void) {
 	initSensors(&sharedLogger PASS_ENGINE_PARAMETER);
 
 	initAlgo(&sharedLogger, engineConfiguration);
+	initConfigActions();
+
 	initRpmCalculator(engine);
 
 #if EFI_ANALOG_CHART
