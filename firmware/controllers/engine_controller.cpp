@@ -78,7 +78,7 @@ board_configuration_s *boardConfiguration = &persistentState.persistentConfigura
  * CH_FREQUENCY is the number of system ticks in a second
  */
 
-static VirtualTimer everyMsTimer;
+static VirtualTimer periodicTimer;
 
 static LoggingWithStorage logger("Engine Controller");
 
@@ -200,18 +200,18 @@ static void cylinderCleanupControl(Engine *engine) {
 
 static LocalVersionHolder versionForConfigurationListeners;
 
-static void onEvenyGeneralMilliseconds(Engine *engine);
+static void periodicCallback(Engine *engine);
 
 static void scheduleNextInvocation(void) {
 	// schedule next invocation
 	int period = boardConfiguration->generalPeriodicThreadPeriod;
 	if (period == 0)
 		period = 50; // this might happen while resetting config
-	chVTSetAny(&everyMsTimer, period * TICKS_IN_MS, (vtfunc_t) &onEvenyGeneralMilliseconds, engine);
+	chVTSetAny(&periodicTimer, period * TICKS_IN_MS, (vtfunc_t) &periodicCallback, engine);
 
 }
 
-static void onEvenyGeneralMilliseconds(Engine *engine) {
+static void periodicCallback(Engine *engine) {
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 64, "lowStckOnEv");
 #if EFI_PROD_CODE
 	/**
@@ -392,6 +392,15 @@ static void resetAccel(void) {
 }
 #endif
 
+void initConfigActions(void) {
+	addConsoleActionSS("set_float", (VoidCharPtrCharPtr) setFloat);
+	addConsoleActionII("set_int", (VoidIntInt) setInt);
+	addConsoleActionII("set_short", (VoidIntInt) setShort);
+	addConsoleActionI("get_float", getFloat);
+	addConsoleActionI("get_int", getInt);
+	addConsoleActionI("get_short", getShort);
+}
+
 void initEngineContoller(Logging *sharedLogger, Engine *engine) {
 	if (hasFirmwareError()) {
 		return;
@@ -408,6 +417,7 @@ void initEngineContoller(Logging *sharedLogger, Engine *engine) {
 #endif /* EFI_ANALOG_CHART */
 
 	initAlgo(sharedLogger, engineConfiguration);
+	initConfigActions();
 
 #if EFI_WAVE_ANALYZER || defined(__DOXYGEN__)
 	if (engineConfiguration->isWaveAnalyzerEnabled) {
@@ -483,12 +493,7 @@ void initEngineContoller(Logging *sharedLogger, Engine *engine) {
 
 	addConsoleAction("analoginfo", printAnalogInfo);
 
-	addConsoleActionSS("set_float", (VoidCharPtrCharPtr) setFloat);
-	addConsoleActionII("set_int", (VoidIntInt) setInt);
-	addConsoleActionII("set_short", (VoidIntInt) setShort);
-	addConsoleActionI("get_float", getFloat);
-	addConsoleActionI("get_int", getInt);
-	addConsoleActionI("get_short", getShort);
+	initConfigActions();
 #if EFI_PROD_CODE
 	addConsoleAction("reset_accel", resetAccel);
 #endif
