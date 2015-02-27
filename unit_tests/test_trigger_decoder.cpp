@@ -473,7 +473,8 @@ static void testRpmCalculator(void) {
 void testTriggerDecoder(void) {
 	printf("*************************************************** testTriggerDecoder\r\n");
 
-	Engine engine;
+	persistent_config_s config;
+	Engine engine(&config);
 	TriggerShape * s = &engine.triggerShape;
 
 

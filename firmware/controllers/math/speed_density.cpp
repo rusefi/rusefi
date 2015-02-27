@@ -73,13 +73,13 @@ float sdMath(engine_configuration_s *engineConfiguration, float VE, float MAP, f
 	return airMass / (AFR * injectorFlowRate);
 }
 
+EXTERN_ENGINE;
+
 /**
  * @return per cylinder injection time, in Milliseconds
  */
-float getSpeedDensityFuel(Engine *engine, int rpm) {
+float getSpeedDensityFuel(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	//int rpm = engine->rpmCalculator->rpm();
-
-	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
 
 	float tps = getTPS(PASS_ENGINE_PARAMETER_F);
 	float coolantC = engine->engineState.clt;
@@ -89,7 +89,7 @@ float getSpeedDensityFuel(Engine *engine, int rpm) {
 	float VE = veMap.getValue(map, rpm);
 	float AFR = afrMap.getValue(map, rpm);
 
-	return sdMath(engine->engineConfiguration, VE, map, AFR, tChargeK) * 1000;
+	return sdMath(engineConfiguration, VE, map, AFR, tChargeK) * 1000;
 }
 
 void setDetaultVETable(engine_configuration_s *engineConfiguration) {

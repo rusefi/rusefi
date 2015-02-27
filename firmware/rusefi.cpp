@@ -172,8 +172,6 @@ void swo_init()
 void runRusEfi(void) {
 	msObjectInit(&firmwareErrorMessageStream, errorMessageBuffer, sizeof(errorMessageBuffer), 0);
 
-	// that's dirty, this assignment should be nicer or in a better spot
-	engine->engineConfiguration = engineConfiguration;
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
 	engine->engineConfiguration2 = engineConfiguration2;
 #endif

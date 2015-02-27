@@ -64,8 +64,8 @@ float decodePressure(float voltage, air_pressure_sensor_config_s * config) {
  */
 float getMapByVoltage(float voltage DECLARE_ENGINE_PARAMETER_S) {
 	// todo: migrate to mapDecoder once parameter listeners are ready
-	air_pressure_sensor_config_s * config = &engineConfiguration->map.sensor;
-	return decodePressure(voltage, config);
+	air_pressure_sensor_config_s * apConfig = &engineConfiguration->map.sensor;
+	return decodePressure(voltage, apConfig);
 }
 
 /**

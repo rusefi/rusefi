@@ -74,7 +74,7 @@ float getRealMafFuel(float airSpeed, int rpm DECLARE_ENGINE_PARAMETER_S) {
 
 float getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	if (engineConfiguration->algorithm == LM_SPEED_DENSITY) {
-		return getSpeedDensityFuel(engine, rpm);
+		return getSpeedDensityFuel(rpm PASS_ENGINE_PARAMETER);
 	} else if (engineConfiguration->algorithm == LM_REAL_MAF) {
 		return getRealMafFuel(getRealMaf(PASS_ENGINE_PARAMETER_F), rpm PASS_ENGINE_PARAMETER);
 	} else {
@@ -117,7 +117,7 @@ float getFuelMs(int rpm DECLARE_ENGINE_PARAMETER_S) {
 		float baseFuel = getBaseFuel(rpm PASS_ENGINE_PARAMETER);
 		float fuelPerCycle = getRunningFuel(baseFuel, rpm PASS_ENGINE_PARAMETER);
 		theoreticalInjectionLength = fuelPerCycle
-				/ getNumberOfInjections(engineConfiguration, engine->engineConfiguration->injectionMode);
+				/ getNumberOfInjections(engineConfiguration, engineConfiguration->injectionMode);
 	}
 	return theoreticalInjectionLength + ENGINE(injectorLagMs);
 }
@@ -190,7 +190,7 @@ float getBaseTableFuel(engine_configuration_s *engineConfiguration, int rpm, flo
  * @return Duration of fuel injection while craning, in milliseconds
  */
 float getCrankingFuel(DECLARE_ENGINE_PARAMETER_F) {
-	return getCrankingFuel3(engine->engineConfiguration, getCoolantTemperature(PASS_ENGINE_PARAMETER_F),
+	return getCrankingFuel3(engineConfiguration, getCoolantTemperature(PASS_ENGINE_PARAMETER_F),
 			engine->rpmCalculator.getRevolutionCounterSinceStart());
 }
 #endif

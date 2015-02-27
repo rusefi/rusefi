@@ -195,7 +195,7 @@ static void showLine(lcd_line_e line) {
 		lcdPrintf("version %s", VCS_VERSION);
 		return;
 	case LL_CONFIG:
-		lcdPrintf("config %s", getConfigurationName(engine->engineConfiguration->engineType));
+		lcdPrintf("config %s", getConfigurationName(engineConfiguration->engineType));
 		return;
 	case LL_RPM:
 		lcdPrintf("RPM %d", getRpmE(engine));

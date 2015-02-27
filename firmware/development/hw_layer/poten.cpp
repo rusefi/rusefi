@@ -43,7 +43,7 @@
 static Logging * logger;
 
 #if EFI_POTENTIOMETER || defined(__DOXYGEN__)
-Mcp42010Driver config[DIGIPOT_COUNT];
+static Mcp42010Driver potConfig[DIGIPOT_COUNT];
 
 void initPotentiometer(Mcp42010Driver *driver, SPIDriver *spi, brain_pin_e csPin) {
 	driver->spiConfig.cr1 = SPI_POT_CONFIG;
@@ -74,11 +74,11 @@ void setPotResistance(Mcp42010Driver *driver, int channel, int resistance) {
 }
 
 static void setPotResistanceCommand(int index, int value) {
-	setPotResistance(&config[index / 2], index % 2, value);
+	setPotResistance(&potConfig[index / 2], index % 2, value);
 }
 
 static void setPotValue1(int value) {
-	sendToPot(&config[0], 1, value);
+	sendToPot(&potConfig[0], 1, value);
 }
 
 #endif /* EFI_POTENTIOMETER */
@@ -98,7 +98,7 @@ void initPotentiometers(Logging *sharedLogger, board_configuration_s *boardConfi
 			continue;
                 }
 
-		initPotentiometer(&config[i], getSpiDevice(boardConfiguration->digitalPotentiometerSpiDevice),
+		initPotentiometer(&potConfig[i], getSpiDevice(boardConfiguration->digitalPotentiometerSpiDevice),
 				csPin);
 	}
 
@@ -106,8 +106,8 @@ void initPotentiometers(Logging *sharedLogger, board_configuration_s *boardConfi
 
 	addConsoleActionI("potd1", setPotValue1);
 
-	setPotResistance(&config[0], 0, 3000);
-	setPotResistance(&config[0], 1, 7000);
+	setPotResistance(&potConfig[0], 0, 3000);
+	setPotResistance(&potConfig[0], 1, 7000);
 #else
 	print("digiPot logic disabled\r\n");
 #endif

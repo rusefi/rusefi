@@ -53,7 +53,7 @@ void Engine::addConfigurationListener(configuration_callback_t callback) {
 	configurationListeners.registerCallback((VoidInt)invokeEnginePreCalculate, this);
 }
 
-Engine::Engine() {
+Engine::Engine(persistent_config_s *config) {
 	lastTriggerEventTimeNt = 0;
 	isCylinderCleanupMode = false;
 	engineCycleEventCount = 0;
@@ -62,7 +62,7 @@ Engine::Engine() {
 	isTestMode = false;
 	isSpinning = false;
 	adcToVoltageInputDividerCoefficient = NAN;
-	engineConfiguration = NULL;
+	engineConfiguration = &config->engineConfiguration;
 	engineConfiguration2 = NULL;
 	engineState.iat = engineState.clt = NAN;
 	memset(&ignitionPin, 0, sizeof(ignitionPin));

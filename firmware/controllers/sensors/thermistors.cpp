@@ -207,7 +207,7 @@ static void testCltByR(float resistance) {
 	float kTemp = getKelvinTemperature(resistance, thermistor->config);
 	scheduleMsg(logger, "for R=%f we have %f", resistance, (kTemp - KELV));
 
-	initThermistorCurve(&engine->clt, &engine->engineConfiguration->clt, engine->engineConfiguration->cltAdcChannel);
+	initThermistorCurve(&engine->clt, &engineConfiguration->clt, engineConfiguration->cltAdcChannel);
 
 }
 #endif

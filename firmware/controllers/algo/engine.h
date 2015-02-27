@@ -118,7 +118,7 @@ typedef void (*configuration_callback_t)(Engine*);
 
 class Engine {
 public:
-	Engine();
+	Engine(persistent_config_s *config);
 	void init();
 	RpmCalculator rpmCalculator;
 	engine_configuration_s *engineConfiguration;
@@ -249,9 +249,9 @@ private:
 	void setPumpsCounter(engine_configuration_s *engineConfiguration, int newValue);
 };
 
-void prepareShapes(Engine *engine);
+void prepareShapes(DECLARE_ENGINE_PARAMETER_F);
 void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_ENGINE_PARAMETER_S);
-void applyNonPersistentConfiguration(Logging * logger, Engine *engine);
+void applyNonPersistentConfiguration(Logging * logger DECLARE_ENGINE_PARAMETER_S);
 void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_F);
 
 #endif /* ENGINE_H_ */
