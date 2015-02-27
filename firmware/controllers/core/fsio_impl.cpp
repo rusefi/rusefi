@@ -60,6 +60,7 @@ EXTERN_ENGINE
 static Logging *logger;
 
 float getLEValue(Engine *engine, calc_stack_t *s, le_action_e action) {
+	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
 	efiAssert(engine!=NULL, "getLEValue", NAN);
 	switch (action) {
 	case LE_METHOD_FAN:
@@ -67,17 +68,17 @@ float getLEValue(Engine *engine, calc_stack_t *s, le_action_e action) {
 	case LE_METHOD_AC_TOGGLE:
 		return getAcToggle(engine);
 	case LE_METHOD_COOLANT:
-		return getCoolantTemperature(engine);
+		return getCoolantTemperature(PASS_ENGINE_PARAMETER_F);
 	case LE_METHOD_INTAKE_AIR:
-		return getIntakeAirTemperature(engine);
+		return getIntakeAirTemperature(PASS_ENGINE_PARAMETER_F);
 	case LE_METHOD_RPM:
 		return engine->rpmCalculator.rpm();
 	case LE_METHOD_TIME_SINCE_BOOT:
 		return getTimeNowSeconds();
 	case LE_METHOD_FAN_OFF_SETTING:
-		return engine->engineConfiguration->fanOffTemperature;
+		return engineConfiguration->fanOffTemperature;
 	case LE_METHOD_FAN_ON_SETTING:
-		return engine->engineConfiguration->fanOnTemperature;
+		return engineConfiguration->fanOnTemperature;
 	case LE_METHOD_VBATT:
 		return getVBatt(engine->engineConfiguration);
 	default:

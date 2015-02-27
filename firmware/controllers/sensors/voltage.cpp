@@ -12,8 +12,6 @@
 #include "adc_inputs.h"
 #include "voltage.h"
 
-extern engine_configuration_s *engineConfiguration;
-
 float getVRef(engine_configuration_s *engineConfiguration) {
 	return getVoltageDivided(engineConfiguration->vRefAdcChannel);
 }

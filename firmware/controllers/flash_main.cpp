@@ -92,7 +92,7 @@ static bool isValidCrc(persistent_config_container_s *state) {
 }
 
 static void doResetConfiguration(void) {
-	resetConfigurationExt(logger, engineConfiguration->engineType, engine);
+	resetConfigurationExt(logger, engineConfiguration->engineType PASS_ENGINE_PARAMETER);
 }
 
 static bool hasValidEngineType(engine_configuration_s *engineConfiguration) {
@@ -106,16 +106,16 @@ void readFromFlash(void) {
 
 	if (!isValidCrc(&persistentState)) {
 		printMsg(logger, "Need to reset flash to default due to CRC");
-		resetConfigurationExt(logger, DEFAULT_ENGINE_TYPE, engine);
+		resetConfigurationExt(logger, DEFAULT_ENGINE_TYPE PASS_ENGINE_PARAMETER);
 	} else if (persistentState.version == FLASH_DATA_VERSION && persistentState.size == PERSISTENT_SIZE) {
 		printMsg(logger, "Got valid configuration from flash!");
 		applyNonPersistentConfiguration(logger, engine);
 	} else if (hasValidEngineType(engineConfiguration)) {
 		printMsg(logger, "Resetting but saving engine type [%d]", engineConfiguration->engineType);
-		resetConfigurationExt(logger, engineConfiguration->engineType, engine);
+		resetConfigurationExt(logger, engineConfiguration->engineType PASS_ENGINE_PARAMETER);
 	} else {
 		printMsg(logger, "Need to reset flash to default due to version change");
-		resetConfigurationExt(logger, DEFAULT_ENGINE_TYPE, engine);
+		resetConfigurationExt(logger, DEFAULT_ENGINE_TYPE PASS_ENGINE_PARAMETER);
 	}
 	// we can only change the state after the CRC check
 	engineConfiguration->firmwareVersion = getRusEfiVersion();

@@ -14,7 +14,7 @@
 #include "tunerstudio_configuration.h"
 #include "engine.h"
 
-void updateTunerStudioState(Engine *engine, TunerStudioOutputChannels *tsOutputChannels);
+void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_ENGINE_PARAMETER_S);
 void printTsStats(void);
 void requestBurn(void);
 

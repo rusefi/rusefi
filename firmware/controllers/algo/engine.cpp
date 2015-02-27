@@ -33,10 +33,10 @@ EXTERN_ENGINE
  * We are executing these heavy (logarithm) methods from outside the trigger callbacks for performance reasons.
  */
 void Engine::updateSlowSensors() {
-	engineState.iat = getIntakeAirTemperature(this);
-	engineState.clt = getCoolantTemperature(this);
-
 	Engine *engine = this;
+	engineState.iat = getIntakeAirTemperature(PASS_ENGINE_PARAMETER_F);
+	engineState.clt = getCoolantTemperature(PASS_ENGINE_PARAMETER_F);
+
 	injectorLagMs = getInjectorLag(getVBatt(engineConfiguration) PASS_ENGINE_PARAMETER);
 }
 

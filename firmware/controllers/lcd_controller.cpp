@@ -201,10 +201,10 @@ static void showLine(lcd_line_e line) {
 		lcdPrintf("RPM %d", getRpmE(engine));
 		return;
 	case LL_CLT_TEMPERATURE:
-		lcdPrintf("Coolant %f", getCoolantTemperature(engine));
+		lcdPrintf("Coolant %f", getCoolantTemperature(PASS_ENGINE_PARAMETER_F));
 		return;
 	case LL_IAT_TEMPERATURE:
-		lcdPrintf("Intake Air %f", getIntakeAirTemperature(engine));
+		lcdPrintf("Intake Air %f", getIntakeAirTemperature(PASS_ENGINE_PARAMETER_F));
 		return;
 	case LL_ALGORITHM:
 		lcdPrintf(getEngine_load_mode_e(engineConfiguration->algorithm));

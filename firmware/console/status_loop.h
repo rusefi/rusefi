@@ -11,7 +11,7 @@
 #include "engine.h"
 
 void updateDevConsoleState(Engine *engine);
-void printSensors(Engine *engine);
+void printSensors(void);
 void startStatusThreads(Engine *engine);
 void initStatusLoop(Engine *engine);
 void writeLogLine(void);

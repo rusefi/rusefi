@@ -15,7 +15,8 @@ extern int timeNow;
 
 EngineTestHelper::EngineTestHelper(engine_type_e engineType) {
 	ec = &persistentConfig.engineConfiguration;
-	engine.engineConfiguration = &persistentConfig.engineConfiguration;
+	this->engine.engineConfiguration = &persistentConfig.engineConfiguration;
+
 
 	engine_configuration_s *engineConfiguration = ec;
 
@@ -35,14 +36,15 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType) {
 
 	engine.engineConfiguration2 = &ec2;
 
-	prepareFuelMap(engine.engineConfiguration);
+	Engine *engine = &this->engine;
+	prepareFuelMap(engine->engineConfiguration);
 
 
 	initSpeedDensity(ec);
 
-	resetConfigurationExt(NULL, engineType, &engine);
-	prepareShapes(&engine);
-	engine.engineConfiguration->mafAdcChannel = (adc_channel_e)TEST_MAF_CHANNEL;
+	resetConfigurationExt(NULL, engineType PASS_ENGINE_PARAMETER);
+	prepareShapes(engine);
+	engine->engineConfiguration->mafAdcChannel = (adc_channel_e)TEST_MAF_CHANNEL;
 }
 
 void EngineTestHelper::fireTriggerEvents() {
