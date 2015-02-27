@@ -123,6 +123,8 @@ void chSysInit(void) {
 #endif
 }
 
+void assertVtList(void);
+
 /**
  * @brief   Handles time ticks for round robin preemption and timer increments.
  * @details Decrements the remaining time quantum of the running thread
@@ -147,6 +149,7 @@ void chSysTimerHandlerI(void) {
 #if CH_DBG_THREADS_PROFILING
   currp->p_time++;
 #endif
+//  assertVtList();
   chVTDoTickI();
 #if defined(SYSTEM_TICK_EVENT_HOOK)
   SYSTEM_TICK_EVENT_HOOK();
