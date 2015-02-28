@@ -10,7 +10,7 @@
 #include "engine.h"
 
 float getTCharge(int rpm, float tps, float coolantTemp, float airTemp);
-void setDetaultVETable(engine_configuration_s *engineConfiguration);
+void setDetaultVETable(persistent_config_s *config);
 float sdMath(engine_configuration_s *engineConfiguration, float VE, float MAP, float AFR, float tempK);
 
 #define gramm_second_to_cc_minute(gs) ((gs) / 0.0119997981)

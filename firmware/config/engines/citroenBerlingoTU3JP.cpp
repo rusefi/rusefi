@@ -66,7 +66,8 @@ static const ignition_table_t tps_advance_table = {
 static const float rpmSteps[16] = {800, 1200, 1600, 2000, 2500, 2800,
 		3280, 3693.0, 4106.0, 4520.0, 4933.0, 5346.0, 5760.0, 6173.0, 6586.0, 7000.0};
 
-void setCitroenBerlingoTU3JPConfiguration(engine_configuration_s *engineConfiguration) {
+void setCitroenBerlingoTU3JPConfiguration(persistent_config_s *config) {
+	engine_configuration_s *engineConfiguration = &config->engineConfiguration;
 	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 
 	engineConfiguration->engineType = CITROEN_TU3JP;
@@ -86,7 +87,7 @@ void setCitroenBerlingoTU3JPConfiguration(engine_configuration_s *engineConfigur
 	engineConfiguration->rpmHardLimit = 5000;
 	engineConfiguration->cranking.rpm = 600;
 
-	memcpy(engineConfiguration->ve2RpmBins, rpmSteps, sizeof(rpmSteps));
+	memcpy(config->ve2RpmBins, rpmSteps, sizeof(rpmSteps));
 
 	/**
 	* Cranking fuel setting

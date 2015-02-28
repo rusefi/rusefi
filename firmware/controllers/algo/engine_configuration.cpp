@@ -134,12 +134,13 @@ void setWholeTimingTable(engine_configuration_s *engineConfiguration, float valu
  * This method sets the default global engine configuration. These values are later overridden by engine-specific defaults
  * and the settings saves in flash memory.
  */
-void setDefaultConfiguration(engine_configuration_s *engineConfiguration) {
+void setDefaultConfiguration(persistent_config_s *config) {
+	engine_configuration_s *engineConfiguration = &config->engineConfiguration;
 	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 	memset(engineConfiguration, 0, sizeof(engine_configuration_s));
 	memset(boardConfiguration, 0, sizeof(board_configuration_s));
 
-	setDetaultVETable(engineConfiguration);
+	setDetaultVETable(config);
 
 	boardConfiguration->mafSensorType = Bosch0280218037;
 	setBosch0280218037(engineConfiguration);
@@ -539,7 +540,7 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 	/**
 	 * Let's apply global defaults first
 	 */
-	setDefaultConfiguration(engineConfiguration);
+	setDefaultConfiguration(config);
 #if EFI_SIMULATOR
 	engineConfiguration->directSelfStimulation = true;
 #endif /* */
@@ -632,7 +633,7 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 		setMiata1996(engineConfiguration);
 		break;
 	case CITROEN_TU3JP:
-		setCitroenBerlingoTU3JPConfiguration(engineConfiguration);
+		setCitroenBerlingoTU3JPConfiguration(config);
 		break;
 	case ROVER_V8:
 		setRoverv8(engineConfiguration);

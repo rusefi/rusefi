@@ -10,6 +10,6 @@
 
 #include "engine_configuration.h"
 
-void setCitroenBerlingoTU3JPConfiguration(engine_configuration_s *engineConfiguration);
+void setCitroenBerlingoTU3JPConfiguration(persistent_config_s *config);
 
 #endif /* CITROENBERLINGOTU3JP_H_ */

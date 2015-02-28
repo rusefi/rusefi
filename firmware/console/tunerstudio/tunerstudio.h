@@ -34,6 +34,7 @@ void tunerStudioWriteCrcPacket(const uint8_t command, const void *buf, const uin
 
 typedef pre_packed struct
 	post_packed {
+		short int page;
 		short int offset;
 		short int count;
 	} TunerStudioWriteChunkRequest;

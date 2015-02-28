@@ -18,7 +18,11 @@
  */
 #define TS_FILE_VERSION 20150216
 
-#define PAGE_0_SIZE 15160
+#define PAGE_COUNT 2
+
+#define PAGE_0_SIZE 14008
+#define PAGE_1_SIZE 1152
+
 #define TS_OUTPUT_SIZE 196
 
 typedef struct {

@@ -73,6 +73,8 @@ TunerStudioOutputChannels tsOutputChannels;
  */
 persistent_config_s configWorkingCopy;
 
+short currentPageId;
+
 void tunerStudioError(const char *msg) {
 	tunerStudioDebug(msg);
 	tsState.errorCounter++;
@@ -90,9 +92,10 @@ int tunerStudioHandleCrcCommand(uint8_t *data, int incomingPacketSize) {
 		uint16_t page = *(uint16_t *) data;
 		handlePageSelectCommand(TS_CRC, page);
 	} else if (command == TS_CHUNK_WRITE_COMMAND) {
-		uint16_t offset = *(uint16_t *) data;
-		uint16_t count = *(uint16_t *) (data + 2);
-		handleWriteChunkCommand(TS_CRC, offset, count, data + 4);
+		currentPageId = *(uint16_t *) data;
+		uint16_t offset = *(uint16_t *) (data + 2);
+		uint16_t count = *(uint16_t *) (data + 4);
+		handleWriteChunkCommand(TS_CRC, offset, count, data + sizeof(TunerStudioWriteChunkRequest));
 	} else if (command == TS_SINGLE_WRITE_COMMAND) {
 		uint16_t page = *(uint16_t *) data;
 		uint16_t offset = *(uint16_t *) (data + 2);
