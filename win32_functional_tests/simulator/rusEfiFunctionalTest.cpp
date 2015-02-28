@@ -29,11 +29,6 @@
 #include "trigger_emulator.h"
 #include "engine_controller.h"
 
-// todo: reuse the instance from engine_controller?
-
-//static Engine _engine;
-//Engine *engine = &_engine;
-
 EXTERN_ENGINE;
 extern engine_configuration2_s * engineConfiguration2;
 
@@ -79,7 +74,6 @@ void rusEfiFunctionalTest(void) {
 	initStatusLoop(engine);
 	initDataStructures(PASS_ENGINE_PARAMETER_F);
 
-	engine->engineConfiguration = engineConfiguration;
 	engine->engineConfiguration2 = engineConfiguration2;
 
 	// todo: reduce code duplication with initEngineContoller

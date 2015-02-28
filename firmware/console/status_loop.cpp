@@ -201,9 +201,9 @@ void printSensors(Logging *log, bool fileFormat) {
 
 
 void writeLogLine(void) {
+#if EFI_FILE_LOGGING || defined(__DOXYGEN__)
 	if (!main_loop_started)
 		return;
-#if EFI_FILE_LOGGING || defined(__DOXYGEN__)
 	resetLogging(&fileLogger);
 	printSensors(&fileLogger, true);
 

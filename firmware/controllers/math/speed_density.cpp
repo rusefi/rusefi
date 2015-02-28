@@ -107,6 +107,7 @@ void setDetaultVETable(engine_configuration_s *engineConfiguration) {
 }
 
 void initSpeedDensity(persistent_config_s *config) {
+	efiAssertVoid(config!=NULL, "config is NULL");
 	engine_configuration_s *e = &config->engineConfiguration;
 	veMap.init(e->veTable, e->veLoadBins, e->veRpmBins);
 	ve2Map.init(e->ve2Table, e->ve2LoadBins, e->ve2RpmBins);
