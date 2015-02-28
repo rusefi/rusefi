@@ -367,19 +367,19 @@ void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_F) {
 #endif
 
 void setFuelRpmBin(float from, float to DECLARE_ENGINE_PARAMETER_S) {
-	setTableBin(config->fuelRpmBins, FUEL_RPM_COUNT, from, to);
+	setTableBin(engineConfiguration->fuelRpmBins, FUEL_RPM_COUNT, from, to);
 }
 
 void setFuelLoadBin(float from, float to DECLARE_ENGINE_PARAMETER_S) {
-	setTableBin(config->fuelLoadBins, FUEL_LOAD_COUNT, from, to);
+	setTableBin(engineConfiguration->fuelLoadBins, FUEL_LOAD_COUNT, from, to);
 }
 
 void setTimingRpmBin(float from, float to DECLARE_ENGINE_PARAMETER_S) {
-	setTableBin(config->ignitionRpmBins, IGN_RPM_COUNT, from, to);
+	setTableBin(engineConfiguration->ignitionRpmBins, IGN_RPM_COUNT, from, to);
 }
 
 void setTimingLoadBin(float from, float to DECLARE_ENGINE_PARAMETER_S) {
-	setTableBin(config->ignitionLoadBins, IGN_LOAD_COUNT, from, to);
+	setTableBin(engineConfiguration->ignitionLoadBins, IGN_LOAD_COUNT, from, to);
 }
 
 int isInjectionEnabled(engine_configuration_s *engineConfiguration) {

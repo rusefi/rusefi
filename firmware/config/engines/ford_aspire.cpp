@@ -73,8 +73,8 @@ static void setDefaultAspireMaps(DECLARE_ENGINE_PARAMETER_F) {
 	setTimingLoadBin(1.2, 4.4 PASS_ENGINE_PARAMETER);
 	setTimingRpmBin(800, 7000 PASS_ENGINE_PARAMETER);
 
-	copyFuelTable(default_aspire_fuel_table, config->fuelTable);
-	copyTimingTable(default_aspire_timing_table, config->ignitionTable);
+	copyFuelTable(default_aspire_fuel_table, engineConfiguration->fuelTable);
+	copyTimingTable(default_aspire_timing_table, engineConfiguration->ignitionTable);
 }
 
 void setFordAspireEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
