@@ -10,13 +10,16 @@ import java.net.URISyntaxException;
 
 public class URLLabel extends JLabel {
     private String text;
-    private URI uri;
 
     public URLLabel(String text, URI uri) {
         setup(text, uri);
     }
 
     public URLLabel(String text, String uri) {
+        setup(text, createUri(uri));
+    }
+
+    public static URI createUri(String uri) {
         URI oURI;
         try {
             oURI = new URI(uri);
@@ -27,18 +30,16 @@ public class URLLabel extends JLabel {
             // use the other constructor.
             throw new RuntimeException(e);
         }
-        setup(text, oURI);
+        return oURI;
     }
 
-    public void setup(String t, URI u) {
+    public void setup(String t, final URI u) {
+        setCursor(new Cursor(Cursor.HAND_CURSOR));
         text = t;
-        uri = u;
         setText(text);
-        setToolTipText(uri.toString());
+        setToolTipText(u.toString());
+        addUrlAction(this, u);
         addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                open(uri);
-            }
 
             public void mouseEntered(MouseEvent e) {
                 setText(text, false);
@@ -46,6 +47,14 @@ public class URLLabel extends JLabel {
 
             public void mouseExited(MouseEvent e) {
                 setText(text, true);
+            }
+        });
+    }
+
+    public static void addUrlAction(JComponent component, final URI u) {
+        component.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                open(u);
             }
         });
     }
