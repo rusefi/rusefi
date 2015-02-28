@@ -372,9 +372,9 @@ static void setMiata1994_common(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineConfiguration->crankingChargeAngle = 70;
 
-	copyFuelTable(miata_maf_fuel_table, config->fuelTable);
+	copyFuelTable(miata_maf_fuel_table, engineConfiguration->fuelTable);
 
-	copyTimingTable(miata_maf_advance_table, config->ignitionTable);
+	copyTimingTable(miata_maf_advance_table, engineConfiguration->ignitionTable);
 
 //	boardConfiguration->triggerSimulatorPins[0] = GPIOD_2; // 2G - YEL/BLU
 //	boardConfiguration->triggerSimulatorPins[1] = GPIOB_3; // 2E - WHT - four times
@@ -501,8 +501,8 @@ void setMiata1996(DECLARE_ENGINE_PARAMETER_F) {
 	commonMiataNa(PASS_ENGINE_PARAMETER_F);
 	engineConfiguration->specs.displacement = 1.839;
 
-	copyFuelTable(miata_maf_fuel_table, config->fuelTable);
-	copyTimingTable(miata_maf_advance_table, config->ignitionTable);
+	copyFuelTable(miata_maf_fuel_table, engineConfiguration->fuelTable);
+	copyTimingTable(miata_maf_advance_table, engineConfiguration->ignitionTable);
 
 	// upside down
 	boardConfiguration->triggerInputPins[0] = GPIOA_5;

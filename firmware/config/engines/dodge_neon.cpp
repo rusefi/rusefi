@@ -217,9 +217,9 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	 * set_whole_fuel_map 12
 	 */
 	//setWholeFuelMap(12 PASS_ENGINE_PARAMETER);
-	copyFuelTable(alphaNfuel, config->fuelTable);
+	copyFuelTable(alphaNfuel, engineConfiguration->fuelTable);
 	//setWholeTimingTable(12 PASS_ENGINE_PARAMETER);
-	copyTimingTable(fromDyno, config->ignitionTable);
+	copyTimingTable(fromDyno, engineConfiguration->ignitionTable);
 
 	// set_cranking_charge_angle 70
 	engineConfiguration->crankingChargeAngle = 70;

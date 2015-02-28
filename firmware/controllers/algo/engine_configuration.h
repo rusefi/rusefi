@@ -42,28 +42,14 @@ typedef struct {
 	engine_configuration_s engineConfiguration;
 
 	ve_table_t ve2Table;
+	/**
+	 * offset 15032
+	 */
 	float ve2LoadBins[FUEL_LOAD_COUNT];
+	/**
+	 * offset 15096
+	 */
 	float ve2RpmBins[FUEL_RPM_COUNT];
-
-	fuel_table_t fuelTable;
-	float fuelLoadBins[FUEL_LOAD_COUNT];
-	float fuelRpmBins[FUEL_RPM_COUNT];
-
-	ignition_table_t ignitionTable;
-	float ignitionLoadBins[IGN_LOAD_COUNT];
-	float ignitionRpmBins[IGN_RPM_COUNT];
-
-	ve_table_t veTable;
-	float veLoadBins[FUEL_LOAD_COUNT];
-	float veRpmBins[FUEL_RPM_COUNT];
-
-	afr_table_t afrTable;
-	float afrLoadBins[FUEL_LOAD_COUNT];
-	float afrRpmBins[FUEL_RPM_COUNT];
-
-	fuel_table_t injectionPhase;
-	float injPhaseLoadBins[FUEL_LOAD_COUNT];
-	float injPhaseRpmBins[FUEL_RPM_COUNT];
 
 } persistent_config_s;
 
