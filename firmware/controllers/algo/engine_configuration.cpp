@@ -334,6 +334,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->isDigitalChartEnabled = true;
 
 	boardConfiguration->idleSolenoidFrequency = 200;
+	// set_idle_pwm 50
 	boardConfiguration->idleSolenoidPwm = 0.5;
 	engineConfiguration->targetIdleRpm = 1200;
 //	engineConfiguration->idleMode = IM_AUTO;

@@ -167,6 +167,16 @@ char *getWorkingPageAddr(int pageIndex) {
 		return (char*) &configWorkingCopy.engineConfiguration;
 	case 1:
 		return (char*) &configWorkingCopy.ve2Table;
+//	case 2:
+//		return (char*) &configWorkingCopy.fuelTable;
+//	case 3:
+//		return (char*) &configWorkingCopy.ignitionTable;
+//	case 4:
+//		return (char*) &configWorkingCopy.veTable;
+//	case 5:
+//		return (char*) &configWorkingCopy.afrTable;
+//	case 6:
+//		return (char*) &configWorkingCopy.injectionPhase;
 //	case 2: // fuelTable
 //	case 3: // ignitionTable
 //	case 4: // veTable
@@ -181,6 +191,11 @@ int getTunerStudioPageSize(int pageIndex) {
 	case 0:
 		return PAGE_0_SIZE;
 	case 1:
+	case 2:
+	case 3:
+	case 4:
+	case 5:
+	case 6:
 		return PAGE_1_SIZE;
 //	case 2:
 //	case 3:
