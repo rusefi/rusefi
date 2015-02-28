@@ -5,7 +5,7 @@ package com.rusefi.io;
  *         3/3/14
  */
 public interface LinkConnector {
-    void connect();
+    void connect(LinkManager.LinkStateListener listener);
 
     void send(String command) throws InterruptedException;
 

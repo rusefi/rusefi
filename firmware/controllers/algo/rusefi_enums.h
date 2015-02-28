@@ -180,7 +180,7 @@ typedef enum {
 	 */
 	LM_MAP = 2,
 	/**
-	 * Speed Density algorithm - Engile Load is a function of MAP and ... TODO
+	 * Speed Density algorithm - Engile Load is a function of MAP, VE and target AFR
 	 * http://articles.sae.org/8539/
 	 */
 	LM_SPEED_DENSITY = 3,
@@ -519,6 +519,7 @@ typedef enum {
 	MT_MPX4250 = 2,
 	MT_HONDA3BAR = 3,
 	MT_DODGE_NEON_2003 = 4,
+	MT_SUBY_DENSO = 5,
 
 	Force_4b_cranking_map_type = ENUM_32_BITS,
 } air_pressure_sensor_type_e;

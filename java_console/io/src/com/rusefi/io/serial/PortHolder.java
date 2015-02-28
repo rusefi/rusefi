@@ -3,6 +3,7 @@ package com.rusefi.io.serial;
 import com.rusefi.FileLog;
 import com.rusefi.core.EngineState;
 import com.rusefi.io.DataListener;
+import com.rusefi.io.LinkManager;
 import jssc.SerialPort;
 import jssc.SerialPortException;
 import org.jetbrains.annotations.NotNull;
@@ -31,11 +32,14 @@ public class PortHolder {
     @Nullable
     private SerialPort serialPort;
 
-    void openPort(String port, DataListener dataListener) {
-        listener.onPortHolderMessage(SerialManager.class, "Opening port: " + port);
+    boolean openPort(String port, DataListener dataListener, LinkManager.LinkStateListener listener) {
+        this.listener.onPortHolderMessage(SerialManager.class, "Opening port: " + port);
         if (port == null)
-            return;
-        open(port, dataListener);
+            return false;
+        boolean result = open(port, dataListener);
+        if (!result)
+            listener.onConnectionFailed();
+        return result;
     }
 
     public boolean open(String port, DataListener listener) {

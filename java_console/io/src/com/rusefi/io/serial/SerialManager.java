@@ -14,20 +14,22 @@ class SerialManager {
 
     private static boolean closed;
 
-    static DataListener listener = new DataListener() {
+    static DataListener dataListener = new DataListener() {
         public void onStringArrived(String string) {
             //                jTextAreaIn.append(string);
             LinkManager.engineState.processNewData(string);
         }
     };
+    private static LinkManager.LinkStateListener listener;
 
-    public static void scheduleOpening() {
+    public static void scheduleOpening(LinkManager.LinkStateListener listener) {
+        SerialManager.listener = listener;
         FileLog.rlog("scheduleOpening");
         LinkManager.IO_EXECUTOR.execute(new Runnable() {
             @Override
             public void run() {
                 FileLog.rlog("scheduleOpening>openPort");
-                PortHolder.getInstance().openPort(port, listener);
+                PortHolder.getInstance().openPort(port, SerialManager.dataListener, SerialManager.listener);
             }
         });
     }
@@ -40,7 +42,7 @@ class SerialManager {
                 if (closed)
                     return;
                 PortHolder.getInstance().close();
-                PortHolder.getInstance().openPort(port, listener);
+                boolean result = PortHolder.getInstance().openPort(port, dataListener, SerialManager.listener);
             }
         });
     }

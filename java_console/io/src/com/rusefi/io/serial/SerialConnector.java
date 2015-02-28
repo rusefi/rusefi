@@ -2,6 +2,7 @@ package com.rusefi.io.serial;
 
 import com.rusefi.FileLog;
 import com.rusefi.io.LinkConnector;
+import com.rusefi.io.LinkManager;
 
 /**
  * @author Andrey Belomutskiy
@@ -13,9 +14,9 @@ public class SerialConnector implements LinkConnector {
     }
 
     @Override
-    public void connect() {
+    public void connect(LinkManager.LinkStateListener listener) {
         FileLog.MAIN.logLine("SerialConnector: connecting");
-        SerialManager.scheduleOpening();
+        SerialManager.scheduleOpening(listener);
     }
 
     @Override

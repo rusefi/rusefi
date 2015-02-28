@@ -27,7 +27,7 @@ public class LinkManager {
     public static final String LOG_VIEWER = "log viewer";
     private static final LinkConnector VOID = new LinkConnector() {
         @Override
-        public void connect() {
+        public void connect(LinkStateListener listener) {
         }
 
         @Override
@@ -80,10 +80,14 @@ public class LinkManager {
     /**
      * todo: should this be merged into {@link #start(String)} ?
      */
-    public static void open() {
+    public static void open(LinkStateListener listener) {
         if (connector == null)
             throw new NullPointerException("connector");
-        connector.connect();
+        connector.connect(listener);
+    }
+
+    public static void open() {
+        open(LinkStateListener.VOID);
     }
 
     public static void send(String command) throws InterruptedException {
@@ -102,5 +106,15 @@ public class LinkManager {
 
     public static boolean hasError() {
         return connector.hasError();
+    }
+
+    public static interface LinkStateListener {
+        public static final LinkStateListener VOID = new LinkStateListener() {
+            @Override
+            public void onConnectionFailed() {
+            }
+        };
+
+        void onConnectionFailed();
     }
 }

@@ -60,9 +60,10 @@ public class TcpConnector implements LinkConnector {
 
     /**
      * this implementation is blocking
+     * @param listener
      */
     @Override
-    public void connect() {
+    public void connect(LinkManager.LinkStateListener listener) {
         FileLog.rlog("Connecting to " + port);
         BufferedInputStream stream;
         try {

@@ -53,6 +53,8 @@ void setMazda626EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	// todo: 8.2 or 10k?
 	engineConfiguration->vbattDividerCoeff = ((float) (10 + 33)) / 10 * 2;
 
+	engineConfiguration->map.sensor.type = MT_SUBY_DENSO;
+
 
 // todo	engineConfiguration->afr.hwChannel = EFI_ADC_3;
 	initEgoSensor(&engineConfiguration->afr, ES_Innovate_MTX_L);
