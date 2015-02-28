@@ -106,7 +106,8 @@ void setDetaultVETable(engine_configuration_s *engineConfiguration) {
 	afrMap.setAll(14.7);
 }
 
-void initSpeedDensity(engine_configuration_s *e) {
+void initSpeedDensity(persistent_config_s *config) {
+	engine_configuration_s *e = &config->engineConfiguration;
 	veMap.init(e->veTable, e->veLoadBins, e->veRpmBins);
 	ve2Map.init(e->ve2Table, e->ve2LoadBins, e->ve2RpmBins);
 	afrMap.init(e->afrTable, e->afrLoadBins, e->afrRpmBins);

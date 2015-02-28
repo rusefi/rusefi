@@ -24,6 +24,7 @@ void testMafFuelMath(void) {
 
 	Engine *engine = &eth.engine;
 	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
+	persistent_config_s *config = engine->config;
 
 	engineConfiguration->algorithm = LM_REAL_MAF;
 
@@ -58,6 +59,7 @@ void testFuelMap(void) {
 
 	Engine *engine = &eth.engine;
 	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
+	persistent_config_s *config = engine->config;
 
 	initThermistors(NULL PASS_ENGINE_PARAMETER);
 
@@ -174,6 +176,7 @@ void testAngleResolver(void) {
 	Engine *engine = &eth.engine;
 
 	engine_configuration_s *engineConfiguration = eth.engine.engineConfiguration;
+	persistent_config_s *config = engine->config;
 
 	engineConfiguration->globalTriggerAngleOffset = 175;
 	assertTrue(engine->engineConfiguration2!=NULL);
@@ -181,7 +184,7 @@ void testAngleResolver(void) {
 
 	confgiureFordAspireTriggerShape(ts);
 
-	ts->calculateTriggerSynchPoint(engineConfiguration, engine);
+	ts->calculateTriggerSynchPoint(PASS_ENGINE_PARAMETER_F);
 
 	assertEqualsM("index 2", 228.0450, ts->eventAngles[3]); // this angle is relation to synch point
 	assertEqualsM("time 2", 0.3233, ts->wave.getSwitchTime(2));

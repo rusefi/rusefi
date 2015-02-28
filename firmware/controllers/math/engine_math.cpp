@@ -345,7 +345,7 @@ void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_F) {
 	engine_configuration2_s *engineConfiguration2 = engine->engineConfiguration2;
 
 	// todo: move this reset into decoder
-	engine->triggerShape.calculateTriggerSynchPoint(engineConfiguration, engine);
+	engine->triggerShape.calculateTriggerSynchPoint(PASS_ENGINE_PARAMETER_F);
 
 	for (int i = 0; i < CONFIG(specs.cylindersCount); i++) {
 		ENGINE(angleExtra[i])= (float) CONFIG(engineCycle) * i / CONFIG(specs.cylindersCount);

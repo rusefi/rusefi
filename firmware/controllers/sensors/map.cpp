@@ -100,8 +100,8 @@ static FastInterpolation *getDecoder(air_pressure_sensor_type_e type) {
 }
 
 static void applyConfiguration(DECLARE_ENGINE_PARAMETER_F) {
-	air_pressure_sensor_config_s * config = &engineConfiguration->map.sensor;
-	customMap.init(0, config->valueAt0, 5, config->valueAt5);
+	air_pressure_sensor_config_s * apConfig = &engineConfiguration->map.sensor;
+	customMap.init(0, apConfig->valueAt0, 5, apConfig->valueAt5);
 	mapDecoder = getDecoder(engineConfiguration->map.sensor.type);
 }
 

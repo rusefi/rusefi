@@ -62,6 +62,7 @@ Engine::Engine(persistent_config_s *config) {
 	isTestMode = false;
 	isSpinning = false;
 	adcToVoltageInputDividerCoefficient = NAN;
+	this->config = config;
 	engineConfiguration = &config->engineConfiguration;
 	engineConfiguration2 = NULL;
 	engineState.iat = engineState.clt = NAN;

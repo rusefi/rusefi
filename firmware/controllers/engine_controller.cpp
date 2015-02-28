@@ -66,6 +66,8 @@ extern bool hasFirmwareErrorFlag;
 
 persistent_config_container_s persistentState CCM_OPTIONAL;
 
+persistent_config_s *config;
+
 /**
  * todo: it really looks like these fields should become 'static', i.e. private
  * the whole 'extern ...' pattern is less then perfect, I guess the 'God object' Engine

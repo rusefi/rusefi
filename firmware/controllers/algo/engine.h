@@ -121,6 +121,7 @@ public:
 	Engine(persistent_config_s *config);
 	void init();
 	RpmCalculator rpmCalculator;
+	persistent_config_s *config;
 	engine_configuration_s *engineConfiguration;
 	engine_configuration2_s *engineConfiguration2;
 

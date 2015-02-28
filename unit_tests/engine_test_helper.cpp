@@ -14,7 +14,8 @@
 extern int timeNow;
 
 EngineTestHelper::EngineTestHelper(engine_type_e engineType) : engine (&persistentConfig) {
-	ec = &persistentConfig.engineConfiguration;
+	engineConfiguration = ec = &persistentConfig.engineConfiguration;
+	config = &persistentConfig;
 
 	engine_configuration_s *engineConfiguration = ec;
 
@@ -38,7 +39,7 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType) : engine (&persiste
 	prepareFuelMap(engine->engineConfiguration);
 
 
-	initSpeedDensity(ec);
+	initSpeedDensity(&persistentConfig);
 
 	resetConfigurationExt(NULL, engineType PASS_ENGINE_PARAMETER);
 	prepareShapes(PASS_ENGINE_PARAMETER_F);
@@ -46,11 +47,12 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType) : engine (&persiste
 }
 
 void EngineTestHelper::fireTriggerEvents() {
+	Engine *engine = &this->engine;
 	for (int i = 0; i < 24; i++) {
 		timeNow += 5000; // 5ms
-		triggerCentral.handleShaftSignal(SHAFT_PRIMARY_UP, &engine, engine.engineConfiguration);
+		triggerCentral.handleShaftSignal(SHAFT_PRIMARY_UP PASS_ENGINE_PARAMETER);
 		timeNow += 5000;
-		triggerCentral.handleShaftSignal(SHAFT_PRIMARY_DOWN, &engine, engine.engineConfiguration);
+		triggerCentral.handleShaftSignal(SHAFT_PRIMARY_DOWN PASS_ENGINE_PARAMETER);
 	}
 }
 

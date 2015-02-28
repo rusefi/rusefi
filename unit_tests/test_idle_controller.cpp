@@ -20,6 +20,7 @@ void testIdleController(void) {
 	EngineTestHelper eth(FORD_INLINE_6_1995);
 	Engine *engine = &eth.engine;
 	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
+	persistent_config_s *config = engine->config;
 
 	engineConfiguration->targetIdleRpm = 1200;
 

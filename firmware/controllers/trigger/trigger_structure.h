@@ -103,7 +103,7 @@ public:
 
 	int getTriggerShapeSynchPointIndex();
 
-	void calculateTriggerSynchPoint(engine_configuration_s *engineConfiguration, Engine *engine);
+	void calculateTriggerSynchPoint(DECLARE_ENGINE_PARAMETER_F);
 
 	void setTriggerShapeSynchPointIndex(engine_configuration_s *engineConfiguration, int triggerShapeSynchPointIndex, Engine *engine);
 private:
