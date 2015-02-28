@@ -19,7 +19,8 @@ EXTERN_ENGINE;
 void setBmwE34(DECLARE_ENGINE_PARAMETER_F) {
 	board_configuration_s * boardConfiguration = &engineConfiguration->bc;
 
-	engineConfiguration->algorithm = LM_SPEED_DENSITY;
+	engineConfiguration->algorithm = LM_PLAIN_MAF;
+	engineConfiguration->injector.flow = 750;
 
 	boardConfiguration->tunerStudioThreadPeriod = 50;
 	engineConfiguration->rpmHardLimit = 6000;
@@ -77,6 +78,8 @@ void setBmwE34(DECLARE_ENGINE_PARAMETER_F) {
 
 	boardConfiguration->idleValvePin = GPIOC_13;
 	boardConfiguration->idleSolenoidFrequency = 300;
+	// set_idle_pwm 50
+	boardConfiguration->idleSolenoidPwm = 0.5;
 
 	// turbocharger boost control solenoid: TODO output: GPIOE_6
 	// water injection #1 TODO GPIOD_7
