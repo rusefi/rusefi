@@ -88,7 +88,7 @@ void setCitroenBerlingoTU3JPConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->rpmHardLimit = 5000;
 	engineConfiguration->cranking.rpm = 600;
 
-	memcpy(config->ve2RpmBins, rpmSteps, sizeof(rpmSteps));
+//	memcpy(config->ve2RpmBins, rpmSteps, sizeof(rpmSteps));
 
 	/**
 	* Cranking fuel setting
