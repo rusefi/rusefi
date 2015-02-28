@@ -19,6 +19,8 @@ EXTERN_ENGINE;
 void setBmwE34(DECLARE_ENGINE_PARAMETER_F) {
 	board_configuration_s * boardConfiguration = &engineConfiguration->bc;
 
+	engineConfiguration->algorithm = LM_SPEED_DENSITY;
+
 	boardConfiguration->tunerStudioThreadPeriod = 50;
 	engineConfiguration->rpmHardLimit = 6000;
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);

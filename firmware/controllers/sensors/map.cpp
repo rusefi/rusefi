@@ -29,6 +29,8 @@ static FastInterpolation denso183(0, -6.64, 5, 182.78);
  */
 static FastInterpolation honda3bar(0.5, 91.422, 3.0, 0);
 
+static FastInterpolation subyDenso(0, 0, 5, 200);
+
 static FastInterpolation mpx4250(0, 8, 5, 260);
 
 static FastInterpolation dodgeNeon2003(0.5, 0, 4.5, 100);
@@ -52,6 +54,8 @@ float decodePressure(float voltage, air_pressure_sensor_config_s * config) {
 		return honda3bar.getValue(voltage);
 	case MT_DODGE_NEON_2003:
 		return dodgeNeon2003.getValue(voltage);
+	case MT_SUBY_DENSO:
+		return subyDenso.getValue(voltage);
 	default:
 		firmwareError("Unknown MAP type: %d", config->type);
 		return NAN;

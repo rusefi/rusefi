@@ -163,7 +163,13 @@ public class IoUtil {
 
     static void realHardwareConnect(String port) {
         LinkManager.start(port);
-        LinkManager.open();
+        LinkManager.open(new LinkManager.LinkStateListener() {
+            @Override
+            public void onConnectionFailed() {
+                System.out.println("CONNECTION FAILED, did you specify the right port name?");
+                System.exit(-1);
+            }
+        });
         LinkManager.engineState.registerStringValueAction(EngineState.RUS_EFI_VERSION_TAG, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
         LinkManager.engineState.registerStringValueAction(EngineState.OUTPIN_TAG, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
         LinkManager.engineState.registerStringValueAction(AverageAnglesUtil.KEY, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
