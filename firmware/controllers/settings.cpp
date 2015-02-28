@@ -195,9 +195,9 @@ void printConfiguration(engine_configuration_s *engineConfiguration) {
 //		print("\r\n");
 	}
 
-	printFloatArray("RPM bin: ", engineConfiguration->fuelRpmBins, FUEL_RPM_COUNT);
+	printFloatArray("RPM bin: ", config->fuelRpmBins, FUEL_RPM_COUNT);
 
-	printFloatArray("Y bin: ", engineConfiguration->fuelLoadBins, FUEL_LOAD_COUNT);
+	printFloatArray("Y bin: ", config->fuelLoadBins, FUEL_LOAD_COUNT);
 
 	printFloatArray("CLT: ", engineConfiguration->cltFuelCorr, CLT_CURVE_SIZE);
 	printFloatArray("CLT bins: ", engineConfiguration->cltFuelCorrBins, CLT_CURVE_SIZE);
@@ -532,14 +532,14 @@ static void setWholeTimingMap(float value) {
 	scheduleMsg(&logger, "Setting whole timing map to %f", value);
 	for (int l = 0; l < IGN_LOAD_COUNT; l++) {
 		for (int r = 0; r < IGN_RPM_COUNT; r++) {
-			engineConfiguration->ignitionTable[l][r] = value;
+			config->ignitionTable[l][r] = value;
 		}
 	}
 }
 
 static void setWholePhaseMapCmd(float value) {
 	scheduleMsg(&logger, "Setting whole injection phase map to %f", value);
-	setMap(engineConfiguration->injectionPhase, value);
+	setMap(config->injectionPhase, value);
 }
 
 static void setWholeTimingMapCmd(float value) {
@@ -552,7 +552,7 @@ static void setWholeFuelMapCmd(float value) {
 	if (engineConfiguration->algorithm == LM_SPEED_DENSITY) {
 		scheduleMsg(&logger, "WARNING: setting fuel map in SD mode is pointless");
 	}
-	setWholeFuelMap(engineConfiguration, value);
+	setWholeFuelMap(value PASS_ENGINE_PARAMETER);
 }
 
 #if EFI_PROD_CODE
@@ -726,12 +726,12 @@ static void setTimingMap(const char * rpmStr, const char *loadStr, const char *v
 	float engineLoad = atoff(loadStr);
 	float value = atoff(valueStr);
 
-	int rpmIndex = findIndex(engineConfiguration->ignitionRpmBins, IGN_RPM_COUNT, rpm);
+	int rpmIndex = findIndex(config->ignitionRpmBins, IGN_RPM_COUNT, rpm);
 	rpmIndex = rpmIndex < 0 ? 0 : rpmIndex;
-	int loadIndex = findIndex(engineConfiguration->ignitionLoadBins, IGN_LOAD_COUNT, engineLoad);
+	int loadIndex = findIndex(config->ignitionLoadBins, IGN_LOAD_COUNT, engineLoad);
 	loadIndex = loadIndex < 0 ? 0 : loadIndex;
 
-	engineConfiguration->ignitionTable[loadIndex][rpmIndex] = value;
+	config->ignitionTable[loadIndex][rpmIndex] = value;
 	scheduleMsg(&logger, "Setting timing map entry %d:%d to %f", rpmIndex, loadIndex, value);
 }
 
@@ -740,12 +740,12 @@ static void setFuelMap(const char * rpmStr, const char *loadStr, const char *val
 	float engineLoad = atoff(loadStr);
 	float value = atoff(valueStr);
 
-	int rpmIndex = findIndex(engineConfiguration->fuelRpmBins, FUEL_RPM_COUNT, rpm);
+	int rpmIndex = findIndex(config->fuelRpmBins, FUEL_RPM_COUNT, rpm);
 	rpmIndex = rpmIndex < 0 ? 0 : rpmIndex;
-	int loadIndex = findIndex(engineConfiguration->fuelLoadBins, FUEL_LOAD_COUNT, engineLoad);
+	int loadIndex = findIndex(config->fuelLoadBins, FUEL_LOAD_COUNT, engineLoad);
 	loadIndex = loadIndex < 0 ? 0 : loadIndex;
 
-	engineConfiguration->fuelTable[loadIndex][rpmIndex] = value;
+	config->fuelTable[loadIndex][rpmIndex] = value;
 	scheduleMsg(&logger, "Setting fuel map entry %d:%d to %f", rpmIndex, loadIndex, value);
 }
 

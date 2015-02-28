@@ -112,19 +112,19 @@ void setMap(fuel_table_t table, float value) {
 	}
 }
 
-static void setWholeVEMap(engine_configuration_s *engineConfiguration, float value) {
-	setMap(engineConfiguration->veTable, value);
+static void setWholeVEMap(float value DECLARE_ENGINE_PARAMETER_S) {
+	setMap(config->veTable, value);
 }
 
-void setWholeFuelMap(engine_configuration_s *engineConfiguration, float value) {
-	setMap(engineConfiguration->fuelTable, value);
+void setWholeFuelMap(float value DECLARE_ENGINE_PARAMETER_S) {
+	setMap(config->fuelTable, value);
 }
 
-void setWholeTimingTable(engine_configuration_s *engineConfiguration, float value) {
+void setWholeTimingTable(float value DECLARE_ENGINE_PARAMETER_S) {
 	// todo: table helper?
 	for (int l = 0; l < IGN_LOAD_COUNT; l++) {
 		for (int r = 0; r < IGN_RPM_COUNT; r++) {
-			engineConfiguration->ignitionTable[l][r] = value;
+			config->ignitionTable[l][r] = value;
 		}
 	}
 }
@@ -136,8 +136,7 @@ void setWholeTimingTable(engine_configuration_s *engineConfiguration, float valu
  */
 void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
-	memset(engineConfiguration, 0, sizeof(engine_configuration_s));
-	memset(boardConfiguration, 0, sizeof(board_configuration_s));
+	memset(config, 0, sizeof(persistent_config_s));
 
 	setDetaultVETable(PASS_ENGINE_PARAMETER_F);
 
@@ -191,13 +190,13 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	setTableBin2(engineConfiguration->map.samplingWindow, MAP_ANGLE_SIZE, 50, 50, 1);
 
 	// set_whole_timing_map 3
-	setWholeFuelMap(engineConfiguration, 3);
-	setWholeVEMap(engineConfiguration, 0.8);
-	setMap(engineConfiguration->afrTable, 14.7);
+	setWholeFuelMap(3 PASS_ENGINE_PARAMETER);
+	setWholeVEMap(0.8 PASS_ENGINE_PARAMETER);
+	setMap(config->afrTable, 14.7);
 
-	setMap(engineConfiguration->injectionPhase, -180);
-	setRpmTableBin(engineConfiguration->injPhaseRpmBins, FUEL_RPM_COUNT);
-	setTableBin2(engineConfiguration->injPhaseLoadBins, FUEL_LOAD_COUNT, 10, 300, 1);
+	setMap(config->injectionPhase, -180);
+	setRpmTableBin(config->injPhaseRpmBins, FUEL_RPM_COUNT);
+	setTableBin2(config->injPhaseLoadBins, FUEL_LOAD_COUNT, 10, 300, 1);
 
 	setThermistorConfiguration(&engineConfiguration->clt, 0, 9500, 23.8889, 2100, 48.8889, 1000);
 	engineConfiguration->clt.bias_resistor = 1500;

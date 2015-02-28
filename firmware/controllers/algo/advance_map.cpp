@@ -58,6 +58,6 @@ float getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_S) {
 }
 
 void prepareTimingMap(DECLARE_ENGINE_PARAMETER_F) {
-	advanceMap.init(engineConfiguration->ignitionTable, engineConfiguration->ignitionLoadBins,
-			engineConfiguration->ignitionRpmBins);
+	advanceMap.init(config->ignitionTable, config->ignitionLoadBins,
+			config->ignitionRpmBins);
 }

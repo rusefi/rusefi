@@ -39,8 +39,8 @@ void setBmwE34(DECLARE_ENGINE_PARAMETER_F) {
 	// set_global_trigger_offset_angle 84
 	engineConfiguration->globalTriggerAngleOffset = 84;
 
-	setWholeFuelMap(engineConfiguration, 6);
-	setWholeTimingTable(engineConfiguration, 10);
+	setWholeFuelMap(6 PASS_ENGINE_PARAMETER);
+	setWholeTimingTable(10 PASS_ENGINE_PARAMETER);
 
 	board_configuration_s *bc = &engineConfiguration->bc;
 	bc->malfunctionIndicatorPin = GPIO_UNASSIGNED;

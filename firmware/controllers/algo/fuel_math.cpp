@@ -155,8 +155,8 @@ float getInjectorLag(float vBatt DECLARE_ENGINE_PARAMETER_S) {
  * is to prepare the fuel map data structure for 3d interpolation
  */
 void prepareFuelMap(DECLARE_ENGINE_PARAMETER_F) {
-	fuelMap.init(engineConfiguration->fuelTable, engineConfiguration->fuelLoadBins, engineConfiguration->fuelRpmBins);
-	fuelPhaseMap.init(engineConfiguration->injectionPhase, engineConfiguration->injPhaseLoadBins, engineConfiguration->injPhaseRpmBins);
+	fuelMap.init(config->fuelTable, config->fuelLoadBins, config->fuelRpmBins);
+	fuelPhaseMap.init(config->injectionPhase, config->injPhaseLoadBins, config->injPhaseRpmBins);
 }
 
 /**

@@ -295,9 +295,9 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->crankingTimingAngle = 3;
 	engineConfiguration->crankingChargeAngle = 70;
 
-	setWholeTimingTable(engineConfiguration, 10);
+	setWholeTimingTable(10 PASS_ENGINE_PARAMETER);
 	// set_whole_fuel_map 5
-	setWholeFuelMap(engineConfiguration, 5);
+	setWholeFuelMap(5 PASS_ENGINE_PARAMETER);
 
 	setSingleCoilDwell(engineConfiguration);
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
@@ -372,9 +372,9 @@ static void setMiata1994_common(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineConfiguration->crankingChargeAngle = 70;
 
-	copyFuelTable(miata_maf_fuel_table, engineConfiguration->fuelTable);
+	copyFuelTable(miata_maf_fuel_table, config->fuelTable);
 
-	copyTimingTable(miata_maf_advance_table, engineConfiguration->ignitionTable);
+	copyTimingTable(miata_maf_advance_table, config->ignitionTable);
 
 //	boardConfiguration->triggerSimulatorPins[0] = GPIOD_2; // 2G - YEL/BLU
 //	boardConfiguration->triggerSimulatorPins[1] = GPIOB_3; // 2E - WHT - four times
@@ -501,8 +501,8 @@ void setMiata1996(DECLARE_ENGINE_PARAMETER_F) {
 	commonMiataNa(PASS_ENGINE_PARAMETER_F);
 	engineConfiguration->specs.displacement = 1.839;
 
-	copyFuelTable(miata_maf_fuel_table, engineConfiguration->fuelTable);
-	copyTimingTable(miata_maf_advance_table, engineConfiguration->ignitionTable);
+	copyFuelTable(miata_maf_fuel_table, config->fuelTable);
+	copyTimingTable(miata_maf_advance_table, config->ignitionTable);
 
 	// upside down
 	boardConfiguration->triggerInputPins[0] = GPIOA_5;

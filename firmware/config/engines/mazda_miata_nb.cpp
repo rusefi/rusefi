@@ -74,7 +74,7 @@ void setMazdaMiataNbEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->clutchDownPin = GPIO_UNASSIGNED;
 
 	// set_whole_fuel_map 3
-	setWholeFuelMap(engineConfiguration, 3);
+	setWholeFuelMap(3 PASS_ENGINE_PARAMETER);
 
 
 // 10 deg before TDC is default timing

@@ -18,9 +18,9 @@
  */
 #define TS_FILE_VERSION 20150216
 
-#define PAGE_COUNT 2
+#define PAGE_COUNT 7
 
-#define PAGE_0_SIZE 14008
+#define PAGE_0_SIZE 8248
 #define PAGE_1_SIZE 1152
 
 #define TS_OUTPUT_SIZE 196
