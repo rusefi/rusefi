@@ -66,12 +66,12 @@ static const ignition_table_t default_aspire_timing_table = {
 
 EXTERN_ENGINE;
 
-static void setDefaultAspireMaps(engine_configuration_s *engineConfiguration) {
+static void setDefaultAspireMaps(DECLARE_ENGINE_PARAMETER_F) {
 
-	setFuelLoadBin(engineConfiguration, 1.2, 4.4);
-	setFuelRpmBin(engineConfiguration, 800, 7000);
-	setTimingLoadBin(engineConfiguration, 1.2, 4.4);
-	setTimingRpmBin(engineConfiguration, 800, 7000);
+	setFuelLoadBin(1.2, 4.4 PASS_ENGINE_PARAMETER);
+	setFuelRpmBin(800, 7000 PASS_ENGINE_PARAMETER);
+	setTimingLoadBin(1.2, 4.4 PASS_ENGINE_PARAMETER);
+	setTimingRpmBin(800, 7000 PASS_ENGINE_PARAMETER);
 
 	copyFuelTable(default_aspire_fuel_table, engineConfiguration->fuelTable);
 	copyTimingTable(default_aspire_timing_table, engineConfiguration->ignitionTable);
@@ -106,7 +106,7 @@ void setFordAspireEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->ignitionBaseAngle = 87;
 	engineConfiguration->injectionAngle = 54 + 360;
 
-	setDefaultAspireMaps(engineConfiguration);
+	setDefaultAspireMaps(PASS_ENGINE_PARAMETER_F);
 	// set_cranking_rpm 550
 	engineConfiguration->cranking.rpm = 550;
 	// set_cranking_charge_angle 70

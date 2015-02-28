@@ -127,7 +127,8 @@ static void setDefaultCrankingFuel(engine_configuration_s *engineConfiguration) 
 
 EXTERN_ENGINE;
 
-static void commonMiataNa(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
+static void commonMiataNa(DECLARE_ENGINE_PARAMETER_F) {
+	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 	engineConfiguration->trigger.type = TT_MAZDA_MIATA_NA;
 	engineConfiguration->digitalChartSize = 100;
 
@@ -135,8 +136,8 @@ static void commonMiataNa(engine_configuration_s *engineConfiguration, board_con
 	boardConfiguration->triggerInputPins[1] = GPIOA_5; // 2E White CKP
 
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
-	setFuelLoadBin(engineConfiguration, 1.2, 4.4);
-	setFuelRpmBin(engineConfiguration, 800, 7000);
+	setFuelLoadBin(1.2, 4.4 PASS_ENGINE_PARAMETER);
+	setFuelRpmBin(800, 7000 PASS_ENGINE_PARAMETER);
 
 	boardConfiguration->idleSolenoidFrequency = 160;
 
@@ -205,7 +206,7 @@ void setMiata1990(DECLARE_ENGINE_PARAMETER_F) {
 
 	common079721_2351(engineConfiguration, boardConfiguration);
 
-	commonMiataNa(engineConfiguration, boardConfiguration);
+	commonMiataNa(PASS_ENGINE_PARAMETER_F);
 
 	// Frankenstein: low side - out #1: PC14
 	// Frankenstein: low side - out #2: PC15
@@ -254,8 +255,8 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_F) {
 //	engineConfiguration->algorithm = LM_REAL_MAF;
 	boardConfiguration->tunerStudioSerialSpeed = 9600;
 
-	setFuelLoadBin(engineConfiguration, 1.2, 4.4);
-	setFuelRpmBin(engineConfiguration, 800, 7000);
+	setFuelLoadBin(1.2, 4.4 PASS_ENGINE_PARAMETER);
+	setFuelRpmBin(800, 7000 PASS_ENGINE_PARAMETER);
 
 //	boardConfiguration->triggerInputPins[0] = GPIOC_6; // 2G YEL/BLU
 //	boardConfiguration->triggerInputPins[1] = GPIOA_5; // 2E White CKP
@@ -361,9 +362,9 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_F) {
 	// end of Ford Escort GT config
 }
 
-static void setMiata1994_common(engine_configuration_s *engineConfiguration,
-		board_configuration_s *boardConfiguration) {
-	commonMiataNa(engineConfiguration, boardConfiguration);
+static void setMiata1994_common(DECLARE_ENGINE_PARAMETER_F) {
+	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
+	commonMiataNa(PASS_ENGINE_PARAMETER_F);
 	engineConfiguration->specs.displacement = 1.839;
 
 	// set_cranking_timing_angle 0
@@ -438,7 +439,7 @@ static void setMiata1994_common(engine_configuration_s *engineConfiguration,
  */
 void setMiata1994_d(DECLARE_ENGINE_PARAMETER_F) {
 	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
-	setMiata1994_common(engineConfiguration, boardConfiguration);
+	setMiata1994_common(PASS_ENGINE_PARAMETER_F);
 	engineConfiguration->vbattDividerCoeff = ((float) (8.2 + 33)) / 8.2 * 2;
 	/**
 	 * This board was avoiding PE0 & PE1 mosfets altogether
@@ -454,7 +455,7 @@ void setMiata1994_d(DECLARE_ENGINE_PARAMETER_F) {
 
 void setMiata1994_s(DECLARE_ENGINE_PARAMETER_F) {
 	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
-	setMiata1994_common(engineConfiguration, boardConfiguration);
+	setMiata1994_common(PASS_ENGINE_PARAMETER_F);
 	engineConfiguration->vbattDividerCoeff = ((float) (10.0 + 33)) / 10 * 2;
 
 	boardConfiguration->triggerSimulatorPins[2] = GPIO_UNASSIGNED;
@@ -497,7 +498,7 @@ void setMiata1994_s(DECLARE_ENGINE_PARAMETER_F) {
  */
 void setMiata1996(DECLARE_ENGINE_PARAMETER_F) {
 	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
-	commonMiataNa(engineConfiguration, boardConfiguration);
+	commonMiataNa(PASS_ENGINE_PARAMETER_F);
 	engineConfiguration->specs.displacement = 1.839;
 
 	copyFuelTable(miata_maf_fuel_table, engineConfiguration->fuelTable);

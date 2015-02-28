@@ -55,15 +55,14 @@ float getCrankshaftRevolutionTimeMs(int rpm);
 
 float getEngineLoadT(DECLARE_ENGINE_PARAMETER_F);
 
-
 float getSparkDwellMsT(int rpm DECLARE_ENGINE_PARAMETER_S);
 
 int getCylinderId(firing_order_e firingOrder, int index);
 
-void setFuelRpmBin(engine_configuration_s *engineConfiguration, float from, float to);
-void setFuelLoadBin(engine_configuration_s *engineConfiguration, float from, float to);
-void setTimingRpmBin(engine_configuration_s *engineConfiguration, float from, float to);
-void setTimingLoadBin(engine_configuration_s *engineConfiguration, float from, float to);
+void setFuelRpmBin(float from, float to DECLARE_ENGINE_PARAMETER_S);
+void setFuelLoadBin(float from, float to DECLARE_ENGINE_PARAMETER_S);
+void setTimingRpmBin(float from, float to DECLARE_ENGINE_PARAMETER_S);
+void setTimingLoadBin(float from, float to DECLARE_ENGINE_PARAMETER_S);
 
 void setSingleCoilDwell(engine_configuration_s *engineConfiguration);
 

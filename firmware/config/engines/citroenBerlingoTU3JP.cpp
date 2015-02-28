@@ -100,10 +100,10 @@ void setCitroenBerlingoTU3JPConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	 * Algorithm Alpha-N setting
 	 */
 	engineConfiguration->algorithm = LM_ALPHA_N;
-	setFuelLoadBin(engineConfiguration, 0, 100);
-	setFuelRpmBin(engineConfiguration, 800, 7000);
-	setTimingLoadBin(engineConfiguration, 0, 100);
-	setTimingRpmBin(engineConfiguration, 800, 7000);
+	setFuelLoadBin(0, 100 PASS_ENGINE_PARAMETER);
+	setFuelRpmBin(800, 7000 PASS_ENGINE_PARAMETER);
+	setTimingLoadBin(0, 100 PASS_ENGINE_PARAMETER);
+	setTimingRpmBin(800, 7000 PASS_ENGINE_PARAMETER);
 
 	/**
 	 * Outputs

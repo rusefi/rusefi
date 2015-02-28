@@ -180,10 +180,10 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	setConstantDwell(engineConfiguration, 4); // 4ms is global default dwell
 	engineConfiguration->useConstantDwellDuringCranking = false;
 
-	setFuelLoadBin(engineConfiguration, 1.2, 4.4);
-	setFuelRpmBin(engineConfiguration, 800, 7000);
-	setTimingLoadBin(engineConfiguration, 1.2, 4.4);
-	setTimingRpmBin(engineConfiguration, 800, 7000);
+	setFuelLoadBin(1.2, 4.4 PASS_ENGINE_PARAMETER);
+	setFuelRpmBin(800, 7000 PASS_ENGINE_PARAMETER);
+	setTimingLoadBin(1.2, 4.4 PASS_ENGINE_PARAMETER);
+	setTimingRpmBin(800, 7000 PASS_ENGINE_PARAMETER);
 
 	setTableBin2(engineConfiguration->map.samplingAngleBins, MAP_ANGLE_SIZE, 800, 7000, 1);
 	setTableBin2(engineConfiguration->map.samplingAngle, MAP_ANGLE_SIZE, 100, 130, 1);
