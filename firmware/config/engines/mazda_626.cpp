@@ -14,8 +14,10 @@
 #include "custom_engine.h"
 #include "allsensors.h"
 
-void setMazda626EngineConfiguration(engine_configuration_s *engineConfiguration) {
-	setCustomEngineConfiguration(engineConfiguration);
+EXTERN_ENGINE;
+
+void setMazda626EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
+	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_F);
 
 	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 	engineConfiguration->trigger.type = TT_MAZDA_DOHC_1_4;

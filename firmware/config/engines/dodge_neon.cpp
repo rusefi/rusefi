@@ -89,8 +89,9 @@ static float dodge_map_advance_table[16][16] = {
 {/*15 engineLoad=4.3999950000000005*//*0 800.0*/-4.85, /*1 1213.0*/-12.24, /*2 1626.0*/-24.091, /*3 2040.0*/-25.394, /*4 2453.0*/-25.323, /*5 2866.0*/-25.544, /*6 3280.0*/-29.915, /*7 3693.0*/-33.104, /*8 4106.0*/-36.016, /*9 4520.0*/-37.933, /*10 4933.0*/-36.254, /*11 5346.0*/-29.712, /*12 5760.0*/-28.651, /*13 6173.0*/-28.045, /*14 6586.0*/-27.228, /*15 7000.0*/-27.784}
 };
 
+EXTERN_ENGINE;
 
-void setDodgeNeon1995EngineConfiguration(engine_configuration_s *engineConfiguration) {
+void setDodgeNeon1995EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	board_configuration_s * boardConfiguration = &engineConfiguration->bc;
 
 	engineConfiguration->trigger.type = TT_DODGE_NEON_1995;
@@ -181,7 +182,7 @@ void setDodgeNeon1995EngineConfiguration(engine_configuration_s *engineConfigura
 	engineConfiguration->analogChartFrequency = 7;
 }
 
-void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfiguration) {
+void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	board_configuration_s * boardConfiguration = &engineConfiguration->bc;
 	engineConfiguration->trigger.type = TT_DODGE_NEON_2003;
 	setFrankenso_01_LCD(boardConfiguration);

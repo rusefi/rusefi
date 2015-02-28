@@ -8,8 +8,8 @@
 #ifndef BMW_E34_H_
 #define BMW_E34_H_
 
-#include "engine_configuration.h"
+#include "engine.h"
 
-void setBmwE34(engine_configuration_s *engineConfiguration);
+void setBmwE34(DECLARE_ENGINE_PARAMETER_F);
 
 #endif /* BMW_E34_H_ */

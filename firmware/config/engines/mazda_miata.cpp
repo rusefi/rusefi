@@ -125,6 +125,8 @@ static void setDefaultCrankingFuel(engine_configuration_s *engineConfiguration) 
 	engineConfiguration->cranking.baseFuel = 5;
 }
 
+EXTERN_ENGINE;
+
 static void commonMiataNa(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
 	engineConfiguration->trigger.type = TT_MAZDA_MIATA_NA;
 	engineConfiguration->digitalChartSize = 100;
@@ -198,7 +200,7 @@ static void common079721_2351(engine_configuration_s *engineConfiguration, board
 
 }
 
-void setMiata1990(engine_configuration_s *engineConfiguration) {
+void setMiata1990(DECLARE_ENGINE_PARAMETER_F) {
 	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 
 	common079721_2351(engineConfiguration, boardConfiguration);
@@ -234,7 +236,7 @@ void setMiata1990(engine_configuration_s *engineConfiguration) {
  * pin 1I/W9 - extra +5v
  * set_engine_type 14
  */
-void setFordEscortGt(engine_configuration_s *engineConfiguration) {
+void setFordEscortGt(DECLARE_ENGINE_PARAMETER_F) {
 	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 	engineConfiguration->trigger.type = TT_MAZDA_DOHC_1_4;
 
@@ -434,7 +436,7 @@ static void setMiata1994_common(engine_configuration_s *engineConfiguration,
  * Frankenso board
  * set_engine_type 20
  */
-void setMiata1994_d(engine_configuration_s *engineConfiguration) {
+void setMiata1994_d(DECLARE_ENGINE_PARAMETER_F) {
 	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 	setMiata1994_common(engineConfiguration, boardConfiguration);
 	engineConfiguration->vbattDividerCoeff = ((float) (8.2 + 33)) / 8.2 * 2;
@@ -450,7 +452,7 @@ void setMiata1994_d(engine_configuration_s *engineConfiguration) {
 	boardConfiguration->idleValvePin = GPIO_UNASSIGNED;
 }
 
-void setMiata1994_s(engine_configuration_s *engineConfiguration) {
+void setMiata1994_s(DECLARE_ENGINE_PARAMETER_F) {
 	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 	setMiata1994_common(engineConfiguration, boardConfiguration);
 	engineConfiguration->vbattDividerCoeff = ((float) (10.0 + 33)) / 10 * 2;
@@ -493,7 +495,7 @@ void setMiata1994_s(engine_configuration_s *engineConfiguration) {
 /**
  * Tom tomiata, Frankenstein board
  */
-void setMiata1996(engine_configuration_s *engineConfiguration) {
+void setMiata1996(DECLARE_ENGINE_PARAMETER_F) {
 	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 	commonMiataNa(engineConfiguration, boardConfiguration);
 	engineConfiguration->specs.displacement = 1.839;

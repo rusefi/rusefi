@@ -64,6 +64,8 @@ static const ignition_table_t default_aspire_timing_table = {
 /* Load 4.400000 */{	-0.350000,	-5.590000,	-0.502000,	-0.910000,	-0.864000,	-0.954000,	-1.324000,	+7.436000,	-1.170000,	-1.054000,	-2.058000,	-2.098000,	-2.636000,	+12.352000,	+12.352000,	+12.352000}
 };
 
+EXTERN_ENGINE;
+
 static void setDefaultAspireMaps(engine_configuration_s *engineConfiguration) {
 
 	setFuelLoadBin(engineConfiguration, 1.2, 4.4);
@@ -75,7 +77,7 @@ static void setDefaultAspireMaps(engine_configuration_s *engineConfiguration) {
 	copyTimingTable(default_aspire_timing_table, engineConfiguration->ignitionTable);
 }
 
-void setFordAspireEngineConfiguration(engine_configuration_s *engineConfiguration) {
+void setFordAspireEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	board_configuration_s * boardConfiguration = &engineConfiguration->bc;
 	engineConfiguration->tpsMin = 100;
 	engineConfiguration->tpsMax = 750;
