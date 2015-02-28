@@ -22,8 +22,7 @@ SimplePwm::SimplePwm() {
 	sr[0] = waveInstance;
 	init(_switchTimes, sr);
 }
-
-PwmConfig::PwmConfig() {
+void PwmConfig::baseConstructor() {
 	memset(&scheduling, 0, sizeof(scheduling));
 	memset(&safe, 0, sizeof(safe));
 	scheduling.name = "PwmConfig";
@@ -34,7 +33,12 @@ PwmConfig::PwmConfig() {
 	stateChangeCallback = NULL;
 }
 
-PwmConfig::PwmConfig(float *st, single_wave_s *waves) : PwmConfig() {
+PwmConfig::PwmConfig() {
+	baseConstructor();
+}
+
+PwmConfig::PwmConfig(float *st, single_wave_s *waves) {
+	baseConstructor();
 	multiWave.init(st, waves);
 }
 

@@ -11,6 +11,7 @@
 IntListenerArray::IntListenerArray() {
 	currentListenersCount = 0;
 	memset(&args, 0, sizeof(args));
+	memset(&callbacks, 0, sizeof(callbacks));
 }
 
 void IntListenerArray::registerCallback(VoidInt handler, void *arg) {

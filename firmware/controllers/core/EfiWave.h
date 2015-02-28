@@ -39,6 +39,7 @@ class TriggerShape;
 
 class multi_wave_s {
 public:
+	void baseConstructor();
 	multi_wave_s();
 	multi_wave_s(float *st, single_wave_s *waves);
 	void init(float *st, single_wave_s *waves);
