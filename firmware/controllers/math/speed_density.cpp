@@ -97,9 +97,9 @@ void setDetaultVETable(DECLARE_ENGINE_PARAMETER_F) {
 	setTableBin2(engineConfiguration->veLoadBins, FUEL_LOAD_COUNT, 10, 300, 1);
 	veMap.setAll(0.8);
 
-	setRpmTableBin(config->ve2RpmBins, FUEL_RPM_COUNT);
-	setTableBin2(config->ve2LoadBins, FUEL_LOAD_COUNT, 10, 300, 1);
-	ve2Map.setAll(0.81);
+//	setRpmTableBin(engineConfiguration->ve2RpmBins, FUEL_RPM_COUNT);
+//	setTableBin2(engineConfiguration->ve2LoadBins, FUEL_LOAD_COUNT, 10, 300, 1);
+//	ve2Map.setAll(0.81);
 
 	setRpmTableBin(engineConfiguration->afrRpmBins, FUEL_RPM_COUNT);
 	setTableBin2(engineConfiguration->afrLoadBins, FUEL_LOAD_COUNT, 10, 300, 1);
@@ -107,9 +107,8 @@ void setDetaultVETable(DECLARE_ENGINE_PARAMETER_F) {
 }
 
 void initSpeedDensity(DECLARE_ENGINE_PARAMETER_F) {
-	efiAssertVoid(config!=NULL, "config is NULL");
-	engine_configuration_s *e = &config->engineConfiguration;
+	engine_configuration_s *e = engineConfiguration;
 	veMap.init(e->veTable, e->veLoadBins, e->veRpmBins);
-	ve2Map.init(config->ve2Table, config->ve2LoadBins, config->ve2RpmBins);
+//	ve2Map.init(engineConfiguration->ve2Table, engineConfiguration->ve2LoadBins, engineConfiguration->ve2RpmBins);
 	afrMap.init(e->afrTable, e->afrLoadBins, e->afrRpmBins);
 }

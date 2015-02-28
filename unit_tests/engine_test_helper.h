@@ -18,7 +18,6 @@ public:
 	void fireTriggerEvents();
 
 	persistent_config_s persistentConfig;
-	persistent_config_s *config;
 	engine_configuration2_s ec2;
 	Engine engine;
 

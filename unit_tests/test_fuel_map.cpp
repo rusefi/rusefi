@@ -24,13 +24,12 @@ void testMafFuelMath(void) {
 
 	Engine *engine = &eth.engine;
 	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
-	persistent_config_s *config = engine->config;
 
 	engineConfiguration->algorithm = LM_REAL_MAF;
 
 	engineConfiguration->injector.flow = 200;
 
-	setMap(config->afrTable, 13);
+	setMap(engineConfiguration->afrTable, 13);
 
 	float fuelMs = getRealMafFuel(300, 6000 PASS_ENGINE_PARAMETER);
 	assertEquals(26.7099, fuelMs);
@@ -45,13 +44,13 @@ void testFuelMap(void) {
 	printf("Filling fuel map\r\n");
 	for (int k = 0; k < FUEL_LOAD_COUNT; k++) {
 		for (int r = 0; r < FUEL_RPM_COUNT; r++) {
-			eth.engine.config->fuelTable[k][r] = k * 200 + r;
+			eth.engine.engineConfiguration->fuelTable[k][r] = k * 200 + r;
 		}
 	}
 	for (int i = 0; i < FUEL_LOAD_COUNT; i++)
-		eth.engine.config->fuelLoadBins[i] = i;
+		eth.engine.engineConfiguration->fuelLoadBins[i] = i;
 	for (int i = 0; i < FUEL_RPM_COUNT; i++)
-		eth.engine.config->fuelRpmBins[i] = i;
+		eth.engine.engineConfiguration->fuelRpmBins[i] = i;
 
 	assertEqualsM("base fuel table", 1005, getBaseTableFuel(eth.engine.engineConfiguration, 5, 5));
 
@@ -59,7 +58,6 @@ void testFuelMap(void) {
 
 	Engine *engine = &eth.engine;
 	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
-	persistent_config_s *config = engine->config;
 
 	initThermistors(NULL PASS_ENGINE_PARAMETER);
 
@@ -176,7 +174,6 @@ void testAngleResolver(void) {
 	Engine *engine = &eth.engine;
 
 	engine_configuration_s *engineConfiguration = eth.engine.engineConfiguration;
-	persistent_config_s *config = engine->config;
 
 	engineConfiguration->globalTriggerAngleOffset = 175;
 	assertTrue(engine->engineConfiguration2!=NULL);

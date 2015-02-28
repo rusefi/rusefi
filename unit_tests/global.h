@@ -38,10 +38,10 @@ typedef int bool_t;
 class Engine;
 #endif
 
-#define DECLARE_ENGINE_PARAMETER_F Engine *engine, engine_configuration_s *engineConfiguration, persistent_config_s *config
-#define DECLARE_ENGINE_PARAMETER_S , Engine *engine, engine_configuration_s *engineConfiguration, persistent_config_s *config
-#define PASS_ENGINE_PARAMETER_F engine, engineConfiguration, config
-#define PASS_ENGINE_PARAMETER , engine, engineConfiguration, config
+#define DECLARE_ENGINE_PARAMETER_F Engine *engine, engine_configuration_s *engineConfiguration
+#define DECLARE_ENGINE_PARAMETER_S , Engine *engine, engine_configuration_s *engineConfiguration
+#define PASS_ENGINE_PARAMETER_F engine, engineConfiguration
+#define PASS_ENGINE_PARAMETER , engine, engineConfiguration
 
 #define CONFIG(x) engineConfiguration->x
 #define ENGINE(x) engine->x

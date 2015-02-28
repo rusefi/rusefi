@@ -14,10 +14,9 @@
 extern int timeNow;
 
 EngineTestHelper::EngineTestHelper(engine_type_e engineType) : engine (&persistentConfig) {
-	engineConfiguration = ec = &persistentConfig.engineConfiguration;
-	config = &persistentConfig;
+	ec = &persistentConfig.engineConfiguration;
 
-	engine_configuration_s *engineConfiguration = ec;
+	engineConfiguration = ec;
 
 	setTableValue(engineConfiguration->cltFuelCorrBins, engineConfiguration->cltFuelCorr, CLT_CURVE_SIZE, -40, 1.5);
 	setTableValue(engineConfiguration->cltFuelCorrBins, engineConfiguration->cltFuelCorr, CLT_CURVE_SIZE, -30, 1.5);
@@ -47,12 +46,11 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType) : engine (&persiste
 }
 
 void EngineTestHelper::fireTriggerEvents() {
-	Engine *engine = &this->engine;
 	for (int i = 0; i < 24; i++) {
 		timeNow += 5000; // 5ms
-		triggerCentral.handleShaftSignal(SHAFT_PRIMARY_UP PASS_ENGINE_PARAMETER);
+		triggerCentral.handleShaftSignal(SHAFT_PRIMARY_UP, &engine, engine.engineConfiguration);
 		timeNow += 5000;
-		triggerCentral.handleShaftSignal(SHAFT_PRIMARY_DOWN PASS_ENGINE_PARAMETER);
+		triggerCentral.handleShaftSignal(SHAFT_PRIMARY_DOWN, &engine, engine.engineConfiguration);
 	}
 }
 
