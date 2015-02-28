@@ -236,8 +236,8 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	// I want to start with a simple Alpha-N
 	engineConfiguration->algorithm = LM_ALPHA_N;
 //	engineConfiguration->algorithm = LM_SPEED_DENSITY;
-	setFuelLoadBin(engineConfiguration, 0, 100);
-	setTimingLoadBin(engineConfiguration, 0, 100);
+	setFuelLoadBin(0, 100 PASS_ENGINE_PARAMETER);
+	setTimingLoadBin(0, 100 PASS_ENGINE_PARAMETER);
 
 	boardConfiguration->malfunctionIndicatorPin = GPIO_UNASSIGNED;
 

@@ -52,8 +52,8 @@ static void setHondaAccordConfigurationCommon(DECLARE_ENGINE_PARAMETER_F) {
 //	engineConfiguration->algorithm = LM_SPEED_DENSITY;
 	// I want to start with a simple Alpha-N
 	engineConfiguration->algorithm = LM_ALPHA_N;
-	setFuelLoadBin(engineConfiguration, 0, 100);
-	setTimingLoadBin(engineConfiguration, 0, 100);
+	setFuelLoadBin(0, 100 PASS_ENGINE_PARAMETER);
+	setTimingLoadBin(0, 100 PASS_ENGINE_PARAMETER);
 
 	/**
 	 * 18K Ohm @ -20C

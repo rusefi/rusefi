@@ -366,19 +366,19 @@ void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_F) {
 
 #endif
 
-void setFuelRpmBin(engine_configuration_s *engineConfiguration, float from, float to) {
+void setFuelRpmBin(float from, float to DECLARE_ENGINE_PARAMETER_S) {
 	setTableBin(engineConfiguration->fuelRpmBins, FUEL_RPM_COUNT, from, to);
 }
 
-void setFuelLoadBin(engine_configuration_s *engineConfiguration, float from, float to) {
+void setFuelLoadBin(float from, float to DECLARE_ENGINE_PARAMETER_S) {
 	setTableBin(engineConfiguration->fuelLoadBins, FUEL_LOAD_COUNT, from, to);
 }
 
-void setTimingRpmBin(engine_configuration_s *engineConfiguration, float from, float to) {
+void setTimingRpmBin(float from, float to DECLARE_ENGINE_PARAMETER_S) {
 	setTableBin(engineConfiguration->ignitionRpmBins, IGN_RPM_COUNT, from, to);
 }
 
-void setTimingLoadBin(engine_configuration_s *engineConfiguration, float from, float to) {
+void setTimingLoadBin(float from, float to DECLARE_ENGINE_PARAMETER_S) {
 	setTableBin(engineConfiguration->ignitionLoadBins, IGN_LOAD_COUNT, from, to);
 }
 
