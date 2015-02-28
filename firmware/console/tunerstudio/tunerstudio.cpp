@@ -53,7 +53,7 @@ static SerialConfig tsSerialConfig = { 0, 0, USART_CR2_STOP1_BITS | USART_CR2_LI
 EXTERN_ENGINE
 ;
 
-#define MAX_PAGE_ID 0
+extern short currentPageId;
 
 // in MS, that's 10 seconds
 #define TS_READ_TIMEOUT 10000
@@ -112,14 +112,6 @@ static void resetTs(void) {
 	memset(&tsState, 0, sizeof(tsState));
 }
 
-/**
- * For some reason I could not get the 'pages' feature of Tuner Studio working - as
- * a workaround the whole configuration is just one page
- *
- * this field is in the end to simply aligning situation
- */
-static short currentPageId;
-
 void printTsStats(void) {
 #if EFI_PROD_CODE
 	if (!isSerialOverUart()) {
@@ -132,7 +124,7 @@ void printTsStats(void) {
 			tsState.outputChannelsCommandCounter, tsState.readPageCommandsCounter, tsState.burnCommandCounter);
 	scheduleMsg(tsLogger, "TunerStudio W=%d / C=%d / P=%d / page=%d", tsState.writeValueCommandCounter,
 			tsState.writeChunkCommandCounter, tsState.pageCommandCounter, currentPageId);
-	scheduleMsg(tsLogger, "page size=%d", sizeof(engine_configuration_s));
+	scheduleMsg(tsLogger, "page size=%d", getTunerStudioPageSize(currentPageId));
 
 //	scheduleMsg(logger, "analogChartFrequency %d",
 //			(int) (&engineConfiguration->analogChartFrequency) - (int) engineConfiguration);
@@ -173,8 +165,8 @@ char *getWorkingPageAddr(int pageIndex) {
 	switch (pageIndex) {
 	case 0:
 		return (char*) &configWorkingCopy.engineConfiguration;
-//	case 1:
-//		return (char*) &configWorkingCopy.boardConfiguration;
+	case 1:
+		return (char*) &configWorkingCopy.ve2Table;
 //	case 2: // fuelTable
 //	case 3: // ignitionTable
 //	case 4: // veTable
@@ -188,8 +180,8 @@ int getTunerStudioPageSize(int pageIndex) {
 	switch (pageIndex) {
 	case 0:
 		return PAGE_0_SIZE;
-//	case 1:
-//		return sizeof(configWorkingCopy.boardConfiguration);
+	case 1:
+		return PAGE_1_SIZE;
 //	case 2:
 //	case 3:
 //	case 4:
@@ -202,7 +194,7 @@ void handlePageSelectCommand(ts_response_format_e mode, uint16_t pageId) {
 	tsState.pageCommandCounter++;
 
 	currentPageId = pageId;
-	scheduleMsg(tsLogger, "page %d selected", currentPageId);
+	scheduleMsg(tsLogger, "PAGE %d", currentPageId);
 	tsSendResponse(mode, NULL, 0);
 }
 
@@ -213,17 +205,17 @@ void handlePageSelectCommand(ts_response_format_e mode, uint16_t pageId) {
 void handleWriteChunkCommand(ts_response_format_e mode, short offset, short count, void *content) {
 	tsState.writeChunkCommandCounter++;
 
-	scheduleMsg(tsLogger, "%d receiving page %d chunk offset %d size %d", mode, currentPageId, offset, count);
+	scheduleMsg(tsLogger, "WRITE CHUNK m=%d p=%d o=%d s=%d", mode, currentPageId, offset, count);
 
 	if (offset > getTunerStudioPageSize(currentPageId)) {
-		scheduleMsg(tsLogger, "ERROR offset %d", offset);
+		scheduleMsg(tsLogger, "ERROR invalid offset %d", offset);
 		tunerStudioError("ERROR: out of range");
 		offset = 0;
 	}
 
 	if (count > getTunerStudioPageSize(currentPageId)) {
 		tunerStudioError("ERROR: unexpected count");
-		scheduleMsg(tsLogger, "ERROR count %d", count);
+		scheduleMsg(tsLogger, "ERROR unexpected count %d", count);
 		count = 0;
 	}
 
@@ -276,20 +268,18 @@ static void sendErrorCode(void) {
 
 void handlePageReadCommand(ts_response_format_e mode, uint16_t pageId, uint16_t offset, uint16_t count) {
 	tsState.readPageCommandsCounter++;
-	tunerStudioDebug("got R (Read page)");
 	currentPageId = pageId;
 
 #if EFI_TUNER_STUDIO_VERBOSE
-	scheduleMsg(tsLogger, "%d: Page requested: page %d offset=%d count=%d", mode, (int) currentPageId, offset,
+	scheduleMsg(tsLogger, "READ m=%d p=%d o=%d c=%d", mode, (int) currentPageId, offset,
 			count);
+	printTsStats();
 #endif
 
-	if (currentPageId > MAX_PAGE_ID) {
-		scheduleMsg(tsLogger, "invalid Page number %x", currentPageId);
-
+	if (currentPageId >= PAGE_COUNT) {
 		// something is not right here
 		currentPageId = 0;
-		tunerStudioError("ERROR: invalid page");
+		tunerStudioError("ERROR: invalid page number");
 		return;
 	}
 
@@ -336,7 +326,7 @@ void handleBurnCommand(ts_response_format_e mode, uint16_t page) {
 
 	requestBurn();
 	tunerStudioWriteCrcPacket(TS_RESPONSE_BURN_OK, NULL, 0);
-	scheduleMsg(tsLogger, "burned in (ms): %d", currentTimeMillis() - nowMs);
+	scheduleMsg(tsLogger, "BURN in %dms", currentTimeMillis() - nowMs);
 }
 
 static TunerStudioReadRequest readRequest;
@@ -385,6 +375,7 @@ static bool handlePlainCommand(uint8_t command) {
 			tsState.errorCounter++;
 			return true;
 		}
+		currentPageId = writeChunkRequest.page;
 
 		handleWriteChunkCommand(TS_PLAIN, writeChunkRequest.offset, writeChunkRequest.count, (uint8_t * )&crcIoBuffer);
 		return true;

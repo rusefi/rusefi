@@ -40,6 +40,17 @@ operation_mode_e getOperationMode(engine_configuration_s const *engineConfigurat
 
 typedef struct {
 	engine_configuration_s engineConfiguration;
+
+	ve_table_t ve2Table;
+	/**
+	 * offset 15032
+	 */
+	float ve2LoadBins[FUEL_LOAD_COUNT];
+	/**
+	 * offset 15096
+	 */
+	float ve2RpmBins[FUEL_RPM_COUNT];
+
 } persistent_config_s;
 
 typedef struct {
@@ -49,7 +60,7 @@ typedef struct {
 	crc_t value;
 } persistent_config_container_s;
 
-void setDefaultConfiguration(engine_configuration_s *engineConfiguration);
+void setDefaultConfiguration(persistent_config_s *config);
 void setMap(fuel_table_t table, float value);
 void setWholeFuelMap(engine_configuration_s *engineConfiguration, float value);
 void setWholeTimingTable(engine_configuration_s *engineConfiguration, float value);
