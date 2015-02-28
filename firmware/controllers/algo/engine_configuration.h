@@ -60,7 +60,7 @@ typedef struct {
 	crc_t value;
 } persistent_config_container_s;
 
-void setDefaultConfiguration(persistent_config_s *config);
+void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F);
 void setMap(fuel_table_t table, float value);
 void setWholeFuelMap(engine_configuration_s *engineConfiguration, float value);
 void setWholeTimingTable(engine_configuration_s *engineConfiguration, float value);

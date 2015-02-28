@@ -10,7 +10,7 @@
 
 #include "engine.h"
 
-void prepareFuelMap(engine_configuration_s *engineConfiguration);
+void prepareFuelMap(DECLARE_ENGINE_PARAMETER_F);
 
 float getRealMafFuel(float airMass, int rpm DECLARE_ENGINE_PARAMETER_S);
 float getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_S);
