@@ -201,7 +201,7 @@ void setCitroenBerlingoTU3JPConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	*/
 //	engineConfiguration->mafAdcChannel = GPIO_UNASSIGNED;
 
-	copyFuelTable(tps_fuel_table, engineConfiguration->fuelTable);
-	copyTimingTable(tps_advance_table, engineConfiguration->ignitionTable);
+	copyFuelTable(tps_fuel_table, config->fuelTable);
+	copyTimingTable(tps_advance_table, config->ignitionTable);
 
 }

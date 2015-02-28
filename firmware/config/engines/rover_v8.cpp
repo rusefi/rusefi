@@ -41,7 +41,7 @@ void setRoverv8(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->cranking.rpm = 550;
 
 	// set_whole_fuel_map 3
-	setWholeFuelMap(engineConfiguration, 3);
+	setWholeFuelMap(3 PASS_ENGINE_PARAMETER);
 
 	// set_cranking_injection_mode 0
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;

@@ -35,10 +35,10 @@ void setMazda626EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->crankingChargeAngle = 70;
 
 	// set_whole_fuel_map 9
-	setWholeFuelMap(engineConfiguration, 9);
+	setWholeFuelMap(9 PASS_ENGINE_PARAMETER);
 
 // set_whole_timing_map 10
-	setWholeTimingTable(engineConfiguration, 10);
+	setWholeTimingTable(10 PASS_ENGINE_PARAMETER);
 
 	// http://i.imgur.com/fclVzvu.jpg
 	setCommonNTCSensor(&engineConfiguration->clt);
