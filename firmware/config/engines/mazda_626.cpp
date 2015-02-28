@@ -34,6 +34,11 @@ void setMazda626EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->crankingTimingAngle = 15;
 	engineConfiguration->crankingChargeAngle = 70;
 
+	engineConfiguration->tpsMin = 80;
+	engineConfiguration->tpsMax = 764;
+
+	engineConfiguration->algorithm = LM_ALPHA_N;
+
 	// set_whole_fuel_map 9
 	setWholeFuelMap(9 PASS_ENGINE_PARAMETER);
 
@@ -46,7 +51,6 @@ void setMazda626EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	setThermistorConfiguration(&engineConfiguration->iat, 20, 33000, 50, 9000, 90.0, 2700);
 
 	commonFrankensoAnalogInputs(engineConfiguration);
-	engineConfiguration->hasTpsSensor = false;
 //	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
 	engineConfiguration->mafAdcChannel = EFI_ADC_0;
 
