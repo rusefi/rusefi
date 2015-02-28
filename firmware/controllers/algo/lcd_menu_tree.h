@@ -42,7 +42,7 @@ typedef void (*VoidCallback)(void);
 
 class MenuItem {
 public:
-	MenuItem(MenuItem * parent, lcd_line_e lcdLine, const char *text, VoidCallback callback);
+	void baseConstructor(MenuItem * parent, lcd_line_e lcdLine, const char *text, VoidCallback callback);
 	MenuItem(MenuItem * parent, const char *text, VoidCallback callback);
 	MenuItem(MenuItem * parent, const char *text);
 	MenuItem(MenuItem * parent, lcd_line_e lcdLine);

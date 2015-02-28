@@ -21,13 +21,18 @@ void single_wave_s::init(pin_state_t *pinStates) {
 	this->pinStates = pinStates;
 }
 
-multi_wave_s::multi_wave_s() {
+void multi_wave_s::baseConstructor() {
 	waves = NULL;
 	switchTimes = NULL;
 	reset();
 }
 
-multi_wave_s::multi_wave_s(float *switchTimes, single_wave_s *waves) : multi_wave_s() {
+multi_wave_s::multi_wave_s() {
+	baseConstructor();
+}
+
+multi_wave_s::multi_wave_s(float *switchTimes, single_wave_s *waves) {
+	baseConstructor();
 	init(switchTimes, waves);
 }
 

@@ -47,16 +47,19 @@ void MenuTree::nextItem(void) {
 		topVisible = topVisible->next;
 }
 
-MenuItem::MenuItem(MenuItem * parent, const char *text, VoidCallback callback) : MenuItem(parent, LL_STRING, text, callback) {
+MenuItem::MenuItem(MenuItem * parent, const char *text, VoidCallback callback) {
+	baseConstructor(parent, LL_STRING, text, callback);
 }
 
-MenuItem::MenuItem(MenuItem * parent, const char *text) : MenuItem(parent, LL_STRING, text, NULL) {
+MenuItem::MenuItem(MenuItem * parent, const char *text) {
+	baseConstructor(parent, LL_STRING, text, NULL);
 }
 
-MenuItem::MenuItem(MenuItem * parent, lcd_line_e lcdLine) : MenuItem(parent, lcdLine, NULL, NULL) {
+MenuItem::MenuItem(MenuItem * parent, lcd_line_e lcdLine)  {
+	baseConstructor(parent, lcdLine, NULL, NULL);
 }
 
-MenuItem::MenuItem(MenuItem * parent, lcd_line_e lcdLine, const char *text, VoidCallback callback) {
+void MenuItem::baseConstructor(MenuItem * parent, lcd_line_e lcdLine, const char *text, VoidCallback callback) {
 	this->parent = parent;
 	this->lcdLine = lcdLine;
 	this->text = text;

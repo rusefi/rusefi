@@ -18,6 +18,7 @@
 // size of buffers?
 class Logging {
 public:
+	void baseConstructor();
 	Logging();
 	Logging(const char *name, char *buffer, int bufferSize);
 	const char *name;
