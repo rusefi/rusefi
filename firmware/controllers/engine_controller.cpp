@@ -66,7 +66,7 @@ extern bool hasFirmwareErrorFlag;
 
 persistent_config_container_s persistentState CCM_OPTIONAL;
 
-persistent_config_s *config;
+persistent_config_s *config = &persistentState.persistentConfiguration;
 
 /**
  * todo: it really looks like these fields should become 'static', i.e. private
