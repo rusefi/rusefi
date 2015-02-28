@@ -302,8 +302,10 @@ static void testTriggerDecoder2(const char *msg, engine_type_e type, int synchPo
 	EngineTestHelper eth(type);
 	engine_configuration_s *ec = eth.ec;
 	persistent_config_s *config = eth.config;
+	engine_configuration_s * engineConfiguration = eth.engineConfiguration;
+	Engine *engine = &eth.engine;
 
-	initSpeedDensity(config);
+	initSpeedDensity(PASS_ENGINE_PARAMETER_F);
 
 	TriggerShape *t = &eth.engine.triggerShape;
 
