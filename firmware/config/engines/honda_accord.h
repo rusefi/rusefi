@@ -8,11 +8,11 @@
 #ifndef HONDA_ACCORD_H_
 #define HONDA_ACCORD_H_
 
-#include "engine_configuration.h"
+#include "engine.h"
 
 void setFrankenso_01_LCD(board_configuration_s *boardConfiguration);
-void setHondaAccordConfigurationTwoWires(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration);
-void setHondaAccordConfigurationThreeWires(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration);
-void setHondaAccordConfigurationDip(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration);
+void setHondaAccordConfigurationTwoWires(DECLARE_ENGINE_PARAMETER_F);
+void setHondaAccordConfigurationThreeWires(DECLARE_ENGINE_PARAMETER_F);
+void setHondaAccordConfigurationDip(DECLARE_ENGINE_PARAMETER_F);
 
 #endif /* HONDA_ACCORD_H_ */

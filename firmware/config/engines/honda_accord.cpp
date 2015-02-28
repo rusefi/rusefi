@@ -27,7 +27,11 @@ void setFrankenso_01_LCD(board_configuration_s *boardConfiguration) {
 	boardConfiguration->HD44780_db7 = GPIOB_10;
 }
 
-static void setHondaAccordConfigurationCommon(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
+EXTERN_ENGINE;
+
+static void setHondaAccordConfigurationCommon(DECLARE_ENGINE_PARAMETER_F) {
+	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
+
 	engineConfiguration->map.sensor.type = MT_DENSO183;
 	boardConfiguration->isFastAdcEnabled = true;
 
@@ -181,20 +185,20 @@ static void setHondaAccordConfigurationCommon(engine_configuration_s *engineConf
 	boardConfiguration->idleSolenoidFrequency = 500;
 }
 
-void setHondaAccordConfigurationTwoWires(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
+void setHondaAccordConfigurationTwoWires(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->engineType = HONDA_ACCORD_CD_TWO_WIRES;
 	engineConfiguration->trigger.type = TT_HONDA_ACCORD_CD_TWO_WIRES;
-	setHondaAccordConfigurationCommon(engineConfiguration, boardConfiguration);
+	setHondaAccordConfigurationCommon(PASS_ENGINE_PARAMETER_F);
 }
 
-void setHondaAccordConfigurationThreeWires(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
+void setHondaAccordConfigurationThreeWires(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->engineType = HONDA_ACCORD_CD;
 	engineConfiguration->trigger.type = TT_HONDA_ACCORD_CD;
-	setHondaAccordConfigurationCommon(engineConfiguration, boardConfiguration);
+	setHondaAccordConfigurationCommon(PASS_ENGINE_PARAMETER_F);
 }
 
-void setHondaAccordConfigurationDip(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
+void setHondaAccordConfigurationDip(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->engineType = HONDA_ACCORD_CD_DIP;
 	engineConfiguration->trigger.type = TT_HONDA_ACCORD_CD_DIP;
-	setHondaAccordConfigurationCommon(engineConfiguration, boardConfiguration);
+	setHondaAccordConfigurationCommon(PASS_ENGINE_PARAMETER_F);
 }

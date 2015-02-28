@@ -554,22 +554,22 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 	 */
 	switch (engineType) {
 	case CUSTOM_ENGINE:
-		setCustomEngineConfiguration(engineConfiguration);
+		setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_F);
 		break;
 	case ACURA_RSX:
 		setAcuraRSX(engineConfiguration);
 		break;
 #if EFI_SUPPORT_DODGE_NEON || defined(__DOXYGEN__)
 	case DODGE_NEON_1995:
-		setDodgeNeon1995EngineConfiguration(engineConfiguration);
+		setDodgeNeon1995EngineConfiguration(PASS_ENGINE_PARAMETER_F);
 		break;
 	case DODGE_NEON_2003:
-		setDodgeNeonNGCEngineConfiguration(engineConfiguration);
+		setDodgeNeonNGCEngineConfiguration(PASS_ENGINE_PARAMETER_F);
 		break;
 #endif /* EFI_SUPPORT_DODGE_NEON */
 #if EFI_SUPPORT_FORD_ASPIRE || defined(__DOXYGEN__)
 	case FORD_ASPIRE_1996:
-		setFordAspireEngineConfiguration(engineConfiguration);
+		setFordAspireEngineConfiguration(PASS_ENGINE_PARAMETER_F);
 		break;
 #endif /* EFI_SUPPORT_FORD_ASPIRE */
 #if EFI_SUPPORT_FORD_FIESTA || defined(__DOXYGEN__)
@@ -583,16 +583,16 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 		break;
 #endif
 	case HONDA_ACCORD_CD:
-		setHondaAccordConfigurationThreeWires(engineConfiguration, boardConfiguration);
+		setHondaAccordConfigurationThreeWires(PASS_ENGINE_PARAMETER_F);
 		break;
 	case HONDA_ACCORD_CD_TWO_WIRES:
-		setHondaAccordConfigurationTwoWires(engineConfiguration, boardConfiguration);
+		setHondaAccordConfigurationTwoWires(PASS_ENGINE_PARAMETER_F);
 		break;
 	case HONDA_ACCORD_CD_DIP:
-		setHondaAccordConfigurationDip(engineConfiguration, boardConfiguration);
+		setHondaAccordConfigurationDip(PASS_ENGINE_PARAMETER_F);
 		break;
 	case MITSU_4G93:
-		setMitsubishiConfiguration(engineConfiguration, boardConfiguration);
+		setMitsubishiConfiguration(PASS_ENGINE_PARAMETER_F);
 		break;
 #if EFI_SUPPORT_1995_FORD_INLINE_6 || defined(__DOXYGEN__)
 	case FORD_INLINE_6_1995:
@@ -603,13 +603,13 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 		setGy6139qmbDefaultEngineConfiguration(engineConfiguration);
 		break;
 	case MAZDA_MIATA_NB:
-		setMazdaMiataNbEngineConfiguration(engineConfiguration);
+		setMazdaMiataNbEngineConfiguration(PASS_ENGINE_PARAMETER_F);
 		break;
 	case MAZDA_323:
 		setMazda323EngineConfiguration(engineConfiguration);
 		break;
 	case MAZDA_626:
-		setMazda626EngineConfiguration(engineConfiguration);
+		setMazda626EngineConfiguration(PASS_ENGINE_PARAMETER_F);
 		break;
 	case SATURN_ION_2004:
 		setSaturnIonEngineConfiguration(engineConfiguration);
@@ -618,31 +618,31 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 		setMiniCooperR50(engineConfiguration);
 		break;
 	case FORD_ESCORT_GT:
-		setFordEscortGt(engineConfiguration);
+		setFordEscortGt(PASS_ENGINE_PARAMETER_F);
 		break;
 	case MIATA_1990:
-		setMiata1990(engineConfiguration);
+		setMiata1990(PASS_ENGINE_PARAMETER_F);
 		break;
 	case MIATA_1994_DEVIATOR:
-		setMiata1994_d(engineConfiguration);
+		setMiata1994_d(PASS_ENGINE_PARAMETER_F);
 		break;
 	case MIATA_1994_SPAGS:
-		setMiata1994_s(engineConfiguration);
+		setMiata1994_s(PASS_ENGINE_PARAMETER_F);
 		break;
 	case MIATA_1996:
-		setMiata1996(engineConfiguration);
+		setMiata1996(PASS_ENGINE_PARAMETER_F);
 		break;
 	case CITROEN_TU3JP:
-		setCitroenBerlingoTU3JPConfiguration(config);
+		setCitroenBerlingoTU3JPConfiguration(PASS_ENGINE_PARAMETER_F);
 		break;
 	case ROVER_V8:
-		setRoverv8(engineConfiguration);
+		setRoverv8(PASS_ENGINE_PARAMETER_F);
 		break;
 	case SUBARU_2003_WRX:
 		setSubaru2003Wrx(engineConfiguration);
 		break;
 	case BMW_E34:
-		setBmwE34(engineConfiguration);
+		setBmwE34(PASS_ENGINE_PARAMETER_F);
 		break;
 	case TEST_ENGINE:
 		setTestEngineConfiguration(engineConfiguration);

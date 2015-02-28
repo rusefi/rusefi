@@ -9,8 +9,8 @@
 #ifndef CONFIG_ENGINES_MAZDA_626_H_
 #define CONFIG_ENGINES_MAZDA_626_H_
 
-#include "engine_configuration.h"
+#include "engine.h"
 
-void setMazda626EngineConfiguration(engine_configuration_s *engineConfiguration);
+void setMazda626EngineConfiguration(DECLARE_ENGINE_PARAMETER_F);
 
 #endif /* CONFIG_ENGINES_MAZDA_626_H_ */

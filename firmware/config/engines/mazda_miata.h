@@ -12,12 +12,12 @@
 #ifndef MAZDA_MIATA_H_
 #define MAZDA_MIATA_H_
 
-#include "engine_configuration.h"
+#include "engine.h"
 
-void setFordEscortGt(engine_configuration_s *engineConfiguration);
-void setMiata1990(engine_configuration_s *engineConfiguration);
-void setMiata1994_d(engine_configuration_s *engineConfiguration);
-void setMiata1994_s(engine_configuration_s *engineConfiguration);
-void setMiata1996(engine_configuration_s *engineConfiguration);
+void setFordEscortGt(DECLARE_ENGINE_PARAMETER_F);
+void setMiata1990(DECLARE_ENGINE_PARAMETER_F);
+void setMiata1994_d(DECLARE_ENGINE_PARAMETER_F);
+void setMiata1994_s(DECLARE_ENGINE_PARAMETER_F);
+void setMiata1996(DECLARE_ENGINE_PARAMETER_F);
 
 #endif /* MAZDA_MIATA_H_ */

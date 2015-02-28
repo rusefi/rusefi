@@ -23,7 +23,9 @@ void setFrankenstein_01_LCD(board_configuration_s *boardConfiguration) {
 	boardConfiguration->HD44780_db7 = GPIOB_13;
 }
 
-void setRoverv8(engine_configuration_s *engineConfiguration) {
+EXTERN_ENGINE;
+
+void setRoverv8(DECLARE_ENGINE_PARAMETER_F) {
 	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);

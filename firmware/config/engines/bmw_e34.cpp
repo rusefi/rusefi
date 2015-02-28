@@ -14,7 +14,9 @@
 #include "global.h"
 #include "bmw_e34.h"
 
-void setBmwE34(engine_configuration_s *engineConfiguration) {
+EXTERN_ENGINE;
+
+void setBmwE34(DECLARE_ENGINE_PARAMETER_F) {
 	board_configuration_s * boardConfiguration = &engineConfiguration->bc;
 
 	boardConfiguration->tunerStudioThreadPeriod = 50;

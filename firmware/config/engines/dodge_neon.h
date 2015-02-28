@@ -11,11 +11,11 @@
 
 #if EFI_SUPPORT_DODGE_NEON
 
-#include "engine_configuration.h"
+#include "engine.h"
 
-void setDodgeNeon1995EngineConfiguration(engine_configuration_s *engineConfiguration);
+void setDodgeNeon1995EngineConfiguration(DECLARE_ENGINE_PARAMETER_F);
 
-void setDodgeNeonNGCEngineConfiguration(engine_configuration_s *engineConfiguration);
+void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_F);
 
 #endif /* EFI_SUPPORT_DODGE_NEON */
 

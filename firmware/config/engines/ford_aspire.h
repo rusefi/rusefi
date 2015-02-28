@@ -12,8 +12,8 @@
 #ifndef FORD_ASPIRE_H_
 #define FORD_ASPIRE_H_
 
-#include "engine_configuration.h"
+#include "engine.h"
 
-void setFordAspireEngineConfiguration(engine_configuration_s *engineConfiguration);
+void setFordAspireEngineConfiguration(DECLARE_ENGINE_PARAMETER_F);
 
 #endif /* FORD_ASPIRE_H_ */

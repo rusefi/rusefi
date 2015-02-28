@@ -11,7 +11,9 @@
 #include "honda_accord.h"
 #include "allsensors.h"
 
-void setCustomEngineConfiguration(engine_configuration_s *engineConfiguration) {
+EXTERN_ENGINE;
+
+void setCustomEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->trigger.type = TT_ONE_PLUS_ONE;
 
 	board_configuration_s * boardConfiguration = &engineConfiguration->bc;
