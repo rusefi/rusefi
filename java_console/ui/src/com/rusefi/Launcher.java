@@ -26,9 +26,10 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  *
  * @see StartupFrame
  * @see com.rusefi.ui.engine.EngineSnifferPanel
+ * @see com.rusefi.StartupFrame
  */
 public class Launcher extends FrameHelper {
-    public static final int CONSOLE_VERSION = 20150223;
+    public static final int CONSOLE_VERSION = 20150228;
     public static final boolean SHOW_STIMULATOR = true;
     public static final String TAB_INDEX = "main_tab";
     private final String port;

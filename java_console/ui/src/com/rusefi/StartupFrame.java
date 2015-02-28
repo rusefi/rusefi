@@ -3,6 +3,7 @@ package com.rusefi;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.tcp.TcpConnector;
 import com.rusefi.maintenance.FirmwareFlasher;
+import com.rusefi.maintenance.ProcessStatusWindow;
 import com.rusefi.ui.util.HorizontalLine;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.util.URLLabel;
@@ -61,15 +62,15 @@ public class StartupFrame {
         ports.addAll(Arrays.asList(SerialPortList.getPortNames()));
         ports.addAll(TcpConnector.getAvailablePorts());
 
-        JPanel startupOptions = new JPanel(new VerticalFlowLayout());
-        startupOptions.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10),
+        JPanel leftPanel = new JPanel(new VerticalFlowLayout());
+        leftPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10),
                 BorderFactory.createLineBorder(Color.darkGray)));
 
         if (!ports.isEmpty()) {
             final JPanel connectPanel = new JPanel(new FlowLayout());
             addPortSelection(ports, connectPanel);
-            startupOptions.add(connectPanel);
-            startupOptions.add(new HorizontalLine());
+            leftPanel.add(connectPanel);
+            leftPanel.add(new HorizontalLine());
         }
 
         final JButton buttonLogViewer = new JButton();
@@ -82,29 +83,34 @@ public class StartupFrame {
             }
         });
 
-        startupOptions.add(buttonLogViewer);
-        startupOptions.add(new HorizontalLine());
+        leftPanel.add(buttonLogViewer);
+        leftPanel.add(new HorizontalLine());
 
-        startupOptions.add(SimulatorHelper.createSimulatorComponent(this));
+        leftPanel.add(SimulatorHelper.createSimulatorComponent(this));
 
-        if (FirmwareFlasher.isWindows()) {
-            startupOptions.add(new HorizontalLine());
-            startupOptions.add(FirmwareFlasher.getContent());
+        if (ProcessStatusWindow.isWindows()) {
+            leftPanel.add(new HorizontalLine());
+            leftPanel.add(FirmwareFlasher.getContent());
         }
 
-        startupOptions.add(new HorizontalLine());
-        startupOptions.add(new URLLabel(LINK_TEXT, URI));
+        leftPanel.add(new HorizontalLine());
 
-        JPanel content = new JPanel(new BorderLayout());
-        content.add(startupOptions, BorderLayout.WEST);
+        JPanel rightPanel = new JPanel(new VerticalFlowLayout());
+
 
         ImageIcon logoIcon = loadIcon(LOGO);
         if (logoIcon != null) {
             JLabel logo = new JLabel(logoIcon);
             logo.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10));
-            content.add(logo, BorderLayout.EAST);
+            URLLabel.addUrlAction(logo, URLLabel.createUri(URI));
+            logo.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            rightPanel.add(logo);
         }
+        rightPanel.add(new URLLabel(LINK_TEXT, URI));
 
+        JPanel content = new JPanel(new BorderLayout());
+        content.add(leftPanel, BorderLayout.WEST);
+        content.add(rightPanel, BorderLayout.EAST);
         frame.add(content);
         frame.pack();
         frame.setVisible(true);
