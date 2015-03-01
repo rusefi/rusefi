@@ -17,6 +17,7 @@ public class FirmwareFlasher extends ProcessStatusWindow {
             IMAGE_FILE +
             " verify reset exit 0x08000000\"";
     private static final String SUCCESS_MESSAGE_TAG = "shutdown command invoked";
+    private static final String FAILED_MESSAGE_TAG = "failed";
 
     private final JButton button = new JButton("Program Firmware");
 
@@ -43,14 +44,15 @@ public class FirmwareFlasher extends ProcessStatusWindow {
             return;
         }
         StringBuffer error = executeCommand(OPEN_OCD_COMMAND);
-        if (error.toString().contains(SUCCESS_MESSAGE_TAG)) {
+        if (error.toString().contains(SUCCESS_MESSAGE_TAG) && !error.toString().contains(FAILED_MESSAGE_TAG)) {
             appendMsg("!!! Looks good!!!");
         } else {
             appendMsg("!!! FIRMWARE FLASH: DOES NOT LOOK RIGHT !!!");
         }
     }
 
-    public static Component getContent() {
-        return new FirmwareFlasher().button;
+    public JButton getButton() {
+        return button;
     }
+
 }

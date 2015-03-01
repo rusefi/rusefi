@@ -13,9 +13,11 @@ public class EraseChip extends ProcessStatusWindow {
         button.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (JOptionPane.showConfirmDialog(button, "Do you really want to reset stm32 chip?") !=
-                        JOptionPane.YES_OPTION)
+                int dialogResult = JOptionPane.showConfirmDialog(button, "Do you really want to reset stm32 chip and all settings?",
+                        "Are you sure?", JOptionPane.YES_NO_OPTION);
+                if (dialogResult != JOptionPane.YES_OPTION)
                     return;
+                showFrame();
                 submitAction(new Runnable() {
                     @Override
                     public void run() {
