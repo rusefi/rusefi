@@ -15,7 +15,6 @@ import java.awt.event.ActionListener;
  * (c) Andrey Belomutskiy
  */
 public class AnyCommand {
-    private static final int COMMAND_CONFIRMATION_TIMEOUT = 1000;
     public static final String KEY = "last_value";
     private final JTextField text = new JTextField() {
         @Override
@@ -45,7 +44,8 @@ public class AnyCommand {
                 String cmd = text.getText();
                 if (!isValidInput(text))
                     return;
-                CommandQueue.getInstance().write(cmd.toLowerCase(), COMMAND_CONFIRMATION_TIMEOUT);
+                int timeout = CommandQueue.getTimeout(cmd);
+                CommandQueue.getInstance().write(cmd.toLowerCase(), timeout);
             }
         });
         text.getDocument().addDocumentListener(new DocumentListener() {

@@ -97,6 +97,8 @@ static FastInterpolation *getDecoder(air_pressure_sensor_type_e type) {
 		return &honda3bar;
 	case MT_DODGE_NEON_2003:
 		return &dodgeNeon2003;
+	case MT_SUBY_DENSO:
+		return &subyDenso;
 	default:
 		firmwareError("Unknown MAP type: %d", type);
 		return &customMap;

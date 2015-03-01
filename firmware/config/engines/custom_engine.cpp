@@ -23,7 +23,7 @@ void setCustomEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	/**
 	 * Frankenso analog #1 PC2 ADC12 CLT
 	 * Frankenso analog #2 PC1 ADC11 IAT
-	 * Frankenso analog #3 PA0 ADC0
+	 * Frankenso analog #3 PA0 ADC0 MAP
 	 * Frankenso analog #4 PC3 ADC13 WBO / O2
 	 * Frankenso analog #5 PA2 ADC2 TPS
 	 * Frankenso analog #6 PA1 ADC1
@@ -36,8 +36,10 @@ void setCustomEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	 */
 	engineConfiguration->tpsAdcChannel = EFI_ADC_2;
 
-	boardConfiguration->adcHwChannelEnabled[4] = ADC_FAST;
-	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
+	boardConfiguration->adcHwChannelEnabled[0] = ADC_FAST;
+	engineConfiguration->map.sensor.hwChannel = EFI_ADC_0;
+
+	boardConfiguration->adcHwChannelEnabled[4] = ADC_SLOW;
 
 	engineConfiguration->cltAdcChannel = EFI_ADC_12;
 	engineConfiguration->iatAdcChannel = EFI_ADC_11;
