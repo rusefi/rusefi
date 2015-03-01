@@ -35,6 +35,10 @@ void setCustomEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	 * Frankenso analog #12 PC4 ADC14 VBatt
 	 */
 	engineConfiguration->tpsAdcChannel = EFI_ADC_2;
+
+	boardConfiguration->adcHwChannelEnabled[4] = ADC_FAST;
+	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
+
 	engineConfiguration->cltAdcChannel = EFI_ADC_12;
 	engineConfiguration->iatAdcChannel = EFI_ADC_11;
 	engineConfiguration->afr.hwChannel = EFI_ADC_13;
