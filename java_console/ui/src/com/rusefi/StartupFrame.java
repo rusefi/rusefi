@@ -91,9 +91,9 @@ public class StartupFrame {
 
         if (ProcessStatusWindow.isWindows()) {
             leftPanel.add(new HorizontalLine());
-            leftPanel.add(FirmwareFlasher.getContent());
-//            leftPanel.add(new HorizontalLine());
-//            leftPanel.add(new EraseChip().getButton());
+            leftPanel.add(new FirmwareFlasher().getButton());
+            leftPanel.add(new HorizontalLine());
+            leftPanel.add(new EraseChip().getButton());
         }
 
         JPanel rightPanel = new JPanel(new VerticalFlowLayout());
