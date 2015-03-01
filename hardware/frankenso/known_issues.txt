@@ -53,16 +53,19 @@
 52) RESOLVED IN R0.4 Add header for CAN bus with 5V and GND. see P401
 53)                  verify D9 is the same BOM item as discovery board. 
 54) RESOLVED IN R0.4 Add 5V and GND vias to proto area
-55)                  Add Top, T-1, T-2 and T-3 to PCB copper layers to more clearly identify layers to MFG
-56)                  knock1 is actually knock2 and vice versa. Need to fix net names & the pinout picture
-57)                  route unused stm32 pins (D3 PC13 etc) to unused connector pins
-58)                  cheaper battery holder - through-hole (need to find out footprint)
-59)                  remove some/all EGT - expand prototyping area?
-60)                  idle valve SMD diode?
-61)                  better test pads silkscreen: 5V, GND, 12V
-62)                  LED for cam/crank signal. we can remove cam/crank test points if we need space
-63)                  why do we have W1002 & W1003 if these are usually there? Removing them would remove one point of failure
-64)                  JP04 & JP05 are defined on the main schematics sheet. if would be better to define then on Page 8 with the rest of cam/crank stuff
+55) RESOLVED IN R0.4 Add Top, T-1, T-2 and T-3 to PCB copper layers to more clearly identify layers to MFG
+56) RESOLVED IN R0.4 knock2 is actually knock0. Need to fix net names & the pinout picture
+57) RESOLVED IN R0.4 Change C166 and C167 to 30pF instead of 20pF, to match XTAL specified 20CL. (30*30)/(30+30)+5= 20pF with 5pF stray capacitance.
+58) RESOLVED IN R0.4 add pF cap to HIP9011 knock chip to help fast transients and XTAL starting.
+59)                  FIX CLAIMED ERRORS IN SCHEMATIC ERC
+60)                  remove AC RELAY ect from harness connector net names.
+61) RESOLVED IN R0.4 add 0R jumper between 5V and 5V plane to allow power supply verification before powering the 5V devices. 
+62)                  add resistor divider or some mechanism for identifying via firmware sensing PCB revision. Perhaps to PB1 AN input 
+63)                  better test pads silkscreen: 5V, GND, 12V
+64)                  LED for cam/crank signal. we can remove cam/crank test points if we need space
+65)                  why do we have W1002 & W1003 if these are usually there? Removing them would remove one point of failure
+66)                  JP04 & JP05 are defined on the main schematics sheet. if would be better to define then on Page 8 with the rest of cam/crank stuff
+67)                  Updated silk screen notes, draws .12 amps normal, with a typical inrush of .3A. 
 
 
 For honda add-on / rewiring board

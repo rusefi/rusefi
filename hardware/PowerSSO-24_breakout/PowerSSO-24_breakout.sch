@@ -30,14 +30,13 @@ LIBS:atmel
 LIBS:contrib
 LIBS:valves
 LIBS:vnd5e025aktr
-LIBS:PowerSSO-24_breakout-cache
 EELAYER 27 0
 EELAYER END
 $Descr A 11000 8500
 encoding utf-8
 Sheet 1 1
 Title "pOWERsso-24 breakout"
-Date "4 jan 2015"
+Date "1 mar 2015"
 Rev "R0.1"
 Comp "rusEFI"
 Comment1 ""
@@ -402,48 +401,48 @@ Wire Notes Line
 Text Notes 9950 4700 0    60   ~ 0
 ALTERNATOR\n   FIELD
 Wire Notes Line
-	9050 4150 10050 4150
+	9050 5650 10050 5650
 Wire Notes Line
-	10050 4300 10050 4000
+	10050 5800 10050 5500
 Wire Notes Line
-	10100 4250 10100 4050
+	10100 5750 10100 5550
 Wire Notes Line
-	10150 4200 10150 4100
-Text Notes 9750 5800 0    60   ~ 0
+	10150 5700 10150 5600
+Text Notes 9750 4250 0    60   ~ 0
 BAT
 Wire Notes Line
-	9750 5650 9750 5700
+	9750 4100 9750 4150
 Wire Notes Line
-	9050 5650 9750 5650
+	9050 4100 9750 4100
 Wire Notes Line
-	9700 5650 9700 5700
+	9700 4100 9700 4150
 Wire Notes Line
-	9700 5700 9650 5700
+	9700 4150 9650 4150
 Wire Notes Line
-	9650 5700 9650 5850
+	9650 4150 9650 4300
 Wire Notes Line
-	9650 5850 10000 5850
+	9650 4300 10000 4300
 Wire Notes Line
-	10000 5850 10000 5700
+	10000 4300 10000 4150
 Wire Notes Line
-	10000 5700 9950 5700
+	10000 4150 9950 4150
 Wire Notes Line
-	9950 5700 9950 5650
+	9950 4150 9950 4100
 Wire Notes Line
-	9900 5650 10300 5650
+	9900 4100 10300 4100
 Wire Notes Line
-	9900 5650 9900 5700
+	9900 4100 9900 4150
 Wire Notes Line
-	9900 5700 9750 5700
+	9900 4150 9750 4150
 Wire Notes Line
-	10300 5650 10300 5750
+	10300 4100 10300 4200
 Wire Notes Line
-	10150 5750 10450 5750
+	10150 4200 10450 4200
 Wire Notes Line
-	10200 5800 10400 5800
+	10200 4250 10400 4250
 Wire Notes Line
-	10250 5850 10350 5850
-Text Notes 9650 5650 0    60   ~ 0
+	10250 4300 10350 4300
+Text Notes 9650 4100 0    60   ~ 0
 +    -
 Text Notes 6100 4500 0    60   ~ 0
 MCU GND\n\nMCU TTL\n\nMCU TTL
@@ -467,4 +466,6 @@ NoConn ~ 9650 6650
 NoConn ~ 9650 6750
 NoConn ~ 9650 6850
 NoConn ~ 9650 6950
+Text Notes 5500 3650 0    60   ~ 0
+10A PCB drive capable design \n\n5V / 10k = .5 mohms, then 3X potentail MCU on-states, so Is = 1.5mA.\n(Is is max on-state current)\n\nR101 <= .6V / .0015 = 400 ohms\nR101 >= -16V / .2A = 80 ohms
 $EndSCHEMATC

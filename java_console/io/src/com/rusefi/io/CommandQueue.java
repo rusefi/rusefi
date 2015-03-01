@@ -18,7 +18,9 @@ import java.util.concurrent.LinkedBlockingQueue;
 @SuppressWarnings("FieldCanBeLocal")
 public class CommandQueue {
     private static final String CONFIRMATION_PREFIX = "confirmation_";
-    public static final int DEFAULT_TIMEOUT = 300;
+    public static final int DEFAULT_TIMEOUT = 500;
+    private static final int COMMAND_CONFIRMATION_TIMEOUT = 1000;
+    private static final int SLOW_CONFIRMATION_TIMEOUT = 5000;
     private final Object lock = new Object();
     private String latestConfirmation;
 
@@ -42,6 +44,15 @@ public class CommandQueue {
             }
         }
     };
+
+    private static boolean isSlowCommand(String cmd) {
+        String lc = cmd.toLowerCase();
+        return lc.startsWith("set_engine_type") || lc.startsWith("writeconfig") || lc.startsWith("rewriteconfig");
+    }
+
+    public static int getTimeout(String cmd) {
+        return isSlowCommand(cmd) ? SLOW_CONFIRMATION_TIMEOUT : COMMAND_CONFIRMATION_TIMEOUT;
+    }
 
     public void addListener(CommandQueueListener listener) {
         commandListeners.add(listener);

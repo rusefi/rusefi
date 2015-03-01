@@ -88,7 +88,8 @@ public class RecentCommands {
             @Override
             public void actionPerformed(ActionEvent e) {
                 reentrant = true;
-                CommandQueue.getInstance().write(entry.command);
+                int timeout = CommandQueue.getTimeout(entry.command);
+                CommandQueue.getInstance().write(entry.command, timeout);
                 reentrant = false;
             }
         });
