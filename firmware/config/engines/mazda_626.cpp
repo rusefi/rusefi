@@ -38,6 +38,8 @@ void setMazda626EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->tpsMax = 764;
 
 	engineConfiguration->algorithm = LM_ALPHA_N;
+	setFuelLoadBin(0, 100 PASS_ENGINE_PARAMETER);
+	setTimingLoadBin(0, 100 PASS_ENGINE_PARAMETER);
 
 	// set_whole_fuel_map 9
 	setWholeFuelMap(9 PASS_ENGINE_PARAMETER);
