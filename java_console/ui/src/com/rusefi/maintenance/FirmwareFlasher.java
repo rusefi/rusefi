@@ -12,7 +12,8 @@ import java.io.*;
  */
 public class FirmwareFlasher extends ProcessStatusWindow {
     private static final String IMAGE_FILE = "rusefi.bin";
-    private static final String OPEN_OCD_COMMAND = "openocd-0.8.0.exe -f interface/stlink-v2.cfg -f board/stm32f4discovery.cfg -c \"program " +
+    static final String OPENOCD_BIN = "openocd/bin/openocd-0.8.0.exe";
+    private static final String OPEN_OCD_COMMAND = OPENOCD_BIN + " -f interface/stlink-v2.cfg -f board/stm32f4discovery.cfg -c \"program " +
             IMAGE_FILE +
             " verify reset exit 0x08000000\"";
     private static final String SUCCESS_MESSAGE_TAG = "shutdown command invoked";
@@ -25,14 +26,13 @@ public class FirmwareFlasher extends ProcessStatusWindow {
             public void actionPerformed(ActionEvent event) {
                 showFrame();
 
-                Thread openOcdThread = new Thread(new Runnable() {
+                Runnable runnable = new Runnable() {
                     @Override
                     public void run() {
                         doFlashFirmware();
                     }
-                });
-                openOcdThread.setDaemon(true);
-                openOcdThread.start();
+                };
+                submitAction(runnable);
             }
         });
     }

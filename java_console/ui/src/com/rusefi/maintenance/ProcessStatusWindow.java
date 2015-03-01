@@ -96,4 +96,10 @@ public class ProcessStatusWindow {
         }
         return error;
     }
+
+    protected void submitAction(Runnable runnable) {
+        Thread thread = new Thread(runnable, "console extProcessThread");
+        thread.setDaemon(true);
+        thread.start();
+    }
 }

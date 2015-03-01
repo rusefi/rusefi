@@ -2,6 +2,7 @@ package com.rusefi;
 
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.tcp.TcpConnector;
+import com.rusefi.maintenance.EraseChip;
 import com.rusefi.maintenance.FirmwareFlasher;
 import com.rusefi.maintenance.ProcessStatusWindow;
 import com.rusefi.ui.util.HorizontalLine;
@@ -91,12 +92,11 @@ public class StartupFrame {
         if (ProcessStatusWindow.isWindows()) {
             leftPanel.add(new HorizontalLine());
             leftPanel.add(FirmwareFlasher.getContent());
+//            leftPanel.add(new HorizontalLine());
+//            leftPanel.add(new EraseChip().getButton());
         }
 
-        leftPanel.add(new HorizontalLine());
-
         JPanel rightPanel = new JPanel(new VerticalFlowLayout());
-
 
         ImageIcon logoIcon = loadIcon(LOGO);
         if (logoIcon != null) {
