@@ -2,10 +2,8 @@ package com.rusefi.ui;
 
 import com.rusefi.core.Sensor;
 import com.rusefi.ui.util.FrameHelper;
-import com.rusefi.ui.widgets.MafCommand;
 import com.rusefi.ui.widgets.RpmCommand;
 import com.rusefi.ui.widgets.SensorGauge;
-import eu.hansolo.steelseries.gauges.Radial;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,9 +13,6 @@ import java.awt.*;
  * (c) Andrey Belomutskiy
  */
 public class GaugesPanel  {
-    private static final int ADC_MAX_VALUE = 255; // mazda ECU
-//    private static final int ADC_MAX_VALUE = 4095; // discovery board
-
     private final JPanel content = new JPanel(new BorderLayout());
 
     public static void main(String[] args) {
@@ -31,7 +26,7 @@ public class GaugesPanel  {
         JPanel box2 = new JPanel(new GridLayout(3, 5));
 
         box2.add(createControls());
-        box2.add(createRpmGauge());
+        box2.add(SensorGauge.createGauge(Sensor.RPM));
         box2.add(SensorGauge.createGauge(Sensor.MAF));
         box2.add(SensorGauge.createGauge(Sensor.CLT));
         box2.add(SensorGauge.createGauge(Sensor.IAT));
@@ -88,16 +83,5 @@ public class GaugesPanel  {
         JPanel controls = new JPanel(new GridLayout(2, 1));
         controls.add(new RpmCommand());
         return controls;
-    }
-
-    private Radial createRpmGauge() {
-        final Radial rpmGauge = SensorGauge.createRadial("RPM", "", 8000, 0);
-        RpmModel.getInstance().addListener(new RpmModel.RpmListener() {
-            public void onRpmChange(RpmModel rpm) {
-                rpmGauge.setValue(rpm.getValue());
-            }
-        });
-        rpmGauge.setMaxMeasuredValueVisible(true);
-        return rpmGauge;
     }
 }
