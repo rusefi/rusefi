@@ -2,7 +2,7 @@
  * @file	rusefi_types.h
  *
  * @date Jan 12, 2015
- * @author Andrey Belomutskiy, (c) 2012-2014
+ * @author Andrey Belomutskiy, (c) 2012-2015
  */
 #ifndef CONTROLLERS_ALGO_RUSEFI_TYPES_H_
 #define CONTROLLERS_ALGO_RUSEFI_TYPES_H_
