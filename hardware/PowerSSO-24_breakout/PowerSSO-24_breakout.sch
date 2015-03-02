@@ -30,13 +30,14 @@ LIBS:atmel
 LIBS:contrib
 LIBS:valves
 LIBS:vnd5e025aktr
+LIBS:PowerSSO-24_breakout-cache
 EELAYER 27 0
 EELAYER END
 $Descr A 11000 8500
 encoding utf-8
 Sheet 1 1
 Title "pOWERsso-24 breakout"
-Date "1 mar 2015"
+Date "2 mar 2015"
 Rev "R0.1"
 Comp "rusEFI"
 Comment1 ""
@@ -466,6 +467,6 @@ NoConn ~ 9650 6650
 NoConn ~ 9650 6750
 NoConn ~ 9650 6850
 NoConn ~ 9650 6950
-Text Notes 5500 3650 0    60   ~ 0
-10A PCB drive capable design \n\n5V / 10k = .5 mohms, then 3X potentail MCU on-states, so Is = 1.5mA.\n(Is is max on-state current)\n\nR101 <= .6V / .0015 = 400 ohms\nR101 >= -16V / .2A = 80 ohms
+Text Notes 6250 2950 0    60   ~ 0
+10A PCB drive capable design \n\n5V / 10k = .5 mohms, then 3X potentail MCU on-states, so Is = 1.5mA.\n(Is is max on-state current)\n\nR101 <= .6V / .0015 = 400 ohms\nR101 >= -16V / .2A = 80 ohms\n\nIf output P107 or P108 is not connected to a load, it's suggested to install a 22k \nohm resistor, in the unused connector. 
 $EndSCHEMATC
