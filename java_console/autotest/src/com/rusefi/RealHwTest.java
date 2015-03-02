@@ -39,7 +39,7 @@ public class RealHwTest {
         TestingUtils.isRealHardware = true;
         FileLog.MAIN.start();
         String port;
-        if (args.length == 1) {
+        if (args.length == 1 || args.length == 2) {
             port = args[0];
         } else if (args.length == 0) {
             port = IoUtil.getDefaultPort();
