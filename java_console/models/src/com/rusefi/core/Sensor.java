@@ -9,7 +9,7 @@ import java.util.ArrayList;
  *         2/11/13
  */
 public enum Sensor {
-    RPM("RPM", SensorCategory.SENSOR_INPUTS),
+    RPM("RPM", SensorCategory.SENSOR_INPUTS, "rpm", 8000),
     MAP("MAP", SensorCategory.SENSOR_INPUTS),
     MAP_RAW("MAP_RAW", SensorCategory.SENSOR_INPUTS),
     BARO("Baro", SensorCategory.SENSOR_INPUTS),

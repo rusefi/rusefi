@@ -25,7 +25,7 @@ import java.util.Hashtable;
 public class SensorGauge {
 
     public static Component createGauge(final Sensor sensor) {
-        return createGauge(sensor, null);
+        return createGauge(sensor, GaugeChangeListener.VOID);
     }
 
     private static Component createGauge(Sensor sensor, GaugeChangeListener listener) {
@@ -37,7 +37,19 @@ public class SensorGauge {
     }
 
     interface GaugeChangeListener {
-        void onChange(Sensor sensor);
+        GaugeChangeListener VOID = new GaugeChangeListener() {
+            @Override
+            public void onSensorChange(Sensor sensor) {
+            }
+        };
+
+        /**
+         * This event happens when user decides to switch the kind of gauge
+         * displayed by this control
+         *
+         * @param sensor new type
+         */
+        void onSensorChange(Sensor sensor);
     }
 
     private static void createGaugeBody(final Sensor sensor, final JPanel wrapper, final GaugeChangeListener listener) {
@@ -87,8 +99,7 @@ public class SensorGauge {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         createGaugeBody(s, wrapper, listener);
-                        if (listener != null)
-                            listener.onChange(s);
+                        listener.onSensorChange(s);
                     }
                 });
                 cmi.add(mi);
@@ -102,7 +113,7 @@ public class SensorGauge {
 
         GaugeChangeListener listener = new GaugeChangeListener() {
             @Override
-            public void onChange(Sensor sensor) {
+            public void onSensorChange(Sensor sensor) {
                 ds.onChange(sensor);
             }
         };
