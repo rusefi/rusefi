@@ -38,6 +38,7 @@ java -jar ../../java_tools/gcc_map_reader.jar > ../rusefi_ram_report.txt
 cd ..
 
 arm-none-eabi-size  --format=berkeley "build\rusefi.elf"
+arm-none-eabi-gcc -v
 
 rem file, let's program the board right away
 cd build
