@@ -10,6 +10,7 @@
 #ifndef ALTERNATORCONTROLLER_H_
 #define ALTERNATORCONTROLLER_H_
 
-void initAlternatorCtrl(void);
+#include "main.h"
+void initAlternatorCtrl(Logging *sharedLogger);
 
 #endif /* ALTERNATORCONTROLLER_H_ */
