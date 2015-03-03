@@ -4,7 +4,7 @@
  *
  * @date Apr 21, 2014
  * @author Dmitry Sidin
- * @author Andrey Belomutskiy (c) 2012-2014
+ * @author Andrey Belomutskiy, (c) 2012-2015
  */
 
 #ifndef ACC_ENRICHMENT_H_
