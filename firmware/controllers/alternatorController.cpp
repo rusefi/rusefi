@@ -27,7 +27,7 @@ static SimplePwm alternatorControl;
 static OutputPin alternatorPin;
 static Pid altPid(10, 0, 0, 10, 90);
 
-static THD_WORKING_AREA(ivThreadStack, UTILITY_THREAD_STACK_SIZE);
+static THD_WORKING_AREA(alternatorControlThreadStack, UTILITY_THREAD_STACK_SIZE);
 
 static msg_t AltCtrlThread(int param) {
 	chRegSetThreadName("AlternatorController");
@@ -57,7 +57,7 @@ void initAlternatorCtrl(Logging *sharedLogger) {
 	startSimplePwmExt(&alternatorControl, "Alternator control", boardConfiguration->alternatorControlPin,
 			&alternatorPin,
 			ALTERNATOR_VALVE_PWM_FREQUENCY, 0.1, applyPinState);
-	chThdCreateStatic(ivThreadStack, sizeof(ivThreadStack), LOWPRIO, (tfunc_t) AltCtrlThread, NULL);
+	chThdCreateStatic(alternatorControlThreadStack, sizeof(alternatorControlThreadStack), LOWPRIO, (tfunc_t) AltCtrlThread, NULL);
 
 
 	addConsoleActionF("alt_pid", setAltPid);
