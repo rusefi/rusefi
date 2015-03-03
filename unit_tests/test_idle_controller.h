@@ -3,6 +3,6 @@
 
 void testIdleController(void);
 void idleDebug(char *msg, int value);
-//bool_t isCranking(void);
+void testPidController(void);
 
 #endif

@@ -9,6 +9,7 @@
 #include "idle_controller.h"
 #include "efitime.h"
 #include "engine_test_helper.h"
+#include "pid.h"
 
 void idleDebug(const char *msg, percent_t value) {
 	printf("%s\r\n", msg);
@@ -17,6 +18,7 @@ void idleDebug(const char *msg, percent_t value) {
 static IdleValveState is;
 
 void testIdleController(void) {
+	print("******************************************* testIdleController\r\n");
 	EngineTestHelper eth(FORD_INLINE_6_1995);
 	Engine *engine = &eth.engine;
 	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
@@ -34,4 +36,13 @@ void testIdleController(void) {
 
 	time += 2000;
 	assertEquals(60.6, is.getIdle(1050, time PASS_ENGINE_PARAMETER));
+}
+
+void testPidController(void) {
+	print("******************************************* testPidController\r\n");
+	Pid pid(50, 0.5, 0, 10, 90);
+
+	assertEquals(90, pid.getValue(14, 12, 0.1));
+
+
 }
