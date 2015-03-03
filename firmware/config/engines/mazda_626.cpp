@@ -27,6 +27,8 @@ void setMazda626EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->analogChartMode = AC_TRIGGER;
 	engineConfiguration->analogChartFrequency = 2;
 
+	engineConfiguration->injector.flow = 330;
+
 	// set_global_trigger_offset_angle -42
 	engineConfiguration->globalTriggerAngleOffset = -42;
 
