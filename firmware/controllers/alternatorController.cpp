@@ -12,50 +12,53 @@
 #include "pwm_generator.h"
 #include "alternatorController.h"
 #include "pin_repository.h"
-#include "engine_configuration.h"
+#include "engine.h"
 #include "voltage.h"
+#include "pid.h"
 
-#if 0
+EXTERN_ENGINE
+;
 
-extern board_configuration_s *boardConfiguration;
+static Logging *logger;
 
-#define ALTERNATOR_VALVE_PWM_FREQUENCY 30000
+#define ALTERNATOR_VALVE_PWM_FREQUENCY 300
 
-static PwmConfig alternatorControl;
+static SimplePwm alternatorControl;
+static OutputPin alternatorPin;
+static Pid altPid(10, 0, 0, 10, 90);
 
 static THD_WORKING_AREA(ivThreadStack, UTILITY_THREAD_STACK_SIZE);
 
 static msg_t AltCtrlThread(int param) {
 	chRegSetThreadName("AlternatorController");
-	int alternatorDutyCycle = 500;
-	while (TRUE) {
-		chThdSleepMilliseconds(10);
+	while (true) {
+		chThdSleepMilliseconds(100);
 
-		if ( getVBatt() > 14.2 )
-			alternatorDutyCycle = alternatorDutyCycle + 1 ;
-			else
-			alternatorDutyCycle = alternatorDutyCycle - 1;
+		float result = altPid.getValue(14, getVBatt(engineConfiguration), 1);
+		scheduleMsg(logger, "alt duty: %f", result);
 
-
-		if (alternatorDutyCycle < 150 )
-			alternatorDutyCycle = 150;
-		if (alternatorDutyCycle > 950)
-			alternatorDutyCycle = 950;
-		setSimplePwmDutyCycle(&alternatorControl, 0.001 * alternatorDutyCycle);
+		alternatorControl.setSimplePwmDutyCycle(result / 100);
 	}
 #if defined __GNUC__
 	return -1;
 #endif
 }
 
-void initAlternatorCtrl() {
-	startSimplePwm(&alternatorControl, "Alternator control",
-				boardConfiguration->alternatorControlPin,
-				0.5,
-				ALTERNATOR_VALVE_PWM_FREQUENCY,
-				ALTERNATOR_SWITCH
-				);
-	chThdCreateStatic(ivThreadStack, sizeof(ivThreadStack), LOWPRIO, (tfunc_t)AltCtrlThread, NULL);
+static void setAltPid(float p) {
+	scheduleMsg(logger, "setAltPid: %f", p);
+	altPid.updateFactors(p, 0, 0);
 }
 
-#endif
+void initAlternatorCtrl(Logging *sharedLogger) {
+	logger = sharedLogger;
+	if (boardConfiguration->alternatorControlPin == GPIO_UNASSIGNED)
+		return;
+
+	startSimplePwmExt(&alternatorControl, "Alternator control", boardConfiguration->alternatorControlPin,
+			&alternatorPin,
+			ALTERNATOR_VALVE_PWM_FREQUENCY, 0.1, applyPinState);
+	chThdCreateStatic(ivThreadStack, sizeof(ivThreadStack), LOWPRIO, (tfunc_t) AltCtrlThread, NULL);
+
+
+	addConsoleActionF("alt_pid", setAltPid);
+}
