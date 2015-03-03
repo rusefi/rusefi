@@ -11,8 +11,8 @@
 #include <stdint.h>
 
 typedef struct {
-	uint64_t highBits;
-	uint32_t lowBits;
+	volatile uint64_t highBits;
+	volatile uint32_t lowBits;
 } State64;
 
 void updateAndSet(State64 *state, uint32_t value);
