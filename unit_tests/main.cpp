@@ -145,6 +145,8 @@ int main(void) {
 	testMafLookup();
 	testMafFuelMath();
 
+	testPidController();
+
 	//	resizeMap();
 	printf("Success 20150213\r\n");
 	return EXIT_SUCCESS;
