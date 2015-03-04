@@ -86,6 +86,8 @@ template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE>
 Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE>::Map3D() {
 	initialized = 0;
 	memset(&pointers, 0, sizeof(pointers));
+	loadBins = NULL;
+	rpmBins = NULL;
 }
 
 template<int RPM_BIN_SIZE, int LOAD_BIN_SIZE>
