@@ -110,14 +110,25 @@ void initErrorHandling(void) {
 extern VTList vtlist;
 extern bool_t main_loop_started;
 
-void assertVtList(void) {
-	if(!main_loop_started)
-		return;
-	VirtualTimer          *first = vtlist.vt_next;
-	VirtualTimer          *cur = first->vt_next;
+int getVtSizeEstimate(void) {
+	VirtualTimer *first = vtlist.vt_next;
+	VirtualTimer *cur = first->vt_next;
 	int c = 0;
-	while(c++ < 20 && cur != first) {
+	while (c++ < 20 && cur != first) {
 		cur = cur->vt_next;
 	}
-	efiAssertVoid(c > 3, "VT list?");
+	return c;
+}
+
+int globalVt;
+
+int allReady = 0;
+void assertVtList(void) {
+	if (!main_loop_started)
+		return;
+	globalVt = getVtSizeEstimate();
+	//efiAssertVoid(globalVt > 3, "VT list?");
+	if(globalVt <=3 ) {
+		allReady++;
+	}
 }
