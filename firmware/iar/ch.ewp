@@ -2286,6 +2286,12 @@
         <name>$PROJ_DIR$\..\controllers\math\engine_math.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\controllers\math\pid.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\controllers\math\pid.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\controllers\math\speed_density.cpp</name>
       </file>
       <file>
