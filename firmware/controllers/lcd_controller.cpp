@@ -224,6 +224,7 @@ static void showLine(lcd_line_e line) {
 	case LL_VBATT:
 		lcdPrintf("Battery %fv", getVBatt(engineConfiguration));
 		return;
+#if	EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
 	case LL_BARO:
 		if (engineConfiguration->hasBaroSensor) {
 			lcdPrintf("Baro: %f", getBaroPressure());
@@ -231,6 +232,7 @@ static void showLine(lcd_line_e line) {
 			lcdPrintf("Baro: none");
 		}
 		return;
+#endif
 	case LL_AFR:
 		if (engineConfiguration->hasAfrSensor) {
 			lcdPrintf("AFR: %f", getAfr());
@@ -265,6 +267,8 @@ static void showLine(lcd_line_e line) {
 	case LL_TRIGGER_DUTY:
 		lcdPrintf("Duty");
 		return;
+	default:
+		lcdPrintf("()");
 	}
 }
 
