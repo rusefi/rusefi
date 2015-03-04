@@ -13,6 +13,8 @@ extern "C"
 {
 #endif /* __cplusplus */
 
+int getVtSizeEstimate(void);
+
 #include "obd_error_codes.h"
 #include "efifeatures.h"
 #include "stdbool.h"
