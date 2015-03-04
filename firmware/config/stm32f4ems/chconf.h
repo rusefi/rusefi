@@ -50,7 +50,7 @@
 
 #define CHPRINTF_USE_FLOAT          	TRUE
 
-#define EFI_CLOCK_LOCKS   TRUE
+#define EFI_CLOCK_LOCKS   FALSE
 
 
 #if EFI_CLOCK_LOCKS
