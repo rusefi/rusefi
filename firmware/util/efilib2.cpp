@@ -33,10 +33,12 @@ void updateAndSet(State64 *state, uint32_t value) {
 	state->lowBits = value;
 }
 
+#if EFI_UNIT_TEST
 uint64_t Overflow64Counter::update(uint32_t value) {
 	updateAndSet(&state, value);
 	return state.highBits + state.lowBits;
 }
+#endif
 
 // todo: make this a macro? always inline?
 uint64_t Overflow64Counter::get() {
