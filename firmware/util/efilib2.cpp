@@ -42,6 +42,27 @@ uint64_t Overflow64Counter::update(uint32_t value) {
 
 // todo: make this a macro? always inline?
 uint64_t Overflow64Counter::get() {
+#if EFI_PROD_CODE
+	bool alreadyLocked = lockAnyContext();
+	uint64_t localH = state.highBits;
+	uint32_t localLow = state.lowBits;
+
+	uint32_t value = GET_TIMESTAMP();
+
+	if (value < localLow) {
+		// new value less than previous value means there was an overflow in that 32 bit counter
+		localH += 0x100000000LL;
+	}
+
+	uint64_t result = localH + value;
+
+
+	if (!alreadyLocked) {
+		unlockAnyContext();
+	}
+	return result;
+#else
+
 	/**
 	 * this method is lock-free and thread-safe, that's because the 'update' method
 	 * is atomic with a critical zone requirement.
@@ -73,4 +94,5 @@ uint64_t Overflow64Counter::get() {
 	}
 
 	return localH + value;
+#endif
 }

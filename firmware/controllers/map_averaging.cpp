@@ -113,7 +113,7 @@ void mapAveragingCallback(adcsample_t adcValue) {
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#9a");
 
 
-#if EFI_ANALOG_CHART
+#if (EFI_ANALOG_CHART && EFI_ANALOG_SENSORS) || defined(__DOXYGEN__)
 	if (boardConfiguration->analogChartMode == AC_MAP)
 		if (perRevolutionCounter % FAST_MAP_CHART_SKIP_FACTOR == 0) {
 			float voltage = adcToVoltsDivided(adcValue);
@@ -199,9 +199,13 @@ float getMapVoltage(void) {
  * @return Manifold Absolute Pressure, in kPa
  */
 float getMap(void) {
+#if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
 	if (!isValidRpm(engine->rpmCalculator.rpmValue))
 		return getRawMap(); // maybe return NaN in case of stopped engine?
 	return getMapByVoltage(v_averagedMapValue);
+#else
+	return 100;
+#endif
 }
 
 void initMapAveraging(Logging *sharedLogger, Engine *engine) {
