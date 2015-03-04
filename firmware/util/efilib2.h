@@ -9,8 +9,10 @@
 #define EFILIB2_H_
 
 #include <stdint.h>
+#include "main.h"
 
 typedef struct {
+	// todo: would probably be better to keep the high bits as 32 bit field to be sure
 	volatile uint64_t highBits;
 	volatile uint32_t lowBits;
 } State64;
@@ -23,7 +25,9 @@ class Overflow64Counter
 	Overflow64Counter();
 
 	uint64_t get();
+#if EFI_UNIT_TEST
 	uint64_t update(uint32_t value);
+#endif
 
 	State64 state;
 };
