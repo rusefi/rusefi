@@ -76,7 +76,10 @@ void setBmwE34(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->clutchUpPin = GPIOD_3;
 	engineConfiguration->clutchUpPinMode = PI_PULLUP;
 
-	boardConfiguration->idleValvePin = GPIOC_13;
+	boardConfiguration->fuelPumpPin = GPIOC_13;
+
+	boardConfiguration->idleValvePin = GPIOB_10;
+	boardConfiguration->idleValvePinMode = OM_INVERTED;
 	boardConfiguration->idleSolenoidFrequency = 300;
 	// set_idle_pwm 50
 	boardConfiguration->idleSolenoidPwm = 0.5;
