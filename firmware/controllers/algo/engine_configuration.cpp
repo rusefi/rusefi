@@ -533,6 +533,8 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->isFastAdcEnabled = true;
 	boardConfiguration->isEngineControlEnabled = true;
 
+	boardConfiguration->isVerboseAlternator = true;
+
 	boardConfiguration->tunerStudioSerialSpeed = TS_DEFAULT_SPEED;
 }
 

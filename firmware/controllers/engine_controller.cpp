@@ -47,6 +47,7 @@
 #include "engine.h"
 #include "algo.h"
 #include "LocalVersionHolder.h"
+#include "alternatorController.h"
 
 #if HAL_USE_ADC || defined(__DOXYGEN__)
 #include "AdcConfiguration.h"
@@ -461,6 +462,10 @@ void initEngineContoller(Logging *sharedLogger, Engine *engine) {
 #endif
 
 	initMalfunctionCentral();
+
+#if EFI_ALTERNATOR_CONTROL || defined(__DOXYGEN__)
+	initAlternatorCtrl(sharedLogger);
+#endif
 
 #if EFI_ELECTRONIC_THROTTLE_BODY || defined(__DOXYGEN__)
 	initElectronicThrottle();
