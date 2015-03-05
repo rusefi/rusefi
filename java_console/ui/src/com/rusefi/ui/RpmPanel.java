@@ -1,17 +1,13 @@
 package com.rusefi.ui;
 
-import com.rusefi.core.EngineTimeListener;
 import com.rusefi.core.Sensor;
 import com.rusefi.ui.storage.Node;
 import com.rusefi.ui.widgets.*;
-import com.rusefi.io.LinkManager;
 import com.rusefi.ui.widgets.SensorGauge;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * Date: 1/7/13
@@ -43,7 +39,7 @@ public class RpmPanel {
         gauges.add(SensorGauge.createGauge(Sensor.MAF));
         gauges.add(SensorGauge.createGauge(Sensor.TPS));
 
-        startConnectionWatchDog();
+        ConnectionWatchdog.start();
 
         JPanel smallMessagePanel = new JPanel(new BorderLayout());
         MessagesPanel mp = new MessagesPanel(config);
@@ -64,30 +60,6 @@ public class RpmPanel {
         rpmPanel.add(new WarningPanel().getPanel(), BorderLayout.SOUTH);
 
         return rpmPanel;
-    }
-
-    private void startConnectionWatchDog() {
-        final Timer reconnectTimer = new Timer(10000, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                LinkManager.restart();
-            }
-        });
-        reconnectTimer.restart();
-
-        LinkManager.engineState.timeListeners.add(new EngineTimeListener() {
-            @Override
-            public void onTime(double time) {
-                /**
-                 * this timer will reconnect
-                 */
-                postponeReconnecting(reconnectTimer);
-            }
-        });
-    }
-
-    private void postponeReconnecting(Timer timer2) {
-        timer2.restart();
     }
 
     private JPanel createControls() {
