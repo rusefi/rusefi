@@ -389,6 +389,8 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->tunerStudioSerialSpeed = 9600;
 	engineConfiguration->algorithm = LM_SPEED_DENSITY;
 
+	boardConfiguration->alternatorControlPin = GPIOD_5;
+
 //	engineConfiguration->isCanEnabled = true;
 	boardConfiguration->canTxPin = GPIOB_6;
 	boardConfiguration->canRxPin = GPIOB_12;

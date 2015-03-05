@@ -35,7 +35,9 @@ static msg_t AltCtrlThread(int param) {
 		chThdSleepMilliseconds(100);
 
 		float result = altPid.getValue(14, getVBatt(engineConfiguration), 1);
-		scheduleMsg(logger, "alt duty: %f", result);
+		if (boardConfiguration->isVerboseAlternator) {
+			scheduleMsg(logger, "alt duty: %f", result);
+		}
 
 		alternatorControl.setSimplePwmDutyCycle(result / 100);
 	}
@@ -57,8 +59,8 @@ void initAlternatorCtrl(Logging *sharedLogger) {
 	startSimplePwmExt(&alternatorControl, "Alternator control", boardConfiguration->alternatorControlPin,
 			&alternatorPin,
 			ALTERNATOR_VALVE_PWM_FREQUENCY, 0.1, applyPinState);
-	chThdCreateStatic(alternatorControlThreadStack, sizeof(alternatorControlThreadStack), LOWPRIO, (tfunc_t) AltCtrlThread, NULL);
-
+	chThdCreateStatic(alternatorControlThreadStack, sizeof(alternatorControlThreadStack), LOWPRIO,
+			(tfunc_t) AltCtrlThread, NULL);
 
 	addConsoleActionF("alt_pid", setAltPid);
 }
