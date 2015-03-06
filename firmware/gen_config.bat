@@ -1,2 +1,2 @@
 
-java -jar ../java_tools/ConfigDefinition.jar . tunerstudio controllers\algo
+java -jar ../java_tools/ConfigDefinition.jar integration tunerstudio controllers\algo
