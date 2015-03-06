@@ -18,5 +18,6 @@
     <orderEntry type="module" module-name="models" />
     <orderEntry type="library" name="SteelSeries" level="project" />
     <orderEntry type="module" module-name="autotest" />
+    <orderEntry type="module" module-name="romraider" />
   </component>
 </module>

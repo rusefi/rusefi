@@ -7,11 +7,12 @@
 
     <target name="compile">
         <mkdir dir="build/classes"/>
-        <javac debug="yes" destdir="build/classes" classpath="lib/junit.jar:lib/jssc.jar:lib/SteelSeries-3.9.30.jar:lib/annotations.jar:lib/miglayout-4.0.jar:lib/surfaceplotter-2.0.1.jar">
+        <javac debug="yes" destdir="build/classes" classpath="lib/swing-layout-1.0.jar:lib/jep.jar:lib/log4j.jar:lib/junit.jar:lib/jssc.jar:lib/SteelSeries-3.9.30.jar:lib/annotations.jar:lib/miglayout-4.0.jar:lib/surfaceplotter-2.0.1.jar">
 		<src path="autotest/src"/>
 		<src path="io/src"/>
 		<src path="models/src"/>
 		<src path="ui/src"/>
+		<src path="romraider/src"/>
 	</javac>
 
 
@@ -29,6 +30,7 @@
 				<fileset dir="io/src" includes="**/test/**/*Test.java"/>
 				<fileset dir="models/src" includes="**/test/**/*Test.java"/>
 				<fileset dir="ui/src" includes="**/test/**/*Test.java"/>
+				<fileset dir="romraider/src" includes="**/test/**/*Test.java"/>
 			</batchtest>
 		</junit>
 

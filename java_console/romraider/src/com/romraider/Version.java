@@ -25,12 +25,12 @@ import javax.swing.ImageIcon;
 
 public final class Version {
     public static final String PRODUCT_NAME = "RomRaider";
-    public static final String VERSION = "0.5.8 RC 1";
+    public static final String VERSION = "0.5.8 RC 1 for rusEfi";
     public static final String BUILDNUMBER = "635";
-    public static final String SUPPORT_URL = "http://www.romraider.com";
-    public static final String ROM_REVISION_URL = "http://www.scoobypedia.co.uk/index.php/Knowledge/ECUVersionCompatibilityList";
-    public static final String ECU_DEFS_URL = "http://www.romraider.com/forum/topic360.html";
-    public static final String LOGGER_DEFS_URL = "http://www.romraider.com/forum/topic1642.html";
+    public static final String SUPPORT_URL = "http://www.rusefi.com";
+//    public static final String ROM_REVISION_URL = "http://www.scoobypedia.co.uk/index.php/Knowledge/ECUVersionCompatibilityList";
+//    public static final String ECU_DEFS_URL = "http://www.romraider.com/forum/topic360.html";
+//    public static final String LOGGER_DEFS_URL = "http://www.romraider.com/forum/topic1642.html";
     public static final String CARS_DEFS_URL = "http://www.romraider.com/forum/topic5792.html";
     public static final String RELEASE_NOTES = "release_notes.txt";
     public static final ImageIcon ABOUT_ICON = new ImageIcon(Version.class.getClass().getResource("/graphics/romraider-ico-large.gif"));
