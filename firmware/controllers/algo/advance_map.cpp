@@ -27,7 +27,7 @@
 
 EXTERN_ENGINE;
 
-static Map3D1616 advanceMap;
+static ign_Map3D_t advanceMap;
 
 float getBaseAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_S) {
 	if (cisnan(engineLoad)) {

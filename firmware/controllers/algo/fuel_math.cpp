@@ -44,10 +44,10 @@
 EXTERN_ENGINE
 ;
 
-static Map3D1616 fuelMap;
-static Map3D1616 fuelPhaseMap;
-extern Map3D1616 ve2Map;
-extern Map3D1616 afrMap;
+static fuel_Map3D_t fuelMap;
+static fuel_Map3D_t fuelPhaseMap;
+extern fuel_Map3D_t ve2Map;
+extern fuel_Map3D_t afrMap;
 
 /**
  * @return total duration of fuel injection per engine cycle, in milliseconds

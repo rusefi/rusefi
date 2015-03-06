@@ -521,7 +521,7 @@ static THD_WORKING_AREA(tsThreadStack, UTILITY_THREAD_STACK_SIZE);
 
 #if EFI_TUNER_STUDIO
 
-extern Map3D1616 veMap;
+extern fuel_Map3D_t veMap;
 
 void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_ENGINE_PARAMETER_S) {
 #if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
