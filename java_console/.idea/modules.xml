@@ -5,8 +5,8 @@
       <module fileurl="file://$PROJECT_DIR$/autotest/autotest.iml" filepath="$PROJECT_DIR$/autotest/autotest.iml" />
       <module fileurl="file://$PROJECT_DIR$/io/io.iml" filepath="$PROJECT_DIR$/io/io.iml" />
       <module fileurl="file://$PROJECT_DIR$/models/models.iml" filepath="$PROJECT_DIR$/models/models.iml" />
+      <module fileurl="file://$PROJECT_DIR$/romraider/romraider.iml" filepath="$PROJECT_DIR$/romraider/romraider.iml" />
       <module fileurl="file://$PROJECT_DIR$/ui/ui.iml" filepath="$PROJECT_DIR$/ui/ui.iml" />
     </modules>
   </component>
 </project>
-
