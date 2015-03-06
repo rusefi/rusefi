@@ -20,7 +20,7 @@
 package com.romraider;
 
 import static com.romraider.Version.RELEASE_NOTES;
-import static com.romraider.Version.ROM_REVISION_URL;
+//import static com.romraider.Version.ROM_REVISION_URL;
 import static com.romraider.Version.SUPPORT_URL;
 import static com.romraider.util.ParamChecker.checkNotNullOrEmpty;
 
@@ -308,9 +308,9 @@ public class Settings implements Serializable {
         this.windowMaximized = windowMaximized;
     }
 
-    public String getRomRevisionURL() {
-        return ROM_REVISION_URL;
-    }
+//    public String getRomRevisionURL() {
+//        return ROM_REVISION_URL;
+//    }
 
     public String getSupportURL() {
         return SUPPORT_URL;

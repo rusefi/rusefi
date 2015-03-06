@@ -19,7 +19,7 @@
 
 package com.romraider.editor.ecu;
 
-import static com.romraider.Version.ECU_DEFS_URL;
+//import static com.romraider.Version.ECU_DEFS_URL;
 import static com.romraider.Version.PRODUCT_NAME;
 import static com.romraider.Version.VERSION;
 import static javax.swing.JOptionPane.DEFAULT_OPTION;
@@ -182,7 +182,7 @@ public class ECUEditor extends AbstractFrame {
                     options,
                     options[0]);
             if (answer == 0) {
-                BrowserControl.displayURL(ECU_DEFS_URL);
+//                BrowserControl.displayURL(ECU_DEFS_URL);
             } else {
                 showMessageDialog(this,
                         "ECU definition files need to be configured before ROM images can be opened.\nMenu: ECU Definitions > ECU Definition Manager...",
@@ -298,7 +298,7 @@ public class ECUEditor extends AbstractFrame {
             infoPanel.setLayout(new GridLayout(3, 1));
             infoPanel.add(new JLabel("A newer version of this ECU revision exists. " +
                     "Please visit the following link to download the latest revision:"));
-            infoPanel.add(new URL(settings.getRomRevisionURL()));
+//            infoPanel.add(new URL(settings.getRomRevisionURL()));
 
             JCheckBox check = new JCheckBox("Always display this message", true);
             check.setHorizontalAlignment(JCheckBox.RIGHT);

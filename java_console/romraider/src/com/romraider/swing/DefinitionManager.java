@@ -106,61 +106,61 @@ public class DefinitionManager extends javax.swing.JFrame implements ActionListe
 
         btnUndo.setText("Undo");
 
-//        org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
-//        getContentPane().setLayout(layout);
-//        layout.setHorizontalGroup(
-//                layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-//                .add(layout.createSequentialGroup()
-//                        .addContainerGap()
-//                        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-//                                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 448, Short.MAX_VALUE)
-//                                .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
-//                                        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-//                                                .add(layout.createSequentialGroup()
-//                                                        .add(btnSave)
-//                                                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-//                                                        .add(btnApply)
-//                                                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-//                                                        .add(btnUndo)
-//                                                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-//                                                        .add(btnCancel))
-//                                                        .add(layout.createSequentialGroup()
-//                                                                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-//                                                                        .add(defLabel)
-//                                                                        .add(layout.createSequentialGroup()
-//                                                                                .add(btnMoveDown)
-//                                                                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-//                                                                                .add(btnMoveUp)))
-//                                                                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 80, Short.MAX_VALUE)
-//                                                                                .add(btnAddDefinition)))
-//                                                                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-//                                                                                .add(btnRemoveDefinition)))
-//                                                                                .addContainerGap())
-//                );
-//
-//        layout.linkSize(new java.awt.Component[]{btnAddDefinition, btnMoveDown, btnMoveUp, btnRemoveDefinition}, org.jdesktop.layout.GroupLayout.HORIZONTAL);
-//
-//        layout.setVerticalGroup(
-//                layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-//                .add(layout.createSequentialGroup()
-//                        .addContainerGap()
-//                        .add(defLabel)
-//                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-//                        .add(jScrollPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-//                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-//                        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-//                                .add(btnMoveUp)
-//                                .add(btnMoveDown)
-//                                .add(btnRemoveDefinition, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 23, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-//                                .add(btnAddDefinition))
-//                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-//                                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-//                                        .add(btnSave)
-//                                        .add(btnApply)
-//                                        .add(btnUndo)
-//                                        .add(btnCancel))
-//                                        .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-//                );
+        org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+                layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                .add(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 448, Short.MAX_VALUE)
+                                .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
+                                        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                                                .add(layout.createSequentialGroup()
+                                                        .add(btnSave)
+                                                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                                                        .add(btnApply)
+                                                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                                                        .add(btnUndo)
+                                                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                                                        .add(btnCancel))
+                                                        .add(layout.createSequentialGroup()
+                                                                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                                                                        .add(defLabel)
+                                                                        .add(layout.createSequentialGroup()
+                                                                                .add(btnMoveDown)
+                                                                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                                                                                .add(btnMoveUp)))
+                                                                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 80, Short.MAX_VALUE)
+                                                                                .add(btnAddDefinition)))
+                                                                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                                                                                .add(btnRemoveDefinition)))
+                                                                                .addContainerGap())
+                );
+
+        layout.linkSize(new java.awt.Component[]{btnAddDefinition, btnMoveDown, btnMoveUp, btnRemoveDefinition}, org.jdesktop.layout.GroupLayout.HORIZONTAL);
+
+        layout.setVerticalGroup(
+                layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                .add(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .add(defLabel)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(jScrollPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                                .add(btnMoveUp)
+                                .add(btnMoveDown)
+                                .add(btnRemoveDefinition, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 23, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                .add(btnAddDefinition))
+                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                                        .add(btnSave)
+                                        .add(btnApply)
+                                        .add(btnUndo)
+                                        .add(btnCancel))
+                                        .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                );
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
