@@ -22,9 +22,9 @@
 #define rpmMin 500
 #define rpmMax 8000
 
-Map3D1616 veMap;
-Map3D1616 ve2Map;
-Map3D1616 afrMap;
+fuel_Map3D_t veMap;
+fuel_Map3D_t ve2Map;
+fuel_Map3D_t afrMap;
 
 #define tpMin 0
 #define tpMax 100

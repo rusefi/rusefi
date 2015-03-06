@@ -100,7 +100,8 @@ void Map3D<RPM_BIN_SIZE, LOAD_BIN_SIZE>::setAll(float value) {
 	}
 }
 
-typedef Map3D<16, 16> Map3D1616;
+typedef Map3D<IGN_RPM_COUNT, IGN_LOAD_COUNT> ign_Map3D_t;
+typedef Map3D<FUEL_RPM_COUNT, FUEL_LOAD_COUNT> fuel_Map3D_t;
 
 void setTableBin(float array[], int size, float l, float r);
 void setTableBin2(float array[], int size, float l, float r, float precision);
