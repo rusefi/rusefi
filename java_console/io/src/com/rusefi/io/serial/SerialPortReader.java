@@ -35,8 +35,7 @@ class SerialPortReader implements SerialPortEventListener {
     private void handleRx(SerialPortEvent spe) throws SerialPortException {
         if (spe.getEventValue() > 0) {
             byte[] buffer = serialPort.readBytes(spe.getEventValue());
-            String str = new String(buffer);
-            listener.onStringArrived(str);
+            listener.onDataArrived(buffer);
             //           System.out.println("arrived [" + str + "]");
         }
     }

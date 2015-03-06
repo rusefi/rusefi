@@ -12,12 +12,12 @@ import com.rusefi.io.LinkManager;
 class SerialManager {
     public static String port;
 
-    private static boolean closed;
+//    private static boolean closed;
 
     static DataListener dataListener = new DataListener() {
-        public void onStringArrived(String string) {
+        public void onDataArrived(byte freshData[]) {
             //                jTextAreaIn.append(string);
-            LinkManager.engineState.processNewData(string);
+            LinkManager.engineState.processNewData(new String(freshData));
         }
     };
     private static LinkManager.LinkStateListener listener;
@@ -39,10 +39,10 @@ class SerialManager {
             @Override
             public void run() {
                 MessagesCentral.getInstance().postMessage(SerialManager.class, "Restarting serial IO");
-                if (closed)
-                    return;
+//                if (closed)
+//                    return;
                 PortHolder.getInstance().close();
-                boolean result = PortHolder.getInstance().openPort(port, dataListener, SerialManager.listener);
+                PortHolder.getInstance().openPort(port, dataListener, SerialManager.listener);
             }
         });
     }

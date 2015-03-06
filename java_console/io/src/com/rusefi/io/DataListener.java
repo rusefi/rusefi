@@ -5,5 +5,5 @@ package com.rusefi.io;
 *         3/3/14
 */
 public interface DataListener {
-    void onStringArrived(String string);
+    void onDataArrived(byte freshData[]);
 }
