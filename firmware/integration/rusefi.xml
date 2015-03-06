@@ -1,0 +1,34 @@
+<roms>
+  <rom>
+    <romid>
+      <xmlid>RUSEFI</xmlid>
+      <internalidaddress>0</internalidaddress>
+      <internalidstring>RUSEFI</internalidstring>
+      <ecuid>RUSEFI</ecuid>
+      <year>00</year>
+      <market>US</market>
+      <make>rusEfi</make>
+      <model>rusEfi</model>
+      <submodel>ANY</submodel>
+      <transmission>MT</transmission>
+      <memmodel>SH7055</memmodel>
+      <flashmethod>sti04</flashmethod>
+      <filesize>1kb</filesize>
+    </romid>
+    <table type="3D" name="Primary Open Loop Fueling A" storageaddress="24" sizex="2" sizey="2">
+      <scaling units="Target Boost (psia) Compensation (%)" expression="(x*100)-100" to_byte="(x+100)/100" format="0.00" fineincrement=".1" coarseincrement="1" />
+      <table type="X Axis" storageaddress="6">
+          <scaling units="uni" expression="x" to_byte="(x+100)/100" format="0.00" fineincrement=".1" coarseincrement="1" />
+      </table>
+      <table type="Y Axis" storageaddress="18">
+          <scaling units="uni" expression="x" to_byte="(x+100)/100" format="0.00" fineincrement=".1" coarseincrement="1" />
+      </table>
+    </table>
+    <table type="2D" name="CL to OL Delay" storageaddress="40" sizex="4" sizey="6">
+      <scaling units="Target Boost (psia) Compensation (%)" expression="(x*100)-100" to_byte="(x+100)/100" format="0.00" fineincrement=".1" coarseincrement="1" />
+        <table type="X Axis" storageaddress="6">
+            <scaling units="uni" expression="x" to_byte="(x+100)/100" format="0.00" fineincrement=".1" coarseincrement="1" />
+        </table>
+    </table>
+  </rom>
+</roms>
