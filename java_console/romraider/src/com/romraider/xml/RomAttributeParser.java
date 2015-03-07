@@ -196,6 +196,8 @@ public final class RomAttributeParser {
         ByteBuffer bb = ByteBuffer.wrap(input, 0, 4);
         if (endian == Settings.ENDIAN_LITTLE) {
             bb.order(ByteOrder.BIG_ENDIAN);
+        } else {
+            bb.order(ByteOrder.LITTLE_ENDIAN);
         }
         return bb.getFloat();
     }
