@@ -12,4 +12,8 @@ public class CRC {
         c.update(buf, 0, size);
         return (int) c.getValue();
     }
+
+    public static int crc32(byte[] packet) {
+        return crc32(packet, packet.length);
+    }
 }

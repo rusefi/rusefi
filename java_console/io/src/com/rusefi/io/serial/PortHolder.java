@@ -49,7 +49,7 @@ public class PortHolder {
             boolean opened = serialPort.openPort();//Open serial port
             if (!opened)
                 FileLog.MAIN.logLine("not opened!");
-            setupPort(serialPort);
+            setupPort(serialPort, BAUD_RATE);
             serialPort.addEventListener(new SerialPortReader(serialPort, listener));
         } catch (SerialPortException e) {
             FileLog.rlog("ERROR " + e.getMessage());
@@ -81,8 +81,8 @@ public class PortHolder {
         return true;
     }
 
-    public static void setupPort(SerialPort serialPort) throws SerialPortException {
-        serialPort.setParams(BAUD_RATE, 8, 1, 0);//Set params.
+    public static void setupPort(SerialPort serialPort, int baudRate) throws SerialPortException {
+        serialPort.setParams(baudRate, 8, 1, 0);//Set params.
         int mask = SerialPort.MASK_RXCHAR;
         //Set the prepared mask
         serialPort.setEventsMask(mask);
