@@ -172,10 +172,10 @@ abstract public class ByteBuffer {
         return b0 | (b1 << 8) | (b2 << 16) | (b3 << 24);
     }
 
-    public short getShort() throws EOFException {
+    public int getShort() throws EOFException {
         int b0 = get() & 255;
         int b1 = get() & 255;
-        return (short) (b0 | (b1 << 8));
+        return (b0 | (b1 << 8));
     }
 
     /**
