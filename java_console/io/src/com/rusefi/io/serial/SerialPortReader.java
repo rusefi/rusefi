@@ -11,7 +11,7 @@ import jssc.SerialPortException;
  * Date: 12/25/12
  * (c) Andrey Belomutskiy
  */
-class SerialPortReader implements SerialPortEventListener {
+public class SerialPortReader implements SerialPortEventListener {
     private SerialPort serialPort;
     private DataListener listener;
 
