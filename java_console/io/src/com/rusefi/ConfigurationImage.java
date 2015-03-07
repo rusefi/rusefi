@@ -31,4 +31,8 @@ public class ConfigurationImage {
         fos.close();
         System.out.println("Saved to " + fileName);
     }
+
+    public byte[] getContent() {
+        return content;
+    }
 }

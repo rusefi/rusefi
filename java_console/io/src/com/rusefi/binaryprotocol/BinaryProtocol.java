@@ -155,6 +155,8 @@ public class BinaryProtocol {
             }
 
 
+            System.arraycopy(response, 1, image.getContent(), offset, requestSize);
+
             offset += requestSize;
         }
         System.out.println("Got image!");
