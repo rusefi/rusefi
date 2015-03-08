@@ -7,6 +7,7 @@ import org.junit.Test;
 import static com.rusefi.ConfigurationImageDiff.findDifferences;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 /**
  * (c) Andrey Belomutskiy
@@ -22,6 +23,8 @@ public class ConfigurationImageDiffTest {
             assertNotNull(p);
             assertEquals(5, (int) p.first);
             assertEquals(15, (int) p.second);
+            p = findDifferences(new ConfigurationImage(data1), new ConfigurationImage(data2), 15);
+            assertNull(p);
         }
         {
             byte[] data1 = {1, 2, 3, 4, 5, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5, 6};
