@@ -18,11 +18,12 @@ import java.util.Arrays;
 public class BinaryProtocol {
     private static final int BLOCKING_FACTOR = 256;
     private static final byte RESPONSE_OK = 0;
+    private static final byte RESPONSE_BURN_OK = 0x04;
     private final Logger logger;
     private final SerialPort serialPort;
     private static final int BUFFER_SIZE = 10000;
-    final CircularByteBuffer cbb;
-    private boolean isBurnPendig;
+    private final CircularByteBuffer cbb;
+    private boolean isBurnPending;
 
     public BinaryProtocol(final Logger logger, SerialPort serialPort) throws SerialPortException {
         this.logger = logger;
@@ -86,12 +87,7 @@ public class BinaryProtocol {
         }
     }
 
-    public void sendQueryCommand() throws SerialPortException {
-        byte[] command = {'S'};
-        sendCrcPacket(command);
-    }
-
-    public void sendCrcPacket(byte[] command) throws SerialPortException {
+    private void sendCrcPacket(byte[] command) throws SerialPortException {
         byte[] packet = makePacket(command);
 
         logger.info("Sending " + Arrays.toString(packet));
@@ -106,7 +102,7 @@ public class BinaryProtocol {
         return (((x) >> 24) & 0xff) | (((x) << 8) & 0xff0000) | (((x) >> 8) & 0xff00) | (((x) << 24) & 0xff000000);
     }
 
-    public byte[] receivePacket() throws InterruptedException, EOFException {
+    private byte[] receivePacket() throws InterruptedException, EOFException {
         synchronized (cbb) {
             waitForBytes(2);
 
@@ -150,9 +146,8 @@ public class BinaryProtocol {
             putShort(packet, 3, swap16(offset));
             putShort(packet, 5, swap16(requestSize));
 
-            sendCrcPacket(packet);
+            byte[] response = exchange(packet);
 
-            byte[] response = receivePacket();
             if (!checkResponseCode(response, RESPONSE_OK) || response.length != requestSize + 1) {
                 logger.error("Something is wrong, retrying...");
                 continue;
@@ -166,6 +161,11 @@ public class BinaryProtocol {
         logger.info("Got image!");
     }
 
+    public byte[] exchange(byte[] packet) throws SerialPortException, InterruptedException, EOFException {
+        sendCrcPacket(packet);
+        return receivePacket();
+    }
+
     private boolean checkResponseCode(byte[] response, byte code) {
         return response != null && response.length > 0 && response[0] == code;
     }
@@ -177,7 +177,7 @@ public class BinaryProtocol {
             return;
         }
 
-        isBurnPendig = true;
+        isBurnPending = true;
 
         byte packet[] = new byte[7 + size];
         packet[0] = 'C';
@@ -188,25 +188,27 @@ public class BinaryProtocol {
         System.arraycopy(content, offset, packet, 7, size);
 
         while (true) {
-            sendCrcPacket(packet);
-
-            byte[] response = receivePacket();
-
-            if (!checkResponseCode(response, RESPONSE_OK)
-                //|| response.length != requestSize + 1
-                    ) {
+            byte[] response = exchange(packet);
+            if (!checkResponseCode(response, RESPONSE_OK) || response.length != 1) {
                 logger.error("Something is wrong, retrying...");
                 continue;
             }
-
             break;
         }
 
     }
 
-    public void burn() {
-        if (!isBurnPendig)
+    public void burn() throws InterruptedException, EOFException, SerialPortException {
+        if (!isBurnPending)
             return;
-        isBurnPendig = false;
+
+        while (true) {
+            byte[] response = exchange(new byte[]{'B'});
+            if (!checkResponseCode(response, RESPONSE_BURN_OK) || response.length != 1) {
+                continue;
+            }
+            break;
+        }
+        isBurnPending = false;
     }
 }

@@ -114,15 +114,12 @@ public class UploadChanges {
         while (offset < ci1.getSize()) {
             Pair<Integer, Integer> range = ConfigurationImageDiff.findDifferences(ci1, ci2, offset);
             if (range == null)
-                return;
-
+                break;
             logger.info("Need to patch: " + range);
             bp.writeData(ci2.getContent(), range.first, range.second - range.first, logger);
-
 
             offset = range.second;
         }
         bp.burn();
-
     }
 }
