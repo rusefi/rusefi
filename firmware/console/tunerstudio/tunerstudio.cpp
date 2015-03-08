@@ -97,7 +97,9 @@ extern persistent_config_container_s persistentState;
 
 static efitimems_t previousWriteReportMs = 0;
 
-static char crcReadBuffer[300];
+ts_channel_s tsChannel;
+
+char crcReadBuffer[300];
 extern uint8_t crcWriteBuffer[300];
 
 static int ts_serial_ready(void) {
@@ -211,19 +213,19 @@ int getTunerStudioPageSize(int pageIndex) {
 	return 0;
 }
 
-void handlePageSelectCommand(ts_response_format_e mode, uint16_t pageId) {
+void handlePageSelectCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t pageId) {
 	tsState.pageCommandCounter++;
 
 	currentPageId = pageId;
 	scheduleMsg(tsLogger, "PAGE %d", currentPageId);
-	tsSendResponse(mode, NULL, 0);
+	tsSendResponse(tsChannel, mode, NULL, 0);
 }
 
 /**
  * This command is needed to make the whole transfer a bit faster
  * @note See also handleWriteValueCommand
  */
-void handleWriteChunkCommand(ts_response_format_e mode, short offset, short count, void *content) {
+void handleWriteChunkCommand(ts_channel_s *tsChannel, ts_response_format_e mode, short offset, short count, void *content) {
 	tsState.writeChunkCommandCounter++;
 
 	scheduleMsg(tsLogger, "WRITE CHUNK m=%d p=%d o=%d s=%d", mode, currentPageId, offset, count);
@@ -243,7 +245,7 @@ void handleWriteChunkCommand(ts_response_format_e mode, short offset, short coun
 	uint8_t * addr = (uint8_t *) (getWorkingPageAddr(currentPageId) + offset);
 	memcpy(addr, content, count);
 
-	tsSendResponse(mode, NULL, 0);
+	tsSendResponse(tsChannel, mode, NULL, 0);
 	printTsStats();
 }
 
@@ -251,7 +253,7 @@ void handleWriteChunkCommand(ts_response_format_e mode, short offset, short coun
  * 'Write' command receives a single value at a given offset
  * @note Writing values one by one is pretty slow
  */
-void handleWriteValueCommand(ts_response_format_e mode, uint16_t page, uint16_t offset, uint8_t value) {
+void handleWriteValueCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t page, uint16_t offset, uint8_t value) {
 	tsState.writeValueCommandCounter++;
 
 	currentPageId = page;
@@ -283,11 +285,11 @@ void handleWriteValueCommand(ts_response_format_e mode, uint16_t page, uint16_t 
 //	scheduleMsg(logger, "va=%d", configWorkingCopy.boardConfiguration.idleValvePin);
 }
 
-static void sendErrorCode(void) {
-	tunerStudioWriteCrcPacket(TS_RESPONSE_CRC_FAILURE, NULL, 0);
+static void sendErrorCode(ts_channel_s *tsChannel) {
+	tunerStudioWriteCrcPacket(tsChannel, TS_RESPONSE_CRC_FAILURE, NULL, 0);
 }
 
-void handlePageReadCommand(ts_response_format_e mode, uint16_t pageId, uint16_t offset, uint16_t count) {
+void handlePageReadCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t pageId, uint16_t offset, uint16_t count) {
 	tsState.readPageCommandsCounter++;
 	currentPageId = pageId;
 
@@ -308,12 +310,12 @@ void handlePageReadCommand(ts_response_format_e mode, uint16_t pageId, uint16_t 
 
 	if (size < offset + count) {
 		scheduleMsg(tsLogger, "invalid offset/count %d/%d", offset, count);
-		sendErrorCode();
+		sendErrorCode(tsChannel);
 		return;
 	}
 
 	const uint8_t *addr = (const uint8_t *) (getWorkingPageAddr(currentPageId) + offset);
-	tsSendResponse(mode, addr, count);
+	tsSendResponse(tsChannel, mode, addr, count);
 #if EFI_TUNER_STUDIO_VERBOSE
 	scheduleMsg(tsLogger, "Sending %d done", count);
 #endif
@@ -329,7 +331,7 @@ void requestBurn(void) {
 /**
  * 'Burn' command is a command to commit the changes
  */
-void handleBurnCommand(ts_response_format_e mode, uint16_t page) {
+void handleBurnCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t page) {
 	efitimems_t nowMs = currentTimeMillis();
 	tsState.burnCommandCounter++;
 
@@ -346,7 +348,7 @@ void handleBurnCommand(ts_response_format_e mode, uint16_t page) {
 	memcpy(&persistentState.persistentConfiguration, &configWorkingCopy, sizeof(persistent_config_s));
 
 	requestBurn();
-	tunerStudioWriteCrcPacket(TS_RESPONSE_BURN_OK, NULL, 0);
+	tunerStudioWriteCrcPacket(tsChannel, TS_RESPONSE_BURN_OK, NULL, 0);
 	scheduleMsg(tsLogger, "BURN in %dms", currentTimeMillis() - nowMs);
 }
 
@@ -357,13 +359,14 @@ static short int pageIn;
 static bool isKnownCommand(char command) {
 	return command == TS_HELLO_COMMAND || command == TS_READ_COMMAND || command == TS_OUTPUT_COMMAND
 			|| command == TS_PAGE_COMMAND || command == TS_BURN_COMMAND || command == TS_SINGLE_WRITE_COMMAND
-			|| command == TS_LEGACY_HELLO_COMMAND || command == TS_CHUNK_WRITE_COMMAND;
+			|| command == TS_LEGACY_HELLO_COMMAND || command == TS_CHUNK_WRITE_COMMAND
+			|| command == TS_EXECUTE;
 }
 
 static uint8_t firstByte;
 static uint8_t secondByte;
 
-void runBinaryProtocolLoop(void) {
+void runBinaryProtocolLoop(ts_channel_s *tsChannel) {
 	int wasReady = false;
 	while (true) {
 		int isReady = ts_serial_ready();
@@ -380,16 +383,16 @@ void runBinaryProtocolLoop(void) {
 
 		tsState.tsCounter++;
 
-		int recieved = chSequentialStreamRead(getTsSerialDevice(), &firstByte, 1);
+		int recieved = chSequentialStreamRead(tsChannel->channel, &firstByte, 1);
 		if (recieved != 1) {
 			tunerStudioError("ERROR: no command");
 			continue;
 		}
 //		scheduleMsg(logger, "Got first=%x=[%c]", firstByte, firstByte);
-		if (handlePlainCommand(firstByte))
+		if (handlePlainCommand(tsChannel, firstByte))
 			continue;
 
-		recieved = chSequentialStreamRead(getTsSerialDevice(), &secondByte, 1);
+		recieved = chSequentialStreamRead(tsChannel->channel, &secondByte, 1);
 		if (recieved != 1) {
 			tunerStudioError("ERROR: no second");
 			continue;
@@ -401,11 +404,11 @@ void runBinaryProtocolLoop(void) {
 		if (incomingPacketSize == 0 || incomingPacketSize > (sizeof(crcReadBuffer) - CRC_WRAPPING_SIZE)) {
 			scheduleMsg(tsLogger, "TunerStudio: invalid size: %d", incomingPacketSize);
 			tunerStudioError("ERROR: CRC header size");
-			sendErrorCode();
+			sendErrorCode(tsChannel);
 			continue;
 		}
 
-		recieved = chnReadTimeout(getTsSerialDevice(), (uint8_t*)crcReadBuffer, 1, MS2ST(TS_READ_TIMEOUT));
+		recieved = chnReadTimeout(tsChannel->channel, (uint8_t*)crcReadBuffer, 1, MS2ST(TS_READ_TIMEOUT));
 		if (recieved != 1) {
 			tunerStudioError("ERROR: did not receive command");
 			continue;
@@ -414,13 +417,13 @@ void runBinaryProtocolLoop(void) {
 		char command = crcReadBuffer[0];
 		if (!isKnownCommand(command)) {
 			scheduleMsg(tsLogger, "unexpected command %x", command);
-			sendErrorCode();
+			sendErrorCode(tsChannel);
 			continue;
 		}
 
 //		scheduleMsg(logger, "TunerStudio: reading %d+4 bytes(s)", incomingPacketSize);
 
-		recieved = chnReadTimeout(getTsSerialDevice(), (uint8_t * ) (crcReadBuffer + 1),
+		recieved = chnReadTimeout(tsChannel->channel, (uint8_t * ) (crcReadBuffer + 1),
 				incomingPacketSize + CRC_VALUE_SIZE - 1, MS2ST(TS_READ_TIMEOUT));
 		int expectedSize = incomingPacketSize + CRC_VALUE_SIZE - 1;
 		if (recieved != expectedSize) {
@@ -449,7 +452,7 @@ void runBinaryProtocolLoop(void) {
 //		scheduleMsg(logger, "TunerStudio: P00-07 %x %x %x %x %x %x %x %x", crcIoBuffer[0], crcIoBuffer[1],
 //				crcIoBuffer[2], crcIoBuffer[3], crcIoBuffer[4], crcIoBuffer[5], crcIoBuffer[6], crcIoBuffer[7]);
 
-		int success = tunerStudioHandleCrcCommand(crcReadBuffer, incomingPacketSize);
+		int success = tunerStudioHandleCrcCommand(tsChannel, crcReadBuffer, incomingPacketSize);
 		if (!success)
 			print("got unexpected TunerStudio command %x:%c\r\n", command, command);
 
@@ -464,7 +467,7 @@ static msg_t tsThreadEntryPoint(void *arg) {
 	startTsPort();
 #endif
 
-	runBinaryProtocolLoop();
+	runBinaryProtocolLoop(&tsChannel);
 
 #if defined __GNUC__
 	return 0;
@@ -494,80 +497,83 @@ void tunerStudioError(const char *msg) {
  * Query with CRC takes place while re-establishing connection
  * Query without CRC takes place on TunerStudio startup
  */
-void handleQueryCommand(ts_response_format_e mode) {
+void handleQueryCommand(ts_channel_s *tsChannel, ts_response_format_e mode) {
 	tsState.queryCommandCounter++;
 #if EFI_TUNER_STUDIO_VERBOSE
 	scheduleMsg(tsLogger, "got S/H (queryCommand) mode=%d", mode);
 	printTsStats();
 #endif
-	tsSendResponse(mode, (const uint8_t *) TS_SIGNATURE, strlen(TS_SIGNATURE) + 1);
+	tsSendResponse(tsChannel, mode, (const uint8_t *) TS_SIGNATURE, strlen(TS_SIGNATURE) + 1);
 }
 
 /**
  * @brief 'Output' command sends out a snapshot of current values
  */
-void handleOutputChannelsCommand(ts_response_format_e mode) {
+void handleOutputChannelsCommand(ts_channel_s *tsChannel, ts_response_format_e mode) {
 	tsState.outputChannelsCommandCounter++;
 	// this method is invoked too often to print any debug information
-	tsSendResponse(mode, (const uint8_t *) &tsOutputChannels, sizeof(TunerStudioOutputChannels));
+	tsSendResponse(tsChannel, mode, (const uint8_t *) &tsOutputChannels, sizeof(TunerStudioOutputChannels));
 }
 
-void handleTestCommand(void) {
+void handleTestCommand(ts_channel_s *tsChannel) {
 	/**
 	 * this is NOT a standard TunerStudio command, this is my own
 	 * extension of the protocol to simplify troubleshooting
 	 */
 	tunerStudioDebug("got T (Test)");
-	tunerStudioWriteData((const uint8_t *)VCS_VERSION, sizeof(VCS_VERSION));
+	tunerStudioWriteData(tsChannel, (const uint8_t *)VCS_VERSION, sizeof(VCS_VERSION));
 	/**
 	 * Please note that this response is a magic constant used by dev console for protocol detection
 	 * @see EngineState#TS_PROTOCOL_TAG
 	 */
-	tunerStudioWriteData((const uint8_t *) " ts_p_alive\r\n", 8);
+	tunerStudioWriteData(tsChannel, (const uint8_t *) " ts_p_alive\r\n", 8);
 }
 
-static void handleExecuteCommand(char *data, int incomingPacketSize) {
-	data[incomingPacketSize] = 0;
+extern CommandHandler console_line_callback;
 
+static void handleExecuteCommand(ts_channel_s *tsChannel, char *data, int incomingPacketSize) {
+	tunerStudioWriteCrcPacket(tsChannel, TS_RESPONSE_COMMAND_OK, NULL, 0);
+	data[incomingPacketSize] = 0;
+	(console_line_callback)(data);
 }
 
 /**
  * @return true if legacy command was processed, false otherwise
  */
-bool handlePlainCommand(uint8_t command) {
+bool handlePlainCommand(ts_channel_s *tsChannel, uint8_t command) {
 	if (command == TS_HELLO_COMMAND || command == TS_HELLO_COMMAND_DEPRECATED) {
 		scheduleMsg(tsLogger, "Got naked Query command");
-		handleQueryCommand(TS_PLAIN);
+		handleQueryCommand(tsChannel, TS_PLAIN);
 		return true;
 	} else if (command == 't' || command == 'T') {
-		handleTestCommand();
+		handleTestCommand(tsChannel);
 		return true;
 	} else if (command == TS_PAGE_COMMAND) {
-		int recieved = chSequentialStreamRead(getTsSerialDevice(), (uint8_t * )&pageIn, sizeof(pageIn));
+		int recieved = chSequentialStreamRead(tsChannel->channel, (uint8_t * )&pageIn, sizeof(pageIn));
 		// todo: validate 'recieved' value
-		handlePageSelectCommand(TS_PLAIN, pageIn);
+		handlePageSelectCommand(tsChannel, TS_PLAIN, pageIn);
 		return true;
 	} else if (command == TS_BURN_COMMAND) {
 		scheduleMsg(tsLogger, "Got naked BURN");
 		uint16_t page;
-		int recieved = chSequentialStreamRead(getTsSerialDevice(), (uint8_t * )&page,
+		int recieved = chSequentialStreamRead(tsChannel->channel, (uint8_t * )&page,
 				sizeof(page));
 		if (recieved != sizeof(page)) {
 			tunerStudioError("ERROR: Not enough for plain burn");
 			return true;
 		}
-		handleBurnCommand(TS_PLAIN, page);
+		handleBurnCommand(tsChannel, TS_PLAIN, page);
 		return true;
 	} else if (command == TS_CHUNK_WRITE_COMMAND) {
 		scheduleMsg(tsLogger, "Got naked CHUNK_WRITE");
-		int recieved = chSequentialStreamRead(getTsSerialDevice(), (uint8_t * )&writeChunkRequest,
+		int recieved = chSequentialStreamRead(tsChannel->channel, (uint8_t * )&writeChunkRequest,
 				sizeof(writeChunkRequest));
 		if (recieved != sizeof(writeChunkRequest)) {
 			scheduleMsg(tsLogger, "ERROR: Not enough for plain chunk write header: %d", recieved);
 			tsState.errorCounter++;
 			return true;
 		}
-		recieved = chSequentialStreamRead(getTsSerialDevice(), (uint8_t * )&crcReadBuffer, writeChunkRequest.count);
+		recieved = chSequentialStreamRead(tsChannel->channel, (uint8_t * )&crcReadBuffer, writeChunkRequest.count);
 		if (recieved != writeChunkRequest.count) {
 			scheduleMsg(tsLogger, "ERROR: Not enough for plain chunk write content: %d while expecting %d", recieved, writeChunkRequest.count);
 			tsState.errorCounter++;
@@ -575,66 +581,66 @@ bool handlePlainCommand(uint8_t command) {
 		}
 		currentPageId = writeChunkRequest.page;
 
-		handleWriteChunkCommand(TS_PLAIN, writeChunkRequest.offset, writeChunkRequest.count, (uint8_t * )&crcWriteBuffer);
+		handleWriteChunkCommand(tsChannel, TS_PLAIN, writeChunkRequest.offset, writeChunkRequest.count, (uint8_t * )&crcReadBuffer);
 		return true;
 	} else if (command == TS_READ_COMMAND) {
 		//scheduleMsg(logger, "Got naked READ PAGE???");
-		int recieved = chSequentialStreamRead(getTsSerialDevice(), (uint8_t * )&readRequest, sizeof(readRequest));
+		int recieved = chSequentialStreamRead(tsChannel->channel, (uint8_t * )&readRequest, sizeof(readRequest));
 		if (recieved != sizeof(readRequest)) {
 			tunerStudioError("Not enough for plain read header");
 			return true;
 		}
-		handlePageReadCommand(TS_PLAIN, readRequest.page, readRequest.offset, readRequest.count);
+		handlePageReadCommand(tsChannel, TS_PLAIN, readRequest.page, readRequest.offset, readRequest.count);
 		return true;
 	} else if (command == TS_OUTPUT_COMMAND) {
 		//scheduleMsg(logger, "Got naked Channels???");
-		handleOutputChannelsCommand(TS_PLAIN);
+		handleOutputChannelsCommand(tsChannel, TS_PLAIN);
 		return true;
 	} else if (command == TS_LEGACY_HELLO_COMMAND) {
 		tunerStudioDebug("ignoring LEGACY_HELLO_COMMAND");
 		return true;
 	} else if (command == TS_COMMAND_F) {
 		tunerStudioDebug("not ignoring F");
-		tunerStudioWriteData((const uint8_t *) PROTOCOL, strlen(PROTOCOL));
+		tunerStudioWriteData(tsChannel, (const uint8_t *) PROTOCOL, strlen(PROTOCOL));
 		return true;
 	} else {
 		return false;
 	}
 }
 
-int tunerStudioHandleCrcCommand(char *data, int incomingPacketSize) {
+int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomingPacketSize) {
 	char command = data[0];
 	data++;
 	if (command == TS_HELLO_COMMAND || command == TS_HELLO_COMMAND_DEPRECATED) {
 		tunerStudioDebug("got Query command");
-		handleQueryCommand(TS_CRC);
+		handleQueryCommand(tsChannel, TS_CRC);
 	} else if (command == TS_EXECUTE) {
-		handleExecuteCommand(data, incomingPacketSize);
+		handleExecuteCommand(tsChannel, data, incomingPacketSize);
 	} else if (command == TS_OUTPUT_COMMAND) {
-		handleOutputChannelsCommand(TS_CRC);
+		handleOutputChannelsCommand(tsChannel, TS_CRC);
 	} else if (command == TS_PAGE_COMMAND) {
 		uint16_t page = *(uint16_t *) data;
-		handlePageSelectCommand(TS_CRC, page);
+		handlePageSelectCommand(tsChannel, TS_CRC, page);
 	} else if (command == TS_CHUNK_WRITE_COMMAND) {
 		currentPageId = *(uint16_t *) data;
 		uint16_t offset = *(uint16_t *) (data + 2);
 		uint16_t count = *(uint16_t *) (data + 4);
-		handleWriteChunkCommand(TS_CRC, offset, count, data + sizeof(TunerStudioWriteChunkRequest));
+		handleWriteChunkCommand(tsChannel, TS_CRC, offset, count, data + sizeof(TunerStudioWriteChunkRequest));
 	} else if (command == TS_SINGLE_WRITE_COMMAND) {
 		uint16_t page = *(uint16_t *) data;
 		uint16_t offset = *(uint16_t *) (data + 2);
 		uint8_t value = data[4];
-		handleWriteValueCommand(TS_CRC, page, offset, value);
+		handleWriteValueCommand(tsChannel, TS_CRC, page, offset, value);
 	} else if (command == TS_BURN_COMMAND) {
 		uint16_t page = *(uint16_t *) data;
-		handleBurnCommand(TS_CRC, page);
+		handleBurnCommand(tsChannel, TS_CRC, page);
 	} else if (command == TS_READ_COMMAND) {
 		uint16_t page = *(uint16_t *) data;
 		uint16_t offset = *(uint16_t *) (data + 2);
 		uint16_t count = *(uint16_t *) (data + 4);
-		handlePageReadCommand(TS_CRC, page, offset, count);
+		handlePageReadCommand(tsChannel, TS_CRC, page, offset, count);
 	} else if (command == 't' || command == 'T') {
-		handleTestCommand();
+		handleTestCommand(tsChannel);
 	} else if (command == TS_LEGACY_HELLO_COMMAND) {
 		/**
 		 * 'Q' is the query command used for compatibility with older ECUs
@@ -671,6 +677,9 @@ void startTunerStudioConnectivity(Logging *sharedLogger) {
 	addConsoleAction("tsinfo", printTsStats);
 	addConsoleAction("reset_ts", resetTs);
 	addConsoleActionI("set_ts_speed", setTsSpeed);
+
+	tsChannel.channel = getTsSerialDevice();
+//	tsChannel.writeBuffer
 
 	chThdCreateStatic(tsThreadStack, sizeof(tsThreadStack), NORMALPRIO, tsThreadEntryPoint, NULL);
 }
