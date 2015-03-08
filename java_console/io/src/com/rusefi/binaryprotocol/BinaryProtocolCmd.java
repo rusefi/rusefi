@@ -35,8 +35,7 @@ public class BinaryProtocolCmd {
 
         PortHolder.setupPort(serialPort, 38400);
         logger.info("Looks good");
-        bp.sendQueryCommand();
-        bp.receivePacket();
+        bp.exchange(new byte[]{'S'});
 
         ConfigurationImage image = new ConfigurationImage(14008);
 
