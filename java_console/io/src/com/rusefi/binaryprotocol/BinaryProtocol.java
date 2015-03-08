@@ -1,7 +1,9 @@
 package com.rusefi.binaryprotocol;
 
 import com.rusefi.ConfigurationImage;
+import com.rusefi.ConfigurationImageDiff;
 import com.rusefi.Logger;
+import com.rusefi.core.Pair;
 import com.rusefi.io.DataListener;
 import com.rusefi.io.serial.SerialPortReader;
 import etch.util.CircularByteBuffer;
@@ -25,6 +27,9 @@ public class BinaryProtocol {
     private final CircularByteBuffer cbb;
     private boolean isBurnPending;
 
+    private final Object lock = new Object();
+    private ConfigurationImage controller;
+
     public BinaryProtocol(final Logger logger, SerialPort serialPort) throws SerialPortException {
         this.logger = logger;
         this.serialPort = serialPort;
@@ -47,12 +52,22 @@ public class BinaryProtocol {
         serialPort.addEventListener(new SerialPortReader(serialPort, listener));
     }
 
-    private void waitForBytes(int count) throws InterruptedException {
-        logger.info("Waiting for " + count + " byte(s)");
-        synchronized (cbb) {
-            while (cbb.length() < count)
-                cbb.wait();
+    public void burnChanges(ConfigurationImage newVersion, Logger logger) throws InterruptedException, EOFException, SerialPortException {
+        ConfigurationImage current = getController();
+        // let's have our own copy which no one would be able to change
+        newVersion = newVersion.clone();
+        int offset = 0;
+        while (offset < current.getSize()) {
+            Pair<Integer, Integer> range = ConfigurationImageDiff.findDifferences(current, newVersion, offset);
+            if (range == null)
+                break;
+            logger.info("Need to patch: " + range);
+            writeData(newVersion.getContent(), range.first, range.second - range.first, logger);
+
+            offset = range.second;
         }
+        burn();
+        setController(newVersion);
     }
 
     /**
@@ -69,29 +84,6 @@ public class BinaryProtocol {
 
         putInt(packet, packet.length - 4, crc);
         return packet;
-    }
-
-    private static void putInt(byte[] packet, int offset, int value) {
-        int index = offset + 3;
-        for (int i = 0; i < 4; i++) {
-            packet[index--] = (byte) value;
-            value >>= 8;
-        }
-    }
-
-    private static void putShort(byte[] packet, int offset, int value) {
-        int index = offset + 1;
-        for (int i = 0; i < 2; i++) {
-            packet[index--] = (byte) value;
-            value >>= 8;
-        }
-    }
-
-    private void sendCrcPacket(byte[] command) throws SerialPortException {
-        byte[] packet = makePacket(command);
-
-        logger.info("Sending " + Arrays.toString(packet));
-        serialPort.writeBytes(packet);
     }
 
     public static int swap16(int x) {
@@ -133,7 +125,9 @@ public class BinaryProtocol {
         }
     }
 
-    public void readImage(ConfigurationImage image) throws SerialPortException, EOFException, InterruptedException {
+    public void readImage(int size) throws SerialPortException, EOFException, InterruptedException {
+        ConfigurationImage image = new ConfigurationImage(size);
+
         int offset = 0;
 
         while (offset < image.getSize()) {
@@ -159,15 +153,12 @@ public class BinaryProtocol {
             offset += requestSize;
         }
         logger.info("Got image!");
+        setController(image);
     }
 
     public byte[] exchange(byte[] packet) throws SerialPortException, InterruptedException, EOFException {
         sendCrcPacket(packet);
         return receivePacket();
-    }
-
-    private boolean checkResponseCode(byte[] response, byte code) {
-        return response != null && response.length > 0 && response[0] == code;
     }
 
     public void writeData(byte[] content, Integer offset, int size, Logger logger) throws SerialPortException, EOFException, InterruptedException {
@@ -195,7 +186,6 @@ public class BinaryProtocol {
             }
             break;
         }
-
     }
 
     public void burn() throws InterruptedException, EOFException, SerialPortException {
@@ -210,5 +200,51 @@ public class BinaryProtocol {
             break;
         }
         isBurnPending = false;
+    }
+
+    public void setController(ConfigurationImage controller) {
+        synchronized (lock) {
+            this.controller = controller.clone();
+        }
+    }
+
+    public ConfigurationImage getController() {
+        synchronized (lock) {
+            return controller.clone();
+        }
+    }
+
+    private void waitForBytes(int count) throws InterruptedException {
+        logger.info("Waiting for " + count + " byte(s)");
+        synchronized (cbb) {
+            while (cbb.length() < count)
+                cbb.wait();
+        }
+    }
+
+    private boolean checkResponseCode(byte[] response, byte code) {
+        return response != null && response.length > 0 && response[0] == code;
+    }
+
+    private static void putInt(byte[] packet, int offset, int value) {
+        int index = offset + 3;
+        for (int i = 0; i < 4; i++) {
+            packet[index--] = (byte) value;
+            value >>= 8;
+        }
+    }
+
+    private static void putShort(byte[] packet, int offset, int value) {
+        int index = offset + 1;
+        for (int i = 0; i < 2; i++) {
+            packet[index--] = (byte) value;
+            value >>= 8;
+        }
+    }
+
+    private void sendCrcPacket(byte[] command) throws SerialPortException {
+        byte[] packet = makePacket(command);
+        logger.info("Sending " + Arrays.toString(packet));
+        serialPort.writeBytes(packet);
     }
 }

@@ -1,7 +1,6 @@
 package com.rusefi;
 
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.core.Pair;
 import com.rusefi.io.serial.PortHolder;
 import com.rusefi.ui.StatusWindow;
 import jssc.SerialPort;
@@ -19,6 +18,7 @@ import java.util.concurrent.Executors;
  * 3/7/2015
  */
 public class UploadChanges {
+    public static final Logger logger = createUiLogger();
     private static final Executor EXEC = Executors.newSingleThreadExecutor();
 
     public static void main(String[] args) throws SerialPortException, InvocationTargetException, InterruptedException {
@@ -33,11 +33,7 @@ public class UploadChanges {
             public void run() {
                 try {
                     showUi(port);
-                } catch (SerialPortException e) {
-                    throw new IllegalStateException(e);
-                } catch (IOException e) {
-                    throw new IllegalStateException(e);
-                } catch (InterruptedException e) {
+                } catch (SerialPortException | IOException | InterruptedException e) {
                     throw new IllegalStateException(e);
                 }
             }
@@ -45,8 +41,6 @@ public class UploadChanges {
     }
 
     private static void showUi(String port) throws SerialPortException, IOException, InterruptedException {
-        final Logger logger = createUiLogger();
-
         SerialPort serialPort;
 
         serialPort = new SerialPort(port);
@@ -58,29 +52,27 @@ public class UploadChanges {
         logger.info("Looks good");
 
         final ConfigurationImage ci1 = ConfigurationImage.readFromFile("rus_saved.bin", logger);
+
         final ConfigurationImage ci2 = ConfigurationImage.readFromFile("rusefi_configuration.bin", logger);
 
         final BinaryProtocol bp = new BinaryProtocol(logger, serialPort);
+        bp.setController(ci1);
 
+        scheduleBurn(ci2, bp);
+    }
+
+    public static void scheduleBurn(final ConfigurationImage newVersion, final BinaryProtocol bp) {
         EXEC.execute(new Runnable() {
             @Override
             public void run() {
                 try {
-                    patch(ci1, ci2, bp, logger);
-                } catch (InterruptedException e) {
-                    logger.error("Error: " + e);
-                    throw new IllegalStateException(e);
-                } catch (EOFException e) {
-                    logger.error("Error: " + e);
-                    throw new IllegalStateException(e);
-                } catch (SerialPortException e) {
+                    bp.burnChanges(newVersion, logger);
+                } catch (InterruptedException | EOFException | SerialPortException e) {
                     logger.error("Error: " + e);
                     throw new IllegalStateException(e);
                 }
             }
         });
-
-
     }
 
     private static Logger createUiLogger() {
@@ -123,18 +115,4 @@ public class UploadChanges {
         };
     }
 
-    private static void patch(ConfigurationImage ci1, ConfigurationImage ci2, BinaryProtocol bp, Logger logger) throws InterruptedException, EOFException, SerialPortException {
-        int offset = 0;
-        while (offset < ci1.getSize()) {
-            Pair<Integer, Integer> range = ConfigurationImageDiff.findDifferences(ci1, ci2, offset);
-            if (range == null)
-                break;
-            logger.info("Need to patch: " + range);
-            bp.writeData(ci2.getContent(), range.first, range.second - range.first, logger);
-
-            offset = range.second;
-        }
-        bp.burn();
-
-    }
 }

@@ -19,22 +19,18 @@ public class ConfigurationImage {
         this.content = content;
     }
 
-
     public int getSize() {
         return content.length;
     }
 
     public byte[] getFileContent() throws IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        try {
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
             byte[] bytes = BIN_HEADER.getBytes();
             if (bytes.length != BIN_HEADER.length())
                 throw new IllegalStateException("Encoding issue");
             baos.write(bytes);
             baos.write(content);
             return baos.toByteArray();
-        } finally {
-            baos.close();
         }
     }
 
@@ -63,7 +59,22 @@ public class ConfigurationImage {
         return result == image.getContent().length ? image : null;
     }
 
+    public static byte[] extractContent(byte[] rom) {
+        if (rom.length < BIN_HEADER.length())
+            return null;
+        byte[] result = new byte[rom.length - BIN_HEADER.length()];
+        System.arraycopy(rom, BIN_HEADER.length(), result, 0, result.length);
+        return result;
+    }
+
     public byte[] getContent() {
         return content;
+    }
+
+    @SuppressWarnings("CloneDoesntCallSuperClone")
+    @Override
+    public ConfigurationImage clone() {
+        byte[] copy = content.clone();
+        return new ConfigurationImage(copy);
     }
 }

@@ -36,14 +36,17 @@ import javax.swing.JToolBar;
 import com.romraider.Settings;
 import com.romraider.editor.ecu.ECUEditor;
 import com.romraider.editor.ecu.ECUEditorManager;
+import com.romraider.maps.Rom;
 import com.romraider.util.SettingsManager;
+import com.rusefi.ConfigurationImage;
+import com.rusefi.binaryprotocol.BinaryProtocolCmd;
 
-public class ECUEditorToolBar extends JToolBar implements ActionListener {
+public class ECUEditorToolBar extends JToolBar {
 
     private static final long serialVersionUID = 7778170684606193919L;
-    private final JButton saveImage = new JButton();
+    //    private final JButton saveImage = new JButton();
     private final JButton refreshImage = new JButton();
-    private final JButton closeImage = new JButton();
+//    private final JButton closeImage = new JButton();
 
     public ECUEditorToolBar(String name) {
         super(name);
@@ -55,29 +58,40 @@ public class ECUEditorToolBar extends JToolBar implements ActionListener {
 
         this.updateIcons();
 
-        this.add(saveImage);
-        this.add(closeImage);
+//        this.add(saveImage);
+//        this.add(closeImage);
         this.add(refreshImage);
 
-        saveImage.setMaximumSize(new Dimension(50, 50));
-        saveImage.setBorder(createLineBorder(new Color(150, 150, 150), 0));
-        closeImage.setMaximumSize(new Dimension(50, 50));
-        closeImage.setBorder(createLineBorder(new Color(150, 150, 150), 0));
+        refreshImage.setToolTipText("Burn changes into controller");
+
+
+//        saveImage.setMaximumSize(new Dimension(50, 50));
+//        saveImage.setBorder(createLineBorder(new Color(150, 150, 150), 0));
+//        closeImage.setMaximumSize(new Dimension(50, 50));
+//        closeImage.setBorder(createLineBorder(new Color(150, 150, 150), 0));
         refreshImage.setMaximumSize(new Dimension(50, 50));
         refreshImage.setBorder(createLineBorder(new Color(150, 150, 150), 0));
 
         this.updateButtons();
 
-        saveImage.addActionListener(this);
-        closeImage.addActionListener(this);
-        refreshImage.addActionListener(this);
+//        saveImage.addActionListener(this);
+//        closeImage.addActionListener(this);
+        refreshImage.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Rom lastSelectedRom = ECUEditorManager.getECUEditor().getLastSelectedRom();
+                byte[] newVersion = ConfigurationImage.extractContent(lastSelectedRom.saveFile());
+                System.out.println(newVersion.length);
+                BinaryProtocolCmd.scheduleBurn(new ConfigurationImage(newVersion));
+            }
+        });
     }
 
     public void updateIcons() {
         int iconScale = getSettings().getEditorIconScale();
-        saveImage.setIcon(rescaleImageIcon(new ImageIcon(getClass().getResource("/graphics/icon-save.png")), iconScale));
+//        saveImage.setIcon(rescaleImageIcon(new ImageIcon(getClass().getResource("/graphics/icon-save.png")), iconScale));
         refreshImage.setIcon(rescaleImageIcon(new ImageIcon(getClass().getResource("/graphics/icon-refresh.png")), iconScale));
-        closeImage.setIcon(rescaleImageIcon(new ImageIcon( getClass().getResource("/graphics/icon-close.png")), iconScale));
+//        closeImage.setIcon(rescaleImageIcon(new ImageIcon( getClass().getResource("/graphics/icon-close.png")), iconScale));
         repaint();
     }
 
@@ -85,46 +99,28 @@ public class ECUEditorToolBar extends JToolBar implements ActionListener {
         int newHeight = (int) (imageIcon.getImage().getHeight(this) * (percentOfOriginal * .01));
         int newWidth = (int) (imageIcon.getImage().getWidth(this) * (percentOfOriginal * .01));
 
-        if(newHeight > 0 && newWidth > 0)
-        {
+        if (newHeight > 0 && newWidth > 0) {
             imageIcon.setImage(imageIcon.getImage().getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH));
         }
         return imageIcon;
     }
 
     public void updateButtons() {
-        String file = getEditor().getLastSelectedRomFileName();
-
-        saveImage.setToolTipText("Save " + file + " As New Image...");
-        refreshImage.setToolTipText("Refresh " + file + " from saved copy");
-        closeImage.setToolTipText("Close " + file);
-
-        if ("".equals(file)) {
-            saveImage.setEnabled(false);
-            refreshImage.setEnabled(false);
-            closeImage.setEnabled(false);
-        } else {
-            saveImage.setEnabled(true);
-            refreshImage.setEnabled(true);
-            closeImage.setEnabled(true);
-        }
-        revalidate();
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == saveImage) {
-            try {
-                ((ECUEditorMenuBar) getEditor().getJMenuBar()).saveImage();
-                getEditor().refreshUI();
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(getEditor(), new DebugPanel(ex,
-                        getSettings().getSupportURL()), "Exception", JOptionPane.ERROR_MESSAGE);
-            }
-        } else if (e.getSource() == closeImage) {
-            getEditor().closeImage();
-        } else if (e.getSource() == refreshImage) {
-        }
+//        String file = getEditor().getLastSelectedRomFileName();
+//
+////        saveImage.setToolTipText("Save " + file + " As New Image...");
+////        closeImage.setToolTipText("Close " + file);
+//
+//        if ("".equals(file)) {
+////            saveImage.setEnabled(false);
+//            refreshImage.setEnabled(false);
+//            closeImage.setEnabled(false);
+//        } else {
+//            saveImage.setEnabled(true);
+//            refreshImage.setEnabled(true);
+//            closeImage.setEnabled(true);
+//        }
+//        revalidate();
     }
 
     private Settings getSettings() {
