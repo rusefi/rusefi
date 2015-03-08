@@ -363,14 +363,7 @@ static bool isKnownCommand(char command) {
 static uint8_t firstByte;
 static uint8_t secondByte;
 
-static msg_t tsThreadEntryPoint(void *arg) {
-	(void) arg;
-	chRegSetThreadName("tunerstudio thread");
-
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
-	startTsPort();
-#endif
-
+void runBinaryProtocolLoop(void) {
 	int wasReady = false;
 	while (true) {
 		int isReady = ts_serial_ready();
@@ -461,6 +454,18 @@ static msg_t tsThreadEntryPoint(void *arg) {
 			print("got unexpected TunerStudio command %x:%c\r\n", command, command);
 
 	}
+}
+
+static msg_t tsThreadEntryPoint(void *arg) {
+	(void) arg;
+	chRegSetThreadName("tunerstudio thread");
+
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+	startTsPort();
+#endif
+
+	runBinaryProtocolLoop();
+
 #if defined __GNUC__
 	return 0;
 #endif

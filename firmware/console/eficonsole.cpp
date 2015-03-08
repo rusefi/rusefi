@@ -83,7 +83,6 @@ static void sayHello(void) {
 	printMsg(&logger, "STM32_PCLK2=%d", STM32_PCLK2);
 #endif
 
-
 	printMsg(&logger, "PORT_IDLE_THREAD_STACK_SIZE=%d", PORT_IDLE_THREAD_STACK_SIZE);
 
 	printMsg(&logger, "CH_DBG_ENABLE_ASSERTS=%d", CH_DBG_ENABLE_ASSERTS);
@@ -118,7 +117,6 @@ static void sayHello(void) {
 //	printSimpleMsg(&logger, "", );
 //	printSimpleMsg(&logger, "", );
 
-
 	/**
 	 * Time to finish output. This is needed to avoid mix-up of this methods output and console command confirmation
 	 */
@@ -136,11 +134,10 @@ static void cmd_threads(void) {
 	print("    addr    stack prio refs     state time\r\n");
 	tp = chRegFirstThread();
 	do {
-		print("%.8lx [%.8lx] %4lu %4lu %9s %lu %s\r\n", (uint32_t) tp, 0,
-				(uint32_t) tp->p_prio, (uint32_t) (tp->p_refs - 1),
-				states[tp->p_state], (uint32_t) tp->p_time, tp->p_name);
+		print("%.8lx [%.8lx] %4lu %4lu %9s %lu %s\r\n", (uint32_t) tp, 0, (uint32_t) tp->p_prio,
+				(uint32_t) (tp->p_refs - 1), states[tp->p_state], (uint32_t) tp->p_time, tp->p_name);
 		tp = chRegNextThread(tp);
-	} while (tp != NULL );
+	} while (tp != NULL);
 #endif
 }
 
@@ -149,12 +146,12 @@ static void cmd_threads(void) {
  */
 void print(const char *format, ...) {
 #if !EFI_UART_ECHO_TEST_MODE
-  if (!isConsoleReady()) {
+	if (!isConsoleReady()) {
 		return;
-  }
+	}
 	va_list ap;
 	va_start(ap, format);
-	chvprintf((BaseSequentialStream*)getConsoleChannel(), format, ap);
+	chvprintf((BaseSequentialStream*) getConsoleChannel(), format, ap);
 	va_end(ap);
 #endif /* EFI_UART_ECHO_TEST_MODE */
 }
@@ -163,7 +160,7 @@ void initializeConsole(Logging *sharedLogger) {
 	initIntermediateLoggingBuffer();
 	initConsoleLogic(sharedLogger);
 
-	startConsole(&handleConsoleLine);
+	startConsole(sharedLogger, &handleConsoleLine);
 
 	sayHello();
 	addConsoleAction("test", sayNothing);
