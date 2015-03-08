@@ -1,31 +1,18 @@
 package com.rusefi.maintenance;
 
-import com.rusefi.ui.util.FrameHelper;
-import com.rusefi.ui.util.UiUtils;
+import com.rusefi.ui.StatusWindow;
 
-import javax.swing.*;
-import java.awt.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
 public class ProcessStatusWindow {
-    protected final JTextArea log = new JTextArea();
-    private final JScrollPane messagesScroll = new JScrollPane(log, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED) {
-        @Override
-        public Dimension getPreferredSize() {
-            return new Dimension(400, 400);
-        }
-    };
-
-    public ProcessStatusWindow() {
-        log.setLineWrap(true);
-    }
-
     public static boolean isWindows() {
         return System.getProperty("os.name").toLowerCase().contains("win");
     }
+
+    protected final StatusWindow wnd = new StatusWindow();
 
     protected static boolean isRunning(Process p) {
         try {
@@ -34,24 +21,6 @@ public class ProcessStatusWindow {
         } catch (IllegalThreadStateException e) {
             return true;
         }
-    }
-
-    protected void showFrame() {
-        FrameHelper f = new FrameHelper();
-        f.getFrame().setTitle("rusEfi Firmware Flasher");
-        f.showFrame(messagesScroll, false);
-        UiUtils.centerWindow(f.getFrame());
-        log.setText(""); // let's remove stuff from previous invocation
-    }
-
-    protected void appendMsg(final String s) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                log.append(s + "\r\n");
-                UiUtils.trueLayout(log);
-            }
-        });
     }
 
     /**
@@ -68,11 +37,11 @@ public class ProcessStatusWindow {
                         String line = bis.readLine();
                         if (line == null)
                             break;
-                        appendMsg(line);
+                        wnd.appendMsg(line);
                         buffer.append(line);
                     }
                 } catch (IOException e) {
-                    appendMsg("Stream " + e);
+                    wnd.appendMsg("Stream " + e);
                 }
             }
         });
@@ -81,7 +50,7 @@ public class ProcessStatusWindow {
     }
 
     protected StringBuffer executeCommand(String command) {
-        appendMsg("Executing " + command);
+        wnd.appendMsg("Executing " + command);
         StringBuffer output = new StringBuffer();
         StringBuffer error = new StringBuffer();
         try {
@@ -90,9 +59,9 @@ public class ProcessStatusWindow {
             startStreamThread(p, p.getErrorStream(), error);
             p.waitFor();
         } catch (IOException e) {
-            appendMsg("IOError: " + e);
+            wnd.appendMsg("IOError: " + e);
         } catch (InterruptedException e) {
-            appendMsg("WaitError: " + e);
+            wnd.appendMsg("WaitError: " + e);
         }
         return error;
     }

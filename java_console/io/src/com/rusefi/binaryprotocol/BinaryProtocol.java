@@ -1,6 +1,7 @@
 package com.rusefi.binaryprotocol;
 
 import com.rusefi.ConfigurationImage;
+import com.rusefi.Logger;
 import com.rusefi.io.DataListener;
 import com.rusefi.io.serial.SerialPortReader;
 import etch.util.CircularByteBuffer;
@@ -17,21 +18,23 @@ import java.util.Arrays;
 public class BinaryProtocol {
     private static final int BLOCKING_FACTOR = 256;
     private static final byte RESPONSE_OK = 0;
+    private final Logger logger;
     private final SerialPort serialPort;
     private static final int BUFFER_SIZE = 10000;
     final CircularByteBuffer cbb;
 
-    public BinaryProtocol(SerialPort serialPort) throws SerialPortException {
+    public BinaryProtocol(final Logger logger, SerialPort serialPort) throws SerialPortException {
+        this.logger = logger;
         this.serialPort = serialPort;
 
         cbb = new CircularByteBuffer(BUFFER_SIZE);
         DataListener listener = new DataListener() {
             @Override
             public void onDataArrived(byte[] freshData) {
-                System.out.println(freshData.length + " byte(s) arrived");
+                logger.trace(freshData.length + " byte(s) arrived");
                 synchronized (cbb) {
                     if (cbb.size() - cbb.length() < freshData.length) {
-                        System.out.println("buffer overflow not expected");
+                        logger.error("buffer overflow not expected");
                         cbb.clear();
                     }
                     cbb.put(freshData);
@@ -43,7 +46,7 @@ public class BinaryProtocol {
     }
 
     private void waitForBytes(int count) throws InterruptedException {
-        System.out.println("Waiting for " + count + " byte(s)");
+        logger.info("Waiting for " + count + " byte(s)");
         synchronized (cbb) {
             while (cbb.length() < count)
                 cbb.wait();
@@ -90,7 +93,7 @@ public class BinaryProtocol {
     public void sendCrcPacket(byte[] command) throws SerialPortException {
         byte[] packet = makePacket(command);
 
-        System.out.println("Sending " + Arrays.toString(packet));
+        logger.info("Sending " + Arrays.toString(packet));
         serialPort.writeBytes(packet);
     }
 
@@ -107,7 +110,7 @@ public class BinaryProtocol {
             waitForBytes(2);
 
             int packetSize = BinaryProtocol.swap16(cbb.getShort());
-            System.out.println("Got packet size " + packetSize);
+            logger.trace("Got packet size " + packetSize);
             if (packetSize < 0 || packetSize > 300) {
                 // invalid packet size
                 return null;
@@ -124,10 +127,10 @@ public class BinaryProtocol {
 
             boolean isCrcOk = actualCrc == packetCrc;
             if (!isCrcOk) {
-                System.out.println(String.format("%x", actualCrc) + " vs " + String.format("%x", packetCrc));
+                logger.trace(String.format("%x", actualCrc) + " vs " + String.format("%x", packetCrc));
                 return null;
             }
-            System.out.println("packet " + Arrays.toString(packet) + ": crc OK");
+            logger.trace("packet " + Arrays.toString(packet) + ": crc OK");
 
             return packet;
         }
@@ -150,7 +153,7 @@ public class BinaryProtocol {
 
             byte[] response = receivePacket();
             if (response == null || response.length == 0 || response[0] != RESPONSE_OK || response.length != requestSize + 1) {
-                System.out.println("Something is wrong, retrying...");
+                logger.error("Something is wrong, retrying...");
                 continue;
             }
 
@@ -159,6 +162,6 @@ public class BinaryProtocol {
 
             offset += requestSize;
         }
-        System.out.println("Got image!");
+        logger.info("Got image!");
     }
 }
