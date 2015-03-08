@@ -30,7 +30,7 @@ typedef struct {
 } tunerstudio_counters_s;
 
 bool handlePlainCommand(uint8_t command);
-int tunerStudioHandleCrcCommand(uint8_t *data, int incomingPacketSize);
+int tunerStudioHandleCrcCommand(char *data, int incomingPacketSize);
 
 void handleTestCommand(void);
 void handleQueryCommand(ts_response_format_e mode);

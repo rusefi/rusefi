@@ -486,9 +486,17 @@ struct context {
 #define port_wait_for_interrupt()
 #endif
 
-void chDbgStackOverflowPanic(Thread *otp);
+#ifdef __cplusplus
+extern "C"
+{
+#endif /* __cplusplus */
 
+void chDbgStackOverflowPanic(Thread *otp);
 int getRemainingStack(Thread *otp);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 /**
  * @brief   Performs a context switch between two threads.

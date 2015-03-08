@@ -112,7 +112,7 @@ static bool getConsoleLine(BaseSequentialStream *chp, char *line, unsigned size)
 // todo: this is ugly as hell!
 static char consoleInput[] = "                                                                              ";
 
-void (*console_line_callback)(char *);
+CommandHandler console_line_callback;
 
 static bool is_serial_over_uart;
 
@@ -200,7 +200,7 @@ static void switchToBinaryProtocol(void) {
 	scheduleMsg(logger, "switching to binary protocol");
 }
 
-void startConsole(Logging *sharedLogger, void (*console_line_callback_p)(char *)) {
+void startConsole(Logging *sharedLogger, CommandHandler console_line_callback_p) {
 	logger = sharedLogger;
 	console_line_callback = console_line_callback_p;
 

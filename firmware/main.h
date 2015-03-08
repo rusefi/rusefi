@@ -10,6 +10,8 @@
 
 #include <math.h>
 
+#include "efilib.h"
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -17,7 +19,6 @@ extern "C"
 
 #include "global.h"
 
-#include "efilib.h"
 #include "rusefi.h"
 
 #include "efifeatures.h"
