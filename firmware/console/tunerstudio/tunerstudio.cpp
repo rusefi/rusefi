@@ -1,10 +1,50 @@
 /**
  * @file	tunerstudio.cpp
+ * @brief	Binary protocol implementation
+ *
+ * This implementation would not happen without the documentation
+ * provided by Jon Zeeff (jon@zeeff.com)
+ *
+ *
  * @brief Integration with EFI Analytics Tuner Studio software
  *
- * todo: merge this file with tunerstudio_algo.c?
+ * Tuner Studio has a really simple protocol, a minimal implementation
+ * capable of displaying current engine state on the gauges would
+ * require only two commands: queryCommand and ochGetCommand
  *
- * @date Aug 26, 2013
+ * queryCommand:
+ * 		Communication initialization command. TunerStudio sends a single byte H
+ * 		ECU response:
+ * 			One of the known ECU id strings. We are using "MShift v0.01" id string.
+ *
+ * ochGetCommand:
+ * 		Request for output channels state.TunerStudio sends a single byte O
+ * 		ECU response:
+ * 			A snapshot of output channels as described in [OutputChannels] section of the .ini file
+ * 			The length of this block is 'ochBlockSize' property of the .ini file
+ *
+ * These two commands are enough to get working gauges. In order to start configuring the ECU using
+ * tuner studio, three more commands should be implemented:
+ *
+ * todo: merge this file with tunerstudio.c?
+ *
+ *
+ * @date Oct 22, 2013
+ * @author Andrey Belomutskiy, (c) 2012-2015
+ *
+ * This file is part of rusEfi - see http://rusefi.com
+ *
+ * rusEfi is free software; you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation; either
+ * version 3 of the License, or (at your option) any later version.
+ *
+ * rusEfi is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.
+ * If not, see <http://www.gnu.org/licenses/>.
+ *
  * @author Andrey Belomutskiy, (c) 2012-2015
  *
  * This file is part of rusEfi - see http://rusefi.com
@@ -30,25 +70,17 @@
 #include "main_trigger_callback.h"
 #include "flash_main.h"
 
-#include "tunerstudio_algo.h"
+#include "tunerstudio_io.h"
 #include "tunerstudio_configuration.h"
 #include "malfunction_central.h"
 #include "console_io.h"
 #include "crc.h"
 
+#include <string.h>
+#include "engine_configuration.h"
+#include "svnversion.h"
+
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
-
-#if EFI_PROD_CODE
-#include "pin_repository.h"
-#include "usbconsole.h"
-#include "map_averaging.h"
-extern SerialUSBDriver SDU1;
-#define CONSOLE_DEVICE &SDU1
-
-#define TS_SERIAL_UART_DEVICE &SD3
-
-static SerialConfig tsSerialConfig = { 0, 0, USART_CR2_STOP1_BITS | USART_CR2_LINEN, 0 };
-#endif /* EFI_PROD_CODE */
 
 EXTERN_ENGINE
 ;
@@ -58,21 +90,6 @@ extern short currentPageId;
 // in MS, that's 10 seconds
 #define TS_READ_TIMEOUT 10000
 
-#define PROTOCOL  "001"
-
-BaseChannel * getTsSerialDevice(void) {
-#if EFI_PROD_CODE
-	if (isSerialOverUart()) {
-		// if console uses UART then TS uses USB
-		return (BaseChannel *) &SDU1;
-	} else {
-		return (BaseChannel *) TS_SERIAL_UART_DEVICE;
-	}
-#else
-	return (BaseChannel *) TS_SIMULATOR_PORT;
-#endif
-}
-
 Logging *tsLogger;
 
 extern persistent_config_s configWorkingCopy;
@@ -80,12 +97,8 @@ extern persistent_config_container_s persistentState;
 
 static efitimems_t previousWriteReportMs = 0;
 
-/**
- * we use 'blockingFactor = 256' in rusefi.ini
- * todo: should we just do (256 + CRC_WRAPPING_SIZE) ?
- */
-
-static uint8_t crcIoBuffer[300];
+static uint8_t crcReadBuffer[300];
+extern uint8_t crcWriteBuffer[300];
 
 static int ts_serial_ready(void) {
 #if EFI_PROD_CODE
@@ -145,13 +158,6 @@ void printTsStats(void) {
 static void setTsSpeed(int value) {
 	boardConfiguration->tunerStudioSerialSpeed = value;
 	printTsStats();
-}
-
-void tunerStudioWriteData(const uint8_t * buffer, int size) {
-	int transferred = chSequentialStreamWrite(getTsSerialDevice(), buffer, size);
-	if (transferred != size) {
-		scheduleMsg(tsLogger, "!!! NOT ACCEPTED %d out of %d !!!", transferred, size);
-	}
 }
 
 void tunerStudioDebug(const char *msg) {
@@ -348,77 +354,6 @@ static TunerStudioReadRequest readRequest;
 static TunerStudioWriteChunkRequest writeChunkRequest;
 static short int pageIn;
 
-/**
- * @return true if legacy command was processed, false otherwise
- */
-static bool handlePlainCommand(uint8_t command) {
-	if (command == TS_HELLO_COMMAND || command == TS_HELLO_COMMAND_DEPRECATED) {
-		scheduleMsg(tsLogger, "Got naked Query command");
-		handleQueryCommand(TS_PLAIN);
-		return true;
-	} else if (command == 't' || command == 'T') {
-		handleTestCommand();
-		return true;
-	} else if (command == TS_PAGE_COMMAND) {
-		int recieved = chSequentialStreamRead(getTsSerialDevice(), (uint8_t * )&pageIn, sizeof(pageIn));
-		// todo: validate 'recieved' value
-		handlePageSelectCommand(TS_PLAIN, pageIn);
-		return true;
-	} else if (command == TS_BURN_COMMAND) {
-		scheduleMsg(tsLogger, "Got naked BURN");
-		uint16_t page;
-		int recieved = chSequentialStreamRead(getTsSerialDevice(), (uint8_t * )&page,
-				sizeof(page));
-		if (recieved != sizeof(page)) {
-			tunerStudioError("ERROR: Not enough for plain burn");
-			return true;
-		}
-		handleBurnCommand(TS_PLAIN, page);
-		return true;
-	} else if (command == TS_CHUNK_WRITE_COMMAND) {
-		scheduleMsg(tsLogger, "Got naked CHUNK_WRITE");
-		int recieved = chSequentialStreamRead(getTsSerialDevice(), (uint8_t * )&writeChunkRequest,
-				sizeof(writeChunkRequest));
-		if (recieved != sizeof(writeChunkRequest)) {
-			scheduleMsg(tsLogger, "ERROR: Not enough for plain chunk write header: %d", recieved);
-			tsState.errorCounter++;
-			return true;
-		}
-		recieved = chSequentialStreamRead(getTsSerialDevice(), (uint8_t * )&crcIoBuffer, writeChunkRequest.count);
-		if (recieved != writeChunkRequest.count) {
-			scheduleMsg(tsLogger, "ERROR: Not enough for plain chunk write content: %d while expecting %d", recieved, writeChunkRequest.count);
-			tsState.errorCounter++;
-			return true;
-		}
-		currentPageId = writeChunkRequest.page;
-
-		handleWriteChunkCommand(TS_PLAIN, writeChunkRequest.offset, writeChunkRequest.count, (uint8_t * )&crcIoBuffer);
-		return true;
-	} else if (command == TS_READ_COMMAND) {
-		//scheduleMsg(logger, "Got naked READ PAGE???");
-		int recieved = chSequentialStreamRead(getTsSerialDevice(), (uint8_t * )&readRequest, sizeof(readRequest));
-		if (recieved != sizeof(readRequest)) {
-			tunerStudioError("Not enough for plain read header");
-			return true;
-		}
-		handlePageReadCommand(TS_PLAIN, readRequest.page, readRequest.offset, readRequest.count);
-		return true;
-	} else if (command == TS_OUTPUT_COMMAND) {
-		//scheduleMsg(logger, "Got naked Channels???");
-		handleOutputChannelsCommand(TS_PLAIN);
-		return true;
-	} else if (command == TS_LEGACY_HELLO_COMMAND) {
-		tunerStudioDebug("ignoring LEGACY_HELLO_COMMAND");
-		return true;
-	} else if (command == TS_COMMAND_F) {
-		tunerStudioDebug("not ignoring F");
-		tunerStudioWriteData((const uint8_t *) PROTOCOL, strlen(PROTOCOL));
-		return true;
-	} else {
-		return false;
-	}
-}
-
 static bool isKnownCommand(char command) {
 	return command == TS_HELLO_COMMAND || command == TS_READ_COMMAND || command == TS_OUTPUT_COMMAND
 			|| command == TS_PAGE_COMMAND || command == TS_BURN_COMMAND || command == TS_SINGLE_WRITE_COMMAND
@@ -428,32 +363,13 @@ static bool isKnownCommand(char command) {
 static uint8_t firstByte;
 static uint8_t secondByte;
 
-#define CRC_VALUE_SIZE 4
-// todo: double-check this
-#define CRC_WRAPPING_SIZE 7
-
 static msg_t tsThreadEntryPoint(void *arg) {
 	(void) arg;
 	chRegSetThreadName("tunerstudio thread");
 
-#if EFI_PROD_CODE
-	if (isSerialOverUart()) {
-		print("TunerStudio over USB serial");
-		/**
-		 * This method contains a long delay, that's the reason why this is not done on the main thread
-		 */
-		usb_serial_start();
-	} else {
-
-		print("TunerStudio over USART");
-		mySetPadMode("tunerstudio rx", TS_SERIAL_RX_PORT, TS_SERIAL_RX_PIN, PAL_MODE_ALTERNATE(TS_SERIAL_AF));
-		mySetPadMode("tunerstudio tx", TS_SERIAL_TX_PORT, TS_SERIAL_TX_PIN, PAL_MODE_ALTERNATE(TS_SERIAL_AF));
-
-		tsSerialConfig.speed = boardConfiguration->tunerStudioSerialSpeed;
-
-		sdStart(TS_SERIAL_UART_DEVICE, &tsSerialConfig);
-	}
-#endif /* EFI_PROD_CODE */
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+	startTsPort();
+#endif
 
 	int wasReady = false;
 	while (true) {
@@ -489,20 +405,20 @@ static msg_t tsThreadEntryPoint(void *arg) {
 
 		uint32_t incomingPacketSize = firstByte * 256 + secondByte;
 
-		if (incomingPacketSize == 0 || incomingPacketSize > (sizeof(crcIoBuffer) - CRC_WRAPPING_SIZE)) {
+		if (incomingPacketSize == 0 || incomingPacketSize > (sizeof(crcReadBuffer) - CRC_WRAPPING_SIZE)) {
 			scheduleMsg(tsLogger, "TunerStudio: invalid size: %d", incomingPacketSize);
 			tunerStudioError("ERROR: CRC header size");
 			sendErrorCode();
 			continue;
 		}
 
-		recieved = chnReadTimeout(getTsSerialDevice(), crcIoBuffer, 1, MS2ST(TS_READ_TIMEOUT));
+		recieved = chnReadTimeout(getTsSerialDevice(), crcReadBuffer, 1, MS2ST(TS_READ_TIMEOUT));
 		if (recieved != 1) {
 			tunerStudioError("ERROR: did not receive command");
 			continue;
 		}
 
-		char command = crcIoBuffer[0];
+		char command = crcReadBuffer[0];
 		if (!isKnownCommand(command)) {
 			scheduleMsg(tsLogger, "unexpected command %x", command);
 			sendErrorCode();
@@ -511,7 +427,7 @@ static msg_t tsThreadEntryPoint(void *arg) {
 
 //		scheduleMsg(logger, "TunerStudio: reading %d+4 bytes(s)", incomingPacketSize);
 
-		recieved = chnReadTimeout(getTsSerialDevice(), (uint8_t * ) (crcIoBuffer + 1),
+		recieved = chnReadTimeout(getTsSerialDevice(), (uint8_t * ) (crcReadBuffer + 1),
 				incomingPacketSize + CRC_VALUE_SIZE - 1, MS2ST(TS_READ_TIMEOUT));
 		int expectedSize = incomingPacketSize + CRC_VALUE_SIZE - 1;
 		if (recieved != expectedSize) {
@@ -521,17 +437,17 @@ static msg_t tsThreadEntryPoint(void *arg) {
 			continue;
 		}
 
-		uint32_t expectedCrc = *(uint32_t*) (crcIoBuffer + incomingPacketSize);
+		uint32_t expectedCrc = *(uint32_t*) (crcReadBuffer + incomingPacketSize);
 
 		expectedCrc = SWAP_UINT32(expectedCrc);
 
-		uint32_t actualCrc = crc32(crcIoBuffer, incomingPacketSize);
+		uint32_t actualCrc = crc32(crcReadBuffer, incomingPacketSize);
 		if (actualCrc != expectedCrc) {
-			scheduleMsg(tsLogger, "TunerStudio: CRC %x %x %x %x", crcIoBuffer[incomingPacketSize + 0],
-					crcIoBuffer[incomingPacketSize + 1], crcIoBuffer[incomingPacketSize + 2],
-					crcIoBuffer[incomingPacketSize + 3]);
+			scheduleMsg(tsLogger, "TunerStudio: CRC %x %x %x %x", crcReadBuffer[incomingPacketSize + 0],
+					crcReadBuffer[incomingPacketSize + 1], crcReadBuffer[incomingPacketSize + 2],
+					crcReadBuffer[incomingPacketSize + 3]);
 
-			scheduleMsg(tsLogger, "TunerStudio: command %c actual CRC %x/expected %x", crcIoBuffer[0], actualCrc,
+			scheduleMsg(tsLogger, "TunerStudio: command %c actual CRC %x/expected %x", crcReadBuffer[0], actualCrc,
 					expectedCrc);
 			tunerStudioError("ERROR: CRC issue");
 			continue;
@@ -540,7 +456,7 @@ static msg_t tsThreadEntryPoint(void *arg) {
 //		scheduleMsg(logger, "TunerStudio: P00-07 %x %x %x %x %x %x %x %x", crcIoBuffer[0], crcIoBuffer[1],
 //				crcIoBuffer[2], crcIoBuffer[3], crcIoBuffer[4], crcIoBuffer[5], crcIoBuffer[6], crcIoBuffer[7]);
 
-		int success = tunerStudioHandleCrcCommand(crcIoBuffer, incomingPacketSize);
+		int success = tunerStudioHandleCrcCommand(crcReadBuffer, incomingPacketSize);
 		if (!success)
 			print("got unexpected TunerStudio command %x:%c\r\n", command, command);
 
@@ -554,22 +470,178 @@ void syncTunerStudioCopy(void) {
 	memcpy(&configWorkingCopy, &persistentState.persistentConfiguration, sizeof(persistent_config_s));
 }
 
+tunerstudio_counters_s tsState;
+TunerStudioOutputChannels tsOutputChannels;
 /**
- * Adds size to the beginning of a packet and a crc32 at the end. Then send the packet.
+ * this is a local copy of the configuration. Any changes to this copy
+ * have no effect until this copy is explicitly propagated to the main working copy
  */
-void tunerStudioWriteCrcPacket(const uint8_t command, const void *buf, const uint16_t size) {
-	// todo: max size validation
-	*(uint16_t *) crcIoBuffer = SWAP_UINT16(size + 1);   // packet size including command
-	*(uint8_t *) (crcIoBuffer + 2) = command;
-	if (size != 0)
-		memcpy(crcIoBuffer + 3, buf, size);
-	// CRC on whole packet
-	uint32_t crc = crc32((void *) (crcIoBuffer + 2), (uint32_t) (size + 1));
-	*(uint32_t *) (crcIoBuffer + 2 + 1 + size) = SWAP_UINT32(crc);
+persistent_config_s configWorkingCopy;
 
-//	scheduleMsg(logger, "TunerStudio: CRC command %x size %d", command, size);
+short currentPageId;
 
-	tunerStudioWriteData(crcIoBuffer, size + 2 + 1 + 4);      // with size, command and CRC
+void tunerStudioError(const char *msg) {
+	tunerStudioDebug(msg);
+	tsState.errorCounter++;
+}
+
+/**
+ * Query with CRC takes place while re-establishing connection
+ * Query without CRC takes place on TunerStudio startup
+ */
+void handleQueryCommand(ts_response_format_e mode) {
+	tsState.queryCommandCounter++;
+#if EFI_TUNER_STUDIO_VERBOSE
+	scheduleMsg(tsLogger, "got S/H (queryCommand) mode=%d", mode);
+	printTsStats();
+#endif
+	tsSendResponse(mode, (const uint8_t *) TS_SIGNATURE, strlen(TS_SIGNATURE) + 1);
+}
+
+/**
+ * @brief 'Output' command sends out a snapshot of current values
+ */
+void handleOutputChannelsCommand(ts_response_format_e mode) {
+	tsState.outputChannelsCommandCounter++;
+	// this method is invoked too often to print any debug information
+	tsSendResponse(mode, (const uint8_t *) &tsOutputChannels, sizeof(TunerStudioOutputChannels));
+}
+
+void handleTestCommand(void) {
+	/**
+	 * this is NOT a standard TunerStudio command, this is my own
+	 * extension of the protocol to simplify troubleshooting
+	 */
+	tunerStudioDebug("got T (Test)");
+	tunerStudioWriteData((const uint8_t *)VCS_VERSION, sizeof(VCS_VERSION));
+	/**
+	 * Please note that this response is a magic constant used by dev console for protocol detection
+	 * @see EngineState#TS_PROTOCOL_TAG
+	 */
+	tunerStudioWriteData((const uint8_t *) " ts_p_alive\r\n", 8);
+}
+
+/**
+ * @return true if legacy command was processed, false otherwise
+ */
+bool handlePlainCommand(uint8_t command) {
+	if (command == TS_HELLO_COMMAND || command == TS_HELLO_COMMAND_DEPRECATED) {
+		scheduleMsg(tsLogger, "Got naked Query command");
+		handleQueryCommand(TS_PLAIN);
+		return true;
+	} else if (command == 't' || command == 'T') {
+		handleTestCommand();
+		return true;
+	} else if (command == TS_PAGE_COMMAND) {
+		int recieved = chSequentialStreamRead(getTsSerialDevice(), (uint8_t * )&pageIn, sizeof(pageIn));
+		// todo: validate 'recieved' value
+		handlePageSelectCommand(TS_PLAIN, pageIn);
+		return true;
+	} else if (command == TS_BURN_COMMAND) {
+		scheduleMsg(tsLogger, "Got naked BURN");
+		uint16_t page;
+		int recieved = chSequentialStreamRead(getTsSerialDevice(), (uint8_t * )&page,
+				sizeof(page));
+		if (recieved != sizeof(page)) {
+			tunerStudioError("ERROR: Not enough for plain burn");
+			return true;
+		}
+		handleBurnCommand(TS_PLAIN, page);
+		return true;
+	} else if (command == TS_CHUNK_WRITE_COMMAND) {
+		scheduleMsg(tsLogger, "Got naked CHUNK_WRITE");
+		int recieved = chSequentialStreamRead(getTsSerialDevice(), (uint8_t * )&writeChunkRequest,
+				sizeof(writeChunkRequest));
+		if (recieved != sizeof(writeChunkRequest)) {
+			scheduleMsg(tsLogger, "ERROR: Not enough for plain chunk write header: %d", recieved);
+			tsState.errorCounter++;
+			return true;
+		}
+		recieved = chSequentialStreamRead(getTsSerialDevice(), (uint8_t * )&crcReadBuffer, writeChunkRequest.count);
+		if (recieved != writeChunkRequest.count) {
+			scheduleMsg(tsLogger, "ERROR: Not enough for plain chunk write content: %d while expecting %d", recieved, writeChunkRequest.count);
+			tsState.errorCounter++;
+			return true;
+		}
+		currentPageId = writeChunkRequest.page;
+
+		handleWriteChunkCommand(TS_PLAIN, writeChunkRequest.offset, writeChunkRequest.count, (uint8_t * )&crcWriteBuffer);
+		return true;
+	} else if (command == TS_READ_COMMAND) {
+		//scheduleMsg(logger, "Got naked READ PAGE???");
+		int recieved = chSequentialStreamRead(getTsSerialDevice(), (uint8_t * )&readRequest, sizeof(readRequest));
+		if (recieved != sizeof(readRequest)) {
+			tunerStudioError("Not enough for plain read header");
+			return true;
+		}
+		handlePageReadCommand(TS_PLAIN, readRequest.page, readRequest.offset, readRequest.count);
+		return true;
+	} else if (command == TS_OUTPUT_COMMAND) {
+		//scheduleMsg(logger, "Got naked Channels???");
+		handleOutputChannelsCommand(TS_PLAIN);
+		return true;
+	} else if (command == TS_LEGACY_HELLO_COMMAND) {
+		tunerStudioDebug("ignoring LEGACY_HELLO_COMMAND");
+		return true;
+	} else if (command == TS_COMMAND_F) {
+		tunerStudioDebug("not ignoring F");
+		tunerStudioWriteData((const uint8_t *) PROTOCOL, strlen(PROTOCOL));
+		return true;
+	} else {
+		return false;
+	}
+}
+
+int tunerStudioHandleCrcCommand(uint8_t *data, int incomingPacketSize) {
+	char command = data[0];
+	data++;
+	if (command == TS_HELLO_COMMAND || command == TS_HELLO_COMMAND_DEPRECATED) {
+		tunerStudioDebug("got Query command");
+		handleQueryCommand(TS_CRC);
+	} else if (command == TS_OUTPUT_COMMAND) {
+		handleOutputChannelsCommand(TS_CRC);
+	} else if (command == TS_PAGE_COMMAND) {
+		uint16_t page = *(uint16_t *) data;
+		handlePageSelectCommand(TS_CRC, page);
+	} else if (command == TS_CHUNK_WRITE_COMMAND) {
+		currentPageId = *(uint16_t *) data;
+		uint16_t offset = *(uint16_t *) (data + 2);
+		uint16_t count = *(uint16_t *) (data + 4);
+		handleWriteChunkCommand(TS_CRC, offset, count, data + sizeof(TunerStudioWriteChunkRequest));
+	} else if (command == TS_SINGLE_WRITE_COMMAND) {
+		uint16_t page = *(uint16_t *) data;
+		uint16_t offset = *(uint16_t *) (data + 2);
+		uint8_t value = data[4];
+		handleWriteValueCommand(TS_CRC, page, offset, value);
+	} else if (command == TS_BURN_COMMAND) {
+		uint16_t page = *(uint16_t *) data;
+		handleBurnCommand(TS_CRC, page);
+	} else if (command == TS_READ_COMMAND) {
+		uint16_t page = *(uint16_t *) data;
+		uint16_t offset = *(uint16_t *) (data + 2);
+		uint16_t count = *(uint16_t *) (data + 4);
+		handlePageReadCommand(TS_CRC, page, offset, count);
+	} else if (command == 't' || command == 'T') {
+		handleTestCommand();
+	} else if (command == TS_LEGACY_HELLO_COMMAND) {
+		/**
+		 * 'Q' is the query command used for compatibility with older ECUs
+		 */
+		tunerStudioDebug("ignoring Q");
+	} else if (command == TS_COMMAND_F) {
+		tunerStudioDebug("ignoring F");
+		/**
+		 * http://www.msextra.com/forums/viewtopic.php?f=122&t=48327
+		 * Response from TS support: This is an optional command		 *
+		 * "The F command is used to find what ini. file needs to be loaded in TunerStudio to match the controller.
+		 * If you are able to just make your firmware ignore the command that would work.
+		 * Currently on some firmware versions the F command is not used and is just ignored by the firmware as a unknown command."
+		 */
+	} else {
+		tunerStudioError("ERROR: ignoring unexpected command");
+		return false;
+	}
+	return true;
 }
 
 void startTunerStudioConnectivity(Logging *sharedLogger) {
@@ -591,4 +663,4 @@ void startTunerStudioConnectivity(Logging *sharedLogger) {
 	chThdCreateStatic(tsThreadStack, sizeof(tsThreadStack), NORMALPRIO, tsThreadEntryPoint, NULL);
 }
 
-#endif /* EFI_TUNER_STUDIO */
+#endif
