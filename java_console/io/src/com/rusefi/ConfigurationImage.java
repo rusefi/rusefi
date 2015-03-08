@@ -1,9 +1,6 @@
 package com.rusefi;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.Arrays;
 
 /**
@@ -27,13 +24,23 @@ public class ConfigurationImage {
         return content.length;
     }
 
+    public byte[] getFileContent() throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try {
+            byte[] bytes = BIN_HEADER.getBytes();
+            if (bytes.length != BIN_HEADER.length())
+                throw new IllegalStateException("Encoding issue");
+            baos.write(bytes);
+            baos.write(content);
+            return baos.toByteArray();
+        } finally {
+            baos.close();
+        }
+    }
+
     public void saveToFile(String fileName) throws IOException {
         FileOutputStream fos = new FileOutputStream(fileName);
-        byte[] bytes = BIN_HEADER.getBytes();
-        if (bytes.length != BIN_HEADER.length())
-            throw new IllegalStateException("Encoding issue");
-        fos.write(bytes);
-        fos.write(content);
+        fos.write(getFileContent());
         fos.close();
         System.out.println("Saved to " + fileName);
     }

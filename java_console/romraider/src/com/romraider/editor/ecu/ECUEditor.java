@@ -66,12 +66,11 @@ import javax.swing.tree.TreePath;
 
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-import com.romraider.net.BrowserControl;
 import com.romraider.Settings;
 import com.romraider.maps.Rom;
-import com.romraider.net.URL;
 import com.romraider.swing.AbstractFrame;
 import com.romraider.swing.CustomToolbarLayout;
 import com.romraider.swing.ECUEditorMenuBar;
@@ -145,6 +144,42 @@ public class ECUEditor extends AbstractFrame {
         setTitle(titleText);
         setVisible(true);
         toFront();
+    }
+
+    public static void openImage(byte[] input, File definitionFile, String fileName) throws Exception {
+        ECUEditor editor = ECUEditorManager.getECUEditor();
+        DOMParser parser = new DOMParser();
+        Document doc;
+        FileInputStream fileStream;
+        fileStream = new FileInputStream(definitionFile);
+        InputSource src = new InputSource(fileStream);
+
+        parser.parse(src);
+        doc = parser.getDocument();
+
+        Rom rom;
+        try {
+            rom = new DOMRomUnmarshaller().unmarshallXMLDefinition(doc.getDocumentElement(), input, editor.getStatusPanel());
+        } finally {
+            // Release mem after unmarshall.
+            parser.reset();
+            doc.removeChild(doc.getDocumentElement());
+            doc = null;
+            fileStream.close();
+            System.gc();
+        }
+
+        editor.getStatusPanel().setStatus("Populating tables...");
+
+        rom.setFullFileName(fileName);
+        rom.populateTables(input, editor.getStatusPanel());
+
+        editor.getStatusPanel().setStatus("Finalizing...");
+
+        editor.addRom(rom);
+        editor.refreshTableCompareMenus();
+
+        editor.getStatusPanel().setStatus("Done loading image...");
     }
 
     public void initializeEditorUI() {
@@ -478,17 +513,7 @@ public class ECUEditor extends AbstractFrame {
         openImageWorker.execute();
     }
 
-    public void openImages(File[] inputFiles) throws Exception {
-        if(inputFiles.length < 1) {
-            showMessageDialog(this, "Image Not Found", "Error Loading Image(s)", ERROR_MESSAGE);
-            return;
-        }
-        for(int j = 0; j < inputFiles.length; j++) {
-            openImage(inputFiles[j]);
-        }
-    }
-
-    public byte[] readFile(File inputFile) throws IOException {
+    public static byte[] readFile(File inputFile) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         FileInputStream fis = new FileInputStream(inputFile);
         try {
@@ -643,62 +668,28 @@ class OpenImageWorker extends SwingWorker<Void, Void> {
         ECUEditor editor = ECUEditorManager.getECUEditor();
         Settings settings = SettingsManager.getSettings();
 
-        DOMParser parser = new DOMParser();
-        Document doc;
-        FileInputStream fileStream;
 
         try {
             editor.getStatusPanel().setStatus("Parsing ECU definitions...");
             setProgress(0);
 
-            byte[] input = editor.readFile(inputFile);
+            byte[] input = ECUEditor.readFile(inputFile);
 
             editor.getStatusPanel().setStatus("Finding ECU definition...");
             setProgress(10);
 
             // parse ecu definition files until result found
             for (int i = 0; i < settings.getEcuDefinitionFiles().size(); i++) {
-                fileStream = new FileInputStream(settings.getEcuDefinitionFiles().get(i));
-                InputSource src = new InputSource(fileStream);
-
-                parser.parse(src);
-                doc = parser.getDocument();
-
-                Rom rom;
-
+                File definitionFile = settings.getEcuDefinitionFiles().get(i);
                 try {
-                    rom = new DOMRomUnmarshaller().unmarshallXMLDefinition(doc.getDocumentElement(), input, editor.getStatusPanel());
+
+                    ECUEditor.openImage(input, definitionFile, inputFile.getName());
+                    setProgress(100);
+                return null;
+
                 } catch (RomNotFoundException rex) {
                     // rom was not found in current file, skip to next
-                    continue;
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                    showMessageDialog(editor, "Error Loading.  Unknown Exception.", "Error Loading " + inputFile.getName(), ERROR_MESSAGE);
-                    return null;
-                } finally {
-                    // Release mem after unmarshall.
-                    parser.reset();
-                    doc.removeChild(doc.getDocumentElement());
-                    doc = null;
-                    fileStream.close();
-                    System.gc();
                 }
-
-                editor.getStatusPanel().setStatus("Populating tables...");
-                setProgress(50);
-
-                rom.setFullFileName(inputFile);
-                rom.populateTables(input, editor.getStatusPanel());
-
-                editor.getStatusPanel().setStatus("Finalizing...");
-                setProgress(90);
-
-                editor.addRom(rom);
-                editor.refreshTableCompareMenus();
-
-                editor.getStatusPanel().setStatus("Done loading image...");
-                setProgress(100);
-                return null;
             }
 
             // if code executes to this point, no ROM was found, report to user
@@ -716,6 +707,9 @@ class OpenImageWorker extends SwingWorker<Void, Void> {
             // handles Java heap space issues when loading multiple Roms.
             showMessageDialog(editor, "Error loading Image. Out of memeory.", "Error Loading " + inputFile.getName(), ERROR_MESSAGE);
 
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            showMessageDialog(editor, "Error Loading.  Unknown Exception.", "Error Loading " + inputFile.getName(), ERROR_MESSAGE);
         }
         return null;
     }
