@@ -64,14 +64,18 @@ public class RecentCommands {
     }
 
     public void add(String command) {
-        entries.put(new Entry(command), null);
+        synchronized (entries) {
+            entries.put(new Entry(command), null);
+        }
 
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
                 content.removeAll();
-                for (Entry entry : entries.keySet()) {
-                    content.add(createButton(entry));
+                synchronized (entries) {
+                    for (Entry entry : entries.keySet()) {
+                        content.add(createButton(entry));
+                    }
                 }
                 UiUtils.trueRepaint(content.getParent());
                 UiUtils.trueLayout(content.getParent());

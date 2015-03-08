@@ -45,43 +45,7 @@ public class UploadChanges {
     }
 
     private static void showUi(String port) throws SerialPortException, IOException, InterruptedException {
-        final StatusWindow wnd = new StatusWindow();
-        wnd.showFrame("rusEfi bin upload");
-
-        final Logger logger = new Logger() {
-            @Override
-            public void trace(final String msg) {
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        System.out.println(msg);
-                        wnd.appendMsg(msg);
-                    }
-                });
-            }
-
-            @Override
-            public void info(final String msg) {
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        System.out.println(msg);
-                        wnd.appendMsg(msg);
-                    }
-                });
-            }
-
-            @Override
-            public void error(final String msg) {
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        System.out.println(msg);
-                        wnd.appendMsg(msg);
-                    }
-                });
-            }
-        };
+        final Logger logger = createUiLogger();
 
         SerialPort serialPort;
 
@@ -117,6 +81,46 @@ public class UploadChanges {
         });
 
 
+    }
+
+    private static Logger createUiLogger() {
+        final StatusWindow wnd = new StatusWindow();
+        wnd.showFrame("rusEfi bin upload");
+
+        return new Logger() {
+            @Override
+            public void trace(final String msg) {
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        System.out.println(msg);
+                        wnd.appendMsg(msg);
+                    }
+                });
+            }
+
+            @Override
+            public void info(final String msg) {
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        System.out.println(msg);
+                        wnd.appendMsg(msg);
+                    }
+                });
+            }
+
+            @Override
+            public void error(final String msg) {
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        System.out.println(msg);
+                        wnd.appendMsg(msg);
+                    }
+                });
+            }
+        };
     }
 
     private static void patch(ConfigurationImage ci1, ConfigurationImage ci2, BinaryProtocol bp, Logger logger) throws InterruptedException, EOFException, SerialPortException {
