@@ -17,7 +17,7 @@ public class EraseChip extends ProcessStatusWindow {
                         "Are you sure?", JOptionPane.YES_NO_OPTION);
                 if (dialogResult != JOptionPane.YES_OPTION)
                     return;
-                showFrame();
+                wnd.showFrame("rusEfi Firmware Flasher");
                 submitAction(new Runnable() {
                     @Override
                     public void run() {

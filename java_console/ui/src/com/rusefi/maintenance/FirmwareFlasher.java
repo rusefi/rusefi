@@ -1,7 +1,6 @@
 package com.rusefi.maintenance;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
@@ -25,7 +24,7 @@ public class FirmwareFlasher extends ProcessStatusWindow {
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
-                showFrame();
+                wnd.showFrame("rusEfi Firmware Flasher");
 
                 Runnable runnable = new Runnable() {
                     @Override
@@ -40,14 +39,14 @@ public class FirmwareFlasher extends ProcessStatusWindow {
 
     private void doFlashFirmware() {
         if (!new File(IMAGE_FILE).exists()) {
-            appendMsg(IMAGE_FILE + " not found, cannot proceed !!!");
+            wnd.appendMsg(IMAGE_FILE + " not found, cannot proceed !!!");
             return;
         }
         StringBuffer error = executeCommand(OPEN_OCD_COMMAND);
         if (error.toString().contains(SUCCESS_MESSAGE_TAG) && !error.toString().contains(FAILED_MESSAGE_TAG)) {
-            appendMsg("!!! Looks good!!!");
+            wnd.appendMsg("!!! Looks good!!!");
         } else {
-            appendMsg("!!! FIRMWARE FLASH: DOES NOT LOOK RIGHT !!!");
+            wnd.appendMsg("!!! FIRMWARE FLASH: DOES NOT LOOK RIGHT !!!");
         }
     }
 

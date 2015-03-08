@@ -1,6 +1,7 @@
 package com.rusefi.binaryprotocol;
 
 import com.rusefi.ConfigurationImage;
+import com.rusefi.Logger;
 import com.rusefi.io.DataListener;
 import com.rusefi.io.serial.PortHolder;
 import com.rusefi.io.serial.SerialPortReader;
@@ -27,17 +28,18 @@ public class BinaryProtocolCmd {
 
         String port = args[0];
 
+        Logger logger = Logger.STDOUT;
 
         serialPort = new SerialPort(port);
         boolean opened = serialPort.openPort();
         if (!opened) {
-            System.out.println("failed to open " + port);
+            logger.error("failed to open " + port);
         }
-        BinaryProtocol bp = new BinaryProtocol(serialPort);
+        BinaryProtocol bp = new BinaryProtocol(logger, serialPort);
 
 
         PortHolder.setupPort(serialPort, 38400);
-        System.out.println("Looks good");
+        logger.info("Looks good");
         bp.sendQueryCommand();
         bp.receivePacket();
 
