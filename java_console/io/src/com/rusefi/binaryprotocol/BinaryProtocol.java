@@ -22,6 +22,7 @@ public class BinaryProtocol {
     private final SerialPort serialPort;
     private static final int BUFFER_SIZE = 10000;
     final CircularByteBuffer cbb;
+    private boolean isBurnPendig;
 
     public BinaryProtocol(final Logger logger, SerialPort serialPort) throws SerialPortException {
         this.logger = logger;
@@ -152,7 +153,7 @@ public class BinaryProtocol {
             sendCrcPacket(packet);
 
             byte[] response = receivePacket();
-            if (response == null || response.length == 0 || response[0] != RESPONSE_OK || response.length != requestSize + 1) {
+            if (!checkResponseCode(response, RESPONSE_OK) || response.length != requestSize + 1) {
                 logger.error("Something is wrong, retrying...");
                 continue;
             }
@@ -163,5 +164,49 @@ public class BinaryProtocol {
             offset += requestSize;
         }
         logger.info("Got image!");
+    }
+
+    private boolean checkResponseCode(byte[] response, byte code) {
+        return response != null && response.length > 0 && response[0] == code;
+    }
+
+    public void writeData(byte[] content, Integer offset, int size, Logger logger) throws SerialPortException, EOFException, InterruptedException {
+        if (size > BLOCKING_FACTOR) {
+            writeData(content, offset, BLOCKING_FACTOR, logger);
+            writeData(content, offset + BLOCKING_FACTOR, size - BLOCKING_FACTOR, logger);
+            return;
+        }
+
+        isBurnPendig = true;
+
+        byte packet[] = new byte[7 + size];
+        packet[0] = 'C';
+        putShort(packet, 1, 0); // page
+        putShort(packet, 3, swap16(offset));
+        putShort(packet, 5, swap16(size));
+
+        System.arraycopy(content, offset, packet, 7, size);
+
+        while (true) {
+            sendCrcPacket(packet);
+
+            byte[] response = receivePacket();
+
+            if (!checkResponseCode(response, RESPONSE_OK)
+                //|| response.length != requestSize + 1
+                    ) {
+                logger.error("Something is wrong, retrying...");
+                continue;
+            }
+
+            break;
+        }
+
+    }
+
+    public void burn() {
+        if (!isBurnPendig)
+            return;
+        isBurnPendig = false;
     }
 }

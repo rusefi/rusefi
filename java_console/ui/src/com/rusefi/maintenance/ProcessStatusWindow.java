@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+/**
+ * (c) Andrey Belomutskiy 2013-2015
+ */
 public class ProcessStatusWindow {
     public static boolean isWindows() {
         return System.getProperty("os.name").toLowerCase().contains("win");
