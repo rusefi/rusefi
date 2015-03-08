@@ -1,8 +1,10 @@
 package com.rusefi;
 
 
+import com.romraider.ECUExec;
 import com.romraider.Settings;
 import com.romraider.editor.ecu.ECUEditor;
+import com.romraider.editor.ecu.ECUEditorManager;
 import com.romraider.swing.LookAndFeelManager;
 import com.romraider.util.LogManager;
 import com.romraider.util.SettingsManager;
@@ -19,10 +21,16 @@ public class RomRaiderWrapper {
     private static final String DEFINITION_FILE = "..\\firmware\\integration\\rusefi.xml";
 
     public static void main(String[] args) {
-        Settings settings = SettingsManager.getSettings();
-        if (settings.getEcuDefinitionFiles().isEmpty())
-            settings.addEcuDefinitionFile(new File(DEFINITION_FILE));
+        startRomRaider();
 
+        ECUExec.openRom(ECUEditorManager.getECUEditor(), "rusefi_configuration.bin");
+    }
+
+    public static ECUEditor startRomRaider() {
+        Settings settings = SettingsManager.getSettings();
+        settings.getEcuDefinitionFiles().clear();
+
+        settings.addEcuDefinitionFile(new File(DEFINITION_FILE));
 
         LogManager.initDebugLogging();
 
@@ -30,6 +38,6 @@ public class RomRaiderWrapper {
 
         ECUEditor editor = getECUEditor();
         editor.initializeEditorUI();
-
+        return editor;
     }
 }

@@ -33,7 +33,11 @@ public class UploadChanges {
             public void run() {
                 try {
                     showUi(port);
-                } catch (SerialPortException | IOException | InterruptedException e) {
+                } catch (SerialPortException e) {
+                    throw new IllegalStateException(e);
+                } catch (IOException e) {
+                    throw new IllegalStateException(e);
+                } catch (InterruptedException e) {
                     throw new IllegalStateException(e);
                 }
             }
@@ -99,7 +103,13 @@ public class UploadChanges {
             public void run() {
                 try {
                     patch(ci1, ci2, bp, logger);
-                } catch (InterruptedException | EOFException | SerialPortException e) {
+                } catch (InterruptedException e) {
+                    logger.error("Error: " + e);
+                    throw new IllegalStateException(e);
+                } catch (EOFException e) {
+                    logger.error("Error: " + e);
+                    throw new IllegalStateException(e);
+                } catch (SerialPortException e) {
                     logger.error("Error: " + e);
                     throw new IllegalStateException(e);
                 }
@@ -121,5 +131,6 @@ public class UploadChanges {
             offset = range.second;
         }
         bp.burn();
+
     }
 }

@@ -41,7 +41,6 @@ import com.romraider.util.SettingsManager;
 public class ECUEditorToolBar extends JToolBar implements ActionListener {
 
     private static final long serialVersionUID = 7778170684606193919L;
-    private final JButton openImage = new JButton();
     private final JButton saveImage = new JButton();
     private final JButton refreshImage = new JButton();
     private final JButton closeImage = new JButton();
@@ -56,13 +55,10 @@ public class ECUEditorToolBar extends JToolBar implements ActionListener {
 
         this.updateIcons();
 
-        this.add(openImage);
         this.add(saveImage);
         this.add(closeImage);
         this.add(refreshImage);
 
-        openImage.setMaximumSize(new Dimension(58, 50));
-        openImage.setBorder(createLineBorder(new Color(150, 150, 150), 0));
         saveImage.setMaximumSize(new Dimension(50, 50));
         saveImage.setBorder(createLineBorder(new Color(150, 150, 150), 0));
         closeImage.setMaximumSize(new Dimension(50, 50));
@@ -72,7 +68,6 @@ public class ECUEditorToolBar extends JToolBar implements ActionListener {
 
         this.updateButtons();
 
-        openImage.addActionListener(this);
         saveImage.addActionListener(this);
         closeImage.addActionListener(this);
         refreshImage.addActionListener(this);
@@ -80,7 +75,6 @@ public class ECUEditorToolBar extends JToolBar implements ActionListener {
 
     public void updateIcons() {
         int iconScale = getSettings().getEditorIconScale();
-        openImage.setIcon(rescaleImageIcon(new ImageIcon(getClass().getResource("/graphics/icon-open.png")), iconScale));
         saveImage.setIcon(rescaleImageIcon(new ImageIcon(getClass().getResource("/graphics/icon-save.png")), iconScale));
         refreshImage.setIcon(rescaleImageIcon(new ImageIcon(getClass().getResource("/graphics/icon-refresh.png")), iconScale));
         closeImage.setIcon(rescaleImageIcon(new ImageIcon( getClass().getResource("/graphics/icon-close.png")), iconScale));
@@ -101,7 +95,6 @@ public class ECUEditorToolBar extends JToolBar implements ActionListener {
     public void updateButtons() {
         String file = getEditor().getLastSelectedRomFileName();
 
-        openImage.setToolTipText("Open Image");
         saveImage.setToolTipText("Save " + file + " As New Image...");
         refreshImage.setToolTipText("Refresh " + file + " from saved copy");
         closeImage.setToolTipText("Close " + file);
@@ -120,14 +113,7 @@ public class ECUEditorToolBar extends JToolBar implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == openImage) {
-            try {
-                ((ECUEditorMenuBar) getEditor().getJMenuBar()).openImageDialog();
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(getEditor(), new DebugPanel(ex,
-                        getSettings().getSupportURL()), "Exception", JOptionPane.ERROR_MESSAGE);
-            }
-        } else if (e.getSource() == saveImage) {
+        if (e.getSource() == saveImage) {
             try {
                 ((ECUEditorMenuBar) getEditor().getJMenuBar()).saveImage();
                 getEditor().refreshUI();
@@ -138,12 +124,6 @@ public class ECUEditorToolBar extends JToolBar implements ActionListener {
         } else if (e.getSource() == closeImage) {
             getEditor().closeImage();
         } else if (e.getSource() == refreshImage) {
-            try {
-                ((ECUEditorMenuBar) getEditor().getJMenuBar()).refreshImage();
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(getEditor(), new DebugPanel(ex,
-                        getSettings().getSupportURL()), "Exception", JOptionPane.ERROR_MESSAGE);
-            }
         }
     }
 

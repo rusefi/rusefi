@@ -89,8 +89,7 @@ public class ECUExec {
         return false;
     }
 
-
-    private static void openRom(final ECUEditor editor, final String rom) {
+    public static void openRom(final ECUEditor editor, final String rom) {
         invokeLater(new Runnable() {
             @Override
             public void run() {

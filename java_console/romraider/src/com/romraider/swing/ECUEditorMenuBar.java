@@ -19,19 +19,14 @@
 
 package com.romraider.swing;
 
-import static com.romraider.Version.ABOUT_ICON;
-import static com.romraider.Version.BUILDNUMBER;
-//import static com.romraider.Version.ECU_DEFS_URL;
-import static com.romraider.Version.PRODUCT_NAME;
-import static com.romraider.Version.SUPPORT_URL;
-import static com.romraider.Version.VERSION;
-import static javax.swing.JOptionPane.CANCEL_OPTION;
-import static javax.swing.JOptionPane.ERROR_MESSAGE;
-import static javax.swing.JOptionPane.INFORMATION_MESSAGE;
-import static javax.swing.JOptionPane.showConfirmDialog;
-import static javax.swing.JOptionPane.showMessageDialog;
-import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
+import com.romraider.Settings;
+import com.romraider.editor.ecu.ECUEditor;
+import com.romraider.editor.ecu.ECUEditorManager;
+import com.romraider.maps.Rom;
+import com.romraider.maps.Table;
+import com.romraider.util.SettingsManager;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedWriter;
@@ -39,34 +34,24 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 
-import javax.swing.ButtonGroup;
-import javax.swing.JFileChooser;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JRadioButtonMenuItem;
-import javax.swing.JSeparator;
+import static com.romraider.Version.*;
+import static javax.swing.JOptionPane.*;
 
-import com.romraider.Settings;
-import com.romraider.editor.ecu.ECUEditor;
-import com.romraider.editor.ecu.ECUEditorManager;
-import com.romraider.maps.Rom;
-import com.romraider.maps.Table;
-import com.romraider.net.BrowserControl;
-import com.romraider.util.SettingsManager;
+//import static com.romraider.Version.ECU_DEFS_URL;
 
+@SuppressWarnings("FieldCanBeLocal")
 public class ECUEditorMenuBar extends JMenuBar implements ActionListener {
 
     private static final long serialVersionUID = -4777040428837855236L;
-    private final JMenu fileMenu = new JMenu("File");
-    private final JMenuItem openImage = new JMenuItem("Open Image...");
-    private final JMenuItem openImages = new JMenuItem("Open Image(s)...");
-    private final JMenuItem saveImage = new JMenuItem("Save Image As...");
-    private final JMenuItem saveAsRepository = new JMenuItem("Save Image As Repository...");
+//    private final JMenu fileMenu = new JMenu("File");
+//    private final JMenuItem openImage = new JMenuItem("Open Image...");
+//    private final JMenuItem openImages = new JMenuItem("Open Image(s)...");
+//    private final JMenuItem saveImage = new JMenuItem("Save Image As...");
+//    private final JMenuItem saveAsRepository = new JMenuItem("Save Image As Repository...");
     private final JMenuItem refreshImage = new JMenuItem("Refresh Image");
-    private final JMenuItem closeImage = new JMenuItem("Close Image");
-    private final JMenuItem closeAll = new JMenuItem("Close All Images");
-    private final JMenuItem exit = new JMenuItem("Exit");
+//    private final JMenuItem closeImage = new JMenuItem("Close Image");
+//    private final JMenuItem closeAll = new JMenuItem("Close All Images");
+//    private final JMenuItem exit = new JMenuItem("Exit");
 
 //    private final JMenu definitionMenu = new JMenu("ECU Definitions");
 //    private final JMenuItem defManager = new JMenuItem("ECU Definition Manager...");
@@ -94,7 +79,7 @@ public class ECUEditorMenuBar extends JMenuBar implements ActionListener {
 //    private final JMenu loggerMenu = new JMenu("Logger");
 //    private final JMenuItem openLogger = new JMenuItem("Launch Logger...");
 
-    private final JMenu ramTuneMenu = new JMenu("SSM");
+//    private final JMenu ramTuneMenu = new JMenu("SSM");
     private final JMenuItem launchRamTuneTestApp = new JMenuItem("Launch Test App...");
 
     private final JMenu helpMenu = new JMenu("Help");
@@ -102,44 +87,44 @@ public class ECUEditorMenuBar extends JMenuBar implements ActionListener {
 
     public ECUEditorMenuBar() {
         // file menu items
-        add(fileMenu);
-        fileMenu.setMnemonic('F');
-
-        fileMenu.add(openImage);
-        openImage.addActionListener(this);
-        openImage.setMnemonic('O');
+//        add(fileMenu);
+//        fileMenu.setMnemonic('F');
+//
+//        fileMenu.add(openImage);
+//        openImage.addActionListener(this);
+//        openImage.setMnemonic('O');
 
         //fileMenu.add(openImages);
         //openImages.addActionListener(this);
         //openImages.setMnemonic('I');
 
-        fileMenu.add(saveImage);
-        saveImage.addActionListener(this);
-        saveImage.setMnemonic('S');
-
-        fileMenu.add(saveAsRepository);
-        saveAsRepository.setMnemonic('D');
-        saveAsRepository.addActionListener(this);
-
-        fileMenu.add(refreshImage);
-        refreshImage.addActionListener(this);
-        refreshImage.setMnemonic('R');
-
-        fileMenu.add(new JSeparator());
-
-        fileMenu.add(closeImage);
-        closeImage.addActionListener(this);
-        closeImage.setMnemonic('C');
+//        fileMenu.add(saveImage);
+//        saveImage.addActionListener(this);
+//        saveImage.setMnemonic('S');
+//
+//        fileMenu.add(saveAsRepository);
+//        saveAsRepository.setMnemonic('D');
+//        saveAsRepository.addActionListener(this);
+//
+//        fileMenu.add(refreshImage);
+//        refreshImage.addActionListener(this);
+//        refreshImage.setMnemonic('R');
+//
+//        fileMenu.add(new JSeparator());
+//
+//        fileMenu.add(closeImage);
+//        closeImage.addActionListener(this);
+//        closeImage.setMnemonic('C');
 
         //fileMenu.add(closeAll);
         //closeAll.addActionListener(this);
         //closeAll.setMnemonic('A');
 
-        fileMenu.add(new JSeparator());
-
-        fileMenu.add(exit);
-        exit.addActionListener(this);
-        exit.setMnemonic('X');
+//        fileMenu.add(new JSeparator());
+//
+//        fileMenu.add(exit);
+//        exit.addActionListener(this);
+//        exit.setMnemonic('X');
 
         // edit menu items
         add(editMenu);
@@ -242,10 +227,10 @@ public class ECUEditorMenuBar extends JMenuBar implements ActionListener {
 //        openLogger.setMnemonic('O');
 
         // ramtune menu items
-        add(ramTuneMenu);
-        ramTuneMenu.setMnemonic('R');
-
-        ramTuneMenu.add(launchRamTuneTestApp);
+//        add(ramTuneMenu);
+//        ramTuneMenu.setMnemonic('R');
+//
+//        ramTuneMenu.add(launchRamTuneTestApp);
         launchRamTuneTestApp.addActionListener(this);
         launchRamTuneTestApp.setMnemonic('L');
 
@@ -263,28 +248,28 @@ public class ECUEditorMenuBar extends JMenuBar implements ActionListener {
     public void updateMenu() {
         String file = getLastSelectedRomFileName();
         if ("".equals(file)) {
-            saveImage.setEnabled(false);
-            saveAsRepository.setEnabled(false);
-            closeImage.setEnabled(false);
+//            saveImage.setEnabled(false);
+//            saveAsRepository.setEnabled(false);
+//            closeImage.setEnabled(false);
             //closeAll.setEnabled(false);
             romProperties.setEnabled(false);
-            saveImage.setText("Save As...");
-            saveAsRepository.setText("Save As Repository...");
+//            saveImage.setText("Save As...");
+//            saveAsRepository.setText("Save As Repository...");
             compareImages.setEnabled(false);
             convertRom.setEnabled(false);
         } else {
-            saveImage.setEnabled(true);
-            saveAsRepository.setEnabled(true);
-            closeImage.setEnabled(true);
+//            saveImage.setEnabled(true);
+//            saveAsRepository.setEnabled(true);
+//            closeImage.setEnabled(true);
             //closeAll.setEnabled(true);
             romProperties.setEnabled(true);
-            saveImage.setText("Save " + file + " As...");
-            saveAsRepository.setText("Save "+ file +" As Repository...");
+//            saveImage.setText("Save " + file + " As...");
+//            saveAsRepository.setText("Save "+ file +" As Repository...");
             compareImages.setEnabled(true);
             convertRom.setEnabled(true);
         }
         refreshImage.setText("Refresh " + file);
-        closeImage.setText("Close " + file);
+    //    closeImage.setText("Close " + file);
         romProperties.setText(file + "Properties");
 
         int lastSelectedRomSize = 0;
@@ -304,7 +289,7 @@ public class ECUEditorMenuBar extends JMenuBar implements ActionListener {
             convertDecrease.setEnabled(false);
         }
 
-        openImages.setEnabled(false);
+        //openImages.setEnabled(false);
 //        editDefinition.setEnabled(false);
         revalidate();
     }
@@ -312,57 +297,50 @@ public class ECUEditorMenuBar extends JMenuBar implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         ECUEditor parent = ECUEditorManager.getECUEditor();
-        if (e.getSource() == openImage) {
-            try {
-                openImageDialog();
-            } catch (Exception ex) {
-                showMessageDialog(parent,
-                        new DebugPanel(ex, getSettings().getSupportURL()), "Exception", ERROR_MESSAGE);
-            }
+//        if (e.getSource() == openImage) {
+//            try {
+//                openImageDialog();
+//            } catch (Exception ex) {
+//                showMessageDialog(parent,
+//                        new DebugPanel(ex, getSettings().getSupportURL()), "Exception", ERROR_MESSAGE);
+//            }
+//
+//        } else if (e.getSource() == openImages) {
+//            try {
+//                openImagesDialog();
+//            } catch (Exception ex) {
+//                showMessageDialog(parent,
+//                        new DebugPanel(ex, getSettings().getSupportURL()), "Exception", ERROR_MESSAGE);
+//            }
+//
+//        } else if (e.getSource() == saveImage) {
+//            try {
+//                this.saveImage();
+//            } catch (Exception ex) {
+//                showMessageDialog(parent,
+//                        new DebugPanel(ex, getSettings().getSupportURL()), "Exception", ERROR_MESSAGE);
+//            }
+//        } else if (e.getSource() == saveAsRepository) {
+//            try {
+//                this.saveAsRepository();
+//            } catch(Exception ex) {
+//                showMessageDialog(parent,
+//                        new DebugPanel(ex, getSettings().getSupportURL()), "Exception", ERROR_MESSAGE);
+//            }
+//        } else if (e.getSource() == closeImage) {
+//            parent.closeImage();
+//
+//        } else if (e.getSource() == closeAll) {
+//            parent.closeAllImages();
+//
+//        } else if (e.getSource() == exit) {
+//            parent.handleExit();
+//            System.exit(0);
 
-        } else if (e.getSource() == openImages) {
-            try {
-                openImagesDialog();
-            } catch (Exception ex) {
-                showMessageDialog(parent,
-                        new DebugPanel(ex, getSettings().getSupportURL()), "Exception", ERROR_MESSAGE);
-            }
-
-        } else if (e.getSource() == saveImage) {
-            try {
-                this.saveImage();
-            } catch (Exception ex) {
-                showMessageDialog(parent,
-                        new DebugPanel(ex, getSettings().getSupportURL()), "Exception", ERROR_MESSAGE);
-            }
-        } else if (e.getSource() == saveAsRepository) {
-            try {
-                this.saveAsRepository();
-            } catch(Exception ex) {
-                showMessageDialog(parent,
-                        new DebugPanel(ex, getSettings().getSupportURL()), "Exception", ERROR_MESSAGE);
-            }
-        } else if (e.getSource() == closeImage) {
-            parent.closeImage();
-
-        } else if (e.getSource() == closeAll) {
-            parent.closeAllImages();
-
-        } else if (e.getSource() == exit) {
-            parent.handleExit();
-            System.exit(0);
-
-        } else if (e.getSource() == romProperties) {
+        //} else
+            if (e.getSource() == romProperties) {
             showMessageDialog(parent, new RomPropertyPanel(parent.getLastSelectedRom()),
                     parent.getLastSelectedRom().getRomIDString() + " Properties", INFORMATION_MESSAGE);
-
-        } else if (e.getSource() == refreshImage) {
-            try {
-                refreshImage();
-            } catch (Exception ex) {
-                showMessageDialog(parent, new DebugPanel(ex,
-                        getSettings().getSupportURL()), "Exception", ERROR_MESSAGE);
-            }
 
         } else if (e.getSource() == settings) {
             SettingsForm form = new SettingsForm();
@@ -373,29 +351,6 @@ public class ECUEditorMenuBar extends JMenuBar implements ActionListener {
             CompareImagesForm form = new CompareImagesForm(parent.getImages(), parent.getIconImage());
             form.setLocationRelativeTo(parent);
             form.setVisible(true);
-
-        } else if (e.getSource() == convertIncrease) {
-            try {
-                increaseRomSize();
-                refreshImage();
-            } catch (Exception ex) {
-                showMessageDialog(parent,
-                        new DebugPanel(ex, getSettings().getSupportURL()), "Exception", ERROR_MESSAGE);
-            }
-
-        } else if (e.getSource() == convertDecrease) {
-            try {
-                decreaseRomSize();
-                refreshImage();
-            } catch (Exception ex) {
-                showMessageDialog(parent,
-                        new DebugPanel(ex, getSettings().getSupportURL()), "Exception", ERROR_MESSAGE);
-            }
-
-//        } else if (e.getSource() == defManager) {
-//            DefinitionManager form = new DefinitionManager();
-//            form.setLocationRelativeTo(parent);
-//            form.setVisible(true);
 
         } else if (e.getSource() == level1) {
             parent.setUserLevel(1);
@@ -428,40 +383,6 @@ public class ECUEditorMenuBar extends JMenuBar implements ActionListener {
                     + SUPPORT_URL;
             String title = "About " + PRODUCT_NAME;
             showMessageDialog(parent, message, title, INFORMATION_MESSAGE, ABOUT_ICON);
-        }
-    }
-
-    public void refreshImage() throws Exception {
-        ECUEditor parent = ECUEditorManager.getECUEditor();
-        if (parent.getLastSelectedRom() != null) {
-            File file = parent.getLastSelectedRom().getFullFileName();
-            parent.closeImage();
-            parent.openImage(file);
-        }
-    }
-
-    public void openImageDialog() throws Exception {
-        ECUEditor parent = ECUEditorManager.getECUEditor();
-        JFileChooser fc = new JFileChooser(SettingsManager.getSettings().getLastImageDir());
-        fc.setFileFilter(new ECUImageFilter());
-        fc.setDialogTitle("Open Image");
-
-        if (fc.showOpenDialog(parent) == JFileChooser.APPROVE_OPTION) {
-            parent.openImage(fc.getSelectedFile());
-            SettingsManager.getSettings().setLastImageDir(fc.getCurrentDirectory());
-        }
-    }
-
-    public void openImagesDialog() throws Exception {
-        ECUEditor parent = ECUEditorManager.getECUEditor();
-        JFileChooser fc = new JFileChooser(getSettings().getLastImageDir());
-        fc.setFileFilter(new ECUImageFilter());
-        fc.setMultiSelectionEnabled(true);
-        fc.setDialogTitle("Open Image(s)");
-
-        if(fc.showOpenDialog(parent) == JFileChooser.APPROVE_OPTION) {
-            parent.openImages(fc.getSelectedFiles());
-            SettingsManager.getSettings().setLastImageDir(fc.getCurrentDirectory());
         }
     }
 
@@ -503,7 +424,7 @@ public class ECUEditorMenuBar extends JMenuBar implements ActionListener {
         } finally {
             fos.close();
         }
-        parent.getLastSelectedRom().setFullFileName(selectedFile.getAbsoluteFile());
+        parent.getLastSelectedRom().setFullFileName(selectedFile.getAbsoluteFile().getName());
         parent.setLastSelectedRom(parent.getLastSelectedRom());
         SettingsManager.getSettings().setLastImageDir(selectedFile.getParentFile());
     }

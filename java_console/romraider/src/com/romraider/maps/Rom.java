@@ -27,7 +27,6 @@ import static javax.swing.JOptionPane.QUESTION_MESSAGE;
 import static javax.swing.JOptionPane.showOptionDialog;
 
 import java.beans.PropertyVetoException;
-import java.io.File;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -56,7 +55,6 @@ public class Rom extends DefaultMutableTreeNode implements Serializable  {
     private static final Logger LOGGER = Logger.getLogger(Rom.class);
     private RomID romID = new RomID();
     private String fileName = "";
-    private File fullFileName = new File(".");
     private final Vector<TableTreeNode> tableNodes = new Vector<TableTreeNode>();
     private byte[] binData;
     private boolean isAbstract = false;
@@ -380,13 +378,8 @@ public class Rom extends DefaultMutableTreeNode implements Serializable  {
         return binData.length;
     }
 
-    public File getFullFileName() {
-        return fullFileName;
-    }
-
-    public void setFullFileName(File fullFileName) {
-        this.fullFileName = fullFileName;
-        this.setFileName(fullFileName.getName());
+    public void setFullFileName(String fileName) {
+        this.setFileName(fileName);
         for (TableTreeNode tableNode : tableNodes) {
             String frameTitle = this.getFileName() + " - " + tableNode.getTable().getName();
             tableNode.getFrame().setTitle(frameTitle);
