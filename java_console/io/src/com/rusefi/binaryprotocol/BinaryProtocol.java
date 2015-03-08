@@ -21,6 +21,7 @@ public class BinaryProtocol {
     private static final int BLOCKING_FACTOR = 256;
     private static final byte RESPONSE_OK = 0;
     private static final byte RESPONSE_BURN_OK = 0x04;
+    private static final byte RESPONSE_COMMAND_OK = 0x07;
     private final Logger logger;
     private final SerialPort serialPort;
     private static final int BUFFER_SIZE = 10000;
@@ -246,5 +247,20 @@ public class BinaryProtocol {
         byte[] packet = makePacket(command);
         logger.info("Sending " + Arrays.toString(packet));
         serialPort.writeBytes(packet);
+    }
+
+    public void sendTextCommand(String text) throws SerialPortException, EOFException, InterruptedException {
+        byte[] asBytes = text.getBytes();
+        byte[] command = new byte[asBytes.length + 1];
+        command[0] = 'E';
+        System.arraycopy(asBytes, 0, command, 1, asBytes.length);
+
+        while (true) {
+            byte[] response = exchange(command);
+            if (!checkResponseCode(response, RESPONSE_COMMAND_OK) || response.length != 1) {
+                continue;
+            }
+            break;
+        }
     }
 }

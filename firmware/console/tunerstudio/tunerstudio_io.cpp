@@ -19,6 +19,7 @@ extern Logging *tsLogger;
  */
 
 uint8_t crcWriteBuffer[300];
+extern char crcReadBuffer[300];
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 #include "pin_repository.h"
@@ -65,8 +66,8 @@ BaseChannel * getTsSerialDevice(void) {
 #endif
 }
 
-void tunerStudioWriteData(const uint8_t * buffer, int size) {
-	int transferred = chSequentialStreamWrite(getTsSerialDevice(), buffer, size);
+void tunerStudioWriteData(ts_channel_s *tsChannel, const uint8_t * buffer, int size) {
+	int transferred = chSequentialStreamWrite(tsChannel->channel, buffer, size);
 	if (transferred != size) {
 		scheduleMsg(tsLogger, "!!! NOT ACCEPTED %d out of %d !!!", transferred, size);
 	}
@@ -75,27 +76,30 @@ void tunerStudioWriteData(const uint8_t * buffer, int size) {
 /**
  * Adds size to the beginning of a packet and a crc32 at the end. Then send the packet.
  */
-void tunerStudioWriteCrcPacket(const uint8_t command, const void *buf, const uint16_t size) {
+void tunerStudioWriteCrcPacket(ts_channel_s *tsChannel, const uint8_t command, const void *buf, const uint16_t size) {
+
+	uint8_t *writeBuffer = crcWriteBuffer;
+
 	// todo: max size validation
-	*(uint16_t *) crcWriteBuffer = SWAP_UINT16(size + 1);   // packet size including command
-	*(uint8_t *) (crcWriteBuffer + 2) = command;
+	*(uint16_t *) writeBuffer = SWAP_UINT16(size + 1);   // packet size including command
+	*(uint8_t *) (writeBuffer + 2) = command;
 	if (size != 0)
-		memcpy(crcWriteBuffer + 3, buf, size);
+		memcpy(writeBuffer + 3, buf, size);
 	// CRC on whole packet
-	uint32_t crc = crc32((void *) (crcWriteBuffer + 2), (uint32_t) (size + 1));
-	*(uint32_t *) (crcWriteBuffer + 2 + 1 + size) = SWAP_UINT32(crc);
+	uint32_t crc = crc32((void *) (writeBuffer + 2), (uint32_t) (size + 1));
+	*(uint32_t *) (writeBuffer + 2 + 1 + size) = SWAP_UINT32(crc);
 
 //	scheduleMsg(logger, "TunerStudio: CRC command %x size %d", command, size);
 
-	tunerStudioWriteData(crcWriteBuffer, size + 2 + 1 + 4);      // with size, command and CRC
+	tunerStudioWriteData(tsChannel, writeBuffer, size + 2 + 1 + 4);      // with size, command and CRC
 }
 
-void tsSendResponse(ts_response_format_e mode, const uint8_t * buffer, int size) {
+void tsSendResponse(ts_channel_s *tsChannel, ts_response_format_e mode, const uint8_t * buffer, int size) {
 	if (mode == TS_CRC) {
-		tunerStudioWriteCrcPacket(TS_RESPONSE_OK, buffer, size);
+		tunerStudioWriteCrcPacket(tsChannel, TS_RESPONSE_OK, buffer, size);
 	} else {
 		if (size > 0)
-			tunerStudioWriteData(buffer, size);
+			tunerStudioWriteData(tsChannel, buffer, size);
 	}
 }
 
