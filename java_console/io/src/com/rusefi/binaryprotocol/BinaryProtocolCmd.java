@@ -2,23 +2,17 @@ package com.rusefi.binaryprotocol;
 
 import com.rusefi.ConfigurationImage;
 import com.rusefi.Logger;
-import com.rusefi.io.DataListener;
 import com.rusefi.io.serial.PortHolder;
-import com.rusefi.io.serial.SerialPortReader;
-import etch.util.CircularByteBuffer;
 import jssc.SerialPort;
 import jssc.SerialPortException;
 
-import java.io.EOFException;
 import java.io.IOException;
-import java.util.Arrays;
 
 /**
  * (c) Andrey Belomutskiy
  * 3/6/2015
  */
 public class BinaryProtocolCmd {
-    private static SerialPort serialPort;
 
     public static void main(String[] args) throws SerialPortException, InterruptedException, IOException {
         if (args.length != 1) {
@@ -30,6 +24,7 @@ public class BinaryProtocolCmd {
 
         Logger logger = Logger.STDOUT;
 
+        SerialPort serialPort;
         serialPort = new SerialPort(port);
         boolean opened = serialPort.openPort();
         if (!opened) {

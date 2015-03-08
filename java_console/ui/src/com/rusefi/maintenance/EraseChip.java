@@ -3,6 +3,9 @@ package com.rusefi.maintenance;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
+/**
+ * (c) Andrey Belomutskiy 2013-2015
+ */
 public class EraseChip extends ProcessStatusWindow {
     private final JButton button = new JButton("Erase Chip");
 

@@ -7,6 +7,9 @@ import com.rusefi.core.Pair;
  * 3/6/2015
  */
 public class ConfigurationImageDiff {
+    /**
+     * @return NULL if images are the same from OFFSET and to the end
+     */
     public static Pair<Integer, Integer> findDifferences(ConfigurationImage image1, ConfigurationImage image2, int position) {
         byte[] c1 = image1.getContent();
         byte[] c2 = image2.getContent();
