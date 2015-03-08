@@ -19,6 +19,7 @@
 #endif
 
 #include "efifeatures.h"
+#include "datalogging.h"
 
 #define GET_CONSOLE_MODE_VALUE() palReadPad(CONSOLE_MODE_SWITCH_PORT, CONSOLE_MODE_SWITCH_PIN)
 #define SHOULD_INGORE_FLASH() (palReadPad(CONFIG_RESET_SWITCH_PORT, CONFIG_RESET_SWITCH_PIN) == 0)
@@ -32,7 +33,7 @@ SerialDriver * getConsoleChannel(void);
 
 void consolePutChar(int x);
 void consoleOutputBuffer(const uint8_t *buf, int size);
-void startConsole(void (*console_line_callback_p)(char *));
+void startConsole(Logging *sharedLogger, void (*console_line_callback_p)(char *));
 bool isSerialOverUart(void);
 
 #if EFI_PROD_CODE || EFI_SIMULATOR || EFI_EGT

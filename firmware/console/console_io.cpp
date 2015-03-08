@@ -194,7 +194,14 @@ void consoleOutputBuffer(const uint8_t *buf, int size) {
 #endif /* EFI_UART_ECHO_TEST_MODE */
 }
 
-void startConsole(void (*console_line_callback_p)(char *)) {
+static Logging *logger;
+
+static void switchToBinaryProtocol(void) {
+	scheduleMsg(logger, "switching to binary protocol");
+}
+
+void startConsole(Logging *sharedLogger, void (*console_line_callback_p)(char *)) {
+	logger = sharedLogger;
 	console_line_callback = console_line_callback_p;
 
 #if (defined(EFI_CONSOLE_UART_DEVICE) && ! EFI_SIMULATOR) || defined(__DOXYGEN__)
@@ -223,6 +230,7 @@ void startConsole(void (*console_line_callback_p)(char *)) {
 #endif /* EFI_PROD_CODE */
 
 	chThdCreateStatic(consoleThreadStack, sizeof(consoleThreadStack), NORMALPRIO, consoleThreadThreadEntryPoint, NULL);
+	addConsoleAction("~", switchToBinaryProtocol);
 }
 
 /**
