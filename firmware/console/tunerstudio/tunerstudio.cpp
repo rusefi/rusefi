@@ -97,7 +97,7 @@ extern persistent_config_container_s persistentState;
 
 static efitimems_t previousWriteReportMs = 0;
 
-static uint8_t crcReadBuffer[300];
+static char crcReadBuffer[300];
 extern uint8_t crcWriteBuffer[300];
 
 static int ts_serial_ready(void) {
@@ -405,7 +405,7 @@ void runBinaryProtocolLoop(void) {
 			continue;
 		}
 
-		recieved = chnReadTimeout(getTsSerialDevice(), crcReadBuffer, 1, MS2ST(TS_READ_TIMEOUT));
+		recieved = chnReadTimeout(getTsSerialDevice(), (uint8_t*)crcReadBuffer, 1, MS2ST(TS_READ_TIMEOUT));
 		if (recieved != 1) {
 			tunerStudioError("ERROR: did not receive command");
 			continue;
@@ -526,6 +526,11 @@ void handleTestCommand(void) {
 	tunerStudioWriteData((const uint8_t *) " ts_p_alive\r\n", 8);
 }
 
+static void handleExecuteCommand(char *data, int incomingPacketSize) {
+	data[incomingPacketSize] = 0;
+
+}
+
 /**
  * @return true if legacy command was processed, false otherwise
  */
@@ -597,12 +602,14 @@ bool handlePlainCommand(uint8_t command) {
 	}
 }
 
-int tunerStudioHandleCrcCommand(uint8_t *data, int incomingPacketSize) {
+int tunerStudioHandleCrcCommand(char *data, int incomingPacketSize) {
 	char command = data[0];
 	data++;
 	if (command == TS_HELLO_COMMAND || command == TS_HELLO_COMMAND_DEPRECATED) {
 		tunerStudioDebug("got Query command");
 		handleQueryCommand(TS_CRC);
+	} else if (command == TS_EXECUTE) {
+		handleExecuteCommand(data, incomingPacketSize);
 	} else if (command == TS_OUTPUT_COMMAND) {
 		handleOutputChannelsCommand(TS_CRC);
 	} else if (command == TS_PAGE_COMMAND) {

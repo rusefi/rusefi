@@ -33,6 +33,7 @@ typedef enum {
 #define TS_READ_COMMAND 'R'
 #define TS_PAGE_COMMAND 'P'
 #define TS_COMMAND_F 'F'
+#define TS_EXECUTE 'E'
 
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_CHUNK_WRITE_COMMAND 'C'

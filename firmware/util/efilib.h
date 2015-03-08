@@ -26,21 +26,14 @@
 // number of microseconds in one period of given frequency (per second)
 #define frequency2periodUs(freq) ((1000000.0f) / (freq))
 
-#ifndef FALSE
-#define FALSE       0
-#endif
-#ifndef TRUE
-#define TRUE        (!FALSE)
-#endif
+#define ERROR_CODE 311223344
+
+const char * boolToString(bool value);
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif /* __cplusplus */
-
-#define ERROR_CODE 311223344
-
-const char * boolToString(bool value);
 
 uint32_t efiStrlen(const char *param);
 int efiPow10(int param);
