@@ -13,13 +13,6 @@
 EXTERN_ENGINE;
 
 extern Logging *tsLogger;
-/**
- * we use 'blockingFactor = 256' in rusefi.ini
- * todo: should we just do (256 + CRC_WRAPPING_SIZE) ?
- */
-
-uint8_t crcWriteBuffer[300];
-extern char crcReadBuffer[300];
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 #include "pin_repository.h"
@@ -78,7 +71,7 @@ void tunerStudioWriteData(ts_channel_s *tsChannel, const uint8_t * buffer, int s
  */
 void tunerStudioWriteCrcPacket(ts_channel_s *tsChannel, const uint8_t command, const void *buf, const uint16_t size) {
 
-	uint8_t *writeBuffer = crcWriteBuffer;
+	uint8_t *writeBuffer = tsChannel->writeBuffer;
 
 	// todo: max size validation
 	*(uint16_t *) writeBuffer = SWAP_UINT16(size + 1);   // packet size including command

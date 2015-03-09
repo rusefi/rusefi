@@ -44,18 +44,7 @@ public:
 	char DEFAULT_BUFFER[200];
 };
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
-
-bool lockOutputBuffer(void);
-void unlockOutputBuffer(void);
-
 void initIntermediateLoggingBuffer(void);
-uint32_t remainingSize(Logging *logging);
-
-#define loggingSize(logging) ((int) (logging)->linePointer - (int) ((logging)->buffer))
 
 int isInitialized(Logging *logging);
 
@@ -73,6 +62,20 @@ void appendMsgPrefix(Logging *logging);
 void appendMsgPostfix(Logging *logging);
 
 void scheduleMsg(Logging *logging, const char *fmt, ...);
+
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif /* __cplusplus */
+
+bool lockOutputBuffer(void);
+void unlockOutputBuffer(void);
+
+uint32_t remainingSize(Logging *logging);
+
+#define loggingSize(logging) ((int) (logging)->linePointer - (int) ((logging)->buffer))
+
 
 void printMsg(Logging *logging, const char *fmt, ...);
 void appendPrintf(Logging *logging, const char *fmt, ...);
@@ -99,5 +102,7 @@ void printPending(void);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
+
+void printWithLength(char *line);
 
 #endif /* DATALOGGING_H_ */

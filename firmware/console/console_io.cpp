@@ -149,6 +149,8 @@ bool isConsoleReady(void) {
 }
 #endif /* EFI_PROD_CODE || EFI_EGT */
 
+bool_t consoleInBinaryMode = false;
+
 static THD_WORKING_AREA(consoleThreadStack, 2 * UTILITY_THREAD_STACK_SIZE);
 static msg_t consoleThreadThreadEntryPoint(void *arg) {
 	(void) arg;
@@ -198,6 +200,7 @@ static Logging *logger;
 
 static void switchToBinaryProtocol(void) {
 	scheduleMsg(logger, "switching to binary protocol");
+	consoleInBinaryMode = true;
 }
 
 void startConsole(Logging *sharedLogger, CommandHandler console_line_callback_p) {

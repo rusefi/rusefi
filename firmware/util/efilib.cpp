@@ -1,5 +1,5 @@
 /**
- * @file	efilib.c
+ * @file	efilib.cpp
  *
  * We cannot use stdlib because we do not have malloc - so, we have to implement these functions
  *
