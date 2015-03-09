@@ -53,6 +53,11 @@ public class BinaryProtocol {
         serialPort.addEventListener(new SerialPortReader(serialPort, listener));
     }
 
+    void switchToBinaryProtocol() throws SerialPortException, EOFException, InterruptedException {
+//        while (true)
+        serialPort.writeBytes("~\n".getBytes());
+    }
+
     public void burnChanges(ConfigurationImage newVersion, Logger logger) throws InterruptedException, EOFException, SerialPortException {
         ConfigurationImage current = getController();
         // let's have our own copy which no one would be able to change
@@ -101,7 +106,9 @@ public class BinaryProtocol {
 
             int packetSize = BinaryProtocol.swap16(cbb.getShort());
             logger.trace("Got packet size " + packetSize);
-            if (packetSize < 0 || packetSize > 300) {
+            if (packetSize < 0
+//                    || packetSize > 300
+                    ) {
                 // invalid packet size
                 return null;
             }
@@ -262,5 +269,12 @@ public class BinaryProtocol {
             }
             break;
         }
+    }
+
+    public void requestText() throws InterruptedException, EOFException, SerialPortException {
+        byte[] response = exchange(new byte[]{'G'});
+        if (response != null && response.length == 1)
+            Thread.sleep(100);
+        System.out.println(new String(response));
     }
 }

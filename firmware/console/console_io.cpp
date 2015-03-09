@@ -21,6 +21,7 @@
 #include "main.h"
 #include "console_io.h"
 #include "rfiutil.h"
+#include "tunerstudio.h"
 
 #if HAL_USE_SERIAL_USB || defined(__DOXYGEN__)
 #include "usbcfg.h"
@@ -99,6 +100,11 @@ static bool getConsoleLine(BaseSequentialStream *chp, char *line, unsigned size)
 			*p = 0;
 			return false;
 		}
+		if (c == '\n') {
+			consolePutChar('\n');
+			*p = 0;
+			return false;
+		}
 		if (c < 0x20) {
 			continue;
 		}
@@ -151,6 +157,10 @@ bool isConsoleReady(void) {
 
 bool_t consoleInBinaryMode = false;
 
+ts_channel_s binaryConsole;
+
+uint8_t buffer[DL_OUTPUT_BUFFER];
+
 static THD_WORKING_AREA(consoleThreadStack, 2 * UTILITY_THREAD_STACK_SIZE);
 static msg_t consoleThreadThreadEntryPoint(void *arg) {
 	(void) arg;
@@ -165,6 +175,10 @@ static msg_t consoleThreadThreadEntryPoint(void *arg) {
 	}
 #endif /* EFI_PROD_CODE */
 
+	binaryConsole.channel = (BaseChannel *) getConsoleChannel();
+	// todo: clean this spot!
+	binaryConsole.writeBuffer = buffer;
+
 	while (true) {
 		efiAssert(getRemainingStack(chThdSelf()) > 256, "lowstck#9e", 0);
 		bool end = getConsoleLine((BaseSequentialStream*) getConsoleChannel(), consoleInput, sizeof(consoleInput));
@@ -174,6 +188,11 @@ static msg_t consoleThreadThreadEntryPoint(void *arg) {
 		}
 
 		(console_line_callback)(consoleInput);
+
+		if (consoleInBinaryMode) {
+			// switch to binary protocol
+			runBinaryProtocolLoop(&binaryConsole);
+		}
 	}
 #if defined __GNUC__
 	return false;
@@ -233,7 +252,7 @@ void startConsole(Logging *sharedLogger, CommandHandler console_line_callback_p)
 #endif /* EFI_PROD_CODE */
 
 	chThdCreateStatic(consoleThreadStack, sizeof(consoleThreadStack), NORMALPRIO, consoleThreadThreadEntryPoint, NULL);
-	addConsoleAction("~", switchToBinaryProtocol);
+	addConsoleAction(BINARY_COMMAND, switchToBinaryProtocol);
 }
 
 /**

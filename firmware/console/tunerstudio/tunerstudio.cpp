@@ -79,6 +79,7 @@
 #include <string.h>
 #include "engine_configuration.h"
 #include "svnversion.h"
+#include "loggingcentral.h"
 
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 
@@ -400,6 +401,11 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel) {
 
 		uint32_t incomingPacketSize = firstByte * 256 + secondByte;
 
+		if(incomingPacketSize==BINARY_SWITCH_TAG) {
+			// we are here if we get a binary switch request while already in binary mode. We will just ignore it.
+			continue;
+		}
+
 		if (incomingPacketSize == 0 || incomingPacketSize > (sizeof(tsChannel->crcReadBuffer) - CRC_WRAPPING_SIZE)) {
 			scheduleMsg(tsLogger, "TunerStudio: invalid size: %d", incomingPacketSize);
 			tunerStudioError("ERROR: CRC header size");
@@ -530,6 +536,13 @@ void handleTestCommand(ts_channel_s *tsChannel) {
 
 extern CommandHandler console_line_callback;
 
+static void handleGetText(ts_channel_s *tsChannel) {
+	int outputSize;
+	char *output = swapOutputBuffers(&outputSize);
+
+	tunerStudioWriteCrcPacket(tsChannel, TS_RESPONSE_COMMAND_OK, output, outputSize);
+}
+
 static void handleExecuteCommand(ts_channel_s *tsChannel, char *data, int incomingPacketSize) {
 	tunerStudioWriteCrcPacket(tsChannel, TS_RESPONSE_COMMAND_OK, NULL, 0);
 	data[incomingPacketSize] = 0;
@@ -613,6 +626,8 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 	if (command == TS_HELLO_COMMAND || command == TS_HELLO_COMMAND_DEPRECATED) {
 		tunerStudioDebug("got Query command");
 		handleQueryCommand(tsChannel, TS_CRC);
+	} else if (command == TS_GET_TEXT) {
+		handleGetText(tsChannel);
 	} else if (command == TS_EXECUTE) {
 		handleExecuteCommand(tsChannel, data, incomingPacketSize);
 	} else if (command == TS_OUTPUT_COMMAND) {
