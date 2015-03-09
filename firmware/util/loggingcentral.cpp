@@ -8,6 +8,8 @@
 #include "main.h"
 #include "efilib.h"
 
+#if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
+
 typedef char log_buf_t[DL_OUTPUT_BUFFER];
 
 /**
@@ -64,31 +66,43 @@ void scheduleLogging(Logging *logging) {
 }
 
 /**
+ * this method should always be invoked from the same thread!
+ */
+char * swapOutputBuffers(int *actualOutputBufferSize) {
+	int expectedOutputSize;
+	{ // start of critical section
+		lockOutputBuffer();
+		/**
+		 * we cannot output under syslock, we simply rotate which buffer is which
+		 */
+		char *temp = outputBuffer;
+
+		expectedOutputSize = accumulatedSize;
+		outputBuffer = accumulationBuffer;
+
+		accumulationBuffer = temp;
+		accumulatedSize = 0;
+		accumulationBuffer[0] = 0;
+
+		unlockOutputBuffer();
+	} // end of critical section
+
+	*actualOutputBufferSize = efiStrlen(outputBuffer);
+	efiAssert(*actualOutputBufferSize == expectedOutputSize, "out constr", NULL);
+	return outputBuffer;
+}
+
+/**
  * This method actually sends all the pending data to the communication layer.
  * This method is invoked by the main thread - that's the only thread which should be sending
  * actual data to console in order to avoid concurrent access to serial hardware.
  */
 void printPending(void) {
-	lockOutputBuffer();
-	/**
-	 * we cannot output under syslock, we simply rotate which buffer is which
-	 */
-	char *temp = outputBuffer;
+	int actualOutputBufferSize;
+	char *output = swapOutputBuffers(&actualOutputBufferSize);
 
-	int expectedOutputSize = accumulatedSize;
-	outputBuffer = accumulationBuffer;
-
-	accumulationBuffer = temp;
-	accumulatedSize = 0;
-	accumulationBuffer[0] = 0;
-
-	unlockOutputBuffer();
-
-	int actualOutputBuffer = efiStrlen(outputBuffer);
-	efiAssertVoid(actualOutputBuffer == expectedOutputSize, "out constr");
-
-	if (actualOutputBuffer > 0) {
-		printWithLength(outputBuffer);
+	if (actualOutputBufferSize > 0) {
+		printWithLength(output);
 	}
 }
 
@@ -99,3 +113,5 @@ void initLoggingCentral(void) {
 	outputBuffer = pendingBuffers1;
 	accumulatedSize = 0;
 }
+
+#endif /* EFI_UNIT_TEST */
