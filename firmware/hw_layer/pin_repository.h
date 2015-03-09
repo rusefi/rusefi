@@ -42,5 +42,6 @@ GPIO_TypeDef * getHwPort(brain_pin_e brainPin);
 }
 #endif /* __cplusplus */
 
+void efiIcuStart(ICUDriver *icup, const ICUConfig *config);
 
 #endif /* PIN_REPOSITORY_H_ */

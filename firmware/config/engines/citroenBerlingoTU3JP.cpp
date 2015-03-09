@@ -63,8 +63,8 @@ static const ignition_table_t tps_advance_table = {
 {/*15 engineLoad=100.00*/ /*0 800.0*/+12.00, /*1 1213.0*/+13.20, /*2 1626.0*/+14.40, /*3 2040.0*/+15.60, /*4 2453.0*/+16.80, /*5 2866.0*/+18.00, /*6 3280.0*/+19.20, /*7 3693.0*/+20.40, /*8 4106.0*/+21.60, /*9 4520.0*/+22.80, /*10 4933.0*/+24.00, /*11 5346.0*/+25.20, /*12 5760.0*/+26.40, /*13 6173.0*/+27.60, /*14 6586.0*/+28.80, /*15 7000.0*/+30.00}
 };
 
-static const float rpmSteps[16] = {800, 1200, 1600, 2000, 2500, 2800,
-		3280, 3693.0, 4106.0, 4520.0, 4933.0, 5346.0, 5760.0, 6173.0, 6586.0, 7000.0};
+//static const float rpmSteps[16] = {400, 800, 1200, 1600, 2000, 2400, 2800, 3200, 3600, 4000, 4400, 4800, 5200, 5600, 6000, 6400};
+//static const float mapSteps[16] = {25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100};
 
 EXTERN_ENGINE;
 
@@ -117,10 +117,15 @@ void setCitroenBerlingoTU3JPConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	// Frankenstein lo-side output #6: PE5
 	// Frankenstein lo-side output #7: PE2
 	// Frankenstein lo-side output #8: PE3
-	// Frankenstein lo-side output #9: PE0
-	// Frankenstein lo-side output #10: PE1
-	// Frankenstein lo-side output #11: PB8
-	// Frankenstein lo-side output #12: PB9 Fuel pump
+	// Frankenstein lo-side output #9: PE0	Fan
+	// Frankenstein lo-side output #10: PE1	MIL
+	// Frankenstein lo-side output #11: PB8	Main relay
+	// Frankenstein lo-side output #12: PB9	Fuel pump
+
+	boardConfiguration->ignitionPins[0] = GPIOC_14;
+	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
+	boardConfiguration->ignitionPins[2] = GPIOC_15;
+	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
 
 	engineConfiguration->injector.flow = 137; //SIEMENS DEKA VAZ20734
 	boardConfiguration->injectionPins[0] = GPIOE_6;
@@ -128,18 +133,19 @@ void setCitroenBerlingoTU3JPConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->injectionPins[2] = GPIO_UNASSIGNED;
 	boardConfiguration->injectionPins[3] = GPIO_UNASSIGNED;
 
-	boardConfiguration->ignitionPins[0] = GPIOC_14;
-	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPins[2] = GPIOC_15;
-	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
+	boardConfiguration->fanPin = GPIOE_0;
+	boardConfiguration->fanPinMode = OM_DEFAULT;
+
+	boardConfiguration->malfunctionIndicatorPin = GPIOE_1;
+	boardConfiguration->malfunctionIndicatorPinMode = OM_DEFAULT;
+
+	boardConfiguration->mainRelayPin = GPIOB_8;
 
 	boardConfiguration->fuelPumpPin = GPIOB_9;
 	boardConfiguration->fuelPumpPinMode = OM_DEFAULT;
 
 	setLCD(boardConfiguration);
 
-	boardConfiguration->fanPin = GPIO_UNASSIGNED;
-//	boardConfiguration->fanPinMode = OM_DEFAULT;
 
 //	boardConfiguration->o2heaterPin = GPIOC_13;
 //	boardConfiguration->logicAnalyzerPins[1] = GPIO_UNASSIGNED;
@@ -149,18 +155,18 @@ void setCitroenBerlingoTU3JPConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	 */
 
 	// See https://docs.google.com/spreadsheet/ccc?key=0Arl1FeMZcfisdEdGdUlHdWh6cVBoSzFIbkxqa1QtZ3c
-	// Frankenstein analog input #1: PA1 adc1	MAP
-	// Frankenstein analog input #2: PA3 adc3	TPS
-	// Frankenstein analog input #3: PC3 adc13	IAT
-	// Frankenstein analog input #4: PC1 adc11	CLT
-	// Frankenstein analog input #5: PA0 adc0	vBatt
-	// Frankenstein analog input #6: PC2 adc12	WBO
-	// Frankenstein analog input #7: PA4 adc4
-	// Frankenstein analog input #8: PA2 adc2
-	// Frankenstein analog input #9: PA6 adc6
-	// Frankenstein analog input #10: PA7 adc7
-	// Frankenstein analog input #11: PC4 adc14
-	// Frankenstein analog input #12: PC5 adc15
+	// Frankenstein analog input #1: PA1		adc1	MAP
+	// Frankenstein analog input #2: PA3		adc3	TPS
+	// Frankenstein analog input #3: PC3		adc13	IAT
+	// Frankenstein analog input #4: PC1		adc11	CLT
+	// Frankenstein analog input #5: PA0		adc0	vBatt
+	// Frankenstein analog input #6: PC2		adc12	WBO
+	// Frankenstein analog input #7: PA4		adc4
+	// Frankenstein analog input #8: PA2		adc2
+	// Frankenstein analog input #9: PA6		adc6
+	// Frankenstein analog input #10: PA7		adc7
+	// Frankenstein analog input #11: PC4		adc14
+	// Frankenstein analog input #12: PC5|PA8	adc15	Speed Sensor
 
 	/**
 	 * MAP <BOSCH 0 261 230 057>
@@ -196,6 +202,11 @@ void setCitroenBerlingoTU3JPConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	* WBO Innovate LC-1
 	*/
 	engineConfiguration->afr.hwChannel = EFI_ADC_12;
+	/**
+	* Speed Sensor
+	*/
+	engineConfiguration->vehicleSpeedSensorInputPin = GPIOA_8;
+	engineConfiguration->hasVehicleSpeedSensor = true;
 	/**
 	* Other
 	*/

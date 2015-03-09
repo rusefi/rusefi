@@ -482,7 +482,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	boardConfiguration->triggerInputPins[0] = GPIOC_6;
 	boardConfiguration->triggerInputPins[1] = GPIOA_5;
-	boardConfiguration->logicAnalyzerPins[0] = GPIOA_8;
+	boardConfiguration->logicAnalyzerPins[0] = GPIO_UNASSIGNED;
 	boardConfiguration->logicAnalyzerPins[1] = GPIO_UNASSIGNED; // GPIOE_5 is a popular option (if available)
 	boardConfiguration->logicAnalyzerPins[2] = GPIO_UNASSIGNED;
 	boardConfiguration->logicAnalyzerPins[3] = GPIO_UNASSIGNED;

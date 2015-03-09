@@ -230,3 +230,9 @@ void registedFundamentralIoPin(char *msg, ioportid_t port, ioportmask_t pin, iom
 	palSetPadMode(port, pin, mode);
 }
 
+void efiIcuStart(ICUDriver *icup, const ICUConfig *config) {
+	  efiAssertVoid((icup->state == ICU_STOP) || (icup->state == ICU_READY),
+	              "input already used?");
+
+	icuStart(icup, config);
+}

@@ -173,7 +173,7 @@ void startInputDriver(WaveReaderHw *hw, bool isActiveHigh) {
 			icuDisable(driver);
 			icuStop(driver);
 		}
-		icuStart(driver, &wave_icucfg);
+		efiIcuStart(driver, &wave_icucfg);
 		icuEnable(driver);
 	}
 	hw->started = true;
