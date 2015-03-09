@@ -179,8 +179,6 @@ static void setHondaAccordConfigurationCommon(DECLARE_ENGINE_PARAMETER_F) {
 
 	setFrankenso_01_LCD(boardConfiguration);
 
-	boardConfiguration->logicAnalyzerPins[1] = GPIO_UNASSIGNED;
-
 
 	boardConfiguration->idleSolenoidFrequency = 500;
 }

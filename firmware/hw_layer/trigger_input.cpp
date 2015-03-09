@@ -79,7 +79,7 @@ void initShaftPositionInputCapture(void) {
 	print("initShaftPositionInputCapture 1 %s\r\n", hwPortname(boardConfiguration->triggerInputPins[0]));
 	// todo: reuse 'setWaveReaderMode' method here?
 	if (driver != NULL) {
-		icuStart(driver, &shaft_icucfg);
+		efiIcuStart(driver, &shaft_icucfg);
 		icuEnable(driver);
 	}
 
@@ -89,7 +89,7 @@ void initShaftPositionInputCapture(void) {
 	shaft_icucfg.channel = ICU_CHANNEL_1;
 	print("initShaftPositionInputCapture 2 %s\r\n", hwPortname(boardConfiguration->triggerInputPins[1]));
 	if (driver != NULL) {
-		icuStart(driver, &shaft_icucfg);
+		efiIcuStart(driver, &shaft_icucfg);
 		icuEnable(driver);
 	}
 
