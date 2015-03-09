@@ -94,7 +94,7 @@ include $(CHIBIOS)/os/kernel/kernel.mk
 #include $(CHIBIOS)/os/various/cpp_wrappers/kernel.mk
 
 include $(CHIBIOS)/os/various/fatfs_bindings/fatfs.mk
-include console/tunerstudio/tunerstudio.mk
+include console/binary/tunerstudio.mk
 include ext/ext.mk
 include hw_layer/hw_layer.mk
 include development/development.mk
@@ -197,7 +197,7 @@ INCDIR = $(PORTINC) $(KERNINC) $(TESTINC) \
 	util \
 	console_util \
 	console \
-	console/tunerstudio \
+	console/binary \
 	hw_layer \
 	hw_layer/serial_over_usb \
 	hw_layer/algo \
