@@ -79,7 +79,7 @@ include $(PROJECT_DIR)/controllers/sensors/sensors.mk
 include $(PROJECT_DIR)/controllers/trigger/trigger.mk
 include $(PROJECT_DIR)/controllers/system/system.mk
 include $(PROJECT_DIR)/console/console.mk
-include $(PROJECT_DIR)/console/tunerstudio/tunerstudio.mk
+include $(PROJECT_DIR)/console/binary/tunerstudio.mk
 include $(PROJECT_DIR)/console_util/console_util.mk
 include $(PROJECT_DIR)/development/development.mk
 
@@ -165,7 +165,7 @@ $(PORTINC) $(KERNINC) $(TESTINC) \
           $(HALINC) $(PLATFORMINC) $(BOARDINC) \
 	$(PROJECT_DIR)/util \
 	$(PROJECT_DIR)/console \
-	$(PROJECT_DIR)/console/tunerstudio \
+	$(PROJECT_DIR)/console/binary \
 	$(PROJECT_DIR)/console_util \
 	$(PROJECT_DIR)/config/engines \
 	$(PROJECT_DIR)/ext_algo \
