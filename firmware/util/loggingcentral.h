@@ -8,5 +8,6 @@
 #define UTIL_LOGGINGCENTRAL_H_
 
 void initLoggingCentral(void);
+char * swapOutputBuffers(int *actualOutputBufferSize);
 
 #endif /* UTIL_LOGGINGCENTRAL_H_ */

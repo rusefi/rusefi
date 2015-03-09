@@ -14,6 +14,10 @@
 #include "pin_repository.h"
 #endif
 
+// that's hex for "~\n", see
+#define BINARY_SWITCH_TAG 0x7e0d
+#define BINARY_COMMAND "~"
+
 #define PROTOCOL  "001"
 #define TS_SIGNATURE "MShift v0.01"
 

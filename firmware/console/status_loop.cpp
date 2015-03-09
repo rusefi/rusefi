@@ -366,7 +366,7 @@ void updateDevConsoleState(Engine *engine) {
 	printWave(&logger);
 #endif
 
-	printLine(&logger);
+	scheduleLogging(&logger);
 }
 
 #if EFI_PROD_CODE
