@@ -15,7 +15,7 @@
 #endif
 
 // that's hex for "~\n", see
-#define BINARY_SWITCH_TAG 0x7e0d
+#define BINARY_SWITCH_TAG 0x7e0a
 #define BINARY_COMMAND "~"
 
 #define PROTOCOL  "001"

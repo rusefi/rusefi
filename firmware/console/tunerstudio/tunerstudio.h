@@ -53,6 +53,7 @@ void requestBurn(void);
 
 void startTunerStudioConnectivity(Logging *sharedLogger);
 void syncTunerStudioCopy(void);
+void runBinaryProtocolLoop(ts_channel_s *tsChannel);
 
 #if defined __GNUC__
 // GCC

@@ -33,7 +33,7 @@
 #include <stdbool.h>
 #include "main.h"
 
-#if ! EFI_UNIT_TEST
+#if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
 #include "chprintf.h"
 #include "chmtx.h"
 #include "memstreams.h"

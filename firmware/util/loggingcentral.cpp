@@ -92,12 +92,16 @@ char * swapOutputBuffers(int *actualOutputBufferSize) {
 	return outputBuffer;
 }
 
+extern bool_t consoleInBinaryMode;
+
 /**
  * This method actually sends all the pending data to the communication layer.
  * This method is invoked by the main thread - that's the only thread which should be sending
  * actual data to console in order to avoid concurrent access to serial hardware.
  */
 void printPending(void) {
+	if (consoleInBinaryMode)
+		return;
 	int actualOutputBufferSize;
 	char *output = swapOutputBuffers(&actualOutputBufferSize);
 
