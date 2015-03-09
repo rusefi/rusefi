@@ -41,6 +41,7 @@ typedef struct {
 #define TS_PAGE_COMMAND 'P'
 #define TS_COMMAND_F 'F'
 #define TS_EXECUTE 'E'
+#define TS_GET_TEXT 'G'
 
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_CHUNK_WRITE_COMMAND 'C'

@@ -39,35 +39,10 @@
 #include "memstreams.h"
 #include "console_io.h"
 #include "rfiutil.h"
+#include "loggingcentral.h"
 
 // we use this magic constant to make sure it's not just a random non-zero int in memory
 #define MAGIC_LOGGING_FLAG 45234441
-
-typedef char log_buf_t[DL_OUTPUT_BUFFER];
-
-/**
- * we need to leave a byte for zero terminator, also two bytes for the \r\n in
- * printWithLength, also couple of bytes just in case
- */
-#define MAX_DL_CAPACITY (DL_OUTPUT_BUFFER - 5)
-
-static log_buf_t pendingBuffers0 CCM_OPTIONAL;
-static log_buf_t pendingBuffers1;
-
-/**
- * This is the buffer into which all the data providers write
- */
-static char *accumulationBuffer;
-
-/**
- * amount of data accumulated so far
- */
-static uint32_t accumulatedSize;
-
-/**
- * We copy all the pending data into this buffer once we are ready to push it out
- */
-static char * outputBuffer;
 
 static MemoryStream intermediateLoggingBuffer;
 static uint8_t intermediateLoggingBufferData[INTERMEDIATE_LOGGING_BUFFER_SIZE] CCM_OPTIONAL;
@@ -224,7 +199,7 @@ static char header[16];
 /**
  * this method should invoked on the main thread only
  */
-static void printWithLength(char *line) {
+void printWithLength(char *line) {
 	/**
 	 * this is my way to detect serial port transmission errors
 	 * following code is functionally identical to
@@ -315,70 +290,12 @@ void scheduleMsg(Logging *logging, const char *fmt, ...) {
 	}
 }
 
-void scheduleLogging(Logging *logging) {
-	// this could be done without locking
-	int newLength = efiStrlen(logging->buffer);
-
-	bool alreadyLocked = lockOutputBuffer();
-	if (accumulatedSize + newLength >= MAX_DL_CAPACITY) {
-		/**
-		 * if no one is consuming the data we have to drop it
-		 * this happens in case of serial-over-USB, todo: find a better solution?
-		 */
-		if (!alreadyLocked) {
-			unlockOutputBuffer();
-		}
-		resetLogging(logging);
-		return;
-	}
-	// memcpy is faster then strcpy because it is not looking for line terminator
-	memcpy(accumulationBuffer + accumulatedSize, logging->buffer, newLength + 1);
-	accumulatedSize += newLength;
-	if (!alreadyLocked) {
-		unlockOutputBuffer();
-	}
-	resetLogging(logging);
-}
-
 uint32_t remainingSize(Logging *logging) {
 	return logging->bufferSize - loggingSize(logging);
 }
 
-/**
- * This method actually sends all the pending data to the communication layer.
- * This method is invoked by the main thread - that's the only thread which should be sending
- * actual data to console in order to avoid concurrent access to serial hardware.
- */
-void printPending(void) {
-	lockOutputBuffer();
-	/**
-	 * we cannot output under syslock, we simply rotate which buffer is which
-	 */
-	char *temp = outputBuffer;
-
-	int expectedOutputSize = accumulatedSize;
-	outputBuffer = accumulationBuffer;
-
-	accumulationBuffer = temp;
-	accumulatedSize = 0;
-	accumulationBuffer[0] = 0;
-
-	unlockOutputBuffer();
-
-	int actualOutputBuffer = efiStrlen(outputBuffer);
-	efiAssertVoid(actualOutputBuffer == expectedOutputSize, "out constr");
-
-	if (actualOutputBuffer > 0) {
-		printWithLength(outputBuffer);
-	}
-}
-
 void initIntermediateLoggingBuffer(void) {
-	pendingBuffers0[0] = 0;
-	pendingBuffers1[0] = 0;
-	accumulationBuffer = pendingBuffers0;
-	outputBuffer = pendingBuffers1;
-	accumulatedSize = 0;
+	initLoggingCentral();
 
 	msObjectInit(&intermediateLoggingBuffer, intermediateLoggingBufferData, INTERMEDIATE_LOGGING_BUFFER_SIZE, 0);
 	intermediateLoggingBufferInited = TRUE;
