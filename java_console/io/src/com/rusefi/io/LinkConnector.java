@@ -14,4 +14,6 @@ public interface LinkConnector {
     boolean hasError();
 
     String unpack(String packet);
+
+    String unpackConfirmation(String message);
 }

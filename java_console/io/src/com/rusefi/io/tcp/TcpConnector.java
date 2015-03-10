@@ -2,6 +2,7 @@ package com.rusefi.io.tcp;
 
 import com.rusefi.FileLog;
 import com.rusefi.core.EngineState;
+import com.rusefi.io.CommandQueue;
 import com.rusefi.io.LinkConnector;
 import com.rusefi.io.LinkManager;
 
@@ -36,6 +37,25 @@ public class TcpConnector implements LinkConnector {
         } catch (InvalidTcpPort e) {
             return false;
         }
+    }
+
+    public static String doUnpackConfirmation(String message) {
+        String confirmation = message.substring(CommandQueue.CONFIRMATION_PREFIX.length());
+        int index = confirmation.indexOf(":");
+        if (index < 0) {
+            return null;
+        }
+        String number = confirmation.substring(index + 1);
+        int length;
+        try {
+            length = Integer.parseInt(number);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+        if (length != index) {
+            return null;
+        }
+        return confirmation.substring(0, length);
     }
 
     static class InvalidTcpPort extends Exception {
@@ -112,7 +132,8 @@ public class TcpConnector implements LinkConnector {
     }
 
     @Override
-    public void send(String command) throws InterruptedException {
+    public void send(String text) throws InterruptedException {
+        String command = LinkManager.encodeCommand(text);
         FileLog.rlog("Writing " + command);
         try {
             writer.write(command + "\r\n");
@@ -122,6 +143,11 @@ public class TcpConnector implements LinkConnector {
             System.err.println("err in send");
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
+    }
+
+    @Override
+    public String unpackConfirmation(String message) {
+        return doUnpackConfirmation(message);
     }
 
     public static Collection<String> getAvailablePorts() {

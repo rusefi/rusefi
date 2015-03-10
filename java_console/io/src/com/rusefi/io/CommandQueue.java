@@ -17,7 +17,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 @SuppressWarnings("FieldCanBeLocal")
 public class CommandQueue {
-    private static final String CONFIRMATION_PREFIX = "confirmation_";
+    public static final String CONFIRMATION_PREFIX = "confirmation_";
     public static final int DEFAULT_TIMEOUT = 500;
     private static final int COMMAND_CONFIRMATION_TIMEOUT = 1000;
     private static final int SLOW_CONFIRMATION_TIMEOUT = 5000;
@@ -113,26 +113,11 @@ public class CommandQueue {
      * this method handles command confirmations packed as
      * TODO: add example, todo: refactor method and add unit test
      */
-    private void handleConfirmationMessage(String message, MessagesCentral mc) {
-        String confirmation = message.substring(CONFIRMATION_PREFIX.length());
-        int index = confirmation.indexOf(":");
-        if (index < 0) {
-            mc.postMessage(CommandQueue.class, "Broken confirmation: " + confirmation);
-            return;
-        }
-        String number = confirmation.substring(index + 1);
-        int length;
-        try {
-            length = Integer.parseInt(number);
-        } catch (NumberFormatException e) {
-            mc.postMessage(CommandQueue.class, "Broken confirmation length: " + confirmation);
-            return;
-        }
-        if (length != index) {
-            mc.postMessage(CommandQueue.class, "Broken confirmation length: " + confirmation);
-            return;
-        }
-        latestConfirmation = confirmation.substring(0, length);
+    private void handleConfirmationMessage(final String message, MessagesCentral mc) {
+        String confirmation = LinkManager.unpackConfirmation(message);
+        if (confirmation == null)
+            mc.postMessage(CommandQueue.class, "Broken confirmation length: " + message);
+        latestConfirmation = confirmation;
         mc.postMessage(CommandQueue.class, "got valid conf! " + latestConfirmation);
         synchronized (lock) {
             lock.notifyAll();
@@ -154,7 +139,8 @@ public class CommandQueue {
     /**
      * Non-blocking command request
      * Command is placed in the queue where it would be until it is confirmed
-     * @param command dev console command
+     *
+     * @param command   dev console command
      * @param timeoutMs retry timeout
      */
     public void write(String command, int timeoutMs, InvocationConfirmationListener listener) {
