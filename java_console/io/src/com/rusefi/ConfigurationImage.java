@@ -81,4 +81,10 @@ public class ConfigurationImage {
         byte[] copy = content.clone();
         return new ConfigurationImage(copy);
     }
+
+    public byte[] getRange(Integer first, int size) {
+        byte[] r = new byte[size];
+        System.arraycopy(content, first, r, 0, size);
+        return r;
+    }
 }

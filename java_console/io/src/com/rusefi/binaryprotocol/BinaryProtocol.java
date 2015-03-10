@@ -109,8 +109,15 @@ public class BinaryProtocol {
             Pair<Integer, Integer> range = ConfigurationImageDiff.findDifferences(current, newVersion, offset);
             if (range == null)
                 break;
-            logger.info("Need to patch: " + range);
-            writeData(newVersion.getContent(), range.first, range.second - range.first, logger);
+            int size = range.second - range.first;
+            logger.info("Need to patch: " + range + ", size=" + size);
+            byte[] oldBytes = current.getRange(range.first, size);
+            logger.info("old " + Arrays.toString(oldBytes));
+
+            byte[] newBytes = newVersion.getRange(range.first, size);
+            logger.info("new " + Arrays.toString(newBytes));
+
+            writeData(newVersion.getContent(), range.first, size, logger);
 
             offset = range.second;
         }
