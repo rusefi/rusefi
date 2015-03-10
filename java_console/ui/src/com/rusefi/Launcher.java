@@ -83,7 +83,7 @@ public class Launcher extends FrameHelper {
         super.onWindowOpened();
         setTitle("N/A");
 
-        LinkManager.open();
+        LinkManager.open(LinkManager.LinkStateListener.VOID);
 
         LinkManager.engineState.registerStringValueAction(EngineState.RUS_EFI_VERSION_TAG, new EngineState.ValueCallback<String>() {
             @Override

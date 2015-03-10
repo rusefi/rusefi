@@ -8,7 +8,7 @@ public interface Logger {
     Logger STDOUT = new Logger() {
         @Override
         public void trace(String msg) {
-            System.out.println(msg);
+//            System.out.println(msg);
         }
 
         @Override

@@ -2,6 +2,7 @@ package com.rusefi.io.serial;
 
 import com.rusefi.FileLog;
 import com.rusefi.core.EngineState;
+import com.rusefi.io.CommandQueue;
 import com.rusefi.io.LinkConnector;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.tcp.TcpConnector;
@@ -33,17 +34,16 @@ public class SerialConnector implements LinkConnector {
 
     @Override
     public String unpack(String packet) {
-        return EngineState.unpackString(packet);
+        return packet;
     }
 
     @Override
     public void send(String text) throws InterruptedException {
-        String command = LinkManager.encodeCommand(text);
-        PortHolder.getInstance().packAndSend(command);
+        PortHolder.getInstance().packAndSend(text);
     }
 
     @Override
     public String unpackConfirmation(String message) {
-        return TcpConnector.doUnpackConfirmation(message);
+        return message.substring(CommandQueue.CONFIRMATION_PREFIX.length());
     }
 }
