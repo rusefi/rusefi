@@ -18,7 +18,7 @@ import static com.romraider.editor.ecu.ECUEditorManager.getECUEditor;
  * 3/6/2015
  */
 public class RomRaiderWrapper {
-    private static final String DEFINITION_FILE = "rusefi.xml";
+    public static final String DEFINITION_FILE = "rusefi.xml";
 
     public static void main(String[] args) {
         startRomRaider();

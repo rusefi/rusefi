@@ -9,6 +9,9 @@ import com.rusefi.UploadChanges;
 import com.rusefi.io.serial.PortHolder;
 import jssc.SerialPort;
 
+import javax.swing.*;
+import java.io.File;
+
 /**
  * (c) Andrey Belomutskiy
  * 3/6/2015
@@ -46,6 +49,10 @@ public class BinaryProtocolCmd {
     }
 
     public static void doShowImage(ConfigurationImage image) throws Exception {
+        if (!new File(RomRaiderWrapper.DEFINITION_FILE).exists()) {
+            JOptionPane.showMessageDialog(null, RomRaiderWrapper.DEFINITION_FILE + " not found, turning off table editor");
+            return;
+        }
         RomRaiderWrapper.startRomRaider();
         ECUEditor.openImage(image.getFileContent(), SettingsManager.getSettings().getEcuDefinitionFiles().elementAt(0),
                 "rusEfi");
