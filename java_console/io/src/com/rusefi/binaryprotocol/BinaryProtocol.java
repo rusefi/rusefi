@@ -22,6 +22,10 @@ public class BinaryProtocol {
     private static final byte RESPONSE_OK = 0;
     private static final byte RESPONSE_BURN_OK = 0x04;
     private static final byte RESPONSE_COMMAND_OK = 0x07;
+    private static final int SWITCH_TO_BINARY_RESPONSE = 0xA7E;
+    private static final int TIMEOUT = 30 * 1000;
+
+
     private final Logger logger;
     private final SerialPort serialPort;
     private static final int BUFFER_SIZE = 10000;
@@ -54,8 +58,32 @@ public class BinaryProtocol {
     }
 
     void switchToBinaryProtocol() throws SerialPortException, EOFException, InterruptedException {
-//        while (true)
-        serialPort.writeBytes("~\n".getBytes());
+        long start = System.currentTimeMillis();
+
+        while (true) {
+            dropPending();
+
+            serialPort.writeBytes("~\n".getBytes());
+            synchronized (cbb) {
+                waitForBytes(2, start);
+                int response = cbb.getShort();
+                if (response != SWITCH_TO_BINARY_RESPONSE) {
+                    logger.error("Unexpected response, re-trying");
+                    continue;
+                }
+            }
+            break;
+        }
+    }
+
+    private void dropPending() {
+        synchronized (cbb) {
+            int pending = cbb.length();
+            if (pending > 0) {
+                logger.error("Unexpected pending data: " + pending);
+                cbb.get(new byte[pending]);
+            }
+        }
     }
 
     public void burnChanges(ConfigurationImage newVersion, Logger logger) throws InterruptedException, EOFException, SerialPortException {
@@ -101,8 +129,9 @@ public class BinaryProtocol {
     }
 
     private byte[] receivePacket() throws InterruptedException, EOFException {
+        long start = System.currentTimeMillis();
         synchronized (cbb) {
-            waitForBytes(2);
+            waitForBytes(2, start);
 
             int packetSize = BinaryProtocol.swap16(cbb.getShort());
             logger.trace("Got packet size " + packetSize);
@@ -112,7 +141,7 @@ public class BinaryProtocol {
                 // invalid packet size
                 return null;
             }
-            waitForBytes(packetSize + 4);
+            waitForBytes(packetSize + 4, start);
 
             byte[] packet = new byte[packetSize];
             int packetCrc;
@@ -165,6 +194,7 @@ public class BinaryProtocol {
     }
 
     public byte[] exchange(byte[] packet) throws SerialPortException, InterruptedException, EOFException {
+        dropPending();
         sendCrcPacket(packet);
         return receivePacket();
     }
@@ -222,12 +252,21 @@ public class BinaryProtocol {
         }
     }
 
-    private void waitForBytes(int count) throws InterruptedException {
+    /**
+     * @return true in case of timeout, false if everything is fine
+     */
+    private boolean waitForBytes(int count, long start) throws InterruptedException {
         logger.info("Waiting for " + count + " byte(s)");
         synchronized (cbb) {
-            while (cbb.length() < count)
-                cbb.wait();
+            while (cbb.length() < count) {
+                int timeout = (int) (start + TIMEOUT - System.currentTimeMillis());
+                if (timeout < 0) {
+                    return true; // timeout. Sad face.
+                }
+                cbb.wait(timeout);
+            }
         }
+        return false; // looks good!
     }
 
     private boolean checkResponseCode(byte[] response, byte code) {
