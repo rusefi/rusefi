@@ -632,7 +632,7 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 	} else if (command == TS_GET_TEXT) {
 		handleGetText(tsChannel);
 	} else if (command == TS_EXECUTE) {
-		handleExecuteCommand(tsChannel, data, incomingPacketSize);
+		handleExecuteCommand(tsChannel, data, incomingPacketSize - 1);
 	} else if (command == TS_OUTPUT_COMMAND) {
 		handleOutputChannelsCommand(tsChannel, TS_CRC);
 	} else if (command == TS_PAGE_COMMAND) {
