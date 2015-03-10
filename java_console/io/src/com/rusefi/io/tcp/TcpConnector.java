@@ -1,6 +1,7 @@
 package com.rusefi.io.tcp;
 
 import com.rusefi.FileLog;
+import com.rusefi.core.EngineState;
 import com.rusefi.io.LinkConnector;
 import com.rusefi.io.LinkManager;
 
@@ -103,6 +104,11 @@ public class TcpConnector implements LinkConnector {
     @Override
     public boolean hasError() {
         return withError;
+    }
+
+    @Override
+    public String unpack(String packet) {
+        return EngineState.unpackString(packet);
     }
 
     @Override

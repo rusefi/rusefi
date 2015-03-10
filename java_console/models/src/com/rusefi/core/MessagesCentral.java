@@ -19,7 +19,7 @@ public class MessagesCentral {
     private final List<MessageListener> listeners = new CopyOnWriteArrayList<>();
 
     private MessagesCentral() {
-        PortHolder.getInstance().listener = new PortHolderListener() {
+        PortHolder.getInstance().portHolderListener = new PortHolderListener() {
             @Override
             public void onPortHolderMessage(Class clazz, String message) {
                 postMessage(clazz, message);

@@ -2,6 +2,7 @@ package com.rusefi.core;
 
 import com.rusefi.FileLog;
 import com.rusefi.SensorConversion;
+import com.rusefi.io.LinkManager;
 import com.rusefi.waves.WaveReport;
 import org.jetbrains.annotations.NotNull;
 
@@ -59,7 +60,7 @@ public class EngineState {
     public EngineState(@NotNull final EngineStateListener listener) {
         buffer = new ResponseBuffer(new ResponseBuffer.ResponseListener() {
             public void onResponse(String message) {
-                String response = unpackString(message);
+                String response = LinkManager.unpack(message);
                 if (response != null) {
                     int i = response.indexOf(FileLog.END_OF_TIMESTAND_TAG);
                     if (i != -1)
