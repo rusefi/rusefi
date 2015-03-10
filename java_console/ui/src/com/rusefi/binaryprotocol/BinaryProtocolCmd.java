@@ -39,10 +39,13 @@ public class BinaryProtocolCmd {
         bp.switchToBinaryProtocol();
 
         bp.readImage(BinaryProtocol.IMAGE_SIZE);
-        ConfigurationImage image = bp.getController();
-//
+        //
 //        image.saveToFile("rusefi_configuration.bin");
 //
+        doShowImage(bp.getController());
+    }
+
+    public static void doShowImage(ConfigurationImage image) throws Exception {
         RomRaiderWrapper.startRomRaider();
         ECUEditor.openImage(image.getFileContent(), SettingsManager.getSettings().getEcuDefinitionFiles().elementAt(0),
                 "rusEfi");

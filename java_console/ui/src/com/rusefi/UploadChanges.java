@@ -1,6 +1,7 @@
 package com.rusefi;
 
 import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.PortHolder;
 import com.rusefi.ui.StatusWindow;
 import jssc.SerialPort;
@@ -10,8 +11,6 @@ import javax.swing.*;
 import java.io.EOFException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 /**
  * (c) Andrey Belomutskiy 2013-2015
@@ -19,8 +18,6 @@ import java.util.concurrent.Executors;
  */
 public class UploadChanges {
     public static final Logger logger = createUiLogger();
-    private static final Executor EXEC = Executors.newSingleThreadExecutor();
-
     public static void main(String[] args) throws SerialPortException, InvocationTargetException, InterruptedException {
         if (args.length != 1) {
             System.out.println("Exactly one parameter expected");
@@ -62,11 +59,11 @@ public class UploadChanges {
     }
 
     public static void scheduleBurn(final ConfigurationImage newVersion, final BinaryProtocol bp) {
-        EXEC.execute(new Runnable() {
+        LinkManager.COMMUNICATION_EXECUTOR.execute(new Runnable() {
             @Override
             public void run() {
                 try {
-                    bp.burnChanges(newVersion, logger);
+                    BinaryProtocol.instance.burnChanges(newVersion, logger);
                 } catch (InterruptedException | EOFException | SerialPortException e) {
                     logger.error("Error: " + e);
                     throw new IllegalStateException(e);

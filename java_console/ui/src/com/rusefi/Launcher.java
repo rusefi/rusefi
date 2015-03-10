@@ -1,5 +1,7 @@
 package com.rusefi;
 
+import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.binaryprotocol.BinaryProtocolCmd;
 import com.rusefi.core.EngineState;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.LinkManager;
@@ -83,7 +85,20 @@ public class Launcher extends FrameHelper {
         super.onWindowOpened();
         setTitle("N/A");
 
-        LinkManager.open(LinkManager.LinkStateListener.VOID);
+        LinkManager.open(new LinkManager.LinkStateListener() {
+            @Override
+            public void onConnectionFailed() {
+            }
+
+            @Override
+            public void onConnectionEstablished() {
+                try {
+                    BinaryProtocolCmd.doShowImage(BinaryProtocol.instance.getController());
+                } catch (Exception e) {
+                    throw new IllegalStateException(e);
+                }
+            }
+        });
 
         LinkManager.engineState.registerStringValueAction(EngineState.RUS_EFI_VERSION_TAG, new EngineState.ValueCallback<String>() {
             @Override

@@ -29,14 +29,7 @@ public class PortHolder {
     private static PortHolder instance = new PortHolder();
     private final Object portLock = new Object();
 
-    private final LinkedBlockingQueue<Runnable> EXE_Q = new LinkedBlockingQueue<>();
-
-    private final ExecutorService PORT_QUEUE = new ThreadPoolExecutor(1, 1,
-            0L, TimeUnit.MILLISECONDS,
-            EXE_Q);
-
     public PortHolderListener portHolderListener = PortHolderListener.VOID;
-    private DataListener listener;
     private BinaryProtocol bp;
 
     private PortHolder() {
@@ -50,13 +43,15 @@ public class PortHolder {
         if (port == null)
             return false;
         boolean result = open(port, dataListener);
-        if (!result)
+        if (result) {
+            listener.onConnectionEstablished();
+        } else {
             listener.onConnectionFailed();
+        }
         return result;
     }
 
     public boolean open(String port, final DataListener listener) {
-        this.listener = listener;
         SerialPort serialPort = new SerialPort(port);
         try {
             FileLog.MAIN.logLine("Opening " + port + " @ " + BAUD_RATE);
@@ -85,14 +80,14 @@ public class PortHolder {
         bp = new BinaryProtocol(Logger.STDOUT, serialPort);
 
         bp.switchToBinaryProtocol();
-//        bp.readImage(BinaryProtocol.IMAGE_SIZE);
+        bp.readImage(BinaryProtocol.IMAGE_SIZE);
 
         Runnable textPull = new Runnable() {
             @Override
             public void run() {
                 while (true) {
-                    if (EXE_Q.isEmpty()) {
-                        PORT_QUEUE.submit(new Runnable() {
+                    if (LinkManager.COMMUNICATION_QUEUE.isEmpty()) {
+                        LinkManager.COMMUNICATION_EXECUTOR.submit(new Runnable() {
                             @Override
                             public void run() {
                                 String text = bp.requestText();
@@ -159,7 +154,7 @@ public class PortHolder {
         FileLog.MAIN.logLine("Sending [" + command + "]");
         portHolderListener.onPortHolderMessage(PortHolder.class, "Sending [" + command + "]");
 
-        Future f = PORT_QUEUE.submit(new Runnable() {
+        Future f = LinkManager.COMMUNICATION_EXECUTOR.submit(new Runnable() {
             @Override
             public void run() {
                 bp.sendTextCommand(command);
@@ -168,9 +163,7 @@ public class PortHolder {
 
         try {
             f.get(30, TimeUnit.SECONDS);
-        } catch (ExecutionException e) {
-            throw new IllegalStateException(e);
-        } catch (TimeoutException e) {
+        } catch (ExecutionException | TimeoutException e) {
             throw new IllegalStateException(e);
         }
         /**
