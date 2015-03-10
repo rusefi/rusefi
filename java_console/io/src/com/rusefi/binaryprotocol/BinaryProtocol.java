@@ -35,9 +35,15 @@ public class BinaryProtocol {
     private final Object lock = new Object();
     private ConfigurationImage controller;
 
+    // todo: fix this, this is HORRIBLE!
+    @Deprecated
+    public static BinaryProtocol instance;
+
     public BinaryProtocol(final Logger logger, SerialPort serialPort) {
         this.logger = logger;
         this.serialPort = serialPort;
+
+        instance = this;
 
         cbb = new CircularByteBuffer(BUFFER_SIZE);
         DataListener listener = new DataListener() {
@@ -108,7 +114,7 @@ public class BinaryProtocol {
 
             offset = range.second;
         }
-        burn();
+        burn(logger);
         setController(newVersion);
     }
 
@@ -238,9 +244,10 @@ public class BinaryProtocol {
         }
     }
 
-    private void burn() throws InterruptedException, EOFException, SerialPortException {
+    private void burn(Logger logger) throws InterruptedException, EOFException, SerialPortException {
         if (!isBurnPending)
             return;
+        logger.info("Need to burn");
 
         while (true) {
             byte[] response = exchange(new byte[]{'B'});
@@ -249,6 +256,7 @@ public class BinaryProtocol {
             }
             break;
         }
+        logger.info("DONE");
         isBurnPending = false;
     }
 

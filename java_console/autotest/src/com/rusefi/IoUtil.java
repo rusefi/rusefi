@@ -169,6 +169,10 @@ public class IoUtil {
                 System.out.println("CONNECTION FAILED, did you specify the right port name?");
                 System.exit(-1);
             }
+
+            @Override
+            public void onConnectionEstablished() {
+            }
         });
         LinkManager.engineState.registerStringValueAction(EngineState.RUS_EFI_VERSION_TAG, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
         LinkManager.engineState.registerStringValueAction(EngineState.OUTPIN_TAG, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);

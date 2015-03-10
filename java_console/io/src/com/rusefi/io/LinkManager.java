@@ -6,9 +6,7 @@ import com.rusefi.io.serial.SerialConnector;
 import com.rusefi.io.tcp.TcpConnector;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.*;
 
 /**
  * @author Andrey Belomutskiy
@@ -53,6 +51,10 @@ public class LinkManager {
             return TcpConnector.doUnpackConfirmation(message);
         }
     };
+    public static final LinkedBlockingQueue<Runnable> COMMUNICATION_QUEUE = new LinkedBlockingQueue<>();
+    public static final ExecutorService COMMUNICATION_EXECUTOR = new ThreadPoolExecutor(1, 1,
+            0L, TimeUnit.MILLISECONDS,
+            COMMUNICATION_QUEUE);
     public static EngineState engineState = new EngineState(new EngineState.EngineStateListenerImpl() {
         @Override
         public void beforeLine(String fullLine) {
@@ -131,8 +133,15 @@ public class LinkManager {
             @Override
             public void onConnectionFailed() {
             }
+
+            @Override
+            public void onConnectionEstablished() {
+
+            }
         };
 
         void onConnectionFailed();
+
+        void onConnectionEstablished();
     }
 }
