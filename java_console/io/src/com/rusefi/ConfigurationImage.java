@@ -23,14 +23,18 @@ public class ConfigurationImage {
         return content.length;
     }
 
-    public byte[] getFileContent() throws IOException {
-        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-            byte[] bytes = BIN_HEADER.getBytes();
-            if (bytes.length != BIN_HEADER.length())
-                throw new IllegalStateException("Encoding issue");
-            baos.write(bytes);
-            baos.write(content);
-            return baos.toByteArray();
+    public byte[] getFileContent() {
+        try {
+            try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+                byte[] bytes = BIN_HEADER.getBytes();
+                if (bytes.length != BIN_HEADER.length())
+                    throw new IllegalStateException("Encoding issue");
+                baos.write(bytes);
+                baos.write(content);
+                return baos.toByteArray();
+            }
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
         }
     }
 

@@ -85,8 +85,8 @@ public class UploadChanges {
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
-                        System.out.println(msg);
-                        wnd.appendMsg(msg);
+//                        System.out.println(msg);
+//                        wnd.appendMsg(msg);
                     }
                 });
             }

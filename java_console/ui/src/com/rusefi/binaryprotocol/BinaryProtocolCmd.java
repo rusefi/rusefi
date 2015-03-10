@@ -1,7 +1,10 @@
 package com.rusefi.binaryprotocol;
 
+import com.romraider.editor.ecu.ECUEditor;
+import com.romraider.util.SettingsManager;
 import com.rusefi.ConfigurationImage;
 import com.rusefi.Logger;
+import com.rusefi.RomRaiderWrapper;
 import com.rusefi.UploadChanges;
 import com.rusefi.io.serial.PortHolder;
 import jssc.SerialPort;
@@ -35,27 +38,14 @@ public class BinaryProtocolCmd {
         logger.info("Looks good");
         bp.switchToBinaryProtocol();
 
-
-//        bp.exchange(new byte[]{'S'});
-
-
-//        bp.sendTextCommand("hello");
-//        bp.sendTextCommand("echo howareyou");
-
-        while (true) {
-            bp.requestText();
-        }
-
-//        bp.readImage(14008);
-//        ConfigurationImage image = bp.getController();
+        bp.readImage(BinaryProtocol.IMAGE_SIZE);
+        ConfigurationImage image = bp.getController();
 //
 //        image.saveToFile("rusefi_configuration.bin");
 //
-//        RomRaiderWrapper.startRomRaider();
-//
-//        ECUEditor.openImage(image.getFileContent(), SettingsManager.getSettings().getEcuDefinitionFiles().elementAt(0),
-//                "rusEfi");
-
+        RomRaiderWrapper.startRomRaider();
+        ECUEditor.openImage(image.getFileContent(), SettingsManager.getSettings().getEcuDefinitionFiles().elementAt(0),
+                "rusEfi");
     }
 
     public static void scheduleBurn(ConfigurationImage newVersion) {
