@@ -116,6 +116,8 @@ static int ts_serial_ready(void) {
 #endif
 }
 
+static uint16_t BINARY_RESPONSE = (uint16_t)SWAP_UINT16(BINARY_SWITCH_TAG);
+
 // this thread wants a bit extra stack
 static THD_WORKING_AREA(tsThreadStack, UTILITY_THREAD_STACK_SIZE + 200);
 
@@ -401,8 +403,9 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel) {
 
 		uint32_t incomingPacketSize = firstByte * 256 + secondByte;
 
-		if(incomingPacketSize==BINARY_SWITCH_TAG) {
+		if (incomingPacketSize == BINARY_SWITCH_TAG) {
 			// we are here if we get a binary switch request while already in binary mode. We will just ignore it.
+			tunerStudioWriteData(tsChannel, (const uint8_t *)&BINARY_RESPONSE, 2);
 			continue;
 		}
 
