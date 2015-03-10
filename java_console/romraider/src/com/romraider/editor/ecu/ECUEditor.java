@@ -390,7 +390,7 @@ public class ECUEditor extends AbstractFrame {
             frame.getTable().drawTable();
             rightPanel.add(frame);
         } catch (IllegalArgumentException ex) {
-            ;// Do nothing.
+            // Do nothing.
         }
         frame.pack();
         rightPanel.repaint();
@@ -464,7 +464,7 @@ public class ECUEditor extends AbstractFrame {
     }
 
     public Vector<Rom> getImages() {
-        Vector<Rom> images = new Vector<Rom>();
+        Vector<Rom> images = new Vector<>();
         for (int i = 0; i < imageRoot.getChildCount(); i++) {
             if(imageRoot.getChildAt(i) instanceof Rom) {
                 Rom rom = (Rom) imageRoot.getChildAt(i);
@@ -515,15 +515,12 @@ public class ECUEditor extends AbstractFrame {
 
     public static byte[] readFile(File inputFile) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        FileInputStream fis = new FileInputStream(inputFile);
-        try {
+        try (FileInputStream fis = new FileInputStream(inputFile)) {
             byte[] buf = new byte[8192];
             int bytesRead;
             while ((bytesRead = fis.read(buf)) != -1) {
                 baos.write(buf, 0, bytesRead);
             }
-        } finally {
-            fis.close();
         }
         return baos.toByteArray();
     }

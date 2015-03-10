@@ -120,7 +120,7 @@ public class ECUEditorToolBar extends JToolBar {
 //            refreshImage.setEnabled(true);
 //            closeImage.setEnabled(true);
 //        }
-//        revalidate();
+        revalidate();
     }
 
     private Settings getSettings() {
