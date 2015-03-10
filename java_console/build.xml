@@ -44,6 +44,8 @@
 		<fileset dir="ui/resources" includes="**/*.gif"/>
 		<fileset dir="ui/resources" includes="**/*.png"/>
 
+		<fileset dir="romraider/resources" includes="**/*.*"/>
+
 </copy>
         <jar destfile="${jar_file}" basedir="build/classes">
             <manifest>
@@ -51,6 +53,10 @@
             </manifest>
 		<zipfileset src="lib/SteelSeries-3.9.30.jar" includes="**/*.class"/>
 		<zipfileset src="lib/trident-6.2.jar" includes="**/*.class"/>
+
+		<zipfileset src="lib/swing-layout-1.0.jar" includes="**/*.class"/>
+		<zipfileset src="lib/log4j.jar" includes="**/*.class"/>
+		<zipfileset src="lib/jep.jar" includes="**/*.class"/>
 
 		<zipfileset src="lib/jssc.jar" includes="**/*.class **/*.so **/*.dll **/*.jnilib"/>
 

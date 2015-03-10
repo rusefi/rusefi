@@ -31,8 +31,8 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * @see com.rusefi.StartupFrame
  */
 public class Launcher extends FrameHelper {
-    public static final int CONSOLE_VERSION = 20150308;
-    public static final boolean SHOW_STIMULATOR = true;
+    public static final int CONSOLE_VERSION = 20150310;
+    public static final boolean SHOW_STIMULATOR = false;
     public static final String TAB_INDEX = "main_tab";
     private final String port;
     private final JTabbedPane tabbedPane = new JTabbedPane();
@@ -62,6 +62,7 @@ public class Launcher extends FrameHelper {
 
 //        tabbedPane.addTab("ADC", new AdcPanel(new BooleanInputsModel()).createAdcPanel());
         if (SHOW_STIMULATOR && !LinkManager.isStimulationMode && !LinkManager.isLogViewerMode(port)) {
+            // todo: rethink this UI? special command line key to enable it?
             EcuStimulator stimulator = EcuStimulator.getInstance();
             tabbedPane.add("ECU stimulation", stimulator.getPanel());
         }
