@@ -1,6 +1,7 @@
 package com.rusefi.io.serial;
 
 import com.rusefi.FileLog;
+import com.rusefi.core.EngineState;
 import com.rusefi.io.LinkConnector;
 import com.rusefi.io.LinkManager;
 
@@ -27,6 +28,11 @@ public class SerialConnector implements LinkConnector {
     @Override
     public boolean hasError() {
         return false;
+    }
+
+    @Override
+    public String unpack(String packet) {
+        return EngineState.unpackString(packet);
     }
 
     @Override

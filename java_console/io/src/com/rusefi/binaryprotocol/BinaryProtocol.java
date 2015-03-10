@@ -25,7 +25,6 @@ public class BinaryProtocol {
     private static final int SWITCH_TO_BINARY_RESPONSE = 0xA7E;
     private static final int TIMEOUT = 30 * 1000;
 
-
     private final Logger logger;
     private final SerialPort serialPort;
     private static final int BUFFER_SIZE = 10000;
@@ -35,7 +34,7 @@ public class BinaryProtocol {
     private final Object lock = new Object();
     private ConfigurationImage controller;
 
-    public BinaryProtocol(final Logger logger, SerialPort serialPort) throws SerialPortException {
+    public BinaryProtocol(final Logger logger, SerialPort serialPort) {
         this.logger = logger;
         this.serialPort = serialPort;
 
@@ -54,23 +53,31 @@ public class BinaryProtocol {
                 }
             }
         };
-        serialPort.addEventListener(new SerialPortReader(serialPort, listener));
+        try {
+            serialPort.addEventListener(new SerialPortReader(serialPort, listener));
+        } catch (SerialPortException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
-    void switchToBinaryProtocol() throws SerialPortException, EOFException, InterruptedException {
+    public void switchToBinaryProtocol() {
         long start = System.currentTimeMillis();
 
         while (true) {
             dropPending();
 
-            serialPort.writeBytes("~\n".getBytes());
-            synchronized (cbb) {
-                waitForBytes(2, start);
-                int response = cbb.getShort();
-                if (response != SWITCH_TO_BINARY_RESPONSE) {
-                    logger.error("Unexpected response, re-trying");
-                    continue;
+            try {
+                serialPort.writeBytes("~\n".getBytes());
+                synchronized (cbb) {
+                    waitForBytes(2, start);
+                    int response = cbb.getShort();
+                    if (response != SWITCH_TO_BINARY_RESPONSE) {
+                        logger.error("Unexpected response, re-trying");
+                        continue;
+                    }
                 }
+            } catch (SerialPortException | EOFException | InterruptedException e) {
+                throw new IllegalStateException(e);
             }
             break;
         }
@@ -193,10 +200,14 @@ public class BinaryProtocol {
         setController(image);
     }
 
-    public byte[] exchange(byte[] packet) throws SerialPortException, InterruptedException, EOFException {
+    public byte[] exchange(byte[] packet) {
         dropPending();
-        sendCrcPacket(packet);
-        return receivePacket();
+        try {
+            sendCrcPacket(packet);
+            return receivePacket();
+        } catch (SerialPortException | InterruptedException | EOFException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     public void writeData(byte[] content, Integer offset, int size, Logger logger) throws SerialPortException, EOFException, InterruptedException {
@@ -226,7 +237,7 @@ public class BinaryProtocol {
         }
     }
 
-    public void burn() throws InterruptedException, EOFException, SerialPortException {
+    private void burn() throws InterruptedException, EOFException, SerialPortException {
         if (!isBurnPending)
             return;
 
@@ -295,7 +306,12 @@ public class BinaryProtocol {
         serialPort.writeBytes(packet);
     }
 
-    public void sendTextCommand(String text) throws SerialPortException, EOFException, InterruptedException {
+    /**
+     * This method blocks until a confirmation is received
+     *
+     * @return true in case of timeout, false if got proper confirmation
+     */
+    public boolean sendTextCommand(String text) {
         byte[] asBytes = text.getBytes();
         byte[] command = new byte[asBytes.length + 1];
         command[0] = 'E';
@@ -306,14 +322,20 @@ public class BinaryProtocol {
             if (!checkResponseCode(response, RESPONSE_COMMAND_OK) || response.length != 1) {
                 continue;
             }
-            break;
+            return false;
         }
     }
 
-    public void requestText() throws InterruptedException, EOFException, SerialPortException {
-        byte[] response = exchange(new byte[]{'G'});
-        if (response != null && response.length == 1)
-            Thread.sleep(100);
-        System.out.println(new String(response));
+    public String requestText() {
+        try {
+            byte[] response = new byte[0];
+            response = exchange(new byte[]{'G'});
+            if (response != null && response.length == 1)
+                Thread.sleep(100);
+            //        System.out.println(result);
+            return new String(response, 1, response.length - 1);
+        } catch (InterruptedException e) {
+            throw new IllegalStateException(e);
+        }
     }
 }

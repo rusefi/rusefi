@@ -12,4 +12,6 @@ public interface LinkConnector {
     void restart();
 
     boolean hasError();
+
+    String unpack(String packet);
 }
