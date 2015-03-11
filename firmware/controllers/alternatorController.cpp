@@ -51,6 +51,15 @@ static void setAltPid(float p) {
 	altPid.updateFactors(p, 0, 0);
 }
 
+static void applyAlternatorPinState(PwmConfig *state, int stateIndex) {
+	efiAssertVoid(stateIndex < PWM_PHASE_MAX_COUNT, "invalid stateIndex");
+	efiAssertVoid(state->multiWave.waveCount == 1, "invalid idle waveCount");
+	OutputPin *output = state->outputPins[0];
+	int value = state->multiWave.waves[0].pinStates[stateIndex];
+	if (!value || engineConfiguration->isAlternatorControlEnabled)
+		output->setValue(value);
+}
+
 void initAlternatorCtrl(Logging *sharedLogger) {
 	logger = sharedLogger;
 	if (boardConfiguration->alternatorControlPin == GPIO_UNASSIGNED)
@@ -58,7 +67,7 @@ void initAlternatorCtrl(Logging *sharedLogger) {
 
 	startSimplePwmExt(&alternatorControl, "Alternator control", boardConfiguration->alternatorControlPin,
 			&alternatorPin,
-			ALTERNATOR_VALVE_PWM_FREQUENCY, 0.1, applyPinState);
+			ALTERNATOR_VALVE_PWM_FREQUENCY, 0.1, applyAlternatorPinState);
 	chThdCreateStatic(alternatorControlThreadStack, sizeof(alternatorControlThreadStack), LOWPRIO,
 			(tfunc_t) AltCtrlThread, NULL);
 

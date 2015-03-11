@@ -408,6 +408,7 @@ bit hasMapSensor;@see isMapAveragingEnabled
 	bit hasVehicleSpeedSensor
 	bit isJoystickEnabled
 	bit isGpsEnabled
+	bit isAlternatorControlEnabled
 	bit hasMafSensor
 	bit hasTpsSensor
 
