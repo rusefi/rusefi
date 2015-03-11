@@ -50,6 +50,7 @@ public final class TableUpdateHandler implements DataUpdateHandler {
             if (tables != null && !tables.isEmpty()) {
                 String formattedValue = loggerData.getSelectedConvertor().format(response.getDataValue(loggerData));
                 for (Table table : tables) {
+                    table.clearLiveDataTrace();
                     table.highlightLiveData(formattedValue);
                 }
             }
