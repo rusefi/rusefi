@@ -59,7 +59,7 @@ public class SettingsForm extends JFrame implements MouseListener {
     private static final long serialVersionUID = 3910602424260147767L;
 
     public SettingsForm() {
-        this.setIconImage(getEditor().getIconImage());
+        this.setIconImage(getEditor().getFrame().getIconImage());
         initComponents();
         initSettings();
 

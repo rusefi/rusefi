@@ -40,7 +40,7 @@ public class DefinitionManager extends javax.swing.JFrame implements ActionListe
     Vector<String> fileNames;
 
     public DefinitionManager() {
-        this.setIconImage(ECUEditorManager.getECUEditor().getIconImage());
+        this.setIconImage(ECUEditorManager.getECUEditor().getFrame().getIconImage());
         initComponents();
         initSettings();
 
@@ -61,10 +61,10 @@ public class DefinitionManager extends javax.swing.JFrame implements ActionListe
     private void initSettings() {
         // add definitions to list
         Vector<File> definitionFiles = SettingsManager.getSettings().getEcuDefinitionFiles();
-        fileNames = new Vector<String>();
+        fileNames = new Vector<>();
 
-        for (int i = 0; i < definitionFiles.size(); i++) {
-            fileNames.add(definitionFiles.get(i).getAbsolutePath());
+        for (File definitionFile : definitionFiles) {
+            fileNames.add(definitionFile.getAbsolutePath());
         }
 
         updateListModel();

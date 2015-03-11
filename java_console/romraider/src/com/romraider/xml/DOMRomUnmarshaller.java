@@ -369,7 +369,7 @@ public final class DOMRomUnmarshaller {
             } catch (InvalidTableNameException ex) { // Table name is invalid, do nothing.
 
             } catch (NullPointerException ex) {
-                JOptionPane.showMessageDialog(ECUEditorManager.getECUEditor(),
+                JOptionPane.showMessageDialog(ECUEditorManager.getECUEditor().getFrame(),
                         new DebugPanel(ex, SettingsManager.getSettings().getSupportURL()), "Exception",
                         JOptionPane.ERROR_MESSAGE);
 
@@ -581,7 +581,7 @@ public final class DOMRomUnmarshaller {
 
                     } catch (Exception ex) {
                         JOptionPane.showMessageDialog(
-                                ECUEditorManager.getECUEditor(),
+                                ECUEditorManager.getECUEditor().getFrame(),
                                 new DebugPanel(ex, SettingsManager.getSettings()
                                         .getSupportURL()), "Exception",
                                         JOptionPane.ERROR_MESSAGE);
