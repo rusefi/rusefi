@@ -283,6 +283,18 @@ public class Table1D extends Table {
         }
     }
 
+    boolean ec = false;
+
+    @Override
+    public void clearLiveDataTrace() {
+        super.clearLiveDataTrace();
+        if (!ec) {
+            ec = true;
+            getAxisParent().clearLiveDataTrace();
+            ec = false;
+        }
+    }
+
     @Override
     public void updateTableLabel() {
         this.getAxisParent().updateTableLabel();
