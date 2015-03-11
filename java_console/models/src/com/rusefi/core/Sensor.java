@@ -26,6 +26,9 @@ public enum Sensor {
     TPS("throttle", SensorCategory.SENSOR_INPUTS, "%", 100),
     VSS("Speed", SensorCategory.SENSOR_INPUTS, "kph", 100),
 
+    ENGINE_LOAD("Engine Load", SensorCategory.SENSOR_INPUTS, "x", 300),
+
+
     MAFR_CFM("MAFR_CFM", SensorCategory.SENSOR_INPUTS, "cub f/m", 800),
     CLT_F("Coolant F", SensorCategory.SENSOR_INPUTS, "temperature, F", -40, 500),
     IAT_F("Intake Air F", SensorCategory.SENSOR_INPUTS, "temperature, F", -40, 350),

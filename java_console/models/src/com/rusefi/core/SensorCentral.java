@@ -1,5 +1,11 @@
 package com.rusefi.core;
 
+import com.romraider.logger.ecu.comms.query.ResponseImpl;
+import com.romraider.logger.ecu.definition.EcuDataConvertor;
+import com.romraider.logger.ecu.definition.EcuDataType;
+import com.romraider.logger.ecu.definition.LoggerData;
+import com.romraider.logger.ecu.ui.handler.table.TableUpdateHandler;
+
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +40,39 @@ public class SensorCentral {
         return value;
     }
 
-    public void setValue(double value, Sensor sensor) {
+    EcuDataConvertor convertor = new EcuDataConvertor() {
+        @Override
+        public double convert(byte[] bytes) {
+            return 0;
+        }
+
+        @Override
+        public String format(double value) {
+            return Double.toString(value);
+        }
+
+        @Override
+        public String getUnits() {
+            return null;
+        }
+
+        @Override
+        public String getFormat() {
+            return null;
+        }
+
+        @Override
+        public String getExpression() {
+            return null;
+        }
+
+        @Override
+        public String getDataType() {
+            return null;
+        }
+    };
+
+    public void setValue(double value, final Sensor sensor) {
         values.put(sensor, value);
         List<SensorListener> listeners;
         synchronized (allListeners) {
@@ -44,6 +82,62 @@ public class SensorCentral {
             return;
         for (SensorListener listener : listeners)
             listener.onSensorUpdate(value);
+
+
+        ResponseImpl r = new ResponseImpl();
+
+
+
+
+        LoggerData d = new LoggerData() {
+            @Override
+            public String getId() {
+                return sensor.getName();
+            }
+
+            @Override
+            public String getName() {
+                return sensor.getName();
+            }
+
+            @Override
+            public String getDescription() {
+                return sensor.getName();
+            }
+
+            @Override
+            public EcuDataConvertor getSelectedConvertor() {
+                return convertor;
+            }
+
+            @Override
+            public EcuDataConvertor[] getConvertors() {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public void selectConvertor(EcuDataConvertor convertor) {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public EcuDataType getDataType() {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public boolean isSelected() {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public void setSelected(boolean selected) {
+                throw new UnsupportedOperationException();
+            }
+        };
+
+        r.setDataValue(d, value);
+        TableUpdateHandler.getInstance().handleDataUpdate(r);
     }
 
     public static String getInternalAdcRepresentation(double value) {
@@ -81,6 +175,7 @@ public class SensorCentral {
         addDoubleSensor("tp", Sensor.TPS, es);
 
         addDoubleSensor(Sensor.VSS, es);
+        addDoubleSensor(Sensor.ENGINE_LOAD, es);
         addDoubleSensor(Sensor.DWELL0, es);
         addDoubleSensor(Sensor.DWELL1, es);
         addDoubleSensor(Sensor.DWELL2, es);

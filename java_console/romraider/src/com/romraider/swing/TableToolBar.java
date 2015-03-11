@@ -96,8 +96,8 @@ public class TableToolBar extends JToolBar implements MouseListener, ItemListene
     private final JComboBox scaleSelection = new JComboBox();
 
     private final JPanel liveDataPanel = new JPanel();
-    private final JCheckBox overlayLog = new JCheckBox("Overlay Log");
-    private final JButton clearOverlay = new JButton("Clear Overlay");
+//    private final JCheckBox overlayLog = new JCheckBox("Overlay Log");
+//    private final JButton clearOverlay = new JButton("Clear Overlay");
     private final JLabel liveDataValue = new JLabel();
 
     private final URL incrementFineImage = getClass().getResource("/graphics/icon-incfine.png");
@@ -171,8 +171,8 @@ public class TableToolBar extends JToolBar implements MouseListener, ItemListene
 
         scaleSelection.setPreferredSize(new Dimension(80, 23));
 
-        clearOverlay.setPreferredSize(new Dimension(75, 23));
-        clearOverlay.setBorder(createLineBorder(new Color(150, 150, 150), 1));
+//        clearOverlay.setPreferredSize(new Dimension(75, 23));
+//        clearOverlay.setBorder(createLineBorder(new Color(150, 150, 150), 1));
 
         incrementByFine.setAlignmentX(JTextArea.CENTER_ALIGNMENT);
         incrementByFine.setAlignmentY(JTextArea.CENTER_ALIGNMENT);
@@ -194,8 +194,8 @@ public class TableToolBar extends JToolBar implements MouseListener, ItemListene
         incrementByFine.setToolTipText("Fine Value Adjustment");
         incrementByCoarse.setToolTipText("Coarse Value Adjustment");
         multiply.setToolTipText("Multiply Value");
-        overlayLog.setToolTipText("Enable Overlay Of Real Time Log Data");
-        clearOverlay.setToolTipText("Clear Log Data Overlay Highlights");
+//        overlayLog.setToolTipText("Enable Overlay Of Real Time Log Data");
+//        clearOverlay.setToolTipText("Clear Log Data Overlay Highlights");
         colorCells.setToolTipText("Color Table Cells");
         refreshCompare.setToolTipText("Refresh Table Compare");
 
@@ -207,8 +207,8 @@ public class TableToolBar extends JToolBar implements MouseListener, ItemListene
         setValue.addMouseListener(this);
         multiply.addMouseListener(this);
         scaleSelection.addItemListener(this);
-        overlayLog.addItemListener(this);
-        clearOverlay.addActionListener(this);
+//        overlayLog.addItemListener(this);
+//        clearOverlay.addActionListener(this);
         colorCells.addMouseListener(this);
         refreshCompare.addMouseListener(this);
 
@@ -241,12 +241,12 @@ public class TableToolBar extends JToolBar implements MouseListener, ItemListene
         im.put(enter, "enterAction");
         getActionMap().put(im.get(enter), enterAction);
 
-        liveDataPanel.add(overlayLog);
-        liveDataPanel.add(clearOverlay);
+//        liveDataPanel.add(overlayLog);
+//        liveDataPanel.add(clearOverlay);
         //liveDataPanel.add(liveDataValue);
         this.add(liveDataPanel);
-        overlayLog.setEnabled(false);
-        clearOverlay.setEnabled(false);
+//        overlayLog.setEnabled(false);
+//        clearOverlay.setEnabled(false);
 
         incrementFine.getInputMap().put(enter, "enterAction");
         decrementFine.getInputMap().put(enter, "enterAction");
@@ -330,7 +330,7 @@ public class TableToolBar extends JToolBar implements MouseListener, ItemListene
 
         updateToolbarIncrementDecrementValues();
 
-        this.overlayLog.setSelected(selectedTable.getOverlayLog());
+//        this.overlayLog.setSelected(selectedTable.getOverlayLog());
         this.enable3d.setEnabled(selectedTable.getType() == Settings.TABLE_3D);
 
         setScales(selectedTable.getScales());
@@ -422,12 +422,12 @@ public class TableToolBar extends JToolBar implements MouseListener, ItemListene
         }
 
         if (null != currentTable && currentTable.isLiveDataSupported() && enabled) {
-            overlayLog.setEnabled(true);
-            clearOverlay.setEnabled(true);
+//            overlayLog.setEnabled(true);
+//            clearOverlay.setEnabled(true);
         }
         else{
-            overlayLog.setEnabled(false);
-            clearOverlay.setEnabled(false);
+//            overlayLog.setEnabled(false);
+//            clearOverlay.setEnabled(false);
         }
 
         if(null != currentTable && currentTable.isStaticDataTable()) {
@@ -725,9 +725,9 @@ public class TableToolBar extends JToolBar implements MouseListener, ItemListene
             } catch (NameNotFoundException e1) {
                 e1.printStackTrace();
             }
-        } else if (e.getSource() == overlayLog) {
-            // enable/disable log overlay and live data display
-            curTable.setOverlayLog(overlayLog.isSelected());
+//        } else if (e.getSource() == overlayLog) {
+//            // enable/disable log overlay and live data display
+//            curTable.setOverlayLog(overlayLog.isSelected());
         }
     }
 
@@ -739,10 +739,10 @@ public class TableToolBar extends JToolBar implements MouseListener, ItemListene
             return;
         }
 
-        if (e.getSource() == clearOverlay) {
-            // clear log overlay
-            curTable.clearLiveDataTrace();
-        }
+//        if (e.getSource() == clearOverlay) {
+//            // clear log overlay
+//            curTable.clearLiveDataTrace();
+//        }
     }
 
     public void setLiveDataValue(String value) {

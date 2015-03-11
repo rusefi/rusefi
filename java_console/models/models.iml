@@ -20,6 +20,6 @@
     <orderEntry type="library" name="junit" level="project" />
     <orderEntry type="library" name="SteelSeries" level="project" />
     <orderEntry type="module" module-name="io" />
+    <orderEntry type="module" module-name="romraider" />
   </component>
 </module>
-

@@ -94,7 +94,7 @@ public abstract class Table extends JPanel implements Serializable {
     protected boolean locked = false;
 
     protected String logParam = Settings.BLANK;
-    protected boolean overlayLog = false;
+    protected boolean overlayLog = true;
 
     protected CopyTableWorker copyTableWorker;
     protected CopySelectionWorker copySelectionWorker;
