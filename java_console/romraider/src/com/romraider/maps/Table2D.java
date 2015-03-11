@@ -249,7 +249,7 @@ public class Table2D extends Table {
         if(null != ancestorWindow) {
             ancestorWindow.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         }
-        ECUEditorManager.getECUEditor().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        ECUEditorManager.getECUEditor().getFrame().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         super.copySelection();
         copySelection2DWorker = new CopySelection2DWorker(this);
@@ -262,7 +262,7 @@ public class Table2D extends Table {
         if(null != ancestorWindow) {
             ancestorWindow.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         }
-        ECUEditorManager.getECUEditor().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        ECUEditorManager.getECUEditor().getFrame().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         copyTable2DWorker = new CopyTable2DWorker(this);
         copyTable2DWorker.execute();
@@ -473,7 +473,7 @@ class CopySelection2DWorker extends SwingWorker<Void, Void> {
             ancestorWindow.setCursor(null);
         }
         table.setCursor(null);
-        ECUEditorManager.getECUEditor().setCursor(null);
+        ECUEditorManager.getECUEditor().getFrame().setCursor(null);
     }
 }
 
@@ -504,6 +504,6 @@ class CopyTable2DWorker extends SwingWorker<Void, Void> {
             ancestorWindow.setCursor(null);
         }
         table.setCursor(null);
-        ECUEditorManager.getECUEditor().setCursor(null);
+        ECUEditorManager.getECUEditor().getFrame().setCursor(null);
     }
 }

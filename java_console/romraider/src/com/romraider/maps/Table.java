@@ -1030,7 +1030,7 @@ public abstract class Table extends JPanel implements Serializable {
             ancestorWindow.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         }
 
-        ECUEditorManager.getECUEditor().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        ECUEditorManager.getECUEditor().getFrame().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         copySelectionWorker = new CopySelectionWorker(this);
         copySelectionWorker.execute();
@@ -1052,7 +1052,7 @@ public abstract class Table extends JPanel implements Serializable {
         if(null != ancestorWindow) {
             ancestorWindow.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         }
-        ECUEditorManager.getECUEditor().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        ECUEditorManager.getECUEditor().getFrame().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         copyTableWorker = new CopyTableWorker(this);
         copyTableWorker.execute();
@@ -1446,7 +1446,7 @@ class CopySelectionWorker extends SwingWorker<Void, Void> {
             ancestorWindow.setCursor(null);
         }
         table.setCursor(null);
-        ECUEditorManager.getECUEditor().setCursor(null);
+        ECUEditorManager.getECUEditor().getFrame().setCursor(null);
     }
 }
 
@@ -1473,6 +1473,6 @@ class CopyTableWorker extends SwingWorker<Void, Void> {
             ancestorWindow.setCursor(null);
         }
         table.setCursor(null);
-        ECUEditorManager.getECUEditor().setCursor(null);
+        ECUEditorManager.getECUEditor().getFrame().setCursor(null);
     }
 }

@@ -339,17 +339,17 @@ public class ECUEditorMenuBar extends JMenuBar implements ActionListener {
 
         //} else
             if (e.getSource() == romProperties) {
-            showMessageDialog(parent, new RomPropertyPanel(parent.getLastSelectedRom()),
+            showMessageDialog(parent.getFrame(), new RomPropertyPanel(parent.getLastSelectedRom()),
                     parent.getLastSelectedRom().getRomIDString() + " Properties", INFORMATION_MESSAGE);
 
         } else if (e.getSource() == settings) {
             SettingsForm form = new SettingsForm();
-            form.setLocationRelativeTo(parent);
+            form.setLocationRelativeTo(parent.getFrame());
             form.setVisible(true);
 
         } else if (e.getSource() == compareImages){
-            CompareImagesForm form = new CompareImagesForm(parent.getImages(), parent.getIconImage());
-            form.setLocationRelativeTo(parent);
+            CompareImagesForm form = new CompareImagesForm(parent.getImages(), parent.getFrame().getIconImage());
+            form.setLocationRelativeTo(parent.getFrame());
             form.setVisible(true);
 
         } else if (e.getSource() == level1) {
@@ -382,7 +382,7 @@ public class ECUEditorMenuBar extends JMenuBar implements ActionListener {
                     + "Build #: " + BUILDNUMBER + "\n"
                     + SUPPORT_URL;
             String title = "About " + PRODUCT_NAME;
-            showMessageDialog(parent, message, title, INFORMATION_MESSAGE, ABOUT_ICON);
+            showMessageDialog(parent.getFrame(), message, title, INFORMATION_MESSAGE, ABOUT_ICON);
         }
     }
 
@@ -401,10 +401,10 @@ public class ECUEditorMenuBar extends JMenuBar implements ActionListener {
         ECUEditor parent = ECUEditorManager.getECUEditor();
         JFileChooser fc = new JFileChooser(SettingsManager.getSettings().getLastImageDir());
         fc.setFileFilter(new ECUImageFilter());
-        if (fc.showSaveDialog(parent) == JFileChooser.APPROVE_OPTION) {
+        if (fc.showSaveDialog(parent.getFrame()) == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fc.getSelectedFile();
             if (selectedFile.exists()) {
-                int option = showConfirmDialog(parent, selectedFile.getName() + " already exists! Overwrite?");
+                int option = showConfirmDialog(parent.getFrame(), selectedFile.getName() + " already exists! Overwrite?");
 
                 // option: 0 = Cancel, 1 = No
                 if (option == CANCEL_OPTION || option == 1) {
@@ -438,10 +438,10 @@ public class ECUEditorMenuBar extends JMenuBar implements ActionListener {
         // disable the "All files" option
         fc.setAcceptAllFileFilterUsed(false);
 
-        if (fc.showSaveDialog(ECUEditorManager.getECUEditor()) == JFileChooser.APPROVE_OPTION) {
+        if (fc.showSaveDialog(ECUEditorManager.getECUEditor().getFrame()) == JFileChooser.APPROVE_OPTION) {
             File selectedDir = fc.getSelectedFile();
             if (selectedDir.exists()) {
-                int option = showConfirmDialog(ECUEditorManager.getECUEditor(), selectedDir.getName() + " already exists! Overwrite?");
+                int option = showConfirmDialog(ECUEditorManager.getECUEditor().getFrame(), selectedDir.getName() + " already exists! Overwrite?");
 
                 // option: 0 = Cancel, 1 = No
                 if (option == CANCEL_OPTION || option == 1) {
@@ -498,7 +498,7 @@ public class ECUEditorMenuBar extends JMenuBar implements ActionListener {
             if(null != selectedFile){
                 if(lastSelectedRom.getRealFileSize() != Settings.SIXTEENBIT_SMALL_SIZE)
                 {
-                    showMessageDialog(ECUEditorManager.getECUEditor(), "Error converting image.  Image size is invalid.");
+                    showMessageDialog(ECUEditorManager.getECUEditor().getFrame(), "Error converting image.  Image size is invalid.");
                 } else {
                     byte[] output = lastSelectedRom.saveFile();
                     byte[] incOutput = new byte[Settings.SIXTEENBIT_LARGE_SIZE];
@@ -521,7 +521,7 @@ public class ECUEditorMenuBar extends JMenuBar implements ActionListener {
             if(null != selectedFile){
                 if(lastSelectedRom.getRealFileSize() != Settings.SIXTEENBIT_LARGE_SIZE)
                 {
-                    showMessageDialog(ECUEditorManager.getECUEditor(), "Error converting image.  Image size is invalid.");
+                    showMessageDialog(ECUEditorManager.getECUEditor().getFrame(), "Error converting image.  Image size is invalid.");
                 } else {
                     byte[] output =lastSelectedRom.saveFile();
                     byte[] decOutput = new byte[Settings.SIXTEENBIT_SMALL_SIZE];
