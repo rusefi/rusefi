@@ -49,13 +49,19 @@ public class BinaryProtocolCmd {
     }
 
     public static void doShowImage(ConfigurationImage image) throws Exception {
-        if (!new File(RomRaiderWrapper.DEFINITION_FILE).exists()) {
-            JOptionPane.showMessageDialog(null, RomRaiderWrapper.DEFINITION_FILE + " not found, turning off table editor");
+        if (!checkForDefinitionFile())
             return;
-        }
         RomRaiderWrapper.startRomRaider();
         ECUEditor.openImage(image.getFileContent(), SettingsManager.getSettings().getEcuDefinitionFiles().elementAt(0),
                 "rusEfi");
+    }
+
+    public static boolean checkForDefinitionFile() {
+        if (!new File(RomRaiderWrapper.DEFINITION_FILE).exists()) {
+            JOptionPane.showMessageDialog(null, RomRaiderWrapper.DEFINITION_FILE + " not found, turning off table editor");
+            return false;
+        }
+        return true;
     }
 
     public static void scheduleBurn(ConfigurationImage newVersion) {

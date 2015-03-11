@@ -27,7 +27,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 
-public abstract class AbstractFrame extends JFrame implements WindowListener, PropertyChangeListener {
+public abstract class AbstractFrame extends JFrame implements PropertyChangeListener {
     public AbstractFrame() throws HeadlessException {
         super();
     }
@@ -37,29 +37,4 @@ public abstract class AbstractFrame extends JFrame implements WindowListener, Pr
     }
 
     private static final long serialVersionUID = 7948304087075622157L;
-
-    public void windowActivated(WindowEvent arg0) {
-    }
-
-    public void windowClosed(WindowEvent e) {
-    }
-
-    public void windowClosing(WindowEvent e) {
-    }
-
-    public void windowDeactivated(WindowEvent e) {
-    }
-
-    public void windowDeiconified(WindowEvent e) {
-    }
-
-    public void windowIconified(WindowEvent e) {
-    }
-
-    public void windowOpened(WindowEvent e) {
-    }
-
-    public void propertyChange(PropertyChangeEvent arg0) {
-    }
-
 }

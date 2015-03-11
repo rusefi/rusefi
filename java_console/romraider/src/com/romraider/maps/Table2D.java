@@ -41,6 +41,7 @@ import javax.swing.SwingWorker;
 import com.romraider.Settings;
 import com.romraider.editor.ecu.ECUEditorManager;
 import com.romraider.util.SettingsManager;
+import com.rusefi.Launcher;
 
 public class Table2D extends Table {
     private static final long serialVersionUID = -7684570967109324784L;
@@ -249,7 +250,7 @@ public class Table2D extends Table {
         if(null != ancestorWindow) {
             ancestorWindow.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         }
-        ECUEditorManager.getECUEditor().getFrame().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        Launcher.getFrame().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         super.copySelection();
         copySelection2DWorker = new CopySelection2DWorker(this);
@@ -262,7 +263,7 @@ public class Table2D extends Table {
         if(null != ancestorWindow) {
             ancestorWindow.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         }
-        ECUEditorManager.getECUEditor().getFrame().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        Launcher.getFrame().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         copyTable2DWorker = new CopyTable2DWorker(this);
         copyTable2DWorker.execute();
@@ -473,7 +474,7 @@ class CopySelection2DWorker extends SwingWorker<Void, Void> {
             ancestorWindow.setCursor(null);
         }
         table.setCursor(null);
-        ECUEditorManager.getECUEditor().getFrame().setCursor(null);
+        Launcher.getFrame().setCursor(null);
     }
 }
 
@@ -504,6 +505,6 @@ class CopyTable2DWorker extends SwingWorker<Void, Void> {
             ancestorWindow.setCursor(null);
         }
         table.setCursor(null);
-        ECUEditorManager.getECUEditor().getFrame().setCursor(null);
+        Launcher.getFrame().setCursor(null);
     }
 }

@@ -16,6 +16,9 @@ import com.rusefi.ui.util.FrameHelper;
 import jssc.SerialPortList;
 
 import javax.swing.*;
+import javax.swing.table.TableCellEditor;
+
+import java.awt.*;
 
 import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
 
@@ -30,7 +33,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * @see com.rusefi.ui.engine.EngineSnifferPanel
  * @see com.rusefi.StartupFrame
  */
-public class Launcher extends FrameHelper {
+public class Launcher {
     public static final int CONSOLE_VERSION = 20150310;
     public static final boolean SHOW_STIMULATOR = false;
     public static final String TAB_INDEX = "main_tab";
@@ -39,8 +42,26 @@ public class Launcher extends FrameHelper {
 
     public static int defaultFontSize;
 
+    private static Frame staticFrame;
+    TableEditor tableEditor = new TableEditor();
+
+    FrameHelper frame = new FrameHelper() {
+        @Override
+        protected void onWindowOpened() {
+            super.onWindowOpened();
+            windowOpenedHandler();
+        }
+
+        @Override
+        protected void onWindowClosed() {
+            super.onWindowClosed();
+            windowClosedHandler();
+        }
+    };
+
     public Launcher(String port) {
         this.port = port;
+        staticFrame = frame.getFrame();
         FileLog.MAIN.start();
 
         LinkManager.start(port);
@@ -57,6 +78,9 @@ public class Launcher extends FrameHelper {
         tabbedPane.addTab("Gauges", new GaugesPanel().getContent());
         tabbedPane.addTab("Engine Sniffer", engineSnifferPanel.getPanel());
         tabbedPane.addTab("Sensor Sniffer", new AnalogChartPanel().getPanel());
+
+
+        tabbedPane.addTab("Table Editor", tableEditor);
 
         tabbedPane.addTab("LE controls", new FlexibleControls().getPanel());
 
@@ -77,13 +101,11 @@ public class Launcher extends FrameHelper {
                 tabbedPane.setSelectedIndex(selectedIndex);
         }
 
-        StartupFrame.setAppIcon(frame);
-        showFrame(tabbedPane);
+        StartupFrame.setAppIcon(frame.getFrame());
+        frame.showFrame(tabbedPane);
     }
 
-    @Override
-    protected void onWindowOpened() {
-        super.onWindowOpened();
+    private void windowOpenedHandler() {
         setTitle("N/A");
 
         LinkManager.open(new LinkManager.LinkStateListener() {
@@ -93,11 +115,7 @@ public class Launcher extends FrameHelper {
 
             @Override
             public void onConnectionEstablished() {
-                try {
-                    BinaryProtocolCmd.doShowImage(BinaryProtocol.instance.getController());
-                } catch (Exception e) {
-                    throw new IllegalStateException(e);
-                }
+                tableEditor.showContent();
             }
         });
 
@@ -111,14 +129,12 @@ public class Launcher extends FrameHelper {
     }
 
     private void setTitle(String value) {
-        frame.setTitle("Console " + CONSOLE_VERSION + "; firmware=" + value + "@" + port);
+        frame.getFrame().setTitle("Console " + CONSOLE_VERSION + "; firmware=" + value + "@" + port);
     }
 
-    @Override
-    protected void onWindowClosed() {
-        super.onWindowClosed();
+    private void windowClosedHandler() {
         /**
-         * looks like reconnectTimer in {@link RpmPanel} keeps AWT alive. Simplest solution would be to 'exit'
+         * looks like reconnectTimer in {@link com.rusefi.ui.RpmPanel} keeps AWT alive. Simplest solution would be to 'exit'
          */
         SimulatorHelper.onWindowClosed();
         Node root = getConfig().getRoot();
@@ -154,5 +170,9 @@ public class Launcher extends FrameHelper {
         } catch (Throwable e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    public static Frame getFrame() {
+        return staticFrame;
     }
 }

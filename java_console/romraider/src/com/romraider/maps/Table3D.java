@@ -47,6 +47,7 @@ import com.romraider.editor.ecu.ECUEditorManager;
 import com.romraider.logger.ecu.ui.swing.vertical.VerticalLabelUI;
 import com.romraider.util.SettingsManager;
 import com.romraider.xml.RomAttributeParser;
+import com.rusefi.Launcher;
 
 public class Table3D extends Table {
 
@@ -676,11 +677,10 @@ public class Table3D extends Table {
         if(null != ancestorWindow) {
             ancestorWindow.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         }
-        ECUEditorManager.getECUEditor().getFrame().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        Launcher.getFrame().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         copySelection3DWorker = new CopySelection3DWorker(this);
         copySelection3DWorker.execute();
-
     }
 
     @Override
@@ -689,7 +689,7 @@ public class Table3D extends Table {
         if(null != ancestorWindow) {
             ancestorWindow.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         }
-        ECUEditorManager.getECUEditor().getFrame().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        Launcher.getFrame().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         copyTable3DWorker = new CopyTable3DWorker(this);
         copyTable3DWorker.execute();
@@ -1109,7 +1109,7 @@ class CopySelection3DWorker extends SwingWorker<Void, Void> {
             ancestorWindow.setCursor(null);
         }
         table.setCursor(null);
-        ECUEditorManager.getECUEditor().getFrame().setCursor(null);
+        Launcher.getFrame().setCursor(null);
     }
 }
 
@@ -1137,6 +1137,6 @@ class CopyTable3DWorker extends SwingWorker<Void, Void> {
             ancestorWindow.setCursor(null);
         }
         table.setCursor(null);
-        ECUEditorManager.getECUEditor().getFrame().setCursor(null);
+        Launcher.getFrame().setCursor(null);
     }
 }

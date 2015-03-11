@@ -27,17 +27,19 @@ public class RomRaiderWrapper {
     }
 
     public static ECUEditor startRomRaider() {
-        Settings settings = SettingsManager.getSettings();
-        settings.getEcuDefinitionFiles().clear();
+        init();
 
-        settings.addEcuDefinitionFile(new File(DEFINITION_FILE));
-
-        LogManager.initDebugLogging();
-
-        LookAndFeelManager.initLookAndFeel();
+//        LookAndFeelManager.initLookAndFeel();
 
         ECUEditor editor = getECUEditor();
         editor.initializeEditorUI();
         return editor;
+    }
+
+    public static void init() {
+        Settings settings = SettingsManager.getSettings();
+        settings.getEcuDefinitionFiles().clear();
+        settings.addEcuDefinitionFile(new File(DEFINITION_FILE));
+        LogManager.initDebugLogging();
     }
 }
