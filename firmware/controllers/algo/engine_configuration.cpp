@@ -462,6 +462,8 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineConfiguration->hip9011SpiDevice = SPI_DEVICE_2;
 
+	engineConfiguration->isAlternatorControlEnabled = true;
+
 	engineConfiguration->isGpsEnabled = false;
 	boardConfiguration->gps_rx_pin = GPIOB_7;
 	boardConfiguration->gps_tx_pin = GPIOB_6;

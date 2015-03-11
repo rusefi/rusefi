@@ -774,6 +774,8 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engineConfiguration->isJoystickEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "altdebug")) {
 		boardConfiguration->isVerboseAlternator = isEnabled;
+	} else if (strEqualCaseInsensitive(param, "altcontrol")) {
+		engineConfiguration->isAlternatorControlEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "sd")) {
 		boardConfiguration->isSdCardEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "can")) {
