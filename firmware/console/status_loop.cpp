@@ -166,6 +166,9 @@ void printSensors(Logging *log, bool fileFormat) {
 		reportSensorF(log, fileFormat, "mafr", "kg/hr", getRealMaf(), 2);
 	}
 
+	reportSensorF(log, fileFormat, "ENGINE_LOAD", "x", getEngineLoadT(), 2);
+
+
 #if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
 	if (engineConfiguration->hasMapSensor) {
 		reportSensorF(log, fileFormat, "MAP", "kPa", getMap(), 2);

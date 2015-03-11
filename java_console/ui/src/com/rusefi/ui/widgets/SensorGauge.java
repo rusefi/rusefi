@@ -64,6 +64,7 @@ public class SensorGauge {
                 gauge.setValue(sensor.translateValue(value));
             }
         });
+        gauge.setValue(sensor.translateValue(SensorCentral.getInstance().getValue(sensor)));
         gauge.setLcdDecimals(2);
 
         gauge.addMouseListener(new MouseAdapter() {

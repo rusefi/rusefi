@@ -22,11 +22,7 @@ package com.romraider.logger.ecu.ui.handler.table;
 import static com.romraider.util.ParamChecker.isNullOrEmpty;
 import static java.util.Collections.synchronizedMap;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
+import java.util.*;
 
 import com.romraider.logger.ecu.comms.query.Response;
 import com.romraider.logger.ecu.definition.LoggerData;
@@ -37,7 +33,7 @@ import com.romraider.maps.Table3D;
 
 public final class TableUpdateHandler implements DataUpdateHandler {
     private static final TableUpdateHandler INSTANCE = new TableUpdateHandler();
-    private final Map<String, List<Table>> tableMap = synchronizedMap(new HashMap<String, List<Table>>());
+    private final Map<String, List<Table>> tableMap = synchronizedMap(new TreeMap<String, List<Table>>(String.CASE_INSENSITIVE_ORDER));
 
     private TableUpdateHandler() {
         tableMap.clear();
@@ -53,8 +49,8 @@ public final class TableUpdateHandler implements DataUpdateHandler {
             List<Table> tables = tableMap.get(loggerData.getId());
             if (tables != null && !tables.isEmpty()) {
                 String formattedValue = loggerData.getSelectedConvertor().format(response.getDataValue(loggerData));
-                for(ListIterator<Table> item = tables.listIterator(); item.hasNext();) {
-                    item.next().highlightLiveData(formattedValue);
+                for (Table table : tables) {
+                    table.highlightLiveData(formattedValue);
                 }
             }
         }
