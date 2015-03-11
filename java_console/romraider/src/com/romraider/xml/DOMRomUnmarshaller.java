@@ -31,6 +31,7 @@ import java.util.List;
 import javax.management.modelmbean.XMLParseException;
 import javax.swing.JOptionPane;
 
+import com.rusefi.Launcher;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -369,7 +370,7 @@ public final class DOMRomUnmarshaller {
             } catch (InvalidTableNameException ex) { // Table name is invalid, do nothing.
 
             } catch (NullPointerException ex) {
-                JOptionPane.showMessageDialog(ECUEditorManager.getECUEditor().getFrame(),
+                JOptionPane.showMessageDialog(Launcher.getFrame(),
                         new DebugPanel(ex, SettingsManager.getSettings().getSupportURL()), "Exception",
                         JOptionPane.ERROR_MESSAGE);
 
@@ -581,7 +582,7 @@ public final class DOMRomUnmarshaller {
 
                     } catch (Exception ex) {
                         JOptionPane.showMessageDialog(
-                                ECUEditorManager.getECUEditor().getFrame(),
+                                Launcher.getFrame(),
                                 new DebugPanel(ex, SettingsManager.getSettings()
                                         .getSupportURL()), "Exception",
                                         JOptionPane.ERROR_MESSAGE);

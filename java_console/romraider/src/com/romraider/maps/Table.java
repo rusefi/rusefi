@@ -56,6 +56,7 @@ import com.romraider.swing.TableToolBar;
 import com.romraider.util.JEPUtil;
 import com.romraider.util.SettingsManager;
 import com.romraider.xml.RomAttributeParser;
+import com.rusefi.Launcher;
 
 public abstract class Table extends JPanel implements Serializable {
     private static final long serialVersionUID = 6559256489995552645L;
@@ -1030,7 +1031,7 @@ public abstract class Table extends JPanel implements Serializable {
             ancestorWindow.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         }
 
-        ECUEditorManager.getECUEditor().getFrame().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        Launcher.getFrame().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         copySelectionWorker = new CopySelectionWorker(this);
         copySelectionWorker.execute();
@@ -1052,7 +1053,7 @@ public abstract class Table extends JPanel implements Serializable {
         if(null != ancestorWindow) {
             ancestorWindow.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         }
-        ECUEditorManager.getECUEditor().getFrame().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        Launcher.getFrame().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         copyTableWorker = new CopyTableWorker(this);
         copyTableWorker.execute();
@@ -1446,7 +1447,7 @@ class CopySelectionWorker extends SwingWorker<Void, Void> {
             ancestorWindow.setCursor(null);
         }
         table.setCursor(null);
-        ECUEditorManager.getECUEditor().getFrame().setCursor(null);
+        Launcher.getFrame().setCursor(null);
     }
 }
 
@@ -1473,6 +1474,6 @@ class CopyTableWorker extends SwingWorker<Void, Void> {
             ancestorWindow.setCursor(null);
         }
         table.setCursor(null);
-        ECUEditorManager.getECUEditor().getFrame().setCursor(null);
+        Launcher.getFrame().setCursor(null);
     }
 }

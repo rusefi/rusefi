@@ -53,13 +53,14 @@ import com.romraider.editor.ecu.ECUEditor;
 import com.romraider.editor.ecu.ECUEditorManager;
 //import com.romraider.util.FileAssociator;
 import com.romraider.util.SettingsManager;
+import com.rusefi.Launcher;
 
 public class SettingsForm extends JFrame implements MouseListener {
 
     private static final long serialVersionUID = 3910602424260147767L;
 
     public SettingsForm() {
-        this.setIconImage(getEditor().getFrame().getIconImage());
+        this.setIconImage(Launcher.getFrame().getIconImage());
         initComponents();
         initSettings();
 
