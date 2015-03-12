@@ -251,6 +251,23 @@ void handleWriteChunkCommand(ts_channel_s *tsChannel, ts_response_format_e mode,
 	printTsStats();
 }
 
+void handleCrc32Check(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t pageId, uint16_t offset, uint16_t count) {
+	tsState.crc32CheckCommandCounter++;
+
+	count = SWAP_UINT16(count);
+
+	count = 14008;
+
+	scheduleMsg(tsLogger, "CRC32 request: offset %d size %d", offset, count);
+
+	uint32_t crc = SWAP_UINT32(crc32((void *) getWorkingPageAddr(0), count));
+
+	scheduleMsg(tsLogger, "CRC32 response: %x", crc);
+
+	tsSendResponse(tsChannel, mode, (const uint8_t *)&crc, 4);
+}
+
+
 /**
  * 'Write' command receives a single value at a given offset
  * @note Writing values one by one is pretty slow
@@ -362,7 +379,8 @@ static bool isKnownCommand(char command) {
 	return command == TS_HELLO_COMMAND || command == TS_READ_COMMAND || command == TS_OUTPUT_COMMAND
 			|| command == TS_PAGE_COMMAND || command == TS_BURN_COMMAND || command == TS_SINGLE_WRITE_COMMAND
 			|| command == TS_LEGACY_HELLO_COMMAND || command == TS_CHUNK_WRITE_COMMAND
-			|| command == TS_EXECUTE || command == TS_GET_TEXT;
+			|| command == TS_EXECUTE || command == TS_GET_TEXT
+			|| command == TS_CRC_CHECK_COMMAND;
 }
 
 static uint8_t firstByte;
@@ -648,6 +666,11 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 		uint16_t offset = *(uint16_t *) (data + 2);
 		uint8_t value = data[4];
 		handleWriteValueCommand(tsChannel, TS_CRC, page, offset, value);
+	} else if (command == TS_CRC_CHECK_COMMAND) {
+		uint16_t page = *(uint16_t *) data;
+		uint16_t offset = *(uint16_t *) (data + 2);
+		uint16_t count = *(uint16_t *) (data + 4);
+		handleCrc32Check(tsChannel, TS_CRC, page, offset, count);
 	} else if (command == TS_BURN_COMMAND) {
 		uint16_t page = *(uint16_t *) data;
 		handleBurnCommand(tsChannel, TS_CRC, page);
