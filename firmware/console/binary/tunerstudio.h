@@ -24,6 +24,7 @@ typedef struct {
 	int burnCommandCounter;
 	int pageCommandCounter;
 	int writeValueCommandCounter;
+	int crc32CheckCommandCounter;
 	int writeChunkCommandCounter;
 	int errorCounter;
 	int tsCounter;
