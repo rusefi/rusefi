@@ -34,7 +34,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * @see com.rusefi.StartupFrame
  */
 public class Launcher {
-    public static final int CONSOLE_VERSION = 20150311;
+    public static final int CONSOLE_VERSION = 20150312;
     public static final boolean SHOW_STIMULATOR = false;
     public static final String TAB_INDEX = "main_tab";
     private final String port;

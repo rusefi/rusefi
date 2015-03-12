@@ -24,6 +24,12 @@ public class FirmwareFlasher extends ProcessStatusWindow {
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
+                int dialogResult = JOptionPane.showConfirmDialog(button, "Do you really want to update firmware? Please disconnect battery before erasing.",
+                        "Please disconnect from vehicle", JOptionPane.YES_NO_OPTION);
+                if (dialogResult != JOptionPane.YES_OPTION)
+                    return;
+
+
                 wnd.showFrame("rusEfi Firmware Flasher");
 
                 Runnable runnable = new Runnable() {
