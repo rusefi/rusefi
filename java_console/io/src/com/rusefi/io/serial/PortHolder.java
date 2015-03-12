@@ -26,6 +26,7 @@ public class PortHolder {
     private static final int BAUD_RATE = 115200;
     private static final int SECOND = 1000;
     private static final int MINUTE = 60 * SECOND;
+    private static final int COMMAND_TIMEOUT_SEC = 10; // seconds
     private static PortHolder instance = new PortHolder();
     private final Object portLock = new Object();
 
@@ -81,17 +82,20 @@ public class PortHolder {
 
         bp.switchToBinaryProtocol();
         bp.readImage(BinaryProtocol.IMAGE_SIZE);
+        if (bp.isClosed)
+            return false;
 
         Runnable textPull = new Runnable() {
             @Override
             public void run() {
-                while (true) {
+                while (!bp.isClosed) {
                     if (LinkManager.COMMUNICATION_QUEUE.isEmpty()) {
                         LinkManager.COMMUNICATION_EXECUTOR.submit(new Runnable() {
                             @Override
                             public void run() {
                                 String text = bp.requestText();
-                                listener.onDataArrived((text + "\r\n").getBytes());
+                                if (text != null)
+                                    listener.onDataArrived((text + "\r\n").getBytes());
                             }
                         });
                     }
@@ -162,9 +166,12 @@ public class PortHolder {
         });
 
         try {
-            f.get(30, TimeUnit.SECONDS);
-        } catch (ExecutionException | TimeoutException e) {
+            f.get(COMMAND_TIMEOUT_SEC, TimeUnit.SECONDS);
+        } catch (ExecutionException e) {
             throw new IllegalStateException(e);
+        } catch (TimeoutException e) {
+            bp.getLogger().error("timeout, giving up: " + e);
+            return;
         }
         /**
          * this here to make CommandQueue happy

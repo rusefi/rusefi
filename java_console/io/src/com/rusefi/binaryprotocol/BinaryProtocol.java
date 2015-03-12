@@ -38,6 +38,7 @@ public class BinaryProtocol {
     // todo: fix this, this is HORRIBLE!
     @Deprecated
     public static BinaryProtocol instance;
+    public boolean isClosed;
 
     public BinaryProtocol(final Logger logger, SerialPort serialPort) {
         this.logger = logger;
@@ -65,6 +66,10 @@ public class BinaryProtocol {
         } catch (SerialPortException e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    public Logger getLogger() {
+        return logger;
     }
 
     public void switchToBinaryProtocol() {
@@ -189,6 +194,9 @@ public class BinaryProtocol {
         int offset = 0;
 
         while (offset < image.getSize()) {
+            if (isClosed)
+                return;
+
             int remainingSize = image.getSize() - offset;
             int requestSize = Math.min(remainingSize, BLOCKING_FACTOR);
 
@@ -201,7 +209,7 @@ public class BinaryProtocol {
             byte[] response = exchange(packet);
 
             if (!checkResponseCode(response, RESPONSE_OK) || response.length != requestSize + 1) {
-                logger.error("Something is wrong, retrying...");
+                logger.error("readImage: Something is wrong, retrying...");
                 continue;
             }
 
@@ -214,13 +222,22 @@ public class BinaryProtocol {
         setController(image);
     }
 
+    /**
+     * Blocking sending binary packet and waiting for a response
+     *
+     * @return null in case of IO issues
+     */
     public byte[] exchange(byte[] packet) {
         dropPending();
         try {
             sendCrcPacket(packet);
             return receivePacket();
-        } catch (SerialPortException | InterruptedException | EOFException e) {
+        } catch (InterruptedException e) {
             throw new IllegalStateException(e);
+        } catch (SerialPortException | EOFException e) {
+            logger.error("exchange failed: " + e);
+            isClosed = true;
+            return null;
         }
     }
 
@@ -244,7 +261,7 @@ public class BinaryProtocol {
         while (true) {
             byte[] response = exchange(packet);
             if (!checkResponseCode(response, RESPONSE_OK) || response.length != 1) {
-                logger.error("Something is wrong, retrying...");
+                logger.error("writeData: Something is wrong, retrying...");
                 continue;
             }
             break;
@@ -257,6 +274,8 @@ public class BinaryProtocol {
         logger.info("Need to burn");
 
         while (true) {
+            if (isClosed)
+                return;
             byte[] response = exchange(new byte[]{'B'});
             if (!checkResponseCode(response, RESPONSE_BURN_OK) || response.length != 1) {
                 continue;
@@ -275,6 +294,8 @@ public class BinaryProtocol {
 
     public ConfigurationImage getController() {
         synchronized (lock) {
+            if (controller == null)
+                return null;
             return controller.clone();
         }
     }
@@ -287,7 +308,7 @@ public class BinaryProtocol {
         synchronized (cbb) {
             while (cbb.length() < count) {
                 int timeout = (int) (start + TIMEOUT - System.currentTimeMillis());
-                if (timeout < 0) {
+                if (timeout <= 0) {
                     return true; // timeout. Sad face.
                 }
                 cbb.wait(timeout);
@@ -343,6 +364,8 @@ public class BinaryProtocol {
     }
 
     public String requestText() {
+        if (isClosed)
+            return null;
         try {
             byte[] response = new byte[0];
             response = exchange(new byte[]{'G'});

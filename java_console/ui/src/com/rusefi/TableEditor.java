@@ -30,17 +30,15 @@ public class TableEditor extends JPanel {
 
             add(editor.getContent());
 
-
-            ConfigurationImage image = BinaryProtocol.instance.getController();
+            BinaryProtocol instance = BinaryProtocol.instance;
+            if (instance == null)
+                throw new NullPointerException("instance");
+            ConfigurationImage image = instance.getController();
             ECUEditor.openImage(image.getFileContent(), SettingsManager.getSettings().getEcuDefinitionFiles().elementAt(0),
                     "rusEfi");
-
-
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
         UiUtils.trueLayout(this);
-
-
     }
 }
