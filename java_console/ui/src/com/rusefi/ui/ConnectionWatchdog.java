@@ -9,17 +9,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class ConnectionWatchdog {
+    static final Timer reconnectTimer = new Timer(Timeouts.RESTART_DELAY, new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            LinkManager.restart();
+            reconnectTimer.restart();
+        }
+    });
 
     private ConnectionWatchdog() {
     }
 
     public static void start() {
-        final Timer reconnectTimer = new Timer(Timeouts.RESTART_DELAY, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                LinkManager.restart();
-            }
-        });
         reconnectTimer.restart();
 
         LinkManager.engineState.timeListeners.add(new EngineTimeListener() {

@@ -17,6 +17,21 @@ public enum FileLog {
 
     private static final String DIR = "out/";
     public static final String END_OF_TIMESTAND_TAG = "<EOT>: ";
+    public static final Logger LOGGER = new Logger() {
+        @Override
+        public void trace(String msg) {
+        }
+
+        @Override
+        public void info(String msg) {
+            rlog(msg);
+        }
+
+        @Override
+        public void error(String msg) {
+            rlog(msg);
+        }
+    };
 
     @Nullable
     private OutputStream fileLog; // null if not opened yet or already closed

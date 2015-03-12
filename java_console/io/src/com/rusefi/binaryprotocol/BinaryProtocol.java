@@ -73,6 +73,12 @@ public class BinaryProtocol {
     }
 
     public void switchToBinaryProtocol() {
+        // we do not have reliable implementation yet :(
+        for (int i = 0; i < 15; i++)
+            doSwitchToBinary();
+    }
+
+    private void doSwitchToBinary() {
         long start = System.currentTimeMillis();
 
         while (true) {
@@ -81,12 +87,18 @@ public class BinaryProtocol {
             try {
                 serialPort.writeBytes("~\n".getBytes());
                 synchronized (cbb) {
-                    waitForBytes(2, start);
+                    boolean isTimeout = waitForBytes(2, start, "switch to binary");
+                    if (isTimeout) {
+                        close();
+                        System.out.println("Timeout waiting for switch response");
+                        return;
+                    }
                     int response = cbb.getShort();
                     if (response != SWITCH_TO_BINARY_RESPONSE) {
                         logger.error(String.format("Unexpected response [%x], re-trying", response));
                         continue;
                     }
+                    logger.info("Switched to binary protocol");
                 }
             } catch (SerialPortException | EOFException e) {
                 close();
@@ -95,7 +107,6 @@ public class BinaryProtocol {
             } catch (InterruptedException e) {
                 throw new IllegalStateException(e);
             }
-            logger.info("Switched to binary protocol");
             break;
         }
     }
@@ -165,20 +176,23 @@ public class BinaryProtocol {
         return (((x) >> 24) & 0xff) | (((x) << 8) & 0xff0000) | (((x) >> 8) & 0xff00) | (((x) << 24) & 0xff000000);
     }
 
-    private byte[] receivePacket() throws InterruptedException, EOFException {
+    private byte[] receivePacket(String msg, boolean allowLongResponse) throws InterruptedException, EOFException {
         long start = System.currentTimeMillis();
         synchronized (cbb) {
-            waitForBytes(2, start);
+            boolean isTimeout = waitForBytes(2, start, msg + " header");
+            if (isTimeout)
+                return null;
 
             int packetSize = BinaryProtocol.swap16(cbb.getShort());
             logger.trace("Got packet size " + packetSize);
-            if (packetSize < 0
-//                    || packetSize > 300
-                    ) {
-                // invalid packet size
+            if (packetSize < 0)
                 return null;
-            }
-            waitForBytes(packetSize + 4, start);
+            if (!allowLongResponse && packetSize > BLOCKING_FACTOR + 10)
+                return null;
+
+            isTimeout = waitForBytes(packetSize + 4, start, msg + " body");
+            if (isTimeout)
+                return null;
 
             byte[] packet = new byte[packetSize];
             int packetCrc;
@@ -204,7 +218,9 @@ public class BinaryProtocol {
 
         int offset = 0;
 
-        while (offset < image.getSize()) {
+        long start = System.currentTimeMillis();
+
+        while (offset < image.getSize() && (System.currentTimeMillis() - start < Timeouts.READ_IMAGE_TIMEOUT)) {
             if (isClosed)
                 return;
 
@@ -217,7 +233,7 @@ public class BinaryProtocol {
             putShort(packet, 3, swap16(offset));
             putShort(packet, 5, swap16(requestSize));
 
-            byte[] response = exchange(packet);
+            byte[] response = exchange(packet, "load image", false);
 
             if (!checkResponseCode(response, RESPONSE_OK) || response.length != requestSize + 1) {
                 logger.error("readImage: Something is wrong, retrying...");
@@ -238,17 +254,17 @@ public class BinaryProtocol {
      *
      * @return null in case of IO issues
      */
-    public byte[] exchange(byte[] packet) {
+    public byte[] exchange(byte[] packet, String msg, boolean allowLongResponse) {
         if (isClosed)
             return null;
         dropPending();
         try {
             sendCrcPacket(packet);
-            return receivePacket();
+            return receivePacket(msg, allowLongResponse);
         } catch (InterruptedException e) {
             throw new IllegalStateException(e);
         } catch (SerialPortException | EOFException e) {
-            logger.error("exchange failed: " + e);
+            logger.error(msg + ": exchange failed: " + e);
             close();
             return null;
         }
@@ -282,7 +298,7 @@ public class BinaryProtocol {
 
         long start = System.currentTimeMillis();
         while (!isClosed && (System.currentTimeMillis() - start < Timeouts.BINARY_IO_TIMEOUT)) {
-            byte[] response = exchange(packet);
+            byte[] response = exchange(packet, "writeImage", false);
             if (!checkResponseCode(response, RESPONSE_OK) || response.length != 1) {
                 logger.error("writeData: Something is wrong, retrying...");
                 continue;
@@ -299,7 +315,7 @@ public class BinaryProtocol {
         while (true) {
             if (isClosed)
                 return;
-            byte[] response = exchange(new byte[]{'B'});
+            byte[] response = exchange(new byte[]{'B'}, "burn", false);
             if (!checkResponseCode(response, RESPONSE_BURN_OK) || response.length != 1) {
                 continue;
             }
@@ -326,8 +342,8 @@ public class BinaryProtocol {
     /**
      * @return true in case of timeout, false if everything is fine
      */
-    private boolean waitForBytes(int count, long start) throws InterruptedException {
-        logger.info("Waiting for " + count + " byte(s)");
+    private boolean waitForBytes(int count, long start, String msg) throws InterruptedException {
+        logger.info("Waiting for " + count + " byte(s): " + msg);
         synchronized (cbb) {
             while (cbb.length() < count) {
                 int timeout = (int) (start + Timeouts.BINARY_IO_TIMEOUT - System.currentTimeMillis());
@@ -379,7 +395,7 @@ public class BinaryProtocol {
 
         long start = System.currentTimeMillis();
         while (!isClosed && (System.currentTimeMillis() - start < Timeouts.BINARY_IO_TIMEOUT)) {
-            byte[] response = exchange(command);
+            byte[] response = exchange(command, "execute", false);
             if (!checkResponseCode(response, RESPONSE_COMMAND_OK) || response.length != 1) {
                 continue;
             }
@@ -393,7 +409,7 @@ public class BinaryProtocol {
             return null;
         try {
             byte[] response = new byte[0];
-            response = exchange(new byte[]{'G'});
+            response = exchange(new byte[]{'G'}, "text", true);
             if (response != null && response.length == 1)
                 Thread.sleep(100);
             //        System.out.println(result);
