@@ -16,8 +16,8 @@ public class EraseChip extends ProcessStatusWindow {
         button.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int dialogResult = JOptionPane.showConfirmDialog(button, "Do you really want to reset stm32 chip and all settings?",
-                        "Are you sure?", JOptionPane.YES_NO_OPTION);
+                int dialogResult = JOptionPane.showConfirmDialog(button, "Do you really want to reset stm32 chip and all settings? Please disconnect battery before erasing.",
+                        "Please disconnect from vehicle", JOptionPane.YES_NO_OPTION);
                 if (dialogResult != JOptionPane.YES_OPTION)
                     return;
                 wnd.showFrame("rusEfi Firmware Flasher");
