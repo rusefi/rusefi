@@ -328,7 +328,7 @@
           <state>$PROJ_DIR$\..\config</state>
           <state>$PROJ_DIR$\..\config\engines</state>
           <state>$PROJ_DIR$\..\config\stm32f4ems</state>
-          <state>$PROJ_DIR$\..\console\tunerstudio</state>
+          <state>$PROJ_DIR$\..\console\binary</state>
           <state>$PROJ_DIR$\..\console_util</state>
           <state>$PROJ_DIR$\..\development</state>
           <state>$PROJ_DIR$\..\development\test</state>
@@ -2071,25 +2071,25 @@
   <group>
     <name>console</name>
     <group>
-      <name>tunerstudio</name>
+      <name>binary</name>
       <file>
-        <name>$PROJ_DIR$\..\console\tunerstudio\tunerstudio.cpp</name>
+        <name>$PROJ_DIR$\..\console\binary\tunerstudio.cpp</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\console\tunerstudio\tunerstudio.h</name>
+        <name>$PROJ_DIR$\..\console\binary\tunerstudio.h</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\console\tunerstudio\tunerstudio_algo.cpp</name>
+        <name>$PROJ_DIR$\..\console\binary\tunerstudio_io.cpp</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\console\tunerstudio\tunerstudio_algo.h</name>
+        <name>$PROJ_DIR$\..\console\binary\tunerstudio_io.h</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\console\tunerstudio\tunerstudio_configuration.h</name>
+        <name>$PROJ_DIR$\..\console\binary\tunerstudio_configuration.h</name>
       </file>
     </group>
     <file>
-      <name>$PROJ_DIR$\..\console\console_io.c</name>
+      <name>$PROJ_DIR$\..\console\console_io.cpp</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\console\console_io.h</name>

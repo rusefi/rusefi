@@ -470,7 +470,16 @@ struct context {
 #define port_wait_for_interrupt()
 #endif
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif /* __cplusplus */
+
 int getRemainingStack(Thread *otp);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 /**
  * @brief   Performs a context switch between two threads.
