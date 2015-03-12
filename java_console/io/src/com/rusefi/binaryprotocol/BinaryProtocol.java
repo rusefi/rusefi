@@ -3,6 +3,7 @@ package com.rusefi.binaryprotocol;
 import com.rusefi.ConfigurationImage;
 import com.rusefi.ConfigurationImageDiff;
 import com.rusefi.Logger;
+import com.rusefi.Timeouts;
 import com.rusefi.core.Pair;
 import com.rusefi.io.DataListener;
 import com.rusefi.io.serial.SerialPortReader;
@@ -24,7 +25,6 @@ public class BinaryProtocol {
     private static final byte RESPONSE_BURN_OK = 0x04;
     private static final byte RESPONSE_COMMAND_OK = 0x07;
     private static final int SWITCH_TO_BINARY_RESPONSE = 0xA7E;
-    private static final int TIMEOUT = 30 * 1000;
 
     private final Logger logger;
     private final SerialPort serialPort;
@@ -84,13 +84,18 @@ public class BinaryProtocol {
                     waitForBytes(2, start);
                     int response = cbb.getShort();
                     if (response != SWITCH_TO_BINARY_RESPONSE) {
-                        logger.error("Unexpected response, re-trying");
+                        logger.error(String.format("Unexpected response [%x], re-trying", response));
                         continue;
                     }
                 }
-            } catch (SerialPortException | EOFException | InterruptedException e) {
+            } catch (SerialPortException | EOFException e) {
+                close();
+                System.out.println("exception: " + e);
+                return;
+            } catch (InterruptedException e) {
                 throw new IllegalStateException(e);
             }
+            logger.info("Switched to binary protocol");
             break;
         }
     }
@@ -101,6 +106,12 @@ public class BinaryProtocol {
             if (pending > 0) {
                 logger.error("Unexpected pending data: " + pending);
                 cbb.get(new byte[pending]);
+            }
+            try {
+                serialPort.purgePort(SerialPort.PURGE_RXCLEAR | SerialPort.PURGE_TXCLEAR);
+            } catch (SerialPortException e) {
+                logger.info("Error while purge: " + e);
+                close();
             }
         }
     }
@@ -228,6 +239,8 @@ public class BinaryProtocol {
      * @return null in case of IO issues
      */
     public byte[] exchange(byte[] packet) {
+        if (isClosed)
+            return null;
         dropPending();
         try {
             sendCrcPacket(packet);
@@ -236,8 +249,17 @@ public class BinaryProtocol {
             throw new IllegalStateException(e);
         } catch (SerialPortException | EOFException e) {
             logger.error("exchange failed: " + e);
-            isClosed = true;
+            close();
             return null;
+        }
+    }
+
+    private void close() {
+        isClosed = true;
+        try {
+            serialPort.closePort();
+        } catch (SerialPortException e) {
+            logger.error("Error closing port: " + e);
         }
     }
 
@@ -258,7 +280,8 @@ public class BinaryProtocol {
 
         System.arraycopy(content, offset, packet, 7, size);
 
-        while (true) {
+        long start = System.currentTimeMillis();
+        while (!isClosed && (System.currentTimeMillis() - start < Timeouts.BINARY_IO_TIMEOUT)) {
             byte[] response = exchange(packet);
             if (!checkResponseCode(response, RESPONSE_OK) || response.length != 1) {
                 logger.error("writeData: Something is wrong, retrying...");
@@ -307,7 +330,7 @@ public class BinaryProtocol {
         logger.info("Waiting for " + count + " byte(s)");
         synchronized (cbb) {
             while (cbb.length() < count) {
-                int timeout = (int) (start + TIMEOUT - System.currentTimeMillis());
+                int timeout = (int) (start + Timeouts.BINARY_IO_TIMEOUT - System.currentTimeMillis());
                 if (timeout <= 0) {
                     return true; // timeout. Sad face.
                 }
@@ -354,13 +377,15 @@ public class BinaryProtocol {
         command[0] = 'E';
         System.arraycopy(asBytes, 0, command, 1, asBytes.length);
 
-        while (true) {
+        long start = System.currentTimeMillis();
+        while (!isClosed && (System.currentTimeMillis() - start < Timeouts.BINARY_IO_TIMEOUT)) {
             byte[] response = exchange(command);
             if (!checkResponseCode(response, RESPONSE_COMMAND_OK) || response.length != 1) {
                 continue;
             }
             return false;
         }
+        return true;
     }
 
     public String requestText() {

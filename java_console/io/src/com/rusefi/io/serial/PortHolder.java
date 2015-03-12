@@ -2,6 +2,7 @@ package com.rusefi.io.serial;
 
 import com.rusefi.FileLog;
 import com.rusefi.Logger;
+import com.rusefi.Timeouts;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.CommandQueue;
@@ -24,9 +25,6 @@ public class PortHolder {
     //    private static final int BAUD_RATE = 8 * 115200;// 921600;
 //    private static final int BAUD_RATE = 2 * 115200;
     private static final int BAUD_RATE = 115200;
-    private static final int SECOND = 1000;
-    private static final int MINUTE = 60 * SECOND;
-    private static final int COMMAND_TIMEOUT_SEC = 10; // seconds
     private static PortHolder instance = new PortHolder();
     private final Object portLock = new Object();
 
@@ -85,6 +83,9 @@ public class PortHolder {
         if (bp.isClosed)
             return false;
 
+        if (!LinkManager.COMMUNICATION_QUEUE.isEmpty()) {
+            System.out.println("Current queue: " + LinkManager.COMMUNICATION_QUEUE.size());
+        }
         Runnable textPull = new Runnable() {
             @Override
             public void run() {
@@ -166,7 +167,7 @@ public class PortHolder {
         });
 
         try {
-            f.get(COMMAND_TIMEOUT_SEC, TimeUnit.SECONDS);
+            f.get(Timeouts.COMMAND_TIMEOUT_SEC, TimeUnit.SECONDS);
         } catch (ExecutionException e) {
             throw new IllegalStateException(e);
         } catch (TimeoutException e) {

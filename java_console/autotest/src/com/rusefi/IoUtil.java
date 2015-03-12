@@ -19,7 +19,6 @@ import static com.rusefi.waves.WaveReport.isCloseEnough;
  *         3/19/14.
  */
 public class IoUtil {
-    protected static final int CMD_TIMEOUT = 20;
 
     /**
      * Send a command and wait for the confirmation
@@ -27,7 +26,7 @@ public class IoUtil {
      * @throws IllegalStateException if command was not confirmed
      */
     static void sendCommand(String command) {
-        sendCommand(command, CommandQueue.DEFAULT_TIMEOUT, CMD_TIMEOUT);
+        sendCommand(command, CommandQueue.DEFAULT_TIMEOUT, Timeouts.CMD_TIMEOUT);
     }
 
     static void sendCommand(String command, int retryTimeoutMs, int totalTimeoutSeconds) {

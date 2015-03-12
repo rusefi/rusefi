@@ -314,7 +314,7 @@ public class AutoTest {
     }
 
     private static void sendComplexCommand(String command) {
-        sendCommand(command, COMPLEX_COMMAND_RETRY, IoUtil.CMD_TIMEOUT);
+        sendCommand(command, COMPLEX_COMMAND_RETRY, Timeouts.CMD_TIMEOUT);
     }
 
     private static void assertWaveNull(WaveChart chart, String key) {
