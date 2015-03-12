@@ -76,7 +76,7 @@ public class PortHolder {
             portLock.notifyAll();
         }
 
-        bp = new BinaryProtocol(Logger.STDOUT, serialPort);
+        bp = new BinaryProtocol(FileLog.LOGGER, serialPort);
 
         bp.switchToBinaryProtocol();
         bp.readImage(BinaryProtocol.IMAGE_SIZE);
@@ -90,6 +90,7 @@ public class PortHolder {
             @Override
             public void run() {
                 while (!bp.isClosed) {
+//                    FileLog.rlog("queue: " + LinkManager.COMMUNICATION_QUEUE.toString());
                     if (LinkManager.COMMUNICATION_QUEUE.isEmpty()) {
                         LinkManager.COMMUNICATION_EXECUTOR.submit(new Runnable() {
                             @Override
@@ -102,6 +103,7 @@ public class PortHolder {
                     }
                     sleep();
                 }
+                FileLog.rlog("Stopping text pull");
             }
         };
         Thread tr = new Thread(textPull);
@@ -163,6 +165,11 @@ public class PortHolder {
             @Override
             public void run() {
                 bp.sendTextCommand(command);
+            }
+
+            @Override
+            public String toString() {
+                return "Runnable for " + command;
             }
         });
 

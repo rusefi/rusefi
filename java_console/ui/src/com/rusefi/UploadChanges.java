@@ -18,6 +18,7 @@ import java.lang.reflect.InvocationTargetException;
  */
 public class UploadChanges {
     public static final Logger logger = createUiLogger();
+
     public static void main(String[] args) throws SerialPortException, InvocationTargetException, InterruptedException {
         if (args.length != 1) {
             System.out.println("Exactly one parameter expected");
@@ -68,6 +69,11 @@ public class UploadChanges {
                     logger.error("Error: " + e);
                     throw new IllegalStateException(e);
                 }
+            }
+
+            @Override
+            public String toString() {
+                return "Runnable for burn";
             }
         });
     }
