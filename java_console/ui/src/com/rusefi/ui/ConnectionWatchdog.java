@@ -1,5 +1,6 @@
 package com.rusefi.ui;
 
+import com.rusefi.Timeouts;
 import com.rusefi.core.EngineTimeListener;
 import com.rusefi.io.LinkManager;
 
@@ -8,16 +9,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class ConnectionWatchdog {
-    /**
-     * 10 seconds
-     */
-    private static final int RESTART_DELAY = 10000;
 
     private ConnectionWatchdog() {
     }
 
     public static void start() {
-        final Timer reconnectTimer = new Timer(RESTART_DELAY, new ActionListener() {
+        final Timer reconnectTimer = new Timer(Timeouts.RESTART_DELAY, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 LinkManager.restart();
