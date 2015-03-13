@@ -66,6 +66,15 @@
 65)                  why do we have W1002 & W1003 if these are usually there? Removing them would remove one point of failure
 66)                  JP04 & JP05 are defined on the main schematics sheet. if would be better to define then on Page 8 with the rest of cam/crank stuff
 67)                  Updated silk screen notes, draws .12 amps normal, with a typical inrush of .3A. 
+68)                  Look into LCD dimming R99, perhaps replace with a POT. Perhaps connect to a GPIO
+
+
+
+  )                  route unused stm32 pins (D3 PC13 etc) to unused connector pins
+  )                  cheaper battery holder - through-hole (need to find out footprint)
+  )                  remove some/all EGT - expand prototyping area?
+  )                  idle valve SMD diode?
+  )                  place USB connectors closer to board edge or notch the board
 
 
 For honda add-on / rewiring board
