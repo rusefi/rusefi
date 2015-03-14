@@ -46,9 +46,4 @@ public class EngineStateTest {
         es.processNewData("600\r");
         assertEquals(600, rpmResult.get());
     }
-
-    @Test
-    public void testAdcRepresentation() {
-        assertEquals("1025.00 (0.83v)", SensorCentral.getInternalAdcRepresentation(1025));
-    }
 }
