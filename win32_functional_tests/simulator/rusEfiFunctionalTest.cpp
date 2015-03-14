@@ -102,7 +102,7 @@ void rusEfiFunctionalTest(void) {
 
 #if EFI_TUNER_STUDIO
 	if (engineConfiguration->isTunerStudioEnabled) {
-		startTunerStudioConnectivity(&sharedLogger);
+		startTunerStudioConnectivity();
 	}
 #endif
 
