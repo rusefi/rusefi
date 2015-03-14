@@ -12,7 +12,7 @@
 
 EXTERN_ENGINE;
 
-extern Logging *tsLogger;
+extern Logging tsLogger;
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 #include "pin_repository.h"
@@ -62,7 +62,7 @@ BaseChannel * getTsSerialDevice(void) {
 void tunerStudioWriteData(ts_channel_s *tsChannel, const uint8_t * buffer, int size) {
 	int transferred = chSequentialStreamWrite(tsChannel->channel, buffer, size);
 	if (transferred != size) {
-		scheduleMsg(tsLogger, "!!! NOT ACCEPTED %d out of %d !!!", transferred, size);
+		scheduleMsg(&tsLogger, "!!! NOT ACCEPTED %d out of %d !!!", transferred, size);
 	}
 }
 
