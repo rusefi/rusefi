@@ -125,6 +125,9 @@ void WaveChart::publishChartIfFull() {
 	}
 }
 
+WaveChart::WaveChart() {
+}
+
 void WaveChart::init() {
 	initLoggingExt(&logging, "wave chart", WAVE_LOGGING_BUFFER, sizeof(WAVE_LOGGING_BUFFER));
 	isInitialized = TRUE;
