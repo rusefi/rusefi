@@ -2079,13 +2079,13 @@
         <name>$PROJ_DIR$\..\console\binary\tunerstudio.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\console\binary\tunerstudio_configuration.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\console\binary\tunerstudio_io.cpp</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\console\binary\tunerstudio_io.h</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\console\binary\tunerstudio_configuration.h</name>
       </file>
     </group>
     <file>
@@ -3272,6 +3272,12 @@
     </file>
     <file>
       <name>$PROJ_DIR$\..\util\LocalVersionHolder.h</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\util\loggingcentral.cpp</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\util\loggingcentral.h</name>
     </file>
   </group>
   <file>
