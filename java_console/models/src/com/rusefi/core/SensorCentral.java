@@ -150,17 +150,12 @@ public class SensorCentral {
             TableUpdateHandler.getInstance().handleDataUpdate(r);
     }
 
-    public static String getInternalAdcRepresentation(double value) {
-        double volts = value * 3.3 / 4096;
-        return String.format("%.2f (%.2fv)", value, volts);
-    }
-
     public void addListener(Sensor sensor, SensorListener listener) {
         List<SensorListener> listeners;
         synchronized (allListeners) {
             listeners = allListeners.get(sensor);
             if (listeners == null)
-                listeners = new CopyOnWriteArrayList<SensorListener>();
+                listeners = new CopyOnWriteArrayList<>();
             allListeners.put(sensor, listeners);
         }
         listeners.add(listener);
