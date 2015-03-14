@@ -140,13 +140,8 @@ static void reportSensorI(Logging *log, bool fileFormat, const char *caption, co
 	}
 }
 
-static const char* boolean2string(int value) {
-	return value ? "YES" : "NO";
-}
-
 EXTERN_ENGINE
 ;
-
 
 void printSensors(Logging *log, bool fileFormat) {
 	// current time, in milliseconds
@@ -663,7 +658,7 @@ void startStatusThreads(Engine *engine) {
 }
 
 void setFullLog(int value) {
-	print("Setting full logging: %s\r\n", boolean2string(value));
+	print("Setting full logging: %s\r\n", boolToString(value));
 	printMsg(&logger, "%s%d", FULL_LOGGING_KEY, value);
 	fullLog = value;
 }
