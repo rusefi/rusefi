@@ -98,6 +98,9 @@ static void printOutputs(engine_configuration_s *engineConfiguration) {
 
 	scheduleMsg(&logger, "mainRelay: mode %s @ %s", getPin_output_mode_e(boardConfiguration->mainRelayPinMode),
 			hwPortname(boardConfiguration->mainRelayPin));
+
+	scheduleMsg(&logger, "alternator field: mode %s @ %s", getPin_output_mode_e(boardConfiguration->alternatorControlPinMode),
+			hwPortname(boardConfiguration->alternatorControlPin));
 }
 
 EXTERN_ENGINE

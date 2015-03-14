@@ -29,17 +29,19 @@ static Pid altPid(10, 0, 0, 10, 90);
 
 static THD_WORKING_AREA(alternatorControlThreadStack, UTILITY_THREAD_STACK_SIZE);
 
+static float currentAltDuty;
+
 static msg_t AltCtrlThread(int param) {
 	chRegSetThreadName("AlternatorController");
 	while (true) {
 		chThdSleepMilliseconds(100);
 
-		float result = altPid.getValue(14, getVBatt(engineConfiguration), 1);
+		currentAltDuty = altPid.getValue(14, getVBatt(engineConfiguration), 1);
 		if (boardConfiguration->isVerboseAlternator) {
-			scheduleMsg(logger, "alt duty: %f", result);
+			scheduleMsg(logger, "alt duty: %f/vbatt=%f", currentAltDuty, getVBatt(engineConfiguration));
 		}
 
-		alternatorControl.setSimplePwmDutyCycle(result / 100);
+		alternatorControl.setSimplePwmDutyCycle(currentAltDuty / 100);
 	}
 #if defined __GNUC__
 	return -1;
@@ -60,6 +62,11 @@ static void applyAlternatorPinState(PwmConfig *state, int stateIndex) {
 		output->setValue(value);
 }
 
+static void showAltInfo(void) {
+	scheduleMsg(logger, "atl=%s", boolToString(engineConfiguration->isAlternatorControlEnabled));
+	scheduleMsg(logger, "vbatt=%f/duty=%f", getVBatt(engineConfiguration), currentAltDuty);
+}
+
 void initAlternatorCtrl(Logging *sharedLogger) {
 	logger = sharedLogger;
 	if (boardConfiguration->alternatorControlPin == GPIO_UNASSIGNED)
@@ -72,4 +79,5 @@ void initAlternatorCtrl(Logging *sharedLogger) {
 			(tfunc_t) AltCtrlThread, NULL);
 
 	addConsoleActionF("alt_pid", setAltPid);
+	addConsoleAction("altinfo", showAltInfo);
 }

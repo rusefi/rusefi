@@ -85,11 +85,7 @@ public class SensorCentral {
         for (SensorListener listener : listeners)
             listener.onSensorUpdate(value);
 
-
         ResponseImpl r = new ResponseImpl();
-
-
-
 
         LoggerData d = new LoggerData() {
             @Override
@@ -99,7 +95,7 @@ public class SensorCentral {
 
             @Override
             public String getId() {
-                return sensor.getName();
+                return sensor.name();
             }
 
             @Override
