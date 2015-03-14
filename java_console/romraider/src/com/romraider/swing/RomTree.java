@@ -30,6 +30,7 @@ import javax.swing.Action;
 import javax.swing.JTree;
 import javax.swing.KeyStroke;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
 
 import com.romraider.editor.ecu.ECUEditor;
 import com.romraider.editor.ecu.ECUEditorManager;
@@ -75,8 +76,15 @@ public class RomTree extends JTree implements MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
+        TreePath treePath = getPathForLocation(e.getX(), e.getY());
+        if (treePath == null)
+            return;
+        Object selectedRow = treePath.getLastPathComponent();
+        if (selectedRow instanceof Rom) {
+            // we do not really need this collapse/expand action in rusEfi
+            return;
+        }
         try{
-            Object selectedRow = getPathForLocation(e.getX(), e.getY()).getLastPathComponent();
 
             if(selectedRow instanceof TableTreeNode) {
                 if (e.getClickCount() >= SettingsManager.getSettings().getTableClickCount()) {
