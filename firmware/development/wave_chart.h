@@ -19,6 +19,7 @@
  */
 class WaveChart {
 public:
+	WaveChart();
 	void init();
 	void publishChart();
 	void resetWaveChart();

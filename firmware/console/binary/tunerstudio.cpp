@@ -710,6 +710,7 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 static uint8_t tsCrcWriteBuffer[300];
 
 void startTunerStudioConnectivity(Logging *sharedLogger) {
+	efiAssertVoid(sharedLogger!=NULL, "tsLogger");
 	tsLogger = sharedLogger;
 
 	if (sizeof(engine_configuration_s) != getTunerStudioPageSize(0))
