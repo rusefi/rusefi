@@ -227,6 +227,13 @@ void handlePageSelectCommand(ts_channel_s *tsChannel, ts_response_format_e mode,
 	tsSendResponse(tsChannel, mode, NULL, 0);
 }
 
+void yellowMagic(int currentPageId, int  offset, int count) {
+	if(offset > 6200) {
+		scheduleMsg(&tsLogger, "applying soft change from %d length %d", offset, count);
+		memcpy(((char*)engineConfiguration) + offset, ((char*)&configWorkingCopy.engineConfiguration) + offset, count);
+	}
+}
+
 /**
  * This command is needed to make the whole transfer a bit faster
  * @note See also handleWriteValueCommand
@@ -250,6 +257,7 @@ void handleWriteChunkCommand(ts_channel_s *tsChannel, ts_response_format_e mode,
 
 	uint8_t * addr = (uint8_t *) (getWorkingPageAddr(currentPageId) + offset);
 	memcpy(addr, content, count);
+	yellowMagic(currentPageId, offset, count);
 
 	tsSendResponse(tsChannel, mode, NULL, 0);
 	printTsStats();
@@ -281,7 +289,7 @@ void handleWriteValueCommand(ts_channel_s *tsChannel, ts_response_format_e mode,
 
 	currentPageId = page;
 
-//tunerStudioDebug("got W (Write)"); // we can get a lot of these
+tunerStudioDebug("got W (Write)"); // we can get a lot of these
 
 #if EFI_TUNER_STUDIO_VERBOSE
 //	scheduleMsg(logger, "Page number %d\r\n", pageId); // we can get a lot of these
@@ -304,6 +312,8 @@ void handleWriteValueCommand(ts_channel_s *tsChannel, ts_response_format_e mode,
 	}
 
 	getWorkingPageAddr(currentPageId)[offset] = value;
+
+	yellowMagic(currentPageId, offset, 1);
 
 //	scheduleMsg(logger, "va=%d", configWorkingCopy.boardConfiguration.idleValvePin);
 }
