@@ -80,11 +80,17 @@ public class SensorCentral {
         synchronized (allListeners) {
             listeners = allListeners.get(sensor);
         }
+
+        // todo: make this just a normal listener?
+        applyValueToTables(value, sensor, isUpdated);
+
         if (listeners == null)
             return;
         for (SensorListener listener : listeners)
             listener.onSensorUpdate(value);
+    }
 
+    private void applyValueToTables(double value, final Sensor sensor, boolean isUpdated) {
         ResponseImpl r = new ResponseImpl();
 
         LoggerData d = new LoggerData() {

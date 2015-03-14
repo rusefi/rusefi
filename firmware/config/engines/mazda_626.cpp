@@ -52,7 +52,7 @@ void setMazda626EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	// http://i.imgur.com/fclVzvu.jpg
 	setCommonNTCSensor(&engineConfiguration->clt);
 	// http://i.imgur.com/2hI67yW.jpg
-	setThermistorConfiguration(&engineConfiguration->iat, 20, 33000, 50, 9000, 90.0, 2700);
+	setThermistorConfiguration(&engineConfiguration->iat, 13, 56000, 50, 9000, 90.0, 2700);
 
 	commonFrankensoAnalogInputs(engineConfiguration);
 //	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;

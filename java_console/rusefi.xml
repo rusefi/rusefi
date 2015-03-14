@@ -15,7 +15,7 @@
       <flashmethod>sti04</flashmethod>
       <filesize>14008</filesize>
     </romid>
-    
+
     <table type="3D" name="Ignition Advance" storageaddress="24B8" sizex="16" sizey="16" storagetype="float" endian="big">
       <scaling units="Engine Load" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1" />
       <table type="X Axis" storageaddress="28B8" storagetype="float" endian="big" logparam="engine_load">
@@ -25,8 +25,18 @@
           <scaling units="RPM" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1" />
       </table>
     </table>
-    
-    <table type="3D" name="Fuel Table" storageaddress="2038" sizex="16" sizey="16" storagetype="float" endian="big">
+
+      <table type="3D" name="Volumetric Efficiency" storageaddress="2938" sizex="16" sizey="16" storagetype="float" endian="big">
+          <scaling units="Engine Load" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1" />
+          <table type="X Axis" storageaddress="2D38" storagetype="float" endian="big" logparam="engine_load">
+              <scaling units="degree" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1" />
+          </table>
+          <table type="Y Axis" storageaddress="2D78" storagetype="float" endian="big" logparam="rpm">
+              <scaling units="RPM" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1" />
+          </table>
+      </table>
+
+      <table type="3D" name="Fuel Table" storageaddress="2038" sizex="16" sizey="16" storagetype="float" endian="big">
       <scaling units="Engine Load" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1" />
       <table type="X Axis" storageaddress="2438" storagetype="float" endian="big" logparam="engine_load">
           <scaling units="degree" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1" />
@@ -35,7 +45,7 @@
           <scaling units="RPM" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1" />
       </table>
     </table>
-    
+
     <table type="3D" name="Target AFR" storageaddress="2DB8" sizex="16" sizey="16" storagetype="float" endian="big">
       <scaling units="Engine Load" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1" />
       <table type="X Axis" storageaddress="31B8" storagetype="float" endian="big">
