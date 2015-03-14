@@ -52,7 +52,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 void printTsStats(void);
 void requestBurn(void);
 
-void startTunerStudioConnectivity(Logging *sharedLogger);
+void startTunerStudioConnectivity(void);
 void syncTunerStudioCopy(void);
 void runBinaryProtocolLoop(ts_channel_s *tsChannel);
 

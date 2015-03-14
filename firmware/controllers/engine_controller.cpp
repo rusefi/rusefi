@@ -438,7 +438,7 @@ void initEngineContoller(Logging *sharedLogger, Engine *engine) {
 
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 	if (engineConfiguration->isTunerStudioEnabled) {
-		startTunerStudioConnectivity(sharedLogger);
+		startTunerStudioConnectivity();
 	}
 #endif
 
