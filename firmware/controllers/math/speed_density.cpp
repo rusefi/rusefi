@@ -95,9 +95,8 @@ float getSpeedDensityFuel(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	return sdMath(engineConfiguration, VE, map, AFR, tChargeK) * 1000;
 }
 
-void setDetaultVETable(DECLARE_ENGINE_PARAMETER_F) {
+void setDefaultVETable(DECLARE_ENGINE_PARAMETER_F) {
 	setRpmTableBin(engineConfiguration->veRpmBins, FUEL_RPM_COUNT);
-	setTableBin2(engineConfiguration->veLoadBins, FUEL_LOAD_COUNT, 10, 300, 1);
 	veMap.setAll(80);
 
 //	setRpmTableBin(engineConfiguration->ve2RpmBins, FUEL_RPM_COUNT);
@@ -105,7 +104,6 @@ void setDetaultVETable(DECLARE_ENGINE_PARAMETER_F) {
 //	ve2Map.setAll(0.81);
 
 	setRpmTableBin(engineConfiguration->afrRpmBins, FUEL_RPM_COUNT);
-	setTableBin2(engineConfiguration->afrLoadBins, FUEL_LOAD_COUNT, 10, 300, 1);
 	afrMap.setAll(14.7);
 }
 
