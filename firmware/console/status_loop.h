@@ -12,6 +12,7 @@
 
 void updateDevConsoleState(Engine *engine);
 void printSensors(void);
+void prepareTunerStudioOutputs(void);
 void startStatusThreads(Engine *engine);
 void initStatusLoop(Engine *engine);
 void writeLogLine(void);
