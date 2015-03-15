@@ -17,7 +17,7 @@ float sdMath(engine_configuration_s *engineConfiguration, float VE, float MAP, f
 
 #define cc_minute_to_gramm_second(ccm) ((ccm) * 0.0119997981)
 
-void setDetaultVETable(DECLARE_ENGINE_PARAMETER_F);
+void setDefaultVETable(DECLARE_ENGINE_PARAMETER_F);
 void initSpeedDensity(DECLARE_ENGINE_PARAMETER_F);
 float getSpeedDensityFuel(int rpm DECLARE_ENGINE_PARAMETER_S);
 
