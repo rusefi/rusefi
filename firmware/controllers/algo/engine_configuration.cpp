@@ -139,8 +139,6 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	memset(engineConfiguration, 0, sizeof(engine_configuration_s));
 	memset(boardConfiguration, 0, sizeof(board_configuration_s));
 
-	setDetaultVETable(PASS_ENGINE_PARAMETER_F);
-
 	boardConfiguration->mafSensorType = Bosch0280218037;
 	setBosch0280218037(engineConfiguration);
 
@@ -192,8 +190,9 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	// set_whole_timing_map 3
 	setWholeFuelMap(3 PASS_ENGINE_PARAMETER);
-	setWholeVEMap(0.8 PASS_ENGINE_PARAMETER);
 	setMap(engineConfiguration->afrTable, 14.7);
+
+	setDetaultVETable(PASS_ENGINE_PARAMETER_F);
 
 	setMap(engineConfiguration->injectionPhase, -180);
 	setRpmTableBin(engineConfiguration->injPhaseRpmBins, FUEL_RPM_COUNT);

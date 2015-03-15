@@ -86,7 +86,10 @@ float getSpeedDensityFuel(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	float intakeC = engine->engineState.iat;
 	float tChargeK = convertCelsiusToKelvin(getTCharge(rpm, tps, coolantC, intakeC));
 	float map = getMap() + engine->accelEnrichment.getEnrichment(PASS_ENGINE_PARAMETER_F);
-	float VE = veMap.getValue(map, rpm);
+	/**
+	 * *0.01 because of https://sourceforge.net/p/rusefi/tickets/153/
+	 */
+	float VE = veMap.getValue(map, rpm) * 0.01;
 	float AFR = afrMap.getValue(map, rpm);
 
 	return sdMath(engineConfiguration, VE, map, AFR, tChargeK) * 1000;
@@ -95,7 +98,7 @@ float getSpeedDensityFuel(int rpm DECLARE_ENGINE_PARAMETER_S) {
 void setDetaultVETable(DECLARE_ENGINE_PARAMETER_F) {
 	setRpmTableBin(engineConfiguration->veRpmBins, FUEL_RPM_COUNT);
 	setTableBin2(engineConfiguration->veLoadBins, FUEL_LOAD_COUNT, 10, 300, 1);
-	veMap.setAll(0.8);
+	veMap.setAll(80);
 
 //	setRpmTableBin(engineConfiguration->ve2RpmBins, FUEL_RPM_COUNT);
 //	setTableBin2(engineConfiguration->ve2LoadBins, FUEL_LOAD_COUNT, 10, 300, 1);
