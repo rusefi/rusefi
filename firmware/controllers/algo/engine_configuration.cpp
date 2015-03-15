@@ -348,6 +348,8 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineConfiguration->acSwitchAdc = EFI_ADC_NONE;
 
+	engineConfiguration->externalKnockSenseAdc = EFI_ADC_NONE;
+
 #if EFI_PROD_CODE
 	engineConfiguration->digitalChartSize = 300;
 #else

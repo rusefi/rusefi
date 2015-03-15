@@ -64,7 +64,7 @@ typedef struct {
 	 * water 4 bytes per traffic - I want gauges to work as fast as possible
 	 */
 	unsigned int hasSdCard : 1; // bit 0
-	unsigned int ignition_enabled : 1; // bit 1
+	unsigned int isIgnitionEnabled : 1; // bit 1
 	unsigned int injection_enabled : 1; // bit 2
 	unsigned int cylinder_cleanup_enabled : 1; // bit 3
 	unsigned int cylinder_cleanup_activated : 1; // bit 4
@@ -75,7 +75,9 @@ typedef struct {
 	unsigned int needBurn : 1; // bit 9
 	unsigned int secondTriggerChannelEnabled : 1; // bit 10
 	unsigned int clutchUpState : 1; // bit 11
-	unsigned int clutchDownState : 1; // bit 11
+	unsigned int clutchDownState : 1; // bit 12
+	unsigned int knockEverIndicator : 1; // bit 13
+	unsigned int knockNowIndicator : 1; // bit 14
 	float vehicleSpeedKph;
 	unsigned int isTpsError : 1; // bit 0
 	unsigned int isCltError : 1; // bit 1
