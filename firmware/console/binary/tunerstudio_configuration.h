@@ -16,7 +16,7 @@
 /**
  * this is used to confirm that firmware and TunerStudio are using the same rusefi.ini version
  */
-#define TS_FILE_VERSION 20150216
+#define TS_FILE_VERSION 20150314
 
 #define PAGE_COUNT 2
 
