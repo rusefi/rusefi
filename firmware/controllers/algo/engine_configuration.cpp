@@ -504,7 +504,6 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->idleThreadPeriod = 100;
 	boardConfiguration->consoleLoopPeriod = 200;
 	boardConfiguration->lcdThreadPeriod = 300;
-	boardConfiguration->tunerStudioThreadPeriod = 300;
 	boardConfiguration->generalPeriodicThreadPeriod = 50;
 
 	boardConfiguration->boardTestModeJumperPin = GPIOB_0;

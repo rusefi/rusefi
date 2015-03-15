@@ -307,7 +307,7 @@ custom adc_channel_mode_e 4 bits,    U32,   @OFFSET@, [0:1], "Off", "Slow", "Fas
 	int idleThreadPeriod;
 	int consoleLoopPeriod;
 	int lcdThreadPeriod;
-	int tunerStudioThreadPeriod;
+	int anotherUnused;
 	int generalPeriodicThreadPeriod;
 
 
