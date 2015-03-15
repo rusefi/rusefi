@@ -61,7 +61,7 @@ RpmCalculator::RpmCalculator() {
 bool RpmCalculator::isRunning(DECLARE_ENGINE_PARAMETER_F) {
 	uint64_t nowNt = getTimeNowNt();
 	if (engine->stopEngineRequestTimeNt != 0) {
-		if (nowNt - lastRpmEventTimeNt < 3 * US2NT(US_PER_SECOND_LL)) {
+		if (nowNt - engine->stopEngineRequestTimeNt < 3 * US2NT(US_PER_SECOND_LL)) {
 			return false;
 		}
 	}
