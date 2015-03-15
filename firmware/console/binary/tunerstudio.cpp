@@ -80,6 +80,7 @@
 #include "engine_configuration.h"
 #include "svnversion.h"
 #include "loggingcentral.h"
+#include "status_loop.h"
 
 #if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
 
@@ -551,6 +552,7 @@ void handleQueryCommand(ts_channel_s *tsChannel, ts_response_format_e mode) {
  */
 void handleOutputChannelsCommand(ts_channel_s *tsChannel, ts_response_format_e mode) {
 	tsState.outputChannelsCommandCounter++;
+	prepareTunerStudioOutputs();
 	// this method is invoked too often to print any debug information
 	tsSendResponse(tsChannel, mode, (const uint8_t *) &tsOutputChannels, sizeof(TunerStudioOutputChannels));
 }

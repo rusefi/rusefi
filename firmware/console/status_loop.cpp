@@ -514,9 +514,6 @@ static void lcdThread(void *arg) {
 	}
 }
 
-// stack for Tuner Studio thread
-static THD_WORKING_AREA(tsThreadStack, UTILITY_THREAD_STACK_SIZE);
-
 #if EFI_TUNER_STUDIO
 
 extern fuel_Map3D_t veMap;
@@ -599,18 +596,13 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 }
 
 extern TunerStudioOutputChannels tsOutputChannels;
-#endif /* EFI_TUNER_STUDIO */
 
-static void tsStatusThread(Engine *engine) {
-	chRegSetThreadName("tuner s");
-	while (true) {
-#if EFI_TUNER_STUDIO
-		// sensor state for EFI Analytics Tuner Studio
-		updateTunerStudioState(&tsOutputChannels PASS_ENGINE_PARAMETER);
-#endif /* EFI_TUNER_STUDIO */
-		chThdSleepMilliseconds(boardConfiguration->tunerStudioThreadPeriod);
-	}
+void prepareTunerStudioOutputs(void) {
+	// sensor state for EFI Analytics Tuner Studio
+	updateTunerStudioState(&tsOutputChannels PASS_ENGINE_PARAMETER);
 }
+
+#endif /* EFI_TUNER_STUDIO */
 
 static void subscribe(int outputOrdinal) {
 	subscription[outputOrdinal] = true;
@@ -650,7 +642,6 @@ void initStatusLoop(Engine *engine) {
 void startStatusThreads(Engine *engine) {
 	// todo: refactoring needed, this file should probably be split into pieces
 	chThdCreateStatic(lcdThreadStack, sizeof(lcdThreadStack), NORMALPRIO, (tfunc_t) lcdThread, engine);
-	chThdCreateStatic(tsThreadStack, sizeof(tsThreadStack), NORMALPRIO, (tfunc_t) tsStatusThread, engine);
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	initStatisLeds();
 	chThdCreateStatic(blinkingStack, sizeof(blinkingStack), NORMALPRIO, (tfunc_t) blinkingThread, NULL);
