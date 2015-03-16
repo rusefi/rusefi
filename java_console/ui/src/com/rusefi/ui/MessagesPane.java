@@ -1,10 +1,14 @@
 package com.rusefi.ui;
 
+import ZoeloeSoft.projects.JFontChooser.JFontChooser;
+import com.rusefi.Launcher;
 import com.rusefi.ui.storage.Node;
 import com.rusefi.ui.widgets.IdleLabel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class MessagesPane {
     private final JPanel content = new JPanel(new BorderLayout()) {
@@ -14,9 +18,13 @@ public class MessagesPane {
             return new Dimension(250, size.height);
         }
     };
+    private final JButton fontButton = new JButton("Font");
 
-    public MessagesPane(Node config) {
-        MessagesPanel messagesPanel = new MessagesPanel(config);
+    public MessagesPane(final Node config) {
+        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
+
+        final MessagesPanel messagesPanel = new MessagesPanel(config);
+        messagesPanel.loadFont(config);
         content.setBorder(BorderFactory.createLineBorder(Color.red));
 
         JPanel middlePanel = new JPanel(new BorderLayout());
@@ -26,7 +34,9 @@ public class MessagesPane {
         content.add(middlePanel, BorderLayout.CENTER);
 
         messagesPanel.getButtonPanel().add(new RpmLabel().getContent());
-        content.add(messagesPanel.getButtonPanel(), BorderLayout.NORTH);
+        topPanel.add(messagesPanel.getButtonPanel());
+        topPanel.add(fontButton);
+        content.add(topPanel, BorderLayout.NORTH);
 
         JPanel statsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
@@ -35,6 +45,18 @@ public class MessagesPane {
         statsPanel.add(new WarningPanel().getPanel());
 
         content.add(statsPanel, BorderLayout.SOUTH);
+
+
+        fontButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFontChooser fc = new JFontChooser(Launcher.getFrame());
+                fc.setLocationRelativeTo(fontButton);
+                if (fc.showDialog(messagesPanel.getFont()) == JFontChooser.OK_OPTION) {
+                    messagesPanel.setFont(fc.getFont(), config);
+                }
+            }
+        });
     }
 
     public JComponent getContent() {

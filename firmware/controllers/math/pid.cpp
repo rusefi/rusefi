@@ -53,3 +53,16 @@ void Pid::reset(void) {
 	prevError = 0;
 }
 
+float Pid::getP(void) {
+	return pFactor;
+}
+
+float Pid::getI(void) {
+	return iFactor;
+}
+
+float Pid::getD(void) {
+	return dFactor;
+}
+
+
