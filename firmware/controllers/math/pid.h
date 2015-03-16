@@ -15,6 +15,9 @@ public:
 	float getValue(float target, float input, float dTime);
 	void updateFactors(float pFactor, float iFactor, float dFactor);
 	void reset(void);
+	float getP(void);
+	float getI(void);
+	float getD(void);
 private:
 	float pFactor;
 	float iFactor;

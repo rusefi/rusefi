@@ -24,7 +24,6 @@ public class AnyCommand {
         }
     };
 
-    private final Node config;
     private JPanel content = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
     public AnyCommand(final Node config) {
@@ -32,7 +31,6 @@ public class AnyCommand {
     }
 
     public AnyCommand(final Node config, String defaultCommand) {
-        this.config = config;
         text.setText(defaultCommand);
         content.setBorder(BorderFactory.createLineBorder(Color.PINK));
         content.add(new JLabel("Command: "));

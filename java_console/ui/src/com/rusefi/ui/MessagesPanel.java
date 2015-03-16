@@ -4,7 +4,6 @@ import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.io.serial.PortHolder;
 import com.rusefi.ui.storage.Node;
-import com.rusefi.ui.util.LocalizedMessages;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.widgets.AnyCommand;
 
@@ -31,6 +30,8 @@ import static com.rusefi.ui.util.LocalizedMessages.PAUSE;
 public class MessagesPanel {
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH_mm");
     private static final int MAX_SIZE = 50000;
+    private static final String FONT_SIZE = "font_size";
+    private static final String FONT_NAME = "font_name";
 
     private final AnyCommand anyCommand;
     private final JTextPane messages = new JTextPane() {
@@ -131,5 +132,22 @@ public class MessagesPanel {
 
     public JScrollPane getMessagesScroll() {
         return messagesScroll;
+    }
+
+    public Font getFont() {
+        return messages.getFont();
+    }
+
+    public void setFont(Font font, Node config) {
+        messages.setFont(font);
+        config.setProperty(FONT_SIZE, font.getSize());
+        config.setProperty(FONT_NAME, font.getName());
+    }
+
+    public void loadFont(Node config) {
+        Font f = getFont();
+        int size = config.getIntProperty(FONT_SIZE, f.getSize());
+        String name = config.getProperty(FONT_NAME, f.getName());
+        setFont(new Font(f.getName(), f.getStyle(), size), config);
     }
 }

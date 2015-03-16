@@ -1,12 +1,13 @@
 package com.rusefi;
 
-import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.binaryprotocol.BinaryProtocolCmd;
 import com.rusefi.core.EngineState;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.LinkManager;
 import com.rusefi.maintenance.VersionChecker;
-import com.rusefi.ui.*;
+import com.rusefi.ui.GaugesPanel;
+import com.rusefi.ui.MessagesPane;
+import com.rusefi.ui.RpmPanel;
+import com.rusefi.ui.Wizard;
 import com.rusefi.ui.engine.EngineSnifferPanel;
 import com.rusefi.ui.fsio.FlexibleControls;
 import com.rusefi.ui.logview.LogViewer;
@@ -16,8 +17,6 @@ import com.rusefi.ui.util.FrameHelper;
 import jssc.SerialPortList;
 
 import javax.swing.*;
-import javax.swing.table.TableCellEditor;
-
 import java.awt.*;
 
 import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
@@ -34,7 +33,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * @see com.rusefi.StartupFrame
  */
 public class Launcher {
-    public static final int CONSOLE_VERSION = 20150313;
+    public static final int CONSOLE_VERSION = 20150315;
     public static final boolean SHOW_STIMULATOR = false;
     public static final String TAB_INDEX = "main_tab";
     private final String port;
