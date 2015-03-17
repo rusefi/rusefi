@@ -166,7 +166,7 @@ public class LogViewer extends JPanel {
         engineState.registerStringValueAction("wave_chart", new EngineState.ValueCallback<String>() {
             @Override
             public void onUpdate(String value) {
-                FileLog.rlog("Got wave_chart: " + value);
+                FileLog.MAIN.logLine("Got wave_chart: " + value);
 
                 ChartRepository.getInstance().addChart(value);
             }

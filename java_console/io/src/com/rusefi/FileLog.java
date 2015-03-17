@@ -24,12 +24,12 @@ public enum FileLog {
 
         @Override
         public void info(String msg) {
-            rlog(msg);
+            MAIN.logLine(msg);
         }
 
         @Override
         public void error(String msg) {
-            rlog(msg);
+            MAIN.logLine(msg);
         }
     };
 
@@ -95,8 +95,8 @@ public enum FileLog {
         }
     }
 
-    public static void rlog(String msg) {
-        System.out.println("r " + msg);
+    private static void rlog(String msg) {
+        System.out.println("rlog " + msg);
     }
 
     public void log(IllegalStateException exception) {

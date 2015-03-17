@@ -30,8 +30,8 @@ public class XYDataReader {
             Point3D xyz = Point3D.parseLine(line);
             data.addPoint(xyz);
         }
-        FileLog.rlog("x range: " + data.getMinXValue() + " to " + data.getMaxXValue());
-        FileLog.rlog("y range: " + data.getMinYValue() + " to " + data.getMaxYValue());
+        FileLog.MAIN.logLine("x range: " + data.getMinXValue() + " to " + data.getMaxXValue());
+        FileLog.MAIN.logLine("y range: " + data.getMinYValue() + " to " + data.getMaxYValue());
         return data;
     }
 }

@@ -51,7 +51,7 @@ public class YAxisData {
 
         float newAvg = holder.get();
         if (newAvg != value && !Float.isNaN(newAvg)) {
-            FileLog.rlog("new " + value + " avg " + newAvg + " for x=" + x + "/y=" + y);
+            FileLog.MAIN.logLine("new " + value + " avg " + newAvg + " for x=" + x + "/y=" + y);
         }
     }
 

@@ -60,10 +60,10 @@ public class PortHolder {
             setupPort(serialPort, BAUD_RATE);
 //            serialPort.addEventListener(new SerialPortReader(serialPort, portHolderListener));
         } catch (SerialPortException e) {
-            FileLog.rlog("ERROR " + e.getMessage());
+            FileLog.MAIN.logLine("ERROR " + e.getMessage());
             return false;
         }
-        FileLog.rlog("PortHolder: Sleeping a bit");
+        FileLog.MAIN.logLine("PortHolder: Sleeping a bit");
         try {
             // todo: why is this delay here? add a comment
             Thread.sleep(200);
@@ -103,7 +103,7 @@ public class PortHolder {
                     }
                     sleep();
                 }
-                FileLog.rlog("Stopping text pull");
+                FileLog.MAIN.logLine("Stopping text pull");
             }
         };
         Thread tr = new Thread(textPull);

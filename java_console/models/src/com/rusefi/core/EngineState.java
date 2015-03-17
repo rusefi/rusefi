@@ -207,7 +207,7 @@ public class EngineState {
                 response = handleStringActionPair(response, pair, listener);
         }
         if (originalResponse.length() == response.length()) {
-            FileLog.rlog("EngineState.unknown: " + response);
+            FileLog.MAIN.logLine("EngineState.unknown: " + response);
             // discarding invalid line
             return "";
         }

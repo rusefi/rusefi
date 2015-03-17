@@ -25,7 +25,7 @@ public class PersistentConfiguration {
             config = (Map<String, Object>) e.readObject();
             e.close();
         } catch (Throwable e) {
-            FileLog.rlog("Error reading from " + CONFIG_FILE_NAME);
+            FileLog.MAIN.logLine("Error reading from " + CONFIG_FILE_NAME);
         }
     }
 
@@ -36,7 +36,7 @@ public class PersistentConfiguration {
             e.close();
             System.out.println("Saved to " + CONFIG_FILE_NAME);
         } catch (FileNotFoundException e1) {
-            FileLog.rlog("Error saving " + CONFIG_FILE_NAME);
+            FileLog.MAIN.logLine("Error saving " + CONFIG_FILE_NAME);
         }
     }
 

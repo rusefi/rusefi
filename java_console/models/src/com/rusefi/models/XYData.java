@@ -129,7 +129,7 @@ public class XYData {
     public void saveToFile(String filename) {
         try {
             String name = date + filename;
-            FileLog.rlog("Writing data to " + name);
+            FileLog.MAIN.logLine("Writing data to " + name);
             Writer w = new FileWriter(name);
             for (YAxisData yAxisData : yDatas.values())
                 yAxisData.write(w);

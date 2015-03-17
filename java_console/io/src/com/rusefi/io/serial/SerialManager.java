@@ -24,11 +24,11 @@ class SerialManager {
 
     public static void scheduleOpening(LinkManager.LinkStateListener listener) {
         SerialManager.listener = listener;
-        FileLog.rlog("scheduleOpening");
+        FileLog.MAIN.logLine("scheduleOpening");
         LinkManager.IO_EXECUTOR.execute(new Runnable() {
             @Override
             public void run() {
-                FileLog.rlog("scheduleOpening>openPort");
+                FileLog.MAIN.logLine("scheduleOpening>openPort");
                 PortHolder.getInstance().openPort(port, SerialManager.dataListener, SerialManager.listener);
             }
         });

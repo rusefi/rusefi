@@ -1,9 +1,6 @@
 package com.rusefi.binaryprotocol;
 
-import com.rusefi.ConfigurationImage;
-import com.rusefi.ConfigurationImageDiff;
-import com.rusefi.Logger;
-import com.rusefi.Timeouts;
+import com.rusefi.*;
 import com.rusefi.core.Pair;
 import com.rusefi.io.DataListener;
 import com.rusefi.io.serial.SerialPortReader;
@@ -102,7 +99,7 @@ public class BinaryProtocol {
                 }
             } catch (SerialPortException | EOFException e) {
                 close();
-                System.out.println("exception: " + e);
+                FileLog.MAIN.logLine("exception: " + e);
                 return;
             } catch (InterruptedException e) {
                 throw new IllegalStateException(e);
@@ -113,9 +110,11 @@ public class BinaryProtocol {
 
     private void dropPending() {
         synchronized (cbb) {
+            if (isClosed)
+                return;
             int pending = cbb.length();
             if (pending > 0) {
-                logger.error("Unexpected pending data: " + pending);
+                logger.error("Unexpected pending data: " + pending + " byte(s)");
                 cbb.get(new byte[pending]);
             }
             try {
@@ -270,10 +269,12 @@ public class BinaryProtocol {
         }
     }
 
-    private void close() {
+    public void close() {
         isClosed = true;
         try {
+            FileLog.MAIN.logLine("CLOSING PORT...");
             serialPort.closePort();
+            FileLog.MAIN.logLine("PORT CLOSED");
         } catch (SerialPortException e) {
             logger.error("Error closing port: " + e);
         }
