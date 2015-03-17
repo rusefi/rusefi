@@ -333,6 +333,7 @@ bit is_enabled_spi_2
 	bit isEngineControlEnabled
 	bit isHip9011Enabled
 	bit isVerboseAlternator
+	bit useSerialPort
 
 	brain_input_pin_e[LOGIC_ANALYZER_CHANNEL_COUNT iterate] logicAnalyzerPins;
 	uint8_t[LOGIC_ANALYZER_CHANNEL_COUNT] logicAnalyzerMode;default or inverted input
