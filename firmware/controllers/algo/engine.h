@@ -151,6 +151,9 @@ public:
 
 	bool_t isRunningPwmTest;
 
+	bool_t knockNow;
+	bool_t knockEver;
+
 	/**
 	 * are we running any kind of functional test? this affect
 	 * some areas

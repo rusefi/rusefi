@@ -68,6 +68,9 @@ Engine::Engine(persistent_config_s *config) {
 	engineState.iat = engineState.clt = NAN;
 	memset(&ignitionPin, 0, sizeof(ignitionPin));
 
+	knockNow = false;
+	knockEver = false;
+
 	iat.config = NULL;
 	iat.channel = EFI_ADC_NONE;
 
