@@ -14,7 +14,7 @@ public class AverageData {
         double minX = data.getMinXValue();
         double xWidth = data.getMaxXValue() - minX;
 
-        FileLog.rlog("From x" + minX + " w=" + xWidth);
+        FileLog.MAIN.logLine("From x" + minX + " w=" + xWidth);
 
         XYData result = new XYData();
 
@@ -22,7 +22,7 @@ public class AverageData {
             double fromX_ = minX + (xWidth * i) / divider;
             double toX_ = minX + (xWidth * (i + 1)) / divider;
 
-            FileLog.rlog("from " + fromX_ + " to " + toX_);
+            FileLog.MAIN.logLine("from " + fromX_ + " to " + toX_);
 
 //            double fromX = data.findXfromSet(fromX_);
 //            double toX = data.findXfromSet(toX_);

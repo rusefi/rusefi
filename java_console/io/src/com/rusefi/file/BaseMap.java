@@ -18,8 +18,8 @@ public class BaseMap {
     }
 
     public static XYData loadData(String filename, final String key, final String value) {
-        FileLog.rlog("Loading from " + filename);
-        FileLog.rlog("Loading " + key + ">" + value);
+        FileLog.MAIN.logLine("Loading from " + filename);
+        FileLog.MAIN.logLine("Loading " + key + ">" + value);
         final XYData data = new XYData();
 
         EngineState.EngineStateListener listener = new EngineState.EngineStateListenerImpl() {

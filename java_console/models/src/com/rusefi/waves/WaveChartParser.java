@@ -18,7 +18,7 @@ public class WaveChartParser {
     public static WaveChart unpackToMap(String value) {
         if (value == null)
             throw new NullPointerException("value");
-        FileLog.rlog(": " + value);
+        FileLog.MAIN.logLine(": " + value);
 
         String[] array = value.split(DELI);
 

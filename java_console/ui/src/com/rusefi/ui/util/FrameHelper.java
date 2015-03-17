@@ -49,11 +49,11 @@ public class FrameHelper {
     }
 
     protected void onWindowOpened() {
-        FileLog.rlog("onWindowOpened");
+        FileLog.MAIN.logLine("onWindowOpened");
     }
 
     protected void onWindowClosed() {
-        FileLog.rlog("onWindowClosed");
+        FileLog.MAIN.logLine("onWindowClosed");
         FileLog.MAIN.close();
     }
 

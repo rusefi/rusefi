@@ -85,7 +85,7 @@ public class TcpConnector implements LinkConnector {
      */
     @Override
     public void connect(LinkManager.LinkStateListener listener) {
-        FileLog.rlog("Connecting to " + port);
+        FileLog.MAIN.logLine("Connecting to " + port);
         BufferedInputStream stream;
         try {
             Socket socket = new Socket(LOCALHOST, port);
@@ -101,7 +101,7 @@ public class TcpConnector implements LinkConnector {
             @Override
             public void run() {
                 Thread.currentThread().setName("TCP connector loop");
-                FileLog.rlog("Running TCP connection loop");
+                FileLog.MAIN.logLine("Running TCP connection loop");
                 while (true) {
                     try {
                         String line = reader.readLine();
@@ -134,7 +134,7 @@ public class TcpConnector implements LinkConnector {
     @Override
     public void send(String text) throws InterruptedException {
         String command = LinkManager.encodeCommand(text);
-        FileLog.rlog("Writing " + command);
+        FileLog.MAIN.logLine("Writing " + command);
         try {
             writer.write(command + "\r\n");
             writer.flush();

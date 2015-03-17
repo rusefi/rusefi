@@ -1,5 +1,6 @@
 package com.rusefi;
 
+import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.EngineState;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.LinkManager;
@@ -53,8 +54,14 @@ public class Launcher {
 
         @Override
         protected void onWindowClosed() {
-            super.onWindowClosed();
+            /**
+             * here we would close the port and log a message about it
+             */
             windowClosedHandler();
+            /**
+             * here we would close the log file
+             */
+            super.onWindowClosed();
         }
     };
 
@@ -140,6 +147,9 @@ public class Launcher {
         root.setProperty("version", CONSOLE_VERSION);
         root.setProperty(TAB_INDEX, tabbedPane.getSelectedIndex());
         getConfig().save();
+        BinaryProtocol bp = BinaryProtocol.instance;
+        if (bp != null && !bp.isClosed)
+            bp.close();
         System.exit(0);
     }
 
