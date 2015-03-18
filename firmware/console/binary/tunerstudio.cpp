@@ -107,9 +107,9 @@ ts_channel_s tsChannel;
 
 extern uint8_t crcWriteBuffer[300];
 
-static int ts_serial_ready(void) {
+static int ts_serial_ready(bool_t isConsoleRedirect) {
 #if EFI_PROD_CODE
-	if (isSerialOverUart()) {
+	if (isSerialOverUart() ^ isConsoleRedirect) {
 		// TS uses USB when console uses serial
 		return is_usb_serial_ready();
 	} else {
@@ -401,10 +401,10 @@ static bool isKnownCommand(char command) {
 static uint8_t firstByte;
 static uint8_t secondByte;
 
-void runBinaryProtocolLoop(ts_channel_s *tsChannel) {
+void runBinaryProtocolLoop(ts_channel_s *tsChannel, bool_t isConsoleRedirect) {
 	int wasReady = false;
 	while (true) {
-		int isReady = ts_serial_ready();
+		int isReady = ts_serial_ready(isConsoleRedirect);
 		if (!isReady) {
 			chThdSleepMilliseconds(10);
 			wasReady = false;
@@ -508,7 +508,7 @@ static msg_t tsThreadEntryPoint(void *arg) {
 	startTsPort();
 #endif
 
-	runBinaryProtocolLoop(&tsChannel);
+	runBinaryProtocolLoop(&tsChannel, false);
 
 #if defined __GNUC__
 	return 0;

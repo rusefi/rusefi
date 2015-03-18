@@ -191,7 +191,7 @@ static msg_t consoleThreadThreadEntryPoint(void *arg) {
 
 		if (consoleInBinaryMode) {
 			// switch to binary protocol
-			runBinaryProtocolLoop(&binaryConsole);
+			runBinaryProtocolLoop(&binaryConsole, true);
 		}
 	}
 #if defined __GNUC__
