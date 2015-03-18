@@ -24,7 +24,7 @@ import java.util.concurrent.*;
 public class PortHolder {
     //    private static final int BAUD_RATE = 8 * 115200;// 921600;
 //    private static final int BAUD_RATE = 2 * 115200;
-    private static final int BAUD_RATE = 115200;
+    public static int BAUD_RATE = 115200;
     private static PortHolder instance = new PortHolder();
     private final Object portLock = new Object();
 
