@@ -1,6 +1,7 @@
 package com.rusefi;
 
 import com.rusefi.io.LinkManager;
+import com.rusefi.io.serial.PortHolder;
 import com.rusefi.io.tcp.TcpConnector;
 import com.rusefi.maintenance.EraseChip;
 import com.rusefi.maintenance.FirmwareFlasher;
@@ -128,15 +129,28 @@ public class StartupFrame {
             comboPorts.addItem(port);
         panel.add(comboPorts);
 
+        final JComboBox<String> comboSpeeds = createSpeedCombo();
+        panel.add(comboSpeeds);
+
         final JButton connect = new JButton("Connect");
         panel.add(connect);
         connect.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 disposeFrameAndProceed();
+                PortHolder.BAUD_RATE = Integer.parseInt((String) comboSpeeds.getSelectedItem());
                 new Launcher(comboPorts.getSelectedItem().toString());
             }
         });
+    }
+
+    private static JComboBox<String> createSpeedCombo() {
+        JComboBox<String> combo = new JComboBox<>();
+        int defaultSpeed = 115200;
+        for (int speed : new int[]{9600, 14400, 38400, 115200, 460800, 921600})
+            combo.addItem(Integer.toString(speed));
+        combo.setSelectedItem(Integer.toString(defaultSpeed));
+        return combo;
     }
 
     public static ImageIcon loadIcon(String strPath) {
