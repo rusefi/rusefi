@@ -544,7 +544,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->massAirFlowValue = getRealMaf();
 	tsOutputChannels->veValue = veMap.getValue(getMap(), rpm);
 	tsOutputChannels->airFuelRatio = getAfr();
-	tsOutputChannels->v_batt = getVBatt(engineConfiguration);
+	tsOutputChannels->vBatt = getVBatt(engineConfiguration);
 	tsOutputChannels->tpsADC = getTPS10bitAdc(PASS_ENGINE_PARAMETER_F);
 #if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
 	tsOutputChannels->atmospherePressure = getBaroPressure();
@@ -588,7 +588,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->clutchDownState = engine->clutchDownState;
 	tsOutputChannels->tCharge = getTCharge(rpm, tps, coolant, intake);
 	float timing = getAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER);
-	tsOutputChannels->inj_adv = timing > 360 ? timing - 720 : timing;
+	tsOutputChannels->ignitionAdvance = timing > 360 ? timing - 720 : timing;
 	tsOutputChannels->sparkDwell = getSparkDwellMsT(rpm PASS_ENGINE_PARAMETER);
 	tsOutputChannels->baseFuel = baseFuelMs;
 	tsOutputChannels->pulseWidthMs = getRunningFuel(baseFuelMs, rpm PASS_ENGINE_PARAMETER);

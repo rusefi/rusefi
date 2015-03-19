@@ -15,6 +15,8 @@
 #include "rpm_calculator.h"
 #include "efiGpio.h"
 
+#define NO_PWM 0
+
 /**
  * Here we define all rusEfi-specific methods
  */
@@ -126,7 +128,7 @@ void setFsioExt(engine_configuration_s *engineConfiguration, int index, brain_pi
 }
 
 void setFsio(engine_configuration_s *engineConfiguration, int index, brain_pin_e pin, const char * exp) {
-	setFsioExt(engineConfiguration, index, pin, exp, 0);
+	setFsioExt(engineConfiguration, index, pin, exp, NO_PWM);
 }
 
 void applyFsioConfiguration(DECLARE_ENGINE_PARAMETER_F) {
@@ -198,7 +200,7 @@ static void handleFsio(Engine *engine, int index) {
 	if (boardConfiguration->fsioPins[index] == GPIO_UNASSIGNED)
 		return;
 
-	bool_t isPwmMode = boardConfiguration->fsioFrequency[index] != 0;
+	bool_t isPwmMode = boardConfiguration->fsioFrequency[index] != NO_PWM;
 
 	float fvalue = calc.getValue2(fsioLogics[index], engine);
 	engine->engineConfiguration2->fsioLastValue[index] = fvalue;

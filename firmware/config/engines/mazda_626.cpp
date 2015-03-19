@@ -66,4 +66,11 @@ void setMazda626EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 // todo	engineConfiguration->afr.hwChannel = EFI_ADC_3;
 	initEgoSensor(&engineConfiguration->afr, ES_Innovate_MTX_L);
+
+
+#if EFI_FSIO || defined(__DOXYGEN__)
+	// backup main relay pin
+	setFsio(engineConfiguration, 0, GPIOE_6, "1");
+#endif
+
 }
