@@ -89,8 +89,8 @@ EXTERN_ENGINE
 
 extern short currentPageId;
 
-// in MS, that's 10 seconds
-#define TS_READ_TIMEOUT 10000
+// in MS, that's 3 seconds
+#define TS_READ_TIMEOUT MS2ST(3000)
 
 /**
  * note the use-case where text console port is switched into
@@ -121,7 +121,7 @@ static int ts_serial_ready(bool_t isConsoleRedirect) {
 #endif
 }
 
-static uint16_t BINARY_RESPONSE = (uint16_t)SWAP_UINT16(BINARY_SWITCH_TAG);
+static uint16_t BINARY_RESPONSE = (uint16_t) SWAP_UINT16(BINARY_SWITCH_TAG);
 
 // this thread wants a bit extra stack
 static THD_WORKING_AREA(tsThreadStack, 3 * UTILITY_THREAD_STACK_SIZE);
@@ -228,10 +228,11 @@ void handlePageSelectCommand(ts_channel_s *tsChannel, ts_response_format_e mode,
 	tsSendResponse(tsChannel, mode, NULL, 0);
 }
 
-void yellowMagic(int currentPageId, int  offset, int count) {
-	if(offset > 6200) {
+void yellowMagic(int currentPageId, int offset, int count) {
+	if (offset > 6200) {
 		scheduleMsg(&tsLogger, "applying soft change from %d length %d", offset, count);
-		memcpy(((char*)engineConfiguration) + offset, ((char*)&configWorkingCopy.engineConfiguration) + offset, count);
+		memcpy(((char*) engineConfiguration) + offset, ((char*) &configWorkingCopy.engineConfiguration) + offset,
+				count);
 	}
 }
 
@@ -239,7 +240,8 @@ void yellowMagic(int currentPageId, int  offset, int count) {
  * This command is needed to make the whole transfer a bit faster
  * @note See also handleWriteValueCommand
  */
-void handleWriteChunkCommand(ts_channel_s *tsChannel, ts_response_format_e mode, short offset, short count, void *content) {
+void handleWriteChunkCommand(ts_channel_s *tsChannel, ts_response_format_e mode, short offset, short count,
+		void *content) {
 	tsState.writeChunkCommandCounter++;
 
 	scheduleMsg(&tsLogger, "WRITE CHUNK m=%d p=%d o=%d s=%d", mode, currentPageId, offset, count);
@@ -264,7 +266,8 @@ void handleWriteChunkCommand(ts_channel_s *tsChannel, ts_response_format_e mode,
 	printTsStats();
 }
 
-void handleCrc32Check(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t pageId, uint16_t offset, uint16_t count) {
+void handleCrc32Check(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t pageId, uint16_t offset,
+		uint16_t count) {
 	tsState.crc32CheckCommandCounter++;
 
 	count = SWAP_UINT16(count);
@@ -273,24 +276,24 @@ void handleCrc32Check(ts_channel_s *tsChannel, ts_response_format_e mode, uint16
 
 	scheduleMsg(&tsLogger, "CRC32 request: offset %d size %d", offset, count);
 
-	uint32_t crc = SWAP_UINT32(crc32((void *) getWorkingPageAddr(0), count));
+	uint32_t crc = SWAP_UINT32(crc32((void * ) getWorkingPageAddr(0), count));
 
 	scheduleMsg(&tsLogger, "CRC32 response: %x", crc);
 
-	tsSendResponse(tsChannel, mode, (const uint8_t *)&crc, 4);
+	tsSendResponse(tsChannel, mode, (const uint8_t *) &crc, 4);
 }
-
 
 /**
  * 'Write' command receives a single value at a given offset
  * @note Writing values one by one is pretty slow
  */
-void handleWriteValueCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t page, uint16_t offset, uint8_t value) {
+void handleWriteValueCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t page, uint16_t offset,
+		uint8_t value) {
 	tsState.writeValueCommandCounter++;
 
 	currentPageId = page;
 
-tunerStudioDebug("got W (Write)"); // we can get a lot of these
+	tunerStudioDebug("got W (Write)"); // we can get a lot of these
 
 #if EFI_TUNER_STUDIO_VERBOSE
 //	scheduleMsg(logger, "Page number %d\r\n", pageId); // we can get a lot of these
@@ -323,13 +326,13 @@ static void sendErrorCode(ts_channel_s *tsChannel) {
 	tunerStudioWriteCrcPacket(tsChannel, TS_RESPONSE_CRC_FAILURE, NULL, 0);
 }
 
-void handlePageReadCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t pageId, uint16_t offset, uint16_t count) {
+void handlePageReadCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t pageId, uint16_t offset,
+		uint16_t count) {
 	tsState.readPageCommandsCounter++;
 	currentPageId = pageId;
 
 #if EFI_TUNER_STUDIO_VERBOSE
-	scheduleMsg(&tsLogger, "READ m=%d p=%d o=%d c=%d", mode, (int) currentPageId, offset,
-			count);
+	scheduleMsg(&tsLogger, "READ m=%d p=%d o=%d c=%d", mode, (int) currentPageId, offset, count);
 	printTsStats();
 #endif
 
@@ -393,9 +396,8 @@ static short int pageIn;
 static bool isKnownCommand(char command) {
 	return command == TS_HELLO_COMMAND || command == TS_READ_COMMAND || command == TS_OUTPUT_COMMAND
 			|| command == TS_PAGE_COMMAND || command == TS_BURN_COMMAND || command == TS_SINGLE_WRITE_COMMAND
-			|| command == TS_LEGACY_HELLO_COMMAND || command == TS_CHUNK_WRITE_COMMAND
-			|| command == TS_EXECUTE || command == TS_GET_TEXT
-			|| command == TS_CRC_CHECK_COMMAND;
+			|| command == TS_LEGACY_HELLO_COMMAND || command == TS_CHUNK_WRITE_COMMAND || command == TS_EXECUTE
+			|| command == TS_GET_TEXT || command == TS_CRC_CHECK_COMMAND;
 }
 
 static uint8_t firstByte;
@@ -418,7 +420,7 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel, bool_t isConsoleRedirect) {
 
 		tsState.tsCounter++;
 
-		int recieved = chSequentialStreamRead(tsChannel->channel, &firstByte, 1);
+		int recieved = chnReadTimeout(tsChannel->channel, &firstByte, 1, TS_READ_TIMEOUT);
 		if (recieved != 1) {
 			tunerStudioError("ERROR: no command");
 			continue;
@@ -427,7 +429,7 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel, bool_t isConsoleRedirect) {
 		if (handlePlainCommand(tsChannel, firstByte))
 			continue;
 
-		recieved = chSequentialStreamRead(tsChannel->channel, &secondByte, 1);
+		recieved = chnReadTimeout(tsChannel->channel, &secondByte, 1, TS_READ_TIMEOUT);
 		if (recieved != 1) {
 			tunerStudioError("ERROR: no second");
 			continue;
@@ -438,7 +440,7 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel, bool_t isConsoleRedirect) {
 
 		if (incomingPacketSize == BINARY_SWITCH_TAG) {
 			// we are here if we get a binary switch request while already in binary mode. We will just ignore it.
-			tunerStudioWriteData(tsChannel, (const uint8_t *)&BINARY_RESPONSE, 2);
+			tunerStudioWriteData(tsChannel, (const uint8_t *) &BINARY_RESPONSE, 2);
 			continue;
 		}
 
@@ -449,7 +451,7 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel, bool_t isConsoleRedirect) {
 			continue;
 		}
 
-		recieved = chnReadTimeout(tsChannel->channel, (uint8_t*)tsChannel->crcReadBuffer, 1, MS2ST(TS_READ_TIMEOUT));
+		recieved = chnReadTimeout(tsChannel->channel, (uint8_t* )tsChannel->crcReadBuffer, 1, TS_READ_TIMEOUT);
 		if (recieved != 1) {
 			tunerStudioError("ERROR: did not receive command");
 			continue;
@@ -465,7 +467,7 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel, bool_t isConsoleRedirect) {
 //		scheduleMsg(logger, "TunerStudio: reading %d+4 bytes(s)", incomingPacketSize);
 
 		recieved = chnReadTimeout(tsChannel->channel, (uint8_t * ) (tsChannel->crcReadBuffer + 1),
-				incomingPacketSize + CRC_VALUE_SIZE - 1, MS2ST(TS_READ_TIMEOUT));
+				incomingPacketSize + CRC_VALUE_SIZE - 1, TS_READ_TIMEOUT);
 		int expectedSize = incomingPacketSize + CRC_VALUE_SIZE - 1;
 		if (recieved != expectedSize) {
 			scheduleMsg(&tsLogger, "got ONLY %d for packet size %d/%d for command %c", recieved, incomingPacketSize,
@@ -484,8 +486,8 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel, bool_t isConsoleRedirect) {
 					tsChannel->crcReadBuffer[incomingPacketSize + 1], tsChannel->crcReadBuffer[incomingPacketSize + 2],
 					tsChannel->crcReadBuffer[incomingPacketSize + 3]);
 
-			scheduleMsg(&tsLogger, "TunerStudio: command %c actual CRC %x/expected %x", tsChannel->crcReadBuffer[0], actualCrc,
-					expectedCrc);
+			scheduleMsg(&tsLogger, "TunerStudio: command %c actual CRC %x/expected %x", tsChannel->crcReadBuffer[0],
+					actualCrc, expectedCrc);
 			tunerStudioError("ERROR: CRC issue");
 			continue;
 		}
@@ -563,7 +565,7 @@ void handleTestCommand(ts_channel_s *tsChannel) {
 	 * extension of the protocol to simplify troubleshooting
 	 */
 	tunerStudioDebug("got T (Test)");
-	tunerStudioWriteData(tsChannel, (const uint8_t *)VCS_VERSION, sizeof(VCS_VERSION));
+	tunerStudioWriteData(tsChannel, (const uint8_t *) VCS_VERSION, sizeof(VCS_VERSION));
 	/**
 	 * Please note that this response is a magic constant used by dev console for protocol detection
 	 * @see EngineState#TS_PROTOCOL_TAG
@@ -598,15 +600,17 @@ bool handlePlainCommand(ts_channel_s *tsChannel, uint8_t command) {
 		handleTestCommand(tsChannel);
 		return true;
 	} else if (command == TS_PAGE_COMMAND) {
-		int recieved = chSequentialStreamRead(tsChannel->channel, (uint8_t * )&pageIn, sizeof(pageIn));
-		// todo: validate 'recieved' value
+		int recieved = chnReadTimeout(tsChannel->channel, (uint8_t * )&pageIn, sizeof(pageIn), TS_READ_TIMEOUT);
+		if (recieved != sizeof(pageIn)) {
+			tunerStudioError("ERROR: not enough for PAGE");
+			return true;
+		}
 		handlePageSelectCommand(tsChannel, TS_PLAIN, pageIn);
 		return true;
 	} else if (command == TS_BURN_COMMAND) {
 		scheduleMsg(&tsLogger, "Got naked BURN");
 		uint16_t page;
-		int recieved = chSequentialStreamRead(tsChannel->channel, (uint8_t * )&page,
-				sizeof(page));
+		int recieved = chnReadTimeout(tsChannel->channel, (uint8_t * )&page, sizeof(page), TS_READ_TIMEOUT);
 		if (recieved != sizeof(page)) {
 			tunerStudioError("ERROR: Not enough for plain burn");
 			return true;
@@ -615,26 +619,30 @@ bool handlePlainCommand(ts_channel_s *tsChannel, uint8_t command) {
 		return true;
 	} else if (command == TS_CHUNK_WRITE_COMMAND) {
 		scheduleMsg(&tsLogger, "Got naked CHUNK_WRITE");
-		int recieved = chSequentialStreamRead(tsChannel->channel, (uint8_t * )&writeChunkRequest,
-				sizeof(writeChunkRequest));
+		int recieved = chnReadTimeout(tsChannel->channel, (uint8_t * )&writeChunkRequest, sizeof(writeChunkRequest),
+				TS_READ_TIMEOUT);
 		if (recieved != sizeof(writeChunkRequest)) {
 			scheduleMsg(&tsLogger, "ERROR: Not enough for plain chunk write header: %d", recieved);
 			tsState.errorCounter++;
 			return true;
 		}
-		recieved = chSequentialStreamRead(tsChannel->channel, (uint8_t * )&tsChannel->crcReadBuffer, writeChunkRequest.count);
+		recieved = chnReadTimeout(tsChannel->channel, (uint8_t * )&tsChannel->crcReadBuffer, writeChunkRequest.count,
+				TS_READ_TIMEOUT);
 		if (recieved != writeChunkRequest.count) {
-			scheduleMsg(&tsLogger, "ERROR: Not enough for plain chunk write content: %d while expecting %d", recieved, writeChunkRequest.count);
+			scheduleMsg(&tsLogger, "ERROR: Not enough for plain chunk write content: %d while expecting %d", recieved,
+					writeChunkRequest.count);
 			tsState.errorCounter++;
 			return true;
 		}
 		currentPageId = writeChunkRequest.page;
 
-		handleWriteChunkCommand(tsChannel, TS_PLAIN, writeChunkRequest.offset, writeChunkRequest.count, (uint8_t * )&tsChannel->crcReadBuffer);
+		handleWriteChunkCommand(tsChannel, TS_PLAIN, writeChunkRequest.offset, writeChunkRequest.count,
+				(uint8_t *) &tsChannel->crcReadBuffer);
 		return true;
 	} else if (command == TS_READ_COMMAND) {
 		//scheduleMsg(logger, "Got naked READ PAGE???");
-		int recieved = chSequentialStreamRead(tsChannel->channel, (uint8_t * )&readRequest, sizeof(readRequest));
+		int recieved = chnReadTimeout(tsChannel->channel, (uint8_t * )&readRequest, sizeof(readRequest),
+				TS_READ_TIMEOUT);
 		if (recieved != sizeof(readRequest)) {
 			tunerStudioError("Not enough for plain read header");
 			return true;
