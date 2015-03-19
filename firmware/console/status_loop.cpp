@@ -530,7 +530,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	float intake = getIntakeAirTemperature(PASS_ENGINE_PARAMETER_F);
 
 	float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER);
-	float baseFuelMs = getBaseTableFuel(engineConfiguration, (int) rpm, engineLoad);
+	float baseFuelMs = getBaseFuel(rpm PASS_ENGINE_PARAMETER);
 
 	// header
 	tsOutputChannels->tsConfigVersion = TS_FILE_VERSION;
