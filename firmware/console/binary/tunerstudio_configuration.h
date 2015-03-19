@@ -41,7 +41,7 @@ typedef struct {
 	float massAirFlowVoltage; // size 4, offset 16
 	float airFuelRatio; // size 4, offset 20
 	float engineLoad; // size 4, offset 24
-	float v_batt; // size 4, offset 28
+	float vBatt; // size 4, offset 28
 	short int tpsADC; // size 2, offset 32
 	short int alignment; // size 2, offset 34
 	float atmospherePressure; // size 4, offset 36
@@ -52,7 +52,7 @@ typedef struct {
 	 */
 	float baseFuel; // 48
 	float tCharge; // 52
-	float inj_adv; // 56
+	float ignitionAdvance; // 56
 	float sparkDwell; // 60
 	/**
 	 * this one contains fuel with all corrections. See also baseFuel
