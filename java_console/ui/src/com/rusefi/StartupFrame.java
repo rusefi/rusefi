@@ -130,7 +130,7 @@ public class StartupFrame {
         panel.add(comboPorts);
 
         final JComboBox<String> comboSpeeds = createSpeedCombo();
-        panel.add(comboSpeeds);
+//        panel.add(comboSpeeds);
 
         final JButton connect = new JButton("Connect");
         panel.add(connect);

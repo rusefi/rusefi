@@ -270,6 +270,8 @@ public class BinaryProtocol {
     }
 
     public void close() {
+        if (isClosed)
+            return;
         isClosed = true;
         try {
             FileLog.MAIN.logLine("CLOSING PORT...");
