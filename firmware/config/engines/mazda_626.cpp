@@ -13,6 +13,7 @@
 #include "honda_accord.h"
 #include "custom_engine.h"
 #include "allsensors.h"
+#include "fsio_impl.h"
 
 EXTERN_ENGINE;
 

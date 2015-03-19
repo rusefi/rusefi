@@ -584,6 +584,9 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->isIatError = !isValidIntakeAirTemperature(getIntakeAirTemperature(PASS_ENGINE_PARAMETER_F));
 #endif /* EFI_PROD_CODE */
 
+	tsOutputChannels->knockNowIndicator = engine->knockNow;
+	tsOutputChannels->knockEverIndicator = engine->knockEver;
+
 	tsOutputChannels->clutchUpState = engine->clutchUpState;
 	tsOutputChannels->clutchDownState = engine->clutchDownState;
 	tsOutputChannels->tCharge = getTCharge(rpm, tps, coolant, intake);

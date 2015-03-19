@@ -342,10 +342,8 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECL
 		if (engineConfiguration->externalKnockSenseAdc != EFI_ADC_NONE) {
 			float externalKnockValue = getAdcValue(engineConfiguration->externalKnockSenseAdc);
 			engine->knockNow = externalKnockValue > 2.5;
-
-
+			engine->knockEver |= engine->knockNow;
 		}
-
 
 		engine->m.beforeIgnitionMath = GET_TIMESTAMP();
 		ignitionCalc(rpm PASS_ENGINE_PARAMETER);
