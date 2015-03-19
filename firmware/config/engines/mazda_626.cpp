@@ -29,6 +29,7 @@ void setMazda626EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->analogChartFrequency = 2;
 
 	engineConfiguration->injector.flow = 330;
+	engineConfiguration->specs.displacement = 2.0;
 
 	// set_global_trigger_offset_angle -42
 	engineConfiguration->globalTriggerAngleOffset = -42;

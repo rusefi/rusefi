@@ -20,8 +20,8 @@ EXTERN_ENGINE;
 void setBmwE34(DECLARE_ENGINE_PARAMETER_F) {
 	board_configuration_s * boardConfiguration = &engineConfiguration->bc;
 
-	engineConfiguration->algorithm = LM_PLAIN_MAF;
-//	engineConfiguration->algorithm = LM_SPEED_DENSITY;
+//	engineConfiguration->algorithm = LM_PLAIN_MAF;
+	engineConfiguration->algorithm = LM_SPEED_DENSITY;
 	engineConfiguration->injector.flow = 750;
 
 	boardConfiguration->tunerStudioSerialSpeed = 38400;
@@ -30,6 +30,7 @@ void setBmwE34(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
 	engineConfiguration->specs.cylindersCount = 6;
+	engineConfiguration->specs.displacement = 2.91;
 	engineConfiguration->specs.firingOrder = FO_1_THEN_5_THEN_3_THEN_6_THEN_2_THEN_4;
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
