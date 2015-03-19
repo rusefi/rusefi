@@ -279,6 +279,8 @@ static int order_1_THEN_3_THEN_4_THEN2[] = { 1, 3, 4, 2 };
 static int order_1_THEN_2_THEN_4_THEN3[] = { 1, 2, 4, 3 };
 static int order_1_THEN_3_THEN_2_THEN4[] = { 1, 3, 2, 4 };
 
+static int order_1_2_4_5_3[] = {1, 2, 4, 5, 3};
+
 static int order_1_THEN_5_THEN_3_THEN_6_THEN_2_THEN_4[] = { 1, 5, 3, 6, 2, 4 };
 static int order_1_THEN_4_THEN_2_THEN_5_THEN_3_THEN_6[] = { 1, 4, 2, 5, 3, 6 };
 
@@ -295,20 +297,28 @@ int getCylinderId(firing_order_e firingOrder, int index) {
 	switch (firingOrder) {
 	case FO_ONE_CYLINDER:
 		return 1;
+
+	case FO_1_THEN_2:
+		return order_1_2[index];
+// 4 cylinder
 	case FO_1_THEN_3_THEN_4_THEN2:
 		return order_1_THEN_3_THEN_4_THEN2[index];
 	case FO_1_THEN_2_THEN_4_THEN3:
 		return order_1_THEN_2_THEN_4_THEN3[index];
 	case FO_1_THEN_3_THEN_2_THEN4:
 		return order_1_THEN_3_THEN_2_THEN4[index];
+// 5 cylinder
+	case FO_1_2_4_5_3:
+		return order_1_2_4_5_3[index];
+
+// 6 cylinder
 	case FO_1_THEN_5_THEN_3_THEN_6_THEN_2_THEN_4:
 		return order_1_THEN_5_THEN_3_THEN_6_THEN_2_THEN_4[index];
 	case FO_1_THEN_4_THEN_2_THEN_5_THEN_3_THEN_6:
 		return order_1_THEN_4_THEN_2_THEN_5_THEN_3_THEN_6[index];
+// 8 cylinder
 	case FO_1_8_4_3_6_5_7_2:
 		return order_1_8_4_3_6_5_7_2[index];
-	case FO_1_THEN_2:
-		return order_1_2[index];
 
 	default:
 		warning(OBD_PCM_Processor_Fault, "getCylinderId not supported for %d", firingOrder);
