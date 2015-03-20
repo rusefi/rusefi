@@ -271,7 +271,9 @@ unsigned_common:
         chSequentialStreamPut(chp, (uint8_t)filler);
       } while (++width != 0);
     }
-    chSequentialStreamWrite(chp, (uint8_t*)s, i);
+    if (i > 0) {
+    	chSequentialStreamWrite(chp, (uint8_t*)s, i);
+    }
     s += i;
 
     while (width) {

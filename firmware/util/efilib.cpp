@@ -55,6 +55,18 @@ uint32_t efiStrlen(const char *param) {
 	return (s - param);
 }
 
+char * efiTrim(char *param) {
+	while (param[0] == ' ') {
+		param++; // that would skip leading spaces
+	}
+	int len = efiStrlen(param);
+	while (len > 0 && param[len - 1] == ' ') {
+		param[len - 1] = 0;
+		len--;
+	}
+	return param;
+}
+
 bool startsWith(const char *line, const char *prefix) {
 	uint32_t len = efiStrlen(prefix);
 	if (efiStrlen(line) < len) {
@@ -177,7 +189,6 @@ int efiPow10(int param) {
 	return 10 * efiPow10(10 - 1);
 }
 
-
 /**
  * string to float
  * @return NAN in case of invalid string
@@ -257,7 +268,7 @@ void printHistogram(Logging *logging, histogram_s *histogram) {
 	appendMsgPrefix(logging);
 	appendPrintf(logging, "histogram %s *", histogram->name);
 	for (int i = 0; i < len; i++)
-		appendPrintf(logging, "%d ", report[i]);
+	appendPrintf(logging, "%d ", report[i]);
 	appendPrintf(logging, "*");
 	appendMsgPostfix(logging);
 	scheduleLogging(logging);

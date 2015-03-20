@@ -25,7 +25,7 @@ static Logging *logger;
 
 static SimplePwm alternatorControl;
 static OutputPin alternatorPin;
-static Pid altPid(10, 0, 0, 10, 90);
+static Pid altPid(10, 0, 0, 1, 90);
 
 static THD_WORKING_AREA(alternatorControlThreadStack, UTILITY_THREAD_STACK_SIZE);
 

@@ -35,6 +35,7 @@ extern "C"
 {
 #endif /* __cplusplus */
 
+char * efiTrim(char *param);
 uint32_t efiStrlen(const char *param);
 int efiPow10(int param);
 bool startsWith(const char *line, const char *prefix);
@@ -46,7 +47,6 @@ int atoi(const char *string);
  * there is some BS related to isnan in MinGW, so let's have all the issues in one place
  */
 #define cisnan(f) (*(((int*) (&f))) == 0x7FC00000)
-
 
 int absI(int32_t value);
 float absF(float value);
