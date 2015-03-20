@@ -27,11 +27,12 @@
 
 #include "test_signal_executor.h"
 
+#include "test_util.h"
+
 extern "C"
 {
 #include "map_resize.h"
 #include "test_event_registry.h"
-#include "test_util.h"
 }
 
 #include "engine_math.h"
@@ -117,6 +118,7 @@ int main(void) {
 	testSensors();
 	testCyclicBuffer();
 	testCrc();
+	testMisc();
 
 	testSignalExecutor();
 

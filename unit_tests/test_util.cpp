@@ -351,7 +351,14 @@ void testFLStack(void) {
 
 }
 
+static char buff[32];
+
 void testMisc(void) {
+	print("******************************************* testMisc\r\n");
+	strcpy(buff, "  ab  ");
+	// we need a mutable array here
+	assertTrue(strEqual("ab", efiTrim(buff)));
+
 //	assertEquals(true, strEqual("spa3", getPinName(SPARKOUT_3_OUTPUT)));
 //	assertEquals(SPARKOUT_12_OUTPUT, getPinByName("spa12"));
 }
