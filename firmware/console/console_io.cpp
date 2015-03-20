@@ -187,7 +187,9 @@ static msg_t consoleThreadThreadEntryPoint(void *arg) {
 			continue;
 		}
 
-		(console_line_callback)(consoleInput);
+		char *trimmed = efiTrim(consoleInput);
+
+		(console_line_callback)(trimmed);
 
 		if (consoleInBinaryMode) {
 			// switch to binary protocol

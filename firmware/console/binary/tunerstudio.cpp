@@ -585,7 +585,8 @@ static void handleGetText(ts_channel_s *tsChannel) {
 static void handleExecuteCommand(ts_channel_s *tsChannel, char *data, int incomingPacketSize) {
 	tunerStudioWriteCrcPacket(tsChannel, TS_RESPONSE_COMMAND_OK, NULL, 0);
 	data[incomingPacketSize] = 0;
-	(console_line_callback)(data);
+	char *trimmed = efiTrim(data);
+	(console_line_callback)(trimmed);
 }
 
 /**
