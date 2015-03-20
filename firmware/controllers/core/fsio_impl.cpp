@@ -224,7 +224,7 @@ static void setPinState(const char * msg, OutputPin *pin, LEElement *element, En
 		if (value != pin->getLogicValue()) {
 			if (isRunningBenchTest())
 				return; // let's not mess with bench testing
-			scheduleMsg(logger, "setting %s %s", msg, boolToString(value));
+			scheduleMsg(logger, "setPin %s %s", msg, boolToString(value));
 			pin->setValue(value);
 		}
 	}
@@ -347,9 +347,9 @@ void runFsio(void) {
 		setPinState("A/C", &enginePins.acRelay, acRelayLogic, engine);
 	}
 
-	if (boardConfiguration->alternatorControlPin != GPIO_UNASSIGNED) {
-		setPinState("alternator", &enginePins.alternatorField, alternatorLogic, engine);
-	}
+//	if (boardConfiguration->alternatorControlPin != GPIO_UNASSIGNED) {
+//		setPinState("alternator", &enginePins.alternatorField, alternatorLogic, engine);
+//	}
 
 	if (boardConfiguration->fanPin != GPIO_UNASSIGNED) {
 		setPinState("fan", &enginePins.fanRelay, radiatorFanLogic, engine);
