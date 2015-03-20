@@ -18,6 +18,15 @@
 
 #define EFI_USE_CCM TRUE
 
+/**
+ * if you have a 60-2 trigger, or if you just want better performance, you
+ * probably want EFI_ENABLE_ASSERTS to be FALSE. Also you would probably want to FALSE
+ * CH_DBG_ENABLE_CHECKS
+ * CH_DBG_ENABLE_ASSERTS
+ * CH_DBG_ENABLE_TRACE
+ * in chconf.h
+ *
+ */
 #define EFI_ENABLE_ASSERTS TRUE
 
 #ifndef EFI_ENABLE_ASSERTS
