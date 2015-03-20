@@ -48,7 +48,7 @@ typedef struct {
 	OutputPin acRelay;
 	OutputPin fuelPumpRelay;
 	OutputPin o2heater;
-	OutputPin alternatorField;
+//	OutputPin alternatorField;
 	OutputPin errorLedPin;
 
 	NamedOutputPin injectors[ENGINE_CHANNEL_COUNT];
