@@ -21,6 +21,7 @@
 #include "console_io.h"
 #include "engine.h"
 #include "efiGpio.h"
+#include "engine_math.h"
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 #include "rusefi.h"
@@ -37,7 +38,6 @@
 extern int waveChartUsedSize;
 extern WaveChart waveChart;
 #endif /* EFI_WAVE_CHART */
-
 
 static char LOGGING_BUFFER[1000];
 static Logging logger("settings control", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
@@ -99,7 +99,8 @@ static void printOutputs(engine_configuration_s *engineConfiguration) {
 	scheduleMsg(&logger, "mainRelay: mode %s @ %s", getPin_output_mode_e(boardConfiguration->mainRelayPinMode),
 			hwPortname(boardConfiguration->mainRelayPin));
 
-	scheduleMsg(&logger, "alternator field: mode %s @ %s", getPin_output_mode_e(boardConfiguration->alternatorControlPinMode),
+	scheduleMsg(&logger, "alternator field: mode %s @ %s",
+			getPin_output_mode_e(boardConfiguration->alternatorControlPinMode),
 			hwPortname(boardConfiguration->alternatorControlPin));
 }
 
@@ -433,8 +434,23 @@ static void setCrankingRpm(int value) {
 	doPrintConfiguration(engine);
 }
 
-static void setAlgorithm(int value) {
-	engineConfiguration->algorithm = (engine_load_mode_e) value;
+/**
+ * this method sets algorithm and ignition table scale
+ */
+void setAlgorithm(engine_load_mode_e algo) {
+	engineConfiguration->algorithm = algo;
+	if (algo == LM_ALPHA_N) {
+		setTimingLoadBin(0, 100 PASS_ENGINE_PARAMETER);
+	} else if (algo == LM_SPEED_DENSITY) {
+		setTimingLoadBin(0, 160 PASS_ENGINE_PARAMETER);
+	}
+}
+
+/**
+ * this method is used in console - it also prints current configuration
+ */
+static void setAlgorithmInt(int value) {
+	setAlgorithmInt((engine_load_mode_e) value);
 	doPrintConfiguration(engine);
 }
 
@@ -921,7 +937,7 @@ void initSettings(engine_configuration_s *engineConfiguration) {
 
 	addConsoleActionI("set_rpm_hard_limit", setRpmHardLimit);
 	addConsoleActionI("set_firing_order", setFiringOrder);
-	addConsoleActionI("set_algorithm", setAlgorithm);
+	addConsoleActionI("set_algorithm", setAlgorithmInt);
 	addConsoleAction("stopengine", (Void) stopEngine);
 
 	// todo: refactor this - looks like all boolean flags should be controlled with less code duplication

@@ -15,6 +15,7 @@
 #include "engine_math.h"
 #include "thermistors.h"
 #include "citroenBerlingoTU3JP.h"
+#include "settings.h"
 
 void setLCD(board_configuration_s *boardConfiguration) {
 	boardConfiguration->HD44780_rs = GPIOE_7;
@@ -99,10 +100,9 @@ void setCitroenBerlingoTU3JPConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	/**
 	 * Algorithm Alpha-N setting
 	 */
-	engineConfiguration->algorithm = LM_ALPHA_N;
+	setAlgorithm(LM_ALPHA_N);
 	setFuelLoadBin(0, 100 PASS_ENGINE_PARAMETER);
 	setFuelRpmBin(800, 7000 PASS_ENGINE_PARAMETER);
-	setTimingLoadBin(0, 100 PASS_ENGINE_PARAMETER);
 	setTimingRpmBin(800, 7000 PASS_ENGINE_PARAMETER);
 
 	/**
