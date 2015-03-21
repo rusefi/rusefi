@@ -38,8 +38,8 @@ static msg_t AltCtrlThread(int param) {
 
 		currentAltDuty = altPid.getValue(14, getVBatt(engineConfiguration), 1);
 		if (boardConfiguration->isVerboseAlternator) {
-			scheduleMsg(logger, "alt duty: %f/vbatt=%f/p=%f/i=%f", currentAltDuty, getVBatt(engineConfiguration),
-					altPid.getP(), altPid.getI());
+			scheduleMsg(logger, "alt duty: %f/vbatt=%f/p=%f/i=%f/d=%f int=%f", currentAltDuty, getVBatt(engineConfiguration),
+					altPid.getP(), altPid.getI(), altPid.getD(), altPid.getIntegration());
 		}
 
 		alternatorControl.setSimplePwmDutyCycle(currentAltDuty / 100);

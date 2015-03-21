@@ -36,7 +36,6 @@ float Pid::getValue(float target, float input, float dTime) {
 	} else if (result < minResult) {
 		integration += minResult - result;
 		result = minResult;
-
 	}
 	return result;
 }
@@ -59,6 +58,10 @@ float Pid::getP(void) {
 
 float Pid::getI(void) {
 	return iFactor;
+}
+
+float Pid::getIntegration(void) {
+	return integration;
 }
 
 float Pid::getD(void) {

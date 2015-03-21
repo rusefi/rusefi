@@ -17,6 +17,7 @@ public:
 	void reset(void);
 	float getP(void);
 	float getI(void);
+	float getIntegration(void);
 	float getD(void);
 private:
 	float pFactor;
