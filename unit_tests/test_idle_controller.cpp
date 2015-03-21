@@ -48,5 +48,14 @@ void testPidController(void) {
 	assertEquals(10, pid.getValue(14, 16, 0.1));
 	assertEquals(10, pid.getValue(14, 16, 1));
 
+	pid.updateFactors(29, 0, 0);
+	assertEquals(10, pid.getValue(14, 16, 1));
+	assertEquals(68, pid.getIntegration());
+
+	assertEquals(10, pid.getValue(14, 16, 1));
+	assertEquals(68, pid.getIntegration());
+
+	assertEquals(10, pid.getValue(14, 16, 1));
+	assertEquals(68, pid.getIntegration());
 
 }
