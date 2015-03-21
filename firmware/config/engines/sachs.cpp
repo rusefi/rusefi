@@ -12,6 +12,7 @@
 #include "allsensors.h"
 
 void setSachs(engine_configuration_s *engineConfiguration) {
+	board_configuration_s * boardConfiguration = &engineConfiguration->bc;
 	engineConfiguration->specs.displacement = 0.1; // 100cc
 	engineConfiguration->specs.cylindersCount = 1;
 	engineConfiguration->engineCycle = 360;
@@ -67,6 +68,7 @@ void setSachs(engine_configuration_s *engineConfiguration) {
 	// Frankenstein: low side - out #11: PB8
 	// Frankenstein: low side - out #12: PB9
 
-
+	boardConfiguration->triggerInputPins[0] = GPIOA_5;
+	boardConfiguration->triggerInputPins[1] = GPIOC_6;
 }
 
