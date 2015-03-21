@@ -14,6 +14,8 @@
 #include "table_helper.h"
 #include "engine.h"
 
+void setAlgorithm(engine_load_mode_e algo DECLARE_ENGINE_PARAMETER_S);
+
 void findTriggerPosition(
 		event_trigger_position_s *position, angle_t angleOffset DECLARE_ENGINE_PARAMETER_S);
 

@@ -396,3 +396,15 @@ int isInjectionEnabled(engine_configuration_s *engineConfiguration) {
 	// todo: is this worth a method? should this be inlined?
 	return engineConfiguration->isInjectionEnabled;
 }
+
+/**
+ * this method sets algorithm and ignition table scale
+ */
+void setAlgorithm(engine_load_mode_e algo DECLARE_ENGINE_PARAMETER_S) {
+	engineConfiguration->algorithm = algo;
+	if (algo == LM_ALPHA_N) {
+		setTimingLoadBin(0, 100 PASS_ENGINE_PARAMETER);
+	} else if (algo == LM_SPEED_DENSITY) {
+		setTimingLoadBin(0, 160 PASS_ENGINE_PARAMETER);
+	}
+}

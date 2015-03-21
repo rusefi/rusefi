@@ -104,11 +104,12 @@ public class IoUtil {
         FileLog.MAIN.logLine("Got first signal in " + (System.currentTimeMillis() - waitStart));
     }
 
-    static void launchSimulator() throws InterruptedException {
-        if (!TcpConnector.getAvailablePorts().isEmpty())
-            throw new IllegalStateException("Port already binded on startup?");
-
-        ExecHelper.startSimulator();
+    static void launchSimulator(boolean startProcess) throws InterruptedException {
+        if (startProcess) {
+            if (!TcpConnector.getAvailablePorts().isEmpty())
+                throw new IllegalStateException("Port already binded on startup?");
+            ExecHelper.startSimulator();
+        }
 
 
 //        FileLog.rlog("Waiting for TCP port...");

@@ -12,7 +12,6 @@
 #include "engine.h"
 
 void initSettings(engine_configuration_s *engineConfiguration);
-void setAlgorithm(engine_load_mode_e algo);
 void printSpiState(Logging *logger, board_configuration_s *boardConfiguration);
 void printConfiguration(engine_configuration_s *engineConfiguration);
 void stopEngine(void);

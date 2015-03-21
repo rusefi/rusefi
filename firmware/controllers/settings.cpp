@@ -435,18 +435,6 @@ static void setCrankingRpm(int value) {
 }
 
 /**
- * this method sets algorithm and ignition table scale
- */
-void setAlgorithm(engine_load_mode_e algo) {
-	engineConfiguration->algorithm = algo;
-	if (algo == LM_ALPHA_N) {
-		setTimingLoadBin(0, 100 PASS_ENGINE_PARAMETER);
-	} else if (algo == LM_SPEED_DENSITY) {
-		setTimingLoadBin(0, 160 PASS_ENGINE_PARAMETER);
-	}
-}
-
-/**
  * this method is used in console - it also prints current configuration
  */
 static void setAlgorithmInt(int value) {

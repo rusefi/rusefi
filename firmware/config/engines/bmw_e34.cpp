@@ -14,7 +14,7 @@
 #include "global.h"
 #include "bmw_e34.h"
 #include "thermistors.h"
-#include "settings.h"
+#include "engine_math.h"
 
 EXTERN_ENGINE;
 
@@ -22,7 +22,7 @@ void setBmwE34(DECLARE_ENGINE_PARAMETER_F) {
 	board_configuration_s * boardConfiguration = &engineConfiguration->bc;
 
 //	setAlgorithm(LM_PLAIN_MAF);
-	setAlgorithm(LM_SPEED_DENSITY);
+	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER);
 	engineConfiguration->injector.flow = 750;
 
 	boardConfiguration->tunerStudioSerialSpeed = 38400;
