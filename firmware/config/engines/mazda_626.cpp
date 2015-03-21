@@ -14,6 +14,7 @@
 #include "custom_engine.h"
 #include "allsensors.h"
 #include "fsio_impl.h"
+#include "settings.h"
 
 EXTERN_ENGINE;
 
@@ -41,9 +42,8 @@ void setMazda626EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->tpsMin = 80;
 	engineConfiguration->tpsMax = 764;
 
-	engineConfiguration->algorithm = LM_ALPHA_N;
+	setAlgorithm(LM_ALPHA_N);
 	setFuelLoadBin(0, 100 PASS_ENGINE_PARAMETER);
-	setTimingLoadBin(0, 100 PASS_ENGINE_PARAMETER);
 
 	// set_whole_fuel_map 9
 	setWholeFuelMap(9 PASS_ENGINE_PARAMETER);
