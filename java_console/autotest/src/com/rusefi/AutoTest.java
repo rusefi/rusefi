@@ -98,7 +98,7 @@ public class AutoTest {
         msg = "2003 Neon running";
         IoUtil.changeRpm(2000);
         chart = nextChart();
-        x = 120;
+        x = 107;
         assertWave(true, msg, chart, WaveChart.SPARK_1, 0.13299999999999998, 0.005, WaveReport.RATIO, x + 180, x + 540);
         assertWaveNull(msg, chart, WaveChart.SPARK_2);
         assertWave(true, msg, chart, WaveChart.SPARK_3, 0.13299999999999998, 0.005, WaveReport.RATIO, x, x + 360);
@@ -255,7 +255,7 @@ public class AutoTest {
         assertWaveFall(msg, chart, WaveChart.INJECTOR_3, 0.086, 417.04);
         assertWaveFall(msg, chart, WaveChart.INJECTOR_4, 0.086, 594.04);
 
-        x = 22;
+        x = 16.32;
         assertWave(chart, WaveChart.SPARK_1, 0.133, x, x + 180, x + 360, x + 540);
 
         sendCommand("set_fuel_map 2200 4 15.66");
@@ -332,7 +332,7 @@ public class AutoTest {
 
         boolean failed = false;
         try {
-            IoUtil.launchSimulator();
+            IoUtil.launchSimulator(true);
             mainTestBody();
         } catch (Throwable e) {
             e.printStackTrace();

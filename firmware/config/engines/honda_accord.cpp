@@ -52,7 +52,7 @@ static void setHondaAccordConfigurationCommon(DECLARE_ENGINE_PARAMETER_F) {
 
 //	engineConfiguration->algorithm = LM_SPEED_DENSITY;
 	// I want to start with a simple Alpha-N
-	setAlgorithm(LM_ALPHA_N);
+	setAlgorithm(LM_ALPHA_N PASS_ENGINE_PARAMETER);
 	setFuelLoadBin(0, 100 PASS_ENGINE_PARAMETER);
 
 	/**
