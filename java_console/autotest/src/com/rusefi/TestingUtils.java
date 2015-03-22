@@ -75,7 +75,7 @@ public class TestingUtils {
     }
 
     static void assertWave(boolean rise, String msg, WaveChart chart, String key, double expectedWidth, double angleRatio, double widthRatio, double... expectedAngles) {
-        if(isRealHardware)
+        if (isRealHardware)
             return;
         RevolutionLog revolutionLog = chart.getRevolutionsLog();
         if (revolutionLog.keySet().isEmpty())
@@ -111,6 +111,7 @@ public class TestingUtils {
     static String getNextWaveChart() {
         // we need to skip TWO because spark could have been scheduled a while ago and happen now
         // todo: improve this logic, compare times
+        IoUtil.sendCommand("reset_wave_chart");
         getWaveChart();
         getWaveChart();
         // we want to wait for the 2nd chart to see same same RPM across the whole chart

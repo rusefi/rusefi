@@ -41,7 +41,8 @@
 static histogram_s waveChartHisto;
 #endif
 
-EXTERN_ENGINE;
+EXTERN_ENGINE
+;
 extern uint32_t maxLockTime;
 
 /**
@@ -64,13 +65,18 @@ static Logging debugLogging;
 
 static LoggingWithStorage logger("wave info");
 
+/**
+ * We want to skip some engine cycles to skip what was scheduled before parameters were changed
+ */
+uint32_t skipUntilEngineCycle = 0;
+
 #if ! EFI_UNIT_TEST
 extern WaveChart waveChart;
 static void resetWaveChartNow(void) {
+	skipUntilEngineCycle = engine->rpmCalculator.getRevolutionCounter() + 3;
 	waveChart.resetWaveChart();
 }
 #endif
-
 
 void WaveChart::resetWaveChart() {
 #if DEBUG_WAVE
@@ -92,7 +98,7 @@ bool_t WaveChart::isStartedTooLongAgo() {
 	 *
 	 */
 	uint64_t chartDurationNt = getTimeNowNt() - startTimeNt;
-	return startTimeNt!= 0 && NT2US(chartDurationNt) > engineConfiguration->digitalChartSize * 1000000 / 20;
+	return startTimeNt != 0 && NT2US(chartDurationNt) > engineConfiguration->digitalChartSize * 1000000 / 20;
 }
 
 bool_t WaveChart::isWaveChartFull() {
@@ -153,8 +159,10 @@ static char timeBuffer[10];
  * @brief	Register an event for digital sniffer
  */
 void WaveChart::addWaveChartEvent3(const char *name, const char * msg) {
+	if (engine->rpmCalculator.getRevolutionCounter() < skipUntilEngineCycle)
+		return;
 	efiAssertVoid(name!=NULL, "WC: NULL name");
-	if(!engineConfiguration->isDigitalChartEnabled) {
+	if (!engineConfiguration->isDigitalChartEnabled) {
 		return;
 	}
 
@@ -194,7 +202,6 @@ void WaveChart::addWaveChartEvent3(const char *name, const char * msg) {
 	 */
 	uint32_t diffNt = nowNt - startTimeNt;
 	uint32_t time100 = NT2US(diffNt / 10);
-
 
 	if (remainingSize(&logging) > 35) {
 		/**

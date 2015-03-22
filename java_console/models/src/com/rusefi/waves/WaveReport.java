@@ -167,6 +167,7 @@ public class WaveReport implements TimeAxisTranslator {
             return "UpDown{" +
                     "upTime=" + upTime +
                     ", downTime=" + downTime +
+                    ", d=" + getDuration() +
                     '}';
         }
 
