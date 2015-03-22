@@ -516,7 +516,7 @@ void testTriggerDecoder(void) {
 	testTriggerDecoder3("citroen", CITROEN_TU3JP, 0, 0.4833, 0.0, 2.9994);
 
 	testTriggerDecoder3("neon NGC", DODGE_NEON_2003, 0, 0.4786, 0.0, CHRYSLER_NGC_GAP);
-	testTriggerDecoder2("sachs", SACHS, 0, 0.5000, 0.000);
+	testTriggerDecoder2("sachs", SACHS, 0, 0.4800, 0.000);
 
 	testMazda323();
 

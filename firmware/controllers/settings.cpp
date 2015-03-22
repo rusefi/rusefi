@@ -494,6 +494,7 @@ static void setTriggerType(int value) {
 }
 
 static void setToothedWheel(int total, int skipped) {
+	scheduleMsg(&logger, "toothed: total=%d/skipped=%d", total, skipped);
 	setToothedWheelConfiguration(&engine->triggerShape, total, skipped, engineConfiguration);
 //	initializeTriggerShape(&logger, engineConfiguration, engineConfiguration2);
 	incrementGlobalConfigurationVersion();
