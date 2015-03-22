@@ -32,7 +32,7 @@ void startTsPort(void) {
 		 * This method contains a long delay, that's the reason why this is not done on the main thread
 		 */
 		usb_serial_start();
-	} else {
+	} else if (boardConfiguration->useSerialPort) {
 
 		print("TunerStudio over USART");
 		mySetPadMode("tunerstudio rx", TS_SERIAL_RX_PORT, TS_SERIAL_RX_PIN, PAL_MODE_ALTERNATE(TS_SERIAL_AF));

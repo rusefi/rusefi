@@ -23,14 +23,15 @@ void setSachs(engine_configuration_s *engineConfiguration) {
 	 * We treat the trigger as 1/0 toothed wheel
 	 */
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
-	engineConfiguration->trigger.customTotalToothCount = 1;
-	engineConfiguration->trigger.customSkippedToothCount = 0;
+	engineConfiguration->trigger.customTotalToothCount = 50;
+	engineConfiguration->trigger.customSkippedToothCount = 2;
 
 	engineConfiguration->hasIatSensor = false;
 	engineConfiguration->hasMapSensor = false;
 	engineConfiguration->hasBaroSensor = false;
 	engineConfiguration->hasAfrSensor = false;
 	engineConfiguration->hasCltSensor = false;
+	boardConfiguration->useSerialPort = false;
 
 	// Frankenstein analog input #1: PA1 adc1
 	// Frankenstein analog input #2: PA3 adc3 TPS
@@ -70,5 +71,8 @@ void setSachs(engine_configuration_s *engineConfiguration) {
 
 	boardConfiguration->triggerInputPins[0] = GPIOA_5;
 	boardConfiguration->triggerInputPins[1] = GPIOC_6;
+
+	boardConfiguration->injectionPins[0] = GPIOC_15;
+
 }
 
