@@ -31,10 +31,10 @@ float Pid::getValue(float target, float input, float dTime) {
 
 	float result = pTerm + integration + dTerm;
 	if (result > maxResult) {
-		integration -= result - maxResult;
+//		integration -= result - maxResult;
 		result = maxResult;
 	} else if (result < minResult) {
-		integration += minResult - result;
+//		integration += minResult - result;
 		result = minResult;
 	}
 	return result;
