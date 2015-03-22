@@ -169,11 +169,11 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PAR
 	}
 
 	/**
-	 * If we only have a crank position sensor, here we are extending crank revolutions with a 360 degree
-	 * cycle into a four stroke, 720 degrees cycle. TODO
+	 * If we only have a crank position sensor with four stroke, here we are extending crank revolutions with a 360 degree
+	 * cycle into a four stroke, 720 degrees cycle.
 	 */
 	int triggerIndexForListeners;
-	if (getOperationMode(engine->engineConfiguration) == FOUR_STROKE_CAM_SENSOR) {
+	if (engineConfiguration->operationMode != FOUR_STROKE_CRANK_SENSOR) {
 		// That's easy - trigger cycle matches engine cycle
 		triggerIndexForListeners = triggerState.getCurrentIndex();
 	} else {

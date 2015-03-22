@@ -290,7 +290,7 @@ void initializeTriggerShape(Logging *logger, engine_configuration_s const *engin
 
 	case TT_TOOTHED_WHEEL:
 		initializeSkippedToothTriggerShapeExt(triggerShape, triggerConfig->customTotalToothCount,
-				triggerConfig->customSkippedToothCount, getOperationMode(engineConfiguration));
+				triggerConfig->customSkippedToothCount, engineConfiguration->operationMode);
 		break;
 
 	case TT_MAZDA_MIATA_NA:

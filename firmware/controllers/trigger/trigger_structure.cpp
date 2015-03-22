@@ -297,7 +297,7 @@ void setToothedWheelConfiguration(TriggerShape *s, int total, int skipped,
 	s->useRiseEdge = true;
 
 	initializeSkippedToothTriggerShapeExt(s, total, skipped,
-			getOperationMode(engineConfiguration));
+			engineConfiguration->operationMode);
 #endif
 }
 

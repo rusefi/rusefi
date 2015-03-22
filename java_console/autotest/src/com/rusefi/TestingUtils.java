@@ -112,7 +112,7 @@ public class TestingUtils {
         // we need to skip TWO because spark could have been scheduled a while ago and happen now
         // todo: improve this logic, compare times
         IoUtil.sendCommand("reset_wave_chart");
-        getWaveChart();
+//        getWaveChart();
         // we want to wait for the 2nd chart to see same same RPM across the whole chart
         String result = getWaveChart();
         FileLog.MAIN.logLine("current chart: " + result);
