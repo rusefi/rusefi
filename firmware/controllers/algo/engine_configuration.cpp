@@ -711,18 +711,21 @@ void prepareShapes(DECLARE_ENGINE_PARAMETER_F) {
 
 #endif
 
-void setOperationMode(engine_configuration_s *engineConfiguration, operation_mode_e mode) {
+float getRpmMultiplier(operation_mode_e mode) {
 	if (mode == FOUR_STROKE_CAM_SENSOR) {
-		engineConfiguration->rpmMultiplier = 0.5;
+		return 0.5;
 	} else if (mode == FOUR_STROKE_CRANK_SENSOR) {
-		engineConfiguration->rpmMultiplier = 1;
+		return 1;
 	}
+	return 1;
+}
+
+void setOperationMode(engine_configuration_s *engineConfiguration, operation_mode_e mode) {
+	engineConfiguration->operationMode = mode;
 }
 
 operation_mode_e getOperationMode(engine_configuration_s const *engineConfiguration) {
-	if (engineConfiguration->rpmMultiplier == 1)
-		return FOUR_STROKE_CRANK_SENSOR;
-	return FOUR_STROKE_CAM_SENSOR;
+	return engineConfiguration->operationMode;
 }
 
 void commonFrankensoAnalogInputs(engine_configuration_s *engineConfiguration) {

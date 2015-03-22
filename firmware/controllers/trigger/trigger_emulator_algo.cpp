@@ -86,7 +86,8 @@ void setTriggerEmulatorRPM(int rpm, Engine *engine) {
 	if (rpm == 0) {
 		triggerSignal.periodNt = NAN;
 	} else {
-		float gRpm = rpm * engineConfiguration->rpmMultiplier / 60.0; // per minute converted to per second
+		float rpmM = getRpmMultiplier(engineConfiguration->operationMode);
+		float gRpm = rpm * rpmM / 60.0; // per minute converted to per second
 		triggerSignal.periodNt = US2NT(frequency2periodUs(gRpm));
 	}
 #if EFI_WAVE_CHART

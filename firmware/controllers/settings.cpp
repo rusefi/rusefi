@@ -214,8 +214,8 @@ void printConfiguration(engine_configuration_s *engineConfiguration) {
 
 //	appendMsgPrefix(&logger);
 
-	scheduleMsg(&logger, "rpmHardLimit: %d/rpmMultiplier=%f", engineConfiguration->rpmHardLimit,
-			engineConfiguration->rpmMultiplier);
+	scheduleMsg(&logger, "rpmHardLimit: %d/operationMode=%d", engineConfiguration->rpmHardLimit,
+			engineConfiguration->operationMode);
 
 	scheduleMsg(&logger, "tpsMin: %d/tpsMax: %d", engineConfiguration->tpsMin, engineConfiguration->tpsMax);
 
@@ -353,8 +353,8 @@ static void setAnalogChartMode(int value) {
 	doPrintConfiguration(engine);
 }
 
-static void setRpmMultiplier(int value) {
-	engineConfiguration->rpmMultiplier = value;
+static void setOM(int value) {
+	engineConfiguration->operationMode = (operation_mode_e)value;
 	doPrintConfiguration(engine);
 }
 
@@ -903,7 +903,7 @@ void initSettings(engine_configuration_s *engineConfiguration) {
 	addConsoleActionI("set_idle_pin_mode", setIdlePinMode);
 	addConsoleActionI("set_fuel_pump_pin_mode", setFuelPumpPinMode);
 	addConsoleActionI("set_malfunction_indicator_pin_mode", setMalfunctionIndicatorPinMode);
-	addConsoleActionI("set_rpm_multiplier", setRpmMultiplier);
+	addConsoleActionI("set_operation_mode", setOM);
 	// todo: start saving values into flash right away?
 
 	addConsoleActionF("set_global_fuel_correction", setGlobalFuelCorrection);

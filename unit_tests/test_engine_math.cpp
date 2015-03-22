@@ -30,7 +30,7 @@ void testEngineMath(void) {
 	Engine * engine = &eth.engine;
 	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
 
-	engineConfiguration->rpmMultiplier = 0.5;
+	engineConfiguration->operationMode = FOUR_STROKE_CAM_SENSOR;
 
 	assertEqualsM("600 RPM", 50, getOneDegreeTimeMs(600) * 180);
 	assertEqualsM("6000 RPM", 5, getOneDegreeTimeMs(6000) * 180);

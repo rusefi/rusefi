@@ -231,7 +231,6 @@ float getEngineCycle(operation_mode_e operationMode) {
 	return operationMode == TWO_STROKE ? 360 : 720;
 }
 
-
 void initializeSkippedToothTriggerShapeExt(TriggerShape *s, int totalTeethCount, int skippedCount,
 		operation_mode_e operationMode) {
 	efiAssertVoid(totalTeethCount > 0, "totalTeethCount is zero");
@@ -250,19 +249,20 @@ void initializeSkippedToothTriggerShapeExt(TriggerShape *s, int totalTeethCount,
 	float engineCycle = getEngineCycle(operationMode);
 
 	for (int i = 0; i < totalTeethCount - skippedCount - 1; i++) {
-		float angleDown = 720.0 / totalTeethCount * (i + toothWidth);
-		float angleUp = 720.0 / totalTeethCount * (i + 1);
+		float angleDown = engineCycle / totalTeethCount * (i + toothWidth);
+		float angleUp = engineCycle / totalTeethCount * (i + 1);
 		s->addEvent(angleDown, T_PRIMARY, TV_HIGH);
 		s->addEvent(angleUp, T_PRIMARY, TV_LOW);
 	}
 
-	float angleDown = 720.0 / totalTeethCount * (totalTeethCount - skippedCount - 1 + toothWidth);
+	float angleDown = engineCycle / totalTeethCount * (totalTeethCount - skippedCount - 1 + toothWidth);
 	s->addEvent(angleDown, T_PRIMARY, TV_HIGH);
-	s->addEvent(720, T_PRIMARY, TV_LOW);
-
+	s->addEvent(engineCycle, T_PRIMARY, TV_LOW);
 }
 
-static void configureOnePlusOne(TriggerShape *s) {
+static void configureOnePlusOne(TriggerShape *s, operation_mode_e operationMode) {
+	float engineCycle = getEngineCycle(operationMode);
+
 	s->reset(FOUR_STROKE_CAM_SENSOR, true);
 
 	s->addEvent(180, T_PRIMARY, TV_HIGH);
@@ -322,7 +322,7 @@ void initializeTriggerShape(Logging *logger, engine_configuration_s const *engin
 		break;
 
 	case TT_ONE_PLUS_ONE:
-		configureOnePlusOne(triggerShape);
+		configureOnePlusOne(triggerShape, engineConfiguration->operationMode);
 		break;
 
 	case TT_MAZDA_SOHC_4:

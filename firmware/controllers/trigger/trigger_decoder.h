@@ -89,6 +89,7 @@ private:
 	bool thirdWheelState;
 };
 
+float getEngineCycle(operation_mode_e operationMode);
 void initializeSkippedToothTriggerShapeExt(TriggerShape *s, int totalTeethCount, int skippedCount, operation_mode_e operationMode);
 uint32_t findTriggerZeroEventIndex(TriggerShape * shape, trigger_config_s const*triggerConfig DECLARE_ENGINE_PARAMETER_S);
 
