@@ -33,7 +33,7 @@ void scheduleByTime(const char *prefix, scheduling_s *scheduling, efitimeus_t ti
 }
 
 void scheduleTask(const char *prefix, scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) {
-	int delaySt = delayUs * CH_FREQUENCY / 1000000;
+	int delaySt = MY_US2ST(delayUs);
 	if (delaySt <= 0) {
 		/**
 		 * in case of zero delay, we should invoke the callback
