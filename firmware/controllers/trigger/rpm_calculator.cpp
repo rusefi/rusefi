@@ -165,8 +165,8 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index DECL
 		if (diffNt == 0) {
 			rpmState->setRpmValue(NOISY_RPM);
 		} else {
-			// todo: interesting what is this *2 about? four stroke magic constant?
-			int rpm = (int) (60 * US2NT(US_PER_SECOND_LL) * 2 / diffNt);
+			int mult = engineConfiguration->engineCycle / 360;
+			int rpm = (int) (60 * US2NT(US_PER_SECOND_LL) * mult / diffNt);
 			rpmState->setRpmValue(rpm > UNREALISTIC_RPM ? NOISY_RPM : rpm);
 		}
 	}
