@@ -136,7 +136,7 @@ public class TcpConnector implements LinkConnector {
         String command = LinkManager.encodeCommand(text);
         FileLog.MAIN.logLine("Writing " + command);
         try {
-            writer.write(command + "\r\n");
+            writer.write(command + "\n");
             writer.flush();
         } catch (IOException e) {
             withError = true;
