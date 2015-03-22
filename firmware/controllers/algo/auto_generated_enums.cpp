@@ -286,6 +286,8 @@ case FOUR_STROKE_CAM_SENSOR:
   return "FOUR_STROKE_CAM_SENSOR";
 case FOUR_STROKE_CRANK_SENSOR:
   return "FOUR_STROKE_CRANK_SENSOR";
+case TWO_STROKE:
+  return "TWO_STROKE";
 case Force_4b_operation_mode_e:
   return "Force_4b_operation_mode_e";
 case OM_NONE:

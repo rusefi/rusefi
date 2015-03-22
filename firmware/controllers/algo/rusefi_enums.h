@@ -279,6 +279,7 @@ typedef enum {
 	OM_NONE = 0,
 	FOUR_STROKE_CRANK_SENSOR = 1,
 	FOUR_STROKE_CAM_SENSOR = 2,
+	TWO_STROKE = 3,
 
 	Force_4b_operation_mode_e = ENUM_32_BITS,
 } operation_mode_e;

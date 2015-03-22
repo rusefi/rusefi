@@ -17,6 +17,7 @@ void setSachs(engine_configuration_s *engineConfiguration) {
 	engineConfiguration->specs.cylindersCount = 1;
 	engineConfiguration->engineCycle = 360;
 
+//	setOperationMode(engineConfiguration, TWO_STROKE);
 	engineConfiguration->specs.firingOrder = FO_ONE_CYLINDER;
 
 	/**

@@ -227,6 +227,11 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, uint64_t now
 	toothed_previous_time = nowNt;
 }
 
+float getEngineCycle(operation_mode_e operationMode) {
+	return operationMode == TWO_STROKE ? 360 : 720;
+}
+
+
 void initializeSkippedToothTriggerShapeExt(TriggerShape *s, int totalTeethCount, int skippedCount,
 		operation_mode_e operationMode) {
 	efiAssertVoid(totalTeethCount > 0, "totalTeethCount is zero");
@@ -241,6 +246,8 @@ void initializeSkippedToothTriggerShapeExt(TriggerShape *s, int totalTeethCount,
 	s->reset(operationMode, false);
 
 	float toothWidth = 0.5;
+
+	float engineCycle = getEngineCycle(operationMode);
 
 	for (int i = 0; i < totalTeethCount - skippedCount - 1; i++) {
 		float angleDown = 720.0 / totalTeethCount * (i + toothWidth);
