@@ -16,7 +16,7 @@ Pid::Pid(float pFactor, float iFactor, float dFactor, float minResult, float max
 	this->minResult = minResult;
 	this->maxResult = maxResult;
 
-	integration = 0;
+	iTerm = 0;
 	prevError = 0;
 }
 
@@ -24,17 +24,17 @@ float Pid::getValue(float target, float input, float dTime) {
 	float error = target - input;
 
 	float pTerm = pFactor * error;
-	integration += iFactor * dTime * error;
+	iTerm += iFactor * dTime * error;
 	float dTerm = dFactor / dTime * (error - prevError);
 
 	prevError = error;
 
-	float result = pTerm + integration + dTerm;
+	float result = pTerm + iTerm + dTerm;
 	if (result > maxResult) {
-//		integration -= result - maxResult;
+//		iTerm -= result - maxResult;
 		result = maxResult;
 	} else if (result < minResult) {
-//		integration += minResult - result;
+//		iTerm += minResult - result;
 		result = minResult;
 	}
 	return result;
@@ -48,7 +48,7 @@ void Pid::updateFactors(float pFactor, float iFactor, float dFactor) {
 }
 
 void Pid::reset(void) {
-	integration = 0;
+	iTerm = 0;
 	prevError = 0;
 }
 
@@ -61,7 +61,7 @@ float Pid::getI(void) {
 }
 
 float Pid::getIntegration(void) {
-	return integration;
+	return iTerm;
 }
 
 float Pid::getD(void) {

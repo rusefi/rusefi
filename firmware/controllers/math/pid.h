@@ -26,7 +26,7 @@ private:
 	float minResult;
 	float maxResult;
 
-	float integration;
+	float iTerm;
 	float prevError;
 
 };
