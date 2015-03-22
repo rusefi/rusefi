@@ -17,8 +17,9 @@ void setSachs(engine_configuration_s *engineConfiguration) {
 	engineConfiguration->specs.cylindersCount = 1;
 	engineConfiguration->engineCycle = 360;
 
-//	setOperationMode(engineConfiguration, TWO_STROKE);
+	setOperationMode(engineConfiguration, TWO_STROKE);
 	engineConfiguration->specs.firingOrder = FO_ONE_CYLINDER;
+	engineConfiguration->digitalChartSize = 400;
 
 	/**
 	 * We treat the trigger as 1/0 toothed wheel
