@@ -49,7 +49,7 @@ static EventListener consoleEventListener;
 static bool getConsoleLine(BaseSequentialStream *chp, char *line, unsigned size) {
 	char *p = line;
 
-	while (TRUE) {
+	while (true) {
 		if (!isConsoleReady()) {
 			// we better do not read from USB serial before it is ready
 			chThdSleepMilliseconds(10);
@@ -82,7 +82,7 @@ static bool getConsoleLine(BaseSequentialStream *chp, char *line, unsigned size)
 #endif
 
 		if (c < 0 || c == 4) {
-			return TRUE;
+			return true;
 		}
 		if (c == 8) {
 			if (p != line) {

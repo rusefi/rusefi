@@ -25,6 +25,7 @@ SimplePwm::SimplePwm() {
 void PwmConfig::baseConstructor() {
 	memset(&scheduling, 0, sizeof(scheduling));
 	memset(&safe, 0, sizeof(safe));
+	dbgNestingLevel = 0;
 	scheduling.name = "PwmConfig";
 	periodNt = NAN;
 	memset(&outputPins, 0, sizeof(outputPins));
@@ -107,7 +108,7 @@ static efitimeus_t togglePwmState(PwmConfig *state) {
 		/**
 		 * NaN period means PWM is paused
 		 */
-		return MS2US(1);
+		return getTimeNowUs() + MS2US(100);
 	}
 
 	state->handleCycleStart();
@@ -150,8 +151,12 @@ static efitimeus_t togglePwmState(PwmConfig *state) {
  * Main PWM loop: toggle pin & schedule next invocation
  */
 static void timerCallback(PwmConfig *state) {
+	state->dbgNestingLevel++;
+	efiAssertVoid(state->dbgNestingLevel < 25, "PWM nesting issue");
+
 	efitimeus_t switchTimeUs = togglePwmState(state);
 	scheduleByTime("pwm", &state->scheduling, switchTimeUs, (schfunc_t) timerCallback, state);
+	state->dbgNestingLevel--;
 }
 
 /**

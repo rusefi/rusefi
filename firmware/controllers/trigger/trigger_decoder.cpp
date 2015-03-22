@@ -117,7 +117,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, uint64_t now
 	eventCount[triggerWheel]++;
 	eventCountExt[signal]++;
 
-	int isLessImportant = (TRIGGER_SHAPE(useRiseEdge) && signal != SHAFT_PRIMARY_UP)
+	bool_t isLessImportant = (TRIGGER_SHAPE(useRiseEdge) && signal != SHAFT_PRIMARY_UP)
 			|| (!TRIGGER_SHAPE(useRiseEdge) && signal != SHAFT_PRIMARY_DOWN);
 
 	uint64_t currentDurationLong = getCurrentGapDuration(nowNt);
