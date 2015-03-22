@@ -429,8 +429,11 @@ char *validateSecureLine(char *line) {
 }
 
 static char confirmation[200];
+static char handleBuffer[200];
 
-static bool handleConsoleLineInternal(char *line, int lineLength) {
+static bool handleConsoleLineInternal(const char *commandLine, int lineLength) {
+	strncpy(handleBuffer, commandLine, sizeof(handleBuffer));
+	char *line = handleBuffer;
 	int firstTokenLength = tokenLength(line);
 
 //	print("processing [%s] with %d actions\r\n", line, consoleActionCount);
@@ -497,6 +500,8 @@ void handleConsoleLine(char *line) {
 
 	bool isKnownComman = handleConsoleLineInternal(line, lineLength);
 
-	if (!isKnownComman)
+	if (!isKnownComman) {
+		scheduleMsg(logging, "unknown [%s]", line);
 		helpCommand();
+	}
 }
