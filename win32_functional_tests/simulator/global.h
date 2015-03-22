@@ -21,6 +21,10 @@
 
 #define NT2US(x) ((x) / US_TO_NT_MULTIPLIER)
 
+// need to fight 32bit int overflow
+
+#define MY_US2ST(x) ((x) / 10)
+
 #ifndef GLOBAL_FT_H_
 #define GLOBAL_FT_H_
 

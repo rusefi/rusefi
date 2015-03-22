@@ -438,7 +438,7 @@ static void setCrankingRpm(int value) {
  * this method is used in console - it also prints current configuration
  */
 static void setAlgorithmInt(int value) {
-	setAlgorithmInt((engine_load_mode_e) value);
+	setAlgorithm((engine_load_mode_e) value);
 	doPrintConfiguration(engine);
 }
 
