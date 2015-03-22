@@ -213,11 +213,13 @@ void TriggerShape::addEvent(float angle, trigger_wheel_e const waveIndex, trigge
 		state = stateParam;
 	}
 
+	float engineCycle = getEngineCycle(operationMode);
+
 	/**
 	 * While '720' value works perfectly it has not much sense for crank sensor-only scenario.
 	 * todo: accept angle as a value in the 0..1 range?
 	 */
-	angle /= 720;
+	angle /= engineCycle;
 
 	expectedEventCount[waveIndex]++;
 

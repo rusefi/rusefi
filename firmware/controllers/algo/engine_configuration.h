@@ -35,6 +35,7 @@
  *  todo: re-arrange this structure one we have a stable code version
  */
 
+float getRpmMultiplier(operation_mode_e mode);
 void setOperationMode(engine_configuration_s *engineConfiguration, operation_mode_e mode);
 operation_mode_e getOperationMode(engine_configuration_s const *engineConfiguration);
 
