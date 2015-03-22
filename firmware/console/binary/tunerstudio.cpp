@@ -422,7 +422,7 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel, bool_t isConsoleRedirect) {
 
 		int recieved = chnReadTimeout(tsChannel->channel, &firstByte, 1, TS_READ_TIMEOUT);
 		if (recieved != 1) {
-			tunerStudioError("ERROR: no command");
+//			tunerStudioError("ERROR: no command");
 			continue;
 		}
 //		scheduleMsg(logger, "Got first=%x=[%c]", firstByte, firstByte);

@@ -21,6 +21,10 @@ void setSachs(engine_configuration_s *engineConfiguration) {
 	engineConfiguration->specs.firingOrder = FO_ONE_CYLINDER;
 	engineConfiguration->digitalChartSize = 400;
 
+	 // set_injection_offset 0
+	engineConfiguration->injectionAngle = 0;
+
+
 	/**
 	 * We treat the trigger as 1/0 toothed wheel
 	 */
