@@ -24,12 +24,12 @@ public class EnduranceTest {
             IoUtil.realHardwareConnect(port);
             for (int i = 0; i < count; i++) {
                 AutoTest.currentEngineType = 3;
-                sendCommand("set_engine_type " + 3, AutoTest.COMPLEX_COMMAND_RETRY, 600);
+                sendCommand("set_engine_type " + 3, AutoTest.COMPLEX_COMMAND_RETRY, 60);
                 sleep(2);
                 sendCommand("enable self_stimulation");
 //                IoUtil.changeRpm(1200);
                 AutoTest.currentEngineType = 28;
-                sendCommand("set_engine_type " + 28, AutoTest.COMPLEX_COMMAND_RETRY, 600);
+                sendCommand("set_engine_type " + 28, AutoTest.COMPLEX_COMMAND_RETRY, 60);
                 sleep(2);
                 FileLog.MAIN.logLine("++++++++++++++++++++++++++++++++++++  " + i + "   +++++++++++++++");
             }
