@@ -49,9 +49,14 @@ static msg_t AltCtrlThread(int param) {
 #endif
 }
 
-static void setAltPid(float p) {
+static void applySettings(void) {
+	altPid.updateFactors(engineConfiguration->alternatorControlPFactor, 0, 0);
+}
+
+static void setAltPFactor(float p) {
+	engineConfiguration->alternatorControlPFactor = p;
 	scheduleMsg(logger, "setAltPid: %f", p);
-	altPid.updateFactors(p, 0, 0);
+	applySettings();
 }
 
 static void applyAlternatorPinState(PwmConfig *state, int stateIndex) {
@@ -79,6 +84,8 @@ void initAlternatorCtrl(Logging *sharedLogger) {
 	chThdCreateStatic(alternatorControlThreadStack, sizeof(alternatorControlThreadStack), LOWPRIO,
 			(tfunc_t) AltCtrlThread, NULL);
 
-	addConsoleActionF("alt_pid", setAltPid);
+	addConsoleActionF("set_alt_p", setAltPFactor);
 	addConsoleAction("altinfo", showAltInfo);
+
+	applySettings();
 }
