@@ -11,8 +11,9 @@
 #define ACC_ENRICHMENT_H_
 
 #include "engine_configuration.h"
+#include "cyclic_buffer.h"
 
-#define MAX_ACCEL_ARRAY_SIZE 64
+//#define MAX_ACCEL_ARRAY_SIZE 64
 
 class AccelEnrichmemnt {
 public:
@@ -30,13 +31,13 @@ public:
 	float delta;
 
 private:
-	float array[MAX_ACCEL_ARRAY_SIZE];
+//	float array[MAX_ACCEL_ARRAY_SIZE];
 	float diffEnrichment;
+	cyclic_buffer cb;
 };
 
 void initDiffEnrichment(void);
 float getAccelEnrichment(void);
-
 
 #endif /* ACC_ENRICHMENT_H_ */
 
