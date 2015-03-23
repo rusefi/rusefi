@@ -36,10 +36,9 @@ public class CommandQueue {
             while (true) {
                 try {
                     sendPendingCommand();
-                } catch (InterruptedException e) {
-                    FileLog.MAIN.logLine("CommandQueue error");
-                    e.printStackTrace();
-                    throw new IllegalStateException(e);
+                } catch (Throwable e) {
+                    FileLog.MAIN.logException("CommandQueue error", e);
+                    System.exit(-2);
                 }
             }
         }

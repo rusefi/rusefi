@@ -164,6 +164,8 @@ public class PortHolder {
         Future f = LinkManager.COMMUNICATION_EXECUTOR.submit(new Runnable() {
             @Override
             public void run() {
+                if (bp == null)
+                    throw new NullPointerException("bp");
                 bp.sendTextCommand(command);
             }
 

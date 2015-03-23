@@ -45,6 +45,8 @@ public class AutoTest {
     private static void testMitsu() {
         setEngineType(16);
         String msg = "Mitsubishi";
+        IoUtil.changeRpm(200);
+
         IoUtil.changeRpm(1200);
         // todo: add more content
     }
@@ -58,7 +60,7 @@ public class AutoTest {
 
     static void setEngineType(int type) {
         currentEngineType = type;
-        sendCommand("set_engine_type " + type, COMPLEX_COMMAND_RETRY, 600);
+        sendCommand("set_engine_type " + type, COMPLEX_COMMAND_RETRY, 30);
         sleep(10);
         sendCommand("enable self_stimulation");
     }
@@ -326,6 +328,14 @@ public class AutoTest {
     }
 
     public static void main(String[] args) throws InterruptedException {
+        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+            @Override
+            public void uncaughtException(Thread t, Throwable e) {
+                e.printStackTrace();
+                System.exit(-1);
+            }
+        });
+
         long start = System.currentTimeMillis();
         FileLog.SIMULATOR_CONSOLE.start();
         FileLog.MAIN.start();

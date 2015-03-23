@@ -163,6 +163,7 @@ public class IoUtil {
 
     static void realHardwareConnect(String port) {
         LinkManager.start(port);
+        final CountDownLatch connected = new CountDownLatch(1);
         LinkManager.open(new LinkManager.LinkStateListener() {
             @Override
             public void onConnectionFailed() {
@@ -172,10 +173,18 @@ public class IoUtil {
 
             @Override
             public void onConnectionEstablished() {
+                connected.countDown();
             }
         });
         LinkManager.engineState.registerStringValueAction(EngineState.RUS_EFI_VERSION_TAG, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
         LinkManager.engineState.registerStringValueAction(EngineState.OUTPIN_TAG, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
         LinkManager.engineState.registerStringValueAction(AverageAnglesUtil.KEY, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
+        try {
+            connected.await(60, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            throw new IllegalStateException(e);
+        }
+        if (connected.getCount() > 0)
+            throw new IllegalStateException("Not connected in time");
     }
 }
