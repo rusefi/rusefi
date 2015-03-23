@@ -10,13 +10,13 @@
 #ifndef CYCLIC_BUFFER_H
 #define CYCLIC_BUFFER_H
 
-static const short CB_MAX_SIZE = 16;
+static const short CB_MAX_SIZE = 64;
 
 class cyclic_buffer
 {
   public:
-  //ctor
-    cyclic_buffer();
+	cyclic_buffer();
+    cyclic_buffer(int size);
   //cpctor
     cyclic_buffer(const cyclic_buffer& cb);
   //dtor
@@ -29,13 +29,14 @@ class cyclic_buffer
   public:
     void add(int value);
     int sum(int length);
+    void setSize(int size);
     void clear();
-
 
   private:
     volatile int elements[CB_MAX_SIZE];
     volatile int currentIndex;
     volatile int count;
+    int size;
 };
 
 #endif //CYCLIC_BUFFER_H
