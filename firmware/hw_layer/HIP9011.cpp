@@ -98,6 +98,11 @@ EXTERN_ENGINE
 ;
 
 static void showHipInfo(void) {
+	if (!boardConfiguration->isHip9011Enabled) {
+		scheduleMsg(logger, "hip9011 driver not active");
+		return;
+	}
+
 	printSpiState(logger, boardConfiguration);
 	scheduleMsg(logger, "bore=%f freq=%f", engineConfiguration->cylinderBore, BAND(engineConfiguration->cylinderBore));
 
@@ -191,7 +196,6 @@ void hipAdcCallback(adcsample_t value) {
 			timeOfLastKnockEvent = getTimeNowUs();
 		}
 
-
 		int integratorIndex = getIntegrationIndexByRpm(engine->rpmCalculator.rpmValue);
 		int gainIndex = getHip9011GainIndex(boardConfiguration->hip9011Gain);
 
@@ -216,6 +220,7 @@ void hipAdcCallback(adcsample_t value) {
 }
 
 void initHip9011(Logging *sharedLogger) {
+	addConsoleAction("hipinfo", showHipInfo);
 	if (!boardConfiguration->isHip9011Enabled)
 		return;
 	logger = sharedLogger;
@@ -248,7 +253,6 @@ void initHip9011(Logging *sharedLogger) {
 	// MOSI PB15
 //	palSetPadMode(GPIOB, 15, PAL_MODE_ALTERNATE(EFI_SPI2_AF) | PAL_STM32_OTYPE_OPENDRAIN);
 
-	addConsoleAction("hipinfo", showHipInfo);
 	addConsoleActionF("set_gain", setGain);
 
 	// '0' for 4MHz
