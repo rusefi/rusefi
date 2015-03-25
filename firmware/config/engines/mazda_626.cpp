@@ -75,4 +75,7 @@ void setMazda626EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	setFsio(engineConfiguration, 0, GPIOE_6, "1");
 #endif
 
+	engineConfiguration->externalKnockSenseAdc = EFI_ADC_4;
+
+
 }

@@ -313,6 +313,10 @@ static void printAnalogInfo(void) {
 	if (engineConfiguration->hasBaroSensor) {
 		printAnalogChannelInfo("BARO", engineConfiguration->baroSensor.hwChannel);
 	}
+	if (engineConfiguration->externalKnockSenseAdc != EFI_ADC_NONE) {
+		printAnalogChannelInfo("extKno", engineConfiguration->externalKnockSenseAdc);
+	}
+
 	printAnalogChannelInfo("A/C sw", engineConfiguration->acSwitchAdc);
 	printAnalogChannelInfo("HIP9011", engineConfiguration->hipOutputChannel);
 	printAnalogChannelInfoExt("Vbatt", engineConfiguration->vbattAdcChannel, getVBatt(engineConfiguration));
