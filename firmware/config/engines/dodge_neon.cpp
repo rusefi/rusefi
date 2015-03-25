@@ -385,7 +385,8 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->fanOnTemperature = 85;
 	engineConfiguration->fanOffTemperature = 80;
 
-	boardConfiguration->tunerStudioSerialSpeed = 9600;
+//	boardConfiguration->tunerStudioSerialSpeed = 9600;
+	boardConfiguration->tunerStudioSerialSpeed = 38400;
 	engineConfiguration->algorithm = LM_SPEED_DENSITY;
 
 	boardConfiguration->alternatorControlPin = GPIOD_5;
