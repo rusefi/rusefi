@@ -33,6 +33,7 @@ class cyclic_buffer
     void clear();
 
   private:
+    void baseC(int size);
     volatile int elements[CB_MAX_SIZE];
     volatile int currentIndex;
     volatile int count;

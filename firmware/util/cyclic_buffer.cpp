@@ -12,10 +12,15 @@
 #include "cyclic_buffer.h"
 #include <string.h>
 
-cyclic_buffer::cyclic_buffer() : cyclic_buffer(CB_MAX_SIZE) {
+cyclic_buffer::cyclic_buffer() {
+  baseC(CB_MAX_SIZE);
 }
 
 cyclic_buffer::cyclic_buffer(int size) {
+  baseC(size);
+}
+
+void cyclic_buffer::baseC(int size) {
 	currentIndex = 0;
 	setSize(size);
 }
