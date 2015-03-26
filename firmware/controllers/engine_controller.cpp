@@ -408,6 +408,14 @@ void initConfigActions(void) {
 	addConsoleActionI("get_short", getShort);
 }
 
+// todo: move this logic somewhere else?
+static void getKnockInfo(void) {
+	adc_channel_e hwChannel = engineConfiguration->externalKnockSenseAdc;
+	scheduleMsg(&logger, "externalKnockSenseAdc on ADC", getPinNameByAdcChannel(hwChannel, pinNameBuffer));
+
+	scheduleMsg(&logger, "knock now=%s/ever=%s", boolToString(engine->knockNow), boolToString(engine->knockEver));
+}
+
 void initEngineContoller(Logging *sharedLogger, Engine *engine) {
 	if (hasFirmwareError()) {
 		return;
@@ -501,6 +509,10 @@ void initEngineContoller(Logging *sharedLogger, Engine *engine) {
 		startIdleThread(sharedLogger, engine);
 	}
 #endif
+
+	if (engineConfiguration->externalKnockSenseAdc != EFI_ADC_NONE) {
+		addConsoleAction("knockinfo", getKnockInfo);
+	}
 
 	addConsoleAction("analoginfo", printAnalogInfo);
 
