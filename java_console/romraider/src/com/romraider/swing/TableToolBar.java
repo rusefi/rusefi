@@ -272,8 +272,12 @@ public class TableToolBar extends JToolBar implements MouseListener, ItemListene
     }
 
     private ImageIcon rescaleImageIcon(ImageIcon imageIcon, int percentOfOriginal) {
-        int newHeight = (int) (imageIcon.getImage().getHeight(this) * (percentOfOriginal * .01));
-        int newWidth = (int) (imageIcon.getImage().getWidth(this) * (percentOfOriginal * .01));
+        int height = imageIcon.getImage().getHeight(this);
+        int newHeight = (int) (height * (percentOfOriginal * .01));
+        int width = imageIcon.getImage().getWidth(this);
+        int newWidth = (int) (width * (percentOfOriginal * .01));
+        if (newHeight == 0 || newWidth == 0)
+            throw new IllegalStateException("rescale error: w " + width + "/" + newWidth + ", h " + height + "/" + newHeight);
 
         imageIcon.setImage(imageIcon.getImage().getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH));
         return imageIcon;

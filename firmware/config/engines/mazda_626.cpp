@@ -36,13 +36,18 @@ void setMazda626EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->globalTriggerAngleOffset = -42;
 
 	// set_cranking_timing_angle 15
-	engineConfiguration->crankingTimingAngle = 15;
+	engineConfiguration->crankingTimingAngle = 8;
 	engineConfiguration->crankingChargeAngle = 70;
+
+	// set_cranking_fuel 9
+	engineConfiguration->cranking.baseFuel = 9;
+
+	engineConfiguration->rpmHardLimit = 6000;
 
 	engineConfiguration->tpsMin = 80;
 	engineConfiguration->tpsMax = 764;
 
-	setAlgorithm(LM_ALPHA_N PASS_ENGINE_PARAMETER);
+	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER);
 	setFuelLoadBin(0, 100 PASS_ENGINE_PARAMETER);
 
 	// set_whole_fuel_map 9
