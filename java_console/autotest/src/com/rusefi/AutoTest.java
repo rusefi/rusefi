@@ -72,7 +72,7 @@ public class AutoTest {
         WaveChart chart;
         chart = nextChart();
 
-        double x = 275;
+        double x = 102;
         assertWave(msg, chart, WaveChart.SPARK_1, 0.1944, x, x + 180, x + 360, x + 540);
     }
 
