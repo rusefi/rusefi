@@ -70,7 +70,7 @@ static LoggingWithStorage logger("wave info");
  */
 uint32_t skipUntilEngineCycle = 0;
 
-#if ! EFI_UNIT_TEST
+#if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
 extern WaveChart waveChart;
 static void resetWaveChartNow(void) {
 	skipUntilEngineCycle = engine->rpmCalculator.getRevolutionCounter() + 3;
@@ -250,17 +250,17 @@ void initWaveChart(WaveChart *chart) {
 
 	printStatus();
 
-#if DEBUG_WAVE
+#if DEBUG_WAVE || defined(__DOXYGEN__)
 	initLoggingExt(&debugLogging, "wave chart debug", &debugLogging.DEFAULT_BUFFER, sizeof(debugLogging.DEFAULT_BUFFER));
 #endif
 
-#if EFI_HISTOGRAMS
+#if EFI_HISTOGRAMS || defined(__DOXYGEN__)
 	initHistogram(&waveChartHisto, "wave chart");
 #endif /* EFI_HISTOGRAMS */
 
 	addConsoleActionI("chartsize", setChartSize);
 	addConsoleActionI("chart", setChartActive);
-#if ! EFI_UNIT_TEST
+#if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
 	addConsoleAction("reset_wave_chart", resetWaveChartNow);
 #endif
 }
