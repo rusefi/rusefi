@@ -23,6 +23,7 @@ EXTERN_ENGINE
 
 static AccelEnrichmemnt instance;
 
+#if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
 static void setAccelThr(float value) {
 	engineConfiguration->accelEnrichmentThreshold = value;
 }
@@ -45,6 +46,7 @@ void initAccelEnrichment(void) {
 	addConsoleActionF("set_decel_th", setDecelThr);
 	addConsoleActionF("set_decel_mult", setDecelMult);
 }
+#endif /* ! EFI_UNIT_TEST */
 
 void AccelEnrichmemnt::updateDiffEnrichment(engine_configuration_s *engineConfiguration, float engineLoad) {
 //	for (int i = 3; i == 1; i--)
