@@ -23,6 +23,7 @@ public class AutoTest {
 
     static void mainTestBody() {
         sendCommand("fl 1"); // just in case it was disabled
+        testSachs();
         testMitsu();
         testBmwE34();
         testCitroenBerlingo();
@@ -33,6 +34,13 @@ public class AutoTest {
         test1995DodgeNeon();
         testFord6();
         testFordFiesta();
+    }
+
+    private static void testSachs() {
+        setEngineType(29);
+        String msg = "BMW";
+        IoUtil.changeRpm(1200);
+        // todo: add more content
     }
 
     private static void testBmwE34() {

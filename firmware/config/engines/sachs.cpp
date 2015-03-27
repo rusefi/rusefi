@@ -80,5 +80,7 @@ void setSachs(engine_configuration_s *engineConfiguration) {
 
 	boardConfiguration->injectionPins[0] = GPIOC_15;
 
+	boardConfiguration->fuelPumpPin = GPIOE_6;
+
 }
 

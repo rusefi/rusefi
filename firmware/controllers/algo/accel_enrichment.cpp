@@ -23,6 +23,29 @@ EXTERN_ENGINE
 
 static AccelEnrichmemnt instance;
 
+static void setAccelThr(float value) {
+	engineConfiguration->accelEnrichmentThreshold = value;
+}
+
+static void setAccelMult(float value) {
+	engineConfiguration->accelEnrichmentMultiplier = value;
+}
+
+static void setDecelThr(float value) {
+	engineConfiguration->deaccelEnrichmentThreshold = value;
+}
+
+static void setDecelMult(float value) {
+	engineConfiguration->deaccelEnrichmentMultiplier = value;
+}
+
+void initAccelEnrichment(void) {
+	addConsoleActionF("set_accel_th", setAccelThr);
+	addConsoleActionF("set_accel_mult", setAccelMult);
+	addConsoleActionF("set_decel_th", setDecelThr);
+	addConsoleActionF("set_decel_mult", setDecelMult);
+}
+
 void AccelEnrichmemnt::updateDiffEnrichment(engine_configuration_s *engineConfiguration, float engineLoad) {
 //	for (int i = 3; i == 1; i--)
 //		array[i] = array[i - 1];
