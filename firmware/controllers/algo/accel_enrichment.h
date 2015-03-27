@@ -36,7 +36,7 @@ private:
 	cyclic_buffer cb;
 };
 
-void initDiffEnrichment(void);
+void initAccelEnrichment(void);
 float getAccelEnrichment(void);
 
 #endif /* ACC_ENRICHMENT_H_ */
