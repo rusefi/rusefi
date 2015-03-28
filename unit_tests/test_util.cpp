@@ -31,7 +31,7 @@ void testCrc(void) {
 
 	const char * A = "A";
 
-	assertEqualsM("crc8", 168, calc_crc((const crc_t *)A, 1));
+	assertEqualsM("crc8", 168, calc_crc((const crc_t *) A, 1));
 	int c = crc32(A, 1);
 	printf("crc32(A)=%x\r\n", c);
 	assertEqualsM("crc32", 0xd3d99e8b, crc32(A, 1));
@@ -55,12 +55,26 @@ void testOverflow64Counter(void) {
 void testCyclicBuffer(void) {
 	print("*************************************** testCyclicBuffer\r\n");
 
-	sb.add(10);
+	{
+		sb.add(10);
 
-	assertEquals(10, sb.sum(3));
+		assertEquals(10, sb.sum(3));
 
-	sb.add(2);
-	assertEquals(12, sb.sum(2));
+		sb.add(2);
+		assertEquals(12, sb.sum(2));
+	}
+	{
+		sb.clear();
+
+		sb.add(1);
+		sb.add(2);
+		sb.add(3);
+		sb.add(4);
+
+		assertEquals(4, sb.maxValue(3));
+		assertEquals(4, sb.maxValue(113));
+	}
+
 }
 
 void testHistogram(void) {
@@ -169,7 +183,7 @@ void testMalfunctionCentral(void) {
 	assertEquals(code, localCopy.error_codes[0]);
 
 	// let's remove value which is not in the collection
-	removeError((obd_code_e)22);
+	removeError((obd_code_e) 22);
 	// element not present - nothing to removed
 	assertEquals(1, localCopy.count);
 	assertEquals(code, localCopy.error_codes[0]);
@@ -250,12 +264,12 @@ void testGpsParser(void) {
 	assertEqualsM("3 speed", 11.2, GPSdata.speed);
 //	assertEqualsM("3 altitude", 0, GPSdata.altitude);  // GPRMC not overwrite altitude
 	assertEqualsM("3 course", 0, GPSdata.course);
-	assertEqualsM("3 GPS yy",2006, GPSdata.GPStm.tm_year+1900);
-	assertEqualsM("3 GPS mm",12, GPSdata.GPStm.tm_mon);
-	assertEqualsM("3 GPS yy",26, GPSdata.GPStm.tm_mday);	
-	assertEqualsM("3 GPS hh",11, GPSdata.GPStm.tm_hour);
-	assertEqualsM("3 GPS mm",16, GPSdata.GPStm.tm_min);
-	assertEqualsM("3 GPS ss",9, GPSdata.GPStm.tm_sec);	
+	assertEqualsM("3 GPS yy", 2006, GPSdata.GPStm.tm_year + 1900);
+	assertEqualsM("3 GPS mm", 12, GPSdata.GPStm.tm_mon);
+	assertEqualsM("3 GPS yy", 26, GPSdata.GPStm.tm_mday);
+	assertEqualsM("3 GPS hh", 11, GPSdata.GPStm.tm_hour);
+	assertEqualsM("3 GPS mm", 16, GPSdata.GPStm.tm_min);
+	assertEqualsM("3 GPS ss", 9, GPSdata.GPStm.tm_sec);
 
 	// check again first one
 	// we need to pass a mutable string, not a constant because the parser would be modifying the string
@@ -265,7 +279,7 @@ void testGpsParser(void) {
 	assertEqualsM("4 latitude", 3349.896, GPSdata.latitude);
 	assertEqualsM("4 longitude", 11808.521, GPSdata.longitude);
 	assertEqualsM("4 speed", 0, GPSdata.speed);
-	assertEqualsM("4 course", 360, GPSdata.course);	
+	assertEqualsM("4 course", 360, GPSdata.course);
 }
 
 // this buffer is needed because on Unix you would not be able to change static char constants
@@ -291,7 +305,6 @@ void testConsoleLogic(void) {
 
 	strcpy(buffer, "\"echo\"");
 	assertTrueM("unquote quoted", strEqual("echo", unquote(buffer)));
-
 
 	char *ptr = validateSecureLine(UNKNOWN_COMMAND);
 	assertEquals(0, strcmp(UNKNOWN_COMMAND, ptr));
@@ -321,11 +334,9 @@ void testConsoleLogic(void) {
 	assertEquals(111, atoi(lastFirst));
 	assertEquals(333, atoi(lastThird));
 
-
 	strcpy(buffer, "echosss \" 1\" 222 333");
 	handleConsoleLine(buffer);
 	assertTrue(strEqual("\" 1\"", lastFirst));
-
 
 	//addConsoleActionSSS("GPS", testGpsParser);
 }
