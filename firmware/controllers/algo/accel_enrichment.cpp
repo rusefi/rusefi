@@ -22,29 +22,52 @@ EXTERN_ENGINE
 //#endif
 
 static AccelEnrichmemnt instance;
+static Logging *logger;
 
 #if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
+
+static void accelInfo() {
+	scheduleMsg(logger, "accel length=%d", instance.cb.getSize());
+	scheduleMsg(logger, "accel th=%f/mult=%f", engineConfiguration->accelEnrichmentThreshold, engineConfiguration->accelEnrichmentMultiplier);
+	scheduleMsg(logger, "decel th=%f/mult=%f", engineConfiguration->decelEnrichmentThreshold, engineConfiguration->decelEnrichmentMultiplier);
+}
+
 static void setAccelThr(float value) {
 	engineConfiguration->accelEnrichmentThreshold = value;
+	accelInfo();
 }
 
 static void setAccelMult(float value) {
 	engineConfiguration->accelEnrichmentMultiplier = value;
+	accelInfo();
 }
 
 static void setDecelThr(float value) {
-	engineConfiguration->deaccelEnrichmentThreshold = value;
+	engineConfiguration->decelEnrichmentThreshold = value;
+	accelInfo();
 }
 
 static void setDecelMult(float value) {
-	engineConfiguration->deaccelEnrichmentMultiplier = value;
+	engineConfiguration->decelEnrichmentMultiplier = value;
+	accelInfo();
 }
 
-void initAccelEnrichment(void) {
+static void setAccelLen(int len) {
+	instance.cb.setSize(len);
+	accelInfo();
+}
+
+void initAccelEnrichment(Logging *sharedLogger) {
+	logger = sharedLogger;
 	addConsoleActionF("set_accel_th", setAccelThr);
 	addConsoleActionF("set_accel_mult", setAccelMult);
 	addConsoleActionF("set_decel_th", setDecelThr);
 	addConsoleActionF("set_decel_mult", setDecelMult);
+	addConsoleActionI("set_accel_len", setAccelLen);
+	addConsoleAction("accelinfo", accelInfo);
+
+	setAccelLen(engineConfiguration->accelLength);
+
 }
 #endif /* ! EFI_UNIT_TEST */
 
@@ -63,13 +86,13 @@ void AccelEnrichmemnt::updateDiffEnrichment(engine_configuration_s *engineConfig
 //}
 
 float AccelEnrichmemnt::getEnrichment(DECLARE_ENGINE_PARAMETER_F) {
-	float d = delta;
+	float d = cb.maxValue(cb.getSize());
 	if (d > engineConfiguration->accelEnrichmentThreshold) {
 		return d * engineConfiguration->accelEnrichmentMultiplier;
 	}
-	if (d < engineConfiguration->deaccelEnrichmentThreshold) {
-		return d * engineConfiguration->deaccelEnrichmentMultiplier;
-	}
+//	if (d < engineConfiguration->deaccelEnrichmentThreshold) {
+//		return d * engineConfiguration->deaccelEnrichmentMultiplier;
+//	}
 	return 0;
 }
 
@@ -85,6 +108,7 @@ void AccelEnrichmemnt::onEngineCycle(DECLARE_ENGINE_PARAMETER_F) {
 
 	if (!cisnan(this->currentEngineLoad)) {
 		delta = currentEngineLoad - this->currentEngineLoad;
+		cb.add(delta);
 		maxDelta = maxF(maxDelta, delta);
 		minDelta = minF(minDelta, delta);
 	}
