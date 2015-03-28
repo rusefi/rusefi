@@ -1,4 +1,4 @@
-update=12/28/2014 8:08:31 AM
+update=3/27/2015 8:22:10 PM
 version=1
 last_client=eeschema
 [cvpcb]
@@ -14,8 +14,8 @@ LastNetListRead=frankenso.net
 UseCmpFile=0
 PadDrill=0.000000000000
 PadDrillOvalY=0.000000000000
-PadSizeH=1.350000000000
-PadSizeV=1.000000000000
+PadSizeH=1.200000000000
+PadSizeV=1.200000000000
 PcbTextSizeV=1.016000000000
 PcbTextSizeH=1.016000000000
 PcbTextThickness=0.127000000000
@@ -61,6 +61,7 @@ LibName29=RN-41_42
 LibName30=skqucaa010_joystick
 LibName31=HC-0X_bluetooth
 LibName32=joystick_SKRHAAE010
+LibName33=TC33X-2-102E
 [eeschema]
 version=1
 LibDir=../rusefi_lib
@@ -120,3 +121,4 @@ LibName47=rn-41
 LibName48=skqucaa010_joystick
 LibName49=itead_hc-0X_bluetooth
 LibName50=joystick_SKRHAAE010
+LibName51=STM32F407IGT6

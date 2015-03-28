@@ -16,11 +16,11 @@
 16) RESOLVED IN R0.2 add vias for GND, 12V and 5V for test purposes
 17) RESOLVED IN R0.2 add option to GND one side of VR in ECU
 18) RESOLVED IN R0.2 HC-OX needs 3.3V not 5V. 
-19)                  BOM issue: D1001 should be BZT52C7V5-FDICT-ND?
-20)                  BOM issue: C1001 sch says 470uF but part number is 100uF?
+19) RESOLVED IN R0.4 BOM issue: D1001 should be BZT52C7V5-FDICT-ND?
+20) RESOLVED IN R0.4 BOM issue: C1001 sch says 470uF but part number is 100uF? CHANGED TO 330uF 35V
 21) RESOLVED IN R0.4 SKQUCAA010 is End of Life. I've placed and order to get these in October, but we need a better solution
 22) RESOLVED IN R0.2 JP212 should be replaced with JP209 which would be breaking the OUT9 line. That's part of hall-via-op-amp circuirty.  
-23)                  chip select and such for SPI on thermo-couple chips. 
+23) RESOLVED IN R0.4 chip select and such for SPI on thermo-couple chips. 
 24) RESOLVED IN R0.4 Change joy stick to ALPS SKRHAAE010 
 25) RESOLVED IN R0.2 add a prototype area for future circuits to be tossed in.
 26)                  add a couple more low-side chips
@@ -51,22 +51,24 @@
 50) RESOLVED IN R0.4 HIP9011 CS should be connected some GPIO pin, PB0 would work
 51) RESOLVED IN R0.4 CAN_RX line should be connected to PB12, not PD12
 52) RESOLVED IN R0.4 Add header for CAN bus with 5V and GND. see P401
-53)                  verify D9 is the same BOM item as discovery board. 
+53) RESOLVED IN R0.4 verify D9 is the same BOM item as discovery board. D5, D6, D9 CHANGED TO DIGI,497-3707-1-ND ST,BAT60JFILM
 54) RESOLVED IN R0.4 Add 5V and GND vias to proto area
 55) RESOLVED IN R0.4 Add Top, T-1, T-2 and T-3 to PCB copper layers to more clearly identify layers to MFG
 56) RESOLVED IN R0.4 knock2 is actually knock0. Need to fix net names & the pinout picture
-57) RESOLVED IN R0.4 Change C166 and C167 to 30pF instead of 20pF, to match XTAL specified 20CL. (30*30)/(30+30)+5= 20pF with 5pF stray capacitance.
+57) RESOLVED IN R0.4 Change C166 and C167 to 27pF instead of 20/18pF, to match XTAL specified 20CL. (30*30)/(30+30)+5= 20pF with 5pF stray capacitance.
 58) RESOLVED IN R0.4 add pF cap to HIP9011 knock chip to help fast transients and XTAL starting.
-59)                  FIX CLAIMED ERRORS IN SCHEMATIC ERC
+59) RESOLVED IN R0.4 FIX CLAIMED ERRORS IN SCHEMATIC ERC power flags added to resolve 
 60)                  remove AC RELAY ect from harness connector net names.
 61) RESOLVED IN R0.4 add 0R jumper between 5V and 5V plane to allow power supply verification before powering the 5V devices. 
 62)                  add resistor divider or some mechanism for identifying via firmware sensing PCB revision. Perhaps to PB1 AN input 
-63)                  better test pads silkscreen: 5V, GND, 12V
-64)                  LED for cam/crank signal. we can remove cam/crank test points if we need space
+63) RESOLVED IN R0.4 better test pads silkscreen: 5V, GND, 12V
+64) RESOLVED IN R0.4 LED for cam/crank signal. we can remove cam/crank test points if we need space GOING TO BE DIM, AS IT NEED 10K SERIES RESISTOR
 65)                  why do we have W1002 & W1003 if these are usually there? Removing them would remove one point of failure
 66)                  JP04 & JP05 are defined on the main schematics sheet. if would be better to define then on Page 8 with the rest of cam/crank stuff
-67)                  Updated silk screen notes, draws .12 amps normal, with a typical inrush of .3A. 
-68)                  Look into LCD dimming R99, perhaps replace with a POT. Perhaps connect to a GPIO
+67) RESOLVED IN R0.4 Updated silk screen notes, draws .12 amps normal, with a typical inrush of .3A. 
+68) RESOLVED IN R0.4 Look into LCD dimming R99, perhaps replace with a POT. Perhaps connect to a GPIO
+69)                  Change F1 to a wire wound resistor which will also be the weak link and act like a fuse before the PCB breaks, while also snubbing RF
+70) RESOLVED IN R0.4 Some USB connectors are wider and hit the PCB making it hard to insert. MOVED PCB EDGE TO BE CLOSER TO USB CONNECTOR.
 
 
 
@@ -74,7 +76,7 @@
   )                  cheaper battery holder - through-hole (need to find out footprint)
   )                  remove some/all EGT - expand prototyping area?
   )                  idle valve SMD diode?
-  )                  place USB connectors closer to board edge or notch the board
+
 
 
 For honda add-on / rewiring board
