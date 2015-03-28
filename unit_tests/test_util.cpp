@@ -37,7 +37,7 @@ void testCrc(void) {
 	assertEqualsM("crc32", 0xd3d99e8b, crc32(A, 1));
 }
 
-static cyclic_buffer sb;
+static cyclic_buffer<int> sb;
 
 void testOverflow64Counter(void) {
 	print("*************************************** testOverflow64Counter\r\n");
