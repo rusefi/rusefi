@@ -480,8 +480,8 @@ custom pin_input_mode_e 4 scalar, F32,	@OFFSET@,	"ms", 1, 0, 0, 200, 1
 	
 	int accelLength;;"len",        1,     0,    0, 200,     3
 	
-	float deaccelEnrichmentThreshold;;"roc",        1,     0,    0, 200,     3
-	float deaccelEnrichmentMultiplier;;"coeff",        1,     0,    0, 200,     3
+	float decelEnrichmentThreshold;;"roc",        1,     0,    0, 200,     3
+	float decelEnrichmentMultiplier;;"coeff",        1,     0,    0, 200,     3
 	float accelEnrichmentThreshold;;"roc",        1,     0,    0, 200,     3
 	float accelEnrichmentMultiplier;;"coeff",        1,     0,    0, 200,     3
 
