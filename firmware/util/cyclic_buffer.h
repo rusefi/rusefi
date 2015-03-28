@@ -107,7 +107,7 @@ void cyclic_buffer<T>::add(T value) {
 template<typename T>
 void cyclic_buffer<T>::setSize(int size) {
 	clear();
-	this->size = size;
+	this->size = size < CB_MAX_SIZE ? size : CB_MAX_SIZE;
 }
 
 template<typename T>
