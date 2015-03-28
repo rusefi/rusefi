@@ -37,6 +37,7 @@ class cyclic_buffer
     T get(int index);
     T sum(int length);
     T maxValue(int length);
+    T minValue(int length);
     void setSize(int size);
     int getSize();
     void clear();
@@ -131,7 +132,7 @@ T cyclic_buffer<T>::maxValue(int length) {
 		length = count;
 	}
 	int ci = currentIndex; // local copy to increase thread-safety
-	T result = 0; // todo: better min value?
+	T result = -2000000; // todo: better min value?
 	for (int i = 0; i < length; ++i) {
 		int index = ci - i;
 		while (index < 0) {
@@ -142,7 +143,26 @@ T cyclic_buffer<T>::maxValue(int length) {
 			result = elements[index];
 		}
 	}
+	return result;
+}
 
+template<typename T>
+T cyclic_buffer<T>::minValue(int length) {
+	if (length > count) {
+		length = count;
+	}
+	int ci = currentIndex; // local copy to increase thread-safety
+	T result = +2000000; // todo: better max value?
+	for (int i = 0; i < length; ++i) {
+		int index = ci - i;
+		while (index < 0) {
+			index += size;
+		}
+
+		if (elements[index] < result) {
+			result = elements[index];
+		}
+	}
 	return result;
 }
 
