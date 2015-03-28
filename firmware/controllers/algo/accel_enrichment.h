@@ -29,14 +29,14 @@ public:
 	float maxDelta;
 	float minDelta;
 	float delta;
+	cyclic_buffer<float> cb;
 
 private:
 //	float array[MAX_ACCEL_ARRAY_SIZE];
 	float diffEnrichment;
-	cyclic_buffer<float> cb;
 };
 
-void initAccelEnrichment(void);
+void initAccelEnrichment(Logging *sharedLogger);
 float getAccelEnrichment(void);
 
 #endif /* ACC_ENRICHMENT_H_ */

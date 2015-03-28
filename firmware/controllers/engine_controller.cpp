@@ -516,6 +516,8 @@ void initEngineContoller(Logging *sharedLogger, Engine *engine) {
 
 	addConsoleAction("analoginfo", printAnalogInfo);
 
+	initAccelEnrichment(sharedLogger);
+
 	initConfigActions();
 #if EFI_PROD_CODE
 	addConsoleAction("reset_accel", resetAccel);
