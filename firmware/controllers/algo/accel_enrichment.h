@@ -33,7 +33,7 @@ public:
 private:
 //	float array[MAX_ACCEL_ARRAY_SIZE];
 	float diffEnrichment;
-	cyclic_buffer cb;
+	cyclic_buffer<float> cb;
 };
 
 void initAccelEnrichment(void);

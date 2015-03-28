@@ -43,7 +43,7 @@ EXTERN_ENGINE
 // todo: better name for this constant
 #define HELPER_PERIOD 100000
 
-static cyclic_buffer errorDetection;
+static cyclic_buffer<int> errorDetection;
 
 #if ! EFI_PROD_CODE
 bool printGapRatio = false;

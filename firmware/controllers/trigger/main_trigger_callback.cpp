@@ -76,7 +76,7 @@ static IgnitionEvent *iHead = NULL;
  */
 //static EventQueue triggerEventsQueue;
 
-static cyclic_buffer ignitionErrorDetection;
+static cyclic_buffer<int> ignitionErrorDetection;
 
 static Logging *logger;
 
