@@ -355,7 +355,7 @@ bit is_enabled_spi_2
 	
 	pin_output_mode_e triggerErrorPinMode;
 
-	float idleSolenoidPwm;value between 0 and 1
+	float idleSolenoidPwm;value between 0 and 1;"%", 1, 0, 0, 100, 0
 	brain_pin_e acRelayPin;
 	pin_output_mode_e acRelayPinMode;
 

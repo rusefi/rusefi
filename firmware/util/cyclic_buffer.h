@@ -1,5 +1,8 @@
 /**
  * @file	cyclic_buffer.h
+ * @brief	A cyclic buffer is a data structure that uses a single, fixed-size buffer as if it were connected end-to-end.
+ *
+ * http://en.wikipedia.org/wiki/Circular_buffer
  *
  * @date Dec 8, 2013
  * @author Andrey Belomutskiy, Daniel Hill
@@ -30,15 +33,15 @@ class cyclic_buffer
     cyclic_buffer& operator=(const cyclic_buffer& rhCb);
 
   public:
-    void add(int value);
+    void add(T value);
     int get(int index);
-    int sum(int length);
+    T sum(int length);
     void setSize(int size);
     void clear();
 
   private:
     void baseC(int size);
-    volatile int elements[CB_MAX_SIZE];
+    volatile T elements[CB_MAX_SIZE];
     volatile int currentIndex;
     volatile int count;
     int size;
@@ -88,7 +91,7 @@ cyclic_buffer<T>::~cyclic_buffer() {
 //}
 
 template<typename T>
-void cyclic_buffer<T>::add(int value) {
+void cyclic_buffer<T>::add(T value) {
 	++currentIndex;
 	if (currentIndex == size) {
 		currentIndex = 0;
@@ -110,13 +113,13 @@ int cyclic_buffer<T>::get(int index) {
 }
 
 template<typename T>
-int cyclic_buffer<T>::sum(int length) {
+T cyclic_buffer<T>::sum(int length) {
 	if (length > count) {
 		length = count;
 	}
 
 	int ci = currentIndex; // local copy to increase thread-safety
-	int result = 0;
+	T result = 0;
 
 	for (int i = 0; i < length; ++i) {
 		int index = ci - i;
