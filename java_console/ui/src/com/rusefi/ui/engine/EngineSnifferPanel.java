@@ -273,6 +273,8 @@ public class EngineSnifferPanel {
         }
 
         String fixSpark(String s) {
+            if (s.toLowerCase().startsWith("hip"))
+                return "z" + s; // let's place this at the bottom
             if (s.toLowerCase().startsWith("spa"))
                 return "d" + s;
             return s;
