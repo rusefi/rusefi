@@ -36,7 +36,7 @@
 
 #if EFI_HIP_9011 || defined(__DOXYGEN__)
 
-static OutputPin intHold;
+static NamedOutputPin intHold;
 static OutputPin hipCs;
 
 extern pin_output_mode_e DEFAULT_OUTPUT;
@@ -140,7 +140,7 @@ static void startIntegration(void) {
 		 * until we are done integrating
 		 */
 		state = IS_INTEGRATING;
-		intHold.setValue(true);
+		turnPinHigh(&intHold);
 	}
 }
 
@@ -150,7 +150,7 @@ static void endIntegration(void) {
 	 * engine cycle
 	 */
 	if (state == IS_INTEGRATING) {
-		intHold.setValue(false);
+		turnPinLow(&intHold);
 		state = WAITING_FOR_ADC_TO_SKIP;
 	}
 }
@@ -235,6 +235,7 @@ void initHip9011(Logging *sharedLogger) {
 	spicfg.ssport = getHwPort(boardConfiguration->hip9011CsPin);
 	spicfg.sspad = getHwPin(boardConfiguration->hip9011CsPin);
 
+	intHold.name = "HIP";
 	outputPinRegisterExt2("hip int/hold", &intHold, boardConfiguration->hip9011IntHoldPin, &DEFAULT_OUTPUT);
 	outputPinRegisterExt2("hip CS", &hipCs, boardConfiguration->hip9011CsPin, &DEFAULT_OUTPUT);
 
