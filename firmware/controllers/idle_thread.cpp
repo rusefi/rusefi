@@ -31,6 +31,7 @@
 #include "pin_repository.h"
 #include "engine_configuration.h"
 #include "engine.h"
+#include "stepper.h"
 
 #if EFI_IDLE_CONTROL || defined(__DOXYGEN__)
 
@@ -42,6 +43,8 @@ EXTERN_ENGINE
 
 static OutputPin idlePin;
 static SimplePwm idleValvePwm;
+
+static StepperMotor iacMotor;
 
 /**
  * Idle level calculation algorithm lives in idle_controller.c
@@ -62,6 +65,10 @@ static void showIdleInfo(void) {
 static void setIdleControlEnabled(int value) {
 	engineConfiguration->idleMode = value ? IM_AUTO : IM_MANUAL;
 	showIdleInfo();
+}
+
+static void setIdleValvePosition(int position) {
+	iacMotor.targetPosition = position;
 }
 
 static void setIdleValvePwm(percent_t value) {
@@ -131,6 +138,11 @@ static void applyIdleSolenoidPinState(PwmConfig *state, int stateIndex) {
 void startIdleThread(Logging*sharedLogger, Engine *engine) {
 	logger = sharedLogger;
 
+	if (boardConfiguration->idleStepperDirection != GPIO_UNASSIGNED) {
+		iacMotor.initialize(boardConfiguration->idleStepperStep, boardConfiguration->idleStepperDirection);
+	}
+
+
 	/**
 	 * Start PWM for IDLE_VALVE logical / idleValvePin physical
 	 */
@@ -154,6 +166,9 @@ void startIdleThread(Logging*sharedLogger, Engine *engine) {
 	addConsoleAction("idleinfo", showIdleInfo);
 	addConsoleActionI("set_idle_rpm", setIdleRpmAction);
 	addConsoleActionF("set_idle_pwm", setIdleValvePwm);
+
+	addConsoleActionI("set_idle_position", setIdleValvePosition);
+
 	addConsoleActionI("set_idle_enabled", (VoidInt) setIdleControlEnabled);
 }
 
