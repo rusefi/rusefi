@@ -15,7 +15,6 @@
 #include "console_io.h"
 
 #include "adc_inputs.h"
-#include "stepper.h"
 #include "vehicle_speed.h"
 
 #include "trigger_input.h"
@@ -51,8 +50,6 @@
 EXTERN_ENGINE
 ;
 extern bool hasFirmwareErrorFlag;
-
-static StepperMotor iacMotor;
 
 static Mutex spiMtx;
 
@@ -270,15 +267,12 @@ void initHardware(Logging *l, Engine *engine) {
 	initMax31855(sharedLogger, getSpiDevice(boardConfiguration->max31855spiDevice), boardConfiguration->max31855_cs);
 #endif /* EFI_MAX_31855 */
 
-//	iacMotor.initialize(GPIOD_11, GPIOD_10);
-
 #if EFI_CAN_SUPPORT
 	initCan();
 #endif /* EFI_CAN_SUPPORT */
 
 //	init_adc_mcp3208(&adcState, &SPID2);
 //	requestAdcValue(&adcState, 0);
-
 
 #if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
 	// todo: figure out better startup logic

@@ -17,21 +17,44 @@
 static msg_t stThread(StepperMotor *motor) {
 	chRegSetThreadName("stepper");
 
-	palWritePad(motor->directionPort, motor->directionPin, true);
+	palWritePad(motor->directionPort, motor->directionPin, false);
 
-	// let's part the motor in a known position to begin with
+	// let's park the motor in a known position to begin with
 	for (int i = 0; i < ST_COUNT; i++) {
 		motor->pulse();
 	}
 
-	palWritePad(motor->directionPort, motor->directionPin, false);
+	while (true) {
+		int targetPosition = motor->targetPosition;
+		int currentPosition = motor->currentPosition;
 
-	// let's part the motor in a known position to begin with
-	for (int i = 0; i < ST_COUNT / 2; i++) {
+		if (targetPosition == currentPosition) {
+			chThdSleepMilliseconds(ST_DELAY_MS);
+			continue;
+		}
+		bool_t isIncrementing = targetPosition > currentPosition;
+		palWritePad(motor->directionPort, motor->directionPin, isIncrementing);
+		if (isIncrementing) {
+			motor->currentPosition++;
+		} else {
+			motor->currentPosition--;
+		}
 		motor->pulse();
 	}
 
+	// let's part the motor in a known position to begin with
+//	for (int i = 0; i < ST_COUNT / 2; i++) {
+//		motor->pulse();
+//	}
+
 	return 0;
+}
+
+StepperMotor::StepperMotor() {
+	currentPosition = 0;
+	targetPosition = 0;
+	directionPort = NULL;
+	stepPort = NULL;
 }
 
 void StepperMotor::pulse() {
@@ -42,8 +65,6 @@ void StepperMotor::pulse() {
 }
 
 void StepperMotor::initialize(brain_pin_e stepPin, brain_pin_e directionPin) {
-	position = 0;
-
 	stepPort = getHwPort(stepPin);
 	this->stepPin = getHwPin(stepPin);
 
@@ -55,3 +76,4 @@ void StepperMotor::initialize(brain_pin_e stepPin, brain_pin_e directionPin) {
 
 	chThdCreateStatic(stThreadStack, sizeof(stThreadStack), NORMALPRIO, (tfunc_t) stThread, this);
 }
+

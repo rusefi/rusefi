@@ -11,16 +11,19 @@
 
 class StepperMotor {
 public:
+	StepperMotor();
 	void initialize(brain_pin_e stepPin, brain_pin_e directionPin);
 	void pulse();
 	GPIO_TypeDef * directionPort;
 	ioportmask_t directionPin;
+
+	int currentPosition;
+	int targetPosition;
+
 private:
 
 	GPIO_TypeDef * stepPort;
 	ioportmask_t stepPin;
-
-	int position;
 
 	THD_WORKING_AREA(stThreadStack, UTILITY_THREAD_STACK_SIZE);
 
