@@ -390,7 +390,7 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->algorithm = LM_SPEED_DENSITY;
 
 	boardConfiguration->alternatorControlPin = GPIOD_5;
-	engineConfiguration->alternatorControlPFactor = 30;
+	engineConfiguration->alternatorControlPFactor = 22;
 
 //	engineConfiguration->isCanEnabled = true;
 	boardConfiguration->canTxPin = GPIOB_6;
