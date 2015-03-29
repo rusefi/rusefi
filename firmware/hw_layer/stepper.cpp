@@ -16,16 +16,16 @@
 
 static msg_t stThread(StepperMotor *motor) {
 	chRegSetThreadName("stepper");
-        
-        palWritePad(motor->directionPort, motor->directionPin, true);
+
+	palWritePad(motor->directionPort, motor->directionPin, true);
 
 	// let's part the motor in a known position to begin with
 	for (int i = 0; i < ST_COUNT; i++) {
 		motor->pulse();
 	}
 
-        palWritePad(motor->directionPort, motor->directionPin, false);
-        
+	palWritePad(motor->directionPort, motor->directionPin, false);
+
 	// let's part the motor in a known position to begin with
 	for (int i = 0; i < ST_COUNT / 2; i++) {
 		motor->pulse();
@@ -47,7 +47,7 @@ void StepperMotor::initialize(brain_pin_e stepPin, brain_pin_e directionPin) {
 	stepPort = getHwPort(stepPin);
 	this->stepPin = getHwPin(stepPin);
 
-        directionPort = getHwPort(directionPin);
+	directionPort = getHwPort(directionPin);
 	this->directionPin = getHwPin(directionPin);
 
 	mySetPadMode2("st step", stepPin, PAL_MODE_OUTPUT_PUSHPULL);
