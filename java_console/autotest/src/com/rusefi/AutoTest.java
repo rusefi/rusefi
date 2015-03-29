@@ -23,9 +23,9 @@ public class AutoTest {
 
     static void mainTestBody() {
         sendCommand("fl 1"); // just in case it was disabled
+        testBmwE34();
         testSachs();
         testMitsu();
-        testBmwE34();
         testCitroenBerlingo();
         testMazda626();
         test2003DodgeNeon();
@@ -46,8 +46,18 @@ public class AutoTest {
     private static void testBmwE34() {
         setEngineType(25);
         String msg = "BMW";
+        WaveChart chart;
+        IoUtil.changeRpm(200);
+        chart = nextChart();
+        double x = 173.988;
+        assertWave(msg, chart, WaveChart.SPARK_1, 0.01666, x, x + 180, x + 360, x + 540);
+
+
         IoUtil.changeRpm(1200);
-        // todo: add more content
+        chart = nextChart();
+
+        x = 688.464;
+        assertWave(msg, chart, WaveChart.SPARK_1, 0.0597999999, x, x + 180, x + 360, x + 540);
     }
 
     private static void testMitsu() {
