@@ -62,7 +62,7 @@ static efitimeus_t timeOfLastKnockEvent = 0;
  *
  * hipOutput should be set to used FAST adc device
  */
-static hip_state_e state = READY_TO_INTEGRATE;
+static hip_state_e state = NOT_READY;
 
 static scheduling_s startTimer[2];
 static scheduling_s endTimer[2];
@@ -219,6 +219,42 @@ void hipAdcCallback(adcsample_t value) {
 	}
 }
 
+static bool_t needToInit = true;
+
+static void hipStartupCode(void) {
+	// '0' for 4MHz
+	SPI_SYNCHRONOUS(SET_PRESCALER_CMD + 0);
+
+	// '0' for channel #1
+	SPI_SYNCHRONOUS(SET_CHANNEL_CMD + 0);
+
+	// band index depends on cylinder bore
+	SPI_SYNCHRONOUS(SET_BAND_PASS_CMD + bandIndex);
+
+	/**
+	 * Let's restart SPI to switch it from synchronous mode into
+	 * asynchronous mode
+	 */
+	spiStop(driver);
+	spicfg.end_cb = endOfSpiCommunication;
+	spiStart(driver, &spicfg);
+	state = READY_TO_INTEGRATE;
+}
+
+static THD_WORKING_AREA(hipTreadStack, UTILITY_THREAD_STACK_SIZE);
+
+static msg_t hipThread(void *arg) {
+	chRegSetThreadName("hip9011 init");
+	while (true) {
+		// 100 ms to let the hardware to start
+		chThdSleepMilliseconds(100);
+		if (needToInit) {
+			hipStartupCode();
+			needToInit = false;
+		}
+	}
+}
+
 void initHip9011(Logging *sharedLogger) {
 	addConsoleAction("hipinfo", showHipInfo);
 	if (!boardConfiguration->isHip9011Enabled)
@@ -255,23 +291,7 @@ void initHip9011(Logging *sharedLogger) {
 //	palSetPadMode(GPIOB, 15, PAL_MODE_ALTERNATE(EFI_SPI2_AF) | PAL_STM32_OTYPE_OPENDRAIN);
 
 	addConsoleActionF("set_gain", setGain);
-
-	// '0' for 4MHz
-	SPI_SYNCHRONOUS(SET_PRESCALER_CMD + 0);
-
-	// '0' for channel #1
-	SPI_SYNCHRONOUS(SET_CHANNEL_CMD + 0);
-
-	// band index depends on cylinder bore
-	SPI_SYNCHRONOUS(SET_BAND_PASS_CMD + bandIndex);
-
-	/**
-	 * Let's restart SPI to switch it from synchronous mode into
-	 * asynchronous mode
-	 */
-	spiStop(driver);
-	spicfg.end_cb = endOfSpiCommunication;
-	spiStart(driver, &spicfg);
+	chThdCreateStatic(hipTreadStack, sizeof(hipTreadStack), NORMALPRIO, (tfunc_t) hipThread, NULL);
 }
 
 #endif
