@@ -358,6 +358,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->externalKnockSenseAdc = EFI_ADC_NONE;
 
 	boardConfiguration->useSerialPort = true;
+	boardConfiguration->useStepperIdle = false;
 
 #if EFI_PROD_CODE
 	engineConfiguration->digitalChartSize = 300;

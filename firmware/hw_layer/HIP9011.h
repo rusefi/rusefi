@@ -10,6 +10,7 @@
 #define HIP9011_H_
 
 typedef enum {
+	NOT_READY,
 	/**
 	 * the step after this one is always IS_INTEGRATING
 	 */
