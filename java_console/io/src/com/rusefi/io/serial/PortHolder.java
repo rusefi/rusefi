@@ -1,8 +1,8 @@
 package com.rusefi.io.serial;
 
 import com.rusefi.FileLog;
-import com.rusefi.Logger;
 import com.rusefi.Timeouts;
+import com.rusefi.TsPageSize;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.CommandQueue;
@@ -79,7 +79,7 @@ public class PortHolder {
         bp = new BinaryProtocol(FileLog.LOGGER, serialPort);
 
         bp.switchToBinaryProtocol();
-        bp.readImage(BinaryProtocol.IMAGE_SIZE);
+        bp.readImage(TsPageSize.IMAGE_SIZE);
         if (bp.isClosed)
             return false;
 

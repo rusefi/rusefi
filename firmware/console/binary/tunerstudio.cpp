@@ -272,9 +272,9 @@ void handleCrc32Check(ts_channel_s *tsChannel, ts_response_format_e mode, uint16
 
 	count = SWAP_UINT16(count);
 
-	count = 14008;
+	count = getTunerStudioPageSize(pageId);
 
-	scheduleMsg(&tsLogger, "CRC32 request: offset %d size %d", offset, count);
+	scheduleMsg(&tsLogger, "CRC32 request: pageId %d offset %d size %d", pageId, offset, count);
 
 	uint32_t crc = SWAP_UINT32(crc32((void * ) getWorkingPageAddr(0), count));
 

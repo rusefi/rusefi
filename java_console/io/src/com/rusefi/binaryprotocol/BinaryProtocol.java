@@ -16,7 +16,6 @@ import java.util.Arrays;
  * 3/6/2015
  */
 public class BinaryProtocol {
-    public static final int IMAGE_SIZE = 14008;
     private static final int BLOCKING_FACTOR = 256;
     private static final byte RESPONSE_OK = 0;
     private static final byte RESPONSE_BURN_OK = 0x04;

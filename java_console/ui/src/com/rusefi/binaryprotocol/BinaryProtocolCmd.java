@@ -2,10 +2,7 @@ package com.rusefi.binaryprotocol;
 
 import com.romraider.editor.ecu.ECUEditor;
 import com.romraider.util.SettingsManager;
-import com.rusefi.ConfigurationImage;
-import com.rusefi.Logger;
-import com.rusefi.RomRaiderWrapper;
-import com.rusefi.UploadChanges;
+import com.rusefi.*;
 import com.rusefi.io.serial.PortHolder;
 import jssc.SerialPort;
 
@@ -41,7 +38,7 @@ public class BinaryProtocolCmd {
         logger.info("Looks good");
         bp.switchToBinaryProtocol();
 
-        bp.readImage(BinaryProtocol.IMAGE_SIZE);
+        bp.readImage(TsPageSize.IMAGE_SIZE);
         //
 //        image.saveToFile("rusefi_configuration.bin");
 //
