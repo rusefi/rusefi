@@ -16,11 +16,11 @@
 /**
  * this is used to confirm that firmware and TunerStudio are using the same rusefi.ini version
  */
-#define TS_FILE_VERSION 20150314
+#define TS_FILE_VERSION 20150330
 
 #define PAGE_COUNT 2
 
-#define PAGE_0_SIZE 14008
+#define PAGE_0_SIZE 15288
 #define PAGE_1_SIZE 1152
 
 #define TS_OUTPUT_SIZE 196
