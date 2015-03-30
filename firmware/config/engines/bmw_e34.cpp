@@ -36,6 +36,9 @@ void setBmwE34(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 
+	boardConfiguration->triggerInputPins[0] = GPIOC_6;
+	boardConfiguration->triggerInputPins[1] = GPIOA_5;
+
 	engineConfiguration->ignMathCalculateAtIndex = 15;
 
 	setConstantDwell(engineConfiguration, 3); // a bit shorter dwell
@@ -55,34 +58,27 @@ void setBmwE34(DECLARE_ENGINE_PARAMETER_F) {
 //	bc->isFastAdcEnabled = true;
 
 	bc->ignitionPinMode = OM_INVERTED;
-	bc->ignitionPins[0] = GPIOC_7; // #1
-	bc->ignitionPins[1] = GPIO_UNASSIGNED; // #2
-	bc->ignitionPins[2] = GPIOE_4; // #3
-	bc->ignitionPins[3] = GPIO_UNASSIGNED; // #4
-	bc->ignitionPins[4] = GPIOC_9; // #5
-	bc->ignitionPins[5] = GPIO_UNASSIGNED; // #6
+	bc->ignitionPins[0] = GPIOB_8; // #1
+	bc->ignitionPins[1] = GPIOE_2; // #2
+	bc->ignitionPins[2] = GPIOE_3; // #3
+	bc->ignitionPins[3] = GPIOE_4; // #4
+	bc->ignitionPins[4] = GPIOE_5; // #5
+	bc->ignitionPins[5] = GPIOE_6; // #6
 
 	bc->injectionPinMode = OM_INVERTED;
 
-	bc->injectionPins[0] = GPIOB_9; // #1
-	bc->injectionPins[1] = GPIOB_8; // #2
-	/**
-	 * this is a relatively dirty performance hack: with unassigned pin we
-	 * have less stuff to put into wave chart
-	 */
-	bc->injectionPins[2] = GPIO_UNASSIGNED; // #3
-	bc->injectionPins[3] = GPIO_UNASSIGNED; // #4
-	bc->injectionPins[4] = GPIO_UNASSIGNED; // #5
-	bc->injectionPins[5] = GPIO_UNASSIGNED; // #6
+	bc->injectionPins[0] = GPIOB_5; // #1
+	bc->injectionPins[1] = GPIOB_6; // #2
+	bc->injectionPins[2] = GPIOB_7; // #3
 
 	bc->triggerErrorPin = GPIOE_3;
 
 	engineConfiguration->clutchUpPin = GPIOD_3;
 	engineConfiguration->clutchUpPinMode = PI_PULLUP;
 
-	boardConfiguration->fuelPumpPin = GPIOC_13;
+	boardConfiguration->fuelPumpPin = GPIOD_4;
 
-	boardConfiguration->idleValvePin = GPIOB_10;
+	boardConfiguration->idleValvePin = GPIOC_14;
 	boardConfiguration->idleValvePinMode = OM_INVERTED;
 	boardConfiguration->idleSolenoidFrequency = 300;
 	// set_idle_pwm 50
