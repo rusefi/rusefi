@@ -253,6 +253,7 @@ static msg_t hipThread(void *arg) {
 			needToInit = false;
 		}
 	}
+	return -1;
 }
 
 void initHip9011(Logging *sharedLogger) {
