@@ -33,7 +33,7 @@ void setBmwE34(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->specs.cylindersCount = 6;
 	engineConfiguration->specs.displacement = 2.91;
 	engineConfiguration->specs.firingOrder = FO_1_THEN_5_THEN_3_THEN_6_THEN_2_THEN_4;
-	engineConfiguration->injectionMode = IM_SIMULTANEOUS;
+	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 
 	boardConfiguration->triggerInputPins[0] = GPIOC_6;
@@ -57,19 +57,19 @@ void setBmwE34(DECLARE_ENGINE_PARAMETER_F) {
 
 //	bc->isFastAdcEnabled = true;
 
-	bc->ignitionPinMode = OM_INVERTED;
-	bc->ignitionPins[0] = GPIOB_8; // #1
-	bc->ignitionPins[1] = GPIOE_2; // #2
-	bc->ignitionPins[2] = GPIOE_3; // #3
-	bc->ignitionPins[3] = GPIOE_4; // #4
-	bc->ignitionPins[4] = GPIOE_5; // #5
-	bc->ignitionPins[5] = GPIOE_6; // #6
-
 	bc->injectionPinMode = OM_INVERTED;
+	bc->injectionPins[0] = GPIOB_8; // #1
+	bc->injectionPins[1] = GPIOE_2; // #2
+	bc->injectionPins[2] = GPIOE_3; // #3
+	bc->injectionPins[3] = GPIOE_4; // #4
+	bc->injectionPins[4] = GPIOE_5; // #5
+	bc->injectionPins[5] = GPIOE_6; // #6
 
-	bc->injectionPins[0] = GPIOB_5; // #1
-	bc->injectionPins[1] = GPIOB_6; // #2
-	bc->injectionPins[2] = GPIOB_7; // #3
+	bc->ignitionPinMode = OM_INVERTED;
+
+	bc->ignitionPins[0] = GPIOB_5; // #1
+	bc->ignitionPins[1] = GPIOB_6; // #2
+	bc->ignitionPins[2] = GPIOB_7; // #3
 
 	bc->triggerErrorPin = GPIOE_3;
 
