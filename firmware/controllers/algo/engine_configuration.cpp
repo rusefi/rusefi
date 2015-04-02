@@ -135,6 +135,13 @@ void setWholeTimingTable(float value DECLARE_ENGINE_PARAMETER_S) {
 	}
 }
 
+static void initTemperatureCurve(int size, float *bins, float *values) {
+	for (int i = 0; i < size; i++) {
+		bins[i] = -40 + i * 10;
+		values[i] = 1; // this correction is a multiplier
+	}
+}
+
 /**
  * @brief	Global default engine configuration
  * This method sets the default global engine configuration. These values are later overridden by engine-specific defaults
@@ -153,15 +160,26 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->acCutoffLowRpm = 700;
 	engineConfiguration->acCutoffHighRpm = 5000;
 
-	for (int i = 0; i < IAT_CURVE_SIZE; i++) {
-		engineConfiguration->iatFuelCorrBins[i] = -40 + i * 10;
-		engineConfiguration->iatFuelCorr[i] = 1; // this correction is a multiplier
-	}
+	initTemperatureCurve(IAT_CURVE_SIZE, engineConfiguration->iatFuelCorrBins, engineConfiguration->iatFuelCorr);
+	initTemperatureCurve(CLT_CURVE_SIZE, engineConfiguration->cltFuelCorrBins, engineConfiguration->cltFuelCorr);
 
-	for (int i = 0; i < CLT_CURVE_SIZE; i++) {
-		engineConfiguration->cltFuelCorrBins[i] = -40 + i * 10;
-		engineConfiguration->cltFuelCorr[i] = 1; // this correction is a multiplier
-	}
+	initTemperatureCurve(IAT_CURVE_SIZE, engineConfiguration->iatIdleCorrBins, engineConfiguration->iatIdleCorr);
+//	initTemperatureCurve(CLT_CURVE_SIZE, engineConfiguration->cltIdleCorrBins, engineConfiguration->cltIdleCorr);
+
+
+	setTableValue(engineConfiguration->iatIdleCorrBins, engineConfiguration->iatIdleCorr, CLT_CURVE_SIZE, -40, 1.5);
+	setTableValue(engineConfiguration->iatIdleCorrBins, engineConfiguration->iatIdleCorr, CLT_CURVE_SIZE, -30, 1.5);
+	setTableValue(engineConfiguration->iatIdleCorrBins, engineConfiguration->iatIdleCorr, CLT_CURVE_SIZE, -20, 1.42);
+	setTableValue(engineConfiguration->iatIdleCorrBins, engineConfiguration->iatIdleCorr, CLT_CURVE_SIZE, -10, 1.36);
+	setTableValue(engineConfiguration->iatIdleCorrBins, engineConfiguration->iatIdleCorr, CLT_CURVE_SIZE, 0, 1.28);
+	setTableValue(engineConfiguration->iatIdleCorrBins, engineConfiguration->iatIdleCorr, CLT_CURVE_SIZE, 10, 1.19);
+	setTableValue(engineConfiguration->iatIdleCorrBins, engineConfiguration->iatIdleCorr, CLT_CURVE_SIZE, 20, 1.12);
+	setTableValue(engineConfiguration->iatIdleCorrBins, engineConfiguration->iatIdleCorr, CLT_CURVE_SIZE, 30, 1.10);
+	setTableValue(engineConfiguration->iatIdleCorrBins, engineConfiguration->iatIdleCorr, CLT_CURVE_SIZE, 40, 1.06);
+	setTableValue(engineConfiguration->iatIdleCorrBins, engineConfiguration->iatIdleCorr, CLT_CURVE_SIZE, 50, 1.06);
+	setTableValue(engineConfiguration->iatIdleCorrBins, engineConfiguration->iatIdleCorr, CLT_CURVE_SIZE, 60, 1.03);
+	setTableValue(engineConfiguration->iatIdleCorrBins, engineConfiguration->iatIdleCorr, CLT_CURVE_SIZE, 70, 1.01);
+
 
 	setTableValue(engineConfiguration->cltFuelCorrBins, engineConfiguration->cltFuelCorr, CLT_CURVE_SIZE, -40, 1.5);
 	setTableValue(engineConfiguration->cltFuelCorrBins, engineConfiguration->cltFuelCorr, CLT_CURVE_SIZE, -30, 1.5);
