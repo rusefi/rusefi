@@ -65,6 +65,10 @@ void StepperMotor::pulse() {
 }
 
 void StepperMotor::initialize(brain_pin_e stepPin, brain_pin_e directionPin) {
+	if (stepPin == GPIO_UNASSIGNED || directionPin == GPIO_UNASSIGNED) {
+		return;
+	}
+
 	stepPort = getHwPort(stepPin);
 	this->stepPin = getHwPin(stepPin);
 
