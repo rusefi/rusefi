@@ -199,8 +199,6 @@
 //#define SPI_CS3_PIN 15
 //#define SPI_CS4_PORT GPIOD
 //#define SPI_CS4_PIN 10
-//#define SPI_SD_MODULE_PORT GPIOD
-//#define SPI_SD_MODULE_PIN 11
 
 #define EFI_SPI1_AF 5
 
@@ -216,8 +214,6 @@
 #define SPI_CS2_PIN 0
 #define SPI_CS4_PORT GPIOD
 #define SPI_CS4_PIN 3
-#define SPI_SD_MODULE_PORT GPIOD
-#define SPI_SD_MODULE_PIN 4
 #define EFI_SPI3_AF 6
 #define MMC_CARD_SPI SPID3
 

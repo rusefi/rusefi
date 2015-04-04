@@ -243,12 +243,12 @@ void chDbgStackOverflowPanic(Thread *otp) {
 
 extern engine_pins_s enginePins;
 
-// todo: why is this method here and not in error_handling.c ?
+// todo: why is this method here and not in error_handling.cpp ?
 void firmwareError(const char *errorMsg, ...) {
 	if (hasFirmwareErrorFlag)
 		return;
 	ON_FATAL_ERROR();
-	hasFirmwareErrorFlag = TRUE;
+	hasFirmwareErrorFlag = true;
 	if (indexOf(errorMsg, '%') == -1) {
 		/**
 		 * in case of simple error message let's reduce stack usage
@@ -276,5 +276,5 @@ int getRusEfiVersion(void) {
 		return 1; // this is here to make the compiler happy about the unused array
 	if (UNUSED_CCM_SIZE[0] == 0)
 		return 1; // this is here to make the compiler happy about the unused array
-	return 20150403;
+	return 20150404;
 }

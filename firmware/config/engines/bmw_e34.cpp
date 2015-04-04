@@ -68,10 +68,10 @@ void setBmwE34(DECLARE_ENGINE_PARAMETER_F) {
 	bc->ignitionPinMode = OM_INVERTED;
 
 	bc->ignitionPins[0] = GPIOB_5; // #1
-	bc->ignitionPins[1] = GPIOB_6; // #2
-	bc->ignitionPins[2] = GPIOB_7; // #3
+	bc->ignitionPins[2] = GPIOB_6; // #3
+	bc->ignitionPins[4] = GPIOB_7; // #5
 
-	bc->triggerErrorPin = GPIOE_3;
+	bc->triggerErrorPin = GPIO_UNASSIGNED;
 
 	engineConfiguration->clutchUpPin = GPIOD_3;
 	engineConfiguration->clutchUpPinMode = PI_PULLUP;
@@ -83,6 +83,11 @@ void setBmwE34(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->idle.solenoidFrequency = 300;
 	// set_idle_pwm 50
 	boardConfiguration->idlePosition = 50;
+
+	boardConfiguration->sdCardCsPin = GPIO_UNASSIGNED;
+	boardConfiguration->is_enabled_spi_2 = false;
+	boardConfiguration->is_enabled_spi_3 = false;
+	boardConfiguration->max31855spiDevice = SPI_NONE;
 
 	// turbocharger boost control solenoid: TODO output: GPIOE_6
 	// water injection #1 TODO GPIOD_7
