@@ -22,5 +22,6 @@ void setBosch0280218037(engine_configuration_s *engineConfiguration);
 void setBosch0280218004(engine_configuration_s *engineConfiguration);
 
 void setDensoTODO(engine_configuration_s *engineConfiguration);
+void setMazdaMiataNAMaf(engine_configuration_s *e);
 
 #endif
