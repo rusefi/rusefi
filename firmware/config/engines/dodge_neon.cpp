@@ -401,6 +401,9 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 //	engineConfiguration->canNbcType = CAN_BUS_MAZDA_RX8;
 
 
+	boardConfiguration->idle.stepperDirectionPin = GPIOE_10;
+	boardConfiguration->idle.stepperStepPin = GPIOE_12;
+
 	engineConfiguration->accelLength = 12;
 }
 
