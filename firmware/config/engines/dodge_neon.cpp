@@ -365,8 +365,8 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 //	boardConfiguration->clutchDownPin = GPIOC_12;
 	boardConfiguration->clutchDownPinMode = PI_PULLUP;
-	engineConfiguration->clutchUpPin = GPIOD_3;
-	engineConfiguration->clutchUpPinMode = PI_PULLUP;
+	boardConfiguration->clutchUpPin = GPIOD_3;
+	boardConfiguration->clutchUpPinMode = PI_PULLUP;
 
 	// alt GPIOC_12
 	
@@ -379,7 +379,7 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	setFsioExt(engineConfiguration, 0, GPIOE_5, "0 fsio_setting", 400);
 #endif
 
-	engineConfiguration->vehicleSpeedSensorInputPin = GPIOA_8;
+	boardConfiguration->vehicleSpeedSensorInputPin = GPIOA_8;
 	engineConfiguration->hasVehicleSpeedSensor = true;
 
 	engineConfiguration->fanOnTemperature = 85;

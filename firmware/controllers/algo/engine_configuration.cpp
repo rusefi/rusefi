@@ -420,8 +420,8 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	}
 	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
 		boardConfiguration->fsioPins[i] = GPIO_UNASSIGNED;
-		boardConfiguration->le_formulas[i][0] = 0;
-		engineConfiguration->fsioInputs[i] = GPIO_UNASSIGNED;
+		engineConfiguration->le_formulas[i][0] = 0;
+		boardConfiguration->fsioInputs[i] = GPIO_UNASSIGNED;
 		engineConfiguration->fsioInputModes[i] = PI_DEFAULT;
 	}
 	for (int i = 0; i < JOYSTICK_PIN_COUNT; i++) {
@@ -474,8 +474,8 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	boardConfiguration->clutchDownPin = GPIO_UNASSIGNED;
 	boardConfiguration->clutchDownPinMode = PI_PULLUP;
-	engineConfiguration->clutchUpPin = GPIO_UNASSIGNED;
-	engineConfiguration->clutchUpPinMode = PI_PULLUP;
+	boardConfiguration->clutchUpPin = GPIO_UNASSIGNED;
+	boardConfiguration->clutchUpPinMode = PI_PULLUP;
 
 	boardConfiguration->triggerSimulatorPins[0] = GPIOD_1;
 	boardConfiguration->triggerSimulatorPins[1] = GPIOD_2;
@@ -518,7 +518,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->logicAnalyzerPins[1] = GPIO_UNASSIGNED; // GPIOE_5 is a popular option (if available)
 	boardConfiguration->logicAnalyzerPins[2] = GPIO_UNASSIGNED;
 	boardConfiguration->logicAnalyzerPins[3] = GPIO_UNASSIGNED;
-	engineConfiguration->vehicleSpeedSensorInputPin = GPIO_UNASSIGNED;
+	boardConfiguration->vehicleSpeedSensorInputPin = GPIO_UNASSIGNED;
 	engineConfiguration->vehicleSpeedCoef = 100;
 
 	boardConfiguration->logicAnalyzerMode[0] = false;

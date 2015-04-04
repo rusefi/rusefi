@@ -205,7 +205,7 @@ void setCitroenBerlingoTU3JPConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	/**
 	* Speed Sensor
 	*/
-	engineConfiguration->vehicleSpeedSensorInputPin = GPIOA_8;
+	boardConfiguration->vehicleSpeedSensorInputPin = GPIOA_8;
 	engineConfiguration->hasVehicleSpeedSensor = true;
 	/**
 	* Other
