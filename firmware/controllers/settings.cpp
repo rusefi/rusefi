@@ -85,8 +85,8 @@ static void printOutputs(engine_configuration_s *engineConfiguration) {
 		scheduleMsg(&logger, "ignition #%d @ %s", (1 + i), hwPortname(brainPin));
 	}
 
-	scheduleMsg(&logger, "idlePin: mode %s @ %s freq=%d", getPin_output_mode_e(boardConfiguration->idleValvePinMode),
-			hwPortname(boardConfiguration->idleValvePin), boardConfiguration->idleSolenoidFrequency);
+	scheduleMsg(&logger, "idlePin: mode %s @ %s freq=%d", getPin_output_mode_e(boardConfiguration->idle.solenoidPinMode),
+			hwPortname(boardConfiguration->idle.solenoidPin), boardConfiguration->idle.solenoidFrequency);
 	scheduleMsg(&logger, "malfunctionIndicatorn: %s mode=%s", hwPortname(boardConfiguration->malfunctionIndicatorPin),
 			getPin_output_mode_e(boardConfiguration->malfunctionIndicatorPinMode));
 
@@ -308,7 +308,7 @@ void setEngineType(int value) {
 }
 
 static void setIdleSolenoidFrequency(int value) {
-	boardConfiguration->idleSolenoidFrequency = value;
+	boardConfiguration->idle.solenoidFrequency = value;
 }
 
 static void setInjectionPinMode(int value) {
@@ -322,7 +322,7 @@ static void setIgnitionPinMode(int value) {
 }
 
 static void setIdlePinMode(int value) {
-	boardConfiguration->idleValvePinMode = (pin_output_mode_e) value;
+	boardConfiguration->idle.solenoidPinMode = (pin_output_mode_e) value;
 	doPrintConfiguration(engine);
 }
 
@@ -596,7 +596,7 @@ static void setIdlePin(const char *pinName) {
 		return;
 	}
 	scheduleMsg(&logger, "setting idleValve pin to %s please save&restart", hwPortname(pin));
-	boardConfiguration->idleValvePin = pin;
+	boardConfiguration->idle.solenoidPin = pin;
 }
 
 static void setFuelPumpPin(const char *pinName) {

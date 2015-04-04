@@ -72,7 +72,7 @@ void setCustomEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	boardConfiguration->fuelPumpPin = GPIOE_4;
 	boardConfiguration->mainRelayPin = GPIOD_7;
-	boardConfiguration->idleValvePin = GPIOC_13;
+	boardConfiguration->idle.solenoidPin = GPIOC_13;
 
 	boardConfiguration->fanPin = GPIOE_5;
 

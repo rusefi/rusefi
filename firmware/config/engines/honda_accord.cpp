@@ -161,7 +161,7 @@ static void setHondaAccordConfigurationCommon(DECLARE_ENGINE_PARAMETER_F) {
 	// Frankenso low out #11: PB8
 	// Frankenso low out #12: PB7
 
-	boardConfiguration->idleValvePin = GPIOE_5;
+	boardConfiguration->idle.solenoidPin = GPIOE_5;
 	boardConfiguration->o2heaterPin = GPIOC_13;
 
 	boardConfiguration->injectionPins[0] = GPIOB_8;
@@ -180,7 +180,7 @@ static void setHondaAccordConfigurationCommon(DECLARE_ENGINE_PARAMETER_F) {
 	setFrankenso_01_LCD(boardConfiguration);
 
 
-	boardConfiguration->idleSolenoidFrequency = 500;
+	boardConfiguration->idle.solenoidFrequency = 500;
 }
 
 void setHondaAccordConfigurationTwoWires(DECLARE_ENGINE_PARAMETER_F) {
