@@ -144,15 +144,12 @@ static void egtRead(void) {
 void initMax31855(Logging *sharedLogger, SPIDriver *drv, egt_cs_array_t max31855_cs) {
 	logger = sharedLogger;
 
+	// todo:spi device is now enabled separately - should probably be enabled here
 	driver = drv;
 
 	addConsoleAction("egtinfo", (Void) showEgtInfo);
 
 	addConsoleAction("egtread", (Void) egtRead);
-
-#if EFI_PROD_CODE
-	turnOnSpi(SPI_DEVICE_3);
-#endif /* EFI_PROD_CODE */
 
 	for (int i = 0; i < EGT_CHANNEL_COUNT; i++) {
 		if (max31855_cs[i] != GPIO_UNASSIGNED) {

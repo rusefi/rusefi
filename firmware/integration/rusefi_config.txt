@@ -318,7 +318,7 @@ custom adc_channel_mode_e 4 bits,    U32,   @OFFSET@, [0:1], "Off", "Slow", "Fas
 	int idleThreadPeriod;
 	int consoleLoopPeriod;
 	int lcdThreadPeriod;
-	int sdCardCsPin;
+	brain_pin_e sdCardCsPin;
 	int generalPeriodicThreadPeriod;
 
 	uint32_t tunerStudioSerialSpeed;;"BPs",      1,      0,       0,1000000,      0

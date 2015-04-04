@@ -560,6 +560,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	boardConfiguration->hip9011Gain = 1;
 
+	boardConfiguration->sdCardCsPin = GPIOD_4;
 	boardConfiguration->isSdCardEnabled = true;
 	boardConfiguration->isFastAdcEnabled = true;
 	boardConfiguration->isEngineControlEnabled = true;

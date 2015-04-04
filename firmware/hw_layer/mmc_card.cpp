@@ -34,9 +34,9 @@ static THD_WORKING_AREA(mmcThreadStack,UTILITY_THREAD_STACK_SIZE);		// MMC monit
  */
 MMCDriver MMCD1;
 
-static SPIConfig hs_spicfg = { NULL, SPI_SD_MODULE_PORT, SPI_SD_MODULE_PIN,
+static SPIConfig hs_spicfg = { NULL, NULL, 0,
 SPI_BaudRatePrescaler_8 };
-static SPIConfig ls_spicfg = { NULL, SPI_SD_MODULE_PORT, SPI_SD_MODULE_PIN,
+static SPIConfig ls_spicfg = { NULL, NULL, 0,
 SPI_BaudRatePrescaler_256 };
 
 /* MMC/SD over SPI driver configuration.*/
@@ -64,7 +64,7 @@ static FIL FDLogFile;
 static int totalLoggedBytes = 0;
 
 static void printMmcPinout(void) {
-	scheduleMsg(&logger, "MMC CS %s:%d", portname(SPI_SD_MODULE_PORT), SPI_SD_MODULE_PIN);
+	scheduleMsg(&logger, "MMC CS %s", hwPortname(boardConfiguration->sdCardCsPin));
 	// todo: we need to figure out the right SPI pinout, not just SPI2
 //	scheduleMsg(&logger, "MMC SCK %s:%d", portname(EFI_SPI2_SCK_PORT), EFI_SPI2_SCK_PIN);
 //	scheduleMsg(&logger, "MMC MISO %s:%d", portname(EFI_SPI2_MISO_PORT), EFI_SPI2_MISO_PIN);
@@ -255,6 +255,9 @@ void initMmcCard(void) {
 	if (!boardConfiguration->isSdCardEnabled) {
 		return;
 	}
+
+	hs_spicfg.ssport = ls_spicfg.ssport = getHwPort(boardConfiguration->sdCardCsPin);
+	hs_spicfg.sspad = ls_spicfg.sspad = getHwPin(boardConfiguration->sdCardCsPin);
 
 	/**
 	 * FYI: SPI does not work with CCM memory, be sure to have main() stack in RAM, not in CCMRAM
