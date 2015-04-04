@@ -23,6 +23,15 @@ static int initialized = FALSE;
 static LoggingWithStorage logger("pin repos");
 static int totalPinsUsed = 0;
 
+static GPIO_TypeDef* ports[7] = {GPIOA,
+		GPIOB,
+		GPIOC,
+		GPIOD,
+		GPIOE,
+		GPIOF,
+		GPIOH,
+};
+
 /**
  * @deprecated - use hwPortname() instead
  */
@@ -58,11 +67,13 @@ static int getPortIndex(GPIO_TypeDef* port) {
 #if defined(STM32F4XX)
 	if (port == GPIOE)
 		return 4;
-	if (port == GPIOH)
-		return 6;
-#endif
+#endif /* defined(STM32F4XX) */
 	if (port == GPIOF)
 		return 5;
+#if defined(STM32F4XX)
+	if (port == GPIOH)
+		return 6;
+#endif /* defined(STM32F4XX) */
 	firmwareError("portindex");
 	return -1;
 }
@@ -70,12 +81,15 @@ static int getPortIndex(GPIO_TypeDef* port) {
 static void reportPins(void) {
 	for (int i = 0; i < PIN_REPO_SIZE; i++) {
 		const char *name = PIN_USED[i];
+		int portIndex = i / PORT_SIZE;
+		int pin = i % PORT_SIZE;
+		GPIO_TypeDef* port = ports[portIndex];
 		if (name != NULL) {
-			print("pin %d: %s\r\n", i, name);
+			scheduleMsg(&logger, "pin %s%d: %s", portname(port), pin, name);
 		}
 	}
 
-	print("Total pins count: %d\r\n", totalPinsUsed);
+	scheduleMsg(&logger, "Total pins count: %d", totalPinsUsed);
 }
 
 static MemoryStream portNameStream;

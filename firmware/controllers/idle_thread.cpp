@@ -64,7 +64,8 @@ static void showIdleInfo(void) {
 	scheduleMsg(logger, "idleMode=%s position=%f isStepper=%s", getIdle_mode_e(engineConfiguration->idleMode),
 			boardConfiguration->idlePosition, boolToString(boardConfiguration->useStepperIdle));
 	if (boardConfiguration->useStepperIdle) {
-
+		scheduleMsg(logger, "direction=%s", hwPortname(boardConfiguration->idle.stepperDirectionPin));
+		scheduleMsg(logger, "step=%s", hwPortname(boardConfiguration->idle.stepperStepPin));
 	} else {
 		scheduleMsg(logger, "idle valve freq=%d on %s", boardConfiguration->idle.solenoidFrequency,
 				hwPortname(boardConfiguration->idle.solenoidPin));
