@@ -47,6 +47,11 @@ static SimplePwm idleValvePwm;
 static StepperMotor iacMotor;
 
 /**
+ * that's the position with CLT and IAT corrections
+ */
+static float actualIdlePosition = -1.0f;
+
+/**
  * Idle level calculation algorithm lives in idle_controller.cpp
  */
 static IdleValveState idleMath;
@@ -75,17 +80,17 @@ static void setIdleValvePwm(percent_t value) {
 	if (value < 0.01 || value > 99.9)
 		return;
 	scheduleMsg(logger, "setting idle valve PWM %f", value);
-	float f = 0.01 * value;
-	boardConfiguration->idlePosition = f;
 	showIdleInfo();
 	/**
 	 * currently idle level is an percent value (0-100 range), and PWM takes a float in the 0..1 range
 	 * todo: unify?
 	 */
-	idleValvePwm.setSimplePwmDutyCycle(f);
+	idleValvePwm.setSimplePwmDutyCycle(value / 100);
 }
 
 static void setIdleValvePosition(int position) {
+	boardConfiguration->idlePosition = position;
+
 	if (boardConfiguration->useStepperIdle) {
 		iacMotor.targetPosition = position;
 	} else {
@@ -153,7 +158,7 @@ void startIdleThread(Logging*sharedLogger, Engine *engine) {
 		 * Start PWM for idleValvePin
 		 */
 		startSimplePwmExt(&idleValvePwm, "Idle Valve", boardConfiguration->idle.solenoidPin, &idlePin,
-				boardConfiguration->idle.solenoidFrequency, boardConfiguration->idlePosition,
+				boardConfiguration->idle.solenoidFrequency, boardConfiguration->idlePosition / 100,
 				applyIdleSolenoidPinState);
 	}
 

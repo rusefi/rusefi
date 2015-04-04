@@ -1,5 +1,5 @@
 /**
- * @file	io_pins.c
+ * @file	io_pins.cpp
  * @brief	It could be that the main purpose of this file is the status LED blinking
  *
  * @date Jan 24, 2013
@@ -64,7 +64,7 @@ GPIO_TypeDef * getHwPort(brain_pin_e brainPin) {
 		firmwareError("Invalid brain_pin_e: %d", brainPin);
 		return GPIO_NULL;
 	}
-	return PORTS[brainPin / 16];
+	return PORTS[brainPin / PORT_SIZE];
 }
 
 ioportmask_t getHwPin(brain_pin_e brainPin) {
@@ -74,7 +74,7 @@ ioportmask_t getHwPin(brain_pin_e brainPin) {
 		firmwareError("Invalid brain_pin_e: %d", brainPin);
 		return EFI_ERROR_CODE;
 	}
-	return brainPin % 16;
+	return brainPin % PORT_SIZE;
 }
 
 void outputPinRegisterExt2(const char *msg, OutputPin *output, brain_pin_e brainPin, pin_output_mode_e *outputMode) {
