@@ -39,21 +39,6 @@ float getRpmMultiplier(operation_mode_e mode);
 void setOperationMode(engine_configuration_s *engineConfiguration, operation_mode_e mode);
 
 typedef struct {
-	engine_configuration_s engineConfiguration;
-
-	ve_table_t ve2Table;
-	/**
-	 * offset 15032
-	 */
-	float ve2LoadBins[FUEL_LOAD_COUNT];
-	/**
-	 * offset 15096
-	 */
-	float ve2RpmBins[FUEL_RPM_COUNT];
-
-} persistent_config_s;
-
-typedef struct {
 	int version;
 	int size;
 	persistent_config_s persistentConfiguration;

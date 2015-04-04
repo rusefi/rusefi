@@ -9,7 +9,10 @@
 
 ! all the sub-structures are going to be nested withint the primary structure, that's
 ! needed to get a proper TunerStudio file
-struct engine_configuration_s
+
+struct persistent_config_s 
+
+struct_no_prefix engine_configuration_s
 
 #define MAP_ANGLE_SIZE 8
 #define MAP_WINDOW_SIZE 8
@@ -533,6 +536,11 @@ float[IAT_CURVE_SIZE] iatIdleCorr;;"%",      1,     0,      0.0,    500.0,   2
 ignition_table_t ignitionIatCorrTable;
 float[IGN_LOAD_COUNT] ignitionIatCorrLoadBins;;"Load",   1,   0.0,        0,  300.0,   2
 float[IGN_RPM_COUNT] ignitionIatCorrRpmBins;;"RPM",	   1,   0.0,        0,  18000.0, 2
+
+
+end_struct
+
+engine_configuration_s engineConfiguration;
 
 ! ve_table_t ve2Table;
 ! float[FUEL_LOAD_COUNT] ve2LoadBins;;"%",	1,   0.0,        0,  300.0,   2

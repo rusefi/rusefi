@@ -180,8 +180,8 @@ char *getWorkingPageAddr(int pageIndex) {
 	switch (pageIndex) {
 	case 0:
 		return (char*) &configWorkingCopy.engineConfiguration;
-	case 1:
-		return (char*) &configWorkingCopy.ve2Table;
+//	case 1:
+//		return (char*) &configWorkingCopy.ve2Table;
 //	case 2:
 //		return (char*) &configWorkingCopy.fuelTable;
 //	case 3:
