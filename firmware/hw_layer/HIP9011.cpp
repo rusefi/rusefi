@@ -127,6 +127,7 @@ void setHip9011FrankensoPinout(void) {
 	boardConfiguration->hip9011IntHoldPin = GPIOB_11;
 	boardConfiguration->is_enabled_spi_2 = true;
 
+	boardConfiguration->hip9011Gain = 0.1;
 	engineConfiguration->hipThreshold = 2;
 
 	boardConfiguration->adcHwChannelEnabled[10] = ADC_FAST; // HIP9011
