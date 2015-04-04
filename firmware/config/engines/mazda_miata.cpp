@@ -139,7 +139,7 @@ static void commonMiataNa(DECLARE_ENGINE_PARAMETER_F) {
 	setFuelLoadBin(1.2, 4.4 PASS_ENGINE_PARAMETER);
 	setFuelRpmBin(800, 7000 PASS_ENGINE_PARAMETER);
 
-	boardConfiguration->idleSolenoidFrequency = 160;
+	boardConfiguration->idle.solenoidFrequency = 160;
 
 	engineConfiguration->globalTriggerAngleOffset = 294;
 
@@ -335,8 +335,8 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->cranking.baseFuel = 5;
 
 	// 40% idle is good default
-	boardConfiguration->idleSolenoidFrequency = 300;
-	boardConfiguration->idleValvePin = GPIOB_9;
+	boardConfiguration->idle.solenoidFrequency = 300;
+	boardConfiguration->idle.solenoidPin = GPIOB_9;
 
 	boardConfiguration->malfunctionIndicatorPin = GPIOE_5;
 	boardConfiguration->malfunctionIndicatorPinMode = OM_DEFAULT;
@@ -413,7 +413,7 @@ static void setMiata1994_common(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->injectionPins[5] = GPIO_UNASSIGNED;
 	boardConfiguration->injectionPinMode = OM_DEFAULT;
 
-	boardConfiguration->idleValvePin = GPIOB_9;
+	boardConfiguration->idle.solenoidPin = GPIOB_9;
 
 	boardConfiguration->ignitionPins[0] = GPIOE_14; // Frankenso high side - pin 1G
 	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
@@ -450,7 +450,7 @@ void setMiata1994_d(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->injectionPins[3] = GPIOB_7;
 
 	// todo: add the diode? change idle valve logic?
-	boardConfiguration->idleValvePin = GPIO_UNASSIGNED;
+	boardConfiguration->idle.solenoidPin = GPIO_UNASSIGNED;
 }
 
 void setMiata1994_s(DECLARE_ENGINE_PARAMETER_F) {
@@ -474,7 +474,7 @@ void setMiata1994_s(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->injectionPins[3] = GPIOB_7; // injector #4
 
 	//	setFsio(engineConfiguration, 0, GPIOD_11, "coolant 80 >");
-	boardConfiguration->idleSolenoidFrequency = 500;
+	boardConfiguration->idle.solenoidFrequency = 500;
 
 	engineConfiguration->acCutoffLowRpm = 400;
 	engineConfiguration->acCutoffHighRpm = 4500;
@@ -513,7 +513,7 @@ void setMiata1996(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->triggerInputPins[1] = GPIOC_6;
 
 	boardConfiguration->fuelPumpPin = GPIOE_4;
-	boardConfiguration->idleValvePin = GPIOE_5;
+	boardConfiguration->idle.solenoidPin = GPIOE_5;
 
 	engineConfiguration->mafAdcChannel = EFI_ADC_1;
 	engineConfiguration->cltAdcChannel = EFI_ADC_11;

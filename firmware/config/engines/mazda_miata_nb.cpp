@@ -44,8 +44,8 @@ void setMazdaMiataNbEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->iatAdcChannel = EFI_ADC_13;
 	engineConfiguration->afr.hwChannel = EFI_ADC_2;
 
-	boardConfiguration->idleValvePin = GPIOE_0;
-	boardConfiguration->idleValvePinMode = OM_DEFAULT;
+	boardConfiguration->idle.solenoidPin = GPIOE_0;
+	boardConfiguration->idle.solenoidPinMode = OM_DEFAULT;
 
 	boardConfiguration->fuelPumpPin = GPIOC_14; // Frankenstein: low side - out #4
 	boardConfiguration->fuelPumpPinMode = OM_DEFAULT;
