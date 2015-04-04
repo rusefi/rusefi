@@ -112,9 +112,9 @@ static msg_t ivThread(int param) {
 			engine->clutchDownState = palReadPad(getHwPort(boardConfiguration->clutchDownPin),
 					getHwPin(boardConfiguration->clutchDownPin));
 		}
-		if (engineConfiguration->clutchUpPin != GPIO_UNASSIGNED) {
-			engine->clutchUpState = palReadPad(getHwPort(engineConfiguration->clutchUpPin),
-					getHwPin(engineConfiguration->clutchUpPin));
+		if (boardConfiguration->clutchUpPin != GPIO_UNASSIGNED) {
+			engine->clutchUpState = palReadPad(getHwPort(boardConfiguration->clutchUpPin),
+					getHwPin(boardConfiguration->clutchUpPin));
 		}
 
 		if (engineConfiguration->idleMode != IM_AUTO)
@@ -174,9 +174,9 @@ void startIdleThread(Logging*sharedLogger, Engine *engine) {
 		mySetPadMode2("clutch down switch", boardConfiguration->clutchDownPin,
 				getInputMode(boardConfiguration->clutchDownPinMode));
 
-	if (engineConfiguration->clutchUpPin != GPIO_UNASSIGNED)
-		mySetPadMode2("clutch up switch", engineConfiguration->clutchUpPin,
-				getInputMode(engineConfiguration->clutchUpPinMode));
+	if (boardConfiguration->clutchUpPin != GPIO_UNASSIGNED)
+		mySetPadMode2("clutch up switch", boardConfiguration->clutchUpPin,
+				getInputMode(boardConfiguration->clutchUpPinMode));
 
 	addConsoleAction("idleinfo", showIdleInfo);
 	addConsoleActionI("set_idle_rpm", setIdleRpmAction);

@@ -175,7 +175,7 @@ float vbattDividerCoeff;;"coef",    1,      0,    0.01,  20.0,        2
 float fanOnTemperature;Cooling fan turn-on temperature threshold, in Celsuis;"*C",    1,      0,       0,  1000.0,        2
 float fanOffTemperature;Cooling fan turn-off temperature threshold, in Celsuis;"*C",    1,      0,       0,  1000.0,        2
 
-brain_pin_e vehicleSpeedSensorInputPin;
+int ususedBla;
 float vehicleSpeedCoef;This coefficient translates vehicle speed input frequency (in Hz) into vehicle speed, km/h
 
 custom can_nbc_e 4 bits, U32, @OFFSET@, [0:1], "BMW", "FIAT", "VAG" , "INVALID"
@@ -399,14 +399,20 @@ custom analog_chart_e 4 bits, S32, @OFFSET@, [0:1], "none", "trigger", "MAP", "I
 analog_chart_e analogChartMode;
 maf_sensor_type_e mafSensorType;
 
-	int[3] unusedbs;
+brain_pin_e vehicleSpeedSensorInputPin;
 
-custom le_formula_t 200 array, U08, @OFFSET@, [200],"char", 1, 0, 0.0, 3.0, 2
-le_formula_t[LE_COMMAND_COUNT iterate] le_formulas;
+	brain_pin_e clutchUpPin;Some vehicles have a switch to indicate that clutch pedal is all the way up
+	pin_input_mode_e clutchUpPinMode;
+	brain_pin_e[LE_COMMAND_COUNT iterate] fsioInputs;
+
+	int unusedbs;
+
 
 end_struct	
+custom le_formula_t 200 array, U08, @OFFSET@, [200],"char", 1, 0, 0.0, 3.0, 2
 	
 board_configuration_s bc;
+le_formula_t[LE_COMMAND_COUNT iterate] le_formulas;
 bit hasMapSensor;@see isMapAveragingEnabled
 	bit hasIatSensor
 	bit hasBaroSensor
@@ -475,10 +481,8 @@ bit hasMapSensor;@see isMapAveragingEnabled
 
 	float cylinderBore;Cylinder diameter, in mm.
 
-	brain_pin_e clutchUpPin;Some vehicles have a switch to indicate that clutch pedal is all the way up
-	pin_input_mode_e clutchUpPinMode;
+int unusedCP;
 	float hipThreshold;
-	brain_pin_e[LE_COMMAND_COUNT iterate] fsioInputs;
 
 custom pin_input_mode_e 4 scalar, F32,	@OFFSET@,	"ms", 1, 0, 0, 200, 1	
 	pin_input_mode_e[LE_COMMAND_COUNT iterate] fsioInputModes;

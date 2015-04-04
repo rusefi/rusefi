@@ -254,7 +254,7 @@ void printConfiguration(engine_configuration_s *engineConfiguration) {
 			boolToString(engineConfiguration->isManualSpinningMode),
 			boolToString(engineConfiguration->isCylinderCleanupEnabled));
 
-	scheduleMsg(&logger, "clutchUp@%s: %s", hwPortname(engineConfiguration->clutchUpPin),
+	scheduleMsg(&logger, "clutchUp@%s: %s", hwPortname(boardConfiguration->clutchUpPin),
 			boolToString(engine->clutchUpState));
 	scheduleMsg(&logger, "clutchDown@%s: %s", hwPortname(boardConfiguration->clutchDownPin),
 			boolToString(engine->clutchDownState));
