@@ -49,7 +49,7 @@ static StepperMotor iacMotor;
 /**
  * Idle level calculation algorithm lives in idle_controller.c
  */
-static IdleValveState idle;
+static IdleValveState idleMath;
 
 void idleDebug(const char *msg, percent_t value) {
 	scheduleMsg(logger, "%s%f", msg, value);
@@ -67,10 +67,6 @@ static void setIdleControlEnabled(int value) {
 	showIdleInfo();
 }
 
-static void setIdleValvePosition(int position) {
-	iacMotor.targetPosition = position;
-}
-
 static void setIdleValvePwm(percent_t value) {
 	if (value < 0.01 || value > 99.9)
 		return;
@@ -83,6 +79,14 @@ static void setIdleValvePwm(percent_t value) {
 	 * todo: unify?
 	 */
 	idleValvePwm.setSimplePwmDutyCycle(f);
+}
+
+static void setIdleValvePosition(int position) {
+	if(boardConfiguration->useStepperIdle) {
+		iacMotor.targetPosition = position;
+	} else {
+		setIdleValvePwm(position);
+	}
 }
 
 static msg_t ivThread(int param) {
@@ -108,7 +112,7 @@ static msg_t ivThread(int param) {
 
 		efitimems_t now = currentTimeMillis();
 
-		percent_t newValue = idle.getIdle(getRpm(), now PASS_ENGINE_PARAMETER);
+		percent_t newValue = idleMath.getIdle(getRpm(), now PASS_ENGINE_PARAMETER);
 
 		if (currentIdleValve != newValue) {
 			currentIdleValve = newValue;
@@ -122,7 +126,7 @@ static msg_t ivThread(int param) {
 }
 
 static void setIdleRpmAction(int value) {
-	setIdleRpm(&idle, value);
+	idleMath.setTargetRpm(value);
 	scheduleMsg(logger, "target idle RPM %d", value);
 }
 
@@ -138,19 +142,19 @@ static void applyIdleSolenoidPinState(PwmConfig *state, int stateIndex) {
 void startIdleThread(Logging*sharedLogger, Engine *engine) {
 	logger = sharedLogger;
 
-	if (boardConfiguration->idleStepperDirection != GPIO_UNASSIGNED) {
+	if (boardConfiguration->useStepperIdle) {
 		iacMotor.initialize(boardConfiguration->idleStepperStep, boardConfiguration->idleStepperDirection);
+	} else {
+		/**
+		 * Start PWM for idleValvePin
+		 */
+		startSimplePwmExt(&idleValvePwm, "Idle Valve", boardConfiguration->idleValvePin, &idlePin,
+				boardConfiguration->idleSolenoidFrequency, boardConfiguration->idleSolenoidPwm, applyIdleSolenoidPinState);
 	}
 
 
-	/**
-	 * Start PWM for IDLE_VALVE logical / idleValvePin physical
-	 */
-	startSimplePwmExt(&idleValvePwm, "Idle Valve", boardConfiguration->idleValvePin, &idlePin,
-			boardConfiguration->idleSolenoidFrequency, boardConfiguration->idleSolenoidPwm, applyIdleSolenoidPinState);
-
-	idle.init();
-	scheduleMsg(logger, "initial idle %d", idle.value);
+	idleMath.init();
+	scheduleMsg(logger, "initial idle %d", idleMath.value);
 
 	chThdCreateStatic(ivThreadStack, sizeof(ivThreadStack), NORMALPRIO, (tfunc_t) ivThread, NULL);
 
@@ -165,7 +169,6 @@ void startIdleThread(Logging*sharedLogger, Engine *engine) {
 
 	addConsoleAction("idleinfo", showIdleInfo);
 	addConsoleActionI("set_idle_rpm", setIdleRpmAction);
-	addConsoleActionF("set_idle_pwm", setIdleValvePwm);
 
 	addConsoleActionI("set_idle_position", setIdleValvePosition);
 

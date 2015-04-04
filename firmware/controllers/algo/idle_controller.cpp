@@ -32,12 +32,12 @@ IdleValveState::IdleValveState() {
 }
 
 void IdleValveState::init(DECLARE_ENGINE_PARAMETER_F) {
-	setIdleRpm(this, engineConfiguration->targetIdleRpm);
+	setTargetRpm(engineConfiguration->targetIdleRpm);
 }
 
-void setIdleRpm(IdleValveState *idle, int targetRpm) {
-	idle->targetRpmRangeLeft = (int) (targetRpm * 0.93);
-	idle->targetRpmRangeRight = (int) (targetRpm * 1.07);
+void IdleValveState::setTargetRpm(int targetRpm) {
+	targetRpmRangeLeft = (int) (targetRpm * 0.93);
+	targetRpmRangeRight = (int) (targetRpm * 1.07);
 }
 
 /**
