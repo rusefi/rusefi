@@ -16,7 +16,7 @@
 #include "chprintf.h"
 #include "rusefi.h"
 
-#define PIN_REPO_SIZE 7 * 16
+#define PIN_REPO_SIZE 7 * PORT_SIZE
 const char *PIN_USED[PIN_REPO_SIZE];
 static int initialized = FALSE;
 
@@ -70,8 +70,9 @@ static int getPortIndex(GPIO_TypeDef* port) {
 static void reportPins(void) {
 	for (int i = 0; i < PIN_REPO_SIZE; i++) {
 		const char *name = PIN_USED[i];
-		if (name != NULL)
-			print("ping %d: %s\r\n", i, name);
+		if (name != NULL) {
+			print("pin %d: %s\r\n", i, name);
+		}
 	}
 
 	print("Total pins count: %d\r\n", totalPinsUsed);
@@ -157,7 +158,7 @@ iomode_t getInputMode(pin_input_mode_e mode) {
 
 static int getIndex(ioportid_t port, ioportmask_t pin) {
 	int portIndex = getPortIndex(port);
-	return portIndex * 16 + pin;
+	return portIndex * PORT_SIZE + pin;
 }
 
 const char * getPinFunction(brain_input_pin_e brainPin) {

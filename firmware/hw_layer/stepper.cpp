@@ -54,7 +54,9 @@ StepperMotor::StepperMotor() {
 	currentPosition = 0;
 	targetPosition = 0;
 	directionPort = NULL;
+	directionPin = 0;
 	stepPort = NULL;
+	stepPin = 0;
 }
 
 void StepperMotor::pulse() {
