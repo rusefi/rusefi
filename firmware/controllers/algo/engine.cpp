@@ -97,8 +97,8 @@ void Engine::preCalculate() {
 	 */
 	for (int i = 0; i < MAF_DECODING_CACHE_SIZE; i++) {
 		float volts = i / MAF_DECODING_CACHE_MULT;
-		float maf = interpolate2d(volts, engineConfiguration->mafDecodingBins,
-				engineConfiguration->mafDecoding, MAF_DECODING_COUNT);
+		float maf = interpolate2d(volts, config->mafDecodingBins,
+				config->mafDecoding, MAF_DECODING_COUNT);
 		mafDecodingLookup[i] = maf;
 	}
 }

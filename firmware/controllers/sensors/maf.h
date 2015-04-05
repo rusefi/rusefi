@@ -18,10 +18,10 @@
 float getMaf(void);
 float getRealMaf(DECLARE_ENGINE_PARAMETER_F);
 
-void setBosch0280218037(engine_configuration_s *engineConfiguration);
-void setBosch0280218004(engine_configuration_s *engineConfiguration);
+void setBosch0280218037(persistent_config_s *engineConfiguration);
+void setBosch0280218004(persistent_config_s *engineConfiguration);
 
-void setDensoTODO(engine_configuration_s *engineConfiguration);
-void setMazdaMiataNAMaf(engine_configuration_s *e);
+void setDensoTODO(persistent_config_s *engineConfiguration);
+void setMazdaMiataNAMaf(persistent_config_s *e);
 
 #endif
