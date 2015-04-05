@@ -30,8 +30,8 @@
 #define FAN_CONTROL_LOGIC "fan coolant fan_off_setting > & coolant fan_on_setting > OR"
 
 float getLEValue(Engine *engine, calc_stack_t *s, le_action_e action);
-void setFsio(engine_configuration_s *engineConfiguration, int index, brain_pin_e pin, const char * exp);
-void setFsioExt(engine_configuration_s *engineConfiguration, int index, brain_pin_e pin, const char * exp, int freq);
+void setFsio(int index, brain_pin_e pin, const char * exp DECLARE_ENGINE_PARAMETER_S);
+void setFsioExt(int index, brain_pin_e pin, const char * exp, int freq DECLARE_ENGINE_PARAMETER_S);
 
 void initFsioImpl(Logging *sharedLogger, Engine *engine);
 void runFsio(void);

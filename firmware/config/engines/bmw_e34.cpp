@@ -41,7 +41,7 @@ void setBmwE34(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineConfiguration->ignMathCalculateAtIndex = 15;
 
-	setConstantDwell(engineConfiguration, 3); // a bit shorter dwell
+	setConstantDwell(3 PASS_ENGINE_PARAMETER); // a bit shorter dwell
 	engineConfiguration->useConstantDwellDuringCranking = true;
 	engineConfiguration->ignitionDwellForCrankingMs = 5;
 

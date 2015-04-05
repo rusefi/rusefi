@@ -19,10 +19,13 @@
 
 #if EFI_SUPPORT_1995_FORD_INLINE_6 || defined(__DOXYGEN__)
 
+EXTERN_ENGINE;
+
 /**
  * @brief Default values for persistent properties
  */
-void setFordInline6(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
+void setFordInline6(DECLARE_ENGINE_PARAMETER_F) {
+	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 	engineConfiguration->specs.cylindersCount = 6;
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
@@ -36,7 +39,7 @@ void setFordInline6(engine_configuration_s *engineConfiguration, board_configura
 	/**
 	 * 0.5ms dweel time just to be sure it would fit within camshaft revolution, dwell is not controlled by us anyway
 	 */
-	setConstantDwell(engineConfiguration, 0.5);
+	setConstantDwell(0.5 PASS_ENGINE_PARAMETER);
 
 	/**
 	 * We treat the trigger as 6/0 toothed wheel

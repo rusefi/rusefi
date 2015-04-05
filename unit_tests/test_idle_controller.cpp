@@ -20,8 +20,7 @@ static IdleValveState is;
 void testIdleController(void) {
 	print("******************************************* testIdleController\r\n");
 	EngineTestHelper eth(FORD_INLINE_6_1995);
-	Engine *engine = &eth.engine;
-	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
+	EXPAND_EngineTestHelper;
 
 	engineConfiguration->targetIdleRpm = 1200;
 
