@@ -16,11 +16,21 @@
 
 EventQueue schedulingQueue;
 
-void scheduleTask(const char *msg, scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) {
+bool_t debugSignalExecutor = false;
+
+void scheduleTask(const char *msg, scheduling_s *scheduling, int delayUs,
+		schfunc_t callback, void *param) {
+	if (debugSignalExecutor) {
+		printf("scheduleTask %d\r\n", delayUs);
+	}
 	scheduleByTime(msg, scheduling, getTimeNowUs() + delayUs, callback, param);
 }
 
-void scheduleByTime(const char *prefix, scheduling_s *scheduling, efitimeus_t time, schfunc_t callback, void *param) {
+void scheduleByTime(const char *prefix, scheduling_s *scheduling,
+		efitimeus_t time, schfunc_t callback, void *param) {
+	if (debugSignalExecutor) {
+		printf("scheduleByTime %d\r\n", time);
+	}
 	schedulingQueue.insertTask(scheduling, time, callback, param);
 }
 
@@ -45,7 +55,8 @@ typedef struct {
 static void complexCallback(TestPwm *testPwm) {
 	callbackCounter++;
 
-	eq.insertTask(&testPwm->s, complexTestNow + testPwm->period, (schfunc_t)complexCallback, testPwm);
+	eq.insertTask(&testPwm->s, complexTestNow + testPwm->period,
+			(schfunc_t) complexCallback, testPwm);
 }
 
 static void testSignalExecutor2(void) {
@@ -58,8 +69,8 @@ static void testSignalExecutor2(void) {
 
 	complexTestNow = 0;
 	callbackCounter = 0;
-	eq.insertTask(&p1.s, 0, (schfunc_t)complexCallback, &p1);
-	eq.insertTask(&p2.s, 0, (schfunc_t)complexCallback, &p2);
+	eq.insertTask(&p1.s, 0, (schfunc_t) complexCallback, &p1);
+	eq.insertTask(&p2.s, 0, (schfunc_t) complexCallback, &p2);
 	eq.executeAll(complexTestNow);
 	assertEqualsM("callbackCounter #1", 2, callbackCounter);
 	assertEquals(2, eq.size());
