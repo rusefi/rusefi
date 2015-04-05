@@ -9,6 +9,6 @@
 
 #include "engine_configuration.h"
 
-void setTestEngineConfiguration(engine_configuration_s *engineConfiguration);
+void setTestEngineConfiguration(DECLARE_ENGINE_PARAMETER_F);
 
 #endif /* TEST_ENGINE_H_ */

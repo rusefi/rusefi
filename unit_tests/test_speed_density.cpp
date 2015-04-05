@@ -13,8 +13,7 @@
 void testSpeedDensity(void) {
 	printf("*************************************************** testSpeedDensity\r\n");
 	EngineTestHelper eth(FORD_INLINE_6_1995);
-	Engine *engine = &eth.engine;
-	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
+	EXPAND_EngineTestHelper;
 
 	eth.ec->trigger.customTotalToothCount = 8;
 	eth.initTriggerShapeAndRpmCalculator();

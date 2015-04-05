@@ -115,7 +115,7 @@ static void setFsioPin(const char *indexStr, const char *pinName) {
 }
 #endif
 
-void setFsioExt(engine_configuration_s *engineConfiguration, int index, brain_pin_e pin, const char * exp, int freq) {
+void setFsioExt(int index, brain_pin_e pin, const char * exp, int freq DECLARE_ENGINE_PARAMETER_S) {
 	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 
 	boardConfiguration->fsioPins[index] = pin;
@@ -127,8 +127,8 @@ void setFsioExt(engine_configuration_s *engineConfiguration, int index, brain_pi
 	boardConfiguration->fsioFrequency[index] = freq;
 }
 
-void setFsio(engine_configuration_s *engineConfiguration, int index, brain_pin_e pin, const char * exp) {
-	setFsioExt(engineConfiguration, index, pin, exp, NO_PWM);
+void setFsio(int index, brain_pin_e pin, const char * exp DECLARE_ENGINE_PARAMETER_S) {
+	setFsioExt(index, pin, exp, NO_PWM PASS_ENGINE_PARAMETER);
 }
 
 void applyFsioConfiguration(DECLARE_ENGINE_PARAMETER_F) {

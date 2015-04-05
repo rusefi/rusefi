@@ -17,8 +17,7 @@
 void testIgnitionPlanning(void) {
 	printf("*************************************************** testIgnitionPlanning\r\n");
 	EngineTestHelper eth(FORD_ESCORT_GT);
-	Engine * engine = &eth.engine;
-	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
+	EXPAND_EngineTestHelper;
 
 	assertEquals(IM_BATCH, engineConfiguration->injectionMode);
 }

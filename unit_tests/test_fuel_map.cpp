@@ -21,12 +21,9 @@ extern float testMafValue;
 void testMafFuelMath(void) {
 	printf("*************************************************** testMafFuelMath\r\n");
 	EngineTestHelper eth(FORD_ASPIRE_1996);
-
-	Engine *engine = &eth.engine;
-	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
+	EXPAND_EngineTestHelper;
 
 	engineConfiguration->algorithm = LM_REAL_MAF;
-
 	engineConfiguration->injector.flow = 200;
 
 	setMap(engineConfiguration->afrTable, 13);
@@ -40,6 +37,7 @@ void testFuelMap(void) {
 
 	printf("Setting up FORD_ASPIRE_1996\r\n");
 	EngineTestHelper eth(FORD_ASPIRE_1996);
+	EXPAND_EngineTestHelper;
 
 	printf("Filling fuel map\r\n");
 	for (int k = 0; k < FUEL_LOAD_COUNT; k++) {
@@ -56,11 +54,7 @@ void testFuelMap(void) {
 
 	printf("*************************************************** initThermistors\r\n");
 
-	Engine *engine = &eth.engine;
-	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
-
 	initThermistors(NULL PASS_ENGINE_PARAMETER);
-
 
 	printf("*** getInjectorLag\r\n");
 	assertEquals(1.0, getInjectorLag(12 PASS_ENGINE_PARAMETER));
@@ -171,9 +165,7 @@ void testAngleResolver(void) {
 	printf("*************************************************** testAngleResolver\r\n");
 
 	EngineTestHelper eth(FORD_ASPIRE_1996);
-	Engine *engine = &eth.engine;
-
-	engine_configuration_s *engineConfiguration = eth.engine.engineConfiguration;
+	EXPAND_EngineTestHelper;
 
 	engineConfiguration->globalTriggerAngleOffset = 175;
 	assertTrue(engine->engineConfiguration2!=NULL);

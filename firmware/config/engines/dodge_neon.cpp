@@ -376,7 +376,7 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->bc.fsio_setting[0] = 0.2;
 #if EFI_FSIO || defined(__DOXYGEN__)
 	boardConfiguration->fsio_setting[0] = 0.55;
-	setFsioExt(engineConfiguration, 0, GPIOE_5, "0 fsio_setting", 400);
+	setFsioExt(0, GPIOE_5, "0 fsio_setting", 400 PASS_ENGINE_PARAMETER);
 #endif
 
 	boardConfiguration->vehicleSpeedSensorInputPin = GPIOA_8;

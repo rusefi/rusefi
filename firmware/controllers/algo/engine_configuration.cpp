@@ -97,7 +97,7 @@ void incrementGlobalConfigurationVersion(void) {
 /**
  * @brief Sets the same dwell time across the whole getRpm() range
  */
-void setConstantDwell(engine_configuration_s *engineConfiguration, float dwellMs) {
+void setConstantDwell(float dwellMs DECLARE_ENGINE_PARAMETER_S) {
 	for (int i = 0; i < DWELL_CURVE_SIZE; i++) {
 		engineConfiguration->sparkDwellBins[i] = 1000 * i;
 		engineConfiguration->sparkDwell[i] = dwellMs;
@@ -199,7 +199,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 		engineConfiguration->injector.battLagCorr[i] = 0; // zero extra time by default
 	}
 
-	setConstantDwell(engineConfiguration, 4); // 4ms is global default dwell
+	setConstantDwell(4 PASS_ENGINE_PARAMETER); // 4ms is global default dwell
 	engineConfiguration->useConstantDwellDuringCranking = false;
 
 	setFuelLoadBin(1.2, 4.4 PASS_ENGINE_PARAMETER);
@@ -637,7 +637,7 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 		break;
 #if EFI_SUPPORT_1995_FORD_INLINE_6 || defined(__DOXYGEN__)
 	case FORD_INLINE_6_1995:
-		setFordInline6(engineConfiguration, boardConfiguration);
+		setFordInline6(PASS_ENGINE_PARAMETER_F);
 		break;
 #endif /* EFI_SUPPORT_1995_FORD_INLINE_6 */
 	case GY6_139QMB:
@@ -686,7 +686,7 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 		setBmwE34(PASS_ENGINE_PARAMETER_F);
 		break;
 	case TEST_ENGINE:
-		setTestEngineConfiguration(engineConfiguration);
+		setTestEngineConfiguration(PASS_ENGINE_PARAMETER_F);
 		break;
 	case SACHS:
 		setSachs(engineConfiguration);

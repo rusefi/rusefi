@@ -7,10 +7,12 @@
  * @author Andrey Belomutskiy, (c) 2012-2015
  */
 
-#include "main.h"
+#include "engine.h"
 #include "test_engine.h"
 
-void setTestEngineConfiguration(engine_configuration_s *engineConfiguration) {
+EXTERN_ENGINE;
+
+void setTestEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
 
 	trigger_config_s *triggerConfig = &engineConfiguration->trigger;
@@ -20,7 +22,7 @@ void setTestEngineConfiguration(engine_configuration_s *engineConfiguration) {
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
-	setConstantDwell(engineConfiguration, 3); // 50% duty cycle @ 5000 rpm
+	setConstantDwell(3 PASS_ENGINE_PARAMETER); // 50% duty cycle @ 5000 rpm
 
 	board_configuration_s *bc = &engineConfiguration->bc;
 	bc->malfunctionIndicatorPin = GPIO_UNASSIGNED;
