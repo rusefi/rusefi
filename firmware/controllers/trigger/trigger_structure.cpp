@@ -201,6 +201,11 @@ float TriggerShape::getAngle(int index) const {
 	}
 }
 
+void TriggerShape::addEvent(float angle, trigger_wheel_e const waveIndex, trigger_value_e const stateParam, float filterLeft, float filterRight) {
+	if(angle > filterLeft && angle < filterRight)
+		addEvent(angle, waveIndex, stateParam);
+}
+
 void TriggerShape::addEvent(float angle, trigger_wheel_e const waveIndex, trigger_value_e const stateParam) {
 	efiAssertVoid(operationMode != OM_NONE, "operationMode not set");
 
