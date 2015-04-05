@@ -366,6 +366,8 @@ static void testRpmCalculator(void) {
 
 	EngineTestHelper eth(FORD_INLINE_6_1995);
 	EXPAND_EngineTestHelper;
+	IgnitionEventList *ilist = &eth.engine.engineConfiguration2->ignitionEvents[0];
+	assertEqualsM("size", 6, ilist->size);
 
 	assertEquals(720, eth.engine.engineConfiguration->engineCycle);
 	assertEquals(720, eth.ec->engineCycle);
@@ -408,7 +410,6 @@ static void testRpmCalculator(void) {
 	assertEquals(4.5, eth.engine.dwellAngle);
 	assertEqualsM("fuel", 3.03, eth.engine.fuelMs);
 	assertEqualsM("one degree", 111.1111, eth.engine.rpmCalculator.oneDegreeUs);
-	IgnitionEventList *ilist = &eth.engine.engineConfiguration2->ignitionEvents[0];
 	assertEqualsM("size", 6, ilist->size);
 	assertEqualsM("dwell angle", 0, ilist->elements[0].dwellPosition.eventAngle);
 	assertEqualsM("dwell offset", 8.5, ilist->elements[0].dwellPosition.angleOffset);
