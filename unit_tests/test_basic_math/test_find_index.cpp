@@ -97,22 +97,23 @@ void testInterpolate2d(void) {
 	assertEquals(215, result);
 }
 
-static engine_configuration_s engineConfiguration;
-
 void testSetTableValue(void) {
 	printf("*************************************************** testSetTableValue\r\n");
 
+	persistent_config_s config;
+//	memset()
+
 	for (int i = 0; i < CLT_CURVE_SIZE; i++) {
-		engineConfiguration.cltFuelCorrBins[i] = -40 + i * 10;
-		engineConfiguration.cltFuelCorr[i] = 1;
+		config.cltFuelCorrBins[i] = -40 + i * 10;
+		config.cltFuelCorr[i] = 1;
 	}
 
-	assertEquals(1, engineConfiguration.cltFuelCorr[0]);
+	assertEquals(1, config.cltFuelCorr[0]);
 
-	setTableValue(engineConfiguration.cltFuelCorrBins, engineConfiguration.cltFuelCorr, CLT_CURVE_SIZE, -40, 1.5);
-	assertEquals(1.5, engineConfiguration.cltFuelCorr[0]);
+	setTableValue(config.cltFuelCorrBins, config.cltFuelCorr, CLT_CURVE_SIZE, -40, 1.5);
+	assertEquals(1.5, config.cltFuelCorr[0]);
 
-	setTableValue(engineConfiguration.cltFuelCorrBins, engineConfiguration.cltFuelCorr, CLT_CURVE_SIZE, -50, 1.4);
-	assertEquals(1.4, engineConfiguration.cltFuelCorr[0]);
+	setTableValue(config.cltFuelCorrBins, config.cltFuelCorr, CLT_CURVE_SIZE, -50, 1.4);
+	assertEquals(1.4, config.cltFuelCorr[0]);
 
 }

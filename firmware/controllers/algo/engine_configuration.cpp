@@ -113,24 +113,24 @@ void setMap(fuel_table_t table, float value) {
 }
 
 static void setWholeVEMap(float value DECLARE_ENGINE_PARAMETER_S) {
-	setMap(engineConfiguration->veTable, value);
+	setMap(config->veTable, value);
 }
 
 void setWholeFuelMap(float value DECLARE_ENGINE_PARAMETER_S) {
-	setMap(engineConfiguration->fuelTable, value);
+	setMap(config->fuelTable, value);
 }
 
 void setFuelTablesLoadBin(float minValue, float maxValue DECLARE_ENGINE_PARAMETER_S) {
 	setTableBin2(config->injPhaseLoadBins, FUEL_LOAD_COUNT, minValue, maxValue, 1);
-	setTableBin2(engineConfiguration->veLoadBins, FUEL_LOAD_COUNT, minValue, maxValue, 1);
-	setTableBin2(engineConfiguration->afrLoadBins, FUEL_LOAD_COUNT, minValue, maxValue, 1);
+	setTableBin2(config->veLoadBins, FUEL_LOAD_COUNT, minValue, maxValue, 1);
+	setTableBin2(config->afrLoadBins, FUEL_LOAD_COUNT, minValue, maxValue, 1);
 }
 
 void setWholeTimingTable(float value DECLARE_ENGINE_PARAMETER_S) {
 	// todo: table helper?
 	for (int l = 0; l < IGN_LOAD_COUNT; l++) {
 		for (int r = 0; r < IGN_RPM_COUNT; r++) {
-			engineConfiguration->ignitionTable[l][r] = value;
+			config->ignitionTable[l][r] = value;
 		}
 	}
 }
@@ -164,8 +164,8 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->acCutoffLowRpm = 700;
 	engineConfiguration->acCutoffHighRpm = 5000;
 
-	initTemperatureCurve(IAT_CURVE_SIZE, engineConfiguration->iatFuelCorrBins, engineConfiguration->iatFuelCorr);
-	initTemperatureCurve(CLT_CURVE_SIZE, engineConfiguration->cltFuelCorrBins, engineConfiguration->cltFuelCorr);
+	initTemperatureCurve(IAT_CURVE_SIZE, config->iatFuelCorrBins, config->iatFuelCorr);
+	initTemperatureCurve(CLT_CURVE_SIZE, config->cltFuelCorrBins, config->cltFuelCorr);
 
 	initTemperatureCurve(IAT_CURVE_SIZE, config->iatIdleCorrBins, config->iatIdleCorr);
 //	initTemperatureCurve(CLT_CURVE_SIZE, engineConfiguration->cltIdleCorrBins, engineConfiguration->cltIdleCorr);
@@ -185,18 +185,18 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	setTableValue(config->iatIdleCorrBins, config->iatIdleCorr, CLT_CURVE_SIZE, 70, 1.01);
 
 
-	setTableValue(engineConfiguration->cltFuelCorrBins, engineConfiguration->cltFuelCorr, CLT_CURVE_SIZE, -40, 1.5);
-	setTableValue(engineConfiguration->cltFuelCorrBins, engineConfiguration->cltFuelCorr, CLT_CURVE_SIZE, -30, 1.5);
-	setTableValue(engineConfiguration->cltFuelCorrBins, engineConfiguration->cltFuelCorr, CLT_CURVE_SIZE, -20, 1.42);
-	setTableValue(engineConfiguration->cltFuelCorrBins, engineConfiguration->cltFuelCorr, CLT_CURVE_SIZE, -10, 1.36);
-	setTableValue(engineConfiguration->cltFuelCorrBins, engineConfiguration->cltFuelCorr, CLT_CURVE_SIZE, 0, 1.28);
-	setTableValue(engineConfiguration->cltFuelCorrBins, engineConfiguration->cltFuelCorr, CLT_CURVE_SIZE, 10, 1.19);
-	setTableValue(engineConfiguration->cltFuelCorrBins, engineConfiguration->cltFuelCorr, CLT_CURVE_SIZE, 20, 1.12);
-	setTableValue(engineConfiguration->cltFuelCorrBins, engineConfiguration->cltFuelCorr, CLT_CURVE_SIZE, 30, 1.10);
-	setTableValue(engineConfiguration->cltFuelCorrBins, engineConfiguration->cltFuelCorr, CLT_CURVE_SIZE, 40, 1.06);
-	setTableValue(engineConfiguration->cltFuelCorrBins, engineConfiguration->cltFuelCorr, CLT_CURVE_SIZE, 50, 1.06);
-	setTableValue(engineConfiguration->cltFuelCorrBins, engineConfiguration->cltFuelCorr, CLT_CURVE_SIZE, 60, 1.03);
-	setTableValue(engineConfiguration->cltFuelCorrBins, engineConfiguration->cltFuelCorr, CLT_CURVE_SIZE, 70, 1.01);
+	setTableValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, -40, 1.5);
+	setTableValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, -30, 1.5);
+	setTableValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, -20, 1.42);
+	setTableValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, -10, 1.36);
+	setTableValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 0, 1.28);
+	setTableValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 10, 1.19);
+	setTableValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 20, 1.12);
+	setTableValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 30, 1.10);
+	setTableValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 40, 1.06);
+	setTableValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 50, 1.06);
+	setTableValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 60, 1.03);
+	setTableValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 70, 1.01);
 
 	for (int i = 0; i < VBAT_INJECTOR_CURVE_SIZE; i++) {
 		engineConfiguration->injector.battLagCorrBins[i] = 12 - VBAT_INJECTOR_CURVE_SIZE / 2 + i;
@@ -218,7 +218,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	// set_whole_timing_map 3
 	setWholeFuelMap(3 PASS_ENGINE_PARAMETER);
-	setMap(engineConfiguration->afrTable, 14.7);
+	setMap(config->afrTable, 14.7);
 
 	setDefaultVETable(PASS_ENGINE_PARAMETER_F);
 
@@ -236,39 +236,39 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->rpmHardLimit = 7000;
 	engineConfiguration->cranking.rpm = 550;
 
-	engineConfiguration->crankingFuelCoef[0] = 5; // base cranking fuel adjustment coefficient
-	engineConfiguration->crankingFuelBins[0] = -20; // temperature in C
-	engineConfiguration->crankingFuelCoef[1] = 3.7;
-	engineConfiguration->crankingFuelBins[1] = -10;
-	engineConfiguration->crankingFuelCoef[2] = 2.6;
-	engineConfiguration->crankingFuelBins[2] = 5;
-	engineConfiguration->crankingFuelCoef[3] = 2.4;
-	engineConfiguration->crankingFuelBins[3] = 20;
-	engineConfiguration->crankingFuelCoef[4] = 2.1;
-	engineConfiguration->crankingFuelBins[4] = 35;
-	engineConfiguration->crankingFuelCoef[5] = 1.8;
-	engineConfiguration->crankingFuelBins[5] = 50;
-	engineConfiguration->crankingFuelCoef[6] = 1.5;
-	engineConfiguration->crankingFuelBins[6] = 65;
-	engineConfiguration->crankingFuelCoef[7] = 1;
-	engineConfiguration->crankingFuelBins[7] = 90;
+	config->crankingFuelCoef[0] = 5; // base cranking fuel adjustment coefficient
+	config->crankingFuelBins[0] = -20; // temperature in C
+	config->crankingFuelCoef[1] = 3.7;
+	config->crankingFuelBins[1] = -10;
+	config->crankingFuelCoef[2] = 2.6;
+	config->crankingFuelBins[2] = 5;
+	config->crankingFuelCoef[3] = 2.4;
+	config->crankingFuelBins[3] = 20;
+	config->crankingFuelCoef[4] = 2.1;
+	config->crankingFuelBins[4] = 35;
+	config->crankingFuelCoef[5] = 1.8;
+	config->crankingFuelBins[5] = 50;
+	config->crankingFuelCoef[6] = 1.5;
+	config->crankingFuelBins[6] = 65;
+	config->crankingFuelCoef[7] = 1;
+	config->crankingFuelBins[7] = 90;
 
-	engineConfiguration->crankingCycleCoef[0] = 2;
-	engineConfiguration->crankingCycleBins[0] = 10;
-	engineConfiguration->crankingCycleCoef[1] = 1;
-	engineConfiguration->crankingCycleBins[1] = 31;
-	engineConfiguration->crankingCycleCoef[2] = 1;
-	engineConfiguration->crankingCycleBins[2] = 52;
-	engineConfiguration->crankingCycleCoef[3] = 0.5;
-	engineConfiguration->crankingCycleBins[3] = 73;
-	engineConfiguration->crankingCycleCoef[4] = 0.5;
-	engineConfiguration->crankingCycleBins[4] = 74;
-	engineConfiguration->crankingCycleCoef[5] = 0.5;
-	engineConfiguration->crankingCycleBins[5] = 75;
-	engineConfiguration->crankingCycleCoef[6] = 0.5;
-	engineConfiguration->crankingCycleBins[6] = 76;
-	engineConfiguration->crankingCycleCoef[7] = 0.5;
-	engineConfiguration->crankingCycleBins[7] = 77;
+	config->crankingCycleCoef[0] = 2;
+	config->crankingCycleBins[0] = 10;
+	config->crankingCycleCoef[1] = 1;
+	config->crankingCycleBins[1] = 31;
+	config->crankingCycleCoef[2] = 1;
+	config->crankingCycleBins[2] = 52;
+	config->crankingCycleCoef[3] = 0.5;
+	config->crankingCycleBins[3] = 73;
+	config->crankingCycleCoef[4] = 0.5;
+	config->crankingCycleBins[4] = 74;
+	config->crankingCycleCoef[5] = 0.5;
+	config->crankingCycleBins[5] = 75;
+	config->crankingCycleCoef[6] = 0.5;
+	config->crankingCycleBins[6] = 76;
+	config->crankingCycleCoef[7] = 0.5;
+	config->crankingCycleBins[7] = 77;
 
 	engineConfiguration->cranking.baseFuel = 5;
 
@@ -424,7 +424,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	}
 	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
 		boardConfiguration->fsioPins[i] = GPIO_UNASSIGNED;
-		engineConfiguration->le_formulas[i][0] = 0;
+		config->le_formulas[i][0] = 0;
 		boardConfiguration->fsioInputs[i] = GPIO_UNASSIGNED;
 		engineConfiguration->fsioInputModes[i] = PI_DEFAULT;
 	}
@@ -491,8 +491,8 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	setFrankenstein_01_LCD(boardConfiguration);
 
-	strcpy(engineConfiguration->timingMultiplier, "1");
-	strcpy(engineConfiguration->timingAdditive, "0");
+	strcpy(config->timingMultiplier, "1");
+	strcpy(config->timingAdditive, "0");
 
 	engineConfiguration->hip9011SpiDevice = SPI_DEVICE_2;
 

@@ -26,7 +26,7 @@ void testMafFuelMath(void) {
 	engineConfiguration->algorithm = LM_REAL_MAF;
 	engineConfiguration->injector.flow = 200;
 
-	setMap(engineConfiguration->afrTable, 13);
+	setMap(config->afrTable, 13);
 
 	float fuelMs = getRealMafFuel(300, 6000 PASS_ENGINE_PARAMETER);
 	assertEquals(26.7099, fuelMs);
@@ -42,13 +42,13 @@ void testFuelMap(void) {
 	printf("Filling fuel map\r\n");
 	for (int k = 0; k < FUEL_LOAD_COUNT; k++) {
 		for (int r = 0; r < FUEL_RPM_COUNT; r++) {
-			eth.engine.engineConfiguration->fuelTable[k][r] = k * 200 + r;
+			eth.engine.config->fuelTable[k][r] = k * 200 + r;
 		}
 	}
 	for (int i = 0; i < FUEL_LOAD_COUNT; i++)
-		eth.engine.engineConfiguration->fuelLoadBins[i] = i;
+		eth.engine.config->fuelLoadBins[i] = i;
 	for (int i = 0; i < FUEL_RPM_COUNT; i++)
-		eth.engine.engineConfiguration->fuelRpmBins[i] = i;
+		eth.engine.config->fuelRpmBins[i] = i;
 
 	assertEqualsM("base fuel table", 1005, getBaseTableFuel(eth.engine.engineConfiguration, 5, 5));
 
@@ -75,15 +75,15 @@ void testFuelMap(void) {
 
 	printf("*************************************************** setting IAT table\r\n");
 	for (int i = 0; i < IAT_CURVE_SIZE; i++) {
-		eth.engine.engineConfiguration->iatFuelCorrBins[i] = i;
-		eth.engine.engineConfiguration->iatFuelCorr[i] = 2 * i;
+		eth.engine.config->iatFuelCorrBins[i] = i;
+		eth.engine.config->iatFuelCorr[i] = 2 * i;
 	}
-	eth.engine.engineConfiguration->iatFuelCorr[0] = 2;
+	eth.engine.config->iatFuelCorr[0] = 2;
 
 	printf("*************************************************** setting CLT table\r\n");
 	for (int i = 0; i < CLT_CURVE_SIZE; i++) {
-		eth.engine.engineConfiguration->cltFuelCorrBins[i] = i;
-		eth.engine.engineConfiguration->cltFuelCorr[i] = 1;
+		eth.engine.config->cltFuelCorrBins[i] = i;
+		eth.engine.config->cltFuelCorr[i] = 1;
 	}
 	eth.engine.engineConfiguration->injector.lag = 0;
 

@@ -67,6 +67,7 @@ Engine::Engine(persistent_config_s *config) {
 	engineConfiguration2 = NULL;
 	engineState.iat = engineState.clt = NAN;
 	memset(&ignitionPin, 0, sizeof(ignitionPin));
+	memset(config, 0, sizeof(persistent_config_s));
 
 	knockNow = false;
 	knockEver = false;
