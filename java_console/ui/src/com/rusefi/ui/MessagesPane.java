@@ -2,7 +2,9 @@ package com.rusefi.ui;
 
 import ZoeloeSoft.projects.JFontChooser.JFontChooser;
 import com.rusefi.Launcher;
+import com.rusefi.ui.engine.EngineSnifferPanel;
 import com.rusefi.ui.storage.Node;
+import com.rusefi.ui.util.URLLabel;
 import com.rusefi.ui.widgets.IdleLabel;
 
 import javax.swing.*;
@@ -11,6 +13,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class MessagesPane {
+    private static final String HELP_URL = "http://rusefi.com/wiki/index.php?title=Manual:Software:dev_console_commands";
+
     private final JPanel content = new JPanel(new BorderLayout()) {
         @Override
         public Dimension getPreferredSize() {
@@ -36,6 +40,7 @@ public class MessagesPane {
         messagesPanel.getButtonPanel().add(new RpmLabel().getContent());
         topPanel.add(messagesPanel.getButtonPanel());
         topPanel.add(fontButton);
+        topPanel.add(new URLLabel(EngineSnifferPanel.HELP_TEXT, HELP_URL));
         content.add(topPanel, BorderLayout.NORTH);
 
         JPanel statsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
