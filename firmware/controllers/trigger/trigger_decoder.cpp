@@ -43,6 +43,10 @@ EXTERN_ENGINE
 // todo: better name for this constant
 #define HELPER_PERIOD 100000
 
+
+#define NO_LEFT_FILTER -1
+#define NO_RIGHT_FILTER 1000
+
 static cyclic_buffer<int> errorDetection;
 
 #if ! EFI_PROD_CODE
@@ -231,9 +235,27 @@ float getEngineCycle(operation_mode_e operationMode) {
 	return operationMode == TWO_STROKE ? 360 : 720;
 }
 
+void addSkippedToothTriggerEvents(trigger_wheel_e wheel, TriggerShape *s, int totalTeethCount, int skippedCount,
+		operation_mode_e operationMode, float filterLeft, float filterRight) {
+	float toothWidth = 0.5;
+	float engineCycle = getEngineCycle(operationMode);
+
+	for (int i = 0; i < totalTeethCount - skippedCount - 1; i++) {
+		float angleDown = engineCycle / totalTeethCount * (i + toothWidth);
+		float angleUp = engineCycle / totalTeethCount * (i + 1);
+		s->addEvent(angleDown, wheel, TV_HIGH, filterLeft, filterRight);
+		s->addEvent(angleUp, wheel, TV_LOW);
+	}
+
+	float angleDown = engineCycle / totalTeethCount * (totalTeethCount - skippedCount - 1 + toothWidth);
+	s->addEvent(angleDown, wheel, TV_HIGH);
+	s->addEvent(engineCycle, wheel, TV_LOW);
+}
+
 void initializeSkippedToothTriggerShapeExt(TriggerShape *s, int totalTeethCount, int skippedCount,
 		operation_mode_e operationMode) {
 	efiAssertVoid(totalTeethCount > 0, "totalTeethCount is zero");
+
 
 	s->totalToothCount = totalTeethCount;
 	s->skippedToothCount = skippedCount;
@@ -244,20 +266,7 @@ void initializeSkippedToothTriggerShapeExt(TriggerShape *s, int totalTeethCount,
 	efiAssertVoid(s != NULL, "TriggerShape is NULL");
 	s->reset(operationMode, false);
 
-	float toothWidth = 0.5;
-
-	float engineCycle = getEngineCycle(operationMode);
-
-	for (int i = 0; i < totalTeethCount - skippedCount - 1; i++) {
-		float angleDown = engineCycle / totalTeethCount * (i + toothWidth);
-		float angleUp = engineCycle / totalTeethCount * (i + 1);
-		s->addEvent(angleDown, T_PRIMARY, TV_HIGH);
-		s->addEvent(angleUp, T_PRIMARY, TV_LOW);
-	}
-
-	float angleDown = engineCycle / totalTeethCount * (totalTeethCount - skippedCount - 1 + toothWidth);
-	s->addEvent(angleDown, T_PRIMARY, TV_HIGH);
-	s->addEvent(engineCycle, T_PRIMARY, TV_LOW);
+	addSkippedToothTriggerEvents(T_PRIMARY, s, totalTeethCount, skippedCount, operationMode, NO_LEFT_FILTER, NO_RIGHT_FILTER);
 }
 
 static void configureOnePlusOne(TriggerShape *s, operation_mode_e operationMode) {
@@ -271,6 +280,14 @@ static void configureOnePlusOne(TriggerShape *s, operation_mode_e operationMode)
 	s->addEvent(540, T_SECONDARY, TV_HIGH);
 	s->addEvent(720, T_SECONDARY, TV_LOW);
 
+	s->isSynchronizationNeeded = false;
+}
+
+static void configureOnePlus60_2(TriggerShape *s, operation_mode_e operationMode) {
+	s->reset(FOUR_STROKE_CAM_SENSOR, true);
+
+	s->addEvent(180, T_PRIMARY, TV_HIGH);
+	s->addEvent(360, T_PRIMARY, TV_LOW);
 	s->isSynchronizationNeeded = false;
 }
 
@@ -323,6 +340,10 @@ void initializeTriggerShape(Logging *logger, engine_configuration_s const *engin
 
 	case TT_ONE_PLUS_ONE:
 		configureOnePlusOne(triggerShape, engineConfiguration->operationMode);
+		break;
+
+	case TT_ONE_PLUS_TOOTHED_WHEEL_60_2:
+		configureOnePlus60_2(triggerShape, engineConfiguration->operationMode);
 		break;
 
 	case TT_MAZDA_SOHC_4:
