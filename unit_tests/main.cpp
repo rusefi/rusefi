@@ -124,7 +124,6 @@ int main(void) {
 
 	testHistogram();
 
-	testTriggerDecoder();
 
 	testMalfunctionCentral();
 
@@ -148,6 +147,7 @@ int main(void) {
 	testMafFuelMath();
 
 	testPidController();
+	testTriggerDecoder();
 
 	//	resizeMap();
 	printf("Success 20150213\r\n");

@@ -60,7 +60,6 @@ static void testDodgeNeonDecoder(void) {
 	EngineTestHelper eth(DODGE_NEON_1995);
 	EXPAND_EngineTestHelper;
 
-	engine_configuration_s *ec = eth.ec;
 	TriggerShape * shape = &eth.engine.triggerShape;
 	assertEquals(8, shape->getTriggerShapeSynchPointIndex());
 
@@ -293,8 +292,6 @@ static void testTriggerDecoder2(const char *msg, engine_type_e type, int synchPo
 	EngineTestHelper eth(type);
 	EXPAND_EngineTestHelper;
 
-	engine_configuration_s *ec = eth.ec;
-
 	initSpeedDensity(PASS_ENGINE_PARAMETER_F);
 
 	TriggerShape *t = &eth.engine.triggerShape;
@@ -317,6 +314,7 @@ extern EventQueue schedulingQueue;
 extern int mockTps;
 
 static void testStartupFuelPumping(void) {
+	printf("*************************************************** testStartupFuelPumping\r\n");
 	EngineTestHelper eth(FORD_INLINE_6_1995);
 	EXPAND_EngineTestHelper;
 
@@ -361,6 +359,7 @@ static void assertREquals(void *expected, void *actual) {
 }
 
 extern engine_pins_s enginePins;
+extern bool_t debugSignalExecutor;
 
 static void testRpmCalculator(void) {
 	printf("*************************************************** testRpmCalculator\r\n");
@@ -399,8 +398,21 @@ static void testRpmCalculator(void) {
 //	engine.rpmCalculator = &eth.rpmState;
 	prepareTimingMap(PASS_ENGINE_PARAMETER_F);
 
+	assertEqualsM("queue size", 0, schedulingQueue.size());
+
+	debugSignalExecutor = true;
+
 	timeNow += 5000; // 5ms
 	eth.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_UP PASS_ENGINE_PARAMETER);
+
+	assertEquals(4.5, eth.engine.dwellAngle);
+	assertEqualsM("fuel", 3.03, eth.engine.fuelMs);
+	assertEqualsM("one degree", 111.1111, eth.engine.rpmCalculator.oneDegreeUs);
+	IgnitionEventList *ilist = &eth.engine.engineConfiguration2->ignitionEvents[0];
+	assertEqualsM("size", 6, ilist->size);
+	assertEqualsM("dwell angle", 0, ilist->elements[0].dwellPosition.eventAngle);
+	assertEqualsM("dwell offset", 8.5, ilist->elements[0].dwellPosition.angleOffset);
+
 	assertEqualsM("index #2", 0, eth.triggerCentral.triggerState.getCurrentIndex());
 	assertEqualsM("queue size", 6, schedulingQueue.size());
 	scheduling_s *ev1 = schedulingQueue.getForUnitText(0);
@@ -523,6 +535,6 @@ void testTriggerDecoder(void) {
 
 	testMazda323();
 
-	testRpmCalculator();
 	testStartupFuelPumping();
+	testRpmCalculator();
 }
