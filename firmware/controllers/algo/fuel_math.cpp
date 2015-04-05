@@ -157,7 +157,7 @@ float getInjectorLag(float vBatt DECLARE_ENGINE_PARAMETER_S) {
  */
 void prepareFuelMap(DECLARE_ENGINE_PARAMETER_F) {
 	fuelMap.init(engineConfiguration->fuelTable, engineConfiguration->fuelLoadBins, engineConfiguration->fuelRpmBins);
-	fuelPhaseMap.init(engineConfiguration->injectionPhase, engineConfiguration->injPhaseLoadBins, engineConfiguration->injPhaseRpmBins);
+	fuelPhaseMap.init(config->injectionPhase, config->injPhaseLoadBins, config->injPhaseRpmBins);
 }
 
 /**

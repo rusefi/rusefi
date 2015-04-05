@@ -547,7 +547,7 @@ static void setWholeTimingMap(float value) {
 
 static void setWholePhaseMapCmd(float value) {
 	scheduleMsg(&logger, "Setting whole injection phase map to %f", value);
-	setMap(engineConfiguration->injectionPhase, value);
+	setMap(config->injectionPhase, value);
 }
 
 static void setWholeTimingMapCmd(float value) {

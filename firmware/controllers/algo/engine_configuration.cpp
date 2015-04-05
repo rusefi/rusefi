@@ -121,7 +121,7 @@ void setWholeFuelMap(float value DECLARE_ENGINE_PARAMETER_S) {
 }
 
 void setFuelTablesLoadBin(float minValue, float maxValue DECLARE_ENGINE_PARAMETER_S) {
-	setTableBin2(engineConfiguration->injPhaseLoadBins, FUEL_LOAD_COUNT, minValue, maxValue, 1);
+	setTableBin2(config->injPhaseLoadBins, FUEL_LOAD_COUNT, minValue, maxValue, 1);
 	setTableBin2(engineConfiguration->veLoadBins, FUEL_LOAD_COUNT, minValue, maxValue, 1);
 	setTableBin2(engineConfiguration->afrLoadBins, FUEL_LOAD_COUNT, minValue, maxValue, 1);
 }
@@ -149,8 +149,12 @@ static void initTemperatureCurve(int size, float *bins, float *values) {
  */
 void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
+	// technically these regions currently overlap, but I will reset all individually for readability
 	memset(engineConfiguration, 0, sizeof(engine_configuration_s));
 	memset(boardConfiguration, 0, sizeof(board_configuration_s));
+#if ! EFI_UNIT_TEST
+	memset(&persistentState.persistentConfiguration, 0, sizeof(persistentState.persistentConfiguration));
+#endif
 
 	boardConfiguration->mafSensorType = Bosch0280218037;
 	setBosch0280218037(engineConfiguration);
@@ -218,8 +222,8 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	setDefaultVETable(PASS_ENGINE_PARAMETER_F);
 
-	setMap(engineConfiguration->injectionPhase, -180);
-	setRpmTableBin(engineConfiguration->injPhaseRpmBins, FUEL_RPM_COUNT);
+	setMap(config->injectionPhase, -180);
+	setRpmTableBin(config->injPhaseRpmBins, FUEL_RPM_COUNT);
 	setFuelTablesLoadBin(10, 160 PASS_ENGINE_PARAMETER);
 
 	setThermistorConfiguration(&engineConfiguration->clt, 0, 9500, 23.8889, 2100, 48.8889, 1000);
