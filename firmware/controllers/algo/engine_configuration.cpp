@@ -157,7 +157,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 #endif
 
 	boardConfiguration->mafSensorType = Bosch0280218037;
-	setBosch0280218037(engineConfiguration);
+	setBosch0280218037(config);
 
 	engineConfiguration->injector.lag = 1.0;
 
@@ -167,22 +167,22 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	initTemperatureCurve(IAT_CURVE_SIZE, engineConfiguration->iatFuelCorrBins, engineConfiguration->iatFuelCorr);
 	initTemperatureCurve(CLT_CURVE_SIZE, engineConfiguration->cltFuelCorrBins, engineConfiguration->cltFuelCorr);
 
-	initTemperatureCurve(IAT_CURVE_SIZE, engineConfiguration->iatIdleCorrBins, engineConfiguration->iatIdleCorr);
+	initTemperatureCurve(IAT_CURVE_SIZE, config->iatIdleCorrBins, config->iatIdleCorr);
 //	initTemperatureCurve(CLT_CURVE_SIZE, engineConfiguration->cltIdleCorrBins, engineConfiguration->cltIdleCorr);
 
 
-	setTableValue(engineConfiguration->iatIdleCorrBins, engineConfiguration->iatIdleCorr, CLT_CURVE_SIZE, -40, 1.5);
-	setTableValue(engineConfiguration->iatIdleCorrBins, engineConfiguration->iatIdleCorr, CLT_CURVE_SIZE, -30, 1.5);
-	setTableValue(engineConfiguration->iatIdleCorrBins, engineConfiguration->iatIdleCorr, CLT_CURVE_SIZE, -20, 1.42);
-	setTableValue(engineConfiguration->iatIdleCorrBins, engineConfiguration->iatIdleCorr, CLT_CURVE_SIZE, -10, 1.36);
-	setTableValue(engineConfiguration->iatIdleCorrBins, engineConfiguration->iatIdleCorr, CLT_CURVE_SIZE, 0, 1.28);
-	setTableValue(engineConfiguration->iatIdleCorrBins, engineConfiguration->iatIdleCorr, CLT_CURVE_SIZE, 10, 1.19);
-	setTableValue(engineConfiguration->iatIdleCorrBins, engineConfiguration->iatIdleCorr, CLT_CURVE_SIZE, 20, 1.12);
-	setTableValue(engineConfiguration->iatIdleCorrBins, engineConfiguration->iatIdleCorr, CLT_CURVE_SIZE, 30, 1.10);
-	setTableValue(engineConfiguration->iatIdleCorrBins, engineConfiguration->iatIdleCorr, CLT_CURVE_SIZE, 40, 1.06);
-	setTableValue(engineConfiguration->iatIdleCorrBins, engineConfiguration->iatIdleCorr, CLT_CURVE_SIZE, 50, 1.06);
-	setTableValue(engineConfiguration->iatIdleCorrBins, engineConfiguration->iatIdleCorr, CLT_CURVE_SIZE, 60, 1.03);
-	setTableValue(engineConfiguration->iatIdleCorrBins, engineConfiguration->iatIdleCorr, CLT_CURVE_SIZE, 70, 1.01);
+	setTableValue(config->iatIdleCorrBins, config->iatIdleCorr, CLT_CURVE_SIZE, -40, 1.5);
+	setTableValue(config->iatIdleCorrBins, config->iatIdleCorr, CLT_CURVE_SIZE, -30, 1.5);
+	setTableValue(config->iatIdleCorrBins, config->iatIdleCorr, CLT_CURVE_SIZE, -20, 1.42);
+	setTableValue(config->iatIdleCorrBins, config->iatIdleCorr, CLT_CURVE_SIZE, -10, 1.36);
+	setTableValue(config->iatIdleCorrBins, config->iatIdleCorr, CLT_CURVE_SIZE, 0, 1.28);
+	setTableValue(config->iatIdleCorrBins, config->iatIdleCorr, CLT_CURVE_SIZE, 10, 1.19);
+	setTableValue(config->iatIdleCorrBins, config->iatIdleCorr, CLT_CURVE_SIZE, 20, 1.12);
+	setTableValue(config->iatIdleCorrBins, config->iatIdleCorr, CLT_CURVE_SIZE, 30, 1.10);
+	setTableValue(config->iatIdleCorrBins, config->iatIdleCorr, CLT_CURVE_SIZE, 40, 1.06);
+	setTableValue(config->iatIdleCorrBins, config->iatIdleCorr, CLT_CURVE_SIZE, 50, 1.06);
+	setTableValue(config->iatIdleCorrBins, config->iatIdleCorr, CLT_CURVE_SIZE, 60, 1.03);
+	setTableValue(config->iatIdleCorrBins, config->iatIdleCorr, CLT_CURVE_SIZE, 70, 1.01);
 
 
 	setTableValue(engineConfiguration->cltFuelCorrBins, engineConfiguration->cltFuelCorr, CLT_CURVE_SIZE, -40, 1.5);

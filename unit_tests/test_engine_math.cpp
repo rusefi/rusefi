@@ -49,9 +49,9 @@ void testMafLookup(void) {
 	printf("*************************************************** testMafLookup\r\n");
 
 	EngineTestHelper eth(FORD_ESCORT_GT);
-	Engine * engine = &eth.engine;
-	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
-	setBosch0280218037(engineConfiguration);
+	EXPAND_EngineTestHelper;
+
+	setBosch0280218037(config);
 	engine->preCalculate();
 
 	assertEqualsM("@0", -34.5000, engine->mafDecodingLookup[0]);

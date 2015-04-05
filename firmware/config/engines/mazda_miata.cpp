@@ -246,7 +246,7 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_F) {
 	setFrankenso_01_LCD(boardConfiguration);
 	setFrankenso0_1_joystick(engineConfiguration);
 
-	setDensoTODO(engineConfiguration);
+	setDensoTODO(config);
 
 	engineConfiguration->globalFuelCorrection = 0.75;
 	engineConfiguration->specs.displacement = 1.839;
@@ -493,7 +493,7 @@ void setMiata1994_s(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->malfunctionIndicatorPinMode = OM_DEFAULT;
 
 	engineConfiguration->algorithm = LM_REAL_MAF;
-	setMazdaMiataNAMaf(engineConfiguration);
+	setMazdaMiataNAMaf(config);
 	engineConfiguration->injector.flow = 230;
 }
 

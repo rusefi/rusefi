@@ -288,10 +288,10 @@ public class AutoTest {
         sendComplexCommand("set_global_trigger_offset_angle 175");
         chart = nextChart();
 
-        assertWaveFall(chart, WaveChart.INJECTOR_1, 0.555, 238.75);
-        assertWaveFall(chart, WaveChart.INJECTOR_2, 0.555, 53.04);
-        assertWaveFall(chart, WaveChart.INJECTOR_3, 0.555, 417.04);
-        assertWaveFall(chart, WaveChart.INJECTOR_4, 0.555, 594.04);
+        assertWaveFall(msg + " fuel", chart, WaveChart.INJECTOR_1, 0.555, 238.75);
+        assertWaveFall(msg + " fuel", chart, WaveChart.INJECTOR_2, 0.555, 53.04);
+        assertWaveFall(msg + " fuel", chart, WaveChart.INJECTOR_3, 0.555, 417.04);
+        assertWaveFall(msg + " fuel", chart, WaveChart.INJECTOR_4, 0.555, 594.04);
 
         x = 41;
         assertWave(chart, WaveChart.SPARK_1, 0.133, x, x + 180, x + 360, x + 540);
@@ -323,9 +323,9 @@ public class AutoTest {
         sendComplexCommand("set_algorithm 3");
         chart = nextChart();
         x = 8.88;
-        assertWaveFall(msg, chart, WaveChart.INJECTOR_1, 0.329, x + 180);
-        assertWaveFall(msg, chart, WaveChart.INJECTOR_2, 0.329, x);
-        assertWaveFall(msg, chart, WaveChart.INJECTOR_4, 0.329, x + 540);
+        assertWaveFall(msg + " fuel SD", chart, WaveChart.INJECTOR_1, 0.329, x + 180);
+        assertWaveFall(msg + " fuel SD", chart, WaveChart.INJECTOR_2, 0.329, x);
+        assertWaveFall(msg + " fuel SD", chart, WaveChart.INJECTOR_4, 0.329, x + 540);
 
         // above hard limit
         IoUtil.changeRpm(10000);
