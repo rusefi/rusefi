@@ -182,8 +182,8 @@ void testFordAspire(void) {
 
 	assertEquals(4, eth.engine.triggerShape.getTriggerShapeSynchPointIndex());
 
-	assertEquals(800, engineConfiguration->fuelRpmBins[0]);
-	assertEquals(7000, engineConfiguration->fuelRpmBins[15]);
+	assertEquals(800, config->fuelRpmBins[0]);
+	assertEquals(7000, config->fuelRpmBins[15]);
 
 	engineConfiguration->crankingChargeAngle = 65;
 	engineConfiguration->crankingTimingAngle = 31;

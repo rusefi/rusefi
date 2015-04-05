@@ -156,7 +156,7 @@ float getInjectorLag(float vBatt DECLARE_ENGINE_PARAMETER_S) {
  * is to prepare the fuel map data structure for 3d interpolation
  */
 void prepareFuelMap(DECLARE_ENGINE_PARAMETER_F) {
-	fuelMap.init(engineConfiguration->fuelTable, engineConfiguration->fuelLoadBins, engineConfiguration->fuelRpmBins);
+	fuelMap.init(config->fuelTable, config->fuelLoadBins, config->fuelRpmBins);
 	fuelPhaseMap.init(config->injectionPhase, config->injPhaseLoadBins, config->injPhaseRpmBins);
 }
 
@@ -166,13 +166,13 @@ void prepareFuelMap(DECLARE_ENGINE_PARAMETER_F) {
 float getCltCorrection(float clt DECLARE_ENGINE_PARAMETER_S) {
 	if (cisnan(clt))
 		return 1; // this error should be already reported somewhere else, let's just handle it
-	return interpolate2d(clt, engineConfiguration->cltFuelCorrBins, engineConfiguration->cltFuelCorr, CLT_CURVE_SIZE);
+	return interpolate2d(clt, config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE);
 }
 
 float getIatCorrection(float iat DECLARE_ENGINE_PARAMETER_S) {
 	if (cisnan(iat))
 		return 1; // this error should be already reported somewhere else, let's just handle it
-	return interpolate2d(iat, engineConfiguration->iatFuelCorrBins, engineConfiguration->iatFuelCorr, IAT_CURVE_SIZE);
+	return interpolate2d(iat, config->iatFuelCorrBins, config->iatFuelCorr, IAT_CURVE_SIZE);
 }
 
 /**
@@ -202,9 +202,9 @@ float getCrankingFuel3(float coolantTemperature,
 	float baseCrankingFuel = engineConfiguration->cranking.baseFuel;
 	if (cisnan(coolantTemperature))
 		return baseCrankingFuel;
-	float durationCoef = interpolate2d(revolutionCounterSinceStart, engineConfiguration->crankingCycleBins,
-			engineConfiguration->crankingCycleCoef, CRANKING_CURVE_SIZE);
+	float durationCoef = interpolate2d(revolutionCounterSinceStart, config->crankingCycleBins,
+			config->crankingCycleCoef, CRANKING_CURVE_SIZE);
 
-	return interpolate2d(coolantTemperature, engineConfiguration->crankingFuelBins,
-			engineConfiguration->crankingFuelCoef, CRANKING_CURVE_SIZE) * baseCrankingFuel * durationCoef;
+	return interpolate2d(coolantTemperature, config->crankingFuelBins,
+			config->crankingFuelCoef, CRANKING_CURVE_SIZE) * baseCrankingFuel * durationCoef;
 }

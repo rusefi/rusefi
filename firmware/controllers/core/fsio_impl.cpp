@@ -123,7 +123,7 @@ void setFsioExt(int index, brain_pin_e pin, const char * exp, int freq DECLARE_E
 	if (len >= LE_COMMAND_LENGTH) {
 		return;
 	}
-	strcpy(engineConfiguration->le_formulas[index], exp);
+	strcpy(config->le_formulas[index], exp);
 	boardConfiguration->fsioFrequency[index] = freq;
 }
 
@@ -137,7 +137,7 @@ void applyFsioConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 		brain_pin_e brainPin = boardConfiguration->fsioPins[i];
 
 		if (brainPin != GPIO_UNASSIGNED) {
-			const char *formula = engineConfiguration->le_formulas[i];
+			const char *formula = config->le_formulas[i];
 			LEElement *logic = userPool.parseExpression(formula);
 			if (logic == NULL) {
 				warning(OBD_PCM_Processor_Fault, "parsing [%s]", formula);
@@ -248,7 +248,7 @@ static void showFsioInfo(void) {
 	showFsio("alt", alternatorLogic);
 
 	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
-		char * exp = engineConfiguration->le_formulas[i];
+		char * exp = config->le_formulas[i];
 		if (exp[0] != 0) {
 			/**
 			 * in case of FSIO user interface indexes are starting with 0, the argument for that
@@ -305,7 +305,7 @@ static void setUserOutput(const char *indexStr, const char *quotedLine, Engine *
 	}
 
 	scheduleMsg(logger, "setting user out #%d to [%s]", index + 1, l);
-	strcpy(engine->engineConfiguration->le_formulas[index], l);
+	strcpy(engine->config->le_formulas[index], l);
 	// this would apply the changes
 	applyFsioConfiguration(PASS_ENGINE_PARAMETER_F);
 	showFsioInfo();
