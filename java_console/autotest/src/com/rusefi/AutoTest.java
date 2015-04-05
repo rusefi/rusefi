@@ -1,6 +1,8 @@
 package com.rusefi;
 
 
+import com.rusefi.core.Sensor;
+import com.rusefi.core.SensorCentral;
 import com.rusefi.waves.WaveChart;
 import com.rusefi.waves.WaveReport;
 
@@ -8,6 +10,7 @@ import static com.rusefi.TestingUtils.nextChart;
 import static com.rusefi.IoUtil.sendCommand;
 import static com.rusefi.IoUtil.sleep;
 import static com.rusefi.TestingUtils.*;
+import static com.rusefi.waves.WaveReport.isCloseEnough;
 
 /**
  * rusEfi firmware simulator functional test suite
@@ -321,16 +324,29 @@ public class AutoTest {
         if (!TestingUtils.isRealHardware)
             sendCommand("set_mock_map_voltage 1");
         sendComplexCommand("set_algorithm 3");
+        nextChart();
         chart = nextChart();
+        assertEquals(1, SensorCentral.getInstance().getValue(Sensor.MAP));
+        //assertEquals(1, SensorCentral.getInstance().getValue(Sensor.));
         x = 8.88;
-        assertWaveFall(msg + " fuel SD", chart, WaveChart.INJECTOR_1, 0.329, x + 180);
-        assertWaveFall(msg + " fuel SD", chart, WaveChart.INJECTOR_2, 0.329, x);
-        assertWaveFall(msg + " fuel SD", chart, WaveChart.INJECTOR_4, 0.329, x + 540);
+        assertWaveFall(msg + " fuel SD #1", chart, WaveChart.INJECTOR_1, 0.329, x + 180);
+        assertWaveFall(msg + " fuel SD #2", chart, WaveChart.INJECTOR_2, 0.329, x);
+        assertWaveFall(msg + " fuel SD #3", chart, WaveChart.INJECTOR_3, 0.329, x + 360);
+        assertWaveFall(msg + " fuel SD #4", chart, WaveChart.INJECTOR_4, 0.329, x + 540);
 
         // above hard limit
         IoUtil.changeRpm(10000);
         chart = nextChart();
         assertWaveNull("hard limit check", chart, WaveChart.INJECTOR_1);
+    }
+
+    private static void assertEquals(double expected, double actual) {
+        assertEquals("", expected, actual);
+    }
+
+    private static void assertEquals(String msg, double expected, double actual) {
+        if (isCloseEnough(expected, actual))
+            throw new IllegalStateException(msg + " Expected " + expected + " but got " + actual);
     }
 
     private static void sendComplexCommand(String command) {
