@@ -356,6 +356,12 @@ static void testStartupFuelPumping(void) {
 	assertEqualsM("pc#7", 2, sf.pumpsCounter);
 }
 
+static void assertREquals(void *expected, void *actual) {
+	assertEquals((float)(uint64_t)expected, (float)(uint64_t)actual);
+}
+
+extern engine_pins_s enginePins;
+
 static void testRpmCalculator(void) {
 	printf("*************************************************** testRpmCalculator\r\n");
 
@@ -397,7 +403,11 @@ static void testRpmCalculator(void) {
 	eth.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_UP PASS_ENGINE_PARAMETER);
 	assertEqualsM("index #2", 0, eth.triggerCentral.triggerState.getCurrentIndex());
 	assertEqualsM("queue size", 6, schedulingQueue.size());
-	assertEqualsM("ev 1", 246444, schedulingQueue.getForUnitText(0)->momentX);
+	scheduling_s *ev1 = schedulingQueue.getForUnitText(0);
+	assertREquals((void*)ev1->callback, (void*)turnPinLow);
+	assertREquals((void*)&enginePins.coils[0], ev1->param);
+
+	assertEqualsM("ev 1", 246444, ev1->momentX);
 	assertEqualsM("ev 2", 245944, schedulingQueue.getForUnitText(1)->momentX);
 	schedulingQueue.clear();
 
