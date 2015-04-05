@@ -735,8 +735,8 @@ int tunerStudioHandleCrcCommand(ts_channel_s *tsChannel, char *data, int incomin
 static uint8_t tsCrcWriteBuffer[300];
 
 void startTunerStudioConnectivity(void) {
-	if (sizeof(engine_configuration_s) != getTunerStudioPageSize(0))
-		firmwareError("TS page size mismatch: %d/%d", sizeof(engine_configuration_s), getTunerStudioPageSize(0));
+	if (sizeof(persistent_config_s) != getTunerStudioPageSize(0))
+		firmwareError("TS page size mismatch: %d/%d", sizeof(persistent_config_s), getTunerStudioPageSize(0));
 
 	if (sizeof(TunerStudioOutputChannels) != TS_OUTPUT_SIZE)
 		firmwareError("TS outputs size mismatch: %d/%d", sizeof(TunerStudioOutputChannels), TS_OUTPUT_SIZE);
