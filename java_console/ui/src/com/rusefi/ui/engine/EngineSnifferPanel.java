@@ -37,8 +37,7 @@ import static com.rusefi.ui.util.LocalizedMessages.PAUSE;
  */
 public class EngineSnifferPanel {
     private static final int EFI_DEFAULT_CHART_SIZE = 180;
-    public static final String CRANK1 = "c1";
-    public static final Comparator<String> INSTANCE = new ImageOrderComparator();
+    public static final Comparator<String> INSTANCE = new NameUtil.ImageOrderComparator();
     private static final String HELP_URL = "http://rusefi.com/wiki/index.php?title=Manual:DevConsole#Digital_Chart";
     public static final String HELP_TEXT = "Click here for online help";
     public static final String SAVE_IMAGE = "save image";
@@ -66,7 +65,7 @@ public class EngineSnifferPanel {
 
     private final ZoomControl zoomControl = new ZoomControl();
     private final EngineSnifferStatusPanel statusPanel = new EngineSnifferStatusPanel(zoomControl.getZoomProvider());
-    private final UpDownImage crank = createImage(CRANK1);
+    private final UpDownImage crank = createImage(NameUtil.CRANK1);
     private ChartScrollControl scrollControl;
 
     private boolean isPaused;
@@ -124,7 +123,7 @@ public class EngineSnifferPanel {
         buttonPanel.add(pauseButton);
         buttonPanel.add(new RpmLabel().setSize(2).getContent());
 
-        JComponent command = new AnyCommand(config, "chartsize " + EFI_DEFAULT_CHART_SIZE).getContent();
+        JComponent command = new AnyCommand(config, "chartsize " + EFI_DEFAULT_CHART_SIZE, true).getContent();
         buttonPanel.add(command);
 
         buttonPanel.add(zoomControl);
@@ -175,7 +174,7 @@ public class EngineSnifferPanel {
     private void resetImagePanel() {
         imagePanel.removeAll();
         imagePanel.add(crank);
-        images.put(CRANK1, crank);
+        images.put(NameUtil.CRANK1, crank);
     }
 
     public void displayChart(String value) {
@@ -261,23 +260,5 @@ public class EngineSnifferPanel {
     public void reloadFile() {
         displayChart(ChartRepository.getInstance().getChart(0));
         scrollControl.reset();
-    }
-
-    /**
-     * The job of this comparator is to place Spark charts before Injection charts
-     */
-    private static class ImageOrderComparator implements Comparator<String> {
-        @Override
-        public int compare(String o1, String o2) {
-            return fixSpark(o1).compareTo(fixSpark(o2));
-        }
-
-        String fixSpark(String s) {
-            if (s.toLowerCase().startsWith("hip"))
-                return "z" + s; // let's place this at the bottom
-            if (s.toLowerCase().startsWith("spa"))
-                return "d" + s;
-            return s;
-        }
     }
 }

@@ -27,7 +27,7 @@ public class MessagesPane {
     public MessagesPane(final Node config) {
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
 
-        final MessagesPanel messagesPanel = new MessagesPanel(config);
+        final MessagesPanel messagesPanel = new MessagesPanel(config, true);
         messagesPanel.loadFont(config);
         content.setBorder(BorderFactory.createLineBorder(Color.red));
 

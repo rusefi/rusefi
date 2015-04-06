@@ -121,11 +121,14 @@ void setBmwE34(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->clt.bias_resistor = 2200;
 
 
-	/**
-	 * This saves a couple of ticks in trigger emulation methods
-	 * TODO: add some smart logic to detect unneeded trigger simulation pins?
-	 * TODO: but probably not worth it
-	 */
-	bc->triggerSimulatorPins[1] = GPIO_UNASSIGNED;
+//	/**
+//	 * This saves a couple of ticks in trigger emulation methods
+//	 * TODO: add some smart logic to detect unneeded trigger simulation pins?
+//	 * TODO: but probably not worth it
+//	 */
+//	bc->triggerSimulatorPins[1] = GPIO_UNASSIGNED;
+
+	boardConfiguration->triggerSimulatorPins[0] = GPIOD_1;
+	boardConfiguration->triggerSimulatorPins[1] = GPIOD_2;
 	bc->triggerSimulatorPins[2] = GPIO_UNASSIGNED;
 }

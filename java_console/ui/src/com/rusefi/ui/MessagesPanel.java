@@ -48,7 +48,7 @@ public class MessagesPanel {
     private final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
     private final JScrollPane messagesScroll = new JScrollPane(messages, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
-    public MessagesPanel(Node config) {
+    public MessagesPanel(Node config, boolean listenToCommands) {
         JPanel middlePanel = new JPanel(new BorderLayout());
         middlePanel.add(messagesScroll, BorderLayout.CENTER);
         buttonPanel.setBorder(BorderFactory.createLineBorder(Color.red));
@@ -91,7 +91,7 @@ public class MessagesPanel {
 
         buttonPanel.add(resetButton);
         buttonPanel.add(pauseButton);
-        anyCommand = new AnyCommand(config);
+        anyCommand = new AnyCommand(config, listenToCommands);
         buttonPanel.add(anyCommand.getContent());
     }
 

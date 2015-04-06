@@ -25,16 +25,25 @@ public class AnyCommand {
     };
 
     private JPanel content = new JPanel(new FlowLayout(FlowLayout.LEFT));
+    private boolean reentrant;
 
-    public AnyCommand(final Node config) {
-        this(config, config.getProperty(KEY, ""));
+    public AnyCommand(final Node config, boolean listenToCommands) {
+        this(config, config.getProperty(KEY, ""), listenToCommands);
     }
 
-    public AnyCommand(final Node config, String defaultCommand) {
+    public AnyCommand(final Node config, String defaultCommand, final boolean listenToCommands) {
         text.setText(defaultCommand);
         content.setBorder(BorderFactory.createLineBorder(Color.PINK));
         content.add(new JLabel("Command: "));
         content.add(text);
+
+        CommandQueue.getInstance().addListener(new CommandQueue.CommandQueueListener() {
+            @Override
+            public void onCommand(String command) {
+                if (listenToCommands && !reentrant)
+                    text.setText(command);
+            }
+        });
 
         text.addActionListener(new ActionListener() {
             @Override
@@ -43,7 +52,9 @@ public class AnyCommand {
                 if (!isValidInput(text))
                     return;
                 int timeout = CommandQueue.getTimeout(cmd);
+                reentrant = true;
                 CommandQueue.getInstance().write(cmd.toLowerCase(), timeout);
+                reentrant = false;
             }
         });
         text.getDocument().addDocumentListener(new DocumentListener() {

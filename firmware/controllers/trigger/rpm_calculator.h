@@ -16,9 +16,12 @@
 
 #define WC_DOWN "d"
 #define WC_UP "u"
-#define WC_CRANK1 "c1"
-#define WC_CRANK2 "c2"
-#define WC_CRANK3 "c3"
+/**
+ * See also 'CRANK1' in java dev console code
+ */
+#define CRANK1 "t1"
+#define CRANK2 "t2"
+#define CRANK3 "t3"
 
 #define NOISY_RPM -1
 #define UNREALISTIC_RPM 30000

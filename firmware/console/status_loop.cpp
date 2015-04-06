@@ -294,8 +294,8 @@ static void printInfo(systime_t nowSeconds) {
 			getConfigurationName(engineConfiguration->engineType),
 			DELIMETER);
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
-	printOutPin(WC_CRANK1, boardConfiguration->triggerInputPins[0]);
-	printOutPin(WC_CRANK2, boardConfiguration->triggerInputPins[1]);
+	printOutPin(CRANK1, boardConfiguration->triggerInputPins[0]);
+	printOutPin(CRANK2, boardConfiguration->triggerInputPins[1]);
 #if EFI_WAVE_ANALYZER || defined(__DOXYGEN__)
 	printOutPin(WA_CHANNEL_1, boardConfiguration->logicAnalyzerPins[0]);
 	printOutPin(WA_CHANNEL_2, boardConfiguration->logicAnalyzerPins[1]);
