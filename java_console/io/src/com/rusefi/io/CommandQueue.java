@@ -135,6 +135,10 @@ public class CommandQueue {
         write(command, timeout, InvocationConfirmationListener.VOID);
     }
 
+    public void write(String command, int timeoutMs, InvocationConfirmationListener listener) {
+        write(command, timeoutMs, listener, true);
+    }
+
     /**
      * Non-blocking command request
      * Command is placed in the queue where it would be until it is confirmed
@@ -142,10 +146,12 @@ public class CommandQueue {
      * @param command   dev console command
      * @param timeoutMs retry timeout
      */
-    public void write(String command, int timeoutMs, InvocationConfirmationListener listener) {
+    public void write(String command, int timeoutMs, InvocationConfirmationListener listener, boolean fireEvent) {
 
-        for (CommandQueueListener cql : commandListeners)
-            cql.onCommand(command);
+        if (fireEvent) {
+            for (CommandQueueListener cql : commandListeners)
+                cql.onCommand(command);
+        }
 
         pendingCommands.add(new MethodInvocation(command, timeoutMs, listener));
     }
