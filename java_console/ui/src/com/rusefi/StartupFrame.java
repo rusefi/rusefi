@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
+
 /**
  * This frame is used on startup to select the port we would be using
  *
@@ -128,6 +130,8 @@ public class StartupFrame {
         for (final String port : ports)
             comboPorts.addItem(port);
         panel.add(comboPorts);
+        String defaultPort =  getConfig().getRoot().getProperty(Launcher.PORT_KEY, "");
+        comboPorts.setSelectedItem(defaultPort);
 
         final JComboBox<String> comboSpeeds = createSpeedCombo();
 //        panel.add(comboSpeeds);

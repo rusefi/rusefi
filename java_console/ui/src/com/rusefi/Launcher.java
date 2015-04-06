@@ -34,9 +34,10 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * @see com.rusefi.StartupFrame
  */
 public class Launcher {
-    public static final int CONSOLE_VERSION = 20150405;
+    public static final int CONSOLE_VERSION = 20150406;
     public static final boolean SHOW_STIMULATOR = false;
-    public static final String TAB_INDEX = "main_tab";
+    private static final String TAB_INDEX = "main_tab";
+    protected static final String PORT_KEY = "port";
     private final String port;
     private final JTabbedPane tabbedPane = new JTabbedPane();
 
@@ -70,6 +71,8 @@ public class Launcher {
         staticFrame = frame.getFrame();
         FileLog.MAIN.start();
 
+        getConfig().getRoot().setProperty(PORT_KEY, port);
+
         LinkManager.start(port);
 
         FileLog.MAIN.logLine("Console " + CONSOLE_VERSION);
@@ -102,7 +105,7 @@ public class Launcher {
 
 
         if (!LinkManager.isLogViewerMode(port)) {
-            int selectedIndex = getConfig().getRoot().getIntProperty("main_tab", 2);
+            int selectedIndex = getConfig().getRoot().getIntProperty(TAB_INDEX, 2);
             if (selectedIndex < tabbedPane.getTabCount())
                 tabbedPane.setSelectedIndex(selectedIndex);
         }
