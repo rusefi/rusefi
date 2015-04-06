@@ -113,22 +113,22 @@ static ALWAYS_INLINE void reportEventToWaveChart(trigger_event_e ckpSignalType, 
 	itoa10(&shaft_signal_msg_index[2], index);
 	if (ckpSignalType == SHAFT_PRIMARY_UP) {
 		shaft_signal_msg_index[0] = 'u';
-		addWaveChartEvent(WC_CRANK1, (char* ) shaft_signal_msg_index);
+		addWaveChartEvent(CRANK1, (char* ) shaft_signal_msg_index);
 	} else if (ckpSignalType == SHAFT_PRIMARY_DOWN) {
 		shaft_signal_msg_index[0] = 'd';
-		addWaveChartEvent(WC_CRANK1, (char* ) shaft_signal_msg_index);
+		addWaveChartEvent(CRANK1, (char* ) shaft_signal_msg_index);
 	} else if (ckpSignalType == SHAFT_SECONDARY_UP) {
 		shaft_signal_msg_index[0] = 'u';
-		addWaveChartEvent(WC_CRANK2, (char* ) shaft_signal_msg_index);
+		addWaveChartEvent(CRANK2, (char* ) shaft_signal_msg_index);
 	} else if (ckpSignalType == SHAFT_SECONDARY_DOWN) {
 		shaft_signal_msg_index[0] = 'd';
-		addWaveChartEvent(WC_CRANK2, (char* ) shaft_signal_msg_index);
+		addWaveChartEvent(CRANK2, (char* ) shaft_signal_msg_index);
 	} else if (ckpSignalType == SHAFT_3RD_UP) {
 		shaft_signal_msg_index[0] = 'u';
-		addWaveChartEvent(WC_CRANK3, (char* ) shaft_signal_msg_index);
+		addWaveChartEvent(CRANK3, (char* ) shaft_signal_msg_index);
 	} else if (ckpSignalType == SHAFT_3RD_DOWN) {
 		shaft_signal_msg_index[0] = 'd';
-		addWaveChartEvent(WC_CRANK3, (char* ) shaft_signal_msg_index);
+		addWaveChartEvent(CRANK3, (char* ) shaft_signal_msg_index);
 	}
 }
 

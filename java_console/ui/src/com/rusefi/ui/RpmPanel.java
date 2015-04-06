@@ -42,12 +42,12 @@ public class RpmPanel {
         ConnectionWatchdog.start();
 
         JPanel smallMessagePanel = new JPanel(new BorderLayout());
-        MessagesPanel mp = new MessagesPanel(config);
+        MessagesPanel mp = new MessagesPanel(config, false);
         smallMessagePanel.add(BorderLayout.NORTH, mp.getButtonPanel());
         smallMessagePanel.add(BorderLayout.CENTER, mp.getMessagesScroll());
 
         JPanel msgPanel = new JPanel(new BorderLayout());
-        msgPanel.add(new AnyCommand(config).getContent(), BorderLayout.NORTH);
+        msgPanel.add(new AnyCommand(config, false).getContent(), BorderLayout.NORTH);
         msgPanel.add(smallMessagePanel, BorderLayout.CENTER);
 
         JComponent rpmPanel = new JPanel(new BorderLayout());

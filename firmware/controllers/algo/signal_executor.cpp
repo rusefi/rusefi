@@ -43,11 +43,11 @@ extern WaveChart waveChart;
 
 extern engine_pins_s enginePins;
 
-static const char *sparkNames[ENGINE_CHANNEL_COUNT] = { "spa1", "spa2", "spa3", "spa4", "spa5", "spa6", "spa7", "spa8",
-		"spa9", "spa10", "spa11", "spa12"};
+static const char *sparkNames[ENGINE_CHANNEL_COUNT] = { "c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8",
+		"c9", "cA", "cB", "cD"};
 
-static const char *injectorNames[ENGINE_CHANNEL_COUNT] = { "inj1", "inj2", "inj3", "inj4", "inj5", "inj6", "inj7", "inj8", "inj9",
-		"inj10", "inj11", "inj12"};
+static const char *injectorNames[ENGINE_CHANNEL_COUNT] = { "i1", "i2", "i3", "i4", "i5", "i6", "i7", "i8",
+		"j9", "iA", "iB", "iC"};
 
 void initSignalExecutor(void) {
 	initSignalExecutorImpl();

@@ -1,6 +1,7 @@
 package com.rusefi.ui.test;
 
 import com.rusefi.ui.engine.EngineSnifferPanel;
+import com.rusefi.ui.engine.NameUtil;
 import org.junit.Test;
 
 import java.util.Set;
@@ -17,7 +18,7 @@ public class EngineSnifferPanelTest {
     @Test
     public void testInsertIndex() {
         Set<String> names = new TreeSet<>();
-        names.add(EngineSnifferPanel.CRANK1);
+        names.add(NameUtil.CRANK1);
 
         String name;
 
@@ -26,11 +27,11 @@ public class EngineSnifferPanelTest {
         names.add(name);
 
         name = "inj1";
-        assertEquals(1, EngineSnifferPanel.getInsertIndex(name, names));
+        assertEquals(0, EngineSnifferPanel.getInsertIndex(name, names));
         names.add(name);
 
 
-        assertEquals(1, EngineSnifferPanel.getInsertIndex("spa1", names));
+        assertEquals(0, EngineSnifferPanel.getInsertIndex("spa1", names));
     }
 }
 
