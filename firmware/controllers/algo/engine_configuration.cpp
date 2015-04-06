@@ -28,6 +28,7 @@
 #include "trigger_decoder.h"
 #include "engine_math.h"
 #include "speed_density.h"
+#include "advance_map.h"
 
 #include "custom_engine.h"
 #include "acura_rsx.h"
@@ -225,6 +226,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	setMap(config->injectionPhase, -180);
 	setRpmTableBin(config->injPhaseRpmBins, FUEL_RPM_COUNT);
 	setFuelTablesLoadBin(10, 160 PASS_ENGINE_PARAMETER);
+	setDefaultIatTimingCorrection(PASS_ENGINE_PARAMETER_F);
 
 	setThermistorConfiguration(&engineConfiguration->clt, 0, 9500, 23.8889, 2100, 48.8889, 1000);
 	engineConfiguration->clt.bias_resistor = 1500;

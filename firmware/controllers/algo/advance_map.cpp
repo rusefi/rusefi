@@ -29,6 +29,12 @@ EXTERN_ENGINE;
 
 static ign_Map3D_t advanceMap;
 
+static const float iatTimingRpmBins[IGN_LOAD_COUNT] = {880,	1260,	1640,	2020,	2400,	2780,	3000,	3380,	3760,	4140,	4520,	5000,	5700,	6500,	7200,	8000};
+
+//880	1260	1640	2020	2400	2780	3000	3380	3760	4140	4520	5000	5700	6500	7200	8000
+//static const ignition_table_t default_aspire_timing_table = {
+
+
 float getBaseAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_S) {
 	if (cisnan(engineLoad)) {
 		warning(OBD_PCM_Processor_Fault, "NaN engine load");
@@ -55,6 +61,11 @@ float getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_S) {
 	angle -= engineConfiguration->ignitionBaseAngle;
 	fixAngle(angle);
 	return angle;
+}
+
+void setDefaultIatTimingCorrection(DECLARE_ENGINE_PARAMETER_F) {
+	setTableBin2(config->ignitionIatCorrLoadBins, IGN_LOAD_COUNT, -40, 110, 1);
+	memcpy(config->ignitionIatCorrRpmBins, iatTimingRpmBins, sizeof(iatTimingRpmBins));
 }
 
 void prepareTimingMap(DECLARE_ENGINE_PARAMETER_F) {
