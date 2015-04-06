@@ -21,15 +21,22 @@ EXTERN_ENGINE;
 void setBmwE34(DECLARE_ENGINE_PARAMETER_F) {
 	board_configuration_s * boardConfiguration = &engineConfiguration->bc;
 
+	engineConfiguration->analogInputDividerCoefficient = 2;
+	boardConfiguration->analogChartMode = AC_TRIGGER;
+
+	// chartsize 450
+	engineConfiguration->digitalChartSize = 450;
+
 //	setAlgorithm(LM_PLAIN_MAF);
 	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER);
 	engineConfiguration->injector.flow = 750;
 
 	boardConfiguration->tunerStudioSerialSpeed = 38400;
 	engineConfiguration->rpmHardLimit = 6000;
-	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 
-	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
+	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
+	engineConfiguration->trigger.type = TT_ONE_PLUS_TOOTHED_WHEEL_60_2;
+
 	engineConfiguration->specs.cylindersCount = 6;
 	engineConfiguration->specs.displacement = 2.91;
 	engineConfiguration->specs.firingOrder = FO_1_THEN_5_THEN_3_THEN_6_THEN_2_THEN_4;
