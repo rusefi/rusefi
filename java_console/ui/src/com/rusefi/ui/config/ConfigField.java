@@ -5,6 +5,7 @@ import com.rusefi.config.Field;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Pair;
 import com.rusefi.io.CommandQueue;
+import com.rusefi.io.InvocationConfirmationListener;
 import com.rusefi.ui.ConnectionStatus;
 import com.rusefi.ui.util.JTextFieldWithWidth;
 
@@ -29,7 +30,10 @@ public class ConfigField {
         ConnectionStatus.INSTANCE.addListener(new ConnectionStatus.Listener() {
             @Override
             public void onConnectionStatus(boolean isConnected) {
-                CommandQueue.getInstance().write(field.getType().getLoadCommand() + " " + field.getOffset());
+                CommandQueue.getInstance().write(field.getType().getLoadCommand() + " " + field.getOffset(),
+                        CommandQueue.DEFAULT_TIMEOUT,
+                        InvocationConfirmationListener.VOID,
+                        false);
             }
         });
 
