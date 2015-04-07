@@ -16,6 +16,7 @@ public enum FileLog {
     SIMULATOR_CONSOLE;
 
     private static final String DIR = "out/";
+    public static String currentLogName;
     public static final String END_OF_TIMESTAND_TAG = "<EOT>: ";
     public static final Logger LOGGER = new Logger() {
         @Override
@@ -52,7 +53,8 @@ public enum FileLog {
             return null;
         String date = getDate();
         createFolderIfNeeded();
-        String fileName = DIR + name() + "_rfi_report_" + date + ".csv";
+        currentLogName = name() + "_rfi_report_" + date + ".csv";
+        String fileName = DIR + currentLogName;
         rlog("Writing to " + fileName);
         return new FileOutputStream(fileName, true);
     }
