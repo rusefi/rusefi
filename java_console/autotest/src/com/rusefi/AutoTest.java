@@ -121,7 +121,7 @@ public class AutoTest {
         msg = "2003 Neon running";
         IoUtil.changeRpm(2000);
         chart = nextChart();
-        x = 107;
+        x = 113.28;
         assertWave(true, msg, chart, WaveChart.SPARK_1, 0.13299999999999998, 0.005, WaveReport.RATIO, x + 180, x + 540);
         assertWaveNull(msg, chart, WaveChart.SPARK_2);
         assertWave(true, msg, chart, WaveChart.SPARK_3, 0.13299999999999998, 0.005, WaveReport.RATIO, x, x + 360);
@@ -149,7 +149,7 @@ public class AutoTest {
         msg = "ProtegeLX running";
         IoUtil.changeRpm(2000);
         chart = nextChart();
-        x = 121;
+        x = 127.92;
         assertWave(msg, chart, WaveChart.SPARK_1, 0.13333333333333333, x, x + 180, x + 360, x + 540);
         x = 0;
         assertWaveFall(msg, chart, WaveChart.INJECTOR_1, 0.09766666666666689, x + 180, x + 540);
@@ -168,13 +168,13 @@ public class AutoTest {
         chart = nextChart();
 
         String msg = "1995 Neon";
-        float x = -70;
+        double x = -70;
         assertWaveFall(msg, chart, WaveChart.INJECTOR_4, 0.133, x + 540);
         assertWaveFall(msg, chart, WaveChart.INJECTOR_2, 0.133, x + 720);
         assertWaveFall(msg, chart, WaveChart.INJECTOR_1, 0.133, x + 180);
         assertWaveFall(msg, chart, WaveChart.INJECTOR_3, 0.133, x + 360);
 
-        x = 106;
+        x = 115.92;
         assertWave(msg, chart, WaveChart.SPARK_4, 0.13333, x + 540);
         assertWave(msg, chart, WaveChart.SPARK_2, 0.13333, x);
         assertWave(msg, chart, WaveChart.SPARK_1, 0.13333, x + 180);
@@ -211,7 +211,7 @@ public class AutoTest {
 
         String msg = "ford 6";
 
-        int x = 7;
+        double x = 12.84;
         assertWave(msg, chart, WaveChart.SPARK_1, 0.01666, x, x + 120, x + 240, x + 360, x + 480, x + 600);
 
         assertWaveNull(msg, chart, WaveChart.TRIGGER_2);
@@ -278,7 +278,7 @@ public class AutoTest {
         assertWaveFall(msg, chart, WaveChart.INJECTOR_3, 0.086, 417.04);
         assertWaveFall(msg, chart, WaveChart.INJECTOR_4, 0.086, 594.04);
 
-        x = 16.32;
+        x = 22.32;
         assertWave(chart, WaveChart.SPARK_1, 0.133, x, x + 180, x + 360, x + 540);
 
         sendCommand("set_fuel_map 2200 4 15.66");
@@ -296,14 +296,14 @@ public class AutoTest {
         assertWaveFall(msg + " fuel", chart, WaveChart.INJECTOR_3, 0.555, 417.04);
         assertWaveFall(msg + " fuel", chart, WaveChart.INJECTOR_4, 0.555, 594.04);
 
-        x = 41;
+        x = 45;
         assertWave(chart, WaveChart.SPARK_1, 0.133, x, x + 180, x + 360, x + 540);
         assertWaveNull(chart, WaveChart.SPARK_2);
 
         sendComplexCommand("set_global_trigger_offset_angle 130");
         sendComplexCommand("set_injection_offset 369");
         chart = nextChart();
-        x = 580;
+        x = 585;
         assertWave(chart, WaveChart.SPARK_1, 0.133, x, x + 180, x + 360, x + 540);
 
         // let's enable more channels dynamically
@@ -314,7 +314,7 @@ public class AutoTest {
 
         sendCommand("set_whole_timing_map 520");
         chart = nextChart();
-        x = 59;
+        x = 64.8;
         assertWave(chart, WaveChart.SPARK_2, 0.133, x);
 
 

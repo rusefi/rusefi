@@ -21,7 +21,6 @@
  */
 
 // todo: rename this file
-
 #include "main.h"
 
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
@@ -47,7 +46,8 @@ extern engine_pins_s enginePins;
 void initIgnitionCentral(void) {
 	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 		NamedOutputPin *output = &enginePins.coils[i];
-		outputPinRegisterExt2(output->name, output, boardConfiguration->ignitionPins[i], &boardConfiguration->ignitionPinMode);
+		outputPinRegisterExt2(output->name, output, boardConfiguration->ignitionPins[i],
+				&boardConfiguration->ignitionPinMode);
 	}
 }
 
@@ -85,24 +85,34 @@ static void setInjectorEnabled(int id, int value) {
 	printStatus();
 }
 
-static void runBench(brain_pin_e brainPin, OutputPin *output, float delayMs, float onTimeMs, float offTimeMs, int count) {
+static void runBench(brain_pin_e brainPin, OutputPin *output, float delayMs, float onTimeMs, float offTimeMs,
+		int count) {
+	int delaySt = (int) (delayMs * CH_FREQUENCY / 1000);
+	int onTimeSt = (int) (onTimeMs * CH_FREQUENCY / 1000);
+	int offTimeSt = (int) (offTimeMs * CH_FREQUENCY / 1000);
+	if (delaySt <=0) {
+		scheduleMsg(&logger, "Invalid delay %f", delayMs);
+		return;
+	}
+	if (onTimeSt <=0) {
+		scheduleMsg(&logger, "Invalid onTime %f", onTimeMs);
+		return;
+	}
+	if (offTimeSt <=0) {
+		scheduleMsg(&logger, "Invalid offTime %f", offTimeMs);
+		return;
+	}
 	scheduleMsg(&logger, "Running bench: ON_TIME=%f ms OFF_TIME=%fms Counter=%d", onTimeMs, offTimeMs, count);
 	scheduleMsg(&logger, "output on %s", hwPortname(brainPin));
 
-	int delaySt = (int) (delayMs * CH_FREQUENCY / 1000);
-	if (delaySt != 0) {
-		chThdSleep(delaySt);
-	}
+	chThdSleep(delaySt);
 
 	isRunningBench = true;
 	for (int i = 0; i < count; i++) {
 		output->setValue(true);
-		chThdSleep((int) (onTimeMs * CH_FREQUENCY / 1000));
+		chThdSleep(onTimeSt);
 		output->setValue(false);
-		int offTimeSt = (int) (offTimeMs * CH_FREQUENCY / 1000);
-		if (offTimeSt > 0) {
-			chThdSleep(offTimeSt);
-		}
+		chThdSleep(offTimeSt);
 	}
 	scheduleMsg(&logger, "Done!");
 	isRunningBench = false;
@@ -117,7 +127,7 @@ static brain_pin_e brainPin;
 static OutputPin* pinX;
 
 static void pinbench(const char *delayStr, const char *onTimeStr, const char *offTimeStr, const char *countStr,
-		OutputPin*  pinParam, brain_pin_e brainPinParam) {
+		OutputPin* pinParam, brain_pin_e brainPinParam) {
 	delayMs = atoff(delayStr);
 	onTime = atoff(onTimeStr);
 	offTime = atoff(offTimeStr);
@@ -190,7 +200,7 @@ static msg_t benchThread(int param) {
 	(void) param;
 	chRegSetThreadName("BenchThread");
 
-	while (TRUE) {
+	while (true) {
 		while (!needToRunBench) {
 			chThdSleepMilliseconds(200);
 		}
@@ -216,7 +226,7 @@ void initInjectorCentral(Engine *engine) {
 		outputPinRegisterExt2(output->name, output, boardConfiguration->injectionPins[i],
 				&boardConfiguration->injectionPinMode);
 	}
-	
+
 	printStatus();
 	addConsoleActionII("injector", setInjectorEnabled);
 
