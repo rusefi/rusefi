@@ -296,13 +296,13 @@ void multi_wave_s::checkSwitchTimes(int size) {
 }
 
 void setToothedWheelConfiguration(TriggerShape *s, int total, int skipped,
-		engine_configuration_s const *engineConfiguration) {
+		operation_mode_e operationMode) {
 #if EFI_ENGINE_CONTROL
 
 	s->useRiseEdge = true;
 
 	initializeSkippedToothTriggerShapeExt(s, total, skipped,
-			engineConfiguration->operationMode);
+			operationMode);
 #endif
 }
 

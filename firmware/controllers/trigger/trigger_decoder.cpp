@@ -354,6 +354,10 @@ void initializeTriggerShape(Logging *logger, engine_configuration_s const *engin
 		configureOnePlus60_2(triggerShape, engineConfiguration->operationMode);
 		break;
 
+	case TT_ONE:
+		setToothedWheelConfiguration(triggerShape, 1, 0, engineConfiguration->operationMode);
+		break;
+
 	case TT_MAZDA_SOHC_4:
 		configureMazdaProtegeSOHC(triggerShape);
 		break;
@@ -363,11 +367,11 @@ void initializeTriggerShape(Logging *logger, engine_configuration_s const *engin
 		break;
 
 	case TT_TOOTHED_WHEEL_60_2:
-		setToothedWheelConfiguration(triggerShape, 60, 2, engineConfiguration);
+		setToothedWheelConfiguration(triggerShape, 60, 2, engineConfiguration->operationMode);
 		break;
 
 	case TT_TOOTHED_WHEEL_36_1:
-		setToothedWheelConfiguration(triggerShape, 36, 1, engineConfiguration);
+		setToothedWheelConfiguration(triggerShape, 36, 1, engineConfiguration->operationMode);
 		break;
 
 	case TT_HONDA_ACCORD_CD_TWO_WIRES:
