@@ -26,7 +26,7 @@ void setSachs(engine_configuration_s *engineConfiguration) {
 
 
 	/**
-	 * We treat the trigger as 1/0 toothed wheel
+	 * 50/2 trigger
 	 */
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
 	engineConfiguration->trigger.customTotalToothCount = 50;
