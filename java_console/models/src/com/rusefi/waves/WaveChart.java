@@ -13,21 +13,22 @@ import java.util.Map;
  * (c) Andrey Belomutskiy
  */
 public class WaveChart {
-    public static final String INJECTOR_1 = "inj1";
-    public static final String INJECTOR_2 = "inj2";
-    public static final String INJECTOR_3 = "inj3";
-    public static final String INJECTOR_4 = "inj4";
-    public static final String INJECTOR_5 = "inj5";
-    public static final String INJECTOR_6 = "inj6";
-    public static final String INJECTOR_7 = "inj7";
-    public static final String INJECTOR_8 = "inj8";
-    public static final String SPARK_1 = "spa1";
-    public static final String SPARK_2 = "spa2";
-    public static final String SPARK_3 = "spa3";
-    public static final String SPARK_4 = "spa4";
+    // todo: merge with NameUtil
+    public static final String INJECTOR_1 = "i1";
+    public static final String INJECTOR_2 = "i2";
+    public static final String INJECTOR_3 = "i3";
+    public static final String INJECTOR_4 = "i4";
+    public static final String INJECTOR_5 = "i5";
+    public static final String INJECTOR_6 = "i6";
+    public static final String INJECTOR_7 = "i7";
+    public static final String INJECTOR_8 = "i8";
+    public static final String SPARK_1 = "c1";
+    public static final String SPARK_2 = "c2";
+    public static final String SPARK_3 = "c3";
+    public static final String SPARK_4 = "c4";
 
-    public static final String TRIGGER_1 = "c1";
-    public static final String TRIGGER_2 = "c2";
+    public static final String TRIGGER_1 = "t1";
+    public static final String TRIGGER_2 = "t2";
 
     public final Map<String, StringBuilder> map;
 
