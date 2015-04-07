@@ -152,8 +152,7 @@ static void scheduleReboot(void) {
 	unlockAnyContext();
 }
 
-void swo_init()
-{
+void swo_init() {
 	// todo: make SWO work
 //     uint32_t SWOSpeed = 2000000; //2000kbps, default for ST-LINK
 //     // todo: use a macro to access clock speed
@@ -247,7 +246,8 @@ extern engine_pins_s enginePins;
 void firmwareError(const char *errorMsg, ...) {
 	if (hasFirmwareErrorFlag)
 		return;
-	ON_FATAL_ERROR();
+	ON_FATAL_ERROR()
+	;
 	hasFirmwareErrorFlag = true;
 	if (indexOf(errorMsg, '%') == -1) {
 		/**
@@ -272,9 +272,9 @@ static char UNUSED_RAM_SIZE[2999];
 static char UNUSED_CCM_SIZE[3600] CCM_OPTIONAL;
 
 int getRusEfiVersion(void) {
-	if (UNUSED_RAM_SIZE[0]== 0)
-		return 1; // this is here to make the compiler happy about the unused array
-	if (UNUSED_CCM_SIZE[0] == 0)
-		return 1; // this is here to make the compiler happy about the unused array
+	if (UNUSED_RAM_SIZE[0] != 0)
+		return 123; // this is here to make the compiler happy about the unused array
+	if (UNUSED_CCM_SIZE[0] * 0 != 0)
+		return 3211; // this is here to make the compiler happy about the unused array
 	return 20150406;
 }

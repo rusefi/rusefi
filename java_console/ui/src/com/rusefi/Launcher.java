@@ -5,10 +5,7 @@ import com.rusefi.core.EngineState;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.LinkManager;
 import com.rusefi.maintenance.VersionChecker;
-import com.rusefi.ui.GaugesPanel;
-import com.rusefi.ui.MessagesPane;
-import com.rusefi.ui.RpmPanel;
-import com.rusefi.ui.Wizard;
+import com.rusefi.ui.*;
 import com.rusefi.ui.engine.EngineSnifferPanel;
 import com.rusefi.ui.fsio.FlexibleControls;
 import com.rusefi.ui.logview.LogViewer;
@@ -19,6 +16,7 @@ import jssc.SerialPortList;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
 
@@ -40,6 +38,7 @@ public class Launcher {
     protected static final String PORT_KEY = "port";
     private final String port;
     private final JTabbedPane tabbedPane = new JTabbedPane();
+    private static AtomicReference<String> firmwareVersion = new AtomicReference<>("N/A");
 
     public static int defaultFontSize;
 
@@ -115,7 +114,13 @@ public class Launcher {
     }
 
     private void windowOpenedHandler() {
-        setTitle("N/A");
+        setTitle();
+        ConnectionStatus.INSTANCE.addListener(new ConnectionStatus.Listener() {
+            @Override
+            public void onConnectionStatus(boolean isConnected) {
+                setTitle();
+            }
+        });
 
         LinkManager.open(new LinkManager.LinkStateListener() {
             @Override
@@ -129,16 +134,19 @@ public class Launcher {
         });
 
         LinkManager.engineState.registerStringValueAction(EngineState.RUS_EFI_VERSION_TAG, new EngineState.ValueCallback<String>() {
+
             @Override
             public void onUpdate(String firmwareVersion) {
-                setTitle(firmwareVersion);
+                Launcher.firmwareVersion.set(firmwareVersion);
+                setTitle();
                 VersionChecker.getInstance().onFirmwareVersion(firmwareVersion);
             }
         });
     }
 
-    private void setTitle(String value) {
-        frame.getFrame().setTitle("Console " + CONSOLE_VERSION + "; firmware=" + value + "@" + port);
+    private void setTitle() {
+        String disconnected = ConnectionStatus.INSTANCE.isConnected() ? "" : "DISCONNECTED ";
+        frame.getFrame().setTitle(disconnected + "Console " + CONSOLE_VERSION + "; firmware=" + Launcher.firmwareVersion.get() + "@" + port);
     }
 
     private void windowClosedHandler() {

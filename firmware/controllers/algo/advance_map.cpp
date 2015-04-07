@@ -28,6 +28,7 @@
 EXTERN_ENGINE;
 
 static ign_Map3D_t advanceMap;
+static ign_Map3D_t iatAdvanceCorrectionMap;
 
 static const float iatTimingRpmBins[IGN_LOAD_COUNT] = {880,	1260,	1640,	2020,	2400,	2780,	3000,	3380,	3760,	4140,	4520,	5000,	5700,	6500,	7200,	8000};
 
@@ -42,8 +43,8 @@ static const ignition_table_t defaultIatTiming = {
 		{ 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0},
 		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-		{ 0, 0, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9},
-		{ -3.3, -3.4, -4.9, -4.9, -4.9, -4.9, -4.4, -4.4, -4.4, -4.4, -4.4, -9, -9, -9, -9, -9},
+		{ 0, 0, -0.9, -0.9, -0.9, -0.9, -0.9, -0.9, -0.9, -0.9, -0.9, -0.9, -0.9, -0.9, -0.9, -0.9},
+		{ -3.3, -3.4, -4.9, -4.9, -4.9, -4.9, -4.4, -4.4, -4.4, -4.4, -4.4, -0.9, -0.9, -0.9, -0.9, -0.9},
 		{ -4.4, -4.9, -5.9, -5.9, -5.9, -5.9, -4.9, -4.9, -4.9, -4.9, -4.9, -2.4, -2.4, -2.4, -2.4, -2.4},
 		{ -4.4, -4.9, -5.9, -5.9, -5.9, -5.9, -4.9, -4.9, -4.9, -4.9, -4.9, -2.9, -2.9, -2.9, -2.9, -2.9},
 		{-4.4, -4.9, -5.9, -5.9, -5.9, -5.9, -4.9, -4.9, -4.9, -4.9, -4.9, -3.9, -3.9, -3.9, -3.9, -3.9},
@@ -61,8 +62,10 @@ float getBaseAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_S) {
 	engine->m.beforeZeroTest = GET_TIMESTAMP();
 	engine->m.zeroTestTime = GET_TIMESTAMP() - engine->m.beforeZeroTest;
 
+	float iatCorrection = iatAdvanceCorrectionMap.getValue(engine->engineState.clt, (float) rpm);
+
 	engine->m.beforeAdvance = GET_TIMESTAMP();
-	float result = advanceMap.getValue(engineLoad, (float) rpm);
+	float result = advanceMap.getValue(engineLoad, (float) rpm) + iatCorrection;
 	engine->m.advanceTime = GET_TIMESTAMP() - engine->m.beforeAdvance;
 	return result;
 }
@@ -88,4 +91,6 @@ void setDefaultIatTimingCorrection(DECLARE_ENGINE_PARAMETER_F) {
 void prepareTimingMap(DECLARE_ENGINE_PARAMETER_F) {
 	advanceMap.init(config->ignitionTable, config->ignitionLoadBins,
 			config->ignitionRpmBins);
+	iatAdvanceCorrectionMap.init(config->ignitionIatCorrTable, config->ignitionIatCorrLoadBins,
+			config->ignitionIatCorrRpmBins);
 }

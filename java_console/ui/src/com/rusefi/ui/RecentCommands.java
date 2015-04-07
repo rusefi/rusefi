@@ -11,12 +11,16 @@ import java.awt.event.ActionListener;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
+
 /**
  * This UI element displays an array of buttons, each for one of the recently used commands
  */
 
 public class RecentCommands {
     private final static int NUMBER_OF_COMMANDS = 20;
+    private static final String KEY = "recent_commands";
+    private static final String DELIMETER = "|";
 
     private final JPanel content = new JPanel(new GridLayout(NUMBER_OF_COMMANDS, 1));
 
@@ -32,7 +36,6 @@ public class RecentCommands {
     private final JScrollPane messagesScroll = new JScrollPane(content, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
     public RecentCommands() {
-
         CommandQueue.getInstance().addListener(new CommandQueue.CommandQueueListener() {
             @Override
             public void onCommand(String command) {
@@ -41,6 +44,22 @@ public class RecentCommands {
             }
         });
 
+        String value = getConfig().getRoot().getProperty(KEY, null);
+
+        if (value != null && value.trim().length() > 5) {
+            unpack(value);
+        } else {
+            addDefaults();
+        }
+    }
+
+    private void unpack(String value) {
+        entries.clear();
+        for (String command : value.split("\\" + DELIMETER))
+            add(command);
+    }
+
+    private void addDefaults() {
         add("help");
         add("showconfig");
         add("analoginfo");
@@ -60,7 +79,6 @@ public class RecentCommands {
         add("fuelpumpbench");
         add("fanbench");
         add("milbench");
-
     }
 
     public void add(String command) {
@@ -81,7 +99,7 @@ public class RecentCommands {
                 UiUtils.trueLayout(content.getParent());
             }
         });
-
+        getConfig().getRoot().setProperty(KEY, pack());
     }
 
     private JComponent createButton(final Entry entry) {
@@ -103,6 +121,16 @@ public class RecentCommands {
 
     public Component getContent() {
         return messagesScroll;
+    }
+
+    public String pack() {
+        StringBuilder sb = new StringBuilder();
+        for (Entry command : entries.keySet()) {
+            if (sb.length() != 0)
+                sb.append(DELIMETER);
+            sb.append(command.command);
+        }
+        return sb.toString();
     }
 
     static class Entry {
