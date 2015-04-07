@@ -27,10 +27,8 @@
  * in chconf.h
  *
  */
-#define EFI_ENABLE_ASSERTS TRUE
-
-#ifndef EFI_ENABLE_ASSERTS
- #define EFI_ENABLE_ASSERTS FALSE
+#if !defined(EFI_ENABLE_ASSERTS) || defined(__DOXYGEN__)
+ #define EFI_ENABLE_ASSERTS TRUE
 #endif /* EFI_ENABLE_ASSERTS */
 
 //#define EFI_UART_ECHO_TEST_MODE TRUE
