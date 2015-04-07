@@ -6,6 +6,8 @@ import java.util.Comparator;
 import java.util.Map;
 import java.util.TreeMap;
 
+
+// todo: merge with WaveChart
 public class NameUtil {
     /**
      * See also 'CRANK1' in rusEfi firmware code
