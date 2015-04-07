@@ -26,6 +26,16 @@
       </table>
     </table>
 
+    <table type="3D" name="Ignition Advance IAT correction" storageaddress="20b8" sizex="16" sizey="16" storagetype="float" endian="big">
+      <scaling units="Engine Load" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1" />
+      <table type="X Axis" storageaddress="24b8" storagetype="float" endian="big" logparam="engine_load">
+          <scaling units="temperature, C" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1" />
+      </table>
+      <table type="Y Axis" storageaddress="24f8" storagetype="float" endian="big" logparam="rpm">
+          <scaling units="RPM" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1" />
+      </table>
+    </table>
+
       <table type="3D" name="Volumetric Efficiency" storageaddress="32b8" sizex="16" sizey="16" storagetype="float" endian="big">
           <scaling units="Engine Load" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1" />
           <table type="X Axis" storageaddress="36b8" storagetype="float" endian="big" logparam="engine_load">

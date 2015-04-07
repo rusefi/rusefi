@@ -17,6 +17,7 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileFilter;
 import java.util.Arrays;
+import java.util.TreeMap;
 
 /**
  * This tab is the entry point of rusEfi own log browser
@@ -120,8 +121,21 @@ public class LogViewer extends JPanel {
         for (File file : files)
             fileListModel.addElement(getFileDesc(file));
 
-        if (files.length > 0 && LinkManager.isLogViewer())
-            openFile(files[0]);
+        int index = 0;
+
+        while (files.length > index && LinkManager.isLogViewer()) {
+            File file = files[index];
+            if (file.getName().endsWith(FileLog.currentLogName)) {
+                /**
+                 * we do not want to view the log file we've just started to produce.
+                 * We are here if the logs are newer then our current time - remember about fime zone differences
+                 */
+                index++;
+                continue;
+            }
+            openFile(file);
+            break;
+        }
     }
 
     private FileItem getFileDesc(File file) {
