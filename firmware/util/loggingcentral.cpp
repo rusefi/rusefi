@@ -77,7 +77,9 @@ char * swapOutputBuffers(int *actualOutputBufferSize) {
 		 */
 		char *temp = outputBuffer;
 
+#if EFI_ENABLE_ASSERTS
 		expectedOutputSize = accumulatedSize;
+#endif /* EFI_ENABLE_ASSERTS */
 		outputBuffer = accumulationBuffer;
 
 		accumulationBuffer = temp;
