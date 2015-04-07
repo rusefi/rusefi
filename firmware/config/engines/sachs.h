@@ -7,8 +7,8 @@
 #ifndef CONFIG_ENGINES_SACHS_H_
 #define CONFIG_ENGINES_SACHS_H_
 
-#include "engine_configuration.h"
+#include "engine.h"
 
-void setSachs(engine_configuration_s *engineConfiguration);
+void setSachs(DECLARE_ENGINE_PARAMETER_F);
 
 #endif /* CONFIG_ENGINES_SACHS_H_ */

@@ -10,17 +10,18 @@ import java.io.*;
  * 2/4/15
  */
 public class FirmwareFlasher extends ProcessStatusWindow {
-    private static final String IMAGE_FILE = "rusefi.bin";
+    public static final String IMAGE_DEBUG_FILE = "rusefi_debug.bin";
+    public static final String IMAGE_RELEASE_FILE = "rusefi_release.bin";
     static final String OPENOCD_BIN = "openocd/bin/openocd-0.8.0.exe";
-    private static final String OPEN_OCD_COMMAND = OPENOCD_BIN + " -f interface/stlink-v2.cfg -f board/stm32f4discovery.cfg -c \"program " +
-            IMAGE_FILE +
-            " verify reset exit 0x08000000\"";
     private static final String SUCCESS_MESSAGE_TAG = "shutdown command invoked";
     private static final String FAILED_MESSAGE_TAG = "failed";
 
-    private final JButton button = new JButton("Program Firmware");
+    private final JButton button;
+    private String fileName;
 
-    public FirmwareFlasher() {
+    public FirmwareFlasher(String fileName, String buttonTest) {
+        this.fileName = fileName;
+        button = new JButton(buttonTest);
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
@@ -44,11 +45,13 @@ public class FirmwareFlasher extends ProcessStatusWindow {
     }
 
     private void doFlashFirmware() {
-        if (!new File(IMAGE_FILE).exists()) {
-            wnd.appendMsg(IMAGE_FILE + " not found, cannot proceed !!!");
+        if (!new File(fileName).exists()) {
+            wnd.appendMsg(fileName + " not found, cannot proceed !!!");
             return;
         }
-        StringBuffer error = executeCommand(OPEN_OCD_COMMAND);
+        StringBuffer error = executeCommand(OPENOCD_BIN + " -f interface/stlink-v2.cfg -f board/stm32f4discovery.cfg -c \"program " +
+                fileName +
+                " verify reset exit 0x08000000\"");
         if (error.toString().contains(SUCCESS_MESSAGE_TAG) && !error.toString().contains(FAILED_MESSAGE_TAG)) {
             wnd.appendMsg("!!! Looks good!!!");
         } else {

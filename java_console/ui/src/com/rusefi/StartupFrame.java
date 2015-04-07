@@ -94,7 +94,9 @@ public class StartupFrame {
 
         if (ProcessStatusWindow.isWindows()) {
             leftPanel.add(new HorizontalLine());
-            leftPanel.add(new FirmwareFlasher().getButton());
+            leftPanel.add(new FirmwareFlasher(FirmwareFlasher.IMAGE_DEBUG_FILE, "Program Firmware/Debug").getButton());
+            leftPanel.add(new HorizontalLine());
+            leftPanel.add(new FirmwareFlasher(FirmwareFlasher.IMAGE_RELEASE_FILE, "Program Firmware/Release").getButton());
             leftPanel.add(new HorizontalLine());
             leftPanel.add(new EraseChip().getButton());
         }

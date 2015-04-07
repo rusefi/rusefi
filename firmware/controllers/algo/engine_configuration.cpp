@@ -695,7 +695,7 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 		setTestEngineConfiguration(PASS_ENGINE_PARAMETER_F);
 		break;
 	case SACHS:
-		setSachs(engineConfiguration);
+		setSachs(PASS_ENGINE_PARAMETER_F);
 		break;
 	default:
 		firmwareError("Unexpected engine type: %d", engineType);
