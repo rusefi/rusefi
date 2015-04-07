@@ -117,6 +117,8 @@ case TT_TOOTHED_WHEEL_60_2:
   return "TT_TOOTHED_WHEEL_60_2";
 case TT_ONE_PLUS_TOOTHED_WHEEL_60_2:
 	return "TT_ONE_PLUS_TOOTHED_WHEEL_60_2";
+case TT_ONE:
+	return "TT_ONE";
   }
  return NULL;
 }
