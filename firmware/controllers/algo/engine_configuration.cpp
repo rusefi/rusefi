@@ -143,6 +143,18 @@ static void initTemperatureCurve(int size, float *bins, float *values) {
 	}
 }
 
+void prepareVoidConfiguration(engine_configuration_s *activeConfiguration) {
+	memset(activeConfiguration, 0xFF, sizeof(engine_configuration_s));
+	board_configuration_s *boardConfiguration = &activeConfiguration->bc;
+
+	/**
+	 * -1 everywhere is probably good, but explicit values are probably better. Too bad GPIO_UNASSIGNED is not zero :(
+	 */
+	boardConfiguration->triggerInputPins[0] = GPIO_UNASSIGNED;
+	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
+	boardConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
+}
+
 /**
  * @brief	Global default engine configuration
  * This method sets the default global engine configuration. These values are later overridden by engine-specific defaults
