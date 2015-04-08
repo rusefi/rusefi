@@ -18,13 +18,9 @@
 #include "engine_configuration.h"
 #include "wave_analyzer_hw.h"
 
-static WaveReaderHw primaryCrankInput;
-static WaveReaderHw secondaryCrankInput;
+static ICUDriver *primaryCrankDriver;
 
 EXTERN_ENGINE;
-extern engine_configuration_s *engineConfiguration;
-extern engine_configuration2_s *engineConfiguration2;
-extern board_configuration_s *boardConfiguration;
 
 /**
  * that's hardware timer input capture IRQ entry point
@@ -33,7 +29,7 @@ extern board_configuration_s *boardConfiguration;
 static void shaft_icu_width_callback(ICUDriver *icup) {
 // todo: support for 3rd trigger input channel
 // todo: start using real event time from HW event, not just software timer?
-	int isPrimary = icup == primaryCrankInput.driver;
+	int isPrimary = icup == primaryCrankDriver;
 	if (!isPrimary && !engine->triggerShape.needSecondTriggerInput) {
 		return;
 	}
@@ -45,7 +41,7 @@ static void shaft_icu_width_callback(ICUDriver *icup) {
 }
 
 static void shaft_icu_period_callback(ICUDriver *icup) {
-	int isPrimary = icup == primaryCrankInput.driver;
+	int isPrimary = icup == primaryCrankDriver;
 	if (!isPrimary && !engine->triggerShape.needSecondTriggerInput) {
 		return;
 	}
@@ -62,38 +58,30 @@ static void shaft_icu_period_callback(ICUDriver *icup) {
 static ICUConfig shaft_icucfg = { ICU_INPUT_ACTIVE_LOW, 100000, /* 100kHz ICU clock frequency.   */
 shaft_icu_width_callback, shaft_icu_period_callback };
 
-void initShaftPositionInputCapture(void) {
-
-	ICUDriver *driver;
-
-	driver = getInputCaptureDriver(boardConfiguration->triggerInputPins[0]);
-
-	// todo: extract method!
-	// initialize primary Input Capture Unit pin
-	initWaveAnalyzerDriver(&primaryCrankInput, boardConfiguration->triggerInputPins[0]);
-	/**
-	 * Start primary Input Capture Unit using given configuration
-	 * @see shaft_icucfg for callback entry points
-	 */
+static ICUDriver *turnOnTriggerInputPin(brain_pin_e hwPin) {
+	// configure pin
+	turnOnCapturePin(hwPin);
 	shaft_icucfg.channel = ICU_CHANNEL_1;
-	print("initShaftPositionInputCapture 1 %s\r\n", hwPortname(boardConfiguration->triggerInputPins[0]));
+
+	ICUDriver *driver = getInputCaptureDriver(hwPin);
+	print("initShaftPositionInputCapture %s\r\n", hwPortname(hwPin));
 	// todo: reuse 'setWaveReaderMode' method here?
 	if (driver != NULL) {
 		efiIcuStart(driver, &shaft_icucfg);
 		icuEnable(driver);
 	}
+	return driver;
+}
 
-	driver = getInputCaptureDriver(boardConfiguration->triggerInputPins[1]);
-	// initialize secondary Input Capture Unit pin
-	initWaveAnalyzerDriver(&secondaryCrankInput, boardConfiguration->triggerInputPins[1]);
-	shaft_icucfg.channel = ICU_CHANNEL_1;
-	print("initShaftPositionInputCapture 2 %s\r\n", hwPortname(boardConfiguration->triggerInputPins[1]));
-	if (driver != NULL) {
-		efiIcuStart(driver, &shaft_icucfg);
-		icuEnable(driver);
-	}
+void turnOnTriggerInputPins(void) {
+	primaryCrankDriver = turnOnTriggerInputPin(boardConfiguration->triggerInputPins[0]);
+	turnOnTriggerInputPin(boardConfiguration->triggerInputPins[1]);
 
 	print("crank input disabled\r\n");
+}
+
+void turnOffTriggerInputPins(void) {
+
 }
 
 #endif /* EFI_SHAFT_POSITION_INPUT */

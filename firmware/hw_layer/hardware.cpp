@@ -177,6 +177,18 @@ static void adcConfigListener(Engine *engine) {
 	calcFastAdcIndexes();
 }
 
+void turnOnHardware(void) {
+#if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
+	turnOnTriggerInputPins();
+#endif /* EFI_SHAFT_POSITION_INPUT */
+}
+
+void turnOffHardware(void) {
+#if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
+	turnOffTriggerInputPins();
+#endif /* EFI_SHAFT_POSITION_INPUT */
+}
+
 void initHardware(Logging *l, Engine *engine) {
 	sharedLogger = l;
 	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
@@ -277,9 +289,9 @@ void initHardware(Logging *l, Engine *engine) {
 #if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
 	// todo: figure out better startup logic
 	initTriggerCentral(sharedLogger, engine);
-
-	initShaftPositionInputCapture();
 #endif /* EFI_SHAFT_POSITION_INPUT */
+
+	turnOnHardware();
 
 #if HAL_USE_SPI || defined(__DOXYGEN__)
 	initSpiModules(boardConfiguration);

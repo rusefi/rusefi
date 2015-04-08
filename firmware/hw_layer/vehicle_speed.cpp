@@ -18,8 +18,6 @@ EXTERN_ENGINE
 
 static Logging *logger;
 
-static WaveReaderHw vehicleSpeedInput;
-
 static uint64_t lastSignalTimeNt = 0;
 static uint64_t vssDiff = 0;
 static int vssCounter = 0;
@@ -54,10 +52,10 @@ void initVehicleSpeed(Logging *l) {
 	logger = l;
 	if (boardConfiguration->vehicleSpeedSensorInputPin == GPIO_UNASSIGNED)
 		return;
-	initWaveAnalyzerDriver(&vehicleSpeedInput, boardConfiguration->vehicleSpeedSensorInputPin);
-	startInputDriver(&vehicleSpeedInput, true);
+	WaveReaderHw* vehicleSpeedInput = initWaveAnalyzerDriver(boardConfiguration->vehicleSpeedSensorInputPin);
+	startInputDriver(vehicleSpeedInput, true);
 
-	vehicleSpeedInput.widthListeners.registerCallback((VoidInt) vsAnaWidthCallback, NULL);
+	vehicleSpeedInput->widthListeners.registerCallback((VoidInt) vsAnaWidthCallback, NULL);
 	addConsoleAction("speedinfo", speedInfo);
 }
 

@@ -21,7 +21,8 @@ public:
 	T pop();
 	T get(int index);
 	bool_t remove(T value);
-	int size();bool isEmpty();
+	int size();
+	bool isEmpty();
 private:
 	int currentSize;
 	T values[MAXSIZE];
@@ -30,6 +31,7 @@ private:
 template<typename T, int MAXSIZE>
 FLStack<T, MAXSIZE>::FLStack() {
 	reset();
+	memset(values, 0, sizeof(values));
 }
 
 template<typename T, int MAXSIZE>
@@ -94,12 +96,21 @@ public:
 	Type elements[Dimention];
 	void reset(void);
 	Type *add(void);
+	void removeAt(int index);
 };
 
 template<class Type, int Dimention>
 ArrayList<Type, Dimention>::ArrayList(void) {
 	memset(&elements, 0, sizeof(elements));
 	reset();
+}
+
+template<class Type, int Dimention>
+void ArrayList<Type, Dimention>::removeAt(int index) {
+	efiAssertVoid(index < size, "index greater then size");
+	memcpy(&elements[index], &elements[size - 1], sizeof(Type));
+	memset(&elements[size - 1], 0, sizeof(Type));
+	size--;
 }
 
 template<class Type, int Dimention>
