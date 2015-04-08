@@ -53,7 +53,11 @@ public class AverageAngles {
     public void printReport(PrintStream stream) {
         List<Double> angles = new ArrayList<>();
 
+        stream.println("Based on " + angleData.size() + " charts");
+
         stream.println("index,average,stdev");
+
+        double prev = 0;
 
         for (Map.Entry<Integer, List<Double>> e : angleData.entrySet()) {
             int k = e.getKey();
@@ -70,7 +74,9 @@ public class AverageAngles {
 
             angles.add(mean);
 
-            stream.println(k + "," + mean + "," + sdv);
+            double diff = mean - prev;
+            prev = mean;
+            stream.println(k + "," + mean + "," + sdv + "," + diff);
         }
         if (angleData.isEmpty())
             return;

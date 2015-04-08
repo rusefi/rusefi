@@ -7,5 +7,5 @@ package com.rusefi.trigger;
  * 1/18/2015
  */
 public interface TriggerShape {
-    public int getTotalToothCount();
+    int getTotalToothCount();
 }
