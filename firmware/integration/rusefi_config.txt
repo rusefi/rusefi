@@ -182,7 +182,8 @@ int canSleepPeriod;;"ms",    1,      0,       0,  1000.0,        2
 custom ignition_mode_e 4 bits,    U32,    @OFFSET@, [0:1], "One coil", "Individual Coils", "Wasted", "INVALID"
 ignition_mode_e ignitionMode;
 
-operation_mode_e operationMode
+custom operation_mode_e 4 bits,    U32,    @OFFSET@, [0:1], "INVALID", "4 stroke without cam sensor", "4 stroke with cam sensor", "2 stroke"
+operation_mode_e operationMode;
 
 custom display_mode_e 4 bits,    U32,    @OFFSET@, [0:1], "none", "hd44780", "hd44780 over pcf8574", "INVALID"
 display_mode_e displayMode;
