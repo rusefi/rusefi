@@ -9,10 +9,5 @@
 #include "test_event_registry.h"
 #include "main.h"
 
-static ActuatorEventList eventList;
-static ActuatorEventList result;
-
-extern int outputSignalCount;
-
 void testEventRegistry(void) {
 }

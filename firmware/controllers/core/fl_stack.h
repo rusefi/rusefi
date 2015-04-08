@@ -20,10 +20,10 @@ public:
 	void reset();
 	T pop();
 	T get(int index);
-	int size();
-	bool isEmpty();
+	bool_t remove(T value);
+	int size();bool isEmpty();
 private:
-	int index;
+	int currentSize;
 	T values[MAXSIZE];
 };
 
@@ -34,32 +34,47 @@ FLStack<T, MAXSIZE>::FLStack() {
 
 template<typename T, int MAXSIZE>
 bool FLStack<T, MAXSIZE>::isEmpty() {
-	return index == 0;
+	return currentSize == 0;
 }
 
 template<typename T, int MAXSIZE>
 void FLStack<T, MAXSIZE>::reset() {
-	index = 0;
+	currentSize = 0;
+}
+
+template<typename T, int MAXSIZE>
+bool_t FLStack<T, MAXSIZE>::remove(T value) {
+	for (int i = 0; i < currentSize; i++) {
+		if (values[i] == value) {
+			values[0] = values[currentSize - 1];
+			currentSize--;
+			return true;
+		}
+	}
+	return false;
 }
 
 template<typename T, int MAXSIZE>
 void FLStack<T, MAXSIZE>::push(T value) {
-	if(index >= MAXSIZE) {
+	if (currentSize >= MAXSIZE) {
 		firmwareError("FLstack overflow");
 		return;
 		//warning()
 	}
-	values[index++] = value;
+	values[currentSize++] = value;
 }
 
 template<typename T, int MAXSIZE>
 T FLStack<T, MAXSIZE>::pop() {
-	if (index == 0) {
+	if (currentSize == 0) {
 		firmwareError("FLStack is empty");
 	}
-	return values[--index];
+	return values[--currentSize];
 }
 
+/**
+ * @return element at the specified index
+ */
 template<typename T, int MAXSIZE>
 T FLStack<T, MAXSIZE>::get(int index) {
 	efiAssert(index >= 0 && index < MAXSIZE, "FLget", values[0]);
@@ -68,10 +83,10 @@ T FLStack<T, MAXSIZE>::get(int index) {
 
 template<typename T, int MAXSIZE>
 int FLStack<T, MAXSIZE>::size() {
-	return index;
+	return currentSize;
 }
 
-template <class Type, int Dimention>
+template<class Type, int Dimention>
 class ArrayList {
 public:
 	ArrayList();
@@ -81,19 +96,19 @@ public:
 	Type *add(void);
 };
 
-template <class Type, int Dimention>
-ArrayList< Type, Dimention>::ArrayList(void) {
+template<class Type, int Dimention>
+ArrayList<Type, Dimention>::ArrayList(void) {
 	memset(&elements, 0, sizeof(elements));
 	reset();
 }
 
-template <class Type, int Dimention>
-void ArrayList< Type, Dimention>::reset(void) {
+template<class Type, int Dimention>
+void ArrayList<Type, Dimention>::reset(void) {
 	size = 0;
 }
 
-template <class Type, int Dimention>
-Type * ArrayList< Type, Dimention>::add(void) {
+template<class Type, int Dimention>
+Type * ArrayList<Type, Dimention>::add(void) {
 	efiAssert(size < Dimention, "add() too many elements", (Type *)NULL);
 	return &elements[size++];
 }
