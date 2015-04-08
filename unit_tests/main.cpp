@@ -150,7 +150,7 @@ int main(void) {
 	testTriggerDecoder();
 
 	//	resizeMap();
-	printf("Success 20150213\r\n");
+	printf("Success 20150407\r\n");
 	return EXIT_SUCCESS;
 }
 

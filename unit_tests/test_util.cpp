@@ -362,6 +362,15 @@ void testFLStack(void) {
 	assertEquals(123, v);
 	assertEquals(0, stack.size());
 
+	stack.push(123);
+	stack.push(234);
+	stack.push(345);
+	stack.push(456);
+	assertEquals(4, stack.size());
+
+	stack.remove(123);
+	assertEquals(456, stack.get(0));
+	assertEquals(3, stack.size());
 }
 
 static char buff[32];
