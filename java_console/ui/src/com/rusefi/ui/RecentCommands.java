@@ -18,7 +18,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  */
 
 public class RecentCommands {
-    private final static int NUMBER_OF_COMMANDS = 20;
+    private final static int NUMBER_OF_COMMANDS = 40;
     private static final String KEY = "recent_commands";
     private static final String DELIMETER = "|";
 

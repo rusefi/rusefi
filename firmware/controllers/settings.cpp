@@ -780,6 +780,9 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		boardConfiguration->isFastAdcEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "stepperidle")) {
 		boardConfiguration->useStepperIdle = isEnabled;
+	} else if (strEqualCaseInsensitive(param, "two_wire_batch")) {
+		engineConfiguration->twoWireBatch = isEnabled;
+		incrementGlobalConfigurationVersion();
 	} else if (strEqualCaseInsensitive(param, "joystick")) {
 		engineConfiguration->isJoystickEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "HIP9011")) {
