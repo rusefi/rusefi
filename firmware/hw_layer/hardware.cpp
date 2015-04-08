@@ -177,15 +177,15 @@ static void adcConfigListener(Engine *engine) {
 	calcFastAdcIndexes();
 }
 
-void turnOnHardware(void) {
+void turnOnHardware(Logging *sharedLogger) {
 #if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
-	turnOnTriggerInputPins();
+	turnOnTriggerInputPins(sharedLogger);
 #endif /* EFI_SHAFT_POSITION_INPUT */
 }
 
-void turnOffHardware(void) {
+void applyNewHardwareSettings(engine_configuration_s *oldConfiguration) {
 #if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
-	turnOffTriggerInputPins();
+	applyNewTriggerInputPins(oldConfiguration);
 #endif /* EFI_SHAFT_POSITION_INPUT */
 }
 
@@ -291,7 +291,7 @@ void initHardware(Logging *l, Engine *engine) {
 	initTriggerCentral(sharedLogger, engine);
 #endif /* EFI_SHAFT_POSITION_INPUT */
 
-	turnOnHardware();
+	turnOnHardware(sharedLogger);
 
 #if HAL_USE_SPI || defined(__DOXYGEN__)
 	initSpiModules(boardConfiguration);

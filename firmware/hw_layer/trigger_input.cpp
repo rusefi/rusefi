@@ -18,9 +18,13 @@
 #include "engine_configuration.h"
 #include "wave_analyzer_hw.h"
 
+#define TRIGGER_SUPPORTED_CHANNELS 2
+
 static ICUDriver *primaryCrankDriver;
 
-EXTERN_ENGINE;
+EXTERN_ENGINE
+;
+static Logging *logger;
 
 /**
  * that's hardware timer input capture IRQ entry point
@@ -64,7 +68,7 @@ static ICUDriver *turnOnTriggerInputPin(brain_pin_e hwPin) {
 	shaft_icucfg.channel = ICU_CHANNEL_1;
 
 	ICUDriver *driver = getInputCaptureDriver(hwPin);
-	print("initShaftPositionInputCapture %s\r\n", hwPortname(hwPin));
+	scheduleMsg(logger, "turnOnTriggerInputPin %s", hwPortname(hwPin));
 	// todo: reuse 'setWaveReaderMode' method here?
 	if (driver != NULL) {
 		efiIcuStart(driver, &shaft_icucfg);
@@ -73,15 +77,45 @@ static ICUDriver *turnOnTriggerInputPin(brain_pin_e hwPin) {
 	return driver;
 }
 
-void turnOnTriggerInputPins(void) {
-	primaryCrankDriver = turnOnTriggerInputPin(boardConfiguration->triggerInputPins[0]);
-	turnOnTriggerInputPin(boardConfiguration->triggerInputPins[1]);
-
-	print("crank input disabled\r\n");
+static void turnOffTriggerInputPin(brain_pin_e hwPin) {
+	ICUDriver *driver = getInputCaptureDriver(hwPin);
+	if (driver != NULL) {
+		icuDisable(driver);
+		icuStop(driver);
+		scheduleMsg(logger, "turnOffTriggerInputPin %s", hwPortname(hwPin));
+		unmarkPin(hwPin);
+	}
 }
 
-void turnOffTriggerInputPins(void) {
+static void rememberPrimaryChannel(void) {
+	primaryCrankDriver = getInputCaptureDriver(boardConfiguration->triggerInputPins[0]);
+}
 
+void turnOnTriggerInputPins(Logging *sharedLogger) {
+	logger = sharedLogger;
+	for (int i = 0; i < TRIGGER_SUPPORTED_CHANNELS; i++) {
+		turnOnTriggerInputPin(boardConfiguration->triggerInputPins[i]);
+	}
+
+	rememberPrimaryChannel();
+}
+
+void applyNewTriggerInputPins(engine_configuration_s *oldConfiguration) {
+	// first we will turn off all the changed pins
+	for (int i = 0; i < TRIGGER_SUPPORTED_CHANNELS; i++) {
+		if (boardConfiguration->triggerInputPins[i] != oldConfiguration->bc.triggerInputPins[i]) {
+			turnOffTriggerInputPin(oldConfiguration->bc.triggerInputPins[i]);
+		}
+	}
+	// then we will enable all the changed pins
+	for (int i = 0; i < TRIGGER_SUPPORTED_CHANNELS; i++) {
+		if (boardConfiguration->triggerInputPins[i] != oldConfiguration->bc.triggerInputPins[i]) {
+			turnOnTriggerInputPin(boardConfiguration->triggerInputPins[i]);
+		}
+	}
+
+	turnOffTriggerInputPin(oldConfiguration->bc.triggerInputPins[1]);
+	rememberPrimaryChannel();
 }
 
 #endif /* EFI_SHAFT_POSITION_INPUT */

@@ -168,6 +168,16 @@ void swo_init() {
 //     *((volatile unsigned *)(ITM_BASE + 0x40304)) = 0x00000100; // Formatter and Flush Control Register
 }
 
+static engine_configuration_s activeConfiguration;
+
+static void rememberCurrentConfiguration(void) {
+	memcpy(&activeConfiguration, engineConfiguration, sizeof(engine_configuration_s));
+}
+
+void applyNewConfiguration() {
+	applyNewHardwareSettings(&activeConfiguration);
+}
+
 void runRusEfi(void) {
 	msObjectInit(&firmwareErrorMessageStream, errorMessageBuffer, sizeof(errorMessageBuffer), 0);
 
@@ -214,13 +224,15 @@ void runRusEfi(void) {
 #endif
 	startStatusThreads(engine);
 
+	rememberCurrentConfiguration();
+
 	print("Running main loop\r\n");
 	main_loop_started = true;
 	/**
 	 * This loop is the closes we have to 'main loop' - but here we only publish the status. The main logic of engine
 	 * control is around main_trigger_callback
 	 */
-	while (TRUE) {
+	while (true) {
 		efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "stack#1");
 
 #if (EFI_CLI_SUPPORT && !EFI_UART_ECHO_TEST_MODE) || defined(__DOXYGEN__)

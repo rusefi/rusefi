@@ -9,7 +9,9 @@
 #ifndef CRANK_INPUT_H_
 #define CRANK_INPUT_H_
 
-void turnOnTriggerInputPins(void);
-void turnOffTriggerInputPins(void);
+#include "engine.h"
+
+void turnOnTriggerInputPins(Logging *sharedLogger);
+void applyNewTriggerInputPins(engine_configuration_s *oldConfiguration);
 
 #endif /* CRANK_INPUT_H_ */
