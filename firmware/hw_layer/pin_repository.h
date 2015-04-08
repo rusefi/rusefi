@@ -26,20 +26,11 @@ void outputPinRegister(const char *msg, OutputPin *output, GPIO_TypeDef *port, u
 void initPinRepository(void);
 brain_pin_e parseBrainPin(const char *str);
 void mySetPadMode(const char *msg, ioportid_t port, ioportmask_t pin, iomode_t mode);
-
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
-
 const char *hwPortname(brain_pin_e brainPin);
 const char * getPinFunction(brain_input_pin_e brainPin);
 void mySetPadMode2(const char *msg, brain_pin_e pin, iomode_t mode);
 const char *portname(GPIO_TypeDef* GPIOx);
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+void unmarkPin(brain_pin_e brainPin);
 
 iomode_t getInputMode(pin_input_mode_e mode);
 void efiIcuStart(ICUDriver *icup, const ICUConfig *config);
