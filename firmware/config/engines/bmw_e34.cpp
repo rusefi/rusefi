@@ -34,17 +34,23 @@ void setBmwE34(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->tunerStudioSerialSpeed = 38400;
 	engineConfiguration->rpmHardLimit = 6000;
 
+//	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
+//	engineConfiguration->trigger.type = TT_ONE_PLUS_TOOTHED_WHEEL_60_2;
+//	engineConfiguration->injectionMode = IM_SEQUENTIAL;
+//	boardConfiguration->triggerInputPins[0] = GPIOC_6;
+//	boardConfiguration->triggerInputPins[1] = GPIOA_5;
+
 	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
-	engineConfiguration->trigger.type = TT_ONE_PLUS_TOOTHED_WHEEL_60_2;
+	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
+	engineConfiguration->injectionMode = IM_BATCH;
+	boardConfiguration->triggerInputPins[0] = GPIOA_5;
+	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
 
 	engineConfiguration->specs.cylindersCount = 6;
 	engineConfiguration->specs.displacement = 2.91;
 	engineConfiguration->specs.firingOrder = FO_1_THEN_5_THEN_3_THEN_6_THEN_2_THEN_4;
-	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 
-	boardConfiguration->triggerInputPins[0] = GPIOC_6;
-	boardConfiguration->triggerInputPins[1] = GPIOA_5;
 
 	engineConfiguration->ignMathCalculateAtIndex = 15;
 
