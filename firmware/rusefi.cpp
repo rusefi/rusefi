@@ -189,6 +189,8 @@ void runRusEfi(void) {
 
 	swo_init();
 
+	prepareVoidConfiguration(&activeConfiguration);
+
 	/**
 	 * First data structure keeps track of which hardware I/O pins are used by whom
 	 */
@@ -288,5 +290,5 @@ int getRusEfiVersion(void) {
 		return 123; // this is here to make the compiler happy about the unused array
 	if (UNUSED_CCM_SIZE[0] * 0 != 0)
 		return 3211; // this is here to make the compiler happy about the unused array
-	return 20150407;
+	return 20150408;
 }

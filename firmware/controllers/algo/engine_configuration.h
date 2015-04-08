@@ -45,6 +45,7 @@ typedef struct {
 	crc_t value;
 } persistent_config_container_s;
 
+void prepareVoidConfiguration(engine_configuration_s *activeConfiguration);
 void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F);
 void setMap(fuel_table_t table, float value);
 void setWholeFuelMap(float value DECLARE_ENGINE_PARAMETER_S);
