@@ -50,7 +50,7 @@ static THD_WORKING_AREA(waThreadStack, UTILITY_THREAD_STACK_SIZE);
 static Logging * logger;
 
 static void ensureInitialized(WaveReader *reader) {
-	efiAssertVoid(reader->hw.started, "wave analyzer NOT INITIALIZED");
+	efiAssertVoid(reader->hw->started, "wave analyzer NOT INITIALIZED");
 }
 
 #if EFI_WAVE_ANALYZER || defined(__DOXYGEN__)
@@ -104,7 +104,7 @@ static void waIcuPeriodCallback(WaveReader *reader) {
 static void setWaveModeSilent(int index, int mode) {
 	WaveReader *reader = &readers[index];
 
-	startInputDriver(&reader->hw, mode);
+	startInputDriver(reader->hw, mode);
 }
 
 //static int getEventCounter(int index) {
@@ -121,20 +121,24 @@ static void initWave(const char *name, int index) {
 	waveReaderCount++;
 	efiAssertVoid(index < MAX_ICU_COUNT, "too many ICUs");
 	WaveReader *reader = &readers[index];
-	WaveReaderHw *hw = &reader->hw;
-
 	reader->name = name;
 
-	hw->widthListeners.registerCallback((VoidInt) waAnaWidthCallback, (void*) reader);
+	reader->hw = initWaveAnalyzerDriver(brainPin);
 
-	hw->periodListeners.registerCallback((VoidInt) waIcuPeriodCallback, (void*) reader);
 
-	initWaveAnalyzerDriver(hw, brainPin);
+	reader->hw->widthListeners.registerCallback((VoidInt) waAnaWidthCallback, (void*) reader);
 
-	print("wave%d input on %s%d\r\n", index, portname(reader->hw.port), reader->hw.pin);
-	startInputDriver(hw, mode);
+	reader->hw->periodListeners.registerCallback((VoidInt) waIcuPeriodCallback, (void*) reader);
+
+
+	print("wave%d input on %s\r\n", index, hwPortname(brainPin));
+	startInputDriver(reader->hw, mode);
 }
 #endif
+
+WaveReader::WaveReader() {
+	hw = NULL;
+}
 
 static void waTriggerEventListener(trigger_event_e ckpSignalType, uint32_t index DECLARE_ENGINE_PARAMETER_S) {
 	(void)ckpSignalType;
@@ -195,7 +199,7 @@ static float getSignalPeriodMs(int index) {
 //}
 
 static void reportWave(Logging *logging, int index) {
-	if (readers[index].hw.started) {
+	if (readers[index].hw->started) {
 //	int counter = getEventCounter(index);
 //	debugInt2(logging, "ev", index, counter);
 

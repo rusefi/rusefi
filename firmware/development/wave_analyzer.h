@@ -25,9 +25,10 @@
 
 class WaveReader {
 public:
+	WaveReader();
 	void onFallEvent();
 
-	WaveReaderHw hw;
+	WaveReaderHw *hw;
 	const char *name;
 	volatile int eventCounter;
 

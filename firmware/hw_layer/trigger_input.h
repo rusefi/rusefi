@@ -9,15 +9,7 @@
 #ifndef CRANK_INPUT_H_
 #define CRANK_INPUT_H_
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
-
-void initShaftPositionInputCapture(void);
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+void turnOnTriggerInputPins(void);
+void turnOffTriggerInputPins(void);
 
 #endif /* CRANK_INPUT_H_ */

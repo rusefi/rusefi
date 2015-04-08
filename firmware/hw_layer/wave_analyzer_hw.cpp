@@ -8,6 +8,7 @@
 
 #include "wave_analyzer_hw.h"
 #include "mpu_util.h"
+#include "fl_stack.h"
 
 #if EFI_WAVE_ANALYZER || defined(__DOXYGEN__)
 
@@ -25,13 +26,12 @@ static void icuPeriordCallBack(ICUDriver *driver);
 static ICUConfig wave_icucfg = { ICU_INPUT_ACTIVE_LOW, CORE_CLOCK / 100, icuWidthCallback, icuPeriordCallBack, 0,
 		ICU_CHANNEL_1, 0 };
 
-static int registeredIcuCount = 0;
-static WaveReaderHw* registeredIcus[8];
+static ArrayList<WaveReaderHw, 8> registeredIcus;
 
 static WaveReaderHw * findWaveReaderHw(ICUDriver *driver) {
-	for (int i = 0; i < registeredIcuCount; i++) {
-		if (registeredIcus[i]->driver == driver) {
-			return registeredIcus[i];
+	for (int i = 0; i < registeredIcus.size; i++) {
+		if (registeredIcus.elements[i].driver == driver) {
+			return &registeredIcus.elements[i];
 		}
 	}
 	firmwareError("reader not found");
@@ -140,23 +140,25 @@ ICUDriver * getInputCaptureDriver(brain_pin_e hwPin) {
 	return (ICUDriver *) NULL;
 }
 
-void initWaveAnalyzerDriver(WaveReaderHw *hw, brain_pin_e brainPin) {
+void turnOnCapturePin(brain_pin_e brainPin) {
 	ioportid_t port = getHwPort(brainPin);
 	ioportmask_t pin = getHwPin(brainPin);
 
 	ICUDriver *driver = getInputCaptureDriver(brainPin);
-
-	hw->driver = driver;
-	hw->port = port;
-	hw->pin = pin;
 	if (driver != NULL) {
 		iomode_t mode = (iomode_t) PAL_MODE_ALTERNATE(getAlternateFunctions(driver));
 		mySetPadMode("wave input", port, pin, mode);
-
-//	hw->widthListeners.currentListenersCount = 0;
-
-		registeredIcus[registeredIcuCount++] = hw;
 	}
+}
+
+WaveReaderHw * initWaveAnalyzerDriver(brain_pin_e brainPin) {
+	ICUDriver *driver = getInputCaptureDriver(brainPin);
+
+	WaveReaderHw *hw = registeredIcus.add();
+
+	hw->driver = driver;
+	turnOnCapturePin(brainPin);
+	return hw;
 }
 
 void startInputDriver(WaveReaderHw *hw, bool isActiveHigh) {
