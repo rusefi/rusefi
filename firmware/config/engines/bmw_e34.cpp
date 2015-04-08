@@ -40,7 +40,7 @@ void setBmwE34(DECLARE_ENGINE_PARAMETER_F) {
 //	boardConfiguration->triggerInputPins[0] = GPIOC_6;
 //	boardConfiguration->triggerInputPins[1] = GPIOA_5;
 
-	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
+	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
 	engineConfiguration->injectionMode = IM_BATCH;
 	boardConfiguration->triggerInputPins[0] = GPIOA_5;
