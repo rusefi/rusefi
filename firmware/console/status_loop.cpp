@@ -143,7 +143,7 @@ static void reportSensorI(Logging *log, bool fileFormat, const char *caption, co
 EXTERN_ENGINE
 ;
 
-void printSensors(Logging *log, bool fileFormat) {
+static void printSensors(Logging *log, bool fileFormat) {
 	// current time, in milliseconds
 	int nowMs = currentTimeMillis();
 	float sec = ((float) nowMs) / 1000;
@@ -215,7 +215,6 @@ void writeLogLine(void) {
 
 static void printState(void) {
 #if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
-	printSensors(&logger, false);
 
 	// todo: make SWO work
 //	char *msg = "hello\r\n";
@@ -325,12 +324,17 @@ void updateDevConsoleState(Engine *engine) {
 //	checkIfShouldHalt();
 	printPending();
 
+	/**
+	 * this should go before the firmware error so that console can detect connection
+	 */
+	printSensors(&logger, false);
+
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	// todo: unify with simulator!
 	if (hasFirmwareError()) {
-		printMsg(&logger, "firmware error: %s", errorMessageBuffer);
-		warningEnabled = FALSE;
-		chThdSleepMilliseconds(200);
+		scheduleMsg(&logger, "firmware error: %s", errorMessageBuffer);
+		warningEnabled = false;
+		scheduleLogging(&logger);
 		return;
 	}
 #endif

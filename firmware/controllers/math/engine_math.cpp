@@ -247,14 +247,18 @@ static int findAngleIndex(float angleOffset DECLARE_ENGINE_PARAMETER_S) {
 		float eventAngle = TRIGGER_SHAPE(eventAngles[middle]);
 
 		if (middle == left) {
-			return middle;
+			/**
+			 * in case of 'useOnlyFrontForTrigger' flag we will only use even angle indexes
+			 */
+			return engineConfiguration->useOnlyFrontForTrigger ? middle & 0xFFFFFFFE : middle;
 		}
 		if (angleOffset < eventAngle) {
 			right = middle;
 		} else if (angleOffset > eventAngle) {
 			left = middle;
 		} else {
-			return middle;
+			// see comment above
+			return engineConfiguration->useOnlyFrontForTrigger ? middle & 0xFFFFFFFE : middle;
 		}
 	}
 }

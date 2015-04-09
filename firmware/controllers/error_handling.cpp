@@ -58,7 +58,7 @@ static MemoryStream warningStream;
 int warning(obd_code_e code, const char *fmt, ...) {
 	int now = getTimeNowSeconds();
 	if (absI(now - timeOfPreviousWarning) < 10 || !warningEnabled)
-		return TRUE; // we just had another warning, let's not spam
+		return true; // we just had another warning, let's not spam
 	timeOfPreviousWarning = now;
 
 	resetLogging(&logger); // todo: is 'reset' really needed here?
