@@ -75,7 +75,6 @@ static IgnitionEvent *iHead = NULL;
  * This queue is using global trigger event index as 'time'
  */
 //static EventQueue triggerEventsQueue;
-
 static cyclic_buffer<int> ignitionErrorDetection;
 
 static Logging *logger;
@@ -253,8 +252,7 @@ static ALWAYS_INLINE void handleSpark(uint32_t eventIndex, int rpm,
 			scheduling_s * sDown = &current->signalTimerDown;
 
 			float timeTillIgnitionUs = engine->rpmCalculator.oneDegreeUs * current->sparkPosition.angleOffset;
-			scheduleTask("spark 2down", sDown, (int) timeTillIgnitionUs, (schfunc_t) &turnPinLow,
-					current->output);
+			scheduleTask("spark 2down", sDown, (int) timeTillIgnitionUs, (schfunc_t) &turnPinLow, current->output);
 		}
 	}
 
@@ -338,6 +336,10 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECL
 			prepareOutputSignals(PASS_ENGINE_PARAMETER_F);
 	}
 
+	if (engineConfiguration->useOnlyFrontForTrigger && engineConfiguration->ignMathCalculateAtIndex % 2 != 0) {
+		firmwareError("invalid ignMathCalculateAtIndex %d", engineConfiguration->ignMathCalculateAtIndex);
+	}
+
 	if (eventIndex == engineConfiguration->ignMathCalculateAtIndex) {
 		if (engineConfiguration->externalKnockSenseAdc != EFI_ADC_NONE) {
 			float externalKnockValue = getVoltageDivided(engineConfiguration->externalKnockSenseAdc);
@@ -356,7 +358,6 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECL
 		ENGINE(fuelMs) = getFuelMs(rpm PASS_ENGINE_PARAMETER) * engineConfiguration->globalFuelCorrection;
 		engine->m.fuelCalcTime = GET_TIMESTAMP() - engine->m.beforeFuelCalc;
 
-
 		engine->m.beforeIgnitionSch = GET_TIMESTAMP();
 		/**
 		 * TODO: warning. there is a bit of a hack here, todo: improve.
@@ -365,12 +366,15 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECL
 		 * but we are already repurposing the output signals, but everything works because we
 		 * are not affecting that space in memory. todo: use two instances of 'ignitionSignals'
 		 */
-		float maxAllowedDwellAngle = (int)(engineConfiguration->engineCycle / 2); // the cast is about making Coverity happy
+		float maxAllowedDwellAngle = (int) (engineConfiguration->engineCycle / 2); // the cast is about making Coverity happy
 
 		if (engineConfiguration->ignitionMode == IM_ONE_COIL) {
 			maxAllowedDwellAngle = engineConfiguration->engineCycle / engineConfiguration->specs.cylindersCount / 1.1;
 		}
 
+		if (engine->dwellAngle == 0) {
+			warning(OBD_PCM_Processor_Fault, "dwell is zero?");
+		}
 		if (engine->dwellAngle > maxAllowedDwellAngle) {
 			warning(OBD_PCM_Processor_Fault, "dwell angle too long: %f", engine->dwellAngle);
 		}
@@ -387,13 +391,12 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECL
 
 		engine->m.beforeInjectonSch = GET_TIMESTAMP();
 
-		if(isCrankingR(rpm)) {
-			ENGINE(engineConfiguration2)->crankingInjectionEvents.addFuelEvents(
-				&crankingInjectonSignals,
-				engineConfiguration->crankingInjectionMode PASS_ENGINE_PARAMETER);
+		if (isCrankingR(rpm)) {
+			ENGINE(engineConfiguration2)->crankingInjectionEvents.addFuelEvents(&crankingInjectonSignals,
+					engineConfiguration->crankingInjectionMode PASS_ENGINE_PARAMETER);
 		} else {
 			ENGINE(engineConfiguration2)->injectionEvents.addFuelEvents(&runningInjectonSignals,
-				engineConfiguration->injectionMode PASS_ENGINE_PARAMETER);
+					engineConfiguration->injectionMode PASS_ENGINE_PARAMETER);
 		}
 		engine->m.injectonSchTime = GET_TIMESTAMP() - engine->m.beforeInjectonSch;
 	}
@@ -445,7 +448,6 @@ void initMainEventListener(Logging *sharedLogger, Engine *engine) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	addConsoleAction("performanceinfo", showTriggerHistogram);
 	addConsoleActionP("maininfo", (VoidPtr) showMainInfo, engine);
-
 
 	printMsg(logger, "initMainLoop: %d", currentTimeMillis());
 	if (!isInjectionEnabled(mainTriggerCallbackInstance.engine->engineConfiguration))

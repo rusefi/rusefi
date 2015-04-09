@@ -86,6 +86,7 @@ static trigger_value_e eventType[6] = { TV_LOW, TV_HIGH, TV_LOW, TV_HIGH, TV_LOW
 		/* odd event - start accumulation */ \
 		timeOfPreviousEventNt[triggerWheel] = nowNt; \
 	} \
+	if (engineConfiguration->useOnlyFrontForTrigger) {current_index++;} \
 	current_index++; \
 }
 
