@@ -109,26 +109,19 @@ void TriggerCentral::resetCounters() {
 
 static char shaft_signal_msg_index[15];
 
-static ALWAYS_INLINE void reportEventToWaveChart(trigger_event_e ckpSignalType, int index) {
+static bool_t isUpEvent[6] = { false, true, false, true, false, true };
+static const char *eventId[6] = { CRANK1, CRANK1, CRANK2, CRANK2, CRANK3, CRANK3 };
+
+static ALWAYS_INLINE void reportEventToWaveChart(trigger_event_e ckpSignalType, int index DECLARE_ENGINE_PARAMETER_S) {
 	itoa10(&shaft_signal_msg_index[2], index);
-	if (ckpSignalType == SHAFT_PRIMARY_UP) {
-		shaft_signal_msg_index[0] = 'u';
-		addWaveChartEvent(CRANK1, (char* ) shaft_signal_msg_index);
-	} else if (ckpSignalType == SHAFT_PRIMARY_DOWN) {
-		shaft_signal_msg_index[0] = 'd';
-		addWaveChartEvent(CRANK1, (char* ) shaft_signal_msg_index);
-	} else if (ckpSignalType == SHAFT_SECONDARY_UP) {
-		shaft_signal_msg_index[0] = 'u';
-		addWaveChartEvent(CRANK2, (char* ) shaft_signal_msg_index);
-	} else if (ckpSignalType == SHAFT_SECONDARY_DOWN) {
-		shaft_signal_msg_index[0] = 'd';
-		addWaveChartEvent(CRANK2, (char* ) shaft_signal_msg_index);
-	} else if (ckpSignalType == SHAFT_3RD_UP) {
-		shaft_signal_msg_index[0] = 'u';
-		addWaveChartEvent(CRANK3, (char* ) shaft_signal_msg_index);
-	} else if (ckpSignalType == SHAFT_3RD_DOWN) {
-		shaft_signal_msg_index[0] = 'd';
-		addWaveChartEvent(CRANK3, (char* ) shaft_signal_msg_index);
+	bool_t isUp = isUpEvent[(int) ckpSignalType];
+	shaft_signal_msg_index[0] = isUp ? 'u' : 'd';
+
+	addWaveChartEvent(eventId[(int )ckpSignalType], (char* ) shaft_signal_msg_index);
+	if (engineConfiguration->useOnlyFrontForTrigger) {
+		// let's add the opposite event right away
+		shaft_signal_msg_index[0] = isUp ? 'd' : 'u';
+		addWaveChartEvent(eventId[(int )ckpSignalType], (char* ) shaft_signal_msg_index);
 	}
 }
 
@@ -181,7 +174,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal DECLARE_ENGINE_PAR
 
 		triggerIndexForListeners = triggerState.getCurrentIndex() + (isEven ? 0 : TRIGGER_SHAPE(size));
 	}
-	reportEventToWaveChart(signal, triggerIndexForListeners);
+	reportEventToWaveChart(signal, triggerIndexForListeners PASS_ENGINE_PARAMETER);
 
 	if (triggerState.current_index >= TRIGGER_SHAPE(size)) {
 		warning(OBD_PCM_Processor_Fault, "unexpected eventIndex=%d", triggerState.current_index);
@@ -236,9 +229,10 @@ void triggerInfo(Engine *engine) {
 
 	TriggerShape *ts = &engine->triggerShape;
 
-	scheduleMsg(logger, "Template %s (%d) trigger %s (%d) useRiseEdge=%s only=", getConfigurationName(engineConfiguration->engineType),
-			engineConfiguration->engineType, getTrigger_type_e(engineConfiguration->trigger.type),
-			engineConfiguration->trigger.type, boolToString(TRIGGER_SHAPE(useRiseEdge)));
+	scheduleMsg(logger, "Template %s (%d) trigger %s (%d) useRiseEdge=%s onlyFront=%s",
+			getConfigurationName(engineConfiguration->engineType), engineConfiguration->engineType,
+			getTrigger_type_e(engineConfiguration->trigger.type), engineConfiguration->trigger.type,
+			boolToString(TRIGGER_SHAPE(useRiseEdge)), boolToString(engineConfiguration->useOnlyFrontForTrigger));
 
 	scheduleMsg(logger, "trigger#1 event counters up=%d/down=%d", triggerCentral.getHwEventCounter(0),
 			triggerCentral.getHwEventCounter(1));
@@ -266,14 +260,10 @@ void triggerInfo(Engine *engine) {
 #endif
 
 #if EFI_PROD_CODE
-	scheduleMsg(logger, "sn=%s ignitionMathTime=%d schTime=%d injectonSchTime=%d zeroTestTime=%d advanceTime=%d triggerMaxDuration=%d",
-			boolToString(ts->isSynchronizationNeeded),
-			engine->m.ignitionMathTime,
-			engine->m.ignitionSchTime,
-			engine->m.injectonSchTime,
-			engine->m.zeroTestTime,
-			engine->m.advanceTime,
-			triggerMaxDuration);
+	scheduleMsg(logger,
+			"sn=%s ignitionMathTime=%d schTime=%d injectonSchTime=%d zeroTestTime=%d advanceTime=%d triggerMaxDuration=%d",
+			boolToString(ts->isSynchronizationNeeded), engine->m.ignitionMathTime, engine->m.ignitionSchTime,
+			engine->m.injectonSchTime, engine->m.zeroTestTime, engine->m.advanceTime, triggerMaxDuration);
 
 	triggerMaxDuration = 0;
 
@@ -285,7 +275,6 @@ void triggerInfo(Engine *engine) {
 			hwPortname(boardConfiguration->triggerSimulatorPins[0]),
 			getPin_output_mode_e(boardConfiguration->triggerSimulatorPinModes[0]),
 			boardConfiguration->triggerSimulatorFrequency);
-
 
 	if (engine->triggerShape.needSecondTriggerInput) {
 		scheduleMsg(logger, "secondary trigger input: %s", hwPortname(boardConfiguration->triggerInputPins[1]));
