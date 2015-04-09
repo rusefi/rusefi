@@ -46,13 +46,15 @@ void setBmwE34(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->triggerInputPins[0] = GPIOA_5;
 	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
 
+//	engineConfiguration->useOnlyFrontForTrigger = true;
+
 	engineConfiguration->specs.cylindersCount = 6;
 	engineConfiguration->specs.displacement = 2.91;
 	engineConfiguration->specs.firingOrder = FO_1_THEN_5_THEN_3_THEN_6_THEN_2_THEN_4;
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 
 
-	engineConfiguration->ignMathCalculateAtIndex = 15;
+	engineConfiguration->ignMathCalculateAtIndex = 16;
 
 	setConstantDwell(3 PASS_ENGINE_PARAMETER); // a bit shorter dwell
 	engineConfiguration->useConstantDwellDuringCranking = true;
