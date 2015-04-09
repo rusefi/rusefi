@@ -445,7 +445,9 @@ bit hasMapSensor;@see isMapAveragingEnabled
 	bit isIdleThreadEnabled
 	bit isPrintTriggerSynchDetails
 	bit isManualSpinningMode;Usually if we have no trigger events that means engine is stopped\nUnless we are troubleshooting and spinning the engine by hand - this case a longer\ndelay is needed
-		bit twoWireBatch
+	bit twoWireBatch
+		
+	bit useOnlyFrontForTrigger;See #172
 
 
 	uint32_t digitalChartSize;;"count",      1,      0,       0, 300,      0

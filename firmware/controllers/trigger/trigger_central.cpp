@@ -236,9 +236,9 @@ void triggerInfo(Engine *engine) {
 
 	TriggerShape *ts = &engine->triggerShape;
 
-	scheduleMsg(logger, "Template %s (%d) trigger %s (%d)", getConfigurationName(engineConfiguration->engineType),
+	scheduleMsg(logger, "Template %s (%d) trigger %s (%d) useRiseEdge=%s only=", getConfigurationName(engineConfiguration->engineType),
 			engineConfiguration->engineType, getTrigger_type_e(engineConfiguration->trigger.type),
-			engineConfiguration->trigger.type);
+			engineConfiguration->trigger.type, boolToString(TRIGGER_SHAPE(useRiseEdge)));
 
 	scheduleMsg(logger, "trigger#1 event counters up=%d/down=%d", triggerCentral.getHwEventCounter(0),
 			triggerCentral.getHwEventCounter(1));
