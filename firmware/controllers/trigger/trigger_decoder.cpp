@@ -121,8 +121,6 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, uint64_t now
 	eventCount[triggerWheel]++;
 	eventCountExt[signal]++;
 
-	bool_t isLessImportant = (TRIGGER_SHAPE(useRiseEdge) && signal != SHAFT_PRIMARY_UP)
-			|| (!TRIGGER_SHAPE(useRiseEdge) && signal != SHAFT_PRIMARY_DOWN);
 
 	uint64_t currentDurationLong = getCurrentGapDuration(nowNt);
 
@@ -133,7 +131,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, uint64_t now
 	currentDuration =
 			currentDurationLong > 10 * US2NT(US_PER_SECOND_LL) ? 10 * US2NT(US_PER_SECOND_LL) : currentDurationLong;
 
-	if (isLessImportant) {
+	if (isLessImportant(signal)) {
 		/**
 		 * For less important events we simply increment the index.
 		 */
