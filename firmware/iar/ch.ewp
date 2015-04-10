@@ -1962,6 +1962,12 @@
         <name>$PROJ_DIR$\..\config\engines\ford_fiesta.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\config\engines\gm_2_2.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\config\engines\gm_2_2.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\config\engines\GY6_139QMB.cpp</name>
       </file>
       <file>
