@@ -95,7 +95,9 @@ typedef enum {
 
 	SACHS = 29,
 
-	ET_UNUSED = 30,
+	GM_2_2 = 30,
+
+	ET_UNUSED = 31,
 
 	Force_4b_engine_type = ENUM_32_BITS,
 } engine_type_e;
