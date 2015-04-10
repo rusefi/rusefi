@@ -30,6 +30,10 @@ public class RevolutionLog {
         return new RevolutionLog(time2rpm);
     }
 
+    public int getSize() {
+        return time2rpm.size();
+    }
+
     public String getCrankAngleByTimeString(double time) {
         double result = getCrankAngleByTime(time);
         return Double.isNaN(result) ? "n/a" : String.format("%.2f", result);

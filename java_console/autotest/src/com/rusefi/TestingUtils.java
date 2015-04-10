@@ -78,8 +78,8 @@ public class TestingUtils {
         if (isRealHardware)
             return;
         RevolutionLog revolutionLog = chart.getRevolutionsLog();
-        if (revolutionLog.keySet().isEmpty())
-            throw new IllegalStateException(msg + " Empty revolutions in " + chart);
+        if (revolutionLog.getSize() < 2)
+            throw new IllegalStateException(msg + " Not many revolutions in " + chart);
 
         StringBuilder events = chart.get(key);
         assertTrue(msg + " Events not null for " + key, events != null);
