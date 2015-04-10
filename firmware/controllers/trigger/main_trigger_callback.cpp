@@ -161,6 +161,10 @@ static ALWAYS_INLINE void handleFuel(uint32_t eventIndex, int rpm DECLARE_ENGINE
 	if (!fs->hasEvents[eventIndex])
 		return;
 
+// todo: Maxim try this?
+//	engine->accelEnrichment.onEngineCycle(PASS_ENGINE_PARAMETER_F);
+//	ENGINE(fuelMs) = getFuelMs(rpm PASS_ENGINE_PARAMETER) * engineConfiguration->globalFuelCorrection;
+
 	for (int i = 0; i < source->size; i++) {
 		InjectionEvent *event = &source->elements[i];
 		if (event->position.eventIndex != eventIndex)
