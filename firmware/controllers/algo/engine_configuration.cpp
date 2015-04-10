@@ -54,6 +54,7 @@
 #include "subaru.h"
 #include "test_engine.h"
 #include "sachs.h"
+#include "gm_2_2.h"
 
 EXTERN_ENGINE;
 
@@ -704,6 +705,9 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 		break;
 	case BMW_E34:
 		setBmwE34(PASS_ENGINE_PARAMETER_F);
+		break;
+	case GM_2_2:
+		setGm2_2(PASS_ENGINE_PARAMETER_F);
 		break;
 	case TEST_ENGINE:
 		setTestEngineConfiguration(PASS_ENGINE_PARAMETER_F);

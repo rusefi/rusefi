@@ -24,4 +24,6 @@ ENGINES_SRC_CPP = $(PROJECT_DIR)/config/engines/ford_aspire.cpp \
 	$(PROJECT_DIR)/config/engines/saturn_ion.cpp \
 	$(PROJECT_DIR)/config/engines/sachs.cpp \
 	$(PROJECT_DIR)/config/engines/test_engine.cpp \
-	$(PROJECT_DIR)/config/engines/mitsubishi.cpp
+	$(PROJECT_DIR)/config/engines/mitsubishi.cpp \
+	$(PROJECT_DIR)/config/engines/gm_2_2.cpp
+	

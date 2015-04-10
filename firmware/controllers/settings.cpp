@@ -172,6 +172,8 @@ const char* getConfigurationName(engine_type_e engineType) {
 		return "Test";
 	case SACHS:
 		return "SACHS";
+	case GM_2_2:
+	  return "GM_2_2";
 	case MAZDA_626:
 		return "Mazda626";
 	default:
