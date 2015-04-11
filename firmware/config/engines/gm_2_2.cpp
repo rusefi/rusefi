@@ -10,10 +10,14 @@
 #include "global.h"
 #include "gm_2_2.h"
 
-EXTERN_ENGINE;
+EXTERN_ENGINE
+;
 
 void setGm2_2(DECLARE_ENGINE_PARAMETER_F) {
 	board_configuration_s * boardConfiguration = &engineConfiguration->bc;
+
+	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
+	engineConfiguration->trigger.type = TT_ONE_PLUS_TOOTHED_WHEEL_60_2;
 
 	boardConfiguration->triggerInputPins[0] = GPIOC_6;
 	boardConfiguration->triggerInputPins[1] = GPIOA_8;

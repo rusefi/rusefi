@@ -558,7 +558,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->rpmAcceleration = engine->rpmCalculator.getRpmAcceleration();
 	tsOutputChannels->maxDelta = engine->accelEnrichment.maxDelta;
 	tsOutputChannels->minDelta = engine->accelEnrichment.minDelta;
-	tsOutputChannels->currentAccelDelta = engine->accelEnrichment.getEnrichment(PASS_ENGINE_PARAMETER_F) * 100 / getMap();
+	tsOutputChannels->currentMapAccelDelta = engine->accelEnrichment.getEnrichment(PASS_ENGINE_PARAMETER_F) * 100 / getMap();
 
 	tsOutputChannels->checkEngine = hasErrorCodes();
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
