@@ -593,9 +593,9 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->idle.stepperStepPin = GPIO_UNASSIGNED;
 	boardConfiguration->idle.stepperDirectionPin = GPIO_UNASSIGNED;
 
-	engineConfiguration->accelLength = 6;
-	engineConfiguration->accelEnrichmentThreshold = 5; // kPa
-	engineConfiguration->accelEnrichmentMultiplier = 2;
+	engineConfiguration->mapAccelLength = 6;
+	engineConfiguration->mapAccelEnrichmentThreshold = 5; // kPa
+	engineConfiguration->mapAccelEnrichmentMultiplier = 2;
 }
 
 void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_ENGINE_PARAMETER_S) {

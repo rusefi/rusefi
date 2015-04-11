@@ -404,7 +404,7 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->idle.stepperDirectionPin = GPIOE_10;
 	boardConfiguration->idle.stepperStepPin = GPIOE_12;
 
-	engineConfiguration->accelLength = 12;
+	engineConfiguration->mapAccelLength = 12;
 }
 
 #endif /* EFI_SUPPORT_DODGE_NEON */

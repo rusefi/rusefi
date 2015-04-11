@@ -91,8 +91,9 @@ typedef struct {
 	float veValue;
 	float maxDelta;
 	float minDelta;
-	float currentAccelDelta;
-	int unused3[17];
+	float currentMapAccelDelta;
+	float tpsAccelFuel;
+	int unused3[16];
 } TunerStudioOutputChannels;
 
 #endif /* TUNERSTUDIO_CONFIGURATION_H_ */
