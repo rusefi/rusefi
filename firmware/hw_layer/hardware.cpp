@@ -140,6 +140,8 @@ static int fastMapSampleIndex;
 static int hipSampleIndex;
 static int tpsSampleIndex;
 
+extern int tpsFastAdc;
+
 /**
  * This method is not in the adc* lower-level file because it is more business logic then hardware.
  */
@@ -167,7 +169,7 @@ void adc_callback_fast(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 		}
 #endif
 		if(tpsSampleIndex!=TPS_IS_SLOW) {
-
+			tpsFastAdc = fastAdc.samples[tpsSampleIndex];
 		}
 	}
 }

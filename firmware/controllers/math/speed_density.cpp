@@ -85,7 +85,7 @@ float getSpeedDensityFuel(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	float coolantC = engine->engineState.clt;
 	float intakeC = engine->engineState.iat;
 	float tChargeK = convertCelsiusToKelvin(getTCharge(rpm, tps, coolantC, intakeC));
-	float map = getMap() + engine->accelEnrichment.getEnrichment(PASS_ENGINE_PARAMETER_F);
+	float map = getMap() + engine->mapAccelEnrichment.getMapEnrichment(PASS_ENGINE_PARAMETER_F);
 	/**
 	 * *0.01 because of https://sourceforge.net/p/rusefi/tickets/153/
 	 */
