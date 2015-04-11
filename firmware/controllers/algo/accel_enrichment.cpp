@@ -21,8 +21,6 @@ EXTERN_ENGINE
 //static THD_WORKING_AREA(aeThreadStack, UTILITY_THREAD_STACK_SIZE);
 //#endif
 
-static AccelEnrichmemnt mapInstance;
-static AccelEnrichmemnt tpsInstance;
 static Logging *logger;
 
 void AccelEnrichmemnt::updateDiffEnrichment(engine_configuration_s *engineConfiguration, float engineLoad) {
@@ -39,7 +37,7 @@ void AccelEnrichmemnt::updateDiffEnrichment(engine_configuration_s *engineConfig
 //	return diffEnrichment;
 //}
 
-float AccelEnrichmemnt::getEnrichment(DECLARE_ENGINE_PARAMETER_F) {
+float AccelEnrichmemnt::getMapEnrichment(DECLARE_ENGINE_PARAMETER_F) {
 	float d = cb.maxValue(cb.getSize());
 	if (d > engineConfiguration->mapAccelEnrichmentThreshold) {
 		return d * engineConfiguration->mapAccelEnrichmentMultiplier;
@@ -55,6 +53,11 @@ void AccelEnrichmemnt::reset() {
 	minDelta = 0;
 	delta = 0;
 	currentEngineLoad = NAN;
+}
+
+void AccelEnrichmemnt::onEngineCycleTps(DECLARE_ENGINE_PARAMETER_F) {
+	float tps = getTPS();
+	cb.add(delta);
 }
 
 void AccelEnrichmemnt::onEngineCycle(DECLARE_ENGINE_PARAMETER_F) {
@@ -105,11 +108,11 @@ AccelEnrichmemnt::AccelEnrichmemnt() {
 #if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
 
 static void accelInfo() {
-	scheduleMsg(logger, "MAP accel length=%d", mapInstance.cb.getSize());
+//	scheduleMsg(logger, "MAP accel length=%d", mapInstance.cb.getSize());
 	scheduleMsg(logger, "MAP accel th=%f/mult=%f", engineConfiguration->mapAccelEnrichmentThreshold, engineConfiguration->mapAccelEnrichmentMultiplier);
 	scheduleMsg(logger, "MAP decel th=%f/mult=%f", engineConfiguration->decelEnrichmentThreshold, engineConfiguration->decelEnrichmentMultiplier);
 
-	scheduleMsg(logger, "TPS accel length=%d", tpsInstance.cb.getSize());
+//	scheduleMsg(logger, "TPS accel length=%d", tpsInstance.cb.getSize());
 	scheduleMsg(logger, "TPS accel th=%f/mult=%f", engineConfiguration->tpsAccelEnrichmentThreshold, engineConfiguration->tpsAccelEnrichmentMultiplier);
 }
 
@@ -144,12 +147,12 @@ static void setDecelMult(float value) {
 }
 
 static void setTpsAccelLen(int len) {
-	tpsInstance.cb.setSize(len);
+	engine->tpsAccelEnrichment.cb.setSize(len);
 	accelInfo();
 }
 
 static void setMapAccelLen(int len) {
-	mapInstance.cb.setSize(len);
+	engine->mapAccelEnrichment.cb.setSize(len);
 	accelInfo();
 }
 

@@ -17,6 +17,8 @@
  */
 static tps_roc_s states[2];
 
+int tpsFastAdc = 0;
+
 static volatile int tpsRocIndex = 0;
 
 /**
@@ -85,6 +87,10 @@ int getTPS10bitAdc(DECLARE_ENGINE_PARAMETER_F) {
 #endif
 	if(engineConfiguration->tpsAdcChannel==EFI_ADC_NONE)
 		return -1;
+#if EFI_PROD_CODE
+	if(boardConfiguration->adcHwChannelEnabled[engineConfiguration->tpsAdcChannel]==ADC_FAST)
+		return tpsFastAdc / 4;
+#endif /* EFI_PROD_CODE */
 	int adc = getAdcValue(engineConfiguration->tpsAdcChannel);
 	return (int) adc / 4; // Only for TunerStudio compatibility. Max TS adc value in 1023
 }

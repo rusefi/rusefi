@@ -133,7 +133,8 @@ public:
 	Thermistor iat;
 	Thermistor clt;
 
-	AccelEnrichmemnt accelEnrichment;
+	AccelEnrichmemnt mapAccelEnrichment;
+	AccelEnrichmemnt tpsAccelEnrichment;
 
 	/**
 	 * Fuel injection duration for current engine cycle

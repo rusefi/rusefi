@@ -333,7 +333,7 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->adcHwChannelEnabled[12] = ADC_SLOW; // CLT
 	boardConfiguration->adcHwChannelEnabled[13] = ADC_SLOW; // AFR
 	boardConfiguration->adcHwChannelEnabled[14] = ADC_SLOW; // VBatt
-	boardConfiguration->adcHwChannelEnabled[15] = ADC_SLOW; // TPS
+	boardConfiguration->adcHwChannelEnabled[15] = ADC_FAST; // TPS
 
 
 	/**

@@ -20,10 +20,12 @@ public:
 	AccelEnrichmemnt();
 	void updateDiffEnrichment(engine_configuration_s *engineConfiguration,
 			float engineLoad);
-	float getEnrichment(DECLARE_ENGINE_PARAMETER_F);
+	float getMapEnrichment(DECLARE_ENGINE_PARAMETER_F);
+	float getTpsEnrichment(DECLARE_ENGINE_PARAMETER_F);
 //	float getDiffEnrichment(void);
 
 	void onEngineCycle(DECLARE_ENGINE_PARAMETER_F);
+	void onEngineCycleTps(DECLARE_ENGINE_PARAMETER_F);
 	void reset();
 	float currentEngineLoad;
 	float maxDelta;
