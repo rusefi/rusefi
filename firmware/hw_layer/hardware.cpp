@@ -134,8 +134,11 @@ static Logging *sharedLogger;
 
 extern AdcDevice fastAdc;
 
+#define TPS_IS_SLOW -1
+
 static int fastMapSampleIndex;
 static int hipSampleIndex;
+static int tpsSampleIndex;
 
 /**
  * This method is not in the adc* lower-level file because it is more business logic then hardware.
@@ -163,6 +166,9 @@ void adc_callback_fast(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 			hipAdcCallback(fastAdc.samples[hipSampleIndex]);
 		}
 #endif
+		if(tpsSampleIndex!=TPS_IS_SLOW) {
+
+		}
 	}
 }
 
@@ -171,6 +177,11 @@ static void calcFastAdcIndexes(void) {
 	hipSampleIndex =
 			engineConfiguration->hipOutputChannel == EFI_ADC_NONE ?
 					-1 : fastAdc.internalAdcIndexByHardwareIndex[engineConfiguration->hipOutputChannel];
+	if(engineConfiguration->tpsAdcChannel!=EFI_ADC_NONE && boardConfiguration->adcHwChannelEnabled[engineConfiguration->tpsAdcChannel]==ADC_FAST) {
+		tpsSampleIndex = fastAdc.internalAdcIndexByHardwareIndex[engineConfiguration->tpsAdcChannel];
+	} else {
+		tpsSampleIndex = TPS_IS_SLOW;
+	}
 }
 
 static void adcConfigListener(Engine *engine) {
