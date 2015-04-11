@@ -56,7 +56,7 @@ void AccelEnrichmemnt::reset() {
 }
 
 void AccelEnrichmemnt::onEngineCycleTps(DECLARE_ENGINE_PARAMETER_F) {
-	float tps = getTPS();
+	float tps = getTPS(PASS_ENGINE_PARAMETER_F);
 	cb.add(delta);
 }
 

@@ -79,7 +79,7 @@ static ICUDriver *turnOnTriggerInputPin(brain_pin_e hwPin) {
 		shaft_icucfg.width_cb = needWidthCallback ? shaft_icu_width_callback : NULL;
 
 		bool_t needPeriodCallback = !CONFIG(useOnlyFrontForTrigger) || !TRIGGER_SHAPE(useRiseEdge);
-		shaft_icucfg.width_cb = needPeriodCallback ? shaft_icu_period_callback : NULL;
+		shaft_icucfg.period_cb = needPeriodCallback ? shaft_icu_period_callback : NULL;
 
 		efiIcuStart(driver, &shaft_icucfg);
 		icuEnable(driver);
