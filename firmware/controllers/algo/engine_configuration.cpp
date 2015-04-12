@@ -601,7 +601,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineConfiguration->tpsAccelLength = 12;
 	engineConfiguration->tpsAccelEnrichmentThreshold = 10;
-	engineConfiguration->tpsAccelEnrichmentMultiplier = 0.2;
+	engineConfiguration->tpsAccelEnrichmentMultiplier = 0.05;
 }
 
 void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_ENGINE_PARAMETER_S) {

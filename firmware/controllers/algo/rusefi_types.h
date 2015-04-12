@@ -30,6 +30,8 @@ typedef uint64_t efitick_t;
 
 typedef float angle_t;
 
+typedef float floatms_t;
+
 /**
  * numeric value from 0 to 100
  */

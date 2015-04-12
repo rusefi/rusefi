@@ -55,7 +55,8 @@ typedef struct {
 	float ignitionAdvance; // 56
 	float sparkDwell; // 60
 	/**
-	 * this one contains fuel with all corrections. See also baseFuel
+	 * this one contains total resulting fuel squirt time, per event
+	 * With all corrections. See also baseFuel
 	 */
 	float pulseWidthMs; // 64
 	float warmUpEnrich;	// 68

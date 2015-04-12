@@ -72,15 +72,17 @@ float getRealMafFuel(float airSpeed, int rpm DECLARE_ENGINE_PARAMETER_S) {
 	return 1000 * fuelMassGramm / injectorFlowRate;
 }
 
-float getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_S) {
+floatms_t getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_S) {
+	floatms_t tpsAccelEnrich = engine->tpsAccelEnrichment.getTpsEnrichment(PASS_ENGINE_PARAMETER_F);
+
 	if (engineConfiguration->algorithm == LM_SPEED_DENSITY) {
-		return getSpeedDensityFuel(rpm PASS_ENGINE_PARAMETER);
+		return tpsAccelEnrich + getSpeedDensityFuel(rpm PASS_ENGINE_PARAMETER);
 	} else if (engineConfiguration->algorithm == LM_REAL_MAF) {
 		float maf = getRealMaf(PASS_ENGINE_PARAMETER_F) + engine->mapAccelEnrichment.getMapEnrichment(PASS_ENGINE_PARAMETER_F);
-		return getRealMafFuel(maf, rpm PASS_ENGINE_PARAMETER);
+		return tpsAccelEnrich + getRealMafFuel(maf, rpm PASS_ENGINE_PARAMETER);
 	} else {
 		float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_F);
-		return getBaseTableFuel(engineConfiguration, rpm, engineLoad);
+		return tpsAccelEnrich + getBaseTableFuel(engineConfiguration, rpm, engineLoad);
 	}
 }
 
@@ -109,7 +111,7 @@ static int getNumberOfInjections(engine_configuration_s const *engineConfigurati
 /**
  * @returns	Length of fuel injection, in milliseconds
  */
-float getFuelMs(int rpm DECLARE_ENGINE_PARAMETER_S) {
+floatms_t getFuelMs(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	float theoreticalInjectionLength;
 	if (isCrankingR(rpm)) {
 		theoreticalInjectionLength = getCrankingFuel(PASS_ENGINE_PARAMETER_F)
@@ -123,7 +125,7 @@ float getFuelMs(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	return theoreticalInjectionLength + ENGINE(injectorLagMs);
 }
 
-float getRunningFuel(float baseFuelMs, int rpm DECLARE_ENGINE_PARAMETER_S) {
+floatms_t getRunningFuel(floatms_t baseFuel, int rpm DECLARE_ENGINE_PARAMETER_S) {
 	float iatCorrection = getIatCorrection(engine->engineState.iat PASS_ENGINE_PARAMETER);
 	float cltCorrection = getCltCorrection(engine->engineState.clt PASS_ENGINE_PARAMETER);
 
@@ -132,7 +134,7 @@ float getRunningFuel(float baseFuelMs, int rpm DECLARE_ENGINE_PARAMETER_S) {
 	// todo: accelEnrichment
 #endif /* EFI_ACCEL_ENRICHMENT */
 
-	return baseFuelMs * cltCorrection * iatCorrection;
+	return baseFuel * cltCorrection * iatCorrection;
 }
 
 /**
@@ -140,7 +142,7 @@ float getRunningFuel(float baseFuelMs, int rpm DECLARE_ENGINE_PARAMETER_S) {
  * @param	vBatt	Battery voltage.
  * @return	Time in ms for injection opening time based on current battery voltage
  */
-float getInjectorLag(float vBatt DECLARE_ENGINE_PARAMETER_S) {
+floatms_t getInjectorLag(float vBatt DECLARE_ENGINE_PARAMETER_S) {
 	if (cisnan(vBatt)) {
 		warning(OBD_System_Voltage_Malfunction, "vBatt=%f", vBatt);
 		return engineConfiguration->injector.lag;
@@ -178,7 +180,7 @@ float getIatCorrection(float iat DECLARE_ENGINE_PARAMETER_S) {
 /**
  * @return Fuel injection duration injection as specified in the fuel map, in milliseconds
  */
-float getBaseTableFuel(engine_configuration_s *engineConfiguration, int rpm, float engineLoad) {
+floatms_t getBaseTableFuel(engine_configuration_s *engineConfiguration, int rpm, float engineLoad) {
 	if (cisnan(engineLoad)) {
 		warning(OBD_PCM_Processor_Fault, "NaN engine load");
 		return NAN;
@@ -188,15 +190,15 @@ float getBaseTableFuel(engine_configuration_s *engineConfiguration, int rpm, flo
 
 #if EFI_ENGINE_CONTROL
 /**
- * @return Duration of fuel injection while craning, in milliseconds
+ * @return Duration of fuel injection while craning
  */
-float getCrankingFuel(DECLARE_ENGINE_PARAMETER_F) {
+floatms_t getCrankingFuel(DECLARE_ENGINE_PARAMETER_F) {
 	return getCrankingFuel3(getCoolantTemperature(PASS_ENGINE_PARAMETER_F),
 			engine->rpmCalculator.getRevolutionCounterSinceStart() PASS_ENGINE_PARAMETER);
 }
 #endif
 
-float getCrankingFuel3(float coolantTemperature,
+floatms_t getCrankingFuel3(float coolantTemperature,
 		uint32_t revolutionCounterSinceStart DECLARE_ENGINE_PARAMETER_S) {
 	// these magic constants are in Celsius
 	float baseCrankingFuel = engineConfiguration->cranking.baseFuel;
