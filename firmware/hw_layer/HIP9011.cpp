@@ -36,7 +36,7 @@
 
 #if EFI_HIP_9011 || defined(__DOXYGEN__)
 
-static NamedOutputPin intHold;
+static NamedOutputPin intHold("HIP");
 static OutputPin hipCs;
 
 extern pin_output_mode_e DEFAULT_OUTPUT;
@@ -273,7 +273,6 @@ void initHip9011(Logging *sharedLogger) {
 	spicfg.ssport = getHwPort(boardConfiguration->hip9011CsPin);
 	spicfg.sspad = getHwPin(boardConfiguration->hip9011CsPin);
 
-	intHold.name = "HIP";
 	outputPinRegisterExt2("hip int/hold", &intHold, boardConfiguration->hip9011IntHoldPin, &DEFAULT_OUTPUT);
 	outputPinRegisterExt2("hip CS", &hipCs, boardConfiguration->hip9011CsPin, &DEFAULT_OUTPUT);
 
