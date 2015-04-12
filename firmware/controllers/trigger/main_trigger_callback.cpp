@@ -146,7 +146,7 @@ static ALWAYS_INLINE void handleFuel(uint32_t eventIndex, int rpm DECLARE_ENGINE
 	if (!isInjectionEnabled(engine->engineConfiguration))
 		return;
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#3");
-	efiAssertVoid(eventIndex < engine->triggerShape.getLength(), "event index");
+	efiAssertVoid(eventIndex < engine->triggerShape.getLength(), "handleFuel/event index");
 
 	/**
 	 * Ignition events are defined by addFuelEvents() according to selected
@@ -311,7 +311,7 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECL
 	}
 
 	(void) ckpSignalType;
-	efiAssertVoid(eventIndex < 2 * engine->triggerShape.getSize(), "event index");
+	efiAssertVoid(eventIndex < 2 * engine->triggerShape.getSize(), "trigger/event index");
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 128, "lowstck#2");
 
 	int rpm = getRpmE(engine);
