@@ -39,6 +39,7 @@ public:
 class NamedOutputPin : public OutputPin {
 public:
 	NamedOutputPin();
+	NamedOutputPin(const char *name);
 	const char *name;
 };
 

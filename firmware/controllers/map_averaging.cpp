@@ -40,6 +40,7 @@
 #define FAST_MAP_CHART_SKIP_FACTOR 16
 
 static Logging *logger;
+static NamedOutputPin mapAveragingPin("map");
 
 /**
  * Running counter of measurements per revolution
@@ -96,6 +97,7 @@ static void startAveraging(void *arg) {
 	if (!wasLocked)
 		chSysUnlockFromIsr()
 	;
+	turnPinHigh(&mapAveragingPin);
 }
 
 /**
@@ -153,6 +155,7 @@ static void endAveraging(void *arg) {
 	if (!wasLocked)
 		chSysUnlockFromIsr()
 	;
+	turnPinLow(&mapAveragingPin);
 }
 
 /**

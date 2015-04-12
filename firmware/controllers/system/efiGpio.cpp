@@ -22,6 +22,10 @@ NamedOutputPin::NamedOutputPin() : OutputPin() {
 	name = NULL;
 }
 
+NamedOutputPin::NamedOutputPin(const char *name) : OutputPin() {
+	this->name = name;
+}
+
 OutputPin::OutputPin() {
 	modePtr = &OUTPUT_MODE_DEFAULT;
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
