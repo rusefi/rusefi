@@ -598,7 +598,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->ignitionAdvance = timing > 360 ? timing - 720 : timing;
 	tsOutputChannels->sparkDwell = getSparkDwellMsT(rpm PASS_ENGINE_PARAMETER);
 	tsOutputChannels->baseFuel = baseFuelMs;
-	tsOutputChannels->pulseWidthMs = getRunningFuel(baseFuelMs, rpm PASS_ENGINE_PARAMETER);
+	tsOutputChannels->pulseWidthMs = getFuelMs(rpm PASS_ENGINE_PARAMETER);
 	tsOutputChannels->crankingFuelMs = getCrankingFuel(PASS_ENGINE_PARAMETER_F);
 }
 

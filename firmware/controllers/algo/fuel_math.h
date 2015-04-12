@@ -12,16 +12,26 @@
 
 void prepareFuelMap(DECLARE_ENGINE_PARAMETER_F);
 
-float getRealMafFuel(float airMass, int rpm DECLARE_ENGINE_PARAMETER_S);
-float getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_S);
+/**
+ * @return total injection time into all cylinders, before CLT & IAT corrections
+ */
+floatms_t getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_S);
+
+/**
+ * @return baseFuel with CLT and IAT corrections
+ */
+floatms_t getRunningFuel(floatms_t baseFuel, int rpm DECLARE_ENGINE_PARAMETER_S);
+
+floatms_t getRealMafFuel(float airMass, int rpm DECLARE_ENGINE_PARAMETER_S);
+
+floatms_t getBaseTableFuel(engine_configuration_s *engineConfiguration, int rpm, float engineLoad);
+
 float getInjectionAngle(int rpm DECLARE_ENGINE_PARAMETER_S);
-float getBaseTableFuel(engine_configuration_s *engineConfiguration, int rpm, float engineLoad);
 float getIatCorrection(float iat DECLARE_ENGINE_PARAMETER_S);
 float getInjectorLag(float vBatt DECLARE_ENGINE_PARAMETER_S);
 float getCltCorrection(float clt DECLARE_ENGINE_PARAMETER_S);
-float getRunningFuel(float baseFuel, int rpm DECLARE_ENGINE_PARAMETER_S);
 float getCrankingFuel(DECLARE_ENGINE_PARAMETER_F);
 float getCrankingFuel3(float coolantTemperature, uint32_t revolutionCounterSinceStart DECLARE_ENGINE_PARAMETER_S);
-float getFuelMs(int rpm DECLARE_ENGINE_PARAMETER_S);
+floatms_t getFuelMs(int rpm DECLARE_ENGINE_PARAMETER_S);
 
 #endif /* FUEL_MAP_H_ */
