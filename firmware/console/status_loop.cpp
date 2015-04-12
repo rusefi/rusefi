@@ -556,9 +556,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->manifold_air_pressure = getMap();
 	tsOutputChannels->engineLoad = engineLoad;
 	tsOutputChannels->rpmAcceleration = engine->rpmCalculator.getRpmAcceleration();
-	tsOutputChannels->maxDelta = engine->mapAccelEnrichment.maxDelta;
-	tsOutputChannels->minDelta = engine->mapAccelEnrichment.minDelta;
 	tsOutputChannels->currentMapAccelDelta = engine->mapAccelEnrichment.getMapEnrichment(PASS_ENGINE_PARAMETER_F) * 100 / getMap();
+	tsOutputChannels->tpsAccelFuel = engine->tpsAccelEnrichment.getTpsEnrichment(PASS_ENGINE_PARAMETER_F);
 
 	tsOutputChannels->checkEngine = hasErrorCodes();
 #if EFI_PROD_CODE || defined(__DOXYGEN__)

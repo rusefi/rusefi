@@ -27,15 +27,14 @@ public:
 	void onEngineCycle(DECLARE_ENGINE_PARAMETER_F);
 	void onEngineCycleTps(DECLARE_ENGINE_PARAMETER_F);
 	void reset();
-	float currentEngineLoad;
 	float maxDelta;
 	float minDelta;
 	float delta;
 	cyclic_buffer<float> cb;
 
 private:
-//	float array[MAX_ACCEL_ARRAY_SIZE];
-	float diffEnrichment;
+	float currentValue;
+	void onNewValue(float currentValue);
 };
 
 void initAccelEnrichment(Logging *sharedLogger);

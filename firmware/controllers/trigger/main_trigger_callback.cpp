@@ -161,9 +161,10 @@ static ALWAYS_INLINE void handleFuel(uint32_t eventIndex, int rpm DECLARE_ENGINE
 	if (!fs->hasEvents[eventIndex])
 		return;
 
-// todo: Maxim try this?
-//	engine->accelEnrichment.onEngineCycle(PASS_ENGINE_PARAMETER_F);
-//	ENGINE(fuelMs) = getFuelMs(rpm PASS_ENGINE_PARAMETER) * engineConfiguration->globalFuelCorrection;
+	engine->tpsAccelEnrichment.onEngineCycleTps(PASS_ENGINE_PARAMETER_F);
+
+	engine->mapAccelEnrichment.onEngineCycle(PASS_ENGINE_PARAMETER_F);
+	ENGINE(fuelMs) = getFuelMs(rpm PASS_ENGINE_PARAMETER) * engineConfiguration->globalFuelCorrection;
 
 	for (int i = 0; i < source->size; i++) {
 		InjectionEvent *event = &source->elements[i];
@@ -357,7 +358,6 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECL
 	}
 
 	if (eventIndex == 0) {
-		engine->mapAccelEnrichment.onEngineCycle(PASS_ENGINE_PARAMETER_F);
 		engine->m.beforeFuelCalc = GET_TIMESTAMP();
 		ENGINE(fuelMs) = getFuelMs(rpm PASS_ENGINE_PARAMETER) * engineConfiguration->globalFuelCorrection;
 		engine->m.fuelCalcTime = GET_TIMESTAMP() - engine->m.beforeFuelCalc;
