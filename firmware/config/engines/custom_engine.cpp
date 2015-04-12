@@ -34,6 +34,7 @@ void setCustomEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	 * Frankenso analog #11 PC5 ADC15
 	 * Frankenso analog #12 PC4 ADC14 VBatt
 	 */
+	boardConfiguration->adcHwChannelEnabled[2] = ADC_FAST;
 	engineConfiguration->tpsAdcChannel = EFI_ADC_2;
 
 	boardConfiguration->adcHwChannelEnabled[0] = ADC_FAST;

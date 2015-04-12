@@ -37,6 +37,15 @@ void AccelEnrichmemnt::updateDiffEnrichment(engine_configuration_s *engineConfig
 //	return diffEnrichment;
 //}
 
+float AccelEnrichmemnt::getTpsEnrichment(DECLARE_ENGINE_PARAMETER_F) {
+	float d = cb.maxValue(cb.getSize());
+	if (d > engineConfiguration->tpsAccelEnrichmentThreshold) {
+		return d * engineConfiguration->tpsAccelEnrichmentMultiplier;
+	}
+	return 0;
+
+}
+
 float AccelEnrichmemnt::getMapEnrichment(DECLARE_ENGINE_PARAMETER_F) {
 	float d = cb.maxValue(cb.getSize());
 	if (d > engineConfiguration->mapAccelEnrichmentThreshold) {
@@ -49,41 +58,32 @@ float AccelEnrichmemnt::getMapEnrichment(DECLARE_ENGINE_PARAMETER_F) {
 }
 
 void AccelEnrichmemnt::reset() {
-	maxDelta = 0;
-	minDelta = 0;
 	delta = 0;
-	currentEngineLoad = NAN;
+	currentValue = NAN;
+}
+
+void AccelEnrichmemnt::onNewValue(float currentValue) {
+	if (!cisnan(this->currentValue)) {
+		delta = currentValue - this->currentValue;
+		FuelSchedule *fs = &engine->engineConfiguration2->injectionEvents;
+		cb.add(delta * fs->eventsCount);
+	}
+
+	this->currentValue = currentValue;
 }
 
 void AccelEnrichmemnt::onEngineCycleTps(DECLARE_ENGINE_PARAMETER_F) {
-	float tps = getTPS(PASS_ENGINE_PARAMETER_F);
-	cb.add(delta);
+	onNewValue(getTPS(PASS_ENGINE_PARAMETER_F));
 }
 
 void AccelEnrichmemnt::onEngineCycle(DECLARE_ENGINE_PARAMETER_F) {
-	float currentEngineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_F);
-
-	if (!cisnan(this->currentEngineLoad)) {
-		delta = currentEngineLoad - this->currentEngineLoad;
-		cb.add(delta);
-		maxDelta = maxF(maxDelta, delta);
-		minDelta = minF(minDelta, delta);
-	}
-
-	this->currentEngineLoad = currentEngineLoad;
+	onNewValue(getEngineLoadT(PASS_ENGINE_PARAMETER_F));
 }
 
 AccelEnrichmemnt::AccelEnrichmemnt() {
 	reset();
 	cb.setSize(4);
-//	for (int i = 0; i < MAX_ACCEL_ARRAY_SIZE; i++)
-//		array[i] = 0;
-	diffEnrichment = 0;
 }
-
-//float getAccelEnrichment(void) {
-//	return instance.getDiffEnrichment();
-//}
 
 //#if EFI_PROD_CODE
 //

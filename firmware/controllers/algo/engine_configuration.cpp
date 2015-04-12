@@ -347,8 +347,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineConfiguration->alternatorControlPFactor = 30;
 
-	engineConfiguration->tpsAdcChannel = EFI_ADC_3;
-	engineConfiguration->vbattAdcChannel = EFI_ADC_5;
+	engineConfiguration->vbattAdcChannel = EFI_ADC_4;
 	engineConfiguration->cltAdcChannel = EFI_ADC_6;
 	engineConfiguration->iatAdcChannel = EFI_ADC_7;
 	engineConfiguration->mafAdcChannel = EFI_ADC_0;
@@ -523,7 +522,10 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->adcHwChannelEnabled[0] = ADC_SLOW;
 	boardConfiguration->adcHwChannelEnabled[1] = ADC_SLOW;
 	boardConfiguration->adcHwChannelEnabled[2] = ADC_SLOW;
-	boardConfiguration->adcHwChannelEnabled[3] = ADC_SLOW;
+
+	boardConfiguration->adcHwChannelEnabled[3] = ADC_FAST;
+	engineConfiguration->tpsAdcChannel = EFI_ADC_3;
+
 	boardConfiguration->adcHwChannelEnabled[4] = ADC_FAST;
 	// boardConfiguration->adcHwChannelEnabled[5] = ADC_SLOW; PA5 is also timer input
 	boardConfiguration->adcHwChannelEnabled[6] = ADC_SLOW;
@@ -596,6 +598,10 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->mapAccelLength = 6;
 	engineConfiguration->mapAccelEnrichmentThreshold = 5; // kPa
 	engineConfiguration->mapAccelEnrichmentMultiplier = 2;
+
+	engineConfiguration->tpsAccelLength = 12;
+	engineConfiguration->tpsAccelEnrichmentThreshold = 10;
+	engineConfiguration->tpsAccelEnrichmentMultiplier = 0.2;
 }
 
 void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_ENGINE_PARAMETER_S) {
