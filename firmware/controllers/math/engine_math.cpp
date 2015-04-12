@@ -133,7 +133,10 @@ void FuelSchedule::registerInjectionEvent(OutputSignalList *sourceList, NamedOut
 	ev->actuator = actuator;
 
 	findTriggerPosition(&ev->position, angle PASS_ENGINE_PARAMETER);
-	hasEvents[ev->position.eventIndex] = true;
+	if(!hasEvents[ev->position.eventIndex]) {
+		hasEvents[ev->position.eventIndex] = true;
+		eventsCount++;
+	}
 }
 
 FuelSchedule::FuelSchedule() {
@@ -141,6 +144,7 @@ FuelSchedule::FuelSchedule() {
 
 void FuelSchedule::clear() {
 	memset(hasEvents, 0, sizeof(hasEvents));
+	eventsCount = 0;
 }
 
 void FuelSchedule::addFuelEvents(OutputSignalList *sourceList, injection_mode_e mode DECLARE_ENGINE_PARAMETER_S) {

@@ -41,6 +41,10 @@ public:
 	 * TODO: better data structure? better algorithm?
 	 */
 	uint8_t hasEvents[PWM_PHASE_MAX_COUNT];
+	/**
+	 * How many trigger events have injection? This depends on fuel strategy & trigger shape
+	 */
+	int eventsCount;
 private:
 	void clear();
 	void registerInjectionEvent(OutputSignalList *sourceList, NamedOutputPin *output, float angle, bool_t isSimultanious DECLARE_ENGINE_PARAMETER_S);
