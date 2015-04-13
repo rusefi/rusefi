@@ -25,7 +25,7 @@ public class PersistentConfiguration {
             config = (Map<String, Object>) e.readObject();
             e.close();
         } catch (Throwable e) {
-            FileLog.MAIN.logLine("Error reading from " + CONFIG_FILE_NAME);
+            FileLog.MAIN.logLine("Console configuration not found " + CONFIG_FILE_NAME + ", using defaults");
         }
     }
 
