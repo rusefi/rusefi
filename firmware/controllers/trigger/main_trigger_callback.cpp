@@ -99,28 +99,28 @@ static void endSimultaniousInjection(Engine *engine) {
 }
 
 static ALWAYS_INLINE void handleFuelInjectionEvent(InjectionEvent *event, int rpm DECLARE_ENGINE_PARAMETER_S) {
-	float fuelMs = ENGINE(fuelMs);
-	if (cisnan(fuelMs)) {
+	floatms_t injectionDuration = ENGINE(fuelMs);
+	if (cisnan(injectionDuration)) {
 		warning(OBD_PCM_Processor_Fault, "NaN injection pulse");
 		return;
 	}
-	if (fuelMs < 0) {
-		warning(OBD_PCM_Processor_Fault, "Negative injection pulse %f", fuelMs);
+	if (injectionDuration < 0) {
+		warning(OBD_PCM_Processor_Fault, "Negative injection pulse %f", injectionDuration);
 		return;
 	}
 
 	if (engine->isCylinderCleanupMode)
 		return;
 
-	float delayUs = ENGINE(rpmCalculator.oneDegreeUs) * event->position.angleOffset;
+	floatus_t injectionStartDelayUs = ENGINE(rpmCalculator.oneDegreeUs) * event->injectionStart.angleOffset;
 
 	if (event->isSimultanious) {
-		if (fuelMs < 0) {
-			firmwareError("duration cannot be negative: %d", fuelMs);
+		if (injectionDuration < 0) {
+			firmwareError("duration cannot be negative: %d", injectionDuration);
 			return;
 		}
-		if (cisnan(fuelMs)) {
-			firmwareError("NaN in scheduleOutput", fuelMs);
+		if (cisnan(injectionDuration)) {
+			firmwareError("NaN in scheduleOutput", injectionDuration);
 			return;
 		}
 		/**
@@ -134,11 +134,11 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(InjectionEvent *event, int rp
 		scheduling_s * sUp = &signal->signalTimerUp[index];
 		scheduling_s * sDown = &signal->signalTimerDown[index];
 
-		scheduleTask("out up", sUp, (int) delayUs, (schfunc_t) &startSimultaniousInjection, engine);
-		scheduleTask("out down", sDown, (int) delayUs + MS2US(fuelMs), (schfunc_t) &endSimultaniousInjection, engine);
+		scheduleTask("out up", sUp, (int) injectionStartDelayUs, (schfunc_t) &startSimultaniousInjection, engine);
+		scheduleTask("out down", sDown, (int) injectionStartDelayUs + MS2US(injectionDuration), (schfunc_t) &endSimultaniousInjection, engine);
 
 	} else {
-		scheduleOutput(event->actuator, getTimeNowUs(), delayUs, MS2US(fuelMs));
+		scheduleOutput(event->actuator, getTimeNowUs(), injectionStartDelayUs, MS2US(injectionDuration));
 	}
 }
 
@@ -168,7 +168,7 @@ static ALWAYS_INLINE void handleFuel(uint32_t eventIndex, int rpm DECLARE_ENGINE
 
 	for (int i = 0; i < source->size; i++) {
 		InjectionEvent *event = &source->elements[i];
-		if (event->position.eventIndex != eventIndex)
+		if (event->injectionStart.eventIndex != eventIndex)
 			continue;
 		handleFuelInjectionEvent(event, rpm PASS_ENGINE_PARAMETER);
 	}
@@ -183,14 +183,14 @@ static ALWAYS_INLINE void handleSparkEvent(uint32_t eventIndex, IgnitionEvent *i
 		return;
 	}
 
-	float sparkDelayUs = engine->rpmCalculator.oneDegreeUs * iEvent->dwellPosition.angleOffset;
-	int isIgnitionError = sparkDelayUs < 0;
+	floatus_t chargeDelayUs = engine->rpmCalculator.oneDegreeUs * iEvent->dwellPosition.angleOffset;
+	int isIgnitionError = chargeDelayUs < 0;
 	ignitionErrorDetection.add(isIgnitionError);
 	if (isIgnitionError) {
 #if EFI_PROD_CODE
-		scheduleMsg(logger, "Negative spark delay=%f", sparkDelayUs);
+		scheduleMsg(logger, "Negative spark delay=%f", chargeDelayUs);
 #endif
-		sparkDelayUs = 0;
+		chargeDelayUs = 0;
 		return;
 	}
 
@@ -209,7 +209,7 @@ static ALWAYS_INLINE void handleSparkEvent(uint32_t eventIndex, IgnitionEvent *i
 	/**
 	 * The start of charge is always within the current trigger event range, so just plain time-based scheduling
 	 */
-	scheduleTask("spark up", sUp, sparkDelayUs, (schfunc_t) &turnPinHigh, iEvent->output);
+	scheduleTask("spark up", sUp, chargeDelayUs, (schfunc_t) &turnPinHigh, iEvent->output);
 	/**
 	 * Spark event is often happening during a later trigger event timeframe
 	 * TODO: improve precision

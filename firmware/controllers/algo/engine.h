@@ -143,7 +143,7 @@ public:
 	/**
 	 * Fuel injection duration for current engine cycle
 	 */
-	float fuelMs;
+	floatms_t fuelMs;
 
 	/**
 	 * ignition dwell duration as crankshaft angle
