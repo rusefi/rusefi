@@ -24,7 +24,7 @@ bool assertNotInList(T *head, T*element) {
 	{
 		if (++counter > QUEUE_LENGTH_LIMIT) {
 			firmwareError("Looped queue?");
-			return FALSE;
+			return false;
 		}
 		if (current == element) {
 			/**
@@ -33,10 +33,10 @@ bool assertNotInList(T *head, T*element) {
 			 * by time with slow RPM the whole next fast revolution might be within the wait period
 			 */
 			warning(OBD_PCM_Processor_Fault, "re-adding element into event_queue: [%s]", element->name);
-			return TRUE;
+			return true;
 		}
 	}
-	return FALSE;
+	return false;
 }
 
 class EventQueue {

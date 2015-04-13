@@ -24,6 +24,10 @@
 #include "main.h"
 #include "engine_math.h"
 
+IgnitionEvent::IgnitionEvent() {
+	name = NULL;
+}
+
 //void registerActuatorEventWhat(ActuatorEventList *list, int eventIndex, OutputSignal *actuator, float angleOffset) {
 //	ActuatorEvent *e = list->getNextActuatorEvent();
 //	if (e == NULL)
