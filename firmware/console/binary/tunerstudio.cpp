@@ -372,7 +372,7 @@ void handleBurnCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint1
 	efitimems_t nowMs = currentTimeMillis();
 	tsState.burnCommandCounter++;
 
-	tunerStudioDebug("got B (Burn)");
+	scheduleMsg(&tsLogger, "got B (Burn) %s", mode == TS_PLAIN ? "plain" : "CRC");
 
 	currentPageId = page;
 
