@@ -23,31 +23,45 @@ TriggerEmulatorHelper::TriggerEmulatorHelper() {
 	thirdWheelState = false;
 }
 
+static bool_t isUp[6] = { false, true, false, true, false, true };
+
+EXTERN_ENGINE
+;
+
+static void fireShaftSignal(trigger_event_e signal) {
+	if (!engineConfiguration->useOnlyFrontForTrigger || isUp[(int) signal])
+		hwHandleShaftSignal(signal);
+}
+
 void TriggerEmulatorHelper::handleEmulatorCallback(PwmConfig *state, int stateIndex) {
+	int prevIndex = (stateIndex + state->phaseCount - 1) % state->phaseCount;
+
+	bool_t primaryWheelState = state->multiWave.waves[0].pinStates[prevIndex];
 	int newPrimaryWheelState = state->multiWave.waves[0].pinStates[stateIndex];
+
+	bool_t secondaryWheelState = state->multiWave.waves[1].pinStates[prevIndex];
 	int newSecondaryWheelState = state->multiWave.waves[1].pinStates[stateIndex];
+
+	bool_t thirdWheelState = state->multiWave.waves[2].pinStates[prevIndex];
 	int new3rdWheelState = state->multiWave.waves[2].pinStates[stateIndex];
 
 	if (primaryWheelState != newPrimaryWheelState) {
 		primaryWheelState = newPrimaryWheelState;
-		hwHandleShaftSignal(primaryWheelState ? SHAFT_PRIMARY_UP : SHAFT_PRIMARY_DOWN);
+		fireShaftSignal(primaryWheelState ? SHAFT_PRIMARY_UP : SHAFT_PRIMARY_DOWN);
 	}
 
 	if (secondaryWheelState != newSecondaryWheelState) {
 		secondaryWheelState = newSecondaryWheelState;
-		hwHandleShaftSignal(secondaryWheelState ? SHAFT_SECONDARY_UP : SHAFT_SECONDARY_DOWN);
+		fireShaftSignal(secondaryWheelState ? SHAFT_SECONDARY_UP : SHAFT_SECONDARY_DOWN);
 	}
 
 	if (thirdWheelState != new3rdWheelState) {
 		thirdWheelState = new3rdWheelState;
-		hwHandleShaftSignal(thirdWheelState ? SHAFT_3RD_UP : SHAFT_3RD_DOWN);
+		fireShaftSignal(thirdWheelState ? SHAFT_3RD_UP : SHAFT_3RD_DOWN);
 	}
 
 	//	print("hello %d\r\n", chTimeNow());
 }
-
-EXTERN_ENGINE
-;
 
 /*
  * todo: should we simply re-use instances used by trigger_decoder?
