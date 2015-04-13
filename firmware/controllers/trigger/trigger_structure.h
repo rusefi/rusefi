@@ -90,6 +90,7 @@ public:
 
 	void addEvent(float angle, trigger_wheel_e const waveIndex, trigger_value_e const state);
 	void addEvent(float angle, trigger_wheel_e const waveIndex, trigger_value_e const stateParam, float filterLeft, float filterRight);
+	operation_mode_e getOperationMode();
 
 	// todo: these two methods here, something could be improved
 	void clear();
