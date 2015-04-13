@@ -16,23 +16,14 @@
 #include "thermistors.h"
 #include "engine_math.h"
 
-EXTERN_ENGINE;
+EXTERN_ENGINE
+;
 
 void setBmwE34(DECLARE_ENGINE_PARAMETER_F) {
 	board_configuration_s * boardConfiguration = &engineConfiguration->bc;
 
-	engineConfiguration->analogInputDividerCoefficient = 2;
-	boardConfiguration->analogChartMode = AC_TRIGGER;
-
 	// chartsize 450
 	engineConfiguration->digitalChartSize = 450;
-
-//	setAlgorithm(LM_PLAIN_MAF);
-	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER);
-	engineConfiguration->injector.flow = 750;
-
-	boardConfiguration->tunerStudioSerialSpeed = 38400;
-	engineConfiguration->rpmHardLimit = 6000;
 
 //	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
 //	engineConfiguration->trigger.type = TT_ONE_PLUS_TOOTHED_WHEEL_60_2;
@@ -40,32 +31,51 @@ void setBmwE34(DECLARE_ENGINE_PARAMETER_F) {
 //	boardConfiguration->triggerInputPins[0] = GPIOC_6;
 //	boardConfiguration->triggerInputPins[1] = GPIOA_5;
 
-	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
-	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
-	engineConfiguration->injectionMode = IM_SEQUENTIAL;
-	boardConfiguration->triggerInputPins[0] = GPIOA_5;
-	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
-
-//	engineConfiguration->useOnlyFrontForTrigger = true;
-
+//Base engine setting
 	engineConfiguration->specs.cylindersCount = 6;
 	engineConfiguration->specs.displacement = 2.91;
 	engineConfiguration->specs.firingOrder = FO_1_THEN_5_THEN_3_THEN_6_THEN_2_THEN_4;
+	engineConfiguration->injectionMode = IM_BATCH;
+	engineConfiguration->twoWireBatch = true;
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 
-
-	engineConfiguration->ignMathCalculateAtIndex = 16;
-
-	setConstantDwell(3 PASS_ENGINE_PARAMETER); // a bit shorter dwell
-	engineConfiguration->useConstantDwellDuringCranking = true;
-	engineConfiguration->ignitionDwellForCrankingMs = 5;
-
-	// todo: check the digital sniffer while simulating
-	// set_global_trigger_offset_angle 84
+	// Trigger configuration
+	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
+	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->globalTriggerAngleOffset = 84;
 
-	setWholeFuelMap(6 PASS_ENGINE_PARAMETER);
-	setWholeTimingTable(10 PASS_ENGINE_PARAMETER);
+	// Injection settings
+	engineConfiguration->injector.lag = 1.15;
+	engineConfiguration->injector.flow = 750;
+
+	// General settings
+	boardConfiguration->tunerStudioSerialSpeed = 57600;
+	engineConfiguration->rpmHardLimit = 7000;
+	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER);
+	boardConfiguration->analogChartMode = AC_TRIGGER;
+
+	engineConfiguration->isCylinderCleanupEnabled = false;
+	engineConfiguration->isInjectionEnabled = true;
+	engineConfiguration->isIgnitionEnabled = true;
+
+	setConstantDwell(3 PASS_ENGINE_PARAMETER); // a bit shorter dwell
+	engineConfiguration->ignMathCalculateAtIndex = 15;
+
+	// Cranking
+	engineConfiguration->cranking.rpm = 600;
+	engineConfiguration->crankingInjectionMode = IM_BATCH;
+	engineConfiguration->cranking.baseFuel = 7;
+	engineConfiguration->useConstantDwellDuringCranking = true;
+	engineConfiguration->ignitionDwellForCrankingMs = 6;
+
+	// Inputs configuration
+	engineConfiguration->analogInputDividerCoefficient = 1.52;
+	engineConfiguration->vbattDividerCoeff = 5.33;
+
+	boardConfiguration->triggerInputPins[0] = GPIOA_5;
+	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
+
+	setWholeTimingTable(25 PASS_ENGINE_PARAMETER);
 
 	board_configuration_s *bc = &engineConfiguration->bc;
 	bc->malfunctionIndicatorPin = GPIO_UNASSIGNED;
@@ -88,17 +98,20 @@ void setBmwE34(DECLARE_ENGINE_PARAMETER_F) {
 
 	bc->triggerErrorPin = GPIO_UNASSIGNED;
 
+	// clutch up
 	boardConfiguration->clutchUpPin = GPIOD_3;
 	boardConfiguration->clutchUpPinMode = PI_PULLUP;
 
+	// fuel pump
 	boardConfiguration->fuelPumpPin = GPIOD_4;
 
+	// idle
 	boardConfiguration->idle.solenoidPin = GPIOC_14;
 	boardConfiguration->idle.solenoidPinMode = OM_INVERTED;
 	boardConfiguration->idle.solenoidFrequency = 300;
-	// set_idle_pwm 50
-	boardConfiguration->idlePosition = 50;
+	boardConfiguration->idlePosition = 50; // set_idle_pwm 50
 
+	// disable sd_card
 	boardConfiguration->sdCardCsPin = GPIO_UNASSIGNED;
 	boardConfiguration->is_enabled_spi_2 = false;
 	boardConfiguration->is_enabled_spi_3 = false;
@@ -108,26 +121,24 @@ void setBmwE34(DECLARE_ENGINE_PARAMETER_F) {
 	// water injection #1 TODO GPIOD_7
 	// water injection #2 TODO GPIOE_2
 
-
 	/**
 	 * emulating the 60-0 trigger takes some resources, let's keep it slow by default
 	 * rpm 200
 	 */
 	bc->triggerSimulatorFrequency = 200;
 
+	// Configurating sensors:
+
+	// map
 	engineConfiguration->map.sensor.type = MT_MPX4250;
 
-//	engineConfiguration->hasCltSensor = false;
-//	engineConfiguration->hasIatSensor = false;
+	// thermistors
 	engineConfiguration->hasCltSensor = true;
 	engineConfiguration->hasIatSensor = true;
-
 	setThermistorConfiguration(&engineConfiguration->clt, -10, 9300, 20, 2500, 80, 335);
 	engineConfiguration->iat.bias_resistor = 2200;
-
 	setThermistorConfiguration(&engineConfiguration->iat, -10, 9300, 20, 2500, 80, 335);
 	engineConfiguration->clt.bias_resistor = 2200;
-
 
 //	/**
 //	 * This saves a couple of ticks in trigger emulation methods
