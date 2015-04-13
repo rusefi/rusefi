@@ -23,13 +23,14 @@ TriggerEmulatorHelper::TriggerEmulatorHelper() {
 	thirdWheelState = false;
 }
 
-static bool_t isUp[6] = { false, true, false, true, false, true };
+// this is not the only place where we have 'isUpEvent'. todo: reuse
+static bool_t isUpEvent[6] = { false, true, false, true, false, true };
 
 EXTERN_ENGINE
 ;
 
 static void fireShaftSignal(trigger_event_e signal) {
-	if (!engineConfiguration->useOnlyFrontForTrigger || isUp[(int) signal])
+	if (!engineConfiguration->useOnlyFrontForTrigger || isUpEvent[(int) signal])
 		hwHandleShaftSignal(signal);
 }
 
