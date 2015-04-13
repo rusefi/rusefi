@@ -83,10 +83,6 @@ class TriggerStimulatorHelper {
 public:
 	TriggerStimulatorHelper();
 	void nextStep(TriggerState *state, TriggerShape * shape, int i, trigger_config_s const*triggerConfig DECLARE_ENGINE_PARAMETER_S);
-private:
-	bool primaryWheelState;
-	bool secondaryWheelState;
-	bool thirdWheelState;
 };
 
 float getEngineCycle(operation_mode_e operationMode);

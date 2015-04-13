@@ -13,11 +13,13 @@
 EXTERN_ENGINE;
 
 void setTestEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
-	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
+//	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
+	engineConfiguration->trigger.type = TT_ONE_PLUS_ONE;
 
 	trigger_config_s *triggerConfig = &engineConfiguration->trigger;
 	triggerConfig->customTotalToothCount = 60;
 	triggerConfig->customSkippedToothCount = 0;
+	engineConfiguration->useOnlyFrontForTrigger = true;
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 
