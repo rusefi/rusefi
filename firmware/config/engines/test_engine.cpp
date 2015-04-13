@@ -13,7 +13,9 @@
 EXTERN_ENGINE;
 
 void setTestEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
+	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 //	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
+
 	engineConfiguration->trigger.type = TT_ONE_PLUS_ONE;
 
 	trigger_config_s *triggerConfig = &engineConfiguration->trigger;
@@ -21,7 +23,6 @@ void setTestEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	triggerConfig->customSkippedToothCount = 0;
 	engineConfiguration->useOnlyFrontForTrigger = true;
 
-	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
 	setConstantDwell(3 PASS_ENGINE_PARAMETER); // 50% duty cycle @ 5000 rpm

@@ -203,6 +203,10 @@ void TriggerShape::addEvent(float angle, trigger_wheel_e const waveIndex, trigge
 		addEvent(angle, waveIndex, stateParam);
 }
 
+operation_mode_e TriggerShape::getOperationMode() {
+	return operationMode;
+}
+
 void TriggerShape::addEvent(float angle, trigger_wheel_e const waveIndex, trigger_value_e const stateParam) {
 	efiAssertVoid(operationMode != OM_NONE, "operationMode not set");
 
