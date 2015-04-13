@@ -53,7 +53,7 @@ public class AutoTest {
         IoUtil.changeRpm(200);
         chart = nextChart();
         double x = 173.988;
-        assertWave(msg, chart, WaveChart.SPARK_1, 0.01666, x, x + 180, x + 360, x + 540);
+        assertWave(msg, chart, WaveChart.SPARK_1, 0.0199666, x, x + 180, x + 360, x + 540);
 
 
         IoUtil.changeRpm(1200);

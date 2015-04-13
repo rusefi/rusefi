@@ -117,6 +117,7 @@ void setFordAspireEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	setSingleCoilDwell(engineConfiguration);
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
+	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
 	engineConfiguration->trigger.type = TT_FORD_ASPIRE;
 
 	boardConfiguration->injectionPins[4] = GPIO_UNASSIGNED;
