@@ -782,6 +782,9 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		boardConfiguration->isFastAdcEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "stepperidle")) {
 		boardConfiguration->useStepperIdle = isEnabled;
+	} else if (strEqualCaseInsensitive(param, "trigger_only_front")) {
+		engineConfiguration->useOnlyFrontForTrigger = isEnabled;
+		incrementGlobalConfigurationVersion();
 	} else if (strEqualCaseInsensitive(param, "two_wire_batch")) {
 		engineConfiguration->twoWireBatch = isEnabled;
 		incrementGlobalConfigurationVersion();
