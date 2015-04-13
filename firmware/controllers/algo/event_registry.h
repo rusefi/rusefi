@@ -30,7 +30,8 @@ public:
 	angle_t angleOffset;
 };
 
-typedef struct {
+class InjectionEvent {
+public:
 	event_trigger_position_s position;
 	OutputSignal *actuator;
 	/**
@@ -38,16 +39,16 @@ typedef struct {
 	 * injectors together if that's the case
 	 */
 	bool_t isSimultanious;
-} InjectionEvent;
+};
 
-typedef struct IgnitionEvent_struct IgnitionEvent;
-
-struct IgnitionEvent_struct {
+class IgnitionEvent {
+public:
+	IgnitionEvent();
 	NamedOutputPin *output;
 	scheduling_s signalTimerUp;
 	scheduling_s signalTimerDown;
-	event_trigger_position_s dwellPosition;
 	float advance;
+	event_trigger_position_s dwellPosition;
 	event_trigger_position_s sparkPosition;
 	IgnitionEvent *next;
 	char *name;
