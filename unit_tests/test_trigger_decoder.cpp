@@ -515,6 +515,8 @@ void testTriggerDecoder(void) {
 
 	test1995FordInline6TriggerDecoder();
 	testMazdaMianaNbDecoder();
+
+	testTriggerDecoder2("test engine", TEST_ENGINE, 0, 0.5000, 0.0);
 	testTriggerDecoder2("testGY6_139QMB", GY6_139QMB, 0, 0.4375, 0.0);
 	testTriggerDecoder2("testSubary", SUBARU_2003_WRX, 0, 0.4000, 0.0);
 
