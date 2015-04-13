@@ -55,6 +55,8 @@ float actualSynchGap;
 
 static Logging * logger;
 
+efitick_t lastDecodingErrorTime = 0;
+
 /**
  * @return TRUE is something is wrong with trigger decoding
  */
@@ -196,6 +198,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, uint64_t now
 
 		triggerDecoderErrorPin.setValue(isDecodingError);
 		if (isDecodingError) {
+			lastDecodingErrorTime = getTimeNowNt();
 			totalTriggerErrorCounter++;
 			if (engineConfiguration->isPrintTriggerSynchDetails) {
 #if EFI_PROD_CODE
