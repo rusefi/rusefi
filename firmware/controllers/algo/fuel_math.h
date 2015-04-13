@@ -28,10 +28,10 @@ floatms_t getBaseTableFuel(engine_configuration_s *engineConfiguration, int rpm,
 
 float getInjectionAngle(int rpm DECLARE_ENGINE_PARAMETER_S);
 float getIatCorrection(float iat DECLARE_ENGINE_PARAMETER_S);
-float getInjectorLag(float vBatt DECLARE_ENGINE_PARAMETER_S);
+floatms_t getInjectorLag(float vBatt DECLARE_ENGINE_PARAMETER_S);
 float getCltCorrection(float clt DECLARE_ENGINE_PARAMETER_S);
-float getCrankingFuel(DECLARE_ENGINE_PARAMETER_F);
-float getCrankingFuel3(float coolantTemperature, uint32_t revolutionCounterSinceStart DECLARE_ENGINE_PARAMETER_S);
+floatms_t getCrankingFuel(DECLARE_ENGINE_PARAMETER_F);
+floatms_t getCrankingFuel3(float coolantTemperature, uint32_t revolutionCounterSinceStart DECLARE_ENGINE_PARAMETER_S);
 floatms_t getFuelMs(int rpm DECLARE_ENGINE_PARAMETER_S);
 
 #endif /* FUEL_MAP_H_ */

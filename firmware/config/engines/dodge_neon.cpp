@@ -108,6 +108,9 @@ void setDodgeNeon1995EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	// set_cranking_fuel 5
 	engineConfiguration->cranking.baseFuel = 5;
 
+//	todo: finish implementation for 'useRiseEdge'
+//	engineConfiguration->useOnlyFrontForTrigger = true;
+
 	/**
 	 * that's 1995 config
 	 */
