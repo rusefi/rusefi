@@ -181,22 +181,21 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	initTemperatureCurve(IAT_CURVE_SIZE, config->iatFuelCorrBins, config->iatFuelCorr);
 	initTemperatureCurve(CLT_CURVE_SIZE, config->cltFuelCorrBins, config->cltFuelCorr);
 
-	initTemperatureCurve(IAT_CURVE_SIZE, config->iatIdleCorrBins, config->iatIdleCorr);
-//	initTemperatureCurve(CLT_CURVE_SIZE, engineConfiguration->cltIdleCorrBins, engineConfiguration->cltIdleCorr);
+	initTemperatureCurve(CLT_CURVE_SIZE, config->cltIdleCorrBins, config->cltIdleCorr);
 
 
-	setTableValue(config->iatIdleCorrBins, config->iatIdleCorr, CLT_CURVE_SIZE, -40, 1.5);
-	setTableValue(config->iatIdleCorrBins, config->iatIdleCorr, CLT_CURVE_SIZE, -30, 1.5);
-	setTableValue(config->iatIdleCorrBins, config->iatIdleCorr, CLT_CURVE_SIZE, -20, 1.42);
-	setTableValue(config->iatIdleCorrBins, config->iatIdleCorr, CLT_CURVE_SIZE, -10, 1.36);
-	setTableValue(config->iatIdleCorrBins, config->iatIdleCorr, CLT_CURVE_SIZE, 0, 1.28);
-	setTableValue(config->iatIdleCorrBins, config->iatIdleCorr, CLT_CURVE_SIZE, 10, 1.19);
-	setTableValue(config->iatIdleCorrBins, config->iatIdleCorr, CLT_CURVE_SIZE, 20, 1.12);
-	setTableValue(config->iatIdleCorrBins, config->iatIdleCorr, CLT_CURVE_SIZE, 30, 1.10);
-	setTableValue(config->iatIdleCorrBins, config->iatIdleCorr, CLT_CURVE_SIZE, 40, 1.06);
-	setTableValue(config->iatIdleCorrBins, config->iatIdleCorr, CLT_CURVE_SIZE, 50, 1.06);
-	setTableValue(config->iatIdleCorrBins, config->iatIdleCorr, CLT_CURVE_SIZE, 60, 1.03);
-	setTableValue(config->iatIdleCorrBins, config->iatIdleCorr, CLT_CURVE_SIZE, 70, 1.01);
+	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, -40, 1.5);
+	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, -30, 1.5);
+	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, -20, 1.42);
+	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, -10, 1.36);
+	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, 0, 1.28);
+	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, 10, 1.19);
+	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, 20, 1.12);
+	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, 30, 1.10);
+	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, 40, 1.06);
+	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, 50, 1.06);
+	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, 60, 1.03);
+	setTableValue(config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE, 70, 1.01);
 
 
 	setTableValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, -40, 1.5);
