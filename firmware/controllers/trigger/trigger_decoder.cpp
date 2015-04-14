@@ -113,7 +113,7 @@ void TriggerState::decodeTriggerEvent(trigger_event_e const signal, uint64_t now
 
 	trigger_wheel_e triggerWheel = eventIndex[signal];
 
-	if (curSignal == prevSignal) {
+	if (!engineConfiguration->useOnlyFrontForTrigger && curSignal == prevSignal) {
 		orderingErrorCounter++;
 	}
 
