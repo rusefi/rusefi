@@ -38,6 +38,7 @@ void setBmwE34(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->injectionMode = IM_BATCH;
 	engineConfiguration->twoWireBatch = true;
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
+	engineConfiguration->useOnlyFrontForTrigger = true;
 
 	// Trigger configuration
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
@@ -59,7 +60,7 @@ void setBmwE34(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->isIgnitionEnabled = true;
 
 	setConstantDwell(3 PASS_ENGINE_PARAMETER); // a bit shorter dwell
-	engineConfiguration->ignMathCalculateAtIndex = 15;
+	engineConfiguration->ignMathCalculateAtIndex = 14;
 
 	// Cranking
 	engineConfiguration->cranking.rpm = 600;
