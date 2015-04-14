@@ -171,14 +171,12 @@ void testAngleResolver(void) {
 	assertTrue(engine->engineConfiguration2!=NULL);
 	TriggerShape * ts = &engine->triggerShape;
 
-	confgiureFordAspireTriggerShape(ts);
-
 	ts->calculateTriggerSynchPoint(PASS_ENGINE_PARAMETER_F);
 
-	assertEqualsM("index 2", 228.0450, ts->eventAngles[3]); // this angle is relation to synch point
+	assertEqualsM("index 2", 52.76, ts->eventAngles[3]); // this angle is relation to synch point
 	assertEqualsM("time 2", 0.3233, ts->wave.getSwitchTime(2));
-	assertEqualsM("index 5", 413.7470, ts->eventAngles[6]);
-	assertEqualsM("time 5", 0.5692, ts->wave.getSwitchTime(5));
+	assertEqualsM("index 5", 412.76, ts->eventAngles[6]);
+	assertEqualsM("time 5", 0.5733, ts->wave.getSwitchTime(5));
 
 	assertEquals(4, ts->getTriggerShapeSynchPointIndex());
 
@@ -190,40 +188,41 @@ void testAngleResolver(void) {
 	printf("*************************************************** testAngleResolver 0\r\n");
 	findTriggerPosition(&ae.add()->injectionStart, -122 PASS_ENGINE_PARAMETER);
 	assertEqualsM("size", 1, ae.size);
-//	assertEquals(0, ae.elements[0].injectionStart.eventIndex);
-//	assertEquals(53, ae.elements[0].injectionStart.angleOffset);
-	assertEquals(1, ae.elements[0].injectionStart.eventIndex);
-	assertEquals(3.1588, ae.elements[0].injectionStart.angleOffset);
+	assertEquals(2, ae.elements[0].injectionStart.eventIndex);
+	assertEquals(0.24, ae.elements[0].injectionStart.angleOffset);
 
 	printf("*************************************************** testAngleResolver 0.1\r\n");
 	ae.reset();
 	findTriggerPosition(&ae.add()->injectionStart, -80 PASS_ENGINE_PARAMETER);
-	assertEquals(1, ae.elements[0].injectionStart.eventIndex);
-	assertEquals(45.1588, ae.elements[0].injectionStart.angleOffset);
+	assertEquals(2, ae.elements[0].injectionStart.eventIndex);
+	assertEquals(42.24, ae.elements[0].injectionStart.angleOffset);
 
 	printf("*************************************************** testAngleResolver 0.2\r\n");
 	ae.reset();
 	findTriggerPosition(&ae.add()->injectionStart, -54 PASS_ENGINE_PARAMETER);
-	assertEquals(1, ae.elements[0].injectionStart.eventIndex);
-	assertEquals(71.1588, ae.elements[0].injectionStart.angleOffset);
+	assertEquals(2, ae.elements[0].injectionStart.eventIndex);
+	assertEquals(68.2400, ae.elements[0].injectionStart.angleOffset);
 
 	printf("*************************************************** testAngleResolver 0.3\r\n");
 	ae.reset();
 	findTriggerPosition(&ae.add()->injectionStart, -53 PASS_ENGINE_PARAMETER);
 	assertEquals(2, ae.elements[0].injectionStart.eventIndex);
-	assertEquals(3.3495, ae.elements[0].injectionStart.angleOffset);
+	assertEquals(69.24, ae.elements[0].injectionStart.angleOffset);
 
 	printf("*************************************************** testAngleResolver 1\r\n");
 	ae.reset();
 	findTriggerPosition(&ae.add()->injectionStart, 0 PASS_ENGINE_PARAMETER);
 	assertEquals(2, ae.elements[0].injectionStart.eventIndex);
-	assertEquals(56.3495, ae.elements[0].injectionStart.angleOffset);
+	assertEquals(122.24, ae.elements[0].injectionStart.angleOffset);
 
 	printf("*************************************************** testAngleResolver 2\r\n");
 	ae.reset();
 	findTriggerPosition(&ae.add()->injectionStart, 56 PASS_ENGINE_PARAMETER);
 	assertEquals(2, ae.elements[0].injectionStart.eventIndex);
-	assertEquals(112.3495, ae.elements[0].injectionStart.angleOffset);
+	assertEquals(178.24, ae.elements[0].injectionStart.angleOffset);
+
+	TriggerShape t;
+	confgiureFordAspireTriggerShape(&t);
 }
 
 void testPinHelper(void) {

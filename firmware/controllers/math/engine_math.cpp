@@ -370,8 +370,10 @@ void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_F) {
 	}
 
 	for (int angle = 0; angle < CONFIG(engineCycle); angle++) {
-		int triggerIndex = findAngleIndex(angle PASS_ENGINE_PARAMETER);
-		TRIGGER_SHAPE(triggerIndexByAngle[angle])= engineConfiguration->useOnlyFrontForTrigger ? TRIGGER_SHAPE(frontOnlyIndexes[triggerIndex]) : triggerIndex;
+		int triggerShapeIndex = findAngleIndex(angle PASS_ENGINE_PARAMETER);
+		if (engineConfiguration->useOnlyFrontForTrigger)
+			triggerShapeIndex = triggerShapeIndex & 0xFFFFFFFE; // we need even index for front_only
+		TRIGGER_SHAPE(triggerIndexByAngle[angle]) = triggerShapeIndex;
 	}
 
 	engineConfiguration2->crankingInjectionEvents.addFuelEvents(&crankingInjectonSignals,
