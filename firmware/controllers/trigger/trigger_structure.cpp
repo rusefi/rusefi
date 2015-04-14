@@ -44,11 +44,10 @@ TriggerShape::TriggerShape() :
 	tdcPosition = 0;
 	skippedToothCount = totalToothCount = 0;
 	syncRatioFrom = syncRatioTo = 0;
+	memset(eventAngles, 0, sizeof(eventAngles));
 	memset(frontOnlyIndexes, 0, sizeof(frontOnlyIndexes));
 	memset(isFrontEvent, 0, sizeof(isFrontEvent));
 	memset(triggerIndexByAngle, 0, sizeof(triggerIndexByAngle));
-
-
 }
 
 int TriggerShape::getSize() const {
@@ -74,15 +73,24 @@ void TriggerShape::calculateTriggerSynchPoint(DECLARE_ENGINE_PARAMETER_F) {
 		if (eventIndex == 0) {
 			// explicit check for zero to avoid issues where logical zero is not exactly zero due to float nature
 			eventAngles[0] = 0;
+			// this value would be used in case of front-only
+			eventAngles[1] = 0;
 			frontOnlyIndexes[0] = 0;
 		} else {
 			int triggerDefinitionCoordinate = (triggerShapeSynchPointIndex + eventIndex) % engine->engineCycleEventCount;
 			int triggerDefinitionIndex = triggerDefinitionCoordinate >= size ? triggerDefinitionCoordinate - size : triggerDefinitionCoordinate;
-			if (isFrontEvent[triggerDefinitionIndex])
-				frontOnlyIndex += 2;
 			float angle = getAngle(triggerDefinitionCoordinate) - firstAngle;
 			fixAngle(angle);
-			eventAngles[eventIndex] = angle;
+			if (engineConfiguration->useOnlyFrontForTrigger) {
+				if (isFrontEvent[triggerDefinitionIndex]) {
+					frontOnlyIndex += 2;
+					eventAngles[frontOnlyIndex] = angle;
+					eventAngles[frontOnlyIndex + 1] = angle;
+				}
+			} else {
+				eventAngles[eventIndex] = angle;
+			}
+
 			frontOnlyIndexes[eventIndex] = frontOnlyIndex;
 		}
 	}
@@ -268,6 +276,7 @@ void TriggerShape::addEvent(float angle, trigger_wheel_e const waveIndex, trigge
 			wave->pinStates[0] = initialState[i];
 		}
 
+		isFrontEvent[0] = TV_HIGH == stateParam;
 		wave.setSwitchTime(0, angle);
 		wave.waves[waveIndex].pinStates[0] = state;
 		return;
