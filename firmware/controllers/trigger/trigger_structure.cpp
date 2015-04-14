@@ -62,14 +62,22 @@ void TriggerShape::calculateTriggerSynchPoint(DECLARE_ENGINE_PARAMETER_F) {
 
 	float firstAngle = getAngle(triggerShapeSynchPointIndex);
 
+	int frontOnlyIndex = 0;
+
 	for (int eventIndex = 0; eventIndex < engine->engineCycleEventCount; eventIndex++) {
 		if (eventIndex == 0) {
 			// explicit check for zero to avoid issues where logical zero is not exactly zero due to float nature
-			eventAngles[eventIndex] = 0;
+			eventAngles[0] = 0;
+			frontOnlyIndexes[0] = 0;
 		} else {
-			float angle = getAngle((triggerShapeSynchPointIndex + eventIndex) % engine->engineCycleEventCount) - firstAngle;
+			int triggerDefinitionCoordinate = (triggerShapeSynchPointIndex + eventIndex) % engine->engineCycleEventCount;
+			int triggerDefinitionIndex = triggerDefinitionCoordinate >= size ? triggerDefinitionCoordinate - size : triggerDefinitionCoordinate;
+			if (isFrontEvent[triggerDefinitionIndex])
+				frontOnlyIndex += 2;
+			float angle = getAngle(triggerDefinitionCoordinate) - firstAngle;
 			fixAngle(angle);
 			eventAngles[eventIndex] = angle;
+			frontOnlyIndexes[eventIndex] = frontOnlyIndex;
 		}
 	}
 }
@@ -180,6 +188,7 @@ uint32_t TriggerShape::getLength() const {
 }
 
 float TriggerShape::getAngle(int index) const {
+	// todo: why is this check here? looks like the code below could be used universally
 	if (operationMode == FOUR_STROKE_CAM_SENSOR) {
 		return getSwitchAngle(index);
 	}
@@ -199,7 +208,7 @@ float TriggerShape::getAngle(int index) const {
 }
 
 void TriggerShape::addEvent(float angle, trigger_wheel_e const waveIndex, trigger_value_e const stateParam, float filterLeft, float filterRight) {
-	if(angle > filterLeft && angle < filterRight)
+	if (angle > filterLeft && angle < filterRight)
 		addEvent(angle, waveIndex, stateParam);
 }
 
@@ -267,11 +276,18 @@ void TriggerShape::addEvent(float angle, trigger_wheel_e const waveIndex, trigge
 	int index = wave.waveIndertionAngle(angle, size);
 
 	// shifting existing data
+	// todo: does this logic actually work? I think it does not!
 	for (int i = size - 1; i >= index; i--) {
 		for (int j = 0; j < PWM_PHASE_MAX_WAVE_PER_PWM; j++) {
 			wave.waves[j].pinStates[i + 1] = wave.getChannelState(j, index);
 		}
 		wave.setSwitchTime(i + 1, wave.getSwitchTime(i));
+	}
+
+	isFrontEvent[index] = TV_HIGH == stateParam;
+
+	if (index != size) {
+		firmwareError("are we ever here?");
 	}
 
 //	int index = size;

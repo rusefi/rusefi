@@ -252,18 +252,14 @@ static int findAngleIndex(float angleOffset DECLARE_ENGINE_PARAMETER_S) {
 		float eventAngle = TRIGGER_SHAPE(eventAngles[middle]);
 
 		if (middle == left) {
-			/**
-			 * in case of 'useOnlyFrontForTrigger' flag we will only use even angle indexes
-			 */
-			return engineConfiguration->useOnlyFrontForTrigger ? middle & 0xFFFFFFFE : middle;
+			return middle;
 		}
 		if (angleOffset < eventAngle) {
 			right = middle;
 		} else if (angleOffset > eventAngle) {
 			left = middle;
 		} else {
-			// see comment above
-			return engineConfiguration->useOnlyFrontForTrigger ? middle & 0xFFFFFFFE : middle;
+			return middle;
 		}
 	}
 }
@@ -374,7 +370,8 @@ void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_F) {
 	}
 
 	for (int angle = 0; angle < CONFIG(engineCycle); angle++) {
-		TRIGGER_SHAPE(triggerIndexByAngle[angle])= findAngleIndex(angle PASS_ENGINE_PARAMETER);
+		int triggerIndex = findAngleIndex(angle PASS_ENGINE_PARAMETER);
+		TRIGGER_SHAPE(triggerIndexByAngle[angle])= engineConfiguration->useOnlyFrontForTrigger ? TRIGGER_SHAPE(frontOnlyIndexes[triggerIndex]) : triggerIndex;
 	}
 
 	engineConfiguration2->crankingInjectionEvents.addFuelEvents(&crankingInjectonSignals,
