@@ -166,12 +166,12 @@ void lcd_HD44780_print_string(const char* string) {
 }
 //getHwPin(boardConfiguration->HD44780_db7)
 static void lcdInfo(void) {
-	scheduleMsg(logger, "HD44780 RS=%s E=%s", hwPortname(boardConfiguration->HD44780_rs),
-			hwPortname(boardConfiguration->HD44780_e));
-	scheduleMsg(logger, "HD44780 D4=%s D5=%s", hwPortname(boardConfiguration->HD44780_db4),
-			hwPortname(boardConfiguration->HD44780_db5));
-	scheduleMsg(logger, "HD44780 D6=%s D7=%s", hwPortname(boardConfiguration->HD44780_db6),
-			hwPortname(boardConfiguration->HD44780_db7));
+	scheduleMsg(logger, "HD44780 RS=%s", hwPortname(boardConfiguration->HD44780_rs));
+	scheduleMsg(logger, "HD44780 E=%s", hwPortname(boardConfiguration->HD44780_e));
+	scheduleMsg(logger, "HD44780 D4=%s", hwPortname(boardConfiguration->HD44780_db4));
+	scheduleMsg(logger, "HD44780 D5=%s", hwPortname(boardConfiguration->HD44780_db5));
+	scheduleMsg(logger, "HD44780 D6=%s", hwPortname(boardConfiguration->HD44780_db6));
+	scheduleMsg(logger, "HD44780 D7=%s", hwPortname(boardConfiguration->HD44780_db7));
 }
 
 void lcd_HD44780_init(Logging *sharedLogger) {
