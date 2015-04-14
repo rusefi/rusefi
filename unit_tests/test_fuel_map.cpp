@@ -188,16 +188,40 @@ void testAngleResolver(void) {
 
 	ae.reset();
 	printf("*************************************************** testAngleResolver 0\r\n");
-	findTriggerPosition(&ae.add()->injectionStart, 53 - 175 PASS_ENGINE_PARAMETER);
+	findTriggerPosition(&ae.add()->injectionStart, -122 PASS_ENGINE_PARAMETER);
 	assertEqualsM("size", 1, ae.size);
 //	assertEquals(0, ae.elements[0].injectionStart.eventIndex);
 //	assertEquals(53, ae.elements[0].injectionStart.angleOffset);
 	assertEquals(1, ae.elements[0].injectionStart.eventIndex);
 	assertEquals(3.1588, ae.elements[0].injectionStart.angleOffset);
 
+	printf("*************************************************** testAngleResolver 0.1\r\n");
+	ae.reset();
+	findTriggerPosition(&ae.add()->injectionStart, -80 PASS_ENGINE_PARAMETER);
+	assertEquals(1, ae.elements[0].injectionStart.eventIndex);
+	assertEquals(45.1588, ae.elements[0].injectionStart.angleOffset);
+
+	printf("*************************************************** testAngleResolver 0.2\r\n");
+	ae.reset();
+	findTriggerPosition(&ae.add()->injectionStart, -54 PASS_ENGINE_PARAMETER);
+	assertEquals(1, ae.elements[0].injectionStart.eventIndex);
+	assertEquals(71.1588, ae.elements[0].injectionStart.angleOffset);
+
+	printf("*************************************************** testAngleResolver 0.3\r\n");
+	ae.reset();
+	findTriggerPosition(&ae.add()->injectionStart, -53 PASS_ENGINE_PARAMETER);
+	assertEquals(2, ae.elements[0].injectionStart.eventIndex);
+	assertEquals(3.3495, ae.elements[0].injectionStart.angleOffset);
+
+	printf("*************************************************** testAngleResolver 1\r\n");
+	ae.reset();
+	findTriggerPosition(&ae.add()->injectionStart, 0 PASS_ENGINE_PARAMETER);
+	assertEquals(2, ae.elements[0].injectionStart.eventIndex);
+	assertEquals(56.3495, ae.elements[0].injectionStart.angleOffset);
+
 	printf("*************************************************** testAngleResolver 2\r\n");
 	ae.reset();
-	findTriggerPosition(&ae.add()->injectionStart, 51 + 180 - 175 PASS_ENGINE_PARAMETER);
+	findTriggerPosition(&ae.add()->injectionStart, 56 PASS_ENGINE_PARAMETER);
 	assertEquals(2, ae.elements[0].injectionStart.eventIndex);
 	assertEquals(112.3495, ae.elements[0].injectionStart.angleOffset);
 }
