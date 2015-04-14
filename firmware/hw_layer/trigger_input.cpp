@@ -75,11 +75,12 @@ static ICUDriver *turnOnTriggerInputPin(brain_pin_e hwPin) {
 	scheduleMsg(logger, "turnOnTriggerInputPin %s", hwPortname(hwPin));
 	// todo: reuse 'setWaveReaderMode' method here?
 	if (driver != NULL) {
-		bool_t needWidthCallback = !CONFIG(useOnlyFrontForTrigger) || TRIGGER_SHAPE(useRiseEdge);
-		shaft_icucfg.width_cb = needWidthCallback ? shaft_icu_width_callback : NULL;
+          // todo: once http://forum.chibios.org/phpbb/viewtopic.php?f=16&t=1757 is fixed
+//		bool_t needWidthCallback = !CONFIG(useOnlyFrontForTrigger) || TRIGGER_SHAPE(useRiseEdge);
+//		shaft_icucfg.width_cb = needWidthCallback ? shaft_icu_width_callback : NULL;
 
-		bool_t needPeriodCallback = !CONFIG(useOnlyFrontForTrigger) || !TRIGGER_SHAPE(useRiseEdge);
-		shaft_icucfg.period_cb = needPeriodCallback ? shaft_icu_period_callback : NULL;
+//		bool_t needPeriodCallback = !CONFIG(useOnlyFrontForTrigger) || !TRIGGER_SHAPE(useRiseEdge);
+//		shaft_icucfg.period_cb = needPeriodCallback ? shaft_icu_period_callback : NULL;
 
 		efiIcuStart(driver, &shaft_icucfg);
 		icuEnable(driver);
