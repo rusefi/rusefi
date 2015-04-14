@@ -80,11 +80,18 @@ public:
 	 */
 	float eventAngles[PWM_PHASE_MAX_COUNT];
 
+	int8_t isFrontEvent[PWM_PHASE_MAX_COUNT];
+	/**
+	 * this table translates trigger definition index into 'front-only' index. This translation is not so trivial
+	 * in case of a multi-channel signal with overlapping waves, for example Ford Aspire/Mitsubishi
+	 */
+	int frontOnlyIndexes[PWM_PHASE_MAX_COUNT];
+
 	bool_t invertOnAdd;
 	/**
 	 * Total count of shaft events per CAM or CRANK shaft revolution.
 	 * TODO this should be migrated to CRANKshaft revolution, this would go together
-	 * TODO with eliminating RPM_MULT magic constant
+	 * TODO: rename to triggerDefinitionSize ?
 	 */
 	int size;
 
