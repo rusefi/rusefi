@@ -250,7 +250,12 @@ void TriggerShape::addEvent(float angle, trigger_wheel_e const waveIndex, trigge
 	 */
 	angle /= engineCycle;
 
-	expectedEventCount[waveIndex]++;
+#if EFI_PROD_CODE
+// todo: PASS_ENGINE?
+	if (!engineConfiguration->useOnlyFrontForTrigger || stateParam == TV_HIGH) {
+		expectedEventCount[waveIndex]++;
+	}
+#endif
 
 	efiAssertVoid(angle > 0, "angle should be positive");
 	if (size > 0) {
