@@ -250,6 +250,8 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->rpmHardLimit = 7000;
 	engineConfiguration->cranking.rpm = 550;
 
+	engineConfiguration->noAccelAfterHardLimitPeriodSecs = 3;
+
 	config->crankingFuelCoef[0] = 5; // base cranking fuel adjustment coefficient
 	config->crankingFuelBins[0] = -20; // temperature in C
 	config->crankingFuelCoef[1] = 3.7;
