@@ -139,6 +139,7 @@ bool isCranking(void) {
 void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index DECLARE_ENGINE_PARAMETER_S) {
 	RpmCalculator *rpmState = &engine->rpmCalculator;
 	uint64_t nowNt = getTimeNowNt();
+	engine->m.beforeRpmCb = GET_TIMESTAMP();
 #if EFI_PROD_CODE
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 256, "lowstck#2z");
 #endif
@@ -176,6 +177,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index DECL
 	if (boardConfiguration->analogChartMode == AC_TRIGGER)
 		acAddData(getCrankshaftAngleNt(nowNt PASS_ENGINE_PARAMETER), index);
 #endif
+	engine->m.rpmCbTime = GET_TIMESTAMP() - engine->m.beforeRpmCb;
 }
 
 static scheduling_s tdcScheduler[2];

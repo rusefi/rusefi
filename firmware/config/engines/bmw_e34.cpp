@@ -53,7 +53,10 @@ void setBmwE34(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->tunerStudioSerialSpeed = 57600;
 	engineConfiguration->rpmHardLimit = 7000;
 	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER);
-	boardConfiguration->analogChartMode = AC_TRIGGER;
+
+	// for best performance at high RPM, we need to turn off 'Engine Sniffer' and 'Sensor Sniffer'
+	boardConfiguration->analogChartMode = AC_OFF;
+	engineConfiguration->isDigitalChartEnabled = false;
 
 	engineConfiguration->isCylinderCleanupEnabled = false;
 	engineConfiguration->isInjectionEnabled = true;

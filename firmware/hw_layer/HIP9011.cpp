@@ -33,6 +33,7 @@
 #include "hip9011_lookup.h"
 #include "HIP9011.h"
 #include "adc_inputs.h"
+#include "efilib2.h"
 
 #if EFI_HIP_9011 || defined(__DOXYGEN__)
 
@@ -161,7 +162,7 @@ static void endIntegration(void) {
  */
 static void intHoldCallback(trigger_event_e ckpEventType, uint32_t index DECLARE_ENGINE_PARAMETER_S) {
 	// this callback is invoked on interrupt thread
-
+	engine->m.beforeHipCb = GET_TIMESTAMP();
 	if (index != 0)
 		return;
 
@@ -176,6 +177,7 @@ static void intHoldCallback(trigger_event_e ckpEventType, uint32_t index DECLARE
 	scheduleByAngle(rpm, &endTimer[structIndex], engineConfiguration->knockDetectionWindowEnd,
 			(schfunc_t) &endIntegration,
 			NULL);
+	engine->m.hipCbTime = GET_TIMESTAMP() - engine->m.beforeHipCb;
 }
 
 static void setGain(float value) {
