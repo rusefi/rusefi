@@ -19,10 +19,7 @@
 
 package com.romraider.util;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 
 public final class ObjectCloner {
 
@@ -30,7 +27,7 @@ public final class ObjectCloner {
     }
 
     // returns a deep copy of an object
-    public static Object deepCopy(Object obj) throws Exception {
+    public static Object deepCopy(Object obj) {
         /*ByteArrayOutputStream bos = new ByteArrayOutputStream();
         try {
             ObjectOutputStream oos = new ObjectOutputStream(bos);
@@ -82,15 +79,25 @@ public final class ObjectCloner {
             // read the serialized, and deep copied, object and return it
             return inStream.readObject();
 
-        } catch (Exception e) {
-            throw (e);
+        } catch (Throwable e) {
+            throw new IllegalStateException(e);
 
         } finally {
             //always close your streams in finally clauses
-            outStream.close();
-            inStream.close();
+            close(outStream);
+            close(inStream);
         }
 
 
+    }
+
+    public static void close(Closeable closeable) {
+        if(closeable!=null) {
+            try {
+                closeable.close();
+            } catch (IOException e) {
+                // ignoring exception during close()
+            }
+        }
     }
 }

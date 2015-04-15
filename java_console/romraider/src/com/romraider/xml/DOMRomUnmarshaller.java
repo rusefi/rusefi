@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.management.modelmbean.XMLParseException;
+import javax.naming.NameNotFoundException;
 import javax.swing.JOptionPane;
 
 import com.rusefi.Launcher;
@@ -62,9 +63,9 @@ public final class DOMRomUnmarshaller {
     public DOMRomUnmarshaller() {
     }
 
-    public Rom unmarshallXMLDefinition(Node rootNode, byte[] input,
+    public Rom unmarshallXMLDefinition(Node rootNode, byte[] romContent,
             JProgressPane progress) throws RomNotFoundException,
-            XMLParseException, StackOverflowError, Exception {
+            XMLParseException, NameNotFoundException {
 
         this.progress = progress;
         Node n;
@@ -97,13 +98,13 @@ public final class DOMRomUnmarshaller {
                         RomID romID = unmarshallRomID(n2, new RomID());
 
                         if (romID.getInternalIdString().length() > 0
-                                && foundMatch(romID, input)) {
+                                && foundMatch(romID, romContent)) {
                             Rom output = unmarshallRom(n, new Rom());
 
                             // set ram offset
                             output.getRomID().setRamOffset(
                                     output.getRomID().getFileSize()
-                                    - input.length);
+                                    - romContent.length);
                             return output;
                         }
                     }
@@ -189,7 +190,7 @@ public final class DOMRomUnmarshaller {
     }
 
     public Rom unmarshallRom(Node rootNode, Rom rom) throws XMLParseException,
-    RomNotFoundException, StackOverflowError, Exception {
+            RomNotFoundException, NameNotFoundException {
         Node n;
         NodeList nodes = rootNode.getChildNodes();
 
@@ -251,8 +252,7 @@ public final class DOMRomUnmarshaller {
     }
 
     public Rom getBaseRom(Node rootNode, String xmlID, Rom rom)
-            throws XMLParseException, RomNotFoundException, StackOverflowError,
-            Exception {
+            throws XMLParseException, RomNotFoundException, NameNotFoundException {
         Node n;
         NodeList nodes = rootNode.getChildNodes();
 
@@ -351,7 +351,7 @@ public final class DOMRomUnmarshaller {
     }
 
     private Table unmarshallTable(Node tableNode, Table table, Rom rom)
-            throws XMLParseException, TableIsOmittedException, Exception {
+            throws XMLParseException, TableIsOmittedException, NameNotFoundException {
 
         if (unmarshallAttribute(tableNode, "omit", "false").equalsIgnoreCase(
                 "true")) { // remove table if omitted

@@ -176,17 +176,17 @@ static void mapAveragingCallback(trigger_event_e ckpEventType, uint32_t index DE
 
 	MAP_sensor_config_s * config = &engineConfiguration->map;
 
-	float startAngle = interpolate2d(rpm, config->samplingAngleBins, config->samplingAngle, MAP_ANGLE_SIZE);
-	float windowAngle = interpolate2d(rpm, config->samplingWindowBins, config->samplingWindow, MAP_WINDOW_SIZE);
-	if (windowAngle <= 0) {
+	angle_t samplingStart = interpolate2d(rpm, config->samplingAngleBins, config->samplingAngle, MAP_ANGLE_SIZE);
+	angle_t samplingDuration = interpolate2d(rpm, config->samplingWindowBins, config->samplingWindow, MAP_WINDOW_SIZE);
+	if (samplingDuration <= 0) {
 		firmwareError("map sampling angle should be positive");
 		return;
 	}
 
 	int structIndex = getRevolutionCounter() % 2;
 	// todo: schedule this based on closest trigger event, same as ignition works
-	scheduleByAngle(rpm, &startTimer[structIndex], startAngle, startAveraging, NULL);
-	scheduleByAngle(rpm, &endTimer[structIndex], startAngle + windowAngle, endAveraging, NULL);
+	scheduleByAngle(rpm, &startTimer[structIndex], samplingStart, startAveraging, NULL);
+	scheduleByAngle(rpm, &endTimer[structIndex], samplingStart + samplingDuration, endAveraging, NULL);
 }
 
 static void showMapStats(void) {
