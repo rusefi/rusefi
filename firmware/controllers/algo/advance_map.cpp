@@ -53,6 +53,7 @@ static const ignition_table_t defaultIatTiming = {
 };
 
 float getBaseAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_S) {
+	engine->m.beforeAdvance = GET_TIMESTAMP();
 	if (cisnan(engineLoad)) {
 		warning(OBD_PCM_Processor_Fault, "NaN engine load");
 		return NAN;
@@ -64,7 +65,6 @@ float getBaseAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_S) {
 
 	float iatCorrection = iatAdvanceCorrectionMap.getValue(engine->engineState.clt, (float) rpm);
 
-	engine->m.beforeAdvance = GET_TIMESTAMP();
 	float result = advanceMap.getValue(engineLoad, (float) rpm) + iatCorrection;
 	engine->m.advanceTime = GET_TIMESTAMP() - engine->m.beforeAdvance;
 	return result;

@@ -114,6 +114,15 @@ typedef struct {
 
 	uint32_t beforeFuelCalc;
 	uint32_t fuelCalcTime;
+
+	uint32_t beforeMapAveragingCb;
+	uint32_t mapAveragingCbTime;
+
+	uint32_t beforeHipCb;
+	uint32_t hipCbTime;
+
+	uint32_t beforeRpmCb;
+	uint32_t rpmCbTime;
 } monitoring_timestamps_s;
 
 class Engine;

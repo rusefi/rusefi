@@ -248,7 +248,8 @@ void triggerInfo(Engine *engine) {
 			boolToString(engine->triggerShape.needSecondTriggerInput));
 	scheduleMsg(logger, "expected duty #0=%f/#1=%f", ts->dutyCycle[0], ts->dutyCycle[1]);
 
-	scheduleMsg(logger, "isError %s/total errors=%d ord_err=%d/total revolutions=%d/self=%s",
+	scheduleMsg(logger, "synchronizationNeeded=%s/isError=%s/total errors=%d ord_err=%d/total revolutions=%d/self=%s",
+			boolToString(ts->isSynchronizationNeeded),
 			boolToString(isTriggerDecoderError()), triggerCentral.triggerState.totalTriggerErrorCounter,
 			triggerCentral.triggerState.orderingErrorCounter, triggerCentral.triggerState.getTotalRevolutionCounter(),
 			boolToString(engineConfiguration->directSelfStimulation));
@@ -259,16 +260,7 @@ void triggerInfo(Engine *engine) {
 
 #endif
 
-#if EFI_PROD_CODE
-	scheduleMsg(logger,
-			"sn=%s ignitionMathTime=%d schTime=%d injectonSchTime=%d zeroTestTime=%d advanceTime=%d triggerMaxDuration=%d",
-			boolToString(ts->isSynchronizationNeeded), engine->m.ignitionMathTime, engine->m.ignitionSchTime,
-			engine->m.injectonSchTime, engine->m.zeroTestTime, engine->m.advanceTime, triggerMaxDuration);
-
-	triggerMaxDuration = 0;
-
-	scheduleMsg(logger, "maxLockTime=%d / maxTriggerReentraint=%d", maxLockTime, maxTriggerReentraint);
-	scheduleMsg(logger, "maxEventQueueTime=%d", maxEventQueueTime);
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 
 	scheduleMsg(logger, "primary trigger input: %s", hwPortname(boardConfiguration->triggerInputPins[0]));
 	scheduleMsg(logger, "primary trigger simulator: %s %s freq=%d",
@@ -291,6 +283,27 @@ void triggerInfo(Engine *engine) {
 			getPin_output_mode_e(boardConfiguration->triggerErrorPinMode));
 	scheduleMsg(logger, "primary logic input: %s", hwPortname(boardConfiguration->logicAnalyzerPins[0]));
 	scheduleMsg(logger, "secondary logic input: %s", hwPortname(boardConfiguration->logicAnalyzerPins[1]));
+
+	scheduleMsg(logger, "zeroTestTime=%d", engine->m.zeroTestTime);
+
+	scheduleMsg(logger, "advanceLookupTime=%d", engine->m.advanceTime);
+
+	scheduleMsg(logger,
+			"ignitionMathTime=%d schTime=%d injectonSchTime=%d",
+			engine->m.ignitionMathTime, engine->m.ignitionSchTime,
+			engine->m.injectonSchTime);
+
+	scheduleMsg(logger, "mapTime=%d/hipTime=%d/rpmTime=%d",
+			engine->m.mapAveragingCbTime,
+			engine->m.hipCbTime,
+			engine->m.rpmCbTime);
+
+
+	scheduleMsg(logger, "maxLockTime=%d / maxTriggerReentraint=%d", maxLockTime, maxTriggerReentraint);
+	scheduleMsg(logger, "maxEventQueueTime=%d", maxEventQueueTime);
+
+	scheduleMsg(logger, "totalTriggerHandlerMaxTime=%d", triggerMaxDuration);
+	triggerMaxDuration = 0;
 
 #endif /* EFI_PROD_CODE */
 }

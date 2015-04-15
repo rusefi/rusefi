@@ -19,7 +19,7 @@
  */
 
 #include "main.h"
-
+#include "efilib2.h"
 #include "map.h"
 
 #if EFI_MAP_AVERAGING || defined(__DOXYGEN__)
@@ -163,7 +163,7 @@ static void endAveraging(void *arg) {
  */
 static void mapAveragingCallback(trigger_event_e ckpEventType, uint32_t index DECLARE_ENGINE_PARAMETER_S) {
 	// this callback is invoked on interrupt thread
-
+	engine->m.beforeMapAveragingCb = GET_TIMESTAMP();
 	if (index != 0)
 		return;
 
@@ -187,6 +187,7 @@ static void mapAveragingCallback(trigger_event_e ckpEventType, uint32_t index DE
 	// todo: schedule this based on closest trigger event, same as ignition works
 	scheduleByAngle(rpm, &startTimer[structIndex], samplingStart, startAveraging, NULL);
 	scheduleByAngle(rpm, &endTimer[structIndex], samplingStart + samplingDuration, endAveraging, NULL);
+	engine->m.mapAveragingCbTime = GET_TIMESTAMP() - engine->m.beforeMapAveragingCb;
 }
 
 static void showMapStats(void) {
