@@ -52,6 +52,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Vector;
 
+import javax.management.modelmbean.XMLParseException;
+import javax.naming.NameNotFoundException;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JInternalFrame;
@@ -66,6 +68,7 @@ import javax.swing.tree.TreePath;
 import com.rusefi.Launcher;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 import com.romraider.Settings;
@@ -171,27 +174,10 @@ public class ECUEditor {
         return content;
     }
 
-    public static void openImage(byte[] input, File definitionFile, String fileName) throws Exception {
+    public static void openImage(byte[] input, File definitionFile, String fileName) throws IOException, SAXException,
+            RomNotFoundException, XMLParseException, NameNotFoundException {
         ECUEditor editor = ECUEditorManager.getECUEditor();
-        DOMParser parser = new DOMParser();
-        Document doc;
-        FileInputStream fileStream;
-        fileStream = new FileInputStream(definitionFile);
-        InputSource src = new InputSource(fileStream);
-
-        parser.parse(src);
-        doc = parser.getDocument();
-
-        Rom rom;
-        try {
-            rom = new DOMRomUnmarshaller().unmarshallXMLDefinition(doc.getDocumentElement(), input, editor.getStatusPanel());
-        } finally {
-            // Release mem after unmarshall.
-            parser.reset();
-            doc.removeChild(doc.getDocumentElement());
-            fileStream.close();
-            System.gc();
-        }
+        Rom rom = readRom(input, definitionFile, editor);
 
         editor.getStatusPanel().setStatus("Populating tables...");
 
@@ -204,6 +190,29 @@ public class ECUEditor {
         editor.refreshTableCompareMenus();
 
         editor.getStatusPanel().setStatus("Done loading image...");
+    }
+
+    private static Rom readRom(byte[] romContent, File romDefinitionFile, ECUEditor editor) throws SAXException, IOException, RomNotFoundException, XMLParseException, NameNotFoundException {
+        DOMParser parser = new DOMParser();
+        Document doc;
+        FileInputStream fileStream;
+        fileStream = new FileInputStream(romDefinitionFile);
+        InputSource src = new InputSource(fileStream);
+
+        parser.parse(src);
+        doc = parser.getDocument();
+
+        Rom rom;
+        try {
+            rom = new DOMRomUnmarshaller().unmarshallXMLDefinition(doc.getDocumentElement(), romContent, editor.getStatusPanel());
+        } finally {
+            // Release mem after unmarshall.
+            parser.reset();
+            doc.removeChild(doc.getDocumentElement());
+            fileStream.close();
+            System.gc();
+        }
+        return rom;
     }
 
     public void initializeEditorUI() {
