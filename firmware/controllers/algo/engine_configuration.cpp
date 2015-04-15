@@ -397,6 +397,12 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->useSerialPort = true;
 	boardConfiguration->useStepperIdle = false;
 
+	boardConfiguration->idle.stepperDirectionPin = GPIOE_10;
+	boardConfiguration->idle.stepperStepPin = GPIOE_12;
+	engineConfiguration->stepperEnablePin = GPIOE_14;
+	engineConfiguration->idleStepperReactionTime = 10;
+	engineConfiguration->idleStepperTotalSteps = 150;
+
 #if EFI_PROD_CODE
 	engineConfiguration->digitalChartSize = 300;
 #else
@@ -590,12 +596,6 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->isVerboseAlternator = false;
 
 	boardConfiguration->tunerStudioSerialSpeed = TS_DEFAULT_SPEED;
-
-	boardConfiguration->idle.stepperStepPin = GPIO_UNASSIGNED;
-	boardConfiguration->idle.stepperDirectionPin = GPIO_UNASSIGNED;
-
-	engineConfiguration->idleStepperReactionTime = 10;
-	engineConfiguration->idleStepperTotalSteps = 150;
 
 	engineConfiguration->mapAccelLength = 6;
 	engineConfiguration->mapAccelEnrichmentThreshold = 5; // kPa

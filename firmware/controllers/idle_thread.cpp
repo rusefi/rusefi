@@ -68,6 +68,7 @@ static void showIdleInfo(void) {
 				engineConfiguration->idleStepperReactionTime);
 		scheduleMsg(logger, "step=%s steps=%d", hwPortname(boardConfiguration->idle.stepperStepPin),
 				engineConfiguration->idleStepperTotalSteps);
+		scheduleMsg(logger, "enable=%s", hwPortname(engineConfiguration->stepperEnablePin));
 	} else {
 		scheduleMsg(logger, "idle valve freq=%d on %s", boardConfiguration->idle.solenoidFrequency,
 				hwPortname(boardConfiguration->idle.solenoidPin));
@@ -175,7 +176,8 @@ void startIdleThread(Logging*sharedLogger, Engine *engine) {
 
 	if (boardConfiguration->useStepperIdle) {
 		iacMotor.initialize(boardConfiguration->idle.stepperStepPin, boardConfiguration->idle.stepperDirectionPin,
-				engineConfiguration->idleStepperReactionTime, engineConfiguration->idleStepperTotalSteps);
+				engineConfiguration->idleStepperReactionTime, engineConfiguration->idleStepperTotalSteps,
+				engineConfiguration->stepperEnablePin);
 	} else {
 		/**
 		 * Start PWM for idleValvePin
