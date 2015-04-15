@@ -153,7 +153,9 @@ void startIdleThread(Logging*sharedLogger, Engine *engine) {
 	logger = sharedLogger;
 
 	if (boardConfiguration->useStepperIdle) {
-		iacMotor.initialize(boardConfiguration->idle.stepperStepPin, boardConfiguration->idle.stepperDirectionPin);
+		iacMotor.initialize(boardConfiguration->idle.stepperStepPin, boardConfiguration->idle.stepperDirectionPin,
+				engineConfiguration->idleStepperReactionTime,
+				engineConfiguration->idleStepperTotalSteps);
 	} else {
 		/**
 		 * Start PWM for idleValvePin

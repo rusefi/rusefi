@@ -12,15 +12,13 @@
 
 #define ST_DELAY_MS 10
 
-#define ST_COUNT 100
-
 static msg_t stThread(StepperMotor *motor) {
 	chRegSetThreadName("stepper");
 
 	palWritePad(motor->directionPort, motor->directionPin, false);
 
 	// let's park the motor in a known position to begin with
-	for (int i = 0; i < ST_COUNT; i++) {
+	for (int i = 0; i < motor->totalSteps; i++) {
 		motor->pulse();
 	}
 
@@ -57,6 +55,8 @@ StepperMotor::StepperMotor() {
 	directionPin = 0;
 	stepPort = NULL;
 	stepPin = 0;
+	reactionTime = 0;
+	totalSteps = 0;
 }
 
 void StepperMotor::pulse() {
@@ -66,7 +66,9 @@ void StepperMotor::pulse() {
 	chThdSleepMilliseconds(ST_DELAY_MS);
 }
 
-void StepperMotor::initialize(brain_pin_e stepPin, brain_pin_e directionPin) {
+void StepperMotor::initialize(brain_pin_e stepPin, brain_pin_e directionPin, float reactionTime, int totalSteps) {
+	this->reactionTime = reactionTime;
+	this->totalSteps = totalSteps;
 	if (stepPin == GPIO_UNASSIGNED || directionPin == GPIO_UNASSIGNED) {
 		return;
 	}
