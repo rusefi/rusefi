@@ -8,11 +8,11 @@
  */
 
 #include "main.h"
+#include "engine.h"
 #include "rpm_calculator.h"
 #include "pwm_generator.h"
 #include "alternatorController.h"
 #include "pin_repository.h"
-#include "engine.h"
 #include "voltage.h"
 #include "pid.h"
 
