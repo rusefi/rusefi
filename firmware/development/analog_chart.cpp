@@ -7,9 +7,9 @@
 
 #include "main.h"
 #include "analog_chart.h"
+#include "engine.h"
 #include "rpm_calculator.h"
 #include "status_loop.h"
-#include "engine_configuration.h"
 
 #if EFI_ANALOG_CHART || defined(__DOXYGEN__)
 
