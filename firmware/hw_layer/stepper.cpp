@@ -23,7 +23,7 @@ static msg_t stThread(StepperMotor *motor) {
 	}
 
 	while (true) {
-		int targetPosition = motor->targetPosition;
+		int targetPosition = motor->getTargetPosition();
 		int currentPosition = motor->currentPosition;
 
 		if (targetPosition == currentPosition) {
@@ -59,6 +59,14 @@ StepperMotor::StepperMotor() {
 	totalSteps = 0;
 }
 
+int StepperMotor::getTargetPosition() {
+	return targetPosition;
+}
+
+void StepperMotor::setTargetPosition(int targetPosition) {
+	this->targetPosition = targetPosition;
+}
+
 void StepperMotor::pulse() {
 	palWritePad(stepPort, stepPin, true);
 	chThdSleepMilliseconds(ST_DELAY_MS);
@@ -67,8 +75,8 @@ void StepperMotor::pulse() {
 }
 
 void StepperMotor::initialize(brain_pin_e stepPin, brain_pin_e directionPin, float reactionTime, int totalSteps) {
-	this->reactionTime = reactionTime;
-	this->totalSteps = totalSteps;
+	this->reactionTime = maxF(1, reactionTime);
+	this->totalSteps = maxI(3, totalSteps);
 	if (stepPin == GPIO_UNASSIGNED || directionPin == GPIO_UNASSIGNED) {
 		return;
 	}

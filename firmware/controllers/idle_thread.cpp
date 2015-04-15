@@ -41,15 +41,15 @@ static Logging *logger;
 EXTERN_ENGINE
 ;
 
-static OutputPin idlePin;
-static SimplePwm idleValvePwm;
+static OutputPin idleSolenoidPin;
+static SimplePwm idleSolenoid;
 
 static StepperMotor iacMotor;
 
 /**
  * that's the position with CLT and IAT corrections
  */
-static float actualIdlePosition = -1.0f;
+static float actualIdlePosition = -100.0f;
 
 /**
  * Idle level calculation algorithm lives in idle_controller.cpp
@@ -64,8 +64,10 @@ static void showIdleInfo(void) {
 	scheduleMsg(logger, "idleMode=%s position=%f isStepper=%s", getIdle_mode_e(engineConfiguration->idleMode),
 			boardConfiguration->idlePosition, boolToString(boardConfiguration->useStepperIdle));
 	if (boardConfiguration->useStepperIdle) {
-		scheduleMsg(logger, "direction=%s", hwPortname(boardConfiguration->idle.stepperDirectionPin));
-		scheduleMsg(logger, "step=%s", hwPortname(boardConfiguration->idle.stepperStepPin));
+		scheduleMsg(logger, "direction=%s reactionTime=%f", hwPortname(boardConfiguration->idle.stepperDirectionPin),
+				engineConfiguration->idleStepperReactionTime);
+		scheduleMsg(logger, "step=%s steps=%d", hwPortname(boardConfiguration->idle.stepperStepPin),
+				engineConfiguration->idleStepperTotalSteps);
 	} else {
 		scheduleMsg(logger, "idle valve freq=%d on %s", boardConfiguration->idle.solenoidFrequency,
 				hwPortname(boardConfiguration->idle.solenoidPin));
@@ -78,25 +80,41 @@ static void setIdleControlEnabled(int value) {
 }
 
 static void setIdleValvePwm(percent_t value) {
-	if (value < 0.01 || value > 99.9)
-		return;
-	scheduleMsg(logger, "setting idle valve PWM %f", value);
-	showIdleInfo();
 	/**
 	 * currently idle level is an percent value (0-100 range), and PWM takes a float in the 0..1 range
 	 * todo: unify?
 	 */
-	idleValvePwm.setSimplePwmDutyCycle(value / 100);
+	idleSolenoid.setSimplePwmDutyCycle(value / 100);
 }
 
-static void setIdleValvePosition(int position) {
-	boardConfiguration->idlePosition = position;
+static void doSetIdleValvePosition(int positionPercent) {
+	boardConfiguration->idlePosition = positionPercent;
+
+	percent_t cltCorrectedPosition = interpolate2d(engine->engineState.clt, config->cltIdleCorrBins, config->cltIdleCorr,
+	CLT_CURVE_SIZE) * positionPercent;
+
+	// let's put the value into the right range
+	cltCorrectedPosition = maxF(cltCorrectedPosition, 0.01);
+	cltCorrectedPosition = minF(cltCorrectedPosition, 99.9);
+
+	if (absF(cltCorrectedPosition - actualIdlePosition) < 1) {
+		return; // value is pretty close, let's leave the poor valve alone
+	}
+	actualIdlePosition = cltCorrectedPosition;
 
 	if (boardConfiguration->useStepperIdle) {
-		iacMotor.targetPosition = position;
+		iacMotor.setTargetPosition(cltCorrectedPosition / 100 * engineConfiguration->idleStepperTotalSteps);
 	} else {
-		setIdleValvePwm(position);
+		setIdleValvePwm(cltCorrectedPosition);
 	}
+}
+
+static void setIdleValvePosition(int positionPercent) {
+	if (positionPercent < 1 || positionPercent > 99)
+		return;
+	scheduleMsg(logger, "setting idle valve position %d", positionPercent);
+	showIdleInfo();
+	doSetIdleValvePosition(positionPercent);
 }
 
 static msg_t ivThread(int param) {
@@ -117,8 +135,11 @@ static msg_t ivThread(int param) {
 					getHwPin(boardConfiguration->clutchUpPin));
 		}
 
-		if (engineConfiguration->idleMode != IM_AUTO)
+		if (engineConfiguration->idleMode != IM_AUTO) {
+			// let's re-apply CLT correction
+			doSetIdleValvePosition(boardConfiguration->idlePosition);
 			continue;
+		}
 
 		efitimems_t now = currentTimeMillis();
 
@@ -154,13 +175,12 @@ void startIdleThread(Logging*sharedLogger, Engine *engine) {
 
 	if (boardConfiguration->useStepperIdle) {
 		iacMotor.initialize(boardConfiguration->idle.stepperStepPin, boardConfiguration->idle.stepperDirectionPin,
-				engineConfiguration->idleStepperReactionTime,
-				engineConfiguration->idleStepperTotalSteps);
+				engineConfiguration->idleStepperReactionTime, engineConfiguration->idleStepperTotalSteps);
 	} else {
 		/**
 		 * Start PWM for idleValvePin
 		 */
-		startSimplePwmExt(&idleValvePwm, "Idle Valve", boardConfiguration->idle.solenoidPin, &idlePin,
+		startSimplePwmExt(&idleSolenoid, "Idle Valve", boardConfiguration->idle.solenoidPin, &idleSolenoidPin,
 				boardConfiguration->idle.solenoidFrequency, boardConfiguration->idlePosition / 100,
 				applyIdleSolenoidPinState);
 	}
