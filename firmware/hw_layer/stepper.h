@@ -12,13 +12,15 @@
 class StepperMotor {
 public:
 	StepperMotor();
-	void initialize(brain_pin_e stepPin, brain_pin_e directionPin);
+	void initialize(brain_pin_e stepPin, brain_pin_e directionPin, float reactionTime, int totalSteps);
 	void pulse();
 	GPIO_TypeDef * directionPort;
 	ioportmask_t directionPin;
 
 	int currentPosition;
 	int targetPosition;
+	float reactionTime;
+	int totalSteps;
 
 private:
 
