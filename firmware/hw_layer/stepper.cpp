@@ -74,7 +74,8 @@ void StepperMotor::pulse() {
 	chThdSleepMilliseconds(ST_DELAY_MS);
 }
 
-void StepperMotor::initialize(brain_pin_e stepPin, brain_pin_e directionPin, float reactionTime, int totalSteps) {
+void StepperMotor::initialize(brain_pin_e stepPin, brain_pin_e directionPin, float reactionTime, int totalSteps,
+		brain_pin_e enablePin) {
 	this->reactionTime = maxF(1, reactionTime);
 	this->totalSteps = maxI(3, totalSteps);
 	if (stepPin == GPIO_UNASSIGNED || directionPin == GPIO_UNASSIGNED) {
@@ -87,8 +88,9 @@ void StepperMotor::initialize(brain_pin_e stepPin, brain_pin_e directionPin, flo
 	directionPort = getHwPort(directionPin);
 	this->directionPin = getHwPin(directionPin);
 
-	mySetPadMode2("st step", stepPin, PAL_MODE_OUTPUT_PUSHPULL);
-	mySetPadMode2("st dir", directionPin, PAL_MODE_OUTPUT_PUSHPULL);
+	mySetPadMode2("stepper step", stepPin, PAL_MODE_OUTPUT_PUSHPULL);
+	mySetPadMode2("stepper dir", directionPin, PAL_MODE_OUTPUT_PUSHPULL);
+	mySetPadMode2("stepper enable", enablePin, PAL_MODE_OUTPUT_PUSHPULL);
 
 	chThdCreateStatic(stThreadStack, sizeof(stThreadStack), NORMALPRIO, (tfunc_t) stThread, this);
 }
