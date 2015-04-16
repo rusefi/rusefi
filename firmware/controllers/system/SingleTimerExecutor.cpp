@@ -15,6 +15,7 @@
 
 #include "SingleTimerExecutor.h"
 #include "efitime.h"
+#include "efilib2.h"
 
 #if EFI_PROD_CODE
 #include "microsecond_timer.h"
@@ -34,6 +35,10 @@ extern schfunc_t globalTimerCallback;
  */
 static uint64_t nextEventTimeNt = 0;
 static uint64_t hwAlarmTime = 0;
+
+uint32_t beforeHwSetTimer;
+uint32_t hwSetTimerTime;
+uint32_t lastExecutionCount;
 
 static void executorCallback(void *arg) {
 	(void)arg;
@@ -97,19 +102,22 @@ void Executor::doExecute() {
 	 * further invocations
 	 */
 	reentrantFlag = true;
-	bool shouldExecute = true;
+	int shouldExecute = 1;
 	/**
 	 * in real life it could be that while we executing listeners time passes and it's already time to execute
 	 * next listeners.
 	 * TODO: add a counter & figure out a limit of iterations?
 	 */
-	while (shouldExecute) {
+	int totalExecuted = 0;
+	while (shouldExecute > 0) {
 		/**
 		 * It's worth noting that that the actions might be adding new actions into the queue
 		 */
 		uint64_t nowNt = getTimeNowNt();
 		shouldExecute = queue.executeAll(nowNt);
+		totalExecuted += shouldExecute;
 	}
+	lastExecutionCount = totalExecuted;
 	if (!isLocked()) {
 		firmwareError("Someone has stolen my lock");
 		return;
@@ -127,7 +135,9 @@ void Executor::doExecute() {
 	if (nextEventTimeNt == EMPTY_QUEUE)
 		return; // no pending events in the queue
 	hwAlarmTime = NT2US(nextEventTimeNt - nowNt);
+	beforeHwSetTimer = GET_TIMESTAMP();
 	setHardwareUsTimer(hwAlarmTime == 0 ? 1 : hwAlarmTime);
+	hwSetTimerTime = GET_TIMESTAMP() - beforeHwSetTimer;
 }
 
 /**
