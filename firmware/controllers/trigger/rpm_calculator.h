@@ -11,6 +11,7 @@
 
 #include <global.h>
 #include "engine_configuration.h"
+#include "scheduler.h"
 
 #define TOP_DEAD_CENTER_MESSAGE "r"
 
@@ -102,13 +103,6 @@ bool isCranking(void);
 #define addWaveChartEvent(n, msg) {}
 #endif /* EFI_WAVE_CHART */
 
-
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+void scheduleByAngle(int rpm, scheduling_s *timer, angle_t angle, schfunc_t callback, void *param);
 
 #endif /* RPM_REPORTER_H_ */
