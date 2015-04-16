@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
+import com.rusefi.FileLog;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
@@ -72,9 +73,7 @@ public class SettingsManager {
             final Document doc = parser.getDocument();
             loadedSettings = domUms.unmarshallSettings(doc.getDocumentElement());
         } catch (FileNotFoundException e) {
-            showMessageDialog(null,
-                    "Settings file not found.\nUsing default settings.",
-                    "Error Loading Settings", INFORMATION_MESSAGE);
+            FileLog.MAIN.logLine("Settings file not found. Using default settings.");
             loadedSettings = new Settings();
         } catch (Exception e) {
             throw new RuntimeException(e);
