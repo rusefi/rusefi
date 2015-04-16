@@ -45,7 +45,7 @@ public:
 
 	void insertTask(scheduling_s *scheduling, uint64_t timeX, schfunc_t callback, void *param);
 
-	bool executeAll(uint64_t now);
+	int executeAll(uint64_t now);
 
 	uint64_t getNextEventTime(uint64_t nowUs);
 	void clear(void);

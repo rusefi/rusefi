@@ -82,9 +82,9 @@ uint32_t lastEventQueueTime;
 
 /**
  * Invoke all pending actions prior to specified timestamp
- * @return true if at least one action was executed
+ * @return number of executed actions
  */
-bool EventQueue::executeAll(uint64_t now) {
+int EventQueue::executeAll(uint64_t now) {
 	scheduling_s * current, *tmp;
 
 	scheduling_s * executionList = NULL;
@@ -109,7 +109,6 @@ bool EventQueue::executeAll(uint64_t now) {
 	 * we need safe iteration here because 'callback' might change change 'current->next'
 	 * while re-inserting it into the queue from within the callback
 	 */
-	bool result = (executionList != NULL);
 	LL_FOREACH_SAFE(executionList, current, tmp)
 	{
 		uint32_t before = GET_TIMESTAMP();
@@ -123,7 +122,7 @@ bool EventQueue::executeAll(uint64_t now) {
 //			cost++;
 //		}
 	}
-	return result;
+	return executionCounter;
 }
 
 int EventQueue::size(void) {
