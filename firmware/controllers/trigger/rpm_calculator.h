@@ -103,6 +103,6 @@ bool isCranking(void);
 #define addWaveChartEvent(n, msg) {}
 #endif /* EFI_WAVE_CHART */
 
-void scheduleByAngle(int rpm, scheduling_s *timer, angle_t angle, schfunc_t callback, void *param);
+void scheduleByAngle(int rpm, scheduling_s *timer, angle_t angle, schfunc_t callback, void *param, RpmCalculator *calc);
 
 #endif /* RPM_REPORTER_H_ */

@@ -185,8 +185,8 @@ static void mapAveragingCallback(trigger_event_e ckpEventType, uint32_t index DE
 
 	int structIndex = getRevolutionCounter() % 2;
 	// todo: schedule this based on closest trigger event, same as ignition works
-	scheduleByAngle(rpm, &startTimer[structIndex], samplingStart, startAveraging, NULL);
-	scheduleByAngle(rpm, &endTimer[structIndex], samplingStart + samplingDuration, endAveraging, NULL);
+	scheduleByAngle(rpm, &startTimer[structIndex], samplingStart, startAveraging, NULL, &engine->rpmCalculator);
+	scheduleByAngle(rpm, &endTimer[structIndex], samplingStart + samplingDuration, endAveraging, NULL, &engine->rpmCalculator);
 	engine->m.mapAveragingCbTime = GET_TIMESTAMP() - engine->m.beforeMapAveragingCb;
 }
 
