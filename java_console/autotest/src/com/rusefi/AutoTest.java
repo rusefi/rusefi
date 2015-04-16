@@ -48,6 +48,7 @@ public class AutoTest {
 
     private static void testBmwE34() {
         setEngineType(25);
+        sendCommand("chart 1");
         String msg = "BMW";
         WaveChart chart;
         IoUtil.changeRpm(200);
