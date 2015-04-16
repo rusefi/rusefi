@@ -89,16 +89,17 @@ bool EventQueue::executeAll(uint64_t now) {
 
 	scheduling_s * executionList = NULL;
 
-	int counter = 0;
-
+	int listIterationCounter = 0;
+	int executionCounter = 0;
 	// we need safe iteration because we are removing elements inside the loop
 	LL_FOREACH_SAFE(head, current, tmp)
 	{
-		if (++counter > QUEUE_LENGTH_LIMIT) {
+		if (++listIterationCounter > QUEUE_LENGTH_LIMIT) {
 			firmwareError("Is this list looped?");
 			return false;
 		}
 		if (current->momentX <= now) {
+			executionCounter++;
 			LL_DELETE(head, current);
 			LL_PREPEND(executionList, current);
 		}
