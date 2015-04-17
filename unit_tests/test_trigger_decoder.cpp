@@ -417,11 +417,11 @@ static void testRpmCalculator(void) {
 	assertEqualsM("index #2", 0, eth.triggerCentral.triggerState.getCurrentIndex());
 	assertEqualsM("queue size", 6, schedulingQueue.size());
 	scheduling_s *ev1 = schedulingQueue.getForUnitText(0);
-	assertREquals((void*)ev1->callback, (void*)turnPinLow);
-	assertREquals((void*)&enginePins.coils[0], ev1->param);
+	assertREquals((void*)ev1->callback, (void*)turnPinHigh);
+	assertREquals((void*)&enginePins.coils[3], ev1->param);
 
-	assertEqualsM("ev 1", 247059, ev1->momentX);
-	assertEqualsM("ev 2", 246559, schedulingQueue.getForUnitText(1)->momentX);
+	assertEqualsM("ev 1", 245000, ev1->momentX);
+	assertEqualsM("ev 2", 245000, schedulingQueue.getForUnitText(1)->momentX);
 	schedulingQueue.clear();
 
 	timeNow += 5000;
@@ -432,10 +432,10 @@ static void testRpmCalculator(void) {
 	eth.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_DOWN PASS_ENGINE_PARAMETER);
 	assertEqualsM("index #3", 3, eth.triggerCentral.triggerState.getCurrentIndex());
 	assertEqualsM("queue size 3", 6, schedulingQueue.size());
-	assertEqualsM("ev 3", 260392, schedulingQueue.getForUnitText(0)->momentX);
-	assertEquals(259892, schedulingQueue.getForUnitText(1)->momentX);
-	assertEqualsM2("ev 5", 261362, schedulingQueue.getForUnitText(2)->momentX, 2);
-	assertEqualsM("3/3", 258333, schedulingQueue.getForUnitText(3)->momentX);
+	assertEqualsM("ev 3", 258333, schedulingQueue.getForUnitText(0)->momentX);
+	assertEqualsM("ev 4", 258333, schedulingQueue.getForUnitText(1)->momentX);
+	assertEqualsM2("ev 5", 259892, schedulingQueue.getForUnitText(2)->momentX, 2);
+	assertEqualsM("3/3", 260392, schedulingQueue.getForUnitText(3)->momentX);
 	schedulingQueue.clear();
 
 	timeNow += 5000;
@@ -446,7 +446,7 @@ static void testRpmCalculator(void) {
 	eth.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_UP PASS_ENGINE_PARAMETER);
 	assertEqualsM("index #4", 6, eth.triggerCentral.triggerState.getCurrentIndex());
 	assertEqualsM("queue size 4", 6, schedulingQueue.size());
-	assertEqualsM("4/0", 273725, schedulingQueue.getForUnitText(0)->momentX);
+	assertEqualsM("4/0", 271666, schedulingQueue.getForUnitText(0)->momentX);
 	schedulingQueue.clear();
 
 	timeNow += 5000;
@@ -458,9 +458,9 @@ static void testRpmCalculator(void) {
 	timeNow += 5000; // 5ms
 	eth.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_UP PASS_ENGINE_PARAMETER);
 	assertEqualsM("queue size 6", 6, schedulingQueue.size());
-	assertEqualsM("6/0", 287059, schedulingQueue.getForUnitText(0)->momentX);
-	assertEqualsM("6/1", 286559, schedulingQueue.getForUnitText(1)->momentX);
-	assertEqualsM2("6/2", 288029, schedulingQueue.getForUnitText(2)->momentX, 1);
+	assertEqualsM("6/0", 285000, schedulingQueue.getForUnitText(0)->momentX);
+	assertEqualsM("6/1", 285000, schedulingQueue.getForUnitText(1)->momentX);
+	assertEqualsM2("6/2", 286559, schedulingQueue.getForUnitText(2)->momentX, 1);
 	schedulingQueue.clear();
 
 	timeNow += 5000;
@@ -471,10 +471,10 @@ static void testRpmCalculator(void) {
 	timeNow += 5000; // 5ms
 	eth.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_UP PASS_ENGINE_PARAMETER);
 	assertEqualsM("queue size 8", 5, schedulingQueue.size());
-	assertEqualsM("8/0", 299892, schedulingQueue.getForUnitText(0)->momentX);
-	assertEqualsM("8/1", 301363, schedulingQueue.getForUnitText(1)->momentX);
-	assertEqualsM2("8/2", 298333, schedulingQueue.getForUnitText(2)->momentX, 1);
-	assertEqualsM("8/3", 301363, schedulingQueue.getForUnitText(3)->momentX);
+	assertEqualsM("8/0", 298333, schedulingQueue.getForUnitText(0)->momentX);
+	assertEqualsM("8/1", 298333, schedulingQueue.getForUnitText(1)->momentX);
+	assertEqualsM2("8/2", 299892, schedulingQueue.getForUnitText(2)->momentX, 0);
+	assertEqualsM2("8/3", 301363, schedulingQueue.getForUnitText(3)->momentX, 0);
 	schedulingQueue.clear();
 
 	timeNow += 5000;
