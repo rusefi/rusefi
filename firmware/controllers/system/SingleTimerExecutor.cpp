@@ -57,9 +57,6 @@ Executor::Executor() {
 	queue.setLateDelay(US2NT(100));
 }
 
-#define lock() lockAnyContext()
-#define unlock() unlockAnyContext()
-
 void Executor::scheduleByTime(scheduling_s *scheduling, efitimeus_t timeUs, schfunc_t callback,
 		void *param) {
 //	if (delayUs < 0) {
@@ -72,12 +69,12 @@ void Executor::scheduleByTime(scheduling_s *scheduling, efitimeus_t timeUs, schf
 //	}
 	if (!reentrantFlag) {
 		// this would guard the queue and disable interrupts
-		lock();
+		lockAnyContext();
 	}
 	queue.insertTask(scheduling, US2NT(timeUs), callback, param);
 	if (!reentrantFlag) {
 		doExecute();
-		unlock();
+		unlockAnyContext();
 	}
 }
 
@@ -87,9 +84,9 @@ void Executor::schedule(scheduling_s *scheduling, uint64_t nowUs, int delayUs, s
 }
 
 void Executor::onTimerCallback() {
-	lock();
+	lockAnyContext();
 	doExecute();
-	unlock();
+	unlockAnyContext();
 }
 
 /*

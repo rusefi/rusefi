@@ -42,6 +42,10 @@ static OutputPin hipCs;
 
 extern pin_output_mode_e DEFAULT_OUTPUT;
 
+extern uint32_t lastExecutionCount;
+
+uint32_t hipLastExecutionCount;
+
 /**
  * band index is only send to HIP chip on startup
  */
@@ -174,6 +178,7 @@ static void intHoldCallback(trigger_event_e ckpEventType, uint32_t index DECLARE
 	// todo: schedule this based on closest trigger event, same as ignition works
 	scheduleByAngle(rpm, &startTimer[structIndex], engineConfiguration->knockDetectionWindowStart,
 			(schfunc_t) &startIntegration, NULL, &engine->rpmCalculator);
+	hipLastExecutionCount = lastExecutionCount;
 	scheduleByAngle(rpm, &endTimer[structIndex], engineConfiguration->knockDetectionWindowEnd,
 			(schfunc_t) &endIntegration,
 			NULL, &engine->rpmCalculator);
