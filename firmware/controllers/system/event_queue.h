@@ -52,6 +52,7 @@ public:
 	int size(void);
 	scheduling_s *getForUnitText(int index);
 	void setLateDelay(int value);
+	scheduling_s * getHead();
 private:
 	bool checkIfPending(scheduling_s *scheduling);
 	scheduling_s *head;

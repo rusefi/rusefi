@@ -136,6 +136,10 @@ void EventQueue::setLateDelay(int value) {
 	lateDelay = value;
 }
 
+scheduling_s * EventQueue::getHead() {
+	return head;
+}
+
 scheduling_s *EventQueue::getForUnitText(int index) {
 	scheduling_s * current;
 
