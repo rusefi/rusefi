@@ -11,6 +11,9 @@
 #ifndef EVENT_SCHEDULER_H_
 #define EVENT_SCHEDULER_H_
 
+/**
+ * this is a large value which is expected to be larger than any real time
+ */
 #define EMPTY_QUEUE 0x0FFFFFFFFFFFFFFFLL
 
 #define QUEUE_LENGTH_LIMIT 1000
@@ -43,7 +46,10 @@ class EventQueue {
 public:
 	EventQueue();
 
-	void insertTask(scheduling_s *scheduling, uint64_t timeX, schfunc_t callback, void *param);
+	/**
+	 * O(size)
+	 */
+	bool_t insertTask(scheduling_s *scheduling, uint64_t timeX, schfunc_t callback, void *param);
 
 	int executeAll(uint64_t now);
 
@@ -56,6 +62,9 @@ public:
 	void assertListIsSorted();
 private:
 	bool checkIfPending(scheduling_s *scheduling);
+	/**
+	 * this list is sorted
+	 */
 	scheduling_s *head;
 	uint64_t lateDelay;
 };

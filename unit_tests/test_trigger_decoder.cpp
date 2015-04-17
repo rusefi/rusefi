@@ -400,7 +400,7 @@ static void testRpmCalculator(void) {
 //	engine.rpmCalculator = &eth.rpmState;
 	prepareTimingMap(PASS_ENGINE_PARAMETER_F);
 
-	assertEqualsM("queue size", 0, schedulingQueue.size());
+	assertEqualsM("queue size/0", 0, schedulingQueue.size());
 
 	debugSignalExecutor = true;
 
@@ -415,10 +415,9 @@ static void testRpmCalculator(void) {
 	assertEqualsM("dwell offset", 14.0316, ilist->elements[0].dwellPosition.angleOffset);
 
 	assertEqualsM("index #2", 0, eth.triggerCentral.triggerState.getCurrentIndex());
-	assertEqualsM("queue size", 6, schedulingQueue.size());
+	assertEqualsM("queue size/6", 6, schedulingQueue.size());
 	scheduling_s *ev1 = schedulingQueue.getForUnitText(0);
 	assertREquals((void*)ev1->callback, (void*)turnPinHigh);
-	assertREquals((void*)&enginePins.coils[3], ev1->param);
 
 	assertEqualsM("ev 1", 245000, ev1->momentX);
 	assertEqualsM("ev 2", 245000, schedulingQueue.getForUnitText(1)->momentX);

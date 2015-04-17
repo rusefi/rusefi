@@ -54,6 +54,9 @@ static void executorCallback(void *arg) {
 
 Executor::Executor() {
 	reentrantFlag = false;
+	/**
+	 * todo: a good comment
+	 */
 	queue.setLateDelay(US2NT(100));
 }
 

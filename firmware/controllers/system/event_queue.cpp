@@ -25,16 +25,18 @@ bool EventQueue::checkIfPending(scheduling_s *scheduling) {
 	return assertNotInList<scheduling_s>(head, scheduling);
 }
 
-void EventQueue::insertTask(scheduling_s *scheduling, uint64_t timeX, schfunc_t callback, void *param) {
+/**
+ * @return true if inserted into the head of the list
+ */
+bool_t EventQueue::insertTask(scheduling_s *scheduling, uint64_t timeX, schfunc_t callback, void *param) {
 #if EFI_UNIT_TEST
 	assertListIsSorted();
 #endif
-	if (callback == NULL)
-		firmwareError("NULL callback");
+	efiAssert(callback != NULL, "NULL callback", false);
 
 	int alreadyPending = checkIfPending(scheduling);
 	if (alreadyPending)
-		return;
+		return false;
 
 	scheduling->momentX = timeX;
 	scheduling->callback = callback;
@@ -42,6 +44,10 @@ void EventQueue::insertTask(scheduling_s *scheduling, uint64_t timeX, schfunc_t 
 
 	if (head == NULL || timeX < head->momentX) {
 		LL_PREPEND(head, scheduling);
+#if EFI_UNIT_TEST
+		assertListIsSorted();
+#endif
+		return true;
 	} else {
 		scheduling_s *insertPosition = head;
 		while (insertPosition->next != NULL && insertPosition->next->momentX < timeX) {
@@ -50,23 +56,19 @@ void EventQueue::insertTask(scheduling_s *scheduling, uint64_t timeX, schfunc_t 
 
 		scheduling->next = insertPosition->next;
 		insertPosition->next = scheduling;
-	}
 #if EFI_UNIT_TEST
-	assertListIsSorted();
+		assertListIsSorted();
 #endif
+		return false;
+	}
 }
-
-//void EventQueue::insertTask(scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) {
-//	insertTask(scheduling, getTimeNowUs(), delayUs, callback, param);
-//}
 
 /**
  * On this layer it does not matter which units are used - us, ms ot nt.
- * Get the timestamp of the soonest pending action
+ * @return Get the timestamp of the soonest pending action, skipping all the actions in the past
  */
 uint64_t EventQueue::getNextEventTime(uint64_t nowX) {
 	scheduling_s * current;
-	// this is a large value which is expected to be larger than any real time
 	uint64_t nextTimeUs = EMPTY_QUEUE;
 
 	int counter = 0;
@@ -78,18 +80,18 @@ uint64_t EventQueue::getNextEventTime(uint64_t nowX) {
 		}
 		if (current->momentX <= nowX) {
 			/**
+			 * We are here if action timestamp is in the past
+			 *
 			 * looks like we end up here after 'writeconfig' (which freezes the firmware) - we are late
 			 * for the next scheduled event
 			 */
-			uint64_t mock = nowX + lateDelay;
-			if (mock < nextTimeUs)
-				nextTimeUs = mock;
+			uint64_t aBitInTheFuture = nowX + lateDelay;
+			return aBitInTheFuture;
 		} else {
-			if (current->momentX < nextTimeUs)
-				nextTimeUs = current->momentX;
+			return current->momentX;
 		}
 	}
-	return nextTimeUs;
+	return EMPTY_QUEUE;
 }
 
 // static scheduling_s * longScheduling;
@@ -118,6 +120,12 @@ int EventQueue::executeAll(uint64_t now) {
 			executionCounter++;
 			LL_DELETE(head, current);
 			LL_PREPEND(executionList, current);
+		} else {
+			/**
+			 * The list is sorted. Once we find one action in the future, all the remaining ones
+			 * are also in the future.
+			 */
+			break;
 		}
 	}
 #if EFI_UNIT_TEST
