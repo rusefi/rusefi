@@ -92,13 +92,22 @@ void testSignalExecutor(void) {
 	scheduling_s s1;
 	scheduling_s s2;
 	scheduling_s s3;
+	scheduling_s s4;
 
 	eq.insertTask(&s1, 10, callback, NULL);
+	eq.insertTask(&s4, 10, callback, NULL);
 	eq.insertTask(&s2, 11, callback, NULL);
 	eq.insertTask(&s3, 12, callback, NULL);
+
+	assertEquals(4, eq.size());
+	assertEquals(12, eq.getHead()->momentX);
+	assertEquals(11, eq.getHead()->next->momentX);
+	assertEquals(10, eq.getHead()->next->next->momentX);
+	assertEquals(10, eq.getHead()->next->next->next->momentX);
+
 	callbackCounter = 0;
 	eq.executeAll(10);
-	assertEquals(1, callbackCounter);
+	assertEqualsM("callbackCounter", 2, callbackCounter);
 	callbackCounter = 0;
 	eq.executeAll(11);
 	assertEquals(1, callbackCounter);
