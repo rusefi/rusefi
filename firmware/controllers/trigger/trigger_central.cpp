@@ -223,6 +223,8 @@ extern PwmConfig triggerSignal;
 
 extern uint32_t maxLockTime;
 extern uint32_t maxEventQueueTime;
+extern uint32_t hipLastExecutionCount;
+extern uint32_t hwSetTimerTime;
 
 void triggerInfo(Engine *engine) {
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
@@ -301,6 +303,9 @@ void triggerInfo(Engine *engine) {
 
 	scheduleMsg(logger, "maxLockTime=%d / maxTriggerReentraint=%d", maxLockTime, maxTriggerReentraint);
 	scheduleMsg(logger, "maxEventQueueTime=%d", maxEventQueueTime);
+
+	scheduleMsg(logger, "hipLastExecutionCount=%d", hipLastExecutionCount);
+	scheduleMsg(logger, "hwSetTimerTime %d", hwSetTimerTime);
 
 	scheduleMsg(logger, "totalTriggerHandlerMaxTime=%d", triggerMaxDuration);
 	triggerMaxDuration = 0;
