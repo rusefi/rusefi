@@ -26,6 +26,9 @@ bool EventQueue::checkIfPending(scheduling_s *scheduling) {
 }
 
 void EventQueue::insertTask(scheduling_s *scheduling, uint64_t timeX, schfunc_t callback, void *param) {
+#if EFI_UNIT_TEST
+	assertListIsSorted();
+#endif
 	if (callback == NULL)
 		firmwareError("NULL callback");
 
@@ -37,7 +40,20 @@ void EventQueue::insertTask(scheduling_s *scheduling, uint64_t timeX, schfunc_t 
 	scheduling->callback = callback;
 	scheduling->param = param;
 
-	LL_PREPEND(head, scheduling);
+	if (head == NULL || timeX < head->momentX) {
+		LL_PREPEND(head, scheduling);
+	} else {
+		scheduling_s *insertPosition = head;
+		while (insertPosition->next != NULL && insertPosition->next->momentX < timeX) {
+			insertPosition = insertPosition->next;
+		}
+
+		scheduling->next = insertPosition->next;
+		insertPosition->next = scheduling;
+	}
+#if EFI_UNIT_TEST
+	assertListIsSorted();
+#endif
 }
 
 //void EventQueue::insertTask(scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) {
@@ -104,6 +120,9 @@ int EventQueue::executeAll(uint64_t now) {
 			LL_PREPEND(executionList, current);
 		}
 	}
+#if EFI_UNIT_TEST
+	assertListIsSorted();
+#endif
 
 	/*
 	 * we need safe iteration here because 'callback' might change change 'current->next'
@@ -131,6 +150,16 @@ int EventQueue::size(void) {
 	LL_COUNT(head, tmp, result);
 	return result;
 }
+
+#if EFI_UNIT_TEST
+void EventQueue::assertListIsSorted() {
+	scheduling_s *current = head;
+	while (current != NULL && current->next != NULL) {
+		efiAssertVoid(current->momentX <= current->next->momentX, "list order");
+		current = current->next;
+	}
+}
+#endif
 
 void EventQueue::setLateDelay(int value) {
 	lateDelay = value;
