@@ -55,7 +55,7 @@ float actualSynchGap;
 
 static Logging * logger;
 
-efitick_t lastDecodingErrorTime = 0;
+efitick_t lastDecodingErrorTime = US2NT(-10000000LL);
 
 /**
  * @return TRUE is something is wrong with trigger decoding

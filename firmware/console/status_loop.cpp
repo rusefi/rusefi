@@ -473,6 +473,9 @@ static void setBlinkingPeriod(int value) {
 }
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
+
+extern efitick_t lastDecodingErrorTime;
+
 /**
  * this thread has a lower-then-usual stack size so we cannot afford *print* methods here
  */
@@ -483,24 +486,25 @@ static void blinkingThread(void *arg) {
 	initialLedsBlink();
 
 	while (true) {
-		int delay = isConsoleReady() ? 3 * blinkingPeriod : blinkingPeriod;
+		int delayMs = isConsoleReady() ? 3 * blinkingPeriod : blinkingPeriod;
 
 #if EFI_INTERNAL_FLASH || defined(__DOXYGEN__)
 		if (getNeedToWriteConfiguration()) {
-			delay = 2 * delay;
+			delayMs = 2 * delayMs;
 		}
 #endif
 
 		communicationPin.setValue(0);
 		warningPin.setValue(0);
-		chThdSleepMilliseconds(delay);
+		chThdSleepMilliseconds(delayMs);
 
 		communicationPin.setValue(1);
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
-		if (isTriggerDecoderError() || isIgnitionTimingError())
+		bool_t justHadError = (getTimeNowNt() - lastDecodingErrorTime) < US2NT(2 * 1000 * delayMs);
+		if (justHadError || isTriggerDecoderError() || isIgnitionTimingError())
 			warningPin.setValue(1);
 #endif
-		chThdSleepMilliseconds(delay);
+		chThdSleepMilliseconds(delayMs);
 
 	}
 }
