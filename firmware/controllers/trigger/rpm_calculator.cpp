@@ -200,12 +200,14 @@ static void onTdcCallback(void) {
 static void tdcMarkCallback(trigger_event_e ckpSignalType, uint32_t index0 DECLARE_ENGINE_PARAMETER_S) {
 	(void) ckpSignalType;
 	bool isTriggerSynchronizationPoint = index0 == 0;
-	if (isTriggerSynchronizationPoint) {
+	if (isTriggerSynchronizationPoint && engineConfiguration->isDigitalChartEnabled) {
 		int revIndex2 = engine->rpmCalculator.getRevolutionCounter() % 2;
 		int rpm = getRpm();
 		// todo: use event-based scheduling, not just time-based scheduling
-		scheduleByAngle(rpm, &tdcScheduler[revIndex2], tdcPosition(),
-				(schfunc_t) onTdcCallback, NULL, &engine->rpmCalculator);
+		if (isValidRpm(rpm)) {
+			scheduleByAngle(rpm, &tdcScheduler[revIndex2], tdcPosition(),
+					(schfunc_t) onTdcCallback, NULL, &engine->rpmCalculator);
+		}
 	}
 }
 #endif
@@ -249,18 +251,9 @@ void initRpmCalculator(Engine *engine) {
  * it takes the crankshaft to rotate to the specified angle.
  */
 void scheduleByAngle(int rpm, scheduling_s *timer, angle_t angle, schfunc_t callback, void *param, RpmCalculator *calc) {
-	if (!isValidRpm(rpm)) {
-		/**
-		 * this might happen in case of a single trigger event after a pause - this is normal, so no
-		 * warning here
-		 */
-		return;
-	}
-	float delayUs = getOneDegreeTimeUs(rpm) * angle;
-	if (cisnan(delayUs)) {
-		firmwareError("NaN delay?");
-		return;
-	}
+	efiAssertVoid(isValidRpm(rpm), "RPM check expected");
+	float delayUs = calc->oneDegreeUs * angle;
+	efiAssertVoid(!cisnan(delayUs), "NaN delay?");
 	scheduleTask("by angle", timer, (int) delayUs, callback, param);
 }
 #endif

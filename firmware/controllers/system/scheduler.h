@@ -11,8 +11,10 @@
 
 typedef void (*schfunc_t)(void *);
 
-typedef struct scheduling_struct scheduling_s;
-struct scheduling_struct {
+class scheduling_s {
+public:
+	scheduling_s();
+
 #if EFI_SIGNAL_EXECUTOR_SLEEP
 	VirtualTimer timer;
 #endif /* EFI_SIGNAL_EXECUTOR_SLEEP */
@@ -22,6 +24,7 @@ struct scheduling_struct {
 	void *param;
 	scheduling_s *next;
 	const char *name;
+//	bool_t isScheduled;
 };
 
 void scheduleTask(const char *prefix, scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param);
