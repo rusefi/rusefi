@@ -21,6 +21,7 @@ private:
 	EventQueue queue;
 	bool reentrantFlag;
 	void doExecute();
+	void scheduleTimerCallback();
 };
 
 void initSignalExecutorImpl(void);

@@ -1,5 +1,5 @@
 /**
- * @file	microsecond_timer.c
+ * @file	microsecond_timer.cpp
  *
  * Here we have a 1MHz timer dedicated to event scheduling. We are using one of the 32-bit timers here,
  * so this timer can schedule events up to 4B/100M ~ 4000 seconds ~ 1 hour from current time.

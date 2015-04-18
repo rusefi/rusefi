@@ -34,7 +34,6 @@ extern schfunc_t globalTimerCallback;
  * these fields are global in order to facilitate debugging
  */
 static uint64_t nextEventTimeNt = 0;
-static uint64_t hwAlarmTime = 0;
 
 uint32_t beforeHwSetTimer;
 uint32_t hwSetTimerTime;
@@ -74,9 +73,12 @@ void Executor::scheduleByTime(scheduling_s *scheduling, efitimeus_t timeUs, schf
 		// this would guard the queue and disable interrupts
 		lockAnyContext();
 	}
-	queue.insertTask(scheduling, US2NT(timeUs), callback, param);
+	bool_t needToResetTimer = queue.insertTask(scheduling, US2NT(timeUs), callback, param);
 	if (!reentrantFlag) {
 		doExecute();
+		if (needToResetTimer) {
+			scheduleTimerCallback();
+		}
 		unlockAnyContext();
 	}
 }
@@ -89,6 +91,7 @@ void Executor::schedule(scheduling_s *scheduling, uint64_t nowUs, int delayUs, s
 void Executor::onTimerCallback() {
 	lockAnyContext();
 	doExecute();
+	scheduleTimerCallback();
 	unlockAnyContext();
 }
 
@@ -122,19 +125,19 @@ void Executor::doExecute() {
 		firmwareError("Someone has stolen my lock");
 		return;
 	}
-	uint64_t nowNt = getTimeNowNt();
 	reentrantFlag = false;
+}
+
+void Executor::scheduleTimerCallback() {
 	/**
-	 * 'executeAll' is potentially invoking heavy callbacks, let's grab fresh time value?
+	 * Let's grab fresh time value
 	 */
-	/**
-	 * Let's set up the timer for the next execution
-	 */
+	uint64_t nowNt = getTimeNowNt();
 	nextEventTimeNt = queue.getNextEventTime(nowNt);
 	efiAssertVoid(nextEventTimeNt > nowNt, "setTimer constraint");
 	if (nextEventTimeNt == EMPTY_QUEUE)
 		return; // no pending events in the queue
-	hwAlarmTime = NT2US(nextEventTimeNt - nowNt);
+	int32_t hwAlarmTime = NT2US((int32_t)nextEventTimeNt - (int32_t)nowNt);
 	beforeHwSetTimer = GET_TIMESTAMP();
 	setHardwareUsTimer(hwAlarmTime == 0 ? 1 : hwAlarmTime);
 	hwSetTimerTime = GET_TIMESTAMP() - beforeHwSetTimer;
