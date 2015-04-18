@@ -48,7 +48,7 @@
 47) RESOLVED IN R0.3 Per 32) and 33) change W64,63 change to single hole, which allows U chips to move away from enclosre metal wall
 48)                  Make hidden text for component values align such that a picture can be caputured that displays the component values. 
 49)                  check VR against 1996 Miata's. 
-50) RESOLVED IN R0.4 HIP9011 CS should be connected some GPIO pin, PB0 would work
+50) RESOLVED IN R0.4 HIP9011 / TPIC8101 CS should be connected some GPIO pin, PB0 would work
 51) RESOLVED IN R0.4 CAN_RX line should be connected to PB12, not PD12
 52) RESOLVED IN R0.4 Add header for CAN bus with 5V and GND. see P401
 53) RESOLVED IN R0.4 verify D9 is the same BOM item as discovery board. D5, D6, D9 CHANGED TO DIGI,497-3707-1-ND ST,BAT60JFILM
@@ -56,7 +56,7 @@
 55) RESOLVED IN R0.4 Add Top, T-1, T-2 and T-3 to PCB copper layers to more clearly identify layers to MFG
 56) RESOLVED IN R0.4 knock2 is actually knock0. Need to fix net names & the pinout picture
 57) RESOLVED IN R0.4 Change C166 and C167 to 27pF instead of 20/18pF, to match XTAL specified 20CL. (30*30)/(30+30)+5= 20pF with 5pF stray capacitance.
-58) RESOLVED IN R0.4 add pF cap to HIP9011 knock chip to help fast transients and XTAL starting.
+58) RESOLVED IN R0.4 add pF cap to HIP9011 / TPIC8101 knock chip to help fast transients and XTAL starting.
 59) RESOLVED IN R0.4 FIX CLAIMED ERRORS IN SCHEMATIC ERC power flags added to resolve 
 60)                  remove AC RELAY ect from harness connector net names.
 61) RESOLVED IN R0.4 add 0R jumper between 5V and 5V plane to allow power supply verification before powering the 5V devices. 
@@ -64,12 +64,19 @@
 63) RESOLVED IN R0.4 better test pads silkscreen: 5V, GND, 12V
 64) RESOLVED IN R0.4 LED for cam/crank signal. we can remove cam/crank test points if we need space GOING TO BE DIM, AS IT NEED 10K SERIES RESISTOR
 65)                  why do we have W1002 & W1003 if these are usually there? Removing them would remove one point of failure
-66)                  JP04 & JP05 are defined on the main schematics sheet. if would be better to define then on Page 8 with the rest of cam/crank stuff
+66)                  JP04 & JP05 are defined on the main schematics sheet. It would be better to define then on Page 8 with the rest of cam/crank stuff
 67) RESOLVED IN R0.4 Updated silk screen notes, draws .12 amps normal, with a typical inrush of .3A. 
 68) RESOLVED IN R0.4 Look into LCD dimming R99, perhaps replace with a POT. Perhaps connect to a GPIO
 69)                  Change F1 to a wire wound resistor which will also be the weak link and act like a fuse before the PCB breaks, while also snubbing RF
 70) RESOLVED IN R0.4 Some USB connectors are wider and hit the PCB making it hard to insert. MOVED PCB EDGE TO BE CLOSER TO USB CONNECTOR.
-
+71) RESOLVED IN R0.4 TI TPIC8101 part number instead of HIP9011
+72)                  more holes for proto
+73)                  one of LCD holes the traces are too close on the back
+74)                  order new joystick for paper test
+75) RESOLVED IN R0.4 HIP9011 / TPIC8101 chip has a problem with starting, RESOLVED BY ADDING CAP BETWEEN CS AND XIN TO CREATE STARTING PING. 
+76)                  AN inputs are limited to operation between 0V and 4V.
+77)                  W1002 - silksceen on the wrong place? remove these jumpers anyway?
+78)                  1K and 0R on the MAX9926 input: need to put a comment on the schematics page explaining that none or just one of them should be installed depending on the use-case
 
 
   )                  route unused stm32 pins (D3 PC13 etc) to unused connector pins
@@ -78,9 +85,7 @@
   )                  idle valve SMD diode?
   )                  on schematics, rename INJ_xx to LOW_xx? "inj" is a bit confusing, it implies that PE6 is injector #1 while it is usually not the case
   )                  set analog input values to match https://docs.google.com/spreadsheets/d/1LTvS7I-128Hft9uXHG1JrBxetVjGJDSBkySgVDQ6MGk/edit#gid=0
-  )                  remove 'REAR-DEFROSTER-SW' and etc from schematics
-  )                  W1002 - silksceen on the wrong place? remove these jumpers anyway?
-  )                  1K and 0R on the MAX9926 input: need to put a comment on the schematics page explaining that none or just one of them should be installed depending on the use-case
+
 
 
 For honda add-on / rewiring board

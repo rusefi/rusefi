@@ -55,9 +55,9 @@ EELAYER 27 0
 EELAYER END
 $Descr B 17000 11000
 encoding utf-8
-Sheet 1 14
+Sheet 1 15
 Title "Frankenso"
-Date "28 mar 2015"
+Date "17 apr 2015"
 Rev ".04"
 Comp "rusEFI.com"
 Comment1 ""
@@ -1042,34 +1042,6 @@ Text Label 10300 8000 2    60   ~ 0
 HD44780_VCC
 Text Notes 11750 7600 0    60   ~ 0
 The JP1 jumper is needed because we cannot feed the screen via USB - we\nwould need to disconnect it while the board is on a bench
-$Comp
-L TEST JPO2
-U 1 1 539C7A79
-P 1000 9200
-F 0 "JPO2" V 1000 9200 40  0000 C CNN
-F 1 "TEST-gnd" H 1000 9130 40  0001 C CNN
-F 2 "SIL-2" H 1000 9200 60  0001 C CNN
-F 3 "" H 1000 9200 60  0000 C CNN
-F 4 "dnp,dnp" V 1000 9200 60  0001 C CNN "Field4"
-F 5 "dnp,dnp" V 1000 9200 60  0001 C CNN "Field5"
-	1    1000 9200
-	-1   0    0    1   
-$EndComp
-Text Notes 600  8900 0    60   ~ 0
-These two jumpers \nare here to accomodate \nstm32f4discovery
-$Comp
-L TEST JPO3
-U 1 1 539C7A95
-P 1000 9350
-F 0 "JPO3" V 1000 9350 40  0000 C CNN
-F 1 "TEST-gnd" H 1000 9280 40  0001 C CNN
-F 2 "SIL-2" H 1000 9350 60  0001 C CNN
-F 3 "" H 1000 9350 60  0000 C CNN
-F 4 "dnp,dnp" V 1000 9350 60  0001 C CNN "Field4"
-F 5 "dnp,dnp" V 1000 9350 60  0001 C CNN "Field5"
-	1    1000 9350
-	-1   0    0    1   
-$EndComp
 Text Label 9350 8000 2    60   ~ 0
 5V
 Text Label 9600 2150 3    60   ~ 0
@@ -1078,14 +1050,6 @@ Text Label 10000 2150 3    60   ~ 0
 AN11-HARN
 Text Label 10200 2150 3    60   ~ 0
 AN9-HARN
-Text Label 1200 9350 0    60   ~ 0
-GND
-Text Label 1200 9200 0    60   ~ 0
-GND
-Text Label 800  9200 2    60   ~ 0
-GND
-Text Label 800  9350 2    60   ~ 0
-GND
 $Comp
 L GND #PWR01
 U 1 1 539C90CE
@@ -1150,23 +1114,6 @@ Text Label 8700 2150 3    60   ~ 0
 CANL
 Text Label 8300 2150 3    60   ~ 0
 KNOCK-INPUT-0
-$Comp
-L TEST TEST2
-U 1 1 539DA1B1
-P 1100 10400
-F 0 "TEST2" V 1100 10400 40  0000 C CNN
-F 1 "TEST-C-C" H 1100 10330 40  0001 C CNN
-F 2 "SIL-2" H 1100 10400 60  0001 C CNN
-F 3 "" H 1100 10400 60  0000 C CNN
-F 4 "dnp,dnp" V 1100 10400 60  0001 C CNN "Field4"
-F 5 "dnp,dnp" V 1100 10400 60  0001 C CNN "Field5"
-	1    1100 10400
-	-1   0    0    1   
-$EndComp
-Text Label 900  10400 2    60   ~ 0
-CRANK
-Text Label 1300 10400 0    60   ~ 0
-CAM
 Text Label 7800 2150 3    60   ~ 0
 CAM+
 Text Label 7900 2150 3    60   ~ 0
@@ -1175,8 +1122,6 @@ Text Label 7700 2150 3    60   ~ 0
 CRK2-
 Text Label 7600 2150 3    60   ~ 0
 CRK2+
-Text Notes 600  9650 0    60   ~ 0
-That's alternative signal \nOUTPUT - these traces \nshould be routable to PC6 \nand PA5 via jumpers. \nAleternative to W212 and \nW212 routung of op-amps \nch 11 and ch 12
 $Sheet
 S 5700 5850 1200 750 
 U 52C39F6D
@@ -2286,272 +2231,6 @@ pg 13
 Text Notes 4225 10325 0    125  ~ 0
 pg 14
 $Comp
-L CONN_12X2 P7
-U 1 1 5445D37F
-P 1100 8100
-F 0 "P7" H 1100 8750 60  0000 C CNN
-F 1 "CONN_12X2" V 1100 8100 50  0000 C CNN
-F 2 "pin_array_12x2" H 1100 8100 60  0001 C CNN
-F 3 "" H 1100 8100 60  0000 C CNN
-F 4 "dnp,dnp" H 1100 8100 60  0001 C CNN "Field4"
-F 5 "dnp,dnp" H 1100 8100 60  0001 C CNN "Field5"
-	1    1100 8100
-	1    0    0    -1  
-$EndComp
-NoConn ~ 1500 7550
-NoConn ~ 1500 7650
-NoConn ~ 1500 7750
-NoConn ~ 1500 7850
-NoConn ~ 1500 7950
-NoConn ~ 1500 8050
-NoConn ~ 1500 8150
-NoConn ~ 1500 8250
-NoConn ~ 1500 8350
-NoConn ~ 1500 8450
-NoConn ~ 1500 8550
-NoConn ~ 1500 8650
-NoConn ~ 700  8650
-NoConn ~ 700  8550
-NoConn ~ 700  8450
-NoConn ~ 700  8350
-NoConn ~ 700  8250
-NoConn ~ 700  8150
-NoConn ~ 700  8050
-NoConn ~ 700  7950
-NoConn ~ 700  7750
-$Comp
-L CONN_12X2 P8
-U 1 1 5445E017
-P 2000 8100
-F 0 "P8" H 2000 8750 60  0000 C CNN
-F 1 "CONN_12X2" V 2000 8100 50  0000 C CNN
-F 2 "pin_array_12x2" H 2000 8100 60  0001 C CNN
-F 3 "" H 2000 8100 60  0000 C CNN
-F 4 "dnp,dnp" H 2000 8100 60  0001 C CNN "Field4"
-F 5 "dnp,dnp" H 2000 8100 60  0001 C CNN "Field5"
-	1    2000 8100
-	1    0    0    -1  
-$EndComp
-NoConn ~ 2400 7550
-NoConn ~ 2400 7650
-NoConn ~ 2400 7750
-NoConn ~ 2400 7850
-NoConn ~ 2400 7950
-NoConn ~ 2400 8050
-NoConn ~ 2400 8150
-NoConn ~ 2400 8250
-NoConn ~ 2400 8350
-NoConn ~ 2400 8450
-NoConn ~ 2400 8550
-NoConn ~ 2400 8650
-NoConn ~ 1600 8650
-NoConn ~ 1600 8550
-NoConn ~ 1600 8450
-NoConn ~ 1600 8350
-NoConn ~ 1600 8250
-NoConn ~ 1600 8150
-NoConn ~ 1600 8050
-NoConn ~ 1600 7950
-NoConn ~ 1600 7850
-NoConn ~ 1600 7650
-NoConn ~ 1600 7750
-NoConn ~ 1600 7550
-$Comp
-L CONN_12X2 P14
-U 1 1 5445E2AE
-P 3050 8100
-F 0 "P14" H 3050 8750 60  0000 C CNN
-F 1 "CONN_12X2" V 3050 8100 50  0000 C CNN
-F 2 "pin_array_12x2" H 3050 8100 60  0001 C CNN
-F 3 "" H 3050 8100 60  0000 C CNN
-F 4 "dnp,dnp" H 3050 8100 60  0001 C CNN "Field4"
-F 5 "dnp,dnp" H 3050 8100 60  0001 C CNN "Field5"
-	1    3050 8100
-	1    0    0    -1  
-$EndComp
-NoConn ~ 3450 7550
-NoConn ~ 3450 7650
-NoConn ~ 3450 7750
-NoConn ~ 3450 7850
-NoConn ~ 3450 7950
-NoConn ~ 3450 8050
-NoConn ~ 3450 8150
-NoConn ~ 3450 8250
-NoConn ~ 3450 8350
-NoConn ~ 3450 8450
-NoConn ~ 3450 8550
-NoConn ~ 3450 8650
-NoConn ~ 2650 8650
-NoConn ~ 2650 8550
-NoConn ~ 2650 8450
-NoConn ~ 2650 8350
-NoConn ~ 2650 8250
-NoConn ~ 2650 8150
-NoConn ~ 2650 8050
-NoConn ~ 2650 7950
-NoConn ~ 2650 7750
-$Comp
-L CONN_8X2 P24
-U 1 1 544627FC
-P 1100 6850
-F 0 "P24" H 1100 7300 60  0000 C CNN
-F 1 "CONN_8X2" V 1100 6850 50  0000 C CNN
-F 2 "pin_array_8x2" H 1100 6850 60  0001 C CNN
-F 3 "" H 1100 6850 60  0000 C CNN
-F 4 "dnp,dnp" H 1100 6850 60  0001 C CNN "Field4"
-F 5 "dnp,dnp" H 1100 6850 60  0001 C CNN "Field5"
-	1    1100 6850
-	1    0    0    -1  
-$EndComp
-NoConn ~ 1500 7200
-NoConn ~ 1500 7100
-NoConn ~ 1500 7000
-NoConn ~ 1500 6900
-NoConn ~ 1500 6800
-NoConn ~ 1500 6700
-NoConn ~ 1500 6600
-NoConn ~ 1500 6500
-NoConn ~ 700  6700
-NoConn ~ 700  6900
-NoConn ~ 700  7000
-NoConn ~ 700  7100
-NoConn ~ 700  7200
-$Comp
-L CONN_8X2 P25
-U 1 1 54462809
-P 2000 6850
-F 0 "P25" H 2000 7300 60  0000 C CNN
-F 1 "CONN_8X2" V 2000 6850 50  0000 C CNN
-F 2 "pin_array_8x2" H 2000 6850 60  0001 C CNN
-F 3 "" H 2000 6850 60  0000 C CNN
-F 4 "dnp,dnp" H 2000 6850 60  0001 C CNN "Field4"
-F 5 "dnp,dnp" H 2000 6850 60  0001 C CNN "Field5"
-	1    2000 6850
-	1    0    0    -1  
-$EndComp
-NoConn ~ 2400 7200
-NoConn ~ 2400 7100
-NoConn ~ 2400 7000
-NoConn ~ 2400 6900
-NoConn ~ 2400 6800
-NoConn ~ 2400 6700
-NoConn ~ 2400 6600
-NoConn ~ 2400 6500
-NoConn ~ 1600 6500
-NoConn ~ 1600 6600
-NoConn ~ 1600 6700
-NoConn ~ 1600 6800
-NoConn ~ 1600 6900
-NoConn ~ 1600 7000
-NoConn ~ 1600 7100
-NoConn ~ 1600 7200
-$Comp
-L CONN_8X2 P26
-U 1 1 544634A5
-P 3050 6850
-F 0 "P26" H 3050 7300 60  0000 C CNN
-F 1 "CONN_8X2" V 3050 6850 50  0000 C CNN
-F 2 "pin_array_8x2" H 3050 6850 60  0001 C CNN
-F 3 "" H 3050 6850 60  0000 C CNN
-F 4 "dnp,dnp" H 3050 6850 60  0001 C CNN "Field4"
-F 5 "dnp,dnp" H 3050 6850 60  0001 C CNN "Field5"
-	1    3050 6850
-	1    0    0    -1  
-$EndComp
-NoConn ~ 3450 7200
-NoConn ~ 3450 7100
-NoConn ~ 3450 7000
-NoConn ~ 3450 6900
-NoConn ~ 3450 6800
-NoConn ~ 3450 6700
-NoConn ~ 3450 6600
-NoConn ~ 3450 6500
-NoConn ~ 2650 6700
-NoConn ~ 2650 6900
-NoConn ~ 2650 7000
-NoConn ~ 2650 7100
-NoConn ~ 2650 7200
-Text Notes 750  6300 0    60   ~ 0
-PROTO AREA
-Wire Notes Line
-	500  6150 3500 6150
-Wire Notes Line
-	3500 6150 3500 10500
-Wire Notes Line
-	3500 8800 500  8800
-$Comp
-L TEST JPO6
-U 1 1 5446F00B
-P 2300 9200
-F 0 "JPO6" V 2300 9200 40  0000 C CNN
-F 1 "TEST-gnd" H 2300 9130 40  0001 C CNN
-F 2 "SIL-2" H 2300 9200 60  0001 C CNN
-F 3 "" H 2300 9200 60  0000 C CNN
-F 4 "dnp,dnp" V 2300 9200 60  0001 C CNN "Field4"
-F 5 "dnp,dnp" V 2300 9200 60  0001 C CNN "Field5"
-	1    2300 9200
-	-1   0    0    1   
-$EndComp
-$Comp
-L TEST JPO7
-U 1 1 5446F013
-P 2300 9350
-F 0 "JPO7" V 2300 9350 40  0000 C CNN
-F 1 "TEST-gnd" H 2300 9280 40  0001 C CNN
-F 2 "SIL-2" H 2300 9350 60  0001 C CNN
-F 3 "" H 2300 9350 60  0000 C CNN
-F 4 "dnp,dnp" V 2300 9350 60  0001 C CNN "Field4"
-F 5 "dnp,dnp" V 2300 9350 60  0001 C CNN "Field5"
-	1    2300 9350
-	-1   0    0    1   
-$EndComp
-$Comp
-L TEST JPO8
-U 1 1 5446F01B
-P 3100 9200
-F 0 "JPO8" V 3100 9200 40  0000 C CNN
-F 1 "TEST-gnd" H 3100 9130 40  0001 C CNN
-F 2 "SIL-2" H 3100 9200 60  0001 C CNN
-F 3 "" H 3100 9200 60  0000 C CNN
-F 4 "dnp,dnp" V 3100 9200 60  0001 C CNN "Field4"
-F 5 "dnp,dnp" V 3100 9200 60  0001 C CNN "Field5"
-	1    3100 9200
-	-1   0    0    1   
-$EndComp
-Text Label 2500 9350 0    60   ~ 0
-GND
-Text Label 2100 9350 2    60   ~ 0
-GND
-$Comp
-L TEST JPO9
-U 1 1 5446F519
-P 3100 9350
-F 0 "JPO9" V 3100 9350 40  0000 C CNN
-F 1 "TEST-gnd" H 3100 9280 40  0001 C CNN
-F 2 "SIL-2" H 3100 9350 60  0001 C CNN
-F 3 "" H 3100 9350 60  0000 C CNN
-F 4 "dnp,dnp" V 3100 9350 60  0001 C CNN "Field4"
-F 5 "dnp,dnp" V 3100 9350 60  0001 C CNN "Field5"
-	1    3100 9350
-	-1   0    0    1   
-$EndComp
-Text Label 2900 9350 2    60   ~ 0
-3.3V
-Text Label 3300 9350 0    60   ~ 0
-3.3V
-Text Label 2900 9200 2    60   ~ 0
-5V
-Text Label 3300 9200 0    60   ~ 0
-5V
-Text Label 2100 9200 2    60   ~ 0
-12V-SWITCH
-Wire Wire Line
-	2100 9200 2500 9200
-Text Notes 2250 8900 0    60   ~ 0
-These four jumpers \nare test points
-Wire Notes Line
-	3500 9500 500  9500
-$Comp
 L DIODESCH D14
 U 1 1 54490839
 P 9000 850
@@ -2798,24 +2477,6 @@ F 5 "DO NOT POPULATE,DNP" V 1130 2600 60  0001 C CNN "vend1,vend1#"
 	1    7600 9450
 	0    1    1    0   
 $EndComp
-Text Label 2650 7550 2    60   ~ 0
-5V
-Text Label 2650 7850 2    60   ~ 0
-GND
-Text Label 2650 6500 2    60   ~ 0
-5V
-Text Label 2650 6800 2    60   ~ 0
-GND
-Text Label 2650 7650 2    60   ~ 0
-3.3V
-Text Label 2650 6600 2    60   ~ 0
-3.3V
-NoConn ~ 700  7850
-NoConn ~ 700  7650
-NoConn ~ 700  7550
-NoConn ~ 700  6800
-NoConn ~ 700  6600
-NoConn ~ 700  6500
 $Comp
 L SKRHAAE010 U5
 U 1 1 54A3127F
@@ -2824,6 +2485,8 @@ F 0 "U5" H 10850 9900 60  0000 C CNN
 F 1 "SKRHAAE010" H 10850 9300 60  0000 C CNN
 F 2 "joystick_SKRHAAE010" H 10850 9700 60  0001 C CNN
 F 3 "~" H 10850 9700 60  0000 C CNN
+F 4 "ALPS,SKRHAAE010" H 10850 9700 60  0001 C CNN "mfg,mfg#"
+F 5 "Mouser,688-SKRHAAE010" H 10850 9700 60  0001 C CNN "vend1,vend1#"
 	1    10850 9700
 	1    0    0    -1  
 $EndComp
@@ -2945,4 +2608,28 @@ Wire Wire Line
 Wire Wire Line
 	12500 7100 12550 7100
 Connection ~ 12500 7200
+$Sheet
+S 500  9200 800  800 
+U 55244172
+F0 "Misc_Vias" 50
+F1 "Misc_Vias.sch" 50
+F2 "12V-SWITCH" I R 1300 9250 60 
+F3 "5V" I R 1300 9350 60 
+F4 "3.3V" I R 1300 9450 60 
+F5 "GND" I R 1300 9550 60 
+F6 "CRANK" I R 1300 9650 60 
+F7 "CAM" I R 1300 9750 60 
+$EndSheet
+Text Label 1300 9450 0    60   ~ 0
+3.3V
+Text Label 1300 9350 0    60   ~ 0
+5V
+Text Label 1300 9250 0    60   ~ 0
+12V-SWITCH
+Text Label 1300 9550 0    60   ~ 0
+GND
+Text Label 1300 9650 0    60   ~ 0
+CRANK
+Text Label 1300 9750 0    60   ~ 0
+CAM
 $EndSCHEMATC
