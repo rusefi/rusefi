@@ -153,12 +153,12 @@ void Executor::scheduleTimerCallback() {
  * @param [in] dwell the number of ticks of output duration.
  */
 void scheduleTask(const char *prefix, scheduling_s *scheduling, int delayUs, schfunc_t callback, void *param) {
-	scheduling->name = prefix;
+//	scheduling->name = prefix;
 	instance.scheduleByTime(scheduling, getTimeNowUs() + delayUs, callback, param);
 }
 
 void scheduleByTime(const char *prefix, scheduling_s *scheduling, efitimeus_t time, schfunc_t callback, void *param) {
-	scheduling->name = prefix;
+//	scheduling->name = prefix;
 	instance.scheduleByTime(scheduling, time, callback, param);
 }
 

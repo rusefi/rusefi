@@ -2728,7 +2728,7 @@
       <name>$PROJ_DIR$\..\hw_layer\mcp3208.h</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\hw_layer\microsecond_timer.c</name>
+      <name>$PROJ_DIR$\..\hw_layer\microsecond_timer.cpp</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\hw_layer\microsecond_timer.h</name>

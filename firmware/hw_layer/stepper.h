@@ -28,6 +28,9 @@ private:
 	GPIO_TypeDef * stepPort;
 	ioportmask_t stepPin;
 
+	GPIO_TypeDef * enablePort;
+	ioportmask_t enablePin;
+
 	THD_WORKING_AREA(stThreadStack, UTILITY_THREAD_STACK_SIZE);
 };
 

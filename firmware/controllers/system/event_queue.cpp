@@ -16,6 +16,12 @@
 #include "efitime.h"
 #include "efilib2.h"
 
+scheduling_s::scheduling_s() {
+	callback = NULL;
+	next = NULL;
+	isScheduled = false;
+}
+
 EventQueue::EventQueue() {
 	head = NULL;
 	setLateDelay(100);
@@ -34,13 +40,13 @@ bool_t EventQueue::insertTask(scheduling_s *scheduling, uint64_t timeX, schfunc_
 #endif
 	efiAssert(callback != NULL, "NULL callback", false);
 
-	int alreadyPending = checkIfPending(scheduling);
-	if (alreadyPending)
+	if (scheduling->isScheduled)
 		return false;
 
 	scheduling->momentX = timeX;
 	scheduling->callback = callback;
 	scheduling->param = param;
+	scheduling->isScheduled = true;
 
 	if (head == NULL || timeX < head->momentX) {
 		LL_PREPEND(head, scheduling);
@@ -139,6 +145,7 @@ int EventQueue::executeAll(uint64_t now) {
 	LL_FOREACH_SAFE(executionList, current, tmp)
 	{
 		uint32_t before = GET_TIMESTAMP();
+		current->isScheduled = false;
 		current->callback(current->param);
 		// even with overflow it's safe to substract here
 		lastEventQueueTime = GET_TIMESTAMP() - before;

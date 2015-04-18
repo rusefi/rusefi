@@ -68,10 +68,14 @@ void StepperMotor::setTargetPosition(int targetPosition) {
 }
 
 void StepperMotor::pulse() {
+	palWritePad(enablePort, enablePin, false); // ebable stepper
+
 	palWritePad(stepPort, stepPin, true);
 	chThdSleepMilliseconds(ST_DELAY_MS);
 	palWritePad(stepPort, stepPin, false);
 	chThdSleepMilliseconds(ST_DELAY_MS);
+
+	palWritePad(enablePort, enablePin, true); // disable stepper
 }
 
 void StepperMotor::initialize(brain_pin_e stepPin, brain_pin_e directionPin, float reactionTime, int totalSteps,
@@ -88,9 +92,13 @@ void StepperMotor::initialize(brain_pin_e stepPin, brain_pin_e directionPin, flo
 	directionPort = getHwPort(directionPin);
 	this->directionPin = getHwPin(directionPin);
 
+	enablePort = getHwPort(enablePin);
+	this->enablePin = getHwPin(enablePin);
+
 	mySetPadMode2("stepper step", stepPin, PAL_MODE_OUTPUT_PUSHPULL);
 	mySetPadMode2("stepper dir", directionPin, PAL_MODE_OUTPUT_PUSHPULL);
 	mySetPadMode2("stepper enable", enablePin, PAL_MODE_OUTPUT_PUSHPULL);
+	palWritePad(this->enablePort, enablePin, true); // disable stepper
 
 	chThdCreateStatic(stThreadStack, sizeof(stThreadStack), NORMALPRIO, (tfunc_t) stThread, this);
 }
