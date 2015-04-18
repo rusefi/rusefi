@@ -215,10 +215,10 @@ float getMap(void) {
 void initMapAveraging(Logging *sharedLogger, Engine *engine) {
 	logger = sharedLogger;
 
-	startTimer[0].name = "map start0";
-	startTimer[1].name = "map start1";
-	endTimer[0].name = "map end0";
-	endTimer[1].name = "map end1";
+//	startTimer[0].name = "map start0";
+//	startTimer[1].name = "map start1";
+//	endTimer[0].name = "map end0";
+//	endTimer[1].name = "map end1";
 
 	addTriggerEventListener(&mapAveragingCallback, "MAP averaging", engine);
 	addConsoleAction("faststat", showMapStats);

@@ -236,8 +236,8 @@ float getCrankshaftAngleNt(uint64_t timeNt DECLARE_ENGINE_PARAMETER_S) {
 void initRpmCalculator(Engine *engine) {
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
 
-	tdcScheduler[0].name = "tdc0";
-	tdcScheduler[1].name = "tdc1";
+//	tdcScheduler[0].name = "tdc0";
+//	tdcScheduler[1].name = "tdc1";
 	addTriggerEventListener(tdcMarkCallback, "chart TDC mark", engine);
 #endif
 

@@ -107,22 +107,24 @@ void testSignalExecutor(void) {
 
 	callbackCounter = 0;
 	eq.executeAll(10);
-	assertEqualsM("callbackCounter", 2, callbackCounter);
+	assertEqualsM("callbackCounter/2", 2, callbackCounter);
 	callbackCounter = 0;
 	eq.executeAll(11);
-	assertEquals(1, callbackCounter);
-	eq.clear();
+	assertEqualsM("callbackCounter/1#1", 1, callbackCounter);
+	eq.executeAll(100);
+	assertEquals(0, eq.size());
 
 	eq.insertTask(&s1, 12, callback, NULL);
 	eq.insertTask(&s2, 11, callback, NULL);
 	eq.insertTask(&s3, 10, callback, NULL);
 	callbackCounter = 0;
 	eq.executeAll(10);
-	assertEquals(1, callbackCounter);
+	assertEqualsM("callbackCounter/1#2", 1, callbackCounter);
 	callbackCounter = 0;
 	eq.executeAll(11);
 	assertEquals(1, callbackCounter);
-	eq.clear();
+	eq.executeAll(100);
+	assertEquals(0, eq.size());
 
 	callbackCounter = 0;
 	eq.insertTask(&s1, 10, callback, NULL);
@@ -143,7 +145,8 @@ void testSignalExecutor(void) {
 	eq.executeAll(1);
 	assertEquals(10, eq.getNextEventTime(0));
 
-	eq.clear();
+	eq.executeAll(100);
+	assertEquals(0, eq.size());
 	callbackCounter = 0;
 	// both events are scheduled for the same time
 	eq.insertTask(&s1, 10, callback, NULL);

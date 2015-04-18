@@ -26,7 +26,6 @@ void PwmConfig::baseConstructor() {
 	memset(&scheduling, 0, sizeof(scheduling));
 	memset(&safe, 0, sizeof(safe));
 	dbgNestingLevel = 0;
-	scheduling.name = "PwmConfig";
 	periodNt = NAN;
 	memset(&outputPins, 0, sizeof(outputPins));
 	phaseCount = 0;
