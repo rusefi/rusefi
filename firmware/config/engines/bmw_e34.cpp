@@ -5,7 +5,7 @@
  *
  * Coil pairs: 1-6, 2-5, 3-4
  *
- * Injector groups: 1,2,3 è 4,5,6
+ * Injector groups: 1,2,3 & 4,5,6
  *
  * @date Nov 5, 2014
  * @author Andrey Belomutskiy, (c) 2012-2015
