@@ -100,6 +100,7 @@ static void startAveraging(void *arg) {
 	turnPinHigh(&mapAveragingPin);
 }
 
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 /**
  * This method is invoked from ADC callback.
  * @note This method is invoked OFTEN, this method is a potential bottle-next - the implementation should be
@@ -145,13 +146,16 @@ void mapAveragingCallback(adcsample_t adcValue) {
 	chSysUnlockFromIsr()
 	;
 }
+#endif
 
 static void endAveraging(void *arg) {
 	(void) arg;
 	bool wasLocked = lockAnyContext();
 	isAveraging = false;
 	// with locking we would have a consistent state
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 	v_averagedMapValue = adcToVoltsDivided(mapAccumulator / mapMeasurementsCounter);
+#endif
 	if (!wasLocked)
 		chSysUnlockFromIsr()
 	;
@@ -198,6 +202,8 @@ float getMapVoltage(void) {
 	return v_averagedMapValue;
 }
 
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+
 /**
  * Because of MAP window averaging, MAP is only available while engine is spinning
  * @return Manifold Absolute Pressure, in kPa
@@ -211,6 +217,7 @@ float getMap(void) {
 	return 100;
 #endif
 }
+#endif /* EFI_PROD_CODE */
 
 void initMapAveraging(Logging *sharedLogger, Engine *engine) {
 	logger = sharedLogger;
@@ -226,6 +233,8 @@ void initMapAveraging(Logging *sharedLogger, Engine *engine) {
 
 #else
 
+#if EFI_PROD_CODE
+
 float getMap(void) {
 #if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
 	return getRawMap();
@@ -233,5 +242,6 @@ float getMap(void) {
 	return NAN;
 #endif /* EFI_ANALOG_SENSORS */
 }
+#endif /* EFI_PROD_CODE */
 
 #endif /* EFI_MAP_AVERAGING */

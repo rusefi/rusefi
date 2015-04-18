@@ -134,6 +134,7 @@ CPPSRC = $(UTILSRC_CPP) \
 	$(ENGINES_SRC_CPP) \
 	$(PROJECT_DIR)/simulator/rusEfiFunctionalTest.cpp \
 	$(PROJECT_DIR)/simulator/framework.cpp \
+	$(PROJECT_DIR)/controllers/map_averaging.cpp \
 	$(PROJECT_DIR)/development/trigger_emulator.cpp \
        simulator/boards.cpp \
 	$(TEST_SRC_CPP)

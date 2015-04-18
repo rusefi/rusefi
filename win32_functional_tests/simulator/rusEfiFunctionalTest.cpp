@@ -28,6 +28,7 @@
 #include "tunerstudio.h"
 #include "trigger_emulator.h"
 #include "engine_controller.h"
+#include "map_averaging.h"
 
 EXTERN_ENGINE;
 extern engine_configuration2_s * engineConfiguration2;
@@ -93,6 +94,10 @@ void rusEfiFunctionalTest(void) {
 #endif /* EFI_ANALOG_CHART */
 
 	initTriggerEmulator(&sharedLogger, engine);
+
+#if EFI_MAP_AVERAGING || defined(__DOXYGEN__)
+	initMapAveraging(&sharedLogger, engine);
+#endif /* EFI_MAP_AVERAGING */
 
 	initMainEventListener(&sharedLogger, engine);
 
