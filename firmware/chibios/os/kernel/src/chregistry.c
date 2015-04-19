@@ -69,7 +69,7 @@ ROMCONST chdebug_t ch_debug = {
   (uint8_t)sizeof (chdebug_t),
   (uint16_t)((CH_KERNEL_MAJOR << 11) |
              (CH_KERNEL_MINOR << 6) |
-             (CH_KERNEL_PATCH) << 0),
+             (CH_KERNEL_PATCH << 0)),
   (uint8_t)sizeof (void *),
   (uint8_t)sizeof (systime_t),
   (uint8_t)sizeof (Thread),

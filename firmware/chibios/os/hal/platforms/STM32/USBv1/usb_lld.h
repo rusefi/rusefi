@@ -48,6 +48,11 @@
  */
 #define USB_SET_ADDRESS_MODE                USB_LATE_SET_ADDRESS
 
+/**
+ * @brief   Method for set address acknowledge.
+ */
+#define USB_SET_ADDRESS_ACK_HANDLING        USB_SET_ADDRESS_ACK_SW
+
 /*===========================================================================*/
 /* Driver pre-compile time settings.                                         */
 /*===========================================================================*/

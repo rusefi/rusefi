@@ -47,7 +47,7 @@
 /**
  * @brief   Kernel version string.
  */
-#define CH_KERNEL_VERSION       "2.6.7"
+#define CH_KERNEL_VERSION       "2.6.8"
 
 /**
  * @name    Kernel version
@@ -66,7 +66,7 @@
 /**
  * @brief   Kernel version patch number.
  */
-#define CH_KERNEL_PATCH         7
+#define CH_KERNEL_PATCH         8
 /** @} */
 
 /**

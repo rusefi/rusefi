@@ -223,11 +223,10 @@ static void usart_start(UARTDriver *uartp) {
   u->CR2 = uartp->config->cr2 | USART_CR2_LBDIE;
   u->CR3 = uartp->config->cr3 | USART_CR3_DMAT | USART_CR3_DMAR |
                                 USART_CR3_EIE;
-  if (uartp->config->txend2_cb == NULL)
-    cr1 = USART_CR1_UE | USART_CR1_PEIE | USART_CR1_TE | USART_CR1_RE;
-  else
-    cr1 = USART_CR1_UE | USART_CR1_PEIE | USART_CR1_TE | USART_CR1_RE |
-          USART_CR1_TCIE;
+
+  /* Mustn't ever set TCIE here - if done, it causes an immediate
+     interrupt.*/
+  cr1 = USART_CR1_UE | USART_CR1_PEIE | USART_CR1_TE | USART_CR1_RE;
   u->CR1 = uartp->config->cr1 | cr1;
 
   /* Starting the receiver idle loop.*/
@@ -293,6 +292,12 @@ static void uart_lld_serve_tx_end_irq(UARTDriver *uartp, uint32_t flags) {
 
   dmaStreamDisable(uartp->dmatx);
 
+  /* Only enable TC interrupt if there's a callback attached to it.
+     We have to do it here, rather than earlier, because TC flag is set
+     until transmission starts.*/
+  if (uartp->config->txend2_cb != NULL)
+    uartp->usart->CR1 |= USART_CR1_TCIE;
+
   /* A callback is generated, if enabled, after a completed transfer.*/
   uartp->txstate = UART_TX_COMPLETE;
   if (uartp->config->txend1_cb != NULL)
@@ -312,17 +317,22 @@ static void uart_lld_serve_tx_end_irq(UARTDriver *uartp, uint32_t flags) {
 static void serve_usart_irq(UARTDriver *uartp) {
   uint16_t sr;
   USART_TypeDef *u = uartp->usart;
-  
+  uint32_t cr1 = u->CR1;
+
   sr = u->SR;   /* SR reset step 1.*/
   (void)u->DR;  /* SR reset step 2.*/
+
   if (sr & (USART_SR_LBD | USART_SR_ORE | USART_SR_NE |
             USART_SR_FE  | USART_SR_PE)) {
     u->SR = ~USART_SR_LBD;
     if (uartp->config->rxerr_cb != NULL)
       uartp->config->rxerr_cb(uartp, translate_errors(sr));
   }
-  if (sr & USART_SR_TC) {
+
+  if ((sr & USART_SR_TC) && (cr1 & USART_CR1_TCIE)) {
+    /* TC interrupt cleared and disabled.*/
     u->SR = ~USART_SR_TC;
+    u->CR1 = cr1 & ~USART_CR1_TCIE;
 
     /* End of transmission, a callback is generated.*/
     if (uartp->config->txend2_cb != NULL)
