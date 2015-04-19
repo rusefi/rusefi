@@ -32,6 +32,7 @@
 #include "interpolation.h"
 #include "signal_executor.h"
 #include "engine.h"
+#include "engine_math.h"
 
 #if EFI_ANALOG_CHART
 #include "analog_chart.h"
@@ -168,7 +169,7 @@ static void endAveraging(void *arg) {
 static void mapAveragingCallback(trigger_event_e ckpEventType, uint32_t index DECLARE_ENGINE_PARAMETER_S) {
 	// this callback is invoked on interrupt thread
 	engine->m.beforeMapAveragingCb = GET_TIMESTAMP();
-	if (index != 0)
+	if (index != engineConfiguration->mapAveragingSchedulingAtIndex)
 		return;
 
 	int rpm = engine->rpmCalculator.rpmValue;
@@ -180,17 +181,23 @@ static void mapAveragingCallback(trigger_event_e ckpEventType, uint32_t index DE
 
 	MAP_sensor_config_s * config = &engineConfiguration->map;
 
-	angle_t samplingStart = interpolate2d(rpm, config->samplingAngleBins, config->samplingAngle, MAP_ANGLE_SIZE);
+	angle_t currentAngle = TRIGGER_SHAPE(eventAngles[index]);
+
+	angle_t samplingStart = interpolate2d(rpm, config->samplingAngleBins, config->samplingAngle, MAP_ANGLE_SIZE) - currentAngle;
 	angle_t samplingDuration = interpolate2d(rpm, config->samplingWindowBins, config->samplingWindow, MAP_WINDOW_SIZE);
 	if (samplingDuration <= 0) {
 		firmwareError("map sampling angle should be positive");
 		return;
 	}
+	fixAngle(samplingStart);
+
+	angle_t samplingEnd = samplingStart + samplingDuration;
+	fixAngle(samplingEnd);
 
 	int structIndex = getRevolutionCounter() % 2;
 	// todo: schedule this based on closest trigger event, same as ignition works
 	scheduleByAngle(rpm, &startTimer[structIndex], samplingStart, startAveraging, NULL, &engine->rpmCalculator);
-	scheduleByAngle(rpm, &endTimer[structIndex], samplingStart + samplingDuration, endAveraging, NULL, &engine->rpmCalculator);
+	scheduleByAngle(rpm, &endTimer[structIndex], samplingEnd, endAveraging, NULL, &engine->rpmCalculator);
 	engine->m.mapAveragingCbTime = GET_TIMESTAMP() - engine->m.beforeMapAveragingCb;
 }
 

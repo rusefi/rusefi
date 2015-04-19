@@ -29,6 +29,7 @@ public class WaveChart {
 
     public static final String TRIGGER_1 = "t1";
     public static final String TRIGGER_2 = "t2";
+    public static final String MAP_AVERAGING = "map";
 
     public final Map<String, StringBuilder> map;
 
