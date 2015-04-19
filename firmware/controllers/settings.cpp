@@ -557,6 +557,14 @@ static void setWholeTimingMapCmd(float value) {
 	setWholeTimingMap(value);
 }
 
+static void setWholeVeCmd(float value) {
+	scheduleMsg(&logger, "Setting whole VE map to %f", value);
+	if (engineConfiguration->algorithm != LM_SPEED_DENSITY) {
+		scheduleMsg(&logger, "WARNING: setting VE map not in SD mode is pointless");
+	}
+	setMap(config->veTable, value);
+}
+
 static void setWholeFuelMapCmd(float value) {
 	scheduleMsg(&logger, "Setting whole fuel map to %f", value);
 	if (engineConfiguration->algorithm == LM_SPEED_DENSITY) {
@@ -931,6 +939,7 @@ void initSettings(engine_configuration_s *engineConfiguration) {
 	addConsoleActionF("set_whole_phase_map", setWholePhaseMapCmd);
 	addConsoleActionF("set_whole_timing_map", setWholeTimingMapCmd);
 	addConsoleActionF("set_whole_fuel_map", setWholeFuelMapCmd);
+	addConsoleActionF("set_whole_ve_map", setWholeVeCmd);
 	addConsoleActionSSS("set_fuel_map", setFuelMap);
 
 	addConsoleActionF("set_whole_timing_map", setWholeTimingMap);
