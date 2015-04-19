@@ -356,7 +356,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineConfiguration->cylinderBore = 87.5;
 
-	initEgoSensor(&engineConfiguration->afr, ES_BPSX_D1);
+	initEgoSensor(&engineConfiguration->afr, ES_14Point7_Free);
 
 	engineConfiguration->globalFuelCorrection = 1;
 
