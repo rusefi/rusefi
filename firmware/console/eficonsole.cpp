@@ -135,7 +135,7 @@ static void cmd_threads(void) {
 	tp = chRegFirstThread();
 	do {
 		print("%.8lx [%.8lx] %4lu %4lu %9s %lu %s\r\n", (uint32_t) tp, 0, (uint32_t) tp->p_prio,
-				(uint32_t) (tp->p_refs - 1), states[tp->p_state], (uint32_t) tp->p_time, tp->p_name);
+				(uint32_t) (0), states[tp->p_state], (uint32_t) tp->p_time, tp->p_name);
 		tp = chRegNextThread(tp);
 	} while (tp != NULL);
 #endif
