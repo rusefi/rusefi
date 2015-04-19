@@ -487,7 +487,10 @@ custom pin_input_mode_e 4 scalar, F32,	@OFFSET@,	"ms", 1, 0, 0, 200, 1
 	brain_pin_e stepperEnablePin;
 
 float noAccelAfterHardLimitPeriodSecs;;"sec",      1,      0,       0, 60,      0
-	int[134] unused3;
+
+int mapAveragingSchedulingAtIndex;
+
+	int[133] unused3;
 
 	int tpsAccelLength;;"len",        1,     0,    1, 200,     3
 	float tpsAccelEnrichmentThreshold;;"roc",        1,     0,    0, 200,     3

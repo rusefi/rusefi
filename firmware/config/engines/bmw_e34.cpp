@@ -65,6 +65,8 @@ void setBmwE34(DECLARE_ENGINE_PARAMETER_F) {
 	setConstantDwell(3 PASS_ENGINE_PARAMETER); // a bit shorter dwell
 	engineConfiguration->ignMathCalculateAtIndex = 14;
 
+	engineConfiguration->mapAveragingSchedulingAtIndex = 6;
+
 	// Cranking
 	engineConfiguration->cranking.rpm = 600;
 	engineConfiguration->crankingInjectionMode = IM_BATCH;

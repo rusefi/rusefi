@@ -62,6 +62,8 @@ public class AutoTest {
 
         x = 688.464;
         assertWave(msg, chart, WaveChart.SPARK_1, 0.0597999999, x, x + 180, x + 360, x + 540);
+
+        assertWave(msg, chart, WaveChart.MAP_AVERAGING, 0.139, 17.784);
     }
 
     private static void testMitsu() {
