@@ -10,6 +10,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
 
@@ -91,7 +93,10 @@ public class RecentCommands {
             public void run() {
                 content.removeAll();
                 synchronized (entries) {
-                    for (Entry entry : entries.keySet()) {
+                    Set<Entry> sorted = new TreeSet<Entry>();
+                    sorted.addAll(entries.keySet());
+
+                    for (Entry entry : sorted) {
                         content.add(createButton(entry));
                     }
                 }
@@ -133,7 +138,7 @@ public class RecentCommands {
         return sb.toString();
     }
 
-    static class Entry {
+    static class Entry implements Comparable<Entry> {
         private final String command;
 
         Entry(String command) {
@@ -162,6 +167,10 @@ public class RecentCommands {
                     "command='" + command + '\'' +
                     '}';
         }
-    }
 
+        @Override
+        public int compareTo(Entry o) {
+            return command.compareTo(o.command);
+        }
+    }
 }

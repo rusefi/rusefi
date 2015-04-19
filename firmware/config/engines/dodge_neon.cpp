@@ -389,7 +389,7 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->fanOffTemperature = 80;
 
 //	boardConfiguration->tunerStudioSerialSpeed = 9600;
-	boardConfiguration->tunerStudioSerialSpeed = 38400;
+	boardConfiguration->tunerStudioSerialSpeed = 19200;
 	engineConfiguration->algorithm = LM_SPEED_DENSITY;
 
 	boardConfiguration->alternatorControlPin = GPIOD_5;
@@ -404,6 +404,13 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 //	engineConfiguration->canNbcType = CAN_BUS_MAZDA_RX8;
 
 	engineConfiguration->mapAccelLength = 12;
+	engineConfiguration->mapAccelEnrichmentThreshold = 5; // kPa
+	engineConfiguration->mapAccelEnrichmentMultiplier = 0;
+
+	engineConfiguration->tpsAccelLength = 12;
+	engineConfiguration->tpsAccelEnrichmentThreshold = 10;
+	engineConfiguration->tpsAccelEnrichmentMultiplier = 0.15;
+
 }
 
 #endif /* EFI_SUPPORT_DODGE_NEON */

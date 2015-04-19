@@ -134,6 +134,15 @@ static void resetTs(void) {
 	memset(&tsState, 0, sizeof(tsState));
 }
 
+static void printErrorCounters(void) {
+	scheduleMsg(&tsLogger, "TunerStudio size=%d / total=%d / errors=%d / H=%d / O=%d / P=%d / B=%d",
+			sizeof(tsOutputChannels), tsState.tsCounter, tsState.errorCounter, tsState.queryCommandCounter,
+			tsState.outputChannelsCommandCounter, tsState.readPageCommandsCounter, tsState.burnCommandCounter);
+	scheduleMsg(&tsLogger, "TunerStudio W=%d / C=%d / P=%d / page=%d", tsState.writeValueCommandCounter,
+			tsState.writeChunkCommandCounter, tsState.pageCommandCounter, currentPageId);
+//	scheduleMsg(&tsLogger, "page size=%d", getTunerStudioPageSize(currentPageId));
+}
+
 void printTsStats(void) {
 #if EFI_PROD_CODE
 	if (!isSerialOverUart()) {
@@ -141,12 +150,8 @@ void printTsStats(void) {
 				portname(TS_SERIAL_TX_PORT), TS_SERIAL_TX_PIN, boardConfiguration->tunerStudioSerialSpeed);
 	}
 #endif /* EFI_PROD_CODE */
-	scheduleMsg(&tsLogger, "TunerStudio size=%d / total=%d / errors=%d / H=%d / O=%d / P=%d / B=%d",
-			sizeof(tsOutputChannels), tsState.tsCounter, tsState.errorCounter, tsState.queryCommandCounter,
-			tsState.outputChannelsCommandCounter, tsState.readPageCommandsCounter, tsState.burnCommandCounter);
-	scheduleMsg(&tsLogger, "TunerStudio W=%d / C=%d / P=%d / page=%d", tsState.writeValueCommandCounter,
-			tsState.writeChunkCommandCounter, tsState.pageCommandCounter, currentPageId);
-	scheduleMsg(&tsLogger, "page size=%d", getTunerStudioPageSize(currentPageId));
+
+	printErrorCounters();
 
 //	scheduleMsg(logger, "analogChartFrequency %d",
 //			(int) (&engineConfiguration->analogChartFrequency) - (int) engineConfiguration);
@@ -172,7 +177,6 @@ static void setTsSpeed(int value) {
 void tunerStudioDebug(const char *msg) {
 #if EFI_TUNER_STUDIO_VERBOSE
 	scheduleMsg(&tsLogger, "%s", msg);
-	printTsStats();
 #endif
 }
 
@@ -244,7 +248,7 @@ void handleWriteChunkCommand(ts_channel_s *tsChannel, ts_response_format_e mode,
 		void *content) {
 	tsState.writeChunkCommandCounter++;
 
-	scheduleMsg(&tsLogger, "WRITE CHUNK m=%d p=%d o=%d s=%d", mode, currentPageId, offset, count);
+	scheduleMsg(&tsLogger, "WRITE CHUNK mode=%d p=%d o=%d s=%d", mode, currentPageId, offset, count);
 
 	if (offset > getTunerStudioPageSize(currentPageId)) {
 		scheduleMsg(&tsLogger, "ERROR invalid offset %d", offset);
@@ -263,7 +267,6 @@ void handleWriteChunkCommand(ts_channel_s *tsChannel, ts_response_format_e mode,
 	yellowMagic(currentPageId, offset, count);
 
 	tsSendResponse(tsChannel, mode, NULL, 0);
-	printTsStats();
 }
 
 void handleCrc32Check(ts_channel_s *tsChannel, ts_response_format_e mode, uint16_t pageId, uint16_t offset,
@@ -332,8 +335,7 @@ void handlePageReadCommand(ts_channel_s *tsChannel, ts_response_format_e mode, u
 	currentPageId = pageId;
 
 #if EFI_TUNER_STUDIO_VERBOSE
-	scheduleMsg(&tsLogger, "READ m=%d p=%d o=%d c=%d", mode, (int) currentPageId, offset, count);
-	printTsStats();
+	scheduleMsg(&tsLogger, "READ mode=%d page=%d offset=%d size=%d", mode, (int) currentPageId, offset, count);
 #endif
 
 	if (currentPageId >= PAGE_COUNT) {
@@ -354,7 +356,7 @@ void handlePageReadCommand(ts_channel_s *tsChannel, ts_response_format_e mode, u
 	const uint8_t *addr = (const uint8_t *) (getWorkingPageAddr(currentPageId) + offset);
 	tsSendResponse(tsChannel, mode, addr, count);
 #if EFI_TUNER_STUDIO_VERBOSE
-	scheduleMsg(&tsLogger, "Sending %d done", count);
+//	scheduleMsg(&tsLogger, "Sending %d done", count);
 #endif
 }
 
@@ -363,6 +365,12 @@ void requestBurn(void) {
 	setNeedToWriteConfiguration();
 #endif
 	incrementGlobalConfigurationVersion();
+}
+
+static void sendResponseCode(ts_response_format_e mode, ts_channel_s *tsChannel, const uint8_t responseCode) {
+	if (mode == TS_CRC) {
+		tunerStudioWriteCrcPacket(tsChannel, responseCode, NULL, 0);
+	}
 }
 
 /**
@@ -385,7 +393,7 @@ void handleBurnCommand(ts_channel_s *tsChannel, ts_response_format_e mode, uint1
 	memcpy(&persistentState.persistentConfiguration, &configWorkingCopy, sizeof(persistent_config_s));
 
 	requestBurn();
-	tunerStudioWriteCrcPacket(tsChannel, TS_RESPONSE_BURN_OK, NULL, 0);
+	sendResponseCode(mode, tsChannel, TS_RESPONSE_BURN_OK);
 	scheduleMsg(&tsLogger, "BURN in %dms", currentTimeMillis() - nowMs);
 }
 
@@ -470,9 +478,10 @@ void runBinaryProtocolLoop(ts_channel_s *tsChannel, bool_t isConsoleRedirect) {
 				incomingPacketSize + CRC_VALUE_SIZE - 1, TS_READ_TIMEOUT);
 		int expectedSize = incomingPacketSize + CRC_VALUE_SIZE - 1;
 		if (recieved != expectedSize) {
-			scheduleMsg(&tsLogger, "got ONLY %d for packet size %d/%d for command %c", recieved, incomingPacketSize,
+			scheduleMsg(&tsLogger, "Got only %d bytes while expecting %d for command %c", recieved,
 					expectedSize, command);
-			tunerStudioError("ERROR: not enough");
+			tunerStudioError("ERROR: not enough bytes in stream");
+			sendResponseCode(TS_CRC, tsChannel, TS_RESPONSE_UNDERRUN);
 			continue;
 		}
 
@@ -533,6 +542,7 @@ short currentPageId;
 
 void tunerStudioError(const char *msg) {
 	tunerStudioDebug(msg);
+	printErrorCounters();
 	tsState.errorCounter++;
 }
 
