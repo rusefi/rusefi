@@ -168,11 +168,11 @@ void initAccelEnrichment(Logging *sharedLogger) {
 	logger = sharedLogger;
 	addConsoleActionI("set_tps_accel_len", setTpsAccelLen);
 	addConsoleActionF("set_tps_accel_threshold", setTpsAccelThr);
-	addConsoleActionF("set_tps_ccel_multiplier", setTpsAccelMult);
+	addConsoleActionF("set_tps_accel_multiplier", setTpsAccelMult);
 
 	addConsoleActionI("set_map_accel_len", setMapAccelLen);
 	addConsoleActionF("set_map_accel_threshold", setMapAccelThr);
-	addConsoleActionF("set_map_ccel_multiplier", setMapAccelMult);
+	addConsoleActionF("set_map_accel_multiplier", setMapAccelMult);
 	addConsoleActionF("set_decel_threshold", setDecelThr);
 	addConsoleActionF("set_decel_multiplier", setDecelMult);
 	addConsoleAction("accelinfo", accelInfo);
