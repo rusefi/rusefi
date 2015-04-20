@@ -604,7 +604,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->mapAccelEnrichmentMultiplier = 2;
 
 	engineConfiguration->tpsAccelLength = 12;
-	engineConfiguration->tpsAccelEnrichmentThreshold = 10;
+	engineConfiguration->tpsAccelEnrichmentThreshold = 40; // TPS % change, per engine cycle
 	engineConfiguration->tpsAccelEnrichmentMultiplier = 0.05;
 }
 
