@@ -510,7 +510,7 @@ void testTriggerDecoder(void) {
 	testTriggerDecoder2("ford aspire", FORD_ASPIRE_1996, 4, 0.0, 0.5);
 
 	//testTriggerDecoder2("bmw", BMW_E34, 0, 0.9750, 0.5167);
-	testTriggerDecoder2("bmw", BMW_E34, 0, 0.5167, 0.0);
+	testTriggerDecoder2("bmw", BMW_E34, 0, 0.3750, 0.0);
 
 	test1995FordInline6TriggerDecoder();
 	testMazdaMianaNbDecoder();

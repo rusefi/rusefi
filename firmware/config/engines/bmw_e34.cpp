@@ -41,9 +41,14 @@ void setBmwE34(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->useOnlyFrontForTrigger = true;
 
 	// Trigger configuration
-	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
+//	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->globalTriggerAngleOffset = 84;
+
+	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
+	engineConfiguration->trigger.customTotalToothCount = 8;
+	engineConfiguration->trigger.customSkippedToothCount = 1;
+
 
 	// Injection settings
 	engineConfiguration->injector.lag = 1.15;
