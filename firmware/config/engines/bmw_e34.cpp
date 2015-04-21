@@ -46,7 +46,7 @@ void setBmwE34(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->globalTriggerAngleOffset = 84;
 
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
-	engineConfiguration->trigger.customTotalToothCount = 8;
+	engineConfiguration->trigger.customTotalToothCount = 30;
 	engineConfiguration->trigger.customSkippedToothCount = 1;
 
 
