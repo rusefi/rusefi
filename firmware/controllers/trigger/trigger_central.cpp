@@ -209,8 +209,11 @@ EXTERN_ENGINE
 ;
 
 static void triggerShapeInfo(Engine *engine) {
-#if EFI_PROD_CODE || EFI_SIMULATOR
 	TriggerShape *s = &engine->triggerShape;
+#if EFI_PROD_CODE || EFI_SIMULATOR
+	scheduleMsg(logger, "useRise=%s", boolToString(s->useRiseEdge));
+	scheduleMsg(logger, "gap from %f to %f", s->syncRatioFrom, s->syncRatioTo);
+
 	for (int i = 0; i < s->getSize(); i++) {
 		scheduleMsg(logger, "event %d %f", i, s->eventAngles[i]);
 	}
