@@ -147,8 +147,6 @@ private:
 	int getCycleDuration() const;
 };
 
-void setTriggerSynchronizationGap(TriggerShape *s, float synchGap);
-void setTriggerSynchronizationGap2(TriggerShape *s, float syncGapFrom, float syncRatioTo);
 void setToothedWheelConfiguration(TriggerShape *s, int total, int skipped, operation_mode_e operationMode);
 
 #endif /* TRIGGER_STRUCTURE_H_ */

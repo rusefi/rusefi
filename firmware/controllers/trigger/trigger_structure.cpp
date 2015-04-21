@@ -36,6 +36,7 @@ TriggerShape::TriggerShape() :
 		wave(switchTimesBuffer, NULL) {
 	reset(OM_NONE, false);
 	wave.waves = h.waves;
+	// todo: false here, true in clear() what a mess!
 	useRiseEdge = false;
 	gapBothDirections = false;
 	isSynchronizationNeeded = false;
@@ -99,6 +100,7 @@ void TriggerShape::calculateTriggerSynchPoint(DECLARE_ENGINE_PARAMETER_F) {
 void TriggerShape::clear() {
 	tdcPosition = 0;
 	setTriggerSynchronizationGap(2);
+	// todo: true here, false in constructor() what a mess!
 	useRiseEdge = true;
 
 	invertOnAdd = false;
