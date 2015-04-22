@@ -106,10 +106,10 @@ public class AnalogChartPanel {
         lowerPanel.setBorder(BorderFactory.createLineBorder(Color.white));
         content.add(lowerPanel, BorderLayout.SOUTH);
 
-        lowerPanel.add(new ConfigField(Fields.ANALOGCHARTMODE, "Sensor chart mode").getContent());
-        lowerPanel.add(new ConfigField(Fields.ANALOGCHARTFREQUENCY, "Every XXX engine cycles").getContent());
-        lowerPanel.add(new ConfigField(Fields.globalFuelCorrection, "Global Fuel Correction").getContent());
-        lowerPanel.add(new ConfigField(Fields.digitalChartSize, "Engine Sniffer size").getContent());
+        lowerPanel.add(new ConfigField(Fields.SENSOR_SNIFFER_MODE, "Sensor chart mode").getContent());
+        lowerPanel.add(new ConfigField(Fields.SENSOR_SNIFFER_FREQUENCY, "Every XXX engine cycles").getContent());
+        lowerPanel.add(new ConfigField(Fields.GLOBAL_FUEL_CORRECTION, "Global Fuel Correction").getContent());
+        lowerPanel.add(new ConfigField(Fields.ENGINE_SNIFFER_SIZE, "Engine Sniffer size").getContent());
     }
 
     private void clear() {
