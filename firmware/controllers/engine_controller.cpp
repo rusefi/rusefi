@@ -337,12 +337,50 @@ static void getShort(int offset) {
 	scheduleMsg(&logger, "short @%d is %d", offset, value);
 }
 
+static void setBit(const char *offsetStr, const char *bitStr, const char *valueStr) {
+	int offset = atoi(offsetStr);
+	if (absI(offset) == absI(ERROR_CODE)) {
+		scheduleMsg(&logger, "invalid offset [%s]", offsetStr);
+		return;
+	}
+	if (isOutOfBounds(offset)) {
+		return;
+	}
+	int bit = atoi(bitStr);
+	if (absI(bit) == absI(ERROR_CODE)) {
+		scheduleMsg(&logger, "invalid bit [%s]", bitStr);
+		return;
+	}
+	int value = atoi(valueStr);
+	if (absI(value) == absI(ERROR_CODE)) {
+		scheduleMsg(&logger, "invalid value [%s]", valueStr);
+		return;
+	}
+	int *ptr = (int *) (&((char *) engineConfiguration)[offset]);
+	*ptr ^= (-value ^ *ptr) & (1 << bit);
+	/**
+	 * this response is part of dev console API
+	 */
+	scheduleMsg(&logger, "bit @%d/%d is %d", offset, bit, value);
+}
+
 static void setShort(const int offset, const int value) {
 	if (isOutOfBounds(offset))
 		return;
 	uint16_t *ptr = (uint16_t *) (&((char *) engineConfiguration)[offset]);
 	*ptr = (uint16_t) value;
 	getShort(offset);
+}
+
+static void getBit(int offset, int bit) {
+	if (isOutOfBounds(offset))
+		return;
+	int *ptr = (int *) (&((char *) engineConfiguration)[offset]);
+	int value = (*ptr >> bit) & 1;
+	/**
+	 * this response is part of dev console API
+	 */
+	scheduleMsg(&logger, "bit @%d/%d is %d", offset, bit, value);
 }
 
 static void getInt(int offset) {
@@ -404,9 +442,11 @@ void initConfigActions(void) {
 	addConsoleActionSS("set_float", (VoidCharPtrCharPtr) setFloat);
 	addConsoleActionII("set_int", (VoidIntInt) setInt);
 	addConsoleActionII("set_short", (VoidIntInt) setShort);
+	addConsoleActionSSS("set_bit", setBit);
 	addConsoleActionI("get_float", getFloat);
 	addConsoleActionI("get_int", getInt);
 	addConsoleActionI("get_short", getShort);
+	addConsoleActionII("get_bit", getBit);
 }
 
 // todo: move this logic somewhere else?
