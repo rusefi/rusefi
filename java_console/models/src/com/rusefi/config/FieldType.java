@@ -1,7 +1,10 @@
 package com.rusefi.config;
 
 public enum FieldType {
-    INT, FLOAT, ANALOG_CHART_E;
+    INT,
+    BIT,
+    FLOAT,
+    ANALOG_CHART_E;
 
 
     private String getTypeForCommand() {

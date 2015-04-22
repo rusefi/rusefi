@@ -1,11 +1,13 @@
 package com.rusefi.ui.engine;
 
 import com.rusefi.FileLog;
+import com.rusefi.config.Fields;
 import com.rusefi.core.EngineState;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.io.LinkManager;
 import com.rusefi.ui.*;
+import com.rusefi.ui.config.ConfigField;
 import com.rusefi.ui.storage.Node;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.widgets.AnyCommand;
@@ -117,16 +119,16 @@ public class EngineSnifferPanel {
             }
         });
 
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
-        buttonPanel.add(clearButton);
-        buttonPanel.add(saveImageButton);
-        buttonPanel.add(pauseButton);
-        buttonPanel.add(new RpmLabel().setSize(2).getContent());
+        JPanel topButtons = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
+        topButtons.add(clearButton);
+        topButtons.add(saveImageButton);
+        topButtons.add(pauseButton);
+        topButtons.add(new RpmLabel().setSize(2).getContent());
 
         JComponent command = new AnyCommand(config, "chartsize " + EFI_DEFAULT_CHART_SIZE, true).getContent();
-        buttonPanel.add(command);
+        topButtons.add(command);
 
-        buttonPanel.add(zoomControl);
+        topButtons.add(zoomControl);
 
         scrollControl = ChartRepository.getInstance().createControls(new ChartRepository.ChartRepositoryListener() {
             @Override
@@ -134,13 +136,20 @@ public class EngineSnifferPanel {
                 displayChart(chart);
             }
         });
-        buttonPanel.add(scrollControl.getContent());
+        topButtons.add(scrollControl.getContent());
 
-        buttonPanel.add(new URLLabel(HELP_TEXT, HELP_URL));
+        topButtons.add(new URLLabel(HELP_TEXT, HELP_URL));
 
-        chartPanel.add(buttonPanel, BorderLayout.NORTH);
+        JPanel lowerButtons = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
+        lowerButtons.add(new ConfigField(Fields.ENGINE_SNIFFER_SIZE, "Engine Sniffer size").getContent());
+
+        JPanel bottomPanel = new JPanel(new BorderLayout());
+        bottomPanel.add(lowerButtons, BorderLayout.NORTH);
+        bottomPanel.add(statusPanel.infoPanel, BorderLayout.SOUTH);
+
+        chartPanel.add(topButtons, BorderLayout.NORTH);
         chartPanel.add(pane, BorderLayout.CENTER);
-        chartPanel.add(statusPanel.infoPanel, BorderLayout.SOUTH);
+        chartPanel.add(bottomPanel, BorderLayout.SOUTH);
 
         zoomControl.listener = new ZoomControl.ZoomControlListener() {
             @Override

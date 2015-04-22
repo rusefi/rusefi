@@ -30,7 +30,7 @@ public class ConfigField {
         ConnectionStatus.INSTANCE.addListener(new ConnectionStatus.Listener() {
             @Override
             public void onConnectionStatus(boolean isConnected) {
-                CommandQueue.getInstance().write(field.getType().getLoadCommand() + " " + field.getOffset(),
+                CommandQueue.getInstance().write(field.getCommand(),
                         CommandQueue.DEFAULT_TIMEOUT,
                         InvocationConfirmationListener.VOID,
                         false);
@@ -70,7 +70,7 @@ public class ConfigField {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    String msg = field.getType().getStoreCommand() + " " + field.getOffset() + " " + view.getText();
+                    String msg = field.setCommand() + " " + view.getText();
                     FileLog.MAIN.logLine("Sending " + msg);
                     CommandQueue.getInstance().write(msg);
                     status.setText("S");
