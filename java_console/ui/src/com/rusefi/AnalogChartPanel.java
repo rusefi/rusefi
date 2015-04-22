@@ -109,7 +109,6 @@ public class AnalogChartPanel {
         lowerPanel.add(new ConfigField(Fields.SENSOR_SNIFFER_MODE, "Sensor chart mode").getContent());
         lowerPanel.add(new ConfigField(Fields.SENSOR_SNIFFER_FREQUENCY, "Every XXX engine cycles").getContent());
         lowerPanel.add(new ConfigField(Fields.GLOBAL_FUEL_CORRECTION, "Global Fuel Correction").getContent());
-        lowerPanel.add(new ConfigField(Fields.ENGINE_SNIFFER_SIZE, "Engine Sniffer size").getContent());
     }
 
     private void clear() {

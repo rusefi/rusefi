@@ -9,4 +9,5 @@ public class Fields {
     public static final Field SENSOR_SNIFFER_MODE = new Field(1400, FieldType.ANALOG_CHART_E);
     public static final Field GLOBAL_FUEL_CORRECTION = new Field(552, FieldType.FLOAT);
     public static final Field ENGINE_SNIFFER_SIZE = new Field(1504, FieldType.INT);
+    public static final Field isDigitalChartEnabled = new Field(1488, FieldType.BIT, 5);
 }
