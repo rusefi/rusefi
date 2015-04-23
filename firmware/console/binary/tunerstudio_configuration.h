@@ -90,8 +90,8 @@ typedef struct {
 	float rpmAcceleration;
 	float massAirFlowValue;
 	float veValue;
-	float maxDelta;
-	float minDelta;
+	float deltaTps;
+	float unused120;
 	float currentMapAccelDelta;
 	float tpsAccelFuel;
 	int unused3[16];
