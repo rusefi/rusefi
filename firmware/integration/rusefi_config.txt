@@ -343,6 +343,7 @@ bit is_enabled_spi_2
 	bit isVerboseAlternator
 	bit useSerialPort
 	bit useStepperIdle
+	
 
 	brain_input_pin_e[LOGIC_ANALYZER_CHANNEL_COUNT iterate] logicAnalyzerPins;
 	uint8_t[LOGIC_ANALYZER_CHANNEL_COUNT] logicAnalyzerMode;default or inverted input
@@ -415,7 +416,7 @@ bit hasMapSensor;@see isMapAveragingEnabled
 	bit hasBaroSensor
 	bit hasAfrSensor
 	bit useConstantDwellDuringCranking 
-	bit isDigitalChartEnabled 
+	bit isEngineChartEnabled 
 	bit isCanEnabled
 	bit hasCltSensor
 	bit canReadEnabled
@@ -426,7 +427,8 @@ bit hasMapSensor;@see isMapAveragingEnabled
 	bit isAlternatorControlEnabled
 	bit hasMafSensor
 	bit hasTpsSensor
-
+bit cutFuelOnHardLimit
+bit cutSparkOnHardLimit
 
 	adc_channel_e hipOutputChannel;
 
@@ -450,7 +452,7 @@ bit hasMapSensor;@see isMapAveragingEnabled
 	bit useOnlyFrontForTrigger;See #172
 
 
-	uint32_t digitalChartSize;;"count",      1,      0,       0, 300,      0
+	uint32_t engineChartSize;;"count",      1,      0,       0, 300,      0
 
 	float ignitionDwellForCrankingMs;;"ms",        1,     0,    0, 200,     1
 

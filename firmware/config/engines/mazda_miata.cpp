@@ -130,7 +130,7 @@ EXTERN_ENGINE;
 static void commonMiataNa(DECLARE_ENGINE_PARAMETER_F) {
 	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 	engineConfiguration->trigger.type = TT_MAZDA_MIATA_NA;
-	engineConfiguration->digitalChartSize = 100;
+	engineConfiguration->engineChartSize = 100;
 
 	boardConfiguration->triggerInputPins[0] = GPIOC_6; // 2G YEL/BLU
 	boardConfiguration->triggerInputPins[1] = GPIOA_5; // 2E White CKP
@@ -170,7 +170,7 @@ static void commonMiataNa(DECLARE_ENGINE_PARAMETER_F) {
 
 static void common079721_2351(engine_configuration_s *engineConfiguration, board_configuration_s *boardConfiguration) {
 
-	engineConfiguration->digitalChartSize = 150;
+	engineConfiguration->engineChartSize = 150;
 
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_THEN_3_THEN_4_THEN2;

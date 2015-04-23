@@ -23,7 +23,7 @@ void setBmwE34(DECLARE_ENGINE_PARAMETER_F) {
 	board_configuration_s * boardConfiguration = &engineConfiguration->bc;
 
 	// chartsize 450
-	engineConfiguration->digitalChartSize = 450;
+	engineConfiguration->engineChartSize = 450;
 
 //	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
 //	engineConfiguration->trigger.type = TT_ONE_PLUS_TOOTHED_WHEEL_60_2;
@@ -61,7 +61,7 @@ void setBmwE34(DECLARE_ENGINE_PARAMETER_F) {
 
 	// for best performance at high RPM, we need to turn off 'Engine Sniffer' and 'Sensor Sniffer'
 	boardConfiguration->sensorChartMode = SC_OFF;
-	engineConfiguration->isDigitalChartEnabled = false;
+	engineConfiguration->isEngineChartEnabled = false;
 
 	engineConfiguration->isCylinderCleanupEnabled = false;
 	engineConfiguration->isInjectionEnabled = true;

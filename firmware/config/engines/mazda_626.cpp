@@ -24,7 +24,7 @@ void setMazda626EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 	engineConfiguration->trigger.type = TT_MAZDA_DOHC_1_4;
 
-	engineConfiguration->digitalChartSize = 150;
+	engineConfiguration->engineChartSize = 150;
 
 	boardConfiguration->sensorChartMode = SC_TRIGGER;
 	engineConfiguration->sensorChartFrequency = 2;
