@@ -18,6 +18,8 @@ case SACHS:
   return "SACHS";
 case GM_2_2:
   return "GM_2_2";
+case DODGE_RAM:
+  return "DODGE_RAM";
 case BMW_E34:
   return "BMW_E34";
 case CITROEN_TU3JP:
@@ -121,6 +123,8 @@ case TT_ONE_PLUS_TOOTHED_WHEEL_60_2:
 	return "TT_ONE_PLUS_TOOTHED_WHEEL_60_2";
 case TT_ONE:
 	return "TT_ONE";
+case TT_DODGE_RAM:
+	return "TT_DODGE_RAM";
   }
  return NULL;
 }
