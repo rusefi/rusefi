@@ -75,7 +75,7 @@ void turnPinHigh(NamedOutputPin *output) {
 #endif
 #if EFI_WAVE_CHART
 	// explicit check here is a performance optimization to speed up no-chart mode
-	if (CONFIG(isDigitalChartEnabled)) {
+	if (CONFIG(isEngineChartEnabled)) {
 		// this is a performance optimization - array index is cheaper then invoking a method with 'switch'
 		const char *pinName = output->name;
 //	dbgDurr = hal_lld_get_counter_value() - dbgStart;
@@ -100,7 +100,7 @@ void turnPinLow(NamedOutputPin *output) {
 #endif /* EFI_DEFAILED_LOGGING */
 
 #if EFI_WAVE_CHART
-	if (CONFIG(isDigitalChartEnabled)) {
+	if (CONFIG(isEngineChartEnabled)) {
 		// this is a performance optimization - array index is cheaper then invoking a method with 'switch'
 		const char *pinName = output->name;
 

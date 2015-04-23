@@ -22,7 +22,7 @@ void setSachs(DECLARE_ENGINE_PARAMETER_F) {
 
 	setOperationMode(engineConfiguration, TWO_STROKE);
 	engineConfiguration->specs.firingOrder = FO_ONE_CYLINDER;
-	engineConfiguration->digitalChartSize = 400;
+	engineConfiguration->engineChartSize = 400;
 
 	 // set_injection_offset 0
 	engineConfiguration->injectionAngle = 0;

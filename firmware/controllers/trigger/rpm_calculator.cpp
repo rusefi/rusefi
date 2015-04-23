@@ -200,7 +200,7 @@ static void onTdcCallback(void) {
 static void tdcMarkCallback(trigger_event_e ckpSignalType, uint32_t index0 DECLARE_ENGINE_PARAMETER_S) {
 	(void) ckpSignalType;
 	bool isTriggerSynchronizationPoint = index0 == 0;
-	if (isTriggerSynchronizationPoint && engineConfiguration->isDigitalChartEnabled) {
+	if (isTriggerSynchronizationPoint && engineConfiguration->isEngineChartEnabled) {
 		int revIndex2 = engine->rpmCalculator.getRevolutionCounter() % 2;
 		int rpm = getRpm();
 		// todo: use event-based scheduling, not just time-based scheduling

@@ -94,24 +94,24 @@ bool_t WaveChart::isStartedTooLongAgo() {
 	/**
 	 * Say at 300rpm we should get at least four events per revolution.
 	 * That's 300/60*4=20 events per second
-	 * digitalChartSize/20 is the longest meaningful chart.
+	 * engineChartSize/20 is the longest meaningful chart.
 	 *
 	 */
 	uint64_t chartDurationNt = getTimeNowNt() - startTimeNt;
-	return startTimeNt != 0 && NT2US(chartDurationNt) > engineConfiguration->digitalChartSize * 1000000 / 20;
+	return startTimeNt != 0 && NT2US(chartDurationNt) > engineConfiguration->engineChartSize * 1000000 / 20;
 }
 
 bool_t WaveChart::isWaveChartFull() {
-	return counter >= engineConfiguration->digitalChartSize;
+	return counter >= engineConfiguration->engineChartSize;
 }
 
 static void printStatus(void) {
-	scheduleMsg(&logger, "digital chart: %s", boolToString(engineConfiguration->isDigitalChartEnabled));
-	scheduleMsg(&logger, "chartsize=%d", engineConfiguration->digitalChartSize);
+	scheduleMsg(&logger, "digital chart: %s", boolToString(engineConfiguration->isEngineChartEnabled));
+	scheduleMsg(&logger, "chartsize=%d", engineConfiguration->engineChartSize);
 }
 
 static void setChartActive(int value) {
-	engineConfiguration->isDigitalChartEnabled = value;
+	engineConfiguration->isEngineChartEnabled = value;
 	printStatus();
 	maxLockTime = 0;
 }
@@ -120,7 +120,7 @@ void setChartSize(int newSize) {
 	if (newSize < 5) {
 		return;
 	}
-	engineConfiguration->digitalChartSize = newSize;
+	engineConfiguration->engineChartSize = newSize;
 	printStatus();
 }
 
@@ -148,7 +148,7 @@ void WaveChart::publishChart() {
 	scheduleSimpleMsg(&debugLogging, "IT'S TIME", strlen(l->buffer));
 #endif
 	bool isFullLog = getFullLog();
-	if (engineConfiguration->isDigitalChartEnabled && isFullLog) {
+	if (engineConfiguration->isEngineChartEnabled && isFullLog) {
 		scheduleLogging(&logging);
 	}
 }
@@ -162,7 +162,7 @@ void WaveChart::addWaveChartEvent3(const char *name, const char * msg) {
 	if (engine->rpmCalculator.getRevolutionCounter() < skipUntilEngineCycle)
 		return;
 	efiAssertVoid(name!=NULL, "WC: NULL name");
-	if (!engineConfiguration->isDigitalChartEnabled) {
+	if (!engineConfiguration->isEngineChartEnabled) {
 		return;
 	}
 
@@ -239,7 +239,7 @@ void showWaveChartHistogram(void) {
 
 void initWaveChart(WaveChart *chart) {
 
-	if (!engineConfiguration->isDigitalChartEnabled) {
+	if (!engineConfiguration->isEngineChartEnabled) {
 		printMsg(&logger, "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! chart disabled");
 	}
 
