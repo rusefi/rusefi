@@ -7,6 +7,7 @@ import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.io.LinkManager;
 import com.rusefi.ui.*;
+import com.rusefi.ui.config.BitConfigField;
 import com.rusefi.ui.config.ConfigField;
 import com.rusefi.ui.storage.Node;
 import com.rusefi.ui.util.UiUtils;
@@ -141,6 +142,7 @@ public class EngineSnifferPanel {
         topButtons.add(new URLLabel(HELP_TEXT, HELP_URL));
 
         JPanel lowerButtons = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
+        lowerButtons.add(new BitConfigField(Fields.isDigitalChartEnabled, "Collect Engine Data").getContent());
         lowerButtons.add(new ConfigField(Fields.ENGINE_SNIFFER_SIZE, "Engine Sniffer size").getContent());
 
         JPanel bottomPanel = new JPanel(new BorderLayout());
