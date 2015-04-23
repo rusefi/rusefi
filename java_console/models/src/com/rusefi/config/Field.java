@@ -7,6 +7,7 @@ import com.rusefi.core.Pair;
  */
 
 public class Field {
+    private static final String BIT_VALUE_PREFIX = "bit @";
     private static final String INT_VALUE_PREFIX = "int @";
     private static final String FLOAT_VALUE_PREFIX = "float @";
 
@@ -40,6 +41,10 @@ public class Field {
         return offset;
     }
 
+    public int getBitOffset() {
+        return bitOffset;
+    }
+
     public FieldType getType() {
         return type;
     }
@@ -48,6 +53,9 @@ public class Field {
         return message.startsWith(INT_VALUE_PREFIX);
     }
 
+    public static boolean isBitValueMessage(String message) {
+        return message.startsWith(BIT_VALUE_PREFIX);
+    }
 
     public static boolean isFloatValueMessage(String message) {
         return message.startsWith(FLOAT_VALUE_PREFIX);
