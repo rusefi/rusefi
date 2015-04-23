@@ -37,17 +37,20 @@ void AccelEnrichmemnt::updateDiffEnrichment(engine_configuration_s *engineConfig
 //	return diffEnrichment;
 //}
 
+float AccelEnrichmemnt::getDelta() {
+	return cb.maxValue(cb.getSize());
+}
+
 floatms_t AccelEnrichmemnt::getTpsEnrichment(DECLARE_ENGINE_PARAMETER_F) {
-	float d = cb.maxValue(cb.getSize());
+	float d = getDelta();
 	if (d > engineConfiguration->tpsAccelEnrichmentThreshold) {
 		return d * engineConfiguration->tpsAccelEnrichmentMultiplier;
 	}
 	return 0;
-
 }
 
 float AccelEnrichmemnt::getMapEnrichment(DECLARE_ENGINE_PARAMETER_F) {
-	float d = cb.maxValue(cb.getSize());
+	float d = getDelta();
 	if (d > engineConfiguration->mapAccelEnrichmentThreshold) {
 		return d * engineConfiguration->mapAccelEnrichmentMultiplier;
 	}

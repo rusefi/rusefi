@@ -22,12 +22,11 @@ public:
 			float engineLoad);
 	float getMapEnrichment(DECLARE_ENGINE_PARAMETER_F);
 	floatms_t getTpsEnrichment(DECLARE_ENGINE_PARAMETER_F);
+	float getDelta();
 
 	void onEngineCycle(DECLARE_ENGINE_PARAMETER_F);
 	void onEngineCycleTps(DECLARE_ENGINE_PARAMETER_F);
 	void reset();
-	float maxDelta;
-	float minDelta;
 	float delta;
 	cyclic_buffer<float> cb;
 
