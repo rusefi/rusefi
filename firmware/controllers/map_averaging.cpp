@@ -35,7 +35,7 @@
 #include "engine_math.h"
 
 #if EFI_ANALOG_CHART
-#include "analog_chart.h"
+#include <sensor_chart.h>
 #endif /* EFI_ANALOG_CHART */
 
 #define FAST_MAP_CHART_SKIP_FACTOR 16
@@ -108,7 +108,7 @@ static void startAveraging(void *arg) {
  * as fast as possible
  */
 void mapAveragingCallback(adcsample_t adcValue) {
-	if(!isAveraging && boardConfiguration->analogChartMode != AC_MAP) {
+	if(!isAveraging && boardConfiguration->sensorChartMode != SC_MAP) {
 		return;
 	}
 
@@ -118,11 +118,11 @@ void mapAveragingCallback(adcsample_t adcValue) {
 
 
 #if (EFI_ANALOG_CHART && EFI_ANALOG_SENSORS) || defined(__DOXYGEN__)
-	if (boardConfiguration->analogChartMode == AC_MAP)
+	if (boardConfiguration->sensorChartMode == SC_MAP)
 		if (perRevolutionCounter % FAST_MAP_CHART_SKIP_FACTOR == 0) {
 			float voltage = adcToVoltsDivided(adcValue);
 			float currentPressure = getMapByVoltage(voltage);
-			acAddData(getCrankshaftAngleNt(getTimeNowNt() PASS_ENGINE_PARAMETER), currentPressure);
+			scAddData(getCrankshaftAngleNt(getTimeNowNt() PASS_ENGINE_PARAMETER), currentPressure);
 		}
 #endif /* EFI_ANALOG_CHART */
 

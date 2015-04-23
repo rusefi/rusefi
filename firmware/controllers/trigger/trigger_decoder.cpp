@@ -391,6 +391,10 @@ void initializeTriggerShape(Logging *logger, engine_configuration_s const *engin
 		initializeMitsubishi4g18(triggerShape);
 		break;
 
+	case TT_DODGE_RAM:
+		initDodgeRam(triggerShape);
+		break;
+
 	default:
 		firmwareError("initializeTriggerShape() not implemented: %d", triggerConfig->type);
 		;

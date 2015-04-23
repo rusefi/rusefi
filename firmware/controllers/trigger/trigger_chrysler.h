@@ -14,5 +14,6 @@
 
 void configureNeon1995TriggerShape(TriggerShape *s);
 void configureNeon2003TriggerShape(TriggerShape *s);
+void initDodgeRam(TriggerShape *s);
 
 #endif /* TRIGGER_CHRYSLER_H_ */

@@ -542,14 +542,14 @@ typedef enum {
 } can_device_mode_e;
 
 typedef enum {
-	AC_OFF = 0,
+	SC_OFF = 0,
 	/**
 	 * You would use this value if you want to see a detailed graph of your trigger events
 	 */
-	AC_TRIGGER = 1, AC_MAP = 2,
+	SC_TRIGGER = 1, SC_MAP = 2,
 
-	Internal_ForceMyEnumIntSize_analog_chart = ENUM_32_BITS,
-} analog_chart_e;
+	Internal_ForceMyEnumIntSize_sensor_chart = ENUM_32_BITS,
+} sensor_chart_e;
 
 typedef enum {
 	CUSTOM = 0,

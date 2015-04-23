@@ -182,7 +182,7 @@ void setDodgeNeon1995EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	setThermistorConfiguration(&engineConfiguration->clt, 0, 32500, 30, 7550, 100, 700);
 	engineConfiguration->clt.bias_resistor = 2700;
 
-	engineConfiguration->analogChartFrequency = 7;
+	engineConfiguration->sensorChartFrequency = 7;
 }
 
 void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
@@ -357,7 +357,7 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->cltAdcChannel = EFI_ADC_12;
 
 
-	boardConfiguration->analogChartMode = AC_MAP;
+	boardConfiguration->sensorChartMode = SC_MAP;
 	boardConfiguration->isFastAdcEnabled = true;
 	engineConfiguration->map.sensor.type = MT_DODGE_NEON_2003;
 

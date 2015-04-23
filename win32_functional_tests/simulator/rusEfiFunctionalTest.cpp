@@ -22,7 +22,7 @@
 #include "trigger_emulator_algo.h"
 #include "main_trigger_callback.h"
 #include "allsensors.h"
-#include "analog_chart.h"
+#include "sensor_chart.h"
 #include "injector_central.h"
 #include "engine.h"
 #include "tunerstudio.h"
@@ -90,7 +90,7 @@ void rusEfiFunctionalTest(void) {
 	initRpmCalculator(engine);
 
 #if EFI_ANALOG_CHART
-	initAnalogChart();
+	initSensorChart();
 #endif /* EFI_ANALOG_CHART */
 
 	initTriggerEmulator(&sharedLogger, engine);

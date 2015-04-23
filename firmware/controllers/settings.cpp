@@ -352,8 +352,8 @@ static void setMalfunctionIndicatorPinMode(int value) {
 	doPrintConfiguration(engine);
 }
 
-static void setAnalogChartMode(int value) {
-	boardConfiguration->analogChartMode = (analog_chart_e) value;
+static void setSensorChartMode(int value) {
+	boardConfiguration->sensorChartMode = (sensor_chart_e) value;
 	doPrintConfiguration(engine);
 }
 
@@ -915,7 +915,7 @@ void initSettings(engine_configuration_s *engineConfiguration) {
 	addConsoleActionF("set_ignition_offset", setIgnitionOffset);
 	addConsoleActionF("set_injection_offset", setInjectionOffset);
 	addConsoleActionF("set_global_trigger_offset_angle", setGlobalTriggerAngleOffset);
-	addConsoleActionI("set_analog_chart_mode", setAnalogChartMode);
+	addConsoleActionI("set_sensor_chart_mode", setSensorChartMode);
 	addConsoleActionI("set_fixed_mode_timing", setFixedModeTiming);
 	addConsoleActionI("set_timing_mode", setTimingMode);
 	addConsoleActionI("set_engine_type", setEngineType);

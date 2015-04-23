@@ -25,7 +25,7 @@
 #endif
 
 #if ! EFI_UNIT_TEST
-#include "analog_chart.h"
+#include <sensor_chart.h>
 #endif
 
 #include "efilib2.h"
@@ -146,8 +146,8 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index DECL
 
 	if (index != 0) {
 #if EFI_ANALOG_CHART || defined(__DOXYGEN__)
-		if (boardConfiguration->analogChartMode == AC_TRIGGER)
-			acAddData(getCrankshaftAngleNt(nowNt PASS_ENGINE_PARAMETER), 1000 * ckpSignalType + index);
+		if (boardConfiguration->sensorChartMode == SC_TRIGGER)
+			scAddData(getCrankshaftAngleNt(nowNt PASS_ENGINE_PARAMETER), 1000 * ckpSignalType + index);
 #endif
 		return;
 	}
@@ -174,8 +174,8 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index DECL
 	rpmState->onNewEngineCycle();
 	rpmState->lastRpmEventTimeNt = nowNt;
 #if EFI_ANALOG_CHART || defined(__DOXYGEN__)
-	if (boardConfiguration->analogChartMode == AC_TRIGGER)
-		acAddData(getCrankshaftAngleNt(nowNt PASS_ENGINE_PARAMETER), index);
+	if (boardConfiguration->sensorChartMode == SC_TRIGGER)
+		scAddData(getCrankshaftAngleNt(nowNt PASS_ENGINE_PARAMETER), index);
 #endif
 	engine->m.rpmCbTime = GET_TIMESTAMP() - engine->m.beforeRpmCb;
 }

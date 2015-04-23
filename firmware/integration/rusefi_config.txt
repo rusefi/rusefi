@@ -197,7 +197,7 @@ log_format_e logFormat;
 	
 	adc_channel_e tpsAdcChannel;
 	int overrideCrankingIgnition;
-	int analogChartFrequency;;"index",      1,      0,       0, 300,      0 ; size 4
+	int sensorChartFrequency;;"index",      1,      0,       0, 300,      0 ; size 4
 
 struct trigger_config_s @brief Trigger wheel(s) configuration
 
@@ -393,8 +393,8 @@ custom fsio_setting_t 4 scalar,  F32,   @OFFSET@, 		"Val",	   1,	   0,       0, 
 	brain_pin_e joystickCPin;
 	brain_pin_e joystickDPin;
 
-custom analog_chart_e 4 bits, S32, @OFFSET@, [0:1], "none", "trigger", "MAP", "INVALID"		
-analog_chart_e analogChartMode;
+custom sensor_chart_e 4 bits, S32, @OFFSET@, [0:1], "none", "trigger", "MAP", "INVALID"		
+sensor_chart_e sensorChartMode;
 maf_sensor_type_e mafSensorType;
 
 brain_pin_e vehicleSpeedSensorInputPin;

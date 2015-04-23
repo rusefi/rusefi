@@ -17,8 +17,7 @@ void setDodgeRam1996(DECLARE_ENGINE_PARAMETER_F) {
 	board_configuration_s * boardConfiguration = &engineConfiguration->bc;
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
-	engineConfiguration->trigger.type = TT_ONE_PLUS_TOOTHED_WHEEL_60_2;
-
+	engineConfiguration->trigger.type = TT_DODGE_RAM;
 
 	//Base engine setting
 	engineConfiguration->specs.cylindersCount = 8;
