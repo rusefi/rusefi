@@ -97,7 +97,9 @@ typedef enum {
 
 	GM_2_2 = 30,
 
-	ET_UNUSED = 31,
+	DODGE_RAM = 31,
+
+	ET_UNUSED = 32,
 
 	Force_4b_engine_type = ENUM_32_BITS,
 } engine_type_e;
@@ -131,6 +133,8 @@ typedef enum {
 	TT_ONE_PLUS_ONE = 16,
 	TT_ONE_PLUS_TOOTHED_WHEEL_60_2 = 17,
 	TT_ONE = 18,
+
+	TT_DODGE_RAM = 19,
 
 	Force_4b_trigger_type = ENUM_32_BITS,
 } trigger_type_e;
