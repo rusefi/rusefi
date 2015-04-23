@@ -26,8 +26,8 @@ void setMazda626EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineConfiguration->digitalChartSize = 150;
 
-	boardConfiguration->analogChartMode = AC_TRIGGER;
-	engineConfiguration->analogChartFrequency = 2;
+	boardConfiguration->sensorChartMode = SC_TRIGGER;
+	engineConfiguration->sensorChartFrequency = 2;
 
 	engineConfiguration->injector.flow = 330;
 	engineConfiguration->specs.displacement = 2.0;

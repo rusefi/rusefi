@@ -20,7 +20,7 @@ void setGy6139qmbDefaultEngineConfiguration(
 	engineConfiguration->analogInputDividerCoefficient = 1.52;
 	engineConfiguration->algorithm = LM_MAP;
 	engineConfiguration->globalTriggerAngleOffset = 45;
-	engineConfiguration->bc.analogChartMode = AC_MAP;
+	engineConfiguration->bc.sensorChartMode = SC_MAP;
 	engineConfiguration->specs.displacement = 0.072; // 72cc
 	engineConfiguration->specs.cylindersCount = 1;
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);

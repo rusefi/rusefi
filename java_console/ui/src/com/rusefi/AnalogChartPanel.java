@@ -2,6 +2,7 @@ package com.rusefi;
 
 import com.rusefi.config.Fields;
 import com.rusefi.ui.RpmModel;
+import com.rusefi.ui.config.EnumConfigField;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.engine.EngineSnifferPanel;
 import com.rusefi.ui.config.ConfigField;
@@ -106,7 +107,7 @@ public class AnalogChartPanel {
         lowerPanel.setBorder(BorderFactory.createLineBorder(Color.white));
         content.add(lowerPanel, BorderLayout.SOUTH);
 
-        lowerPanel.add(new ConfigField(Fields.SENSOR_SNIFFER_MODE, "Sensor chart mode").getContent());
+        lowerPanel.add(new EnumConfigField(Fields.SENSOR_SNIFFER_MODE, "Mode", "Off", "Trigger", "MAP").getContent());
         lowerPanel.add(new ConfigField(Fields.SENSOR_SNIFFER_FREQUENCY, "Every XXX engine cycles").getContent());
         lowerPanel.add(new ConfigField(Fields.GLOBAL_FUEL_CORRECTION, "Global Fuel Correction").getContent());
     }

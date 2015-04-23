@@ -60,7 +60,7 @@ void setBmwE34(DECLARE_ENGINE_PARAMETER_F) {
 	setAlgorithm(LM_SPEED_DENSITY PASS_ENGINE_PARAMETER);
 
 	// for best performance at high RPM, we need to turn off 'Engine Sniffer' and 'Sensor Sniffer'
-	boardConfiguration->analogChartMode = AC_OFF;
+	boardConfiguration->sensorChartMode = SC_OFF;
 	engineConfiguration->isDigitalChartEnabled = false;
 
 	engineConfiguration->isCylinderCleanupEnabled = false;

@@ -21,6 +21,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <sensor_chart.h>
 #include "main.h"
 #include "engine_configuration.h"
 #include "trigger_central.h"
@@ -39,7 +40,6 @@
 #include "engine_math.h"
 #include "wave_analyzer.h"
 #include "allsensors.h"
-#include "analog_chart.h"
 #include "electronic_throttle.h"
 #include "map_averaging.h"
 #include "malfunction_central.h"
@@ -469,7 +469,7 @@ void initEngineContoller(Logging *sharedLogger, Engine *engine) {
 #endif
 
 #if EFI_ANALOG_CHART || defined(__DOXYGEN__)
-	initAnalogChart();
+	initSensorChart();
 #endif /* EFI_ANALOG_CHART */
 
 	initAlgo(sharedLogger, engineConfiguration);

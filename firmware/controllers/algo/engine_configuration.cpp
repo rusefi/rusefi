@@ -296,7 +296,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->fixedModeTiming = 50;
 
 	// performance optimization
-	boardConfiguration->analogChartMode = AC_OFF;
+	boardConfiguration->sensorChartMode = SC_OFF;
 
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
 	engineConfiguration->baroSensor.hwChannel = EFI_ADC_4;
@@ -310,7 +310,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->injectionAngle = 0;
 	engineConfiguration->ignitionBaseAngle = 0;
 	engineConfiguration->overrideCrankingIgnition = true;
-	engineConfiguration->analogChartFrequency = 20;
+	engineConfiguration->sensorChartFrequency = 20;
 
 	engineConfiguration->algorithm = LM_PLAIN_MAF;
 

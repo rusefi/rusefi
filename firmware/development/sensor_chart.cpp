@@ -5,8 +5,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2015
  */
 
+#include <sensor_chart.h>
 #include "main.h"
-#include "analog_chart.h"
 #include "engine.h"
 #include "rpm_calculator.h"
 #include "status_loop.h"
@@ -21,12 +21,12 @@ static int initialized = FALSE;
 
 extern engine_configuration_s *engineConfiguration;
 
-void acAddData(float angle, float value) {
+void scAddData(float angle, float value) {
 	if (!initialized) {
 		return; // this is possible because of initialization sequence
 	}
 
-	if (engineConfiguration->analogChartFrequency < 2) {
+	if (engineConfiguration->sensorChartFrequency < 2) {
 		/**
 		 * analog chart frequency cannot be 1 because of the way
 		 * data flush is implemented, see below
@@ -35,7 +35,7 @@ void acAddData(float angle, float value) {
 		return;
 	}
 
-	if (getRevolutionCounter() % engineConfiguration->analogChartFrequency != 0) {
+	if (getRevolutionCounter() % engineConfiguration->sensorChartFrequency != 0) {
 		/**
 		 * We are here if we do NOT need to add an event to the analog chart
 		 */
@@ -66,12 +66,12 @@ void acAddData(float angle, float value) {
 	}
 }
 
-static void setAnalogChartFrequency(int value) {
-	engineConfiguration->analogChartFrequency = value;
+static void setSensorChartFrequency(int value) {
+	engineConfiguration->sensorChartFrequency = value;
 }
 
-void initAnalogChart(void) {
-	addConsoleActionI("set_analog_chart_freq", setAnalogChartFrequency);
+void initSensorChart(void) {
+	addConsoleActionI("set_sensor_chart_freq", setSensorChartFrequency);
 
 	initialized = true;
 }
