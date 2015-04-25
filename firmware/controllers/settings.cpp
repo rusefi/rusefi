@@ -193,6 +193,8 @@ void printConfiguration(engine_configuration_s *engineConfiguration) {
 			engineConfiguration->engineType, getTrigger_type_e(engineConfiguration->trigger.type),
 			getEngine_load_mode_e(engineConfiguration->algorithm));
 
+	scheduleMsg(&logger, "templog %x", engineConfiguration->algorithm);
+
 	scheduleMsg(&logger, "configurationVersion=%d", getGlobalConfigurationVersion());
 
 	for (int k = 0; k < FUEL_LOAD_COUNT; k++) {
