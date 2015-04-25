@@ -70,11 +70,11 @@
 69)                  Change F1 to a wire wound resistor which will also be the weak link and act like a fuse before the PCB breaks, while also snubbing RF
 70) RESOLVED IN R0.4 Some USB connectors are wider and hit the PCB making it hard to insert. MOVED PCB EDGE TO BE CLOSER TO USB CONNECTOR.
 71) RESOLVED IN R0.4 TI TPIC8101 part number instead of HIP9011
-72)                  more holes for proto
+72) RESOLVED IN R0.4 more holes for proto
 73)                  one of LCD holes the traces are too close on the back
-74)                  order new joystick for paper test
+74) RESOLVED IN R0.4 order new joystick for paper test
 75) RESOLVED IN R0.4 HIP9011 / TPIC8101 chip has a problem with starting, RESOLVED BY ADDING CAP BETWEEN CS AND XIN TO CREATE STARTING PING. 
-76)                  AN inputs are limited to operation between 0V and 4V.
+76) RESOLVED IN R0.4 AN inputs are limited to operation between 0V and 4V.RESOLVED BY CHANGING OP-AMP TO A BETTER RAIL TO RAIL THAT IS MUCH CLOSER TO THE RAIL.
 77)                  W1002 - silksceen on the wrong place? remove these jumpers anyway?
 78)                  1K and 0R on the MAX9926 input: need to put a comment on the schematics page explaining that none or just one of them should be installed depending on the use-case
 
@@ -85,9 +85,6 @@
   )                  idle valve SMD diode?
   )                  on schematics, rename INJ_xx to LOW_xx? "inj" is a bit confusing, it implies that PE6 is injector #1 while it is usually not the case
   )                  set analog input values to match https://docs.google.com/spreadsheets/d/1LTvS7I-128Hft9uXHG1JrBxetVjGJDSBkySgVDQ6MGk/edit#gid=0
-
-
-
 For honda add-on / rewiring board
 -- Add 2A high side solinoid drive for VTec sol
 -- Add 3rd VR chip for 3rd signal
