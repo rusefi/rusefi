@@ -1941,6 +1941,12 @@
         <name>$PROJ_DIR$\..\config\engines\dodge_neon.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\config\engines\dodge_ram.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\config\engines\dodge_ram.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\config\engines\engines.h</name>
       </file>
       <file>
@@ -2560,10 +2566,10 @@
       </file>
     </group>
     <file>
-      <name>$PROJ_DIR$\..\development\analog_chart.cpp</name>
+      <name>$PROJ_DIR$\..\development\sensor_chart.cpp</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\development\analog_chart.h</name>
+      <name>$PROJ_DIR$\..\development\sensor_chart.h</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\development\engine_emulator.cpp</name>
