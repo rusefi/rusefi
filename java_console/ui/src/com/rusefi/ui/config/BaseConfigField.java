@@ -47,6 +47,8 @@ class BaseConfigField {
     protected void createUi(String topLabel, Component control) {
         JPanel center = new JPanel(new FlowLayout());
 
+        control.setEnabled(false);
+
         /**
          * I guess a nice status enum is coming soon
          */

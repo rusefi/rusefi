@@ -23,6 +23,7 @@ public class ConfigField extends BaseConfigField {
                 if (Field.isIntValueMessage(message) || Field.isFloatValueMessage(message)) {
                     Pair<Integer, ?> p = Field.parseResponse(message);
                     if (p != null && p.first == field.getOffset()) {
+                        view.setEnabled(true);
                         view.setText("" + p.second);
                         onValueArrived();
                     }

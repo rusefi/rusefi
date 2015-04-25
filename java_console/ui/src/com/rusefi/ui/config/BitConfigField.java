@@ -23,9 +23,9 @@ public class BitConfigField extends BaseConfigField {
                     String expectedPrefix = "bit @" + field.getOffset() + "/" + field.getBitOffset() + " is ";
                     if (message.startsWith(expectedPrefix) && message.length() == expectedPrefix.length() + 1) {
                         message = message.substring(expectedPrefix.length());
-                        System.out.println("Bit arrived " + message);
                         Boolean value = message.equals("1");
                         ec = true;
+                        view.setEnabled(true);
                         view.setSelected(value);
                         onValueArrived();
                         ec = false;

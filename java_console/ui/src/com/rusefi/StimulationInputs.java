@@ -1,5 +1,7 @@
 package com.rusefi;
 
+import com.rusefi.ui.util.UiUtils;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -34,11 +36,11 @@ public class StimulationInputs {
         content.add(tpsRange.getContent());
 
         content.add(new JLabel("EL resistance"));
-        content.add(wrap(elResistance2));
+        content.add(UiUtils.wrap(elResistance2));
 
         JButton button = ecuStimulator.createButton();
         if (Launcher.SHOW_STIMULATOR)
-            content.add(wrap(button));
+            content.add(UiUtils.wrap(button));
     }
 
     public double getEngineLoadMin() {
@@ -67,12 +69,6 @@ public class StimulationInputs {
 
     public int getCltTo() {
         return (int) cltRange.getTo();
-    }
-
-    public static JComponent wrap(JComponent component) {
-        JPanel result = new JPanel();
-        result.add(component);
-        return result;
     }
 
     public JPanel getContent() {
