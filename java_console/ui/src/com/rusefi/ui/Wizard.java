@@ -87,8 +87,6 @@ public class Wizard {
                 .setNext(new SendCommand("subscribe " + OutputChannel.RunningOrderingTriggerError.getProtocolId()))
                 .setNext(new SendCommand("set_analog_chart_freq " + 1))
                 .setNext(new WaitForZeroRpm())
-
-
         ;
     }
 

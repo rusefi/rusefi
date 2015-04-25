@@ -10,19 +10,30 @@ public class Field {
     private static final String BIT_VALUE_PREFIX = "bit @";
     private static final String INT_VALUE_PREFIX = "int @";
     private static final String FLOAT_VALUE_PREFIX = "float @";
+    public static final int NO_BIT_OFFSET = -1;
 
     private final int offset;
     private final FieldType type;
     private final int bitOffset;
+    private final String[] options;
 
     public Field(int offset, FieldType type) {
-        this(offset, type, -1);
+        this(offset, type, NO_BIT_OFFSET);
+    }
+
+    public Field(int offset, FieldType type, String... options) {
+        this(offset, type, NO_BIT_OFFSET, options);
     }
 
     public Field(int offset, FieldType type, int bitOffset) {
+        this(offset, type, bitOffset, null);
+    }
+
+    public Field(int offset, FieldType type, int bitOffset, String[] options) {
         this.offset = offset;
         this.type = type;
         this.bitOffset = bitOffset;
+        this.options = options;
     }
 
     public String setCommand() {
@@ -39,6 +50,10 @@ public class Field {
 
     public int getOffset() {
         return offset;
+    }
+
+    public String[] getOptions() {
+        return options;
     }
 
     public int getBitOffset() {

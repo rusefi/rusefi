@@ -7,16 +7,28 @@ import com.rusefi.core.Pair;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
+import java.util.Map;
 
 public class EnumConfigField extends BaseConfigField {
     private final JComboBox<String> view = new JComboBox<>();
     private boolean ec;
+    private final Map<String, Integer> ordinals = new HashMap<>();
 
-    public EnumConfigField(final Field field, String caption, String... options) {
+    public EnumConfigField(final Field field, String caption) {
+        this(field, caption, field.getOptions());
+    }
+
+    public EnumConfigField(final Field field, String caption, final String... options) {
         super(field);
 
-        for (String option : options)
-            view.addItem(option);
+        int ordinal = 0;
+        for (String option : options) {
+            ordinals.put(option, ordinal++);
+
+            if (!"invalid".equalsIgnoreCase(option))
+                view.addItem(option);
+        }
 
         createUi(caption, view);
 
@@ -26,9 +38,10 @@ public class EnumConfigField extends BaseConfigField {
                 if (Field.isIntValueMessage(message)) {
                     Pair<Integer, ?> p = Field.parseResponse(message);
                     if (p != null && p.first == field.getOffset()) {
-                        int value = (Integer) p.second;
+                        int ordinal = (Integer) p.second;
                         ec = true;
-                        view.setSelectedIndex(value);
+                        view.setEnabled(true);
+                        view.setSelectedItem(options[ordinal]);
                         onValueArrived();
                         ec = false;
                     }
@@ -41,7 +54,9 @@ public class EnumConfigField extends BaseConfigField {
             public void actionPerformed(ActionEvent e) {
                 if (ec)
                     return;
-                sendValue(field, Integer.toString(view.getSelectedIndex()));
+                String value = (String) view.getSelectedItem();
+                int ordinal = ordinals.get(value);
+                sendValue(field, Integer.toString(ordinal));
             }
         });
     }

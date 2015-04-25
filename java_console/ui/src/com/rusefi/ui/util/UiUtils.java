@@ -89,4 +89,10 @@ public class UiUtils {
     public static void setTwoLineToolTip(JComponent component, String line1, String line2) {
         component.setToolTipText("<html>" + line1 + "<br>" + line2 + "</html>");
     }
+
+    public static JComponent wrap(JComponent component) {
+        JPanel result = new JPanel();
+        result.add(component);
+        return result;
+    }
 }

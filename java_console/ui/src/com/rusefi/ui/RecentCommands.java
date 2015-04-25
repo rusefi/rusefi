@@ -1,6 +1,5 @@
 package com.rusefi.ui;
 
-import com.rusefi.StimulationInputs;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.ui.util.UiUtils;
 
@@ -12,6 +11,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
 
@@ -33,7 +33,7 @@ public class RecentCommands {
         }
     };
 
-    private boolean reentrant;
+    private final AtomicBoolean reentrant = new AtomicBoolean();
 
     private final JScrollPane messagesScroll = new JScrollPane(content, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
@@ -41,7 +41,7 @@ public class RecentCommands {
         CommandQueue.getInstance().addListener(new CommandQueue.CommandQueueListener() {
             @Override
             public void onCommand(String command) {
-                if (!reentrant)
+                if (!reentrant.get())
                     add(command);
             }
         });
@@ -97,7 +97,7 @@ public class RecentCommands {
                     sorted.addAll(entries.keySet());
 
                     for (Entry entry : sorted) {
-                        content.add(createButton(entry));
+                        content.add(createButton(reentrant, entry.command));
                     }
                 }
                 UiUtils.trueRepaint(content.getParent());
@@ -107,21 +107,21 @@ public class RecentCommands {
         getConfig().getRoot().setProperty(KEY, pack());
     }
 
-    private JComponent createButton(final Entry entry) {
-        JButton button = new JButton(entry.command);
+    public static JComponent createButton(final AtomicBoolean reentrant, final String command) {
+        JButton button = new JButton(command);
         button.setBorder(BorderFactory.createEmptyBorder(3, 5, 0, 5));
 
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                reentrant = true;
-                int timeout = CommandQueue.getTimeout(entry.command);
-                CommandQueue.getInstance().write(entry.command, timeout);
-                reentrant = false;
+                reentrant.set(true);
+                int timeout = CommandQueue.getTimeout(command);
+                CommandQueue.getInstance().write(command, timeout);
+                reentrant.set(false);
             }
         });
 
-        return StimulationInputs.wrap(button);
+        return UiUtils.wrap(button);
     }
 
     public Component getContent() {

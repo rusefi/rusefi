@@ -7,7 +7,6 @@ import com.rusefi.io.LinkManager;
 import com.rusefi.maintenance.VersionChecker;
 import com.rusefi.ui.*;
 import com.rusefi.ui.engine.EngineSnifferPanel;
-import com.rusefi.ui.fsio.FlexibleControls;
 import com.rusefi.ui.logview.LogViewer;
 import com.rusefi.ui.storage.Node;
 import com.rusefi.ui.util.DefaultExceptionHandler;
@@ -32,7 +31,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * @see com.rusefi.StartupFrame
  */
 public class Launcher {
-    public static final int CONSOLE_VERSION = 20150423;
+    public static final int CONSOLE_VERSION = 20150425;
     public static final boolean SHOW_STIMULATOR = false;
     private static final String TAB_INDEX = "main_tab";
     protected static final String PORT_KEY = "port";
@@ -87,10 +86,9 @@ public class Launcher {
         tabbedPane.addTab("Engine Sniffer", engineSnifferPanel.getPanel());
         tabbedPane.addTab("Sensor Sniffer", new AnalogChartPanel().getPanel());
 
-
         tabbedPane.addTab("Table Editor", tableEditor);
 
-        tabbedPane.addTab("LE controls", new FlexibleControls().getPanel());
+//        tabbedPane.addTab("LE controls", new FlexibleControls().getPanel());
 
 //        tabbedPane.addTab("ADC", new AdcPanel(new BooleanInputsModel()).createAdcPanel());
         if (SHOW_STIMULATOR && !LinkManager.isStimulationMode && !LinkManager.isLogViewerMode(port)) {
@@ -100,7 +98,9 @@ public class Launcher {
         }
 //        tabbedPane.addTab("live map adjustment", new Live3DReport().getControl());
         tabbedPane.add("Messages", new MessagesPane(getConfig().getRoot().getChild("messages")).getContent());
-        tabbedPane.add("Wizards", new Wizard().createPane());
+//        tabbedPane.add("Wizards", new Wizard().createPane());
+
+        tabbedPane.add("Settings", new SettingsTab().createPane());
 
 
         if (!LinkManager.isLogViewerMode(port)) {
