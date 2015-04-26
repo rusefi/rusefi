@@ -21,6 +21,7 @@
 class OutputPin {
 public:
 	OutputPin();
+	bool_t isInitialized();
 	void setValue(int logicValue);
 	void setDefaultPinState(pin_output_mode_e *defaultState);
 	bool_t getLogicValue();
