@@ -82,7 +82,7 @@ extern board_configuration_s *boardConfiguration;
 extern bool hasFirmwareErrorFlag;
 #define FULL_LOGGING_KEY "fl"
 
-static char LOGGING_BUFFER[700];
+static char LOGGING_BUFFER[1400];
 static Logging logger("status loop", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
 
 static void setWarningEnabled(int value) {
@@ -167,7 +167,7 @@ static void printSensors(Logging *log, bool fileFormat) {
 #if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
 	if (engineConfiguration->hasMapSensor) {
 		reportSensorF(log, fileFormat, "MAP", "kPa", getMap(), 2);
-		reportSensorF(log, fileFormat, "map_r", "V", getRawMap(), 2);
+//		reportSensorF(log, fileFormat, "map_r", "V", getRawMap(), 2);
 	}
 	if (engineConfiguration->hasBaroSensor) {
 		reportSensorF(log, fileFormat, "baro", "kPa", getBaroPressure(), 2);

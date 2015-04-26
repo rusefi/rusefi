@@ -318,7 +318,7 @@ Logging::Logging() {
 Logging::Logging(char const *name, char *buffer, int bufferSize) {
 	baseConstructor();
 #if ! EFI_UNIT_TEST
-	initLoggingExt(this, "settings control", buffer, bufferSize);
+	initLoggingExt(this, name, buffer, bufferSize);
 #endif /* ! EFI_UNIT_TEST */
 }
 
