@@ -484,6 +484,7 @@ static void configureInputs(void) {
 	addChannel(engineConfiguration->cltAdcChannel, ADC_SLOW);
 	addChannel(engineConfiguration->iatAdcChannel, ADC_SLOW);
 	addChannel(engineConfiguration->afr.hwChannel, ADC_SLOW);
+	addChannel(engineConfiguration->acSwitchAdc, ADC_SLOW);
 }
 
 void initAdcInputs(bool boardTestMode) {

@@ -451,7 +451,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
 		boardConfiguration->fsioPins[i] = GPIO_UNASSIGNED;
 		config->le_formulas[i][0] = 0;
-		boardConfiguration->fsioInputs[i] = GPIO_UNASSIGNED;
+		boardConfiguration->fsioDigitalInputs[i] = GPIO_UNASSIGNED;
 		engineConfiguration->fsioInputModes[i] = PI_DEFAULT;
 	}
 	for (int i = 0; i < JOYSTICK_PIN_COUNT; i++) {
