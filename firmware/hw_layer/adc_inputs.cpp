@@ -19,6 +19,8 @@
 #include "engine_math.h"
 #include "board_test.h"
 
+static adc_channel_mode_e adcHwChannelEnabled[HW_MAX_ADC_INDEX];
+
 AdcDevice::AdcDevice(ADCConversionGroup* hwConfig) {
 	this->hwConfig = hwConfig;
 	channelCount = 0;
@@ -191,11 +193,11 @@ int getInternalAdcValue(adc_channel_e hwChannel) {
 		return -1;
 	}
 
-	if (boardConfiguration->adcHwChannelEnabled[hwChannel] == ADC_FAST) {
+	if (adcHwChannelEnabled[hwChannel] == ADC_FAST) {
 		int internalIndex = fastAdc.internalAdcIndexByHardwareIndex[hwChannel];
 		return fastAdc.samples[internalIndex];
 	}
-	if (boardConfiguration->adcHwChannelEnabled[hwChannel] != ADC_SLOW) {
+	if (adcHwChannelEnabled[hwChannel] != ADC_SLOW) {
 		warning(OBD_PCM_Processor_Fault, "ADC is off %d", hwChannel);
 	}
 
@@ -463,8 +465,32 @@ static void adc_callback_slow(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 	}
 }
 
+static void addChannel(adc_channel_e setting, adc_channel_mode_e mode) {
+	if (setting == EFI_ADC_NONE) {
+		return;
+	}
+	adcHwChannelEnabled[setting] = mode;
+}
+
+static void configureInputs(void) {
+	memset(adcHwChannelEnabled, 0, sizeof(adcHwChannelEnabled));
+
+	addChannel(engineConfiguration->tpsAdcChannel, ADC_FAST);
+	addChannel(engineConfiguration->map.sensor.hwChannel, ADC_FAST);
+	addChannel(engineConfiguration->mafAdcChannel, ADC_FAST);
+	addChannel(engineConfiguration->hipOutputChannel, ADC_FAST);
+
+	addChannel(engineConfiguration->vbattAdcChannel, ADC_SLOW);
+	addChannel(engineConfiguration->cltAdcChannel, ADC_SLOW);
+	addChannel(engineConfiguration->iatAdcChannel, ADC_SLOW);
+	addChannel(engineConfiguration->afr.hwChannel, ADC_SLOW);
+}
+
 void initAdcInputs(bool boardTestMode) {
 	printMsg(&logger, "initAdcInputs()");
+
+	configureInputs();
+
 
 	printStatus();
 
@@ -478,7 +504,7 @@ void initAdcInputs(bool boardTestMode) {
 	adcStart(&ADC_FAST_DEVICE, NULL);
 
 	for (int adc = 0; adc < HW_MAX_ADC_INDEX; adc++) {
-		adc_channel_mode_e mode = boardConfiguration->adcHwChannelEnabled[adc];
+		adc_channel_mode_e mode = adcHwChannelEnabled[adc];
 
 		/**
 		 * in board test mode all currently enabled ADC channels are running in slow mode
