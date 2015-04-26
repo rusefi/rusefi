@@ -179,7 +179,7 @@ static void calcFastAdcIndexes(void) {
 	hipSampleIndex =
 			engineConfiguration->hipOutputChannel == EFI_ADC_NONE ?
 					-1 : fastAdc.internalAdcIndexByHardwareIndex[engineConfiguration->hipOutputChannel];
-	if(engineConfiguration->tpsAdcChannel!=EFI_ADC_NONE && boardConfiguration->adcHwChannelEnabled[engineConfiguration->tpsAdcChannel]==ADC_FAST) {
+	if (engineConfiguration->tpsAdcChannel != EFI_ADC_NONE) {
 		tpsSampleIndex = fastAdc.internalAdcIndexByHardwareIndex[engineConfiguration->tpsAdcChannel];
 	} else {
 		tpsSampleIndex = TPS_IS_SLOW;

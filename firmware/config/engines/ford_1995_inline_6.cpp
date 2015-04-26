@@ -68,17 +68,6 @@ void setFordInline6(DECLARE_ENGINE_PARAMETER_F) {
 	// input channel 10 is PC3, that's ADC13
 	// input channel 12 is PC1, that's ADC11
 
-	memset(boardConfiguration->adcHwChannelEnabled, 0, sizeof(boardConfiguration->adcHwChannelEnabled));
-	boardConfiguration->adcHwChannelEnabled[1] = ADC_SLOW;
-	boardConfiguration->adcHwChannelEnabled[2] = ADC_SLOW;
-	boardConfiguration->adcHwChannelEnabled[3] = ADC_SLOW;
-	boardConfiguration->adcHwChannelEnabled[4] = ADC_SLOW;
-
-	boardConfiguration->adcHwChannelEnabled[7] = ADC_SLOW;
-	boardConfiguration->adcHwChannelEnabled[11] = ADC_SLOW;
-	boardConfiguration->adcHwChannelEnabled[15] = ADC_FAST;
-
-
 	engineConfiguration->tpsAdcChannel = EFI_ADC_4;
 	engineConfiguration->iatAdcChannel = EFI_ADC_2;
 	engineConfiguration->cltAdcChannel = EFI_ADC_1;

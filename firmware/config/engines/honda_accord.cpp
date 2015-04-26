@@ -96,18 +96,6 @@ static void setHondaAccordConfigurationCommon(DECLARE_ENGINE_PARAMETER_F) {
 	 * Inp6/ADC1 PA1: TPS
 	 * Inp12/ADC14 PC4: VBatt
 	 */
-	memset(boardConfiguration->adcHwChannelEnabled, 0, sizeof(boardConfiguration->adcHwChannelEnabled));
-	boardConfiguration->adcHwChannelEnabled[0] = ADC_FAST; // ADC0 - PA0 - MAP
-	boardConfiguration->adcHwChannelEnabled[1] = ADC_SLOW; // TPS
-	boardConfiguration->adcHwChannelEnabled[2] = ADC_SLOW;
-	boardConfiguration->adcHwChannelEnabled[3] = ADC_SLOW;
-	boardConfiguration->adcHwChannelEnabled[4] = ADC_SLOW;
-
-	boardConfiguration->adcHwChannelEnabled[6] = ADC_SLOW;
-	boardConfiguration->adcHwChannelEnabled[11] = ADC_SLOW; // IAT
-	boardConfiguration->adcHwChannelEnabled[12] = ADC_SLOW; // CLT
-	boardConfiguration->adcHwChannelEnabled[13] = ADC_SLOW; // AFR
-	boardConfiguration->adcHwChannelEnabled[14] = ADC_SLOW; // VBatt
 
 	/**
 	 * D14/W10 O2 Sensor

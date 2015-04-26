@@ -88,11 +88,10 @@ int getTPS10bitAdc(DECLARE_ENGINE_PARAMETER_F) {
 	if(engineConfiguration->tpsAdcChannel==EFI_ADC_NONE)
 		return -1;
 #if EFI_PROD_CODE
-	if(boardConfiguration->adcHwChannelEnabled[engineConfiguration->tpsAdcChannel]==ADC_FAST)
-		return tpsFastAdc / 4;
+	return tpsFastAdc / 4;
+#else
+	return 0;
 #endif /* EFI_PROD_CODE */
-	int adc = getAdcValue(engineConfiguration->tpsAdcChannel);
-	return (int) adc / 4; // Only for TunerStudio compatibility. Max TS adc value in 1023
 }
 
 /**

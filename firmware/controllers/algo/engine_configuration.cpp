@@ -528,23 +528,6 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->gps_rx_pin = GPIOB_7;
 	boardConfiguration->gps_tx_pin = GPIOB_6;
 
-	memset(boardConfiguration->adcHwChannelEnabled, 0, sizeof(boardConfiguration->adcHwChannelEnabled));
-	boardConfiguration->adcHwChannelEnabled[0] = ADC_SLOW;
-	boardConfiguration->adcHwChannelEnabled[1] = ADC_SLOW;
-	boardConfiguration->adcHwChannelEnabled[2] = ADC_SLOW;
-
-	boardConfiguration->adcHwChannelEnabled[3] = ADC_FAST;
-	engineConfiguration->tpsAdcChannel = EFI_ADC_3;
-
-	boardConfiguration->adcHwChannelEnabled[4] = ADC_FAST;
-	// boardConfiguration->adcHwChannelEnabled[5] = ADC_SLOW; PA5 is also timer input
-	boardConfiguration->adcHwChannelEnabled[6] = ADC_SLOW;
-	boardConfiguration->adcHwChannelEnabled[7] = ADC_SLOW;
-	boardConfiguration->adcHwChannelEnabled[11] = ADC_SLOW;
-	boardConfiguration->adcHwChannelEnabled[12] = ADC_SLOW;
-	boardConfiguration->adcHwChannelEnabled[13] = ADC_SLOW;
-	boardConfiguration->adcHwChannelEnabled[14] = ADC_SLOW;
-
 	boardConfiguration->triggerInputPins[0] = GPIOC_6;
 	boardConfiguration->triggerInputPins[1] = GPIOA_5;
 	boardConfiguration->logicAnalyzerPins[0] = GPIO_UNASSIGNED;
@@ -805,7 +788,6 @@ void commonFrankensoAnalogInputs(engine_configuration_s *engineConfiguration) {
 	 * VBatt
 	 */
 	engineConfiguration->vbattAdcChannel = EFI_ADC_14;
-	engineConfiguration->bc.adcHwChannelEnabled[14] = ADC_SLOW;
 }
 
 void setFrankenso0_1_joystick(engine_configuration_s *engineConfiguration) {

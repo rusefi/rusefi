@@ -34,20 +34,13 @@ void setCustomEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	 * Frankenso analog #11 PC5 ADC15
 	 * Frankenso analog #12 PC4 ADC14 VBatt
 	 */
-	boardConfiguration->adcHwChannelEnabled[2] = ADC_FAST;
 	engineConfiguration->tpsAdcChannel = EFI_ADC_2;
 
-	boardConfiguration->adcHwChannelEnabled[0] = ADC_FAST;
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_0;
-
-	boardConfiguration->adcHwChannelEnabled[4] = ADC_SLOW;
 
 	engineConfiguration->cltAdcChannel = EFI_ADC_12;
 	engineConfiguration->iatAdcChannel = EFI_ADC_11;
 	engineConfiguration->afr.hwChannel = EFI_ADC_13;
-
-	boardConfiguration->adcHwChannelEnabled[14] = ADC_SLOW;
-	engineConfiguration->vbattAdcChannel = EFI_ADC_14;
 
 	setCommonNTCSensor(&engineConfiguration->clt);
 	engineConfiguration->clt.bias_resistor = 2700;
