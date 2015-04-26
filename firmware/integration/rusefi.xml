@@ -13,7 +13,7 @@
       <transmission>MT</transmission>
       <memmodel>SH7055</memmodel>
       <flashmethod>sti04</flashmethod>
-      <filesize>15288</filesize>
+      <filesize>@@total_config_size@@</filesize>
     </romid>
 
     <table type="3D" name="Ignition Advance" storageaddress="@@ignitionTable_hex@@" sizex="16" sizey="16" storagetype="float" endian="big">
