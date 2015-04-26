@@ -35,6 +35,14 @@ OutputPin::OutputPin() {
 #endif
 }
 
+bool_t OutputPin::isInitialized() {
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+	return port != NULL;
+#else
+	return false;
+#endif
+}
+
 void OutputPin::setValue(int logicValue) {
 	doSetOutputPinValue2(this, logicValue);
 }

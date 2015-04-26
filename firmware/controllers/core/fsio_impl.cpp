@@ -237,7 +237,7 @@ static void setPinState(const char * msg, OutputPin *pin, LEElement *element, En
 		warning(OBD_PCM_Processor_Fault, "invalid expression for %s", msg);
 	} else {
 		int value = calc.getValue2(element, engine);
-		if (value != pin->getLogicValue()) {
+		if (pin->isInitialized() && value != pin->getLogicValue()) {
 			if (isRunningBenchTest())
 				return; // let's not mess with bench testing
 			scheduleMsg(logger, "setPin %s %s", msg, value ? "on" : "off");
