@@ -32,7 +32,7 @@ public class FlexibleControls {
         panel.add(new JLabel("Human-readable"));
         panel.add(normalForm);
         panel.add(human2rpm);
-        panel.add(new JLabel("RPM form"));
+        panel.add(new JLabel("RPN form"));
         panel.add(rpnForm);
 
         normalForm.setText("(time_since_boot < 4) | (rpm > 0)");

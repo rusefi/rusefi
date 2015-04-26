@@ -98,7 +98,23 @@ float getLEValue(Engine *engine, calc_stack_t *s, le_action_e action) {
 // todo: that's about bench test mode, wrong header for sure!
 #include "injector_central.h"
 
-static void setFsioPin(const char *indexStr, const char *pinName) {
+static void setFsioInputPin(const char *indexStr, const char *pinName) {
+	int index = atoi(indexStr) - 1;
+	if (index < 0 || index >= LE_COMMAND_COUNT) {
+		scheduleMsg(logger, "invalid index %d", index);
+		return;
+	}
+	brain_pin_e pin = parseBrainPin(pinName);
+	// todo: extract method - code duplication with other 'set_xxx_pin' methods?
+	if (pin == GPIO_INVALID) {
+		scheduleMsg(logger, "invalid pin name [%s]", pinName);
+		return;
+	}
+	boardConfiguration->fsioDigitalInputs[index] = pin;
+	scheduleMsg(logger, "FSIO input pin #%d [%s]", (index + 1), hwPortname(pin));
+}
+
+static void setFsioOutputPin(const char *indexStr, const char *pinName) {
 	int index = atoi(indexStr) - 1;
 	if (index < 0 || index >= LE_COMMAND_COUNT) {
 		scheduleMsg(logger, "invalid index %d", index);
@@ -111,7 +127,7 @@ static void setFsioPin(const char *indexStr, const char *pinName) {
 		return;
 	}
 	boardConfiguration->fsioPins[index] = pin;
-	scheduleMsg(logger, "FSIO pin #%d [%s]", (index + 1), hwPortname(pin));
+	scheduleMsg(logger, "FSIO output pin #%d [%s]", (index + 1), hwPortname(pin));
 }
 #endif
 
@@ -267,6 +283,13 @@ static void showFsioInfo(void) {
 			scheduleMsg(logger, "user property #%d: %f", i + 1, v);
 		}
 	}
+	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
+		brain_pin_e inputPin = boardConfiguration->fsioDigitalInputs[i];
+		if (inputPin != GPIO_UNASSIGNED) {
+			scheduleMsg(logger, "FSIO digital input #%d: %s", i, hwPortname(inputPin));
+		}
+	}
+
 }
 
 /**
@@ -292,7 +315,7 @@ static void setFsioFrequency(int index, int frequency) {
 	scheduleMsg(logger, "Setting FSIO frequency %d on #%d", frequency, index + 1);
 }
 
-static void setUserOutput(const char *indexStr, const char *quotedLine, Engine *engine) {
+static void setFsioExpression(const char *indexStr, const char *quotedLine, Engine *engine) {
 	int index = atoi(indexStr) - 1;
 	if (index < 0 || index >= LE_COMMAND_COUNT) {
 		scheduleMsg(logger, "invalid index %d", index);
@@ -390,20 +413,22 @@ void initFsioImpl(Logging *sharedLogger, Engine *engine) {
 	}
 
 	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
-		brain_pin_e inputPin = boardConfiguration->fsioInputs[i];
+		brain_pin_e inputPin = boardConfiguration->fsioDigitalInputs[i];
 
 		if (inputPin != GPIO_UNASSIGNED) {
 			mySetPadMode2("FSIO input", inputPin, getInputMode(engineConfiguration->fsioInputModes[i]));
-
 		}
 	}
 
 #endif /* EFI_PROD_CODE */
 
-	addConsoleActionSSP("set_fsio", (VoidCharPtrCharPtrVoidPtr) setUserOutput, engine);
-	addConsoleActionSS("set_fsio_pin", (VoidCharPtrCharPtr) setFsioPin);
-	addConsoleActionII("set_fsio_frequency", (VoidIntInt) setFsioFrequency);
+	addConsoleActionSSP("set_fsio_expression", (VoidCharPtrCharPtrVoidPtr) setFsioExpression, engine);
+	addConsoleActionSS("set_fsio_output_pin", (VoidCharPtrCharPtr) setFsioOutputPin);
+	addConsoleActionII("set_fsio_output_frequency", (VoidIntInt) setFsioFrequency);
+
 	addConsoleActionFF("set_fsio_setting", setFsioSetting);
+
+	addConsoleActionSS("set_fsio_input_pin", (VoidCharPtrCharPtr) setFsioInputPin);
 	addConsoleAction("fsioinfo", showFsioInfo);
 
 	addConsoleActionSP("eval", (VoidCharPtrVoidPtr) eval, engine);
