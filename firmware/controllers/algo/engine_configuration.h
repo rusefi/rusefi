@@ -50,6 +50,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F);
 void setMap(fuel_table_t table, float value);
 void setWholeFuelMap(float value DECLARE_ENGINE_PARAMETER_S);
 void setFuelTablesLoadBin(float minValue, float maxValue DECLARE_ENGINE_PARAMETER_S);
+void setWholeIatCorrTimingTable(float value DECLARE_ENGINE_PARAMETER_S);
 void setWholeTimingTable(float value DECLARE_ENGINE_PARAMETER_S);
 void setConstantDwell(float dwellMs DECLARE_ENGINE_PARAMETER_S);
 void printFloatArray(const char *prefix, float array[], int size);

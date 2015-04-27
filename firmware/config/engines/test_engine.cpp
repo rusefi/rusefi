@@ -24,6 +24,7 @@ void setTestEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	triggerConfig->customSkippedToothCount = 0;
 	engineConfiguration->useOnlyFrontForTrigger = true;
 
+	setWholeIatCorrTimingTable(0 PASS_ENGINE_PARAMETER);
 
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
 	setConstantDwell(3 PASS_ENGINE_PARAMETER); // 50% duty cycle @ 5000 rpm
