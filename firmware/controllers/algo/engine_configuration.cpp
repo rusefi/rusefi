@@ -129,13 +129,20 @@ void setFuelTablesLoadBin(float minValue, float maxValue DECLARE_ENGINE_PARAMETE
 	setTableBin2(config->afrLoadBins, FUEL_LOAD_COUNT, minValue, maxValue, 1);
 }
 
-void setWholeTimingTable(float value DECLARE_ENGINE_PARAMETER_S) {
-	// todo: table helper?
+void setTimingMap(ignition_table_t map, float value) {
 	for (int l = 0; l < IGN_LOAD_COUNT; l++) {
 		for (int r = 0; r < IGN_RPM_COUNT; r++) {
-			config->ignitionTable[l][r] = value;
+			map[l][r] = value;
 		}
 	}
+}
+
+void setWholeIatCorrTimingTable(float value DECLARE_ENGINE_PARAMETER_S) {
+	setTimingMap(config->ignitionIatCorrTable, value);
+}
+
+void setWholeTimingTable(float value DECLARE_ENGINE_PARAMETER_S) {
+	setTimingMap(config->ignitionTable, value);
 }
 
 static void initTemperatureCurve(int size, float *bins, float *values) {
