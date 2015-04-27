@@ -46,6 +46,8 @@ static void speedInfo(void) {
 			engineConfiguration->vehicleSpeedCoef,
 			vssCounter,
 			getVehicleSpeed());
+	scheduleMsg(logger, "vss diff %d", vssDiff);
+
 }
 
 void initVehicleSpeed(Logging *l) {

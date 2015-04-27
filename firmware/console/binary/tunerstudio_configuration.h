@@ -85,13 +85,14 @@ typedef struct {
 	unsigned int isMapError : 1; // bit 2
 	unsigned int isIatError : 1; // bit 3
 	unsigned int isAcSwitchEngaged : 1; // bit 4
+	unsigned int isTriggerError : 1; // bit 5
 	int tsConfigVersion;
 	egt_values_s egtValues;
 	float rpmAcceleration;
 	float massAirFlowValue;
 	float veValue;
 	float deltaTps;
-	float unused120;
+	int triggerErrorsCounter;
 	float currentMapAccelDelta;
 	float tpsAccelFuel;
 	int unused3[16];

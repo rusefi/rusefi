@@ -476,6 +476,11 @@ static void setBlinkingPeriod(int value) {
 
 extern efitick_t lastDecodingErrorTime;
 
+static bool_t isTriggerErrorNow() {
+	bool_t justHadError = (getTimeNowNt() - lastDecodingErrorTime) < US2NT(2 * 1000 * 3 * blinkingPeriod);
+	return justHadError || isTriggerDecoderError();
+}
+
 /**
  * this thread has a lower-then-usual stack size so we cannot afford *print* methods here
  */
@@ -500,8 +505,7 @@ static void blinkingThread(void *arg) {
 
 		communicationPin.setValue(1);
 #if EFI_ENGINE_CONTROL || defined(__DOXYGEN__)
-		bool_t justHadError = (getTimeNowNt() - lastDecodingErrorTime) < US2NT(2 * 1000 * delayMs);
-		if (justHadError || isTriggerDecoderError() || isIgnitionTimingError())
+		if (isTriggerErrorNow() || isIgnitionTimingError())
 			warningPin.setValue(1);
 #endif
 		chThdSleepMilliseconds(delayMs);
@@ -563,10 +567,11 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->currentMapAccelDelta = engine->mapAccelEnrichment.getMapEnrichment(PASS_ENGINE_PARAMETER_F) * 100 / getMap();
 	tsOutputChannels->tpsAccelFuel = engine->tpsAccelEnrichment.getTpsEnrichment(PASS_ENGINE_PARAMETER_F);
 	tsOutputChannels->deltaTps = engine->tpsAccelEnrichment.getDelta();
-
+	tsOutputChannels->triggerErrorsCounter = triggerCentral.triggerState.totalTriggerErrorCounter;
 
 	tsOutputChannels->checkEngine = hasErrorCodes();
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
+	tsOutputChannels->isTriggerError = isTriggerErrorNow();
 
 #if EFI_MAX_31855 || defined(__DOXYGEN__)
 	for (int i = 0; i < EGT_CHANNEL_COUNT; i++)
