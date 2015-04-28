@@ -915,6 +915,12 @@ static void setInjectorLag(float value) {
 	engineConfiguration->injector.lag = value;
 }
 
+static void setValue(const char *paramStr, const char *valueStr) {
+
+	float value = atoff(valueStr);
+	engineConfiguration->vehicleSpeedCoef = value;
+}
+
 void initSettings(engine_configuration_s *engineConfiguration) {
 	addConsoleActionP("showconfig", (VoidPtr) doPrintConfiguration, &engine);
 	addConsoleAction("tempinfo", printTemperatureInfo);
@@ -1000,6 +1006,8 @@ void initSettings(engine_configuration_s *engineConfiguration) {
 	addConsoleActionS("set_fuel_pump_pin", setFuelPumpPin);
 	addConsoleActionS("set_ac_pin", setACPin);
 	addConsoleActionS("set_idle_pin", setIdlePin);
+
+	addConsoleActionSS("set", setValue);
 
 	addConsoleAction("mapinfo", printMAPInfo);
 #if HAL_USE_ADC || defined(__DOXYGEN__)

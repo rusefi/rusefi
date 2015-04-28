@@ -542,7 +542,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->logicAnalyzerPins[2] = GPIO_UNASSIGNED;
 	boardConfiguration->logicAnalyzerPins[3] = GPIO_UNASSIGNED;
 	boardConfiguration->vehicleSpeedSensorInputPin = GPIO_UNASSIGNED;
-	engineConfiguration->vehicleSpeedCoef = 100;
+	engineConfiguration->vehicleSpeedCoef = 1.0f;
 
 	boardConfiguration->logicAnalyzerMode[0] = false;
 	boardConfiguration->logicAnalyzerMode[1] = false;
