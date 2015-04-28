@@ -33,6 +33,10 @@
 #include "efifeatures.h"
 #include "rusefi_enums.h"
 
+#define SCHEDULING_TIMER_PRIORITY 4
+
+#define ICU_PRIORITY 3
+
 /*
  * HAL driver system settings.
  */
@@ -138,7 +142,7 @@
 #define STM32_GPT_TIM2_IRQ_PRIORITY         7
 #define STM32_GPT_TIM3_IRQ_PRIORITY         7
 #define STM32_GPT_TIM4_IRQ_PRIORITY         7
-#define STM32_GPT_TIM5_IRQ_PRIORITY         4
+#define STM32_GPT_TIM5_IRQ_PRIORITY         SCHEDULING_TIMER_PRIORITY
 #define STM32_GPT_TIM6_IRQ_PRIORITY         7
 #define STM32_GPT_TIM7_IRQ_PRIORITY         7
 #define STM32_GPT_TIM8_IRQ_PRIORITY         7
@@ -180,13 +184,13 @@
 #define STM32_ICU_USE_TIM8                  FALSE
 #define STM32_ICU_USE_TIM9                  TRUE // wave input
 
-#define STM32_ICU_TIM1_IRQ_PRIORITY         3
-#define STM32_ICU_TIM2_IRQ_PRIORITY         3
-#define STM32_ICU_TIM3_IRQ_PRIORITY         3
-#define STM32_ICU_TIM4_IRQ_PRIORITY         3
-#define STM32_ICU_TIM5_IRQ_PRIORITY         3
-#define STM32_ICU_TIM8_IRQ_PRIORITY         3
-#define STM32_ICU_TIM9_IRQ_PRIORITY         3
+#define STM32_ICU_TIM1_IRQ_PRIORITY         ICU_PRIORITY
+#define STM32_ICU_TIM2_IRQ_PRIORITY         ICU_PRIORITY
+#define STM32_ICU_TIM3_IRQ_PRIORITY         ICU_PRIORITY
+#define STM32_ICU_TIM4_IRQ_PRIORITY         ICU_PRIORITY
+#define STM32_ICU_TIM5_IRQ_PRIORITY         ICU_PRIORITY
+#define STM32_ICU_TIM8_IRQ_PRIORITY         ICU_PRIORITY
+#define STM32_ICU_TIM9_IRQ_PRIORITY         ICU_PRIORITY
 
 /*
  * MAC driver system settings.
