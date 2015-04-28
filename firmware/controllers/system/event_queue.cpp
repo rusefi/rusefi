@@ -19,6 +19,7 @@
 scheduling_s::scheduling_s() {
 	callback = NULL;
 	next = NULL;
+	param = NULL;
 	isScheduled = false;
 }
 
@@ -124,7 +125,9 @@ int EventQueue::executeAll(uint64_t now) {
 		}
 		if (current->momentX <= now) {
 			executionCounter++;
-			LL_DELETE(head, current);
+			efiAssert(head == current, "removing from head", -1);
+			//LL_DELETE(head, current);
+			head = head->next;
 			LL_PREPEND(executionList, current);
 		} else {
 			/**
@@ -147,7 +150,7 @@ int EventQueue::executeAll(uint64_t now) {
 		uint32_t before = GET_TIMESTAMP();
 		current->isScheduled = false;
 		current->callback(current->param);
-		// even with overflow it's safe to substract here
+		// even with overflow it's safe to subtract here
 		lastEventQueueTime = GET_TIMESTAMP() - before;
 		if (lastEventQueueTime > maxEventQueueTime)
 			maxEventQueueTime = lastEventQueueTime;
