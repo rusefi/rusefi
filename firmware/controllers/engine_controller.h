@@ -16,7 +16,7 @@
 
 char * getPinNameByAdcChannel(adc_channel_e hwChannel, char *buffer);
 void initConfigActions(void);
-void initPeriodicEvents(Engine *engine);
-void initEngineContoller(Logging *sharedLogger, Engine *engine);
+void initPeriodicEvents(DECLARE_ENGINE_PARAMETER_F);
+void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S);
 
 #endif /* ENGINE_STATUS_H_ */

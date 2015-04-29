@@ -81,7 +81,8 @@ board_configuration_s *boardConfiguration = &persistentState.persistentConfigura
  * CH_FREQUENCY is the number of system ticks in a second
  */
 
-static VirtualTimer periodicTimer;
+static VirtualTimer periodicSlowTimer;
+static VirtualTimer periodicFastTimer;
 
 static LoggingWithStorage logger("Engine Controller");
 
@@ -203,18 +204,34 @@ static void cylinderCleanupControl(Engine *engine) {
 
 static LocalVersionHolder versionForConfigurationListeners;
 
-static void periodicCallback(Engine *engine);
+static void periodicSlowCallback(Engine *engine);
 
-static void scheduleNextInvocation(void) {
+static void scheduleNextSlowInvocation(void) {
 	// schedule next invocation
 	int period = boardConfiguration->generalPeriodicThreadPeriod;
 	if (period == 0)
 		period = 50; // this might happen while resetting config
-	chVTSetAny(&periodicTimer, period * TICKS_IN_MS, (vtfunc_t) &periodicCallback, engine);
-
+	chVTSetAny(&periodicSlowTimer, period * TICKS_IN_MS, (vtfunc_t) &periodicSlowCallback, engine);
 }
 
-static void periodicCallback(Engine *engine) {
+static void periodicFastCallback(DECLARE_ENGINE_PARAMETER_F) {
+	int rpm = engine->rpmCalculator.rpmValue;
+
+	if (isValidRpm(rpm)) {
+		MAP_sensor_config_s * c = &engineConfiguration->map;
+
+
+		engine->engineState.mapAveragingStart = interpolate2d(rpm, c->samplingAngleBins, c->samplingAngle, MAP_ANGLE_SIZE);
+		engine->engineState.mapAveragingDuration = interpolate2d(rpm, c->samplingWindowBins, c->samplingWindow, MAP_WINDOW_SIZE);
+	} else {
+		engine->engineState.mapAveragingStart = NAN;
+		engine->engineState.mapAveragingDuration = NAN;
+	}
+
+	chVTSetAny(&periodicFastTimer, 20 * TICKS_IN_MS, (vtfunc_t) &periodicFastCallback, engine);
+}
+
+static void periodicSlowCallback(Engine *engine) {
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 64, "lowStckOnEv");
 #if EFI_PROD_CODE
 	/**
@@ -253,11 +270,12 @@ static void periodicCallback(Engine *engine) {
 
 	cylinderCleanupControl(engine);
 
-	scheduleNextInvocation();
+	scheduleNextSlowInvocation();
 }
 
-void initPeriodicEvents(Engine *engine) {
-	scheduleNextInvocation();
+void initPeriodicEvents(DECLARE_ENGINE_PARAMETER_F) {
+	scheduleNextSlowInvocation();
+	periodicFastCallback(PASS_ENGINE_PARAMETER_F);
 }
 
 char * getPinNameByAdcChannel(adc_channel_e hwChannel, char *buffer) {
@@ -457,7 +475,7 @@ static void getKnockInfo(void) {
 	scheduleMsg(&logger, "knock now=%s/ever=%s", boolToString(engine->knockNow), boolToString(engine->knockEver));
 }
 
-void initEngineContoller(Logging *sharedLogger, Engine *engine) {
+void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 	if (hasFirmwareError()) {
 		return;
 	}
@@ -496,7 +514,7 @@ void initEngineContoller(Logging *sharedLogger, Engine *engine) {
 #endif
 
 // multiple issues with this	initMapAdjusterThread();
-	initPeriodicEvents(engine);
+	initPeriodicEvents(PASS_ENGINE_PARAMETER_F);
 
 	chThdCreateStatic(csThreadStack, sizeof(csThreadStack), LOWPRIO, (tfunc_t) csThread, NULL);
 
