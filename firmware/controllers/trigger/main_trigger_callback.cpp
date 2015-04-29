@@ -177,7 +177,7 @@ static ALWAYS_INLINE void handleFuel(uint32_t eventIndex, int rpm DECLARE_ENGINE
 static ALWAYS_INLINE void handleSparkEvent(uint32_t eventIndex, IgnitionEvent *iEvent,
 		int rpm DECLARE_ENGINE_PARAMETER_S) {
 
-	float dwellMs = getSparkDwellMsT(rpm PASS_ENGINE_PARAMETER);
+	float dwellMs = engine->engineState.sparkDwell;
 	if (cisnan(dwellMs) || dwellMs < 0) {
 		firmwareError("invalid dwell: %f at %d", dwellMs, rpm);
 		return;
@@ -256,7 +256,7 @@ static ALWAYS_INLINE void handleSpark(uint32_t eventIndex, int rpm,
 
 			scheduling_s * sDown = &current->signalTimerDown;
 
-			float timeTillIgnitionUs = engine->rpmCalculator.oneDegreeUs * current->sparkPosition.angleOffset;
+			float timeTillIgnitionUs = ENGINE(rpmCalculator.oneDegreeUs) * current->sparkPosition.angleOffset;
 			scheduleTask("spark 2down", sDown, (int) timeTillIgnitionUs, (schfunc_t) &turnPinLow, current->output);
 		}
 	}

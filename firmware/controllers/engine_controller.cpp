@@ -219,14 +219,14 @@ static void periodicFastCallback(DECLARE_ENGINE_PARAMETER_F) {
 
 	if (isValidRpm(rpm)) {
 		MAP_sensor_config_s * c = &engineConfiguration->map;
-
-
 		engine->engineState.mapAveragingStart = interpolate2d(rpm, c->samplingAngleBins, c->samplingAngle, MAP_ANGLE_SIZE);
 		engine->engineState.mapAveragingDuration = interpolate2d(rpm, c->samplingWindowBins, c->samplingWindow, MAP_WINDOW_SIZE);
 	} else {
 		engine->engineState.mapAveragingStart = NAN;
 		engine->engineState.mapAveragingDuration = NAN;
 	}
+
+	engine->engineState.sparkDwell = getSparkDwellMsT(rpm PASS_ENGINE_PARAMETER);
 
 	chVTSetAny(&periodicFastTimer, 20 * TICKS_IN_MS, (vtfunc_t) &periodicFastCallback, engine);
 }

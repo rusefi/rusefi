@@ -405,9 +405,12 @@ static void testRpmCalculator(void) {
 	debugSignalExecutor = true;
 
 	timeNow += 5000; // 5ms
+
+	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_F);
+
 	eth.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_UP PASS_ENGINE_PARAMETER);
 
-	assertEquals(4.5, eth.engine.dwellAngle);
+	assertEqualsM("dwell", 4.5, eth.engine.dwellAngle);
 	assertEqualsM("fuel", 3.03, eth.engine.fuelMs);
 	assertEqualsM("one degree", 111.1111, eth.engine.rpmCalculator.oneDegreeUs);
 	assertEqualsM("size", 6, ilist->size);

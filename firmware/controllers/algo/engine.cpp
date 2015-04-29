@@ -15,6 +15,7 @@
 #include "efiGpio.h"
 #include "trigger_central.h"
 #include "fuel_math.h"
+#include "engine_math.h"
 
 #if EFI_PROD_CODE
 #include "injector_central.h"
@@ -156,6 +157,13 @@ void Engine::watchdog() {
 
 	stopPins();
 #endif
+}
+
+void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_F) {
+	int rpm = rpmCalculator.rpmValue;
+
+	engineState.sparkDwell = getSparkDwellMsT(rpm PASS_ENGINE_PARAMETER);
+	dwellAngle = engineState.sparkDwell / getOneDegreeTimeMs(rpm);
 }
 
 StartupFuelPumping::StartupFuelPumping() {
