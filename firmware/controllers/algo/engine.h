@@ -86,6 +86,15 @@ public:
 
 	angle_t mapAveragingStart;
 	angle_t mapAveragingDuration;
+
+	// spark-related
+	float sparkDwell;
+	float timingAdvance;
+
+	// fuel-related;
+	float iatFuelCorrection;
+	float cltFuelCorrection;
+	float injectorLag;
 };
 
 class RpmCalculator;
@@ -162,6 +171,8 @@ public:
 	 */
 	angle_t dwellAngle;
 	angle_t advance;
+
+	void periodicFastCallback(DECLARE_ENGINE_PARAMETER_F);
 
 	bool_t clutchUpState;
 	bool_t clutchDownState;
