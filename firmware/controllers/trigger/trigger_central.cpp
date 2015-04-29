@@ -229,6 +229,8 @@ extern uint32_t maxEventQueueTime;
 extern uint32_t hipLastExecutionCount;
 extern uint32_t hwSetTimerTime;
 
+extern int maxHowFarOff;
+
 void triggerInfo(Engine *engine) {
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
 
@@ -289,7 +291,7 @@ void triggerInfo(Engine *engine) {
 	scheduleMsg(logger, "primary logic input: %s", hwPortname(boardConfiguration->logicAnalyzerPins[0]));
 	scheduleMsg(logger, "secondary logic input: %s", hwPortname(boardConfiguration->logicAnalyzerPins[1]));
 
-	scheduleMsg(logger, "zeroTestTime=%d", engine->m.zeroTestTime);
+	scheduleMsg(logger, "zeroTestTime=%d maxHowFarOff=%d", engine->m.zeroTestTime, maxHowFarOff);
 
 	scheduleMsg(logger, "advanceLookupTime=%d", engine->m.advanceTime);
 

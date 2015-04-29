@@ -16,6 +16,8 @@
 #include "efitime.h"
 #include "efilib2.h"
 
+int maxHowFarOff = 0;
+
 scheduling_s::scheduling_s() {
 	callback = NULL;
 	next = NULL;
@@ -149,6 +151,8 @@ int EventQueue::executeAll(uint64_t now) {
 	{
 		uint32_t before = GET_TIMESTAMP();
 		current->isScheduled = false;
+		int howFarOff = now - current->momentX;
+		maxHowFarOff = maxI(maxHowFarOff, howFarOff);
 		current->callback(current->param);
 		// even with overflow it's safe to subtract here
 		lastEventQueueTime = GET_TIMESTAMP() - before;
