@@ -83,6 +83,9 @@ public:
 	 */
 	float iat;
 	float clt;
+
+	angle_t mapAveragingStart;
+	angle_t mapAveragingDuration;
 };
 
 class RpmCalculator;

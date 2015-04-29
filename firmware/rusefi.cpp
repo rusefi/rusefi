@@ -215,7 +215,7 @@ void runRusEfi(void) {
 	 * Now let's initialize actual engine control logic
 	 * todo: should we initialize some? most? controllers before hardware?
 	 */
-	initEngineContoller(&sharedLogger, engine);
+	initEngineContoller(&sharedLogger PASS_ENGINE_PARAMETER_F);
 
 #if EFI_PERF_METRICS || defined(__DOXYGEN__)
 	initTimePerfActions(&sharedLogger);
