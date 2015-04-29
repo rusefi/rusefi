@@ -48,6 +48,7 @@
 #include "algo.h"
 #include "LocalVersionHolder.h"
 #include "alternatorController.h"
+#include "fuel_math.h"
 
 #if HAL_USE_ADC || defined(__DOXYGEN__)
 #include "AdcConfiguration.h"
@@ -226,7 +227,7 @@ static void periodicFastCallback(DECLARE_ENGINE_PARAMETER_F) {
 		engine->engineState.mapAveragingDuration = NAN;
 	}
 
-	engine->engineState.sparkDwell = getSparkDwellMsT(rpm PASS_ENGINE_PARAMETER);
+	engine->periodicFastCallback();
 
 	chVTSetAny(&periodicFastTimer, 20 * TICKS_IN_MS, (vtfunc_t) &periodicFastCallback, engine);
 }
