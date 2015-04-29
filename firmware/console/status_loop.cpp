@@ -241,7 +241,7 @@ static void printState(void) {
 
 //	debugFloat(&logger, "table_spark", getAdvance(rpm, getMaf()), 2);
 
-	float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER);
+	float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_F);
 	float baseFuel = getBaseFuel(rpm PASS_ENGINE_PARAMETER);
 	debugFloat(&logger, "fuel_base", baseFuel, 2);
 //	debugFloat(&logger, "fuel_iat", getIatCorrection(getIntakeAirTemperature()), 2);
@@ -249,7 +249,7 @@ static void printState(void) {
 	debugFloat(&logger, "fuel_lag", engine->injectorLagMs, 2);
 	debugFloat(&logger, "fuel", getFuelMs(rpm PASS_ENGINE_PARAMETER), 2);
 
-	debugFloat(&logger, "timing", getAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER), 2);
+	debugFloat(&logger, "timing", engine->engineState.timingAdvance, 2);
 
 //		float map = getMap();
 
@@ -412,7 +412,7 @@ static void showFuelInfo2(float rpm, float engineLoad) {
 
 #if EFI_ENGINE_CONTROL
 static void showFuelInfo(void) {
-	showFuelInfo2((float) getRpmE(engine), getEngineLoadT(PASS_ENGINE_PARAMETER));
+	showFuelInfo2((float) getRpmE(engine), getEngineLoadT(PASS_ENGINE_PARAMETER_F));
 }
 #endif
 
@@ -541,7 +541,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	float coolant = getCoolantTemperature(PASS_ENGINE_PARAMETER_F);
 	float intake = getIntakeAirTemperature(PASS_ENGINE_PARAMETER_F);
 
-	float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER);
+	float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_F);
 	float baseFuelMs = getBaseFuel(rpm PASS_ENGINE_PARAMETER);
 
 	// header
@@ -605,7 +605,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->clutchUpState = engine->clutchUpState;
 	tsOutputChannels->clutchDownState = engine->clutchDownState;
 	tsOutputChannels->tCharge = getTCharge(rpm, tps, coolant, intake);
-	float timing = getAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER);
+	float timing = engine->engineState.timingAdvance;
 	tsOutputChannels->ignitionAdvance = timing > 360 ? timing - 720 : timing;
 	tsOutputChannels->sparkDwell = ENGINE(engineState.sparkDwell);
 	tsOutputChannels->baseFuel = baseFuelMs;

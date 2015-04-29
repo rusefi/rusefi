@@ -165,7 +165,7 @@ void FuelSchedule::addFuelEvents(OutputSignalList *sourceList, injection_mode_e 
 	 * injection phase is scheduled by injection end, so we need to step the angle back
 	 * for the duration of the injection
 	 */
-	float baseAngle = getInjectionAngle(engine->rpmCalculator.rpmValue PASS_ENGINE_PARAMETER)
+	float baseAngle = ENGINE(engineState.injectionAngle)
 			+ engineConfiguration->injectionAngle - MS2US(engine->fuelMs) / engine->rpmCalculator.oneDegreeUs;
 
 	switch (mode) {

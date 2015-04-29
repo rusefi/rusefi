@@ -95,6 +95,8 @@ public:
 	float iatFuelCorrection;
 	float cltFuelCorrection;
 	float injectorLag;
+
+	angle_t injectionAngle;
 };
 
 class RpmCalculator;
