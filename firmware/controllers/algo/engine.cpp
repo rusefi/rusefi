@@ -16,6 +16,7 @@
 #include "trigger_central.h"
 #include "fuel_math.h"
 #include "engine_math.h"
+#include "advance_map.h"
 
 #if EFI_PROD_CODE
 #include "injector_central.h"
@@ -159,14 +160,23 @@ void Engine::watchdog() {
 #endif
 }
 
+/**
+ * The idea of this method is to execute all heavy calculations in a lower-priority thread,
+ * so that trigger event handler/IO scheduler tasks are faster. Th
+ */
 void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_F) {
 	int rpm = rpmCalculator.rpmValue;
+	float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_F);
 
 	engineState.sparkDwell = getSparkDwellMsT(rpm PASS_ENGINE_PARAMETER);
+	// todo: move this field to engineState
 	dwellAngle = engineState.sparkDwell / getOneDegreeTimeMs(rpm);
 
 	engine->engineState.iatFuelCorrection = getIatCorrection(engine->engineState.iat PASS_ENGINE_PARAMETER);
 	engine->engineState.cltFuelCorrection = getCltCorrection(engine->engineState.clt PASS_ENGINE_PARAMETER);
+
+	engine->engineState.injectionAngle = getInjectionAngle(rpm PASS_ENGINE_PARAMETER);
+	engine->engineState.timingAdvance = getAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER);
 }
 
 StartupFuelPumping::StartupFuelPumping() {

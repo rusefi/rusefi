@@ -93,7 +93,7 @@ AccelEnrichmemnt::AccelEnrichmemnt() {
 //static msg_t DiffEnrichmentThread(int param) {
 //	chRegSetThreadName("Diff Enrichment");
 //	while (TRUE) {
-//		instance.updateDiffEnrichment(engineConfiguration, getEngineLoadT(PASS_ENGINE_PARAMETER));
+//		instance.updateDiffEnrichment(engineConfiguration, getEngineLoadT(PASS_ENGINE_PARAMETER_F));
 //		chThdSleepMilliseconds(100);
 //	}
 //#if defined __GNUC__

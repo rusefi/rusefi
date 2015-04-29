@@ -126,8 +126,8 @@ floatms_t getFuelMs(int rpm DECLARE_ENGINE_PARAMETER_S) {
 }
 
 floatms_t getRunningFuel(floatms_t baseFuel, int rpm DECLARE_ENGINE_PARAMETER_S) {
-	float iatCorrection = getIatCorrection(engine->engineState.iat PASS_ENGINE_PARAMETER);
-	float cltCorrection = getCltCorrection(engine->engineState.clt PASS_ENGINE_PARAMETER);
+	float iatCorrection = ENGINE(engineState.iatFuelCorrection);
+	float cltCorrection = ENGINE(engineState.cltFuelCorrection);
 
 #if EFI_ACCEL_ENRICHMENT
 	float accelEnrichment = getAccelEnrichment();
