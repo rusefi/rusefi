@@ -246,7 +246,7 @@ static void printState(void) {
 	debugFloat(&logger, "fuel_base", baseFuel, 2);
 //	debugFloat(&logger, "fuel_iat", getIatCorrection(getIntakeAirTemperature()), 2);
 //	debugFloat(&logger, "fuel_clt", getCltCorrection(getCoolantTemperature()), 2);
-	debugFloat(&logger, "fuel_lag", getInjectorLag(getVBatt(engineConfiguration) PASS_ENGINE_PARAMETER), 2);
+	debugFloat(&logger, "fuel_lag", engine->injectorLagMs, 2);
 	debugFloat(&logger, "fuel", getFuelMs(rpm PASS_ENGINE_PARAMETER), 2);
 
 	debugFloat(&logger, "timing", getAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER), 2);
@@ -395,9 +395,9 @@ static void showFuelInfo2(float rpm, float engineLoad) {
 	scheduleMsg(&logger2, "cranking fuel: %f", getCrankingFuel(PASS_ENGINE_PARAMETER_F));
 
 	if (engine->rpmCalculator.isRunning()) {
-		float iatCorrection = getIatCorrection(getIntakeAirTemperature(PASS_ENGINE_PARAMETER_F) PASS_ENGINE_PARAMETER);
-		float cltCorrection = getCltCorrection(getCoolantTemperature(PASS_ENGINE_PARAMETER_F) PASS_ENGINE_PARAMETER);
-		float injectorLag = getInjectorLag(getVBatt(engineConfiguration) PASS_ENGINE_PARAMETER);
+		float iatCorrection = engine->engineState.iatFuelCorrection;
+		float cltCorrection = engine->engineState.cltFuelCorrection;
+		float injectorLag = engine->injectorLagMs;
 		scheduleMsg(&logger2, "rpm=%f engineLoad=%f", rpm, engineLoad);
 		scheduleMsg(&logger2, "baseFuel=%f", baseFuelMs);
 
@@ -607,7 +607,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->tCharge = getTCharge(rpm, tps, coolant, intake);
 	float timing = getAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER);
 	tsOutputChannels->ignitionAdvance = timing > 360 ? timing - 720 : timing;
-	tsOutputChannels->sparkDwell = getSparkDwellMsT(rpm PASS_ENGINE_PARAMETER);
+	tsOutputChannels->sparkDwell = ENGINE(engineState.sparkDwell);
 	tsOutputChannels->baseFuel = baseFuelMs;
 	tsOutputChannels->pulseWidthMs = getFuelMs(rpm PASS_ENGINE_PARAMETER);
 	tsOutputChannels->crankingFuelMs = getCrankingFuel(PASS_ENGINE_PARAMETER_F);

@@ -164,6 +164,9 @@ void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineState.sparkDwell = getSparkDwellMsT(rpm PASS_ENGINE_PARAMETER);
 	dwellAngle = engineState.sparkDwell / getOneDegreeTimeMs(rpm);
+
+	engine->engineState.iatFuelCorrection = getIatCorrection(engine->engineState.iat PASS_ENGINE_PARAMETER);
+	engine->engineState.cltFuelCorrection = getCltCorrection(engine->engineState.clt PASS_ENGINE_PARAMETER);
 }
 
 StartupFuelPumping::StartupFuelPumping() {
