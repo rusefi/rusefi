@@ -179,20 +179,23 @@ static void mapAveragingCallback(trigger_event_e ckpEventType, uint32_t index DE
 	perRevolution = perRevolutionCounter;
 	perRevolutionCounter = 0;
 
-	MAP_sensor_config_s * config = &engineConfiguration->map;
-
 	angle_t currentAngle = TRIGGER_SHAPE(eventAngles[index]);
 
-	angle_t samplingStart = interpolate2d(rpm, config->samplingAngleBins, config->samplingAngle, MAP_ANGLE_SIZE) - currentAngle;
-	angle_t samplingDuration = interpolate2d(rpm, config->samplingWindowBins, config->samplingWindow, MAP_WINDOW_SIZE);
+	angle_t samplingStart = engine->engineState.mapAveragingStart - currentAngle;
+	fixAngle(samplingStart);
+
+	angle_t samplingDuration = engine->engineState.mapAveragingDuration;
 	if (samplingDuration <= 0) {
 		firmwareError("map sampling angle should be positive");
 		return;
 	}
-	fixAngle(samplingStart);
 
 	angle_t samplingEnd = samplingStart + samplingDuration;
 	fixAngle(samplingEnd);
+	if (cisnan(samplingEnd)) {
+		// value is not yet prepared
+		return;
+	}
 
 	int structIndex = getRevolutionCounter() % 2;
 	// todo: schedule this based on closest trigger event, same as ignition works
