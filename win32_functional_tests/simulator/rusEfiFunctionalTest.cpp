@@ -111,7 +111,7 @@ void rusEfiFunctionalTest(void) {
 	}
 #endif
 
-	initPeriodicEvents(engine);
+	initPeriodicEvents(PASS_ENGINE_PARAMETER_F);
 }
 
 void printPendingMessages(void) {
