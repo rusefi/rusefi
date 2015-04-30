@@ -361,7 +361,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->vbattAdcChannel = EFI_ADC_4;
 	engineConfiguration->cltAdcChannel = EFI_ADC_6;
 	engineConfiguration->iatAdcChannel = EFI_ADC_7;
-	engineConfiguration->mafAdcChannel = EFI_ADC_0;
+	engineConfiguration->mafAdcChannel = EFI_ADC_NONE;
 	engineConfiguration->afr.hwChannel = EFI_ADC_14;
 
 	engineConfiguration->cylinderBore = 87.5;

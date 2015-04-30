@@ -49,6 +49,7 @@
 #include "LocalVersionHolder.h"
 #include "alternatorController.h"
 #include "fuel_math.h"
+#include "settings.h"
 
 #if HAL_USE_ADC || defined(__DOXYGEN__)
 #include "AdcConfiguration.h"
@@ -478,6 +479,11 @@ static void getKnockInfo(void) {
 
 void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 	addConsoleAction("analoginfo", printAnalogInfo);
+	initConfigActions();
+#if EFI_PROD_CODE
+	// todo: this is a mess, remove code duplication with simulator
+	initSettings(engineConfiguration);
+#endif
 
 	if (hasFirmwareError()) {
 		return;
@@ -494,7 +500,6 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 #endif /* EFI_ANALOG_CHART */
 
 	initAlgo(sharedLogger, engineConfiguration);
-	initConfigActions();
 
 #if EFI_WAVE_ANALYZER || defined(__DOXYGEN__)
 	if (engineConfiguration->isWaveAnalyzerEnabled) {
