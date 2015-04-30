@@ -6,7 +6,7 @@ import com.rusefi.io.LinkManager;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class AnalogChartCentral {
+public class SensorSnifferCentral {
 
     private static List<AnalogChartListener> listeners = new CopyOnWriteArrayList<>();
 

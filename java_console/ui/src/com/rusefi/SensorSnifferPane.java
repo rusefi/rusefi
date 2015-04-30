@@ -1,6 +1,7 @@
 package com.rusefi;
 
 import com.rusefi.config.Fields;
+import com.rusefi.ui.RpmLabel;
 import com.rusefi.ui.RpmModel;
 import com.rusefi.ui.config.EnumConfigField;
 import com.rusefi.ui.util.UiUtils;
@@ -23,7 +24,7 @@ import static com.rusefi.ui.util.LocalizedMessages.RESUME;
  * Date: 12/21/13
  * Andrey Belomutskiy (c) 2012-2013
  */
-public class AnalogChartPanel {
+public class SensorSnifferPane {
     private static final String HELP_URL = "http://rusefi.com/wiki/index.php?title=Manual:DevConsole#Analog_Chart";
 
     private final TreeMap<Double, Double> values = new TreeMap<>();
@@ -38,9 +39,8 @@ public class AnalogChartPanel {
 
     private boolean paused = false;
 
-    public AnalogChartPanel() {
-
-        AnalogChartCentral.addListener(new AnalogChartCentral.AnalogChartListener() {
+    public SensorSnifferPane() {
+        SensorSnifferCentral.addListener(new SensorSnifferCentral.AnalogChartListener() {
             @Override
             public void onAnalogChart(final String message) {
                 // this callback is invoked from the connectivity thread, need to handle in AWT for thread-safety
@@ -57,7 +57,7 @@ public class AnalogChartPanel {
             }
         });
 
-        final JPanel upperPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
+        final JPanel upperPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
 
         JButton clearButton = new JButton(CLEAR.getMessage());
         clearButton.setMnemonic('c');
@@ -70,10 +70,9 @@ public class AnalogChartPanel {
         });
         upperPanel.add(clearButton);
 
-        JButton imageButton = new JButton(EngineSnifferPanel.SAVE_IMAGE);
-        imageButton.setMnemonic('s');
-        upperPanel.add(imageButton);
-        imageButton.addActionListener(new ActionListener() {
+        JButton saveImageButton = UiUtils.createSaveImageButton();
+        upperPanel.add(saveImageButton);
+        saveImageButton.addActionListener(new ActionListener() {
                                           @Override
                                           public void actionPerformed(ActionEvent e) {
                                               int rpm = RpmModel.getInstance().getValue();
@@ -86,6 +85,7 @@ public class AnalogChartPanel {
 
         final JButton pauseButton = new JButton(PAUSE.getMessage());
         upperPanel.add(pauseButton);
+        upperPanel.add(new RpmLabel(2).getContent());
 
         upperPanel.add(new URLLabel(EngineSnifferPanel.HELP_TEXT, HELP_URL));
         pauseButton.addActionListener(new
@@ -98,13 +98,13 @@ public class AnalogChartPanel {
                                               }
         );
 
-        upperPanel.setBorder(BorderFactory.createLineBorder(Color.white));
+//        upperPanel.setBorder(BorderFactory.createLineBorder(Color.orange));
         content.add(upperPanel, BorderLayout.NORTH);
 
         content.add(canvas, BorderLayout.CENTER);
 
         final JPanel lowerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
-        lowerPanel.setBorder(BorderFactory.createLineBorder(Color.white));
+        lowerPanel.setBorder(BorderFactory.createLineBorder(Color.cyan));
         content.add(lowerPanel, BorderLayout.SOUTH);
 
         lowerPanel.add(new EnumConfigField(Fields.SENSOR_SNIFFER_MODE, "Mode", "Off", "Trigger", "MAP").getContent());

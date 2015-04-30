@@ -25,20 +25,19 @@ public class MessagesPane {
     private final JButton fontButton = new JButton("Font");
 
     public MessagesPane(final Node config) {
-        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
+        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
 
-        final MessagesPanel messagesPanel = new MessagesPanel(config, true);
-        messagesPanel.loadFont(config);
-        content.setBorder(BorderFactory.createLineBorder(Color.red));
+        final MessagesPanel upperPanel = new MessagesPanel(config, true);
+        upperPanel.loadFont(config);
 
         JPanel middlePanel = new JPanel(new BorderLayout());
-        middlePanel.add(messagesPanel.getMessagesScroll(), BorderLayout.CENTER);
+        middlePanel.add(upperPanel.getMessagesScroll(), BorderLayout.CENTER);
         middlePanel.add(new RecentCommands().getContent(), BorderLayout.EAST);
 
         content.add(middlePanel, BorderLayout.CENTER);
 
-        messagesPanel.getButtonPanel().add(new RpmLabel().getContent());
-        topPanel.add(messagesPanel.getButtonPanel());
+        upperPanel.getButtonPanel().add(new RpmLabel(2).getContent());
+        topPanel.add(upperPanel.getButtonPanel());
         topPanel.add(fontButton);
         topPanel.add(new URLLabel(EngineSnifferPanel.HELP_TEXT, HELP_URL));
         content.add(topPanel, BorderLayout.NORTH);
@@ -51,14 +50,13 @@ public class MessagesPane {
 
         content.add(statsPanel, BorderLayout.SOUTH);
 
-
         fontButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFontChooser fc = new JFontChooser(Launcher.getFrame());
                 fc.setLocationRelativeTo(fontButton);
-                if (fc.showDialog(messagesPanel.getFont()) == JFontChooser.OK_OPTION) {
-                    messagesPanel.setFont(fc.getFont(), config);
+                if (fc.showDialog(upperPanel.getFont()) == JFontChooser.OK_OPTION) {
+                    upperPanel.setFont(fc.getFont(), config);
                 }
             }
         });

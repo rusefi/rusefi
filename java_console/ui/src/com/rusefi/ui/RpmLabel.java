@@ -17,7 +17,10 @@ public class RpmLabel {
     private final JLabel rpmCaption = new JLabel("RPM:");
 
     public RpmLabel() {
-        rpmCaption.setBorder(BorderFactory.createLineBorder(Color.white));
+        this(1);
+    }
+
+    public RpmLabel(int size) {
         rpmValue.setForeground(Color.red);
 
         content.setBorder(BorderFactory.createLineBorder(Color.white));
@@ -45,6 +48,7 @@ public class RpmLabel {
                 }
             }
         });
+        setSize(size);
     }
 
     public JPanel getContent() {

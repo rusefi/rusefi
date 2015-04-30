@@ -3,7 +3,6 @@ package com.rusefi.ui;
 import com.rusefi.FileLog;
 import com.rusefi.models.Range;
 import com.rusefi.models.XYData;
-import com.rusefi.ui.engine.EngineSnifferPanel;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.util.JTextFieldWithWidth;
 import net.ericaro.surfaceplotter.DefaultSurfaceModel;
@@ -37,8 +36,7 @@ public class ChartHelper {
         jsp.getSurface().setYLabel("MAF voltage");
         result.add(BorderLayout.CENTER, jsp);
 
-        JButton saveImageButton = new JButton(EngineSnifferPanel.SAVE_IMAGE);
-        saveImageButton.setMnemonic('s');
+        JButton saveImageButton = UiUtils.createSaveImageButton();
         saveImageButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

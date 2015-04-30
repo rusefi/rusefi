@@ -11,9 +11,9 @@ import java.awt.*;
 
 import static com.romraider.editor.ecu.ECUEditorManager.getECUEditor;
 
-public class TableEditor extends JPanel {
+public class TableEditorPane extends JPanel {
 
-    public TableEditor() {
+    public TableEditorPane() {
         super(new BorderLayout());
         add(new JLabel("Loading tables"), BorderLayout.CENTER);
     }

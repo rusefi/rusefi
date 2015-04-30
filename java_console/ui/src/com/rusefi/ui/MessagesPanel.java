@@ -51,7 +51,7 @@ public class MessagesPanel {
     public MessagesPanel(Node config, boolean listenToCommands) {
         JPanel middlePanel = new JPanel(new BorderLayout());
         middlePanel.add(messagesScroll, BorderLayout.CENTER);
-        buttonPanel.setBorder(BorderFactory.createLineBorder(Color.red));
+//        buttonPanel.setBorder(BorderFactory.createLineBorder(Color.cyan));
 
         StyledDocument d = (StyledDocument) messages.getDocument();
         bold = d.addStyle("StyleName", null);
