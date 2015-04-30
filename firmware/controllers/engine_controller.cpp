@@ -477,6 +477,8 @@ static void getKnockInfo(void) {
 }
 
 void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
+	addConsoleAction("analoginfo", printAnalogInfo);
+
 	if (hasFirmwareError()) {
 		return;
 	}
@@ -573,8 +575,6 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 	if (engineConfiguration->externalKnockSenseAdc != EFI_ADC_NONE) {
 		addConsoleAction("knockinfo", getKnockInfo);
 	}
-
-	addConsoleAction("analoginfo", printAnalogInfo);
 
 	initAccelEnrichment(sharedLogger);
 
