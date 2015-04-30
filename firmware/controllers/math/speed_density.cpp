@@ -81,18 +81,20 @@ EXTERN_ENGINE;
 float getSpeedDensityFuel(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	//int rpm = engine->rpmCalculator->rpm();
 
-	float tps = getTPS(PASS_ENGINE_PARAMETER_F);
-	float coolantC = engine->engineState.clt;
-	float intakeC = engine->engineState.iat;
-	float tChargeK = convertCelsiusToKelvin(getTCharge(rpm, tps, coolantC, intakeC));
-	float map = getMap() + engine->mapAccelEnrichment.getMapEnrichment(PASS_ENGINE_PARAMETER_F);
+	/**
+	 * most of the values are pre-calculated for performance reasons
+	 */
+	float tChargeK = ENGINE(engineState.tChargeK);
+	float map = getMap();
 	/**
 	 * *0.01 because of https://sourceforge.net/p/rusefi/tickets/153/
 	 */
 	float VE = veMap.getValue(map, rpm) * 0.01;
 	float AFR = afrMap.getValue(map, rpm);
 
-	return sdMath(engineConfiguration, VE, map, AFR, tChargeK) * 1000;
+	float adjMap = map + engine->mapAccelEnrichment.getMapEnrichment(PASS_ENGINE_PARAMETER_F);
+
+	return sdMath(engineConfiguration, VE, adjMap, AFR, tChargeK) * 1000;
 }
 
 void setDefaultVETable(DECLARE_ENGINE_PARAMETER_F) {
