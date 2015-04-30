@@ -166,21 +166,21 @@ void FuelSchedule::addFuelEvents(OutputSignalList *sourceList, injection_mode_e 
 	 * for the duration of the injection
 	 */
 	float baseAngle = ENGINE(engineState.injectionAngle)
-			+ engineConfiguration->injectionAngle - MS2US(engine->fuelMs) / engine->rpmCalculator.oneDegreeUs;
+			+ CONFIG(injectionAngle) - MS2US(ENGINE(fuelMs)) / ENGINE(rpmCalculator.oneDegreeUs);
 
 	switch (mode) {
 	case IM_SEQUENTIAL:
-		for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
+		for (int i = 0; i < CONFIG(specs.cylindersCount); i++) {
 			int index = getCylinderId(engineConfiguration->specs.firingOrder, i) - 1;
 			float angle = baseAngle
-					+ (float) engineConfiguration->engineCycle * i / engineConfiguration->specs.cylindersCount;
+					+ (float) CONFIG(engineCycle) * i / engineConfiguration->specs.cylindersCount;
 			registerInjectionEvent(sourceList, &enginePins.injectors[index], angle, false PASS_ENGINE_PARAMETER);
 		}
 		break;
 	case IM_SIMULTANEOUS:
-		for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
+		for (int i = 0; i < CONFIG(specs.cylindersCount); i++) {
 			float angle = baseAngle
-					+ (float) engineConfiguration->engineCycle * i / engineConfiguration->specs.cylindersCount;
+					+ (float) CONFIG(engineCycle) * i / CONFIG(specs.cylindersCount);
 
 			/**
 			 * We do not need injector pin here because we will control all injectors
@@ -190,18 +190,18 @@ void FuelSchedule::addFuelEvents(OutputSignalList *sourceList, injection_mode_e 
 		}
 		break;
 	case IM_BATCH:
-		for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
+		for (int i = 0; i < CONFIG(specs.cylindersCount); i++) {
 			int index = i % (engineConfiguration->specs.cylindersCount / 2);
 			float angle = baseAngle
-					+ i * (float) engineConfiguration->engineCycle / engineConfiguration->specs.cylindersCount;
+					+ i * (float) CONFIG(engineCycle) / engineConfiguration->specs.cylindersCount;
 			registerInjectionEvent(sourceList, &enginePins.injectors[index], angle, false PASS_ENGINE_PARAMETER);
 
-			if (engineConfiguration->twoWireBatch) {
+			if (CONFIG(twoWireBatch)) {
 
 				/**
 				 * also fire the 2nd half of the injectors so that we can implement a batch mode on individual wires
 				 */
-				index = index + (engineConfiguration->specs.cylindersCount / 2);
+				index = index + (CONFIG(specs.cylindersCount) / 2);
 				registerInjectionEvent(sourceList, &enginePins.injectors[index], angle, false PASS_ENGINE_PARAMETER);
 			}
 		}
