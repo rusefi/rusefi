@@ -15,7 +15,7 @@ import java.awt.*;
  */
 public class RpmPanel {
     private final Node config;
-    private RpmLabel rpmLabel = new RpmLabel();
+    private RpmLabel rpmLabel = new RpmLabel(15);
     // that's for CKP signal emulation
     public final WaveInfoPanel wave0 = new WaveInfoPanel(0);
     public final WaveInfoPanel wave1 = new WaveInfoPanel(1);
@@ -23,11 +23,10 @@ public class RpmPanel {
 
     public RpmPanel(Node config) {
         this.config = config;
-        rpmLabel.setSize(15);
     }
 
     public JComponent createRpmPanel() {
-        JPanel controls = createControls();
+//        JPanel leftSideControls = createControls();
 
         JPanel gauges = new JPanel(new GridLayout(2, 3));
         gauges.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -39,29 +38,26 @@ public class RpmPanel {
         gauges.add(SensorGauge.createGauge(Sensor.MAF));
         gauges.add(SensorGauge.createGauge(Sensor.TPS));
 
-        ConnectionWatchdog.start();
-
         JPanel smallMessagePanel = new JPanel(new BorderLayout());
         MessagesPanel mp = new MessagesPanel(config, false);
         smallMessagePanel.add(BorderLayout.NORTH, mp.getButtonPanel());
         smallMessagePanel.add(BorderLayout.CENTER, mp.getMessagesScroll());
 
         JPanel msgPanel = new JPanel(new BorderLayout());
-        msgPanel.add(new AnyCommand(config, false).getContent(), BorderLayout.NORTH);
         msgPanel.add(smallMessagePanel, BorderLayout.CENTER);
 
         JComponent rpmPanel = new JPanel(new BorderLayout());
         rpmPanel.setBorder(BorderFactory.createLineBorder(Color.white));
 
         rpmPanel.add(rpmLabel.getContent(), BorderLayout.NORTH);
-        rpmPanel.add(controls, BorderLayout.WEST);
+//        rpmPanel.add(leftSideControls, BorderLayout.WEST);
         rpmPanel.add(gauges, BorderLayout.CENTER);
         rpmPanel.add(msgPanel, BorderLayout.EAST);
         rpmPanel.add(new WarningPanel().getPanel(), BorderLayout.SOUTH);
 
         return rpmPanel;
     }
-
+/*
     private JPanel createControls() {
         JPanel controls = new JPanel(new MigLayout());
         controls.setBorder(BorderFactory.createLineBorder(Color.red));
@@ -85,5 +81,6 @@ public class RpmPanel {
 
         return controls;
     }
+*/
 }
 

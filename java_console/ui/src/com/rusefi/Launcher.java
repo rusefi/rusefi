@@ -42,7 +42,7 @@ public class Launcher {
     public static int defaultFontSize;
 
     private static Frame staticFrame;
-    TableEditor tableEditor = new TableEditor();
+    private final TableEditorPane tableEditor = new TableEditorPane();
 
     FrameHelper frame = new FrameHelper() {
         @Override
@@ -68,25 +68,24 @@ public class Launcher {
         this.port = port;
         staticFrame = frame.getFrame();
         FileLog.MAIN.start();
+        FileLog.MAIN.logLine("Console " + CONSOLE_VERSION);
 
         getConfig().getRoot().setProperty(PORT_KEY, port);
 
         LinkManager.start(port);
 
-        FileLog.MAIN.logLine("Console " + CONSOLE_VERSION);
-
-
         EngineSnifferPanel engineSnifferPanel = new EngineSnifferPanel(getConfig().getRoot().getChild("digital_sniffer"));
         if (LinkManager.isLogViewerMode(port))
             tabbedPane.add("Log Viewer", new LogViewer(engineSnifferPanel));
+
+        ConnectionWatchdog.start();
 
         RpmPanel mainGauges = new RpmPanel(getConfig().getRoot().getChild("main_gauges"));
         tabbedPane.addTab("Main", mainGauges.createRpmPanel());
         tabbedPane.addTab("Gauges", new GaugesPanel().getContent());
         tabbedPane.addTab("Engine Sniffer", engineSnifferPanel.getPanel());
-        tabbedPane.addTab("Sensor Sniffer", new AnalogChartPanel().getPanel());
+        tabbedPane.addTab("Sensor Sniffer", new SensorSnifferPane().getPanel());
 
-        tabbedPane.addTab("Table Editor", tableEditor);
 
 //        tabbedPane.addTab("LE controls", new FlexibleControls().getPanel());
 
@@ -98,6 +97,7 @@ public class Launcher {
         }
 //        tabbedPane.addTab("live map adjustment", new Live3DReport().getControl());
         tabbedPane.add("Messages", new MessagesPane(getConfig().getRoot().getChild("messages")).getContent());
+        tabbedPane.addTab("Table Editor", tableEditor);
 //        tabbedPane.add("Wizards", new Wizard().createPane());
 
         tabbedPane.add("Settings", new SettingsTab().createPane());

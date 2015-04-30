@@ -35,7 +35,7 @@ public class AverageAnglePanel {
             }
         }, BorderLayout.CENTER);
 
-        AnalogChartCentral.addListener(new AnalogChartCentral.AnalogChartListener() {
+        SensorSnifferCentral.addListener(new SensorSnifferCentral.AnalogChartListener() {
                                            @Override
                                            public void onAnalogChart(String message) {
                                                int rpm = (int) SensorCentral.getInstance().getValue(Sensor.RPM);

@@ -17,6 +17,8 @@ import static com.rusefi.ui.util.LocalizedMessages.RESUME;
  * (c) Andrey Belomutskiy
  */
 public class UiUtils {
+    private static final String SAVE_IMAGE = "save image";
+
     public static void saveImageWithPrompt(String fileName, Component parent, Component component) {
         JFileChooser fc = new JFileChooser();
         FileFilter filter = new FileNameExtensionFilter("PNG files", "png");
@@ -94,5 +96,11 @@ public class UiUtils {
         JPanel result = new JPanel();
         result.add(component);
         return result;
+    }
+
+    public static JButton createSaveImageButton() {
+        JButton imageButton = new JButton(SAVE_IMAGE);
+        imageButton.setMnemonic('s');
+        return imageButton;
     }
 }

@@ -2,6 +2,7 @@ package com.rusefi.ui;
 
 import com.rusefi.core.Sensor;
 import com.rusefi.ui.util.FrameHelper;
+import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.widgets.RpmCommand;
 import com.rusefi.ui.widgets.SensorGauge;
 
@@ -22,6 +23,12 @@ public class GaugesPanel  {
 
     public GaugesPanel() {
 //        Radial radial2 = createRadial("title");
+
+
+        JButton saveImageButton = UiUtils.createSaveImageButton();
+
+        JPanel upperPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
+        upperPanel.add(saveImageButton);
 
         JPanel box2 = new JPanel(new GridLayout(3, 5));
 
@@ -68,8 +75,8 @@ public class GaugesPanel  {
 
         box2.add(SensorGauge.createGauge(Sensor.TIMING));
 
-
         //add(rpmGauge);
+        content.add(upperPanel, BorderLayout.NORTH);
         content.add(box2, BorderLayout.CENTER);
         content.add(new WarningPanel().getPanel(), BorderLayout.SOUTH);
 //        add(new JLabel("fd"), BorderLayout.EAST);
