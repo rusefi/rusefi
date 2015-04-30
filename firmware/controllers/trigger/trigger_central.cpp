@@ -292,6 +292,7 @@ void triggerInfo(Engine *engine) {
 	scheduleMsg(logger, "secondary logic input: %s", hwPortname(boardConfiguration->logicAnalyzerPins[1]));
 
 	scheduleMsg(logger, "zeroTestTime=%d maxHowFarOff=%d", engine->m.zeroTestTime, maxHowFarOff);
+	maxHowFarOff = 0;
 
 	scheduleMsg(logger, "advanceLookupTime=%d", engine->m.advanceTime);
 
