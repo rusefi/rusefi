@@ -96,6 +96,11 @@ public:
 	float cltFuelCorrection;
 	float injectorLag;
 
+	// speed density
+	float tChargeK;
+	float currentVE;
+	float targerAFR;
+
 	angle_t injectionAngle;
 };
 
