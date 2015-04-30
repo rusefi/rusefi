@@ -24,6 +24,9 @@ void setTestEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	triggerConfig->customSkippedToothCount = 0;
 	engineConfiguration->useOnlyFrontForTrigger = true;
 
+	engineConfiguration->mafAdcChannel = EFI_ADC_NONE;
+	engineConfiguration->vbattAdcChannel = EFI_ADC_NONE;
+
 	setWholeIatCorrTimingTable(0 PASS_ENGINE_PARAMETER);
 
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
