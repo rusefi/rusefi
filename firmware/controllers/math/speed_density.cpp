@@ -86,15 +86,10 @@ float getSpeedDensityFuel(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	 */
 	float tChargeK = ENGINE(engineState.tChargeK);
 	float map = getMap();
-	/**
-	 * *0.01 because of https://sourceforge.net/p/rusefi/tickets/153/
-	 */
-	float VE = veMap.getValue(map, rpm) * 0.01;
-	float AFR = afrMap.getValue(map, rpm);
 
 	float adjMap = map + engine->mapAccelEnrichment.getMapEnrichment(PASS_ENGINE_PARAMETER_F);
 
-	return sdMath(engineConfiguration, VE, adjMap, AFR, tChargeK) * 1000;
+	return sdMath(engineConfiguration, ENGINE(engineState.currentVE), adjMap, ENGINE(engineState.targerAFR), tChargeK) * 1000;
 }
 
 void setDefaultVETable(DECLARE_ENGINE_PARAMETER_F) {
