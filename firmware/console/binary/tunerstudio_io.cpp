@@ -12,7 +12,7 @@
 
 EXTERN_ENGINE;
 
-extern Logging tsLogger;
+extern LoggingWithStorage tsLogger;
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 #include "pin_repository.h"
