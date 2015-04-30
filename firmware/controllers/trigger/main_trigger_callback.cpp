@@ -128,7 +128,7 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(InjectionEvent *event, int rp
 		 * 'scheduleOutput' is currently only used for injection, so maybe it should be
 		 * changed into 'scheduleInjection' and unified? todo: think about it.
 		 */
-		OutputSignal *signal = event->actuator;
+		OutputSignal *signal = &event->actuator;
 		efiAssertVoid(signal!=NULL, "signal is NULL");
 		int index = getRevolutionCounter() % 2;
 		scheduling_s * sUp = &signal->signalTimerUp[index];
@@ -138,7 +138,7 @@ static ALWAYS_INLINE void handleFuelInjectionEvent(InjectionEvent *event, int rp
 		scheduleTask("out down", sDown, (int) injectionStartDelayUs + MS2US(injectionDuration), (schfunc_t) &endSimultaniousInjection, engine);
 
 	} else {
-		scheduleOutput(event->actuator, getTimeNowUs(), injectionStartDelayUs, MS2US(injectionDuration));
+		scheduleOutput(&event->actuator, getTimeNowUs(), injectionStartDelayUs, MS2US(injectionDuration));
 	}
 }
 
@@ -293,9 +293,6 @@ static void ignitionCalc(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	engine->advance = -ENGINE(engineState.timingAdvance);
 }
 
-extern OutputSignalList runningInjectonSignals CCM_OPTIONAL;
-extern OutputSignalList crankingInjectonSignals CCM_OPTIONAL;
-
 /**
  * This is the main trigger event handler.
  * Both injection and ignition are controlled from this method.
@@ -394,10 +391,10 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECL
 		engine->m.beforeInjectonSch = GET_TIMESTAMP();
 
 		if (isCrankingR(rpm)) {
-			ENGINE(engineConfiguration2)->crankingInjectionEvents.addFuelEvents(&crankingInjectonSignals,
+			ENGINE(engineConfiguration2)->crankingInjectionEvents.addFuelEvents(
 					engineConfiguration->crankingInjectionMode PASS_ENGINE_PARAMETER);
 		} else {
-			ENGINE(engineConfiguration2)->injectionEvents.addFuelEvents(&runningInjectonSignals,
+			ENGINE(engineConfiguration2)->injectionEvents.addFuelEvents(
 					engineConfiguration->injectionMode PASS_ENGINE_PARAMETER);
 		}
 		engine->m.injectonSchTime = GET_TIMESTAMP() - engine->m.beforeInjectonSch;

@@ -465,26 +465,30 @@ static void adc_callback_slow(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 	}
 }
 
-static void addChannel(adc_channel_e setting, adc_channel_mode_e mode) {
+static void addChannel(const char *name, adc_channel_e setting, adc_channel_mode_e mode) {
 	if (setting == EFI_ADC_NONE) {
 		return;
 	}
+	if (adcHwChannelEnabled[setting] != ADC_OFF) {
+		firmwareError("ADC mapping error: input for %s already used?", name);
+	}
+
 	adcHwChannelEnabled[setting] = mode;
 }
 
 static void configureInputs(void) {
 	memset(adcHwChannelEnabled, 0, sizeof(adcHwChannelEnabled));
 
-	addChannel(engineConfiguration->tpsAdcChannel, ADC_FAST);
-	addChannel(engineConfiguration->map.sensor.hwChannel, ADC_FAST);
-	addChannel(engineConfiguration->mafAdcChannel, ADC_FAST);
-	addChannel(engineConfiguration->hipOutputChannel, ADC_FAST);
+	addChannel("TPS", engineConfiguration->tpsAdcChannel, ADC_FAST);
+	addChannel("MAP", engineConfiguration->map.sensor.hwChannel, ADC_FAST);
+	addChannel("MAF", engineConfiguration->mafAdcChannel, ADC_FAST);
+	addChannel("hip", engineConfiguration->hipOutputChannel, ADC_FAST);
 
-	addChannel(engineConfiguration->vbattAdcChannel, ADC_SLOW);
-	addChannel(engineConfiguration->cltAdcChannel, ADC_SLOW);
-	addChannel(engineConfiguration->iatAdcChannel, ADC_SLOW);
-	addChannel(engineConfiguration->afr.hwChannel, ADC_SLOW);
-	addChannel(engineConfiguration->acSwitchAdc, ADC_SLOW);
+	addChannel("VBatt", engineConfiguration->vbattAdcChannel, ADC_SLOW);
+	addChannel("CLT", engineConfiguration->cltAdcChannel, ADC_SLOW);
+	addChannel("IAT", engineConfiguration->iatAdcChannel, ADC_SLOW);
+	addChannel("AFR", engineConfiguration->afr.hwChannel, ADC_SLOW);
+	addChannel("AC", engineConfiguration->acSwitchAdc, ADC_SLOW);
 }
 
 void initAdcInputs(bool boardTestMode) {

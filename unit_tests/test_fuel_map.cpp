@@ -186,8 +186,6 @@ void testAngleResolver(void) {
 
 	assertEqualsM("shape size", 10, ts->getSize());
 
-	OutputSignalList list;
-
 	ae.reset();
 	printf("*************************************************** testAngleResolver 0\r\n");
 	findTriggerPosition(&ae.add()->injectionStart, -122 PASS_ENGINE_PARAMETER);

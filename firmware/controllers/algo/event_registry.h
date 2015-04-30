@@ -33,7 +33,7 @@ public:
 class InjectionEvent {
 public:
 	event_trigger_position_s injectionStart;
-	OutputSignal *actuator;
+	OutputSignal actuator;
 	/**
 	 * This is a performance optimization - it's more efficient to handle all
 	 * injectors together if that's the case
@@ -54,7 +54,9 @@ public:
 	char *name;
 };
 
-typedef ArrayList<InjectionEvent, MAX_EVENT_COUNT> ActuatorEventList;
+#define OUTPUT_SIGNAL_MAX_SIZE2 45
+
+typedef ArrayList<InjectionEvent, OUTPUT_SIGNAL_MAX_SIZE2> ActuatorEventList;
 
 typedef ArrayList<IgnitionEvent, MAX_EVENT_COUNT> IgnitionEventList;
 

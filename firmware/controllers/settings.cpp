@@ -383,7 +383,10 @@ static void printThermistor(const char *msg, Thermistor *thermistor) {
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 static void printMAPInfo(void) {
 #if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
-	scheduleMsg(&logger, "map type=%d raw=%f MAP=%f", engineConfiguration->map.sensor.type, getRawMap(), getMap());
+	scheduleMsg(&logger, "map type=%d/%s raw=%f MAP=%f", engineConfiguration->map.sensor.type,
+			getAir_pressure_sensor_type_e(engineConfiguration->map.sensor.type),
+
+			getRawMap(), getMap());
 	if (engineConfiguration->map.sensor.type == MT_CUSTOM) {
 		scheduleMsg(&logger, "at0=%f at5=%f", engineConfiguration->map.sensor.valueAt0,
 				engineConfiguration->map.sensor.valueAt5);
