@@ -168,7 +168,7 @@ void FuelSchedule::addFuelEvents(injection_mode_e mode DECLARE_ENGINE_PARAMETER_
 		for (int i = 0; i < CONFIG(specs.cylindersCount); i++) {
 			int index = getCylinderId(engineConfiguration->specs.firingOrder, i) - 1;
 			float angle = baseAngle
-					+ (float) CONFIG(engineCycle) * i / engineConfiguration->specs.cylindersCount;
+					+ (float) CONFIG(engineCycle) * i / CONFIG(specs.cylindersCount);
 			registerInjectionEvent(&enginePins.injectors[index], angle, false PASS_ENGINE_PARAMETER);
 		}
 		break;
@@ -188,7 +188,7 @@ void FuelSchedule::addFuelEvents(injection_mode_e mode DECLARE_ENGINE_PARAMETER_
 		for (int i = 0; i < CONFIG(specs.cylindersCount); i++) {
 			int index = i % (engineConfiguration->specs.cylindersCount / 2);
 			float angle = baseAngle
-					+ i * (float) CONFIG(engineCycle) / engineConfiguration->specs.cylindersCount;
+					+ i * (float) CONFIG(engineCycle) / CONFIG(specs.cylindersCount);
 			registerInjectionEvent(&enginePins.injectors[index], angle, false PASS_ENGINE_PARAMETER);
 
 			if (CONFIG(twoWireBatch)) {
