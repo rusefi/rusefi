@@ -18,7 +18,7 @@ int getRemainingStack(Thread *otp);
 void prvGetRegistersFromStack(uint32_t *pulFaultStackAddress);
 }
 
-extern stkalign_t __main_stack_base__;
+extern uint32_t __main_stack_base__;
 
 #define GET_CFSR() (*((volatile uint32_t *) (0xE000ED28)))
 

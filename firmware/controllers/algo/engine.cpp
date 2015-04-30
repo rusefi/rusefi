@@ -17,6 +17,7 @@
 #include "fuel_math.h"
 #include "engine_math.h"
 #include "advance_map.h"
+#include "speed_density.h"
 
 #if EFI_PROD_CODE
 #include "injector_central.h"
@@ -160,6 +161,9 @@ void Engine::watchdog() {
 #endif
 }
 
+extern fuel_Map3D_t veMap;
+extern fuel_Map3D_t afrMap;
+
 /**
  * The idea of this method is to execute all heavy calculations in a lower-priority thread,
  * so that trigger event handler/IO scheduler tasks are faster. Th
@@ -177,6 +181,21 @@ void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_F) {
 
 	engine->engineState.injectionAngle = getInjectionAngle(rpm PASS_ENGINE_PARAMETER);
 	engine->engineState.timingAdvance = getAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER);
+
+	if (engineConfiguration->algorithm == LM_SPEED_DENSITY) {
+		float coolantC = ENGINE(engineState.clt);
+		float intakeC = ENGINE(engineState.iat);
+		float tps = getTPS(PASS_ENGINE_PARAMETER_F);
+		engine->engineState.tChargeK = convertCelsiusToKelvin(getTCharge(rpm, tps, coolantC, intakeC));
+		float map = getMap();
+
+		/**
+		 * *0.01 because of https://sourceforge.net/p/rusefi/tickets/153/
+		 */
+		engine->engineState.currentVE = veMap.getValue(map, rpm) * 0.01;
+		engine->engineState.targerAFR = afrMap.getValue(map, rpm);
+	}
+
 }
 
 StartupFuelPumping::StartupFuelPumping() {

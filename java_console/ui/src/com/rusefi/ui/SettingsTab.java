@@ -15,7 +15,7 @@ public class SettingsTab {
         panel.add(UiUtils.wrap(new EnumConfigField(Fields.triggerType, "trigger type").getContent()));
         panel.add(UiUtils.wrap(new EnumConfigField(Fields.triggerInputPins1, "trigger #1 input").getContent()));
         panel.add(UiUtils.wrap(new EnumConfigField(Fields.triggerInputPins2, "trigger #2 input").getContent()));
-        panel.add(UiUtils.wrap(new EnumConfigField(Fields.triggerInputPins3, "trigger #3 input").getContent()));
+//        panel.add(UiUtils.wrap(new EnumConfigField(Fields.triggerInputPins3, "trigger #3 input").getContent()));
 
         panel.add(UiUtils.wrap(RecentCommands.createButton(new AtomicBoolean(), "writeconfig")));
     }

@@ -169,10 +169,10 @@ static void endAveraging(void *arg) {
 static void mapAveragingCallback(trigger_event_e ckpEventType, uint32_t index DECLARE_ENGINE_PARAMETER_S) {
 	// this callback is invoked on interrupt thread
 	engine->m.beforeMapAveragingCb = GET_TIMESTAMP();
-	if (index != engineConfiguration->mapAveragingSchedulingAtIndex)
+	if (index != CONFIG(mapAveragingSchedulingAtIndex))
 		return;
 
-	int rpm = engine->rpmCalculator.rpmValue;
+	int rpm = ENGINE(rpmCalculator.rpmValue);
 	if (!isValidRpm(rpm))
 		return;
 
@@ -181,10 +181,10 @@ static void mapAveragingCallback(trigger_event_e ckpEventType, uint32_t index DE
 
 	angle_t currentAngle = TRIGGER_SHAPE(eventAngles[index]);
 
-	angle_t samplingStart = engine->engineState.mapAveragingStart - currentAngle;
+	angle_t samplingStart = ENGINE(engineState.mapAveragingStart) - currentAngle;
 	fixAngle(samplingStart);
 
-	angle_t samplingDuration = engine->engineState.mapAveragingDuration;
+	angle_t samplingDuration = ENGINE(engineState.mapAveragingDuration);
 	if (samplingDuration <= 0) {
 		firmwareError("map sampling angle should be positive");
 		return;
