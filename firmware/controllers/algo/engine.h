@@ -19,10 +19,6 @@
 #include "listener_array.h"
 #include "accel_enrichment.h"
 
-#define OUTPUT_SIGNAL_MAX_SIZE 45
-
-typedef ArrayList<OutputSignal, OUTPUT_SIGNAL_MAX_SIZE> OutputSignalList;
-
 /**
  * This class knows about when to inject fuel
  */
@@ -34,7 +30,7 @@ public:
 	/**
 	 * this method schedules all fuel events for an engine cycle
 	 */
-	void addFuelEvents(OutputSignalList *sourceList, injection_mode_e mode DECLARE_ENGINE_PARAMETER_S);
+	void addFuelEvents(injection_mode_e mode DECLARE_ENGINE_PARAMETER_S);
 
 	/**
 	 * This is a performance optimization for https://sourceforge.net/p/rusefi/tickets/64/
@@ -47,7 +43,7 @@ public:
 	int eventsCount;
 private:
 	void clear();
-	void registerInjectionEvent(OutputSignalList *sourceList, NamedOutputPin *output, float angle, bool_t isSimultanious DECLARE_ENGINE_PARAMETER_S);
+	void registerInjectionEvent(NamedOutputPin *output, float angle, bool_t isSimultanious DECLARE_ENGINE_PARAMETER_S);
 };
 
 /**
