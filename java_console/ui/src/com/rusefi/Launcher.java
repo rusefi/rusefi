@@ -80,9 +80,7 @@ public class Launcher {
 
         ConnectionWatchdog.start();
 
-        RpmPanel mainGauges = new RpmPanel(getConfig().getRoot().getChild("main_gauges"));
-        tabbedPane.addTab("Main", mainGauges.createRpmPanel());
-        tabbedPane.addTab("Gauges", new GaugesPanel().getContent());
+        tabbedPane.addTab("Gauges", new GaugesPanel(getConfig().getRoot().getChild("gauges")).getContent());
         tabbedPane.addTab("Engine Sniffer", engineSnifferPanel.getPanel());
         tabbedPane.addTab("Sensor Sniffer", new SensorSnifferPane().getPanel());
 

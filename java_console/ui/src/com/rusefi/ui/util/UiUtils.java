@@ -19,15 +19,15 @@ import static com.rusefi.ui.util.LocalizedMessages.RESUME;
 public class UiUtils {
     private static final String SAVE_IMAGE = "save image";
 
-    public static void saveImageWithPrompt(String fileName, Component parent, Component component) {
+    public static void saveImageWithPrompt(String fileName, Component parentForDialog, Component content) {
         JFileChooser fc = new JFileChooser();
         FileFilter filter = new FileNameExtensionFilter("PNG files", "png");
         fc.setFileFilter(filter);
         fc.addChoosableFileFilter(filter);
         fc.setSelectedFile(new File(fileName));
-        if (fc.showSaveDialog(parent) == JFileChooser.APPROVE_OPTION) {
+        if (fc.showSaveDialog(parentForDialog) == JFileChooser.APPROVE_OPTION) {
             fileName = fc.getSelectedFile().getAbsolutePath();
-            UiUtils.saveImage(fileName, component);
+            UiUtils.saveImage(fileName, content);
         }
     }
 
