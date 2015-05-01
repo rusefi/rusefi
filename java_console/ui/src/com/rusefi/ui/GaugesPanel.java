@@ -19,6 +19,36 @@ import java.awt.event.ActionListener;
  * (c) Andrey Belomutskiy
  */
 public class GaugesPanel {
+    private static final Sensor[] DEFAULT_LAYOUT = {
+            Sensor.RPM,
+            Sensor.MAF,
+            Sensor.CLT,
+            Sensor.IAT,
+            Sensor.TPS,
+            Sensor.MAP,
+            Sensor.MAP_RAW,
+            Sensor.T_CHARGE,
+            Sensor.DWELL1,
+            Sensor.DWELL0,
+            Sensor.DUTY0,
+            Sensor.ADVANCE0,
+            Sensor.FUEL,
+            Sensor.BARO,
+            Sensor.FUEL_CLT,
+            Sensor.FUEL_IAT,
+            Sensor.FUEL_LAG,
+            Sensor.AFR,
+            Sensor.DEFAULT_FUEL,
+            Sensor.TIMING,
+            Sensor.VREF
+
+    };
+
+    static {
+        if (DEFAULT_LAYOUT.length != SizeSelectorPanel.WIDTH * SizeSelectorPanel.HEIGHT)
+            throw new IllegalStateException("Not expected " + DEFAULT_LAYOUT.length);
+    }
+
     private final JPanel content = new JPanel(new BorderLayout());
     private final JPanel box2 = new JPanel(new GridLayout(3, 5));
 
@@ -95,7 +125,6 @@ public class GaugesPanel {
         upperPanel.add(leftUpperPanel, BorderLayout.CENTER);
         upperPanel.add(rightUpperPanel, BorderLayout.EAST);
 
-        box2.add(createControls());
         box2.add(SensorGauge.createGauge(Sensor.RPM));
         box2.add(SensorGauge.createGauge(Sensor.MAF));
         box2.add(SensorGauge.createGauge(Sensor.CLT));
@@ -103,39 +132,18 @@ public class GaugesPanel {
         box2.add(SensorGauge.createGauge(Sensor.TPS));
         box2.add(SensorGauge.createGauge(Sensor.MAP));
         box2.add(SensorGauge.createGauge(Sensor.MAP_RAW));
-
         box2.add(SensorGauge.createGauge(Sensor.T_CHARGE));
-
-
         box2.add(SensorGauge.createGauge(Sensor.DWELL1));
         box2.add(SensorGauge.createGauge(Sensor.DWELL0));
         box2.add(SensorGauge.createGauge(Sensor.DUTY0));
         box2.add(SensorGauge.createGauge(Sensor.ADVANCE0));
         box2.add(SensorGauge.createGauge(Sensor.FUEL));
         box2.add(SensorGauge.createGauge(Sensor.BARO));
-        //box2.add(createGauge(Sensor.FUEL_BASE));
         box2.add(SensorGauge.createGauge(Sensor.FUEL_CLT));
         box2.add(SensorGauge.createGauge(Sensor.FUEL_IAT));
         box2.add(SensorGauge.createGauge(Sensor.FUEL_LAG));
-
-//        box2.add(createGauge(Sensor.TABLE_SPARK));
-
-
-//        box2.add(createGauge(Sensor.DUTY1));
-//        box2.add(createGauge(Sensor.ADVANCE1));
-        //box2.add(createGauge(Sensor.INTAKE_AIR_WIDTH));
-//        box2.add(createGauge(Sensor.COOLANT_WIDTH));
-
-//        box2.add(createGauge(Sensor.VREF, PotCommand.VOLTAGE_CORRECTION));
-//        box2.add(createGauge(Sensor.VREF_WIDTH));
-
-//        box2.add(createGauge(Sensor.ADC_FAST));
-//        box2.add(createGauge(Sensor.ADC_FAST_AVG));
-
-
         box2.add(SensorGauge.createGauge(Sensor.AFR));
         box2.add(SensorGauge.createGauge(Sensor.DEFAULT_FUEL));
-
         box2.add(SensorGauge.createGauge(Sensor.TIMING));
 
         JPanel middlePanel = new JPanel(new BorderLayout());
@@ -158,11 +166,5 @@ public class GaugesPanel {
 
     public JComponent getContent() {
         return content;
-    }
-
-    private Component createControls() {
-        JPanel controls = new JPanel(new GridLayout(2, 1));
-        controls.add(new RpmCommand());
-        return controls;
     }
 }
