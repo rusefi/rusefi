@@ -3,10 +3,8 @@ package com.rusefi.ui;
 import com.rusefi.FileLog;
 import com.rusefi.core.Sensor;
 import com.rusefi.ui.storage.Node;
-import com.rusefi.ui.util.FrameHelper;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.widgets.PopupMenuButton;
-import com.rusefi.ui.widgets.RpmCommand;
 import com.rusefi.ui.widgets.SensorGauge;
 
 import javax.swing.*;
@@ -43,6 +41,8 @@ public class GaugesPanel {
             Sensor.VREF
 
     };
+    private static final String GAUGES_ROWS = "gauges_rows";
+    private static final String GAUGES_COLUMNS = "gauges_cols";
 
     static {
         if (DEFAULT_LAYOUT.length != SizeSelectorPanel.WIDTH * SizeSelectorPanel.HEIGHT)
@@ -50,7 +50,8 @@ public class GaugesPanel {
     }
 
     private final JPanel content = new JPanel(new BorderLayout());
-    private final JPanel box2 = new JPanel(new GridLayout(3, 5));
+    private final JPanel gauges = new JPanel(new GridLayout(3, 5));
+    private final Node config;
 
     private boolean showRpmPanel = true;
     private boolean showMessagesPanel = true;
@@ -58,6 +59,7 @@ public class GaugesPanel {
     private JPanel smallMessagePanel = new JPanel(new BorderLayout());
 
     public GaugesPanel(Node config) {
+        this.config = config;
 //        Radial radial2 = createRadial("title");
 
         MessagesPanel mp = new MessagesPanel(config, false);
@@ -70,7 +72,7 @@ public class GaugesPanel {
             public void actionPerformed(ActionEvent e) {
                 String fileName = FileLog.getDate() + "_gauges.png";
 
-                UiUtils.saveImageWithPrompt(fileName, content, box2);
+                UiUtils.saveImageWithPrompt(fileName, content, gauges);
             }
         });
 
@@ -82,6 +84,7 @@ public class GaugesPanel {
             @Override
             public void onSelected(int row, int column) {
                 System.out.println("new size " + row + "/" + column);
+                applySize(row, column);
             }
         }));
 
@@ -125,29 +128,13 @@ public class GaugesPanel {
         upperPanel.add(leftUpperPanel, BorderLayout.CENTER);
         upperPanel.add(rightUpperPanel, BorderLayout.EAST);
 
-        box2.add(SensorGauge.createGauge(Sensor.RPM));
-        box2.add(SensorGauge.createGauge(Sensor.MAF));
-        box2.add(SensorGauge.createGauge(Sensor.CLT));
-        box2.add(SensorGauge.createGauge(Sensor.IAT));
-        box2.add(SensorGauge.createGauge(Sensor.TPS));
-        box2.add(SensorGauge.createGauge(Sensor.MAP));
-        box2.add(SensorGauge.createGauge(Sensor.MAP_RAW));
-        box2.add(SensorGauge.createGauge(Sensor.T_CHARGE));
-        box2.add(SensorGauge.createGauge(Sensor.DWELL1));
-        box2.add(SensorGauge.createGauge(Sensor.DWELL0));
-        box2.add(SensorGauge.createGauge(Sensor.DUTY0));
-        box2.add(SensorGauge.createGauge(Sensor.ADVANCE0));
-        box2.add(SensorGauge.createGauge(Sensor.FUEL));
-        box2.add(SensorGauge.createGauge(Sensor.BARO));
-        box2.add(SensorGauge.createGauge(Sensor.FUEL_CLT));
-        box2.add(SensorGauge.createGauge(Sensor.FUEL_IAT));
-        box2.add(SensorGauge.createGauge(Sensor.FUEL_LAG));
-        box2.add(SensorGauge.createGauge(Sensor.AFR));
-        box2.add(SensorGauge.createGauge(Sensor.DEFAULT_FUEL));
-        box2.add(SensorGauge.createGauge(Sensor.TIMING));
+        int rows = config.getIntProperty(GAUGES_ROWS, SizeSelectorPanel.HEIGHT);
+        int columns = config.getIntProperty(GAUGES_COLUMNS, SizeSelectorPanel.WIDTH);
+
+        applySize(rows, columns);
 
         JPanel middlePanel = new JPanel(new BorderLayout());
-        middlePanel.add(box2, BorderLayout.CENTER);
+        middlePanel.add(gauges, BorderLayout.CENTER);
         middlePanel.add(lowerRpmPanel, BorderLayout.SOUTH);
 
         //add(rpmGauge);
@@ -159,9 +146,31 @@ public class GaugesPanel {
         applyShowFlags();
     }
 
+    private void applySize(int rows, int columns) {
+        gauges.setLayout(new GridLayout(rows, columns));
+        gauges.removeAll();
+
+        for (int i = 0; i < rows * columns; i++) {
+            String gaugeName = config.getProperty("gauge_" + i, DEFAULT_LAYOUT[i].name());
+            Sensor sensor;
+            try {
+                sensor = Sensor.valueOf(Sensor.class, gaugeName);
+            } catch (IllegalArgumentException e) {
+                sensor = DEFAULT_LAYOUT[i];
+            }
+            gauges.add(SensorGauge.createGauge(sensor));
+        }
+
+        saveConfig(rows, columns);
+    }
+
+    private void saveConfig(int rows, int columns) {
+        config.setProperty(GAUGES_ROWS, rows);
+        config.setProperty(GAUGES_COLUMNS, columns);
+    }
+
     private void applyShowFlags() {
         lowerRpmPanel.setVisible(showRpmPanel);
-
     }
 
     public JComponent getContent() {

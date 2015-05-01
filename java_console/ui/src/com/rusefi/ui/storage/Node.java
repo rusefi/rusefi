@@ -48,9 +48,9 @@ public class Node {
         config.put(key, "" + value);
     }
 
-    public String getProperty(String key, String s) {
+    public String getProperty(String key, String defaultValue) {
         String value = (String) config.get(key);
-        return value == null ? s : value;
+        return value == null ? defaultValue : value;
     }
 
     public String getPrefix() {
