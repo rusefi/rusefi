@@ -42,8 +42,8 @@ public class SizeSelectorPanel extends JPanel {
             }
         };
 //        addMouseListener(listener);
-        for (int r = 0; r < HEIGHT; r++) {
-            for (int c = 0; c < WIDTH; c++) {
+        for (int r = 1; r <= HEIGHT; r++) {
+            for (int c = 1; c <= WIDTH; c++) {
                 Element e = new Element(r, c);
                 e.addMouseListener(listener);
                 elements.add(e);
