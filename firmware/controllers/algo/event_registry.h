@@ -56,7 +56,7 @@ public:
 
 #define OUTPUT_SIGNAL_MAX_SIZE2 45
 
-typedef ArrayList<InjectionEvent, OUTPUT_SIGNAL_MAX_SIZE2> ActuatorEventList;
+typedef ArrayList<InjectionEvent, OUTPUT_SIGNAL_MAX_SIZE2> InjectionEventList;
 
 typedef ArrayList<IgnitionEvent, MAX_EVENT_COUNT> IgnitionEventList;
 

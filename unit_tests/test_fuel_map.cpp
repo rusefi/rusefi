@@ -163,7 +163,7 @@ static void confgiureFordAspireTriggerShape(TriggerShape * s) {
 	assertEqualsM("expecting 1", 1, s->wave.waveIndertionAngle(63.747 / 720.0, s->getSize()));
 }
 
-static ActuatorEventList ae;
+static InjectionEventList ae;
 
 void testAngleResolver(void) {
 	printf("*************************************************** testAngleResolver\r\n");
