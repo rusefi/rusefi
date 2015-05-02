@@ -97,6 +97,8 @@ public:
 	float currentVE;
 	float targerAFR;
 
+	float baseTableFuel;
+
 	angle_t injectionAngle;
 };
 
