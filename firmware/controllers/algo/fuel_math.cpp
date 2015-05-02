@@ -81,8 +81,7 @@ floatms_t getBaseFuel(int rpm DECLARE_ENGINE_PARAMETER_S) {
 		float maf = getRealMaf(PASS_ENGINE_PARAMETER_F) + engine->mapAccelEnrichment.getMapEnrichment(PASS_ENGINE_PARAMETER_F);
 		return tpsAccelEnrich + getRealMafFuel(maf, rpm PASS_ENGINE_PARAMETER);
 	} else {
-		float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_F);
-		return tpsAccelEnrich + getBaseTableFuel(engineConfiguration, rpm, engineLoad);
+		return tpsAccelEnrich + engine->engineState.baseTableFuel;
 	}
 }
 
