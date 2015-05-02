@@ -230,6 +230,7 @@ extern uint32_t hipLastExecutionCount;
 extern uint32_t hwSetTimerTime;
 
 extern int maxHowFarOff;
+extern uint32_t *cyccnt;
 
 void triggerInfo(Engine *engine) {
 #if (EFI_PROD_CODE || EFI_SIMULATOR) || defined(__DOXYGEN__)
@@ -294,7 +295,9 @@ void triggerInfo(Engine *engine) {
 	scheduleMsg(logger, "zeroTestTime=%d maxHowFarOff=%d", engine->m.zeroTestTime, maxHowFarOff);
 	maxHowFarOff = 0;
 
-	scheduleMsg(logger, "advanceLookupTime=%d", engine->m.advanceLookupTime);
+	scheduleMsg(logger, "advanceLookupTime=%d t=%d fuelCalcTime=%d",
+			engine->m.advanceLookupTime, *cyccnt,
+			engine->m.fuelCalcTime);
 
 	scheduleMsg(logger,
 			"ignitionMathTime=%d ignitionSchTime=%d injectonSchTime=%d",

@@ -194,8 +194,10 @@ void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_F) {
 		 */
 		engine->engineState.currentVE = veMap.getValue(map, rpm) * 0.01;
 		engine->engineState.targerAFR = afrMap.getValue(map, rpm);
+	} else {
+		float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_F);
+		engine->engineState.baseTableFuel = getBaseTableFuel(engineConfiguration, rpm, engineLoad);
 	}
-
 }
 
 StartupFuelPumping::StartupFuelPumping() {

@@ -22,6 +22,9 @@
  */
 
 #include "main.h"
+#if EFI_PROD_CODE
+#include <nvic.h>
+#endif
 
 #if !EFI_PROD_CODE && !EFI_SIMULATOR
 
@@ -292,6 +295,13 @@ static void ignitionCalc(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	// todo: eliminate this field
 	engine->advance = -ENGINE(engineState.timingAdvance);
 }
+
+#if EFI_PROD_CODE
+/**
+ * this field is used as an Expression in IAR debugger
+ */
+uint32_t *cyccnt = (uint32_t*)&DWT_CYCCNT;
+#endif
 
 /**
  * This is the main trigger event handler.
