@@ -43,6 +43,8 @@ public class GaugesPanel {
     };
     private static final String GAUGES_ROWS = "gauges_rows";
     private static final String GAUGES_COLUMNS = "gauges_cols";
+    public static final String SHOW_MESSAGES = "show_messages";
+    public static final String SHOW_RPM = "show_rpm";
 
     static {
         if (DEFAULT_LAYOUT.length != SizeSelectorPanel.WIDTH * SizeSelectorPanel.HEIGHT)
@@ -58,9 +60,10 @@ public class GaugesPanel {
     private JPanel lowerRpmPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
     private JPanel smallMessagePanel = new JPanel(new BorderLayout());
 
-    public GaugesPanel(Node config) {
+    public GaugesPanel(final Node config) {
         this.config = config;
-//        Radial radial2 = createRadial("title");
+        showRpmPanel = config.getBoolProperty(SHOW_RPM, true);
+        showMessagesPanel = config.getBoolProperty(SHOW_MESSAGES, true);
 
         MessagesPanel mp = new MessagesPanel(config, false);
         smallMessagePanel.add(BorderLayout.NORTH, mp.getButtonPanel());
@@ -102,16 +105,22 @@ public class GaugesPanel {
 
         JPopupMenu menu = new JPopupMenu();
         final JCheckBoxMenuItem showRpmItem = new JCheckBoxMenuItem("Show RPM");
+        final JCheckBoxMenuItem showCommandsItem = new JCheckBoxMenuItem("Show Commands");
         showRpmItem.setSelected(showRpmPanel);
-        showRpmItem.addActionListener(new ActionListener() {
+        ActionListener showCheckboxListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                GaugesPanel.this.showRpmPanel = showRpmItem.isSelected();
+                showRpmPanel = showRpmItem.isSelected();
+                showMessagesPanel = showCommandsItem.isSelected();
+                config.setProperty(SHOW_RPM, showRpmPanel);
+                config.setProperty(SHOW_MESSAGES, showMessagesPanel);
                 applyShowFlags();
             }
-        });
+        };
+        showRpmItem.addActionListener(showCheckboxListener);
+        showCommandsItem.addActionListener(showCheckboxListener);
+        
         menu.add(showRpmItem);
-        JCheckBoxMenuItem showCommandsItem = new JCheckBoxMenuItem("Show Commands");
         showCommandsItem.setSelected(showMessagesPanel);
         menu.add(showCommandsItem);
         menu.add(new JPopupMenu.Separator());
@@ -171,6 +180,7 @@ public class GaugesPanel {
 
     private void applyShowFlags() {
         lowerRpmPanel.setVisible(showRpmPanel);
+        smallMessagePanel.setVisible(showMessagesPanel);
     }
 
     public JComponent getContent() {

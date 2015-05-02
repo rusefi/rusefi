@@ -298,6 +298,7 @@ static void ignitionCalc(int rpm DECLARE_ENGINE_PARAMETER_S) {
  * Both injection and ignition are controlled from this method.
  */
 void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECLARE_ENGINE_PARAMETER_S) {
+	engine->m.beforeMainTrigger = GET_TIMESTAMP();
 	if (hasFirmwareError()) {
 		/**
 		 * In case on a major error we should not process any more events.
@@ -409,6 +410,10 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECL
 	if (diff > 0)
 	hsAdd(&mainLoopHisto, diff);
 #endif /* EFI_HISTOGRAMS */
+
+	if (eventIndex == 0) {
+		engine->m.mainTriggerCallbackTime = GET_TIMESTAMP() - engine->m.beforeMainTrigger;
+	}
 }
 
 #if EFI_WAVE_CHART || defined(__DOXYGEN__)

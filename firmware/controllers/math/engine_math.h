@@ -53,7 +53,7 @@ void initializeIgnitionActions(angle_t advance, angle_t dwellAngle,
 
 float getCrankshaftRevolutionTimeMs(int rpm);
 
-#define isCrankingR(rpm) ((rpm) > 0 && (rpm) < engineConfiguration->cranking.rpm)
+#define isCrankingR(rpm) ((rpm) > 0 && (rpm) < CONFIG(cranking.rpm))
 
 float getEngineLoadT(DECLARE_ENGINE_PARAMETER_F);
 

@@ -40,11 +40,22 @@ public class Node {
         }
     }
 
+    public boolean getBoolProperty(String key, boolean defaultValue) {
+        String value = (String) config.get(key);
+        if (value == null)
+            return defaultValue;
+        return Boolean.parseBoolean(value);
+    }
+
     public void setProperty(String key, String value) {
         config.put(key, value);
     }
 
     public void setProperty(String key, int value) {
+        config.put(key, "" + value);
+    }
+
+    public void setProperty(String key, boolean value) {
         config.put(key, "" + value);
     }
 
