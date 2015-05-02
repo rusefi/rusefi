@@ -13,9 +13,9 @@
 #include "voltage.h"
 
 float getVRef(engine_configuration_s *engineConfiguration) {
-	return getVoltageDivided(engineConfiguration->vRefAdcChannel);
+	return getVoltageDivided("vref", engineConfiguration->vRefAdcChannel);
 }
 
 float getVBatt(engine_configuration_s *engineConfiguration) {
-	return getVoltage(engineConfiguration->vbattAdcChannel) * engineConfiguration->vbattDividerCoeff;
+	return getVoltage("vbatt", engineConfiguration->vbattAdcChannel) * engineConfiguration->vbattDividerCoeff;
 }

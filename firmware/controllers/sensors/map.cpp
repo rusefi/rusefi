@@ -76,12 +76,12 @@ float getMapByVoltage(float voltage DECLARE_ENGINE_PARAMETER_S) {
  * @return Manifold Absolute Pressure, in kPa
  */
 float getRawMap(DECLARE_ENGINE_PARAMETER_F) {
-	float voltage = getVoltageDivided(engineConfiguration->map.sensor.hwChannel);
+	float voltage = getVoltageDivided("map", engineConfiguration->map.sensor.hwChannel);
 	return getMapByVoltage(voltage PASS_ENGINE_PARAMETER);
 }
 
 float getBaroPressure(DECLARE_ENGINE_PARAMETER_F) {
-	float voltage = getVoltageDivided(engineConfiguration->baroSensor.hwChannel);
+	float voltage = getVoltageDivided("map", engineConfiguration->baroSensor.hwChannel);
 	return decodePressure(voltage, &engineConfiguration->baroSensor);
 }
 

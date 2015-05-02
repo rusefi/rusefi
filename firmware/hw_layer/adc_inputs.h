@@ -24,7 +24,7 @@ adc_channel_e getAdcChannel(brain_pin_e pin);
 int getAdcHardwareIndexByInternalIndex(int index);
 
 void pokeAdcInputs(void);
-int getInternalAdcValue(adc_channel_e index);
+int getInternalAdcValue(const char *msg, adc_channel_e index);
 
 /* Depth of the conversion buffer, channels are sampled X times each.*/
 #define ADC_BUF_DEPTH_SLOW      1
@@ -43,7 +43,7 @@ typedef struct {
 //	time_t time;
 } adc_state;
 
-#define getAdcValue(hwChannel) getInternalAdcValue(hwChannel)
+#define getAdcValue(msg, hwChannel) getInternalAdcValue(msg, hwChannel)
 
 // todo: migrate to adcToVoltageInputDividerCoefficient
 #define adcToVoltsDivided(adc) (adcToVolts(adc) * engineConfiguration->analogInputDividerCoefficient)

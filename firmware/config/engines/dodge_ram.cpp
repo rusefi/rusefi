@@ -24,7 +24,7 @@ void setDodgeRam1996(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->specs.firingOrder = FO_1_8_4_3_6_5_7_2;
 
 	boardConfiguration->triggerInputPins[0] = GPIOC_6;
-	boardConfiguration->triggerInputPins[1] = GPIOA_8;
+	boardConfiguration->triggerInputPins[1] = GPIOA_5;
 
 	engineConfiguration->vbattAdcChannel = EFI_ADC_NONE; // todo: conflict with what?
 }

@@ -9,7 +9,7 @@ EXTERN_ENGINE;
 float getAfr(DECLARE_ENGINE_PARAMETER_F) {
 	afr_sensor_s * sensor = &engineConfiguration->afr;
 
-	float volts = getVoltageDivided(sensor->hwChannel);
+	float volts = getVoltageDivided("ego", sensor->hwChannel);
 
 	return interpolate(sensor->v1, sensor->value1, sensor->v2, sensor->value2, volts);
 }

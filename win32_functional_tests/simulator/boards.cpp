@@ -15,7 +15,7 @@ extern engine_configuration_s *engineConfiguration;
 
 static float fakeAdcValues[16];
 
-int getAdcValue(int hwChannel) {
+int getAdcValue(const char *msg, int hwChannel) {
 	return fakeAdcValues[hwChannel];
 }
 

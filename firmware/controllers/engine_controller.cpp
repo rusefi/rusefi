@@ -311,7 +311,7 @@ static void printAnalogChannelInfoExt(const char *name, adc_channel_e hwChannel,
 static void printAnalogChannelInfo(const char *name, adc_channel_e hwChannel) {
 #if HAL_USE_ADC || defined(__DOXYGEN__)
 	if (hwChannel != EFI_ADC_NONE) {
-		printAnalogChannelInfoExt(name, hwChannel, getVoltage(hwChannel));
+		printAnalogChannelInfoExt(name, hwChannel, getVoltage("print", hwChannel));
 	}
 #endif
 }

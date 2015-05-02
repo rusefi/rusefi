@@ -58,7 +58,7 @@
 57) RESOLVED IN R0.4 Change C166 and C167 to 27pF instead of 20/18pF, to match XTAL specified 20CL. (30*30)/(30+30)+5= 20pF with 5pF stray capacitance.
 58) RESOLVED IN R0.4 add pF cap to HIP9011 / TPIC8101 knock chip to help fast transients and XTAL starting.
 59) RESOLVED IN R0.4 FIX CLAIMED ERRORS IN SCHEMATIC ERC power flags added to resolve 
-60)                  remove AC RELAY ect from harness connector net names.
+60) RESOLVED IN R0.4 remove AC RELAY ect from harness connector net names.
 61) RESOLVED IN R0.4 add 0R jumper between 5V and 5V plane to allow power supply verification before powering the 5V devices. 
 62)                  add resistor divider or some mechanism for identifying via firmware sensing PCB revision. Perhaps to PB1 AN input 
 63) RESOLVED IN R0.4 better test pads silkscreen: 5V, GND, 12V
@@ -77,16 +77,16 @@
 76) RESOLVED IN R0.4 AN inputs are limited to operation between 0V and 4V.RESOLVED BY CHANGING OP-AMP TO A BETTER RAIL TO RAIL THAT IS MUCH CLOSER TO THE RAIL.
 77)                  W1002 - silksceen on the wrong place? remove these jumpers anyway?
 78)                  1K and 0R on the MAX9926 input: need to put a comment on the schematics page explaining that none or just one of them should be installed depending on the use-case
+79) RESOLVED IN R0.4 on schematics, rename INJ_xx to LOW_xx? "inj" is a bit confusing, it implies that PE6 is injector #1 while it is usually not the case
+80) RESOLVED IN R0.4 set analog input values to match https://docs.google.com/spreadsheets/d/1LTvS7I-128Hft9uXHG1JrBxetVjGJDSBkySgVDQ6MGk/edit#gid=0
+81) RESOLVED IN R0.4 remove 'REAR-DEFROSTER-SW' and etc from schematics
 
 
   )                  route unused stm32 pins (D3 PC13 etc) to unused connector pins
   )                  cheaper battery holder - through-hole (need to find out footprint)
-  )                  remove some/all EGT - expand prototyping area?
+  )                  remove some/all EGT?
   )                  idle valve SMD diode?
-  )                  on schematics, rename INJ_xx to LOW_xx? "inj" is a bit confusing, it implies that PE6 is injector #1 while it is usually not the case
-  )                  set analog input values to match https://docs.google.com/spreadsheets/d/1LTvS7I-128Hft9uXHG1JrBxetVjGJDSBkySgVDQ6MGk/edit#gid=0
   )                  silkscreen for analog inputs - PA1/PC1/etc?
-
 For honda add-on / rewiring board
 -- Add 2A high side solinoid drive for VTec sol
 -- Add 3rd VR chip for 3rd signal

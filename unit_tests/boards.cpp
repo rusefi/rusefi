@@ -9,7 +9,7 @@
 
 float testMafValue = 0;
 
-float getVoltageDivided(int channel) {
+float getVoltageDivided(const char *msg, int channel) {
 	switch(channel) {
 	case TEST_MAF_CHANNEL:
 		return testMafValue;
@@ -17,11 +17,11 @@ float getVoltageDivided(int channel) {
 	return 0;
 }
 
-float getVoltage(int channel) {
+float getVoltage(const char *msg, int channel) {
 	return 0;
 }
 
-int getAdcValue(int channel) {
+int getAdcValue(const char *msg, int channel) {
 	return 0;
 }
 

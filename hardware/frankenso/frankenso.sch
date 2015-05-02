@@ -58,7 +58,7 @@ $Descr B 17000 11000
 encoding utf-8
 Sheet 1 15
 Title "Frankenso"
-Date "25 apr 2015"
+Date "2 may 2015"
 Rev ".04"
 Comp "rusEFI.com"
 Comment1 ""
@@ -506,35 +506,35 @@ F 3 "DOCUMENTATION" H 10400 1350 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Text Label 5050 2150 3    60   ~ 0
-START-SIG
+1C
 Text Label 5150 2150 3    60   ~ 0
-DIAG
+1D
 Text Label 4850 2150 3    60   ~ 0
-12V-CONST
+1A
 Text Label 5250 2150 3    60   ~ 0
-MUL
+1E
 Text Label 5850 2150 3    60   ~ 0
-DIAG-1K
+1K
 Text Label 5750 2150 3    60   ~ 0
-AC-RELAY
+1J
 Text Label 6250 2150 3    60   ~ 0
-STOP-LIGHT
+1O
 Text Label 6350 2150 3    60   ~ 0
-STEERING-SW
+1P
 Text Label 6150 2150 3    60   ~ 0
-TPS-IDL-SW
+1N
 Text Label 6450 2150 3    60   ~ 0
-AC-SW
+1Q
 Text Label 6550 2150 3    60   ~ 0
-COOL-FAN
+1R
 Text Label 6850 2150 3    60   ~ 0
-HEADLIGHT-SW
+1U
 Text Label 6950 2150 3    60   ~ 0
-NEUTRAL-CLUTCH-SW
+1V
 Text Label 6650 2150 3    60   ~ 0
-BLOWER-SW
+1S
 Text Label 6750 2150 3    60   ~ 0
-REAR-DEFROSTER-SW
+1T
 $Comp
 L TEST W27
 U 1 1 5398DD62
@@ -979,23 +979,23 @@ F 3 "~" H 12100 8550 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 Text Label 11400 2150 3    60   ~ 0
-INJ-05
+LOW-1A-05
 Text Label 11500 2150 3    60   ~ 0
-INJ-06
+LOW-1A-06
 Text Label 11600 2150 3    60   ~ 0
-INJ-07
+LOW-1A-07
 Text Label 10600 2150 3    60   ~ 0
 5V
 Text Label 11700 2150 3    60   ~ 0
-INJ-08
+LOW-1A-08
 Text Label 11800 2150 3    60   ~ 0
-INJ-09
+LOW-1A-09
 Text Label 11900 2150 3    60   ~ 0
-INJ-10
+LOW-1A-10
 Text Label 12000 2150 3    60   ~ 0
-INJ-11
+LOW-1A-11
 Text Label 12100 2150 3    60   ~ 0
-INJ-12
+LOW-1A-12
 Text Label 11000 2150 3    60   ~ 0
 AN3-HARN
 Text Label 10700 2150 3    60   ~ 0
@@ -1094,7 +1094,7 @@ HL5
 Text Label 5950 2150 3    60   ~ 0
 HL6
 Text Label 8900 2150 3    60   ~ 0
-INJ-03
+LOW-1A-03
 Text Label 10900 2150 3    60   ~ 0
 AN4-HARN
 Text Label 10800 2150 3    60   ~ 0
@@ -1104,11 +1104,11 @@ AN8-HARN
 Text Label 10400 2150 3    60   ~ 0
 AN7-HARN
 Text Label 8800 2150 3    60   ~ 0
-INJ-04
+LOW-1A-04
 Text Label 9000 2150 3    60   ~ 0
-INJ-02
+LOW-1A-02
 Text Label 9100 2150 3    60   ~ 0
-INJ-01_2
+LOW-1A-01_2
 Text Label 8600 2150 3    60   ~ 0
 CANH
 Text Label 8700 2150 3    60   ~ 0
@@ -1173,23 +1173,23 @@ GND
 Text Label 5700 6000 2    60   ~ 0
 3.3V
 Text Label 11100 3850 0    60   ~ 0
-INJ-01_2
+LOW-1A-01_2
 Text Label 11100 3950 0    60   ~ 0
-INJ-02
+LOW-1A-02
 Text Label 11100 4050 0    60   ~ 0
-INJ-03
+LOW-1A-03
 Text Label 11100 4150 0    60   ~ 0
-INJ-04
+LOW-1A-04
 Text Label 11100 4250 0    60   ~ 0
-INJ-05
+LOW-1A-05
 Text Label 11100 4350 0    60   ~ 0
-INJ-06
+LOW-1A-06
 Text Label 11100 4450 0    60   ~ 0
-INJ-07
+LOW-1A-07
 Text Label 11100 4550 0    60   ~ 0
-INJ-08
+LOW-1A-08
 Text Label 11100 4650 0    60   ~ 0
-INJ-09
+LOW-1A-09
 Text Label 5700 3850 2    60   ~ 0
 AN1-HARN
 Text Label 5700 3950 2    60   ~ 0
@@ -1211,11 +1211,11 @@ AN9-HARN
 Text Label 5700 4750 2    60   ~ 0
 AN10-HARN
 Text Label 11100 4750 0    60   ~ 0
-INJ-10
+LOW-1A-10
 Text Label 11100 4850 0    60   ~ 0
-INJ-11
+LOW-1A-11
 Text Label 11100 4950 0    60   ~ 0
-INJ-12
+LOW-1A-12
 Text Label 5700 4250 2    60   ~ 0
 AN5-HARN
 Text Label 5700 4550 2    60   ~ 0

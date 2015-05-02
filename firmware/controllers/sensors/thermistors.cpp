@@ -78,7 +78,7 @@ float getKelvinTemperature(float resistance, ThermistorConf *thermistor) {
 }
 
 float getResistance(Thermistor *thermistor) {
-	float voltage = getVoltageDivided(thermistor->channel);
+	float voltage = getVoltageDivided("term", thermistor->channel);
 	efiAssert(thermistor->config != NULL, "thermistor config is null", NAN);
 	float resistance = getR2InVoltageDividor(voltage, _5_VOLTS, thermistor->config->bias_resistor);
 	return resistance;

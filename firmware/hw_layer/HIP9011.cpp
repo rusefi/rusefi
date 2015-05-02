@@ -119,7 +119,7 @@ static void showHipInfo(void) {
 			nonZeroResponse);
 	scheduleMsg(logger, "CS=%s updateCount=%d", hwPortname(boardConfiguration->hip9011CsPin), settingUpdateCount);
 
-	scheduleMsg(logger, "value=%f@#%d", getVoltageDivided(engineConfiguration->hipOutputChannel),
+	scheduleMsg(logger, "value=%f@#%d", getVoltageDivided("hip", engineConfiguration->hipOutputChannel),
 			engineConfiguration->hipOutputChannel);
 }
 
