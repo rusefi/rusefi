@@ -66,7 +66,7 @@ float getBaseAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_S) {
 	float iatCorrection = iatAdvanceCorrectionMap.getValue(engine->engineState.clt, (float) rpm);
 
 	float result = advanceMap.getValue(engineLoad, (float) rpm) + iatCorrection;
-	engine->m.advanceTime = GET_TIMESTAMP() - engine->m.beforeAdvance;
+	engine->m.advanceLookupTime = GET_TIMESTAMP() - engine->m.beforeAdvance;
 	return result;
 }
 

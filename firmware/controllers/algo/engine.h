@@ -112,6 +112,9 @@ typedef struct {
 #define MAF_DECODING_CACHE_MULT (MAF_DECODING_CACHE_SIZE / 5.0)
 
 typedef struct {
+	uint32_t beforeMainTrigger;
+	uint32_t mainTriggerCallbackTime;
+
 	uint32_t beforeIgnitionMath;
 	uint32_t ignitionMathTime;
 
@@ -125,7 +128,7 @@ typedef struct {
 	uint32_t zeroTestTime;
 
 	uint32_t beforeAdvance;
-	uint32_t advanceTime;
+	uint32_t advanceLookupTime;
 
 	uint32_t beforeFuelCalc;
 	uint32_t fuelCalcTime;

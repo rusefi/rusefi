@@ -294,18 +294,18 @@ void triggerInfo(Engine *engine) {
 	scheduleMsg(logger, "zeroTestTime=%d maxHowFarOff=%d", engine->m.zeroTestTime, maxHowFarOff);
 	maxHowFarOff = 0;
 
-	scheduleMsg(logger, "advanceLookupTime=%d", engine->m.advanceTime);
+	scheduleMsg(logger, "advanceLookupTime=%d", engine->m.advanceLookupTime);
 
 	scheduleMsg(logger,
-			"ignitionMathTime=%d schTime=%d injectonSchTime=%d",
+			"ignitionMathTime=%d ignitionSchTime=%d injectonSchTime=%d",
 			engine->m.ignitionMathTime, engine->m.ignitionSchTime,
 			engine->m.injectonSchTime);
 
-	scheduleMsg(logger, "mapTime=%d/hipTime=%d/rpmTime=%d",
+	scheduleMsg(logger, "mapTime=%d/hipTime=%d/rpmTime=%d/mainTriggerCallbackTime=%d",
 			engine->m.mapAveragingCbTime,
 			engine->m.hipCbTime,
-			engine->m.rpmCbTime);
-
+			engine->m.rpmCbTime,
+			engine->m.mainTriggerCallbackTime);
 
 	scheduleMsg(logger, "maxLockTime=%d / maxTriggerReentraint=%d", maxLockTime, maxTriggerReentraint);
 	scheduleMsg(logger, "maxEventQueueTime=%d", maxEventQueueTime);
