@@ -100,5 +100,14 @@ public class Field {
         } catch (NumberFormatException e) {
             return null;
         }
+
+    }
+
+    @Override
+    public String toString() {
+        return "Field{" +
+                "offset=" + offset +
+                ", type=" + type +
+                '}';
     }
 }

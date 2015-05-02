@@ -8,6 +8,7 @@
 #ifndef TRIGGER_DECODER_H_
 #define TRIGGER_DECODER_H_
 
+#include "main.h"
 #include "trigger_structure.h"
 #include "engine_configuration.h"
 
@@ -86,6 +87,10 @@ public:
 };
 
 float getEngineCycle(operation_mode_e operationMode);
+void addSkippedToothTriggerEvents(trigger_wheel_e wheel, TriggerShape *s,
+		int totalTeethCount, int skippedCount,
+		float toothWidth,
+		float offset, float engineCycle, float filterLeft, float filterRight);
 void initializeSkippedToothTriggerShapeExt(TriggerShape *s, int totalTeethCount, int skippedCount, operation_mode_e operationMode);
 uint32_t findTriggerZeroEventIndex(TriggerShape * shape, trigger_config_s const*triggerConfig DECLARE_ENGINE_PARAMETER_S);
 

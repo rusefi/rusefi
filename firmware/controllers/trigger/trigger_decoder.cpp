@@ -236,9 +236,12 @@ float getEngineCycle(operation_mode_e operationMode) {
 	return operationMode == TWO_STROKE ? 360 : 720;
 }
 
-void addSkippedToothTriggerEvents(trigger_wheel_e wheel, TriggerShape *s, int totalTeethCount, int skippedCount,
+void addSkippedToothTriggerEvents(trigger_wheel_e wheel, TriggerShape *s,
+		int totalTeethCount, int skippedCount,
+		float toothWidth,
 		float offset, float engineCycle, float filterLeft, float filterRight) {
-	float toothWidth = 0.5;
+	efiAssertVoid(totalTeethCount > 0, "total count");
+	efiAssertVoid(skippedCount >= 0, "skipped count");
 
 	for (int i = 0; i < totalTeethCount - skippedCount - 1; i++) {
 		float angleDown = engineCycle / totalTeethCount * (i + toothWidth);
@@ -265,7 +268,7 @@ void initializeSkippedToothTriggerShapeExt(TriggerShape *s, int totalTeethCount,
 	efiAssertVoid(s != NULL, "TriggerShape is NULL");
 	s->reset(operationMode, false);
 
-	addSkippedToothTriggerEvents(T_PRIMARY, s, totalTeethCount, skippedCount, 0, getEngineCycle(operationMode),
+	addSkippedToothTriggerEvents(T_PRIMARY, s, totalTeethCount, skippedCount, 0.5, 0, getEngineCycle(operationMode),
 			NO_LEFT_FILTER, NO_RIGHT_FILTER);
 }
 
@@ -290,11 +293,11 @@ static void configureOnePlus60_2(TriggerShape *s, operation_mode_e operationMode
 	int skippedCount = 2;
 
 	s->addEvent(2, T_PRIMARY, TV_HIGH);
-	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 0, 360, 2, 20);
+	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 0, 360, 2, 20);
 	s->addEvent(20, T_PRIMARY, TV_LOW);
-	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 0, 360, 20, NO_RIGHT_FILTER);
+	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 0, 360, 20, NO_RIGHT_FILTER);
 
-	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 360, 360, NO_LEFT_FILTER,
+	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 360, 360, NO_LEFT_FILTER,
 			NO_RIGHT_FILTER);
 
 	s->isSynchronizationNeeded = false;
