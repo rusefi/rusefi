@@ -25,4 +25,6 @@ void setDodgeRam1996(DECLARE_ENGINE_PARAMETER_F) {
 
 	boardConfiguration->triggerInputPins[0] = GPIOC_6;
 	boardConfiguration->triggerInputPins[1] = GPIOA_8;
+
+	engineConfiguration->vbattAdcChannel = EFI_ADC_NONE; // todo: conflict with what?
 }

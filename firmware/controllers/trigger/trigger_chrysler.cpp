@@ -6,15 +6,21 @@
  */
 
 #include "trigger_chrysler.h"
+#include "trigger_decoder.h"
 
 void initDodgeRam(TriggerShape *s) {
 
-	s->reset(FOUR_STROKE_CAM_SENSOR, false);
+	s->reset(FOUR_STROKE_CAM_SENSOR, true);
 	s->useRiseEdge = true;
 
 	s->isSynchronizationNeeded = false;
 
-	s->addEvent(540, T_PRIMARY, TV_HIGH);
+	addSkippedToothTriggerEvents(T_SECONDARY, s, 8, 0, 0.9, -1, 360, 0, 720);
+
+	s->addEvent(360, T_PRIMARY, TV_HIGH);
+
+	addSkippedToothTriggerEvents(T_SECONDARY, s, 8, 0, 0.9, 360 - 1, 360, 0, 720);
+
 	s->addEvent(720, T_PRIMARY, TV_LOW);
 }
 
