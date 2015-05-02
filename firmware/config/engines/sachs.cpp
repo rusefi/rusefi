@@ -42,11 +42,11 @@ void setSachs(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->hasCltSensor = false;
 	boardConfiguration->useSerialPort = false;
 
-	// Frankenstein analog input #1: PA1 adc1
+	// Frankenstein analog input #1: PA1 adc1 MAP
 	// Frankenstein analog input #2: PA3 adc3 TPS
-	// Frankenstein analog input #3: PC3 adc13
-	// Frankenstein analog input #4: PC1 adc11
-	// Frankenstein analog input #5: PA0 adc0
+	// Frankenstein analog input #3: PC3 adc13 IAT
+	// Frankenstein analog input #4: PC1 adc11 CLT
+	// Frankenstein analog input #5: PA0 adc0 O2
 	// Frankenstein analog input #6: PC2 adc12
 	// Frankenstein analog input #7: PA4 adc4
 	// Frankenstein analog input #8: PA2 adc2
@@ -56,6 +56,7 @@ void setSachs(DECLARE_ENGINE_PARAMETER_F) {
 	// Frankenstein analog input #12: PC5 adc15
 
 	engineConfiguration->tpsAdcChannel = EFI_ADC_3;
+	engineConfiguration->vbattAdcChannel = EFI_ADC_NONE;
 
 	/**
 	 * TPS 0% 0.9v
@@ -91,4 +92,3 @@ void setSachs(DECLARE_ENGINE_PARAMETER_F) {
 	setTableBin2(config->veRpmBins, FUEL_RPM_COUNT, 15000, 7000, 1);
 	setTableBin2(config->afrRpmBins, FUEL_RPM_COUNT, 15000, 7000, 1);
 }
-

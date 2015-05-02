@@ -25,7 +25,7 @@
 class FuelSchedule {
 public:
 	FuelSchedule();
-	ActuatorEventList events;
+	InjectionEventList events;
 
 	/**
 	 * this method schedules all fuel events for an engine cycle
