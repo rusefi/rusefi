@@ -17,7 +17,7 @@ float getMaf(DECLARE_ENGINE_PARAMETER_F) {
  * @return kg/hour value
  */
 float getRealMaf(DECLARE_ENGINE_PARAMETER_F) {
-	int mafAdc = getAdcValue(engineConfiguration->mafAdcChannel);
+	int mafAdc = getAdcValue("maf", engineConfiguration->mafAdcChannel);
 	/**
 	 * here we drop from 12 bit ADC to 8 bit index
 	 */

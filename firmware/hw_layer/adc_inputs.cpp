@@ -18,6 +18,7 @@
 #include "pin_repository.h"
 #include "engine_math.h"
 #include "board_test.h"
+#include "engine_controller.h"
 
 static adc_channel_mode_e adcHwChannelEnabled[HW_MAX_ADC_INDEX];
 
@@ -187,9 +188,9 @@ static void pwmpcb_fast(PWMDriver *pwmp) {
 #endif
 }
 
-int getInternalAdcValue(adc_channel_e hwChannel) {
+int getInternalAdcValue(const char *msg, adc_channel_e hwChannel) {
 	if (hwChannel == EFI_ADC_NONE) {
-		warning(OBD_PCM_Processor_Fault, "ADC: should not be asking for NONE");
+		warning(OBD_PCM_Processor_Fault, "ADC: should not be asking for NONE %s", msg);
 		return -1;
 	}
 
@@ -404,7 +405,7 @@ void AdcDevice::addChannel(adc_channel_e hwChannel) {
 }
 
 static void printAdcValue(adc_channel_e channel) {
-	int value = getAdcValue(channel);
+	int value = getAdcValue("print", channel);
 	float volts = adcToVoltsDivided(value);
 	scheduleMsg(&logger, "adc voltage : %f", volts);
 }
@@ -465,12 +466,15 @@ static void adc_callback_slow(ADCDriver *adcp, adcsample_t *buffer, size_t n) {
 	}
 }
 
+static char errorMsgBuff[10];
+
 static void addChannel(const char *name, adc_channel_e setting, adc_channel_mode_e mode) {
 	if (setting == EFI_ADC_NONE) {
 		return;
 	}
 	if (adcHwChannelEnabled[setting] != ADC_OFF) {
-		firmwareError("ADC mapping error: input for %s already used?", name);
+		getPinNameByAdcChannel(setting, errorMsgBuff);
+		firmwareError("ADC mapping error: input %s for %s already used?", errorMsgBuff, name);
 	}
 
 	adcHwChannelEnabled[setting] = mode;

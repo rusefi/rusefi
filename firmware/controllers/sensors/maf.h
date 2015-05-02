@@ -14,7 +14,7 @@
 
 #include "main.h"
 
-#define getMafT(ec) (getVoltageDivided(ec->mafAdcChannel))
+#define getMafT(ec) (getVoltageDivided("maf", ec->mafAdcChannel))
 float getMaf(void);
 float getRealMaf(DECLARE_ENGINE_PARAMETER_F);
 

@@ -72,7 +72,7 @@ static float getTpsValue(int adc DECLARE_ENGINE_PARAMETER_S) {
  * Return voltage on TPS AND channel
  * */
 float getTPSVoltage(DECLARE_ENGINE_PARAMETER_F) {
-	return getVoltageDivided(engineConfiguration->tpsAdcChannel);
+	return getVoltageDivided("tps", engineConfiguration->tpsAdcChannel);
 }
 
 /*

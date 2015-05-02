@@ -16,8 +16,8 @@
 
 #define voltsToAdc(volts) ((volts) * (ADC_MAX_VALUE / ADC_VCC))
 
-#define getVoltage(hwChannel) (adcToVolts(getAdcValue(hwChannel)))
+#define getVoltage(msg, hwChannel) (adcToVolts(getAdcValue(msg, hwChannel)))
 
-#define getVoltageDivided(hwChannel) (getVoltage(hwChannel) * engineConfiguration->analogInputDividerCoefficient)
+#define getVoltageDivided(msg, hwChannel) (getVoltage(msg, hwChannel) * engineConfiguration->analogInputDividerCoefficient)
 
 #endif /* ADC_MATH_H_ */

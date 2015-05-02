@@ -12,8 +12,8 @@
 
 #define TEST_MAF_CHANNEL 10000013
 
-float getVoltageDivided(int);
-float getVoltage(int channel);
-int getAdcValue(int channel);
+float getVoltageDivided(const char *msg, int);
+float getVoltage(const char *msg, int channel);
+int getAdcValue(const char *msg, int channel);
 
 #endif /* BOARDS_H_ */

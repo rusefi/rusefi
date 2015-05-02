@@ -368,7 +368,7 @@ static char pinNameBuffer[16];
 
 static void printThermistor(const char *msg, Thermistor *thermistor) {
 	adc_channel_e adcChannel = thermistor->channel;
-	float voltage = getVoltageDivided(adcChannel);
+	float voltage = getVoltageDivided("term", adcChannel);
 	float r = getResistance(thermistor);
 
 	float t = getTemperatureC(thermistor);
