@@ -1,5 +1,7 @@
 package com.rusefi.ui.util;
 
+import com.rusefi.StartupFrame;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
@@ -8,6 +10,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
 import static com.rusefi.ui.util.LocalizedMessages.PAUSE;
 import static com.rusefi.ui.util.LocalizedMessages.RESUME;
@@ -102,5 +105,13 @@ public class UiUtils {
         JButton imageButton = new JButton(SAVE_IMAGE);
         imageButton.setMnemonic('s');
         return imageButton;
+    }
+
+    public static ImageIcon loadIcon(String strPath) {
+        URL imgURL = StartupFrame.class.getResource(strPath);
+        if (imgURL != null)
+            return new ImageIcon(imgURL);
+        else
+            return null;
     }
 }
