@@ -43,6 +43,7 @@
 		<copy todir="build/classes">
 		<fileset dir="ui/resources" includes="**/*.gif"/>
 		<fileset dir="ui/resources" includes="**/*.png"/>
+		<fileset dir="ui/resources" includes="**/*.jpg"/>
 
 		<fileset dir="romraider/resources" includes="**/*.*"/>
 
