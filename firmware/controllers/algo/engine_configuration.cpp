@@ -308,7 +308,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->sensorChartMode = SC_OFF;
 
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
-	engineConfiguration->baroSensor.hwChannel = EFI_ADC_4;
+	engineConfiguration->baroSensor.hwChannel = EFI_ADC_NONE;
 
 	engineConfiguration->specs.firingOrder = FO_1_THEN_3_THEN_4_THEN2;
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
@@ -358,7 +358,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineConfiguration->alternatorControlPFactor = 30;
 
-	engineConfiguration->vbattAdcChannel = EFI_ADC_4;
+	engineConfiguration->vbattAdcChannel = EFI_ADC_NONE;
 	engineConfiguration->cltAdcChannel = EFI_ADC_6;
 	engineConfiguration->iatAdcChannel = EFI_ADC_7;
 	engineConfiguration->mafAdcChannel = EFI_ADC_NONE;
