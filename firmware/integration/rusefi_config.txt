@@ -173,7 +173,7 @@ float fanOnTemperature;Cooling fan turn-on temperature threshold, in Celsuis;"*C
 float fanOffTemperature;Cooling fan turn-off temperature threshold, in Celsuis;"*C",    1,      0,       0,  1000.0,        2
 
 int ususedBla;
-float vehicleSpeedCoef;This coefficient translates vehicle speed input frequency (in Hz) into vehicle speed, km/h
+float vehicleSpeedCoef;This coefficient translates vehicle speed input frequency (in Hz) into vehicle speed, km/h;"coef",    1,      0,    0.01,  2000.0,        2
 
 custom can_nbc_e 4 bits, U32, @OFFSET@, [0:1], "BMW", "FIAT", "VAG" , "INVALID"
 can_nbc_e canNbcType;
@@ -400,7 +400,7 @@ custom sensor_chart_e 4 bits, S32, @OFFSET@, [0:1], "none", "trigger", "MAP", "I
 sensor_chart_e sensorChartMode;
 maf_sensor_type_e mafSensorType;
 
-brain_pin_e vehicleSpeedSensorInputPin;
+brain_input_pin_e vehicleSpeedSensorInputPin;
 
 	brain_pin_e clutchUpPin;Some vehicles have a switch to indicate that clutch pedal is all the way up
 	pin_input_mode_e clutchUpPinMode;

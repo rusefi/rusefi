@@ -244,13 +244,13 @@ void addSkippedToothTriggerEvents(trigger_wheel_e wheel, TriggerShape *s,
 	efiAssertVoid(skippedCount >= 0, "skipped count");
 
 	for (int i = 0; i < totalTeethCount - skippedCount - 1; i++) {
-		float angleDown = engineCycle / totalTeethCount * (i + toothWidth);
+		float angleDown = engineCycle / totalTeethCount * (i + (1 - toothWidth));
 		float angleUp = engineCycle / totalTeethCount * (i + 1);
 		s->addEvent(offset + angleDown, wheel, TV_HIGH, filterLeft, filterRight);
 		s->addEvent(offset + angleUp, wheel, TV_LOW, filterLeft, filterRight);
 	}
 
-	float angleDown = engineCycle / totalTeethCount * (totalTeethCount - skippedCount - 1 + toothWidth);
+	float angleDown = engineCycle / totalTeethCount * (totalTeethCount - skippedCount - 1 + (1 - toothWidth) );
 	s->addEvent(offset + angleDown, wheel, TV_HIGH, filterLeft, filterRight);
 	s->addEvent(offset + engineCycle, wheel, TV_LOW, filterLeft, filterRight);
 }

@@ -512,7 +512,7 @@ void testTriggerDecoder(void) {
 	// lame duty cycle implementation!
 	testTriggerDecoder2("ford aspire", FORD_ASPIRE_1996, 4, 0.0, 0.5);
 
-	testTriggerDecoder2("dodge ram", DODGE_RAM, 16, 0.5000, 0.100);
+	testTriggerDecoder2("dodge ram", DODGE_RAM, 16, 0.5000, 0.06);
 
 	//testTriggerDecoder2("bmw", BMW_E34, 0, 0.9750, 0.5167);
 	testTriggerDecoder2("bmw", BMW_E34, 0, 0.4667, 0.0);

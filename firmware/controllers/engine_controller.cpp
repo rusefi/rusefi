@@ -323,7 +323,7 @@ static void printAnalogInfo(void) {
 	if (engineConfiguration->hasIatSensor) {
 		printAnalogChannelInfo("IAT", engineConfiguration->iatAdcChannel);
 	}
-	if (engineConfiguration->hasMafSensor) {
+	if (hasMafSensor()) {
 		printAnalogChannelInfo("MAF", engineConfiguration->mafAdcChannel);
 	}
 	printAnalogChannelInfo("AFR", engineConfiguration->afr.hwChannel);

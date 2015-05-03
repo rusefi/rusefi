@@ -35,18 +35,27 @@ public class AverageAngles {
         }
         rpmAtPrevChart = rpm;
 
-
         String v[] = line.split("\\|");
         System.out.println("rpm " + rpm + ": " + v.length + " values");
 
-        for (int i = 0; i < v.length / 2; i++) {
+        List<Double> current = new ArrayList<>();
 
+        for (int i = 0; i < v.length / 2; i++) {
+            Double value = Double.parseDouble(v[2 * i]);
+            if (Double.isNaN(value)) {
+                System.out.println("Skipping due to NaN");
+                return;
+            }
+            current.add(value);
+        }
+
+        for (int i = 0; i < current.size(); i++) {
             List<Double> list = angleData.get(i);
             if (list == null) {
                 list = new ArrayList<>();
                 angleData.put(i, list);
             }
-            list.add(Double.parseDouble(v[2 * i]));
+            list.add(current.get(i));
         }
     }
 
@@ -55,7 +64,7 @@ public class AverageAngles {
 
         stream.println("Based on " + angleData.size() + " charts");
 
-        stream.println("index,average,stdev");
+        stream.println("index,average,stdev,diff");
 
         double prev = 0;
 
