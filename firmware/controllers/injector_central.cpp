@@ -156,17 +156,17 @@ static void fuelbench2(const char *delayStr, const char *indexStr, const char * 
 }
 
 void fanBench(void) {
-	pinbench("0", "3000", "0", "1", &enginePins.fanRelay, boardConfiguration->fanPin);
+	pinbench("0", "3000", "100", "1", &enginePins.fanRelay, boardConfiguration->fanPin);
 }
 
 extern OutputPin checkEnginePin;
 
 void milBench(void) {
-	pinbench("0", "3000", "0", "1", &checkEnginePin, boardConfiguration->malfunctionIndicatorPin);
+	pinbench("0", "3000", "100", "1", &checkEnginePin, boardConfiguration->malfunctionIndicatorPin);
 }
 
 void fuelPumpBench(void) {
-	pinbench("0", "3000", "0", "1", &enginePins.fuelPumpRelay, boardConfiguration->fuelPumpPin);
+	pinbench("0", "3000", "100", "1", &enginePins.fuelPumpRelay, boardConfiguration->fuelPumpPin);
 }
 
 // fuelbench 5 1000 2
