@@ -90,22 +90,24 @@ static void runBench(brain_pin_e brainPin, OutputPin *output, float delayMs, flo
 	int delaySt = (int) (delayMs * CH_FREQUENCY / 1000);
 	int onTimeSt = (int) (onTimeMs * CH_FREQUENCY / 1000);
 	int offTimeSt = (int) (offTimeMs * CH_FREQUENCY / 1000);
-	if (delaySt <=0) {
+	if (delaySt < 0) {
 		scheduleMsg(&logger, "Invalid delay %f", delayMs);
 		return;
 	}
-	if (onTimeSt <=0) {
+	if (onTimeSt <= 0) {
 		scheduleMsg(&logger, "Invalid onTime %f", onTimeMs);
 		return;
 	}
-	if (offTimeSt <=0) {
+	if (offTimeSt <= 0) {
 		scheduleMsg(&logger, "Invalid offTime %f", offTimeMs);
 		return;
 	}
 	scheduleMsg(&logger, "Running bench: ON_TIME=%f ms OFF_TIME=%fms Counter=%d", onTimeMs, offTimeMs, count);
 	scheduleMsg(&logger, "output on %s", hwPortname(brainPin));
 
-	chThdSleep(delaySt);
+	if (delaySt != 0) {
+		chThdSleep(delaySt);
+	}
 
 	isRunningBench = true;
 	for (int i = 0; i < count; i++) {

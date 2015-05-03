@@ -26,5 +26,19 @@ void setDodgeRam1996(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->triggerInputPins[0] = GPIOC_6;
 	boardConfiguration->triggerInputPins[1] = GPIOA_5;
 
+	boardConfiguration->injectionPins[0] = GPIOD_3;
+	boardConfiguration->injectionPins[1] = GPIOE_2;
+	boardConfiguration->injectionPins[2] = GPIOE_3;
+	boardConfiguration->injectionPins[3] = GPIOE_4;
+	boardConfiguration->injectionPins[4] = GPIOD_5;
+	boardConfiguration->injectionPins[5] = GPIOB_7;
+	boardConfiguration->injectionPins[6] = GPIOB_8;
+	boardConfiguration->injectionPins[7] = GPIOB_9;
+
+	boardConfiguration->ignitionPins[0] = GPIOC_9;
+
+	boardConfiguration->mainRelayPin = GPIOE_5;
+	boardConfiguration->fuelPumpPin = GPIOE_6;
+
 	engineConfiguration->vbattAdcChannel = EFI_ADC_NONE; // todo: conflict with what?
 }
