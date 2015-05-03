@@ -16,6 +16,7 @@
 
 #define getMafT(ec) (getVoltageDivided("maf", ec->mafAdcChannel))
 float getMaf(void);
+bool_t hasMafSensor(DECLARE_ENGINE_PARAMETER_F);
 float getRealMaf(DECLARE_ENGINE_PARAMETER_F);
 
 void setBosch0280218037(persistent_config_s *engineConfiguration);

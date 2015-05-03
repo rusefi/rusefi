@@ -156,7 +156,7 @@ static void printSensors(Logging *log, bool fileFormat) {
 	reportSensorF(log, fileFormat, "TRG_1_DUTY", "%", getTriggerDutyCycle(1), 2);
 #endif
 
-	if (engineConfiguration->hasMafSensor) {
+	if (hasMafSensor()) {
 		reportSensorF(log, fileFormat, "maf", "V", getMaf(), 2);
 		reportSensorF(log, fileFormat, "mafr", "kg/hr", getRealMaf(), 2);
 	}

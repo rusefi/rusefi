@@ -15,11 +15,11 @@ void initDodgeRam(TriggerShape *s) {
 
 	s->isSynchronizationNeeded = false;
 
-	addSkippedToothTriggerEvents(T_SECONDARY, s, 8, 0, 0.9, -1, 360, 0, 720);
+	addSkippedToothTriggerEvents(T_SECONDARY, s, 8, 0, 0.06, -25, 360, 0, 720);
 
 	s->addEvent(360, T_PRIMARY, TV_HIGH);
 
-	addSkippedToothTriggerEvents(T_SECONDARY, s, 8, 0, 0.9, 360 - 1, 360, 0, 720);
+	addSkippedToothTriggerEvents(T_SECONDARY, s, 8, 0, 0.06, 360 - 25, 360, 0, 720);
 
 	s->addEvent(720, T_PRIMARY, TV_LOW);
 }

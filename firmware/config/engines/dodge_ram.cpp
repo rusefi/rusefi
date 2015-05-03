@@ -19,6 +19,9 @@ void setDodgeRam1996(DECLARE_ENGINE_PARAMETER_F) {
 	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
 	engineConfiguration->trigger.type = TT_DODGE_RAM;
 
+	// set_cranking_charge_angle 30
+	engineConfiguration->crankingChargeAngle = 30;
+
 	//Base engine setting
 	engineConfiguration->specs.cylindersCount = 8;
 	engineConfiguration->specs.firingOrder = FO_1_8_4_3_6_5_7_2;
