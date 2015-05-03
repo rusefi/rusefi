@@ -604,18 +604,6 @@ static void setIgnitionPin(const char *indexStr, const char *pinName) {
 	boardConfiguration->ignitionPins[index] = pin;
 }
 
-// set_idle_pin none
-static void setIdlePin(const char *pinName) {
-	brain_pin_e pin = parseBrainPin(pinName);
-	// todo: extract method - code duplication with other 'set_xxx_pin' methods?
-	if (pin == GPIO_INVALID) {
-		scheduleMsg(&logger, "invalid pin name [%s]", pinName);
-		return;
-	}
-	scheduleMsg(&logger, "setting idleValve pin to %s please save&restart", hwPortname(pin));
-	boardConfiguration->idle.solenoidPin = pin;
-}
-
 static void setIndividualPin(const char *pinName, brain_pin_e *targetPin, const char *name) {
 	brain_pin_e pin = parseBrainPin(pinName);
 	if (pin == GPIO_INVALID) {
@@ -624,6 +612,15 @@ static void setIndividualPin(const char *pinName, brain_pin_e *targetPin, const 
 	}
 	scheduleMsg(&logger, "setting %s pin to %s please save&restart", name, hwPortname(pin));
 	*targetPin = pin;
+}
+
+// set_idle_pin none
+static void setIdlePin(const char *pinName) {
+	setIndividualPin(pinName, &boardConfiguration->idle.solenoidPin, "idle");
+}
+
+static void setMainRelayPin(const char *pinName) {
+	setIndividualPin(pinName, &boardConfiguration->mainRelayPin, "main relay");
 }
 
 static void setACPin(const char *pinName) {
@@ -1009,6 +1006,7 @@ void initSettings(engine_configuration_s *engineConfiguration) {
 	addConsoleActionS("set_fuel_pump_pin", setFuelPumpPin);
 	addConsoleActionS("set_ac_pin", setACPin);
 	addConsoleActionS("set_idle_pin", setIdlePin);
+	addConsoleActionS("set_main_relay_pin", setMainRelayPin);
 
 	addConsoleActionSS("set", setValue);
 
