@@ -18,7 +18,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -56,7 +55,7 @@ public class StartupFrame {
     }
 
     public static void setAppIcon(JFrame frame) {
-        ImageIcon icon = loadIcon(APPICON);
+        ImageIcon icon = UiUtils.loadIcon(APPICON);
         if (icon != null)
             frame.setIconImage(icon.getImage());
     }
@@ -103,7 +102,7 @@ public class StartupFrame {
 
         JPanel rightPanel = new JPanel(new VerticalFlowLayout());
 
-        ImageIcon logoIcon = loadIcon(LOGO);
+        ImageIcon logoIcon = UiUtils.loadIcon(LOGO);
         if (logoIcon != null) {
             JLabel logo = new JLabel(logoIcon);
             logo.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10));
@@ -159,11 +158,4 @@ public class StartupFrame {
         return combo;
     }
 
-    public static ImageIcon loadIcon(String strPath) {
-        URL imgURL = StartupFrame.class.getResource(strPath);
-        if (imgURL != null)
-            return new ImageIcon(imgURL);
-        else
-            return null;
-    }
 }

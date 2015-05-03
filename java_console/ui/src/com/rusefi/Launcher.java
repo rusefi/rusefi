@@ -31,7 +31,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * @see com.rusefi.StartupFrame
  */
 public class Launcher {
-    public static final int CONSOLE_VERSION = 20150502;
+    public static final int CONSOLE_VERSION = 20150503;
     public static final boolean SHOW_STIMULATOR = false;
     private static final String TAB_INDEX = "main_tab";
     protected static final String PORT_KEY = "port";
@@ -99,7 +99,7 @@ public class Launcher {
 //        tabbedPane.add("Wizards", new Wizard().createPane());
 
         tabbedPane.add("Settings", new SettingsTab().createPane());
-
+        tabbedPane.add("Bench Test", new BenchTestPane().getContent());
 
         if (!LinkManager.isLogViewerMode(port)) {
             int selectedIndex = getConfig().getRoot().getIntProperty(TAB_INDEX, 2);
