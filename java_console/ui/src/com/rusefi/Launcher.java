@@ -11,6 +11,7 @@ import com.rusefi.ui.logview.LogViewer;
 import com.rusefi.ui.storage.Node;
 import com.rusefi.ui.util.DefaultExceptionHandler;
 import com.rusefi.ui.util.FrameHelper;
+import com.rusefi.ui.util.JustOneInstance;
 import jssc.SerialPortList;
 
 import javax.swing.*;
@@ -31,7 +32,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * @see com.rusefi.StartupFrame
  */
 public class Launcher {
-    public static final int CONSOLE_VERSION = 20150503;
+    public static final int CONSOLE_VERSION = 20150504;
     public static final boolean SHOW_STIMULATOR = false;
     private static final String TAB_INDEX = "main_tab";
     protected static final String PORT_KEY = "port";
@@ -174,8 +175,14 @@ public class Launcher {
     }
 
     private static void awtCode(String[] args) {
+        if (JustOneInstance.isAlreadyRunning()) {
+            int result = JOptionPane.showConfirmDialog(null, "Looks like another instance is already running. Do you really want to start another instance?",
+                    "rusEfi", JOptionPane.YES_NO_OPTION);
+            if (result == JOptionPane.NO_OPTION)
+                System.exit(-1);
+        }
+        JustOneInstance.onStart();
         try {
-
             boolean isPortDefined = args.length > 0;
             if (isPortDefined) {
                 new Launcher(args[0]);
