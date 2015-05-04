@@ -20,8 +20,18 @@ public class BenchTestPane {
         content.add(createFuelPumpTest());
         content.add(createSparkTest());
         content.add(createInjectorTest());
-        content.add(new JLabel());
+        content.add(createMILTest());
         content.add(new MessagesView().messagesScroll);
+    }
+
+    private Component createMILTest() {
+        BenchTestPanel panel = new BenchTestPanel("check_engine.jpg", "MIL") {
+            @NotNull
+            protected String getCommand() {
+                return "milbench";
+            }
+        };
+        return panel.getContent();
     }
 
     private Component createFanTest() {
