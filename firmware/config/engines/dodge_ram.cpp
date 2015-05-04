@@ -29,19 +29,30 @@ void setDodgeRam1996(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->triggerInputPins[0] = GPIOC_6;
 	boardConfiguration->triggerInputPins[1] = GPIOA_5;
 
-	boardConfiguration->injectionPins[0] = GPIOD_3;
-	boardConfiguration->injectionPins[1] = GPIOE_2;
-	boardConfiguration->injectionPins[2] = GPIOE_3;
-	boardConfiguration->injectionPins[3] = GPIOE_4;
-	boardConfiguration->injectionPins[4] = GPIOD_5;
-	boardConfiguration->injectionPins[5] = GPIOB_7;
-	boardConfiguration->injectionPins[6] = GPIOB_8;
-	boardConfiguration->injectionPins[7] = GPIOB_9;
+	boardConfiguration->injectionPins[0] = GPIOE_2;
+	boardConfiguration->injectionPins[1] = GPIOB_9;
+	boardConfiguration->injectionPins[2] = GPIOD_5;
+	boardConfiguration->injectionPins[3] = GPIOB_8;
+
+	boardConfiguration->injectionPins[4] = GPIOB_7;
+	boardConfiguration->injectionPins[5] = GPIOE_3;
+	boardConfiguration->injectionPins[6] = GPIOE_4;
+	boardConfiguration->injectionPins[7] = GPIOD_3;
 
 	boardConfiguration->ignitionPins[0] = GPIOC_9;
 
 	boardConfiguration->mainRelayPin = GPIOE_5;
 	boardConfiguration->fuelPumpPin = GPIOE_6;
+
+	engineConfiguration->engineChartSize = 450;
+
+	// set_cranking_fuel 7
+	engineConfiguration->cranking.baseFuel = 7;
+
+	// set_global_trigger_offset_angle -50
+	engineConfiguration->globalTriggerAngleOffset = -50;
+
+
 
 	engineConfiguration->vbattAdcChannel = EFI_ADC_NONE; // todo: conflict with what?
 }
