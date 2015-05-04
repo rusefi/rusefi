@@ -799,6 +799,8 @@ static void setSpiMode(int index, bool mode) {
 static void enableOrDisable(const char *param, bool isEnabled) {
 	if (strEqualCaseInsensitive(param, "fastadc")) {
 		boardConfiguration->isFastAdcEnabled = isEnabled;
+	} else if (strEqualCaseInsensitive(param, "serial")) {
+		boardConfiguration->useSerialPort = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "stepperidle")) {
 		boardConfiguration->useStepperIdle = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "trigger_only_front")) {
