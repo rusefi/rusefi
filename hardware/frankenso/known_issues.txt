@@ -63,7 +63,7 @@
 62)                  add resistor divider or some mechanism for identifying via firmware sensing PCB revision. Perhaps to PB1 AN input 
 63) RESOLVED IN R0.4 better test pads silkscreen: 5V, GND, 12V
 64) RESOLVED IN R0.4 LED for cam/crank signal. we can remove cam/crank test points if we need space GOING TO BE DIM, AS IT NEED 10K SERIES RESISTOR
-65)                  why do we have W1002 & W1003 if these are usually there? Removing them would remove one point of failure
+65) RESOLVED IN R0.4 why do we have W1002 & W1003 if these are usually there? Removing them would remove one point of failure SEE 78)
 66)                  JP04 & JP05 are defined on the main schematics sheet. It would be better to define then on Page 8 with the rest of cam/crank stuff
 67) RESOLVED IN R0.4 Updated silk screen notes, draws .12 amps normal, with a typical inrush of .3A. 
 68) RESOLVED IN R0.4 Look into LCD dimming R99, perhaps replace with a POT. Perhaps connect to a GPIO
@@ -71,22 +71,17 @@
 70) RESOLVED IN R0.4 Some USB connectors are wider and hit the PCB making it hard to insert. MOVED PCB EDGE TO BE CLOSER TO USB CONNECTOR.
 71) RESOLVED IN R0.4 TI TPIC8101 part number instead of HIP9011
 72) RESOLVED IN R0.4 more holes for proto
-73)                  one of LCD holes the traces are too close on the back
+73)                  one of LCD holes the traces are too close on the back FIXED BUT NEED TO VERIFY FOR REAL WITH BOARD SPIN.
 74) RESOLVED IN R0.4 order new joystick for paper test
 75) RESOLVED IN R0.4 HIP9011 / TPIC8101 chip has a problem with starting, RESOLVED BY ADDING CAP BETWEEN CS AND XIN TO CREATE STARTING PING. 
 76) RESOLVED IN R0.4 AN inputs are limited to operation between 0V and 4V.RESOLVED BY CHANGING OP-AMP TO A BETTER RAIL TO RAIL THAT IS MUCH CLOSER TO THE RAIL.
-77)                  W1002 - silksceen on the wrong place? remove these jumpers anyway?
-78)                  1K and 0R on the MAX9926 input: need to put a comment on the schematics page explaining that none or just one of them should be installed depending on the use-case
+77) RESOLVED IN R0.4 W1002 - silksceen on the wrong place
+78) RESOLVED IN R0.4 1K and 0R on the MAX9926 input: need to put a comment on the schematics page explaining that none or just one of them should be installed depending on the use-case SEE 65)
 79) RESOLVED IN R0.4 on schematics, rename INJ_xx to LOW_xx? "inj" is a bit confusing, it implies that PE6 is injector #1 while it is usually not the case
 80) RESOLVED IN R0.4 set analog input values to match https://docs.google.com/spreadsheets/d/1LTvS7I-128Hft9uXHG1JrBxetVjGJDSBkySgVDQ6MGk/edit#gid=0
 81) RESOLVED IN R0.4 remove 'REAR-DEFROSTER-SW' and etc from schematics
+82) RESOLVED IN R0.4 Add silk screen note that fire extinguisher is minimal required equipment. 
 
-
-  )                  route unused stm32 pins (D3 PC13 etc) to unused connector pins
-  )                  cheaper battery holder - through-hole (need to find out footprint)
-  )                  remove some/all EGT?
-  )                  idle valve SMD diode?
-  )                  silkscreen for analog inputs - PA1/PC1/etc?
 For honda add-on / rewiring board
 -- Add 2A high side solinoid drive for VTec sol
 -- Add 3rd VR chip for 3rd signal
