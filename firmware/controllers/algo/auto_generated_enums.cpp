@@ -410,6 +410,8 @@ case ES_BPSX_D1:
   return "ES_BPSX_D1";
 case ES_Innovate_MTX_L:
   return "ES_Innovate_MTX_L";
+case ES_NarrowBand:
+  return "ES_NarrowBand";
 case Force_4b_ego_sensor:
   return "Force_4b_ego_sensor";
   }
