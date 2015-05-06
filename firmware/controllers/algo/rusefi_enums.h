@@ -371,6 +371,8 @@ typedef enum {
 	ES_Innovate_MTX_L = 1,
 	ES_14Point7_Free = 2,
 
+	ES_NarrowBand = 3,
+
 	Force_4b_ego_sensor = ENUM_32_BITS,
 } ego_sensor_e;
 
