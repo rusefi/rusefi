@@ -9,6 +9,8 @@
 
 #include <stdint.h>
 #include "rusefi_enums.h"
+#include "rusefi_generated.h"
+
 
 /**
  * integer time in milliseconds
@@ -40,46 +42,15 @@ typedef float percent_t;
 
 typedef void (*Void)(void);
 
-#define INJECTION_PIN_COUNT 12
-#define IGNITION_PIN_COUNT 12
-
-#define EGT_CHANNEL_COUNT 8
-
-#define JOYSTICK_PIN_COUNT 5
-
-#define FUEL_RPM_COUNT 16
-#define FUEL_LOAD_COUNT 16
-
-#define LE_COMMAND_LENGTH 200
-#define LE_COMMAND_COUNT 16
-
-#define MAF_DECODING_COUNT 256
-
 typedef char le_formula_t[LE_COMMAND_LENGTH];
 
-#define HW_MAX_ADC_INDEX 16
-
 typedef brain_pin_e egt_cs_array_t[EGT_CHANNEL_COUNT];
-
-#define MAP_ANGLE_SIZE 8
-#define MAP_WINDOW_SIZE 8
-
-#define DWELL_COUNT 8
-
-#define DWELL_CURVE_SIZE 8
-
-#define CRANKING_CURVE_SIZE 8
-
-#define CLT_CURVE_SIZE 16
-#define IAT_CURVE_SIZE 16
-#define VBAT_INJECTOR_CURVE_SIZE 8
-
-#define IGN_LOAD_COUNT 16
-#define IGN_RPM_COUNT 16
 
 // todo: merge these two types together?
 typedef float fuel_table_t[FUEL_LOAD_COUNT][FUEL_RPM_COUNT];
 typedef float ignition_table_t[IGN_LOAD_COUNT][IGN_RPM_COUNT];
+
+typedef float baro_corr_table_t[BARO_CORR_SIZE][BARO_CORR_SIZE];
 
 // todo: rename this structure one all tables migrated
 typedef struct {

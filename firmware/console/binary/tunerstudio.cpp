@@ -208,14 +208,14 @@ char *getWorkingPageAddr(int pageIndex) {
 int getTunerStudioPageSize(int pageIndex) {
 	switch (pageIndex) {
 	case 0:
-		return PAGE_0_SIZE;
-	case 1:
-	case 2:
-	case 3:
-	case 4:
-	case 5:
-	case 6:
-		return PAGE_1_SIZE;
+		return TOTAL_CONFIG_SIZE;
+//	case 1:
+//	case 2:
+//	case 3:
+//	case 4:
+//	case 5:
+//	case 6:
+//		return PAGE_1_SIZE;
 //	case 2:
 //	case 3:
 //	case 4:
