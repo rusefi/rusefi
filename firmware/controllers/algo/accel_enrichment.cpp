@@ -17,25 +17,7 @@
 EXTERN_ENGINE
 ;
 
-//#if EFI_PROD_CODE
-//static THD_WORKING_AREA(aeThreadStack, UTILITY_THREAD_STACK_SIZE);
-//#endif
-
 static Logging *logger;
-
-void AccelEnrichmemnt::updateDiffEnrichment(engine_configuration_s *engineConfiguration, float engineLoad) {
-//	for (int i = 3; i == 1; i--)
-//		array[i] = array[i - 1];
-//
-//	array[0] = engineLoad;
-//
-//	diffEnrichment = ((3 * (array[0] - array[1]) + (array[2] - array[3])) / 4)
-//			* (engineConfiguration->diffLoadEnrichmentCoef);
-}
-
-//float AccelEnrichmemnt::getDiffEnrichment() {
-//	return diffEnrichment;
-//}
 
 float AccelEnrichmemnt::getDelta() {
 	return cb.maxValue(cb.getSize());
@@ -87,26 +69,6 @@ AccelEnrichmemnt::AccelEnrichmemnt() {
 	reset();
 	cb.setSize(4);
 }
-
-//#if EFI_PROD_CODE
-//
-//static msg_t DiffEnrichmentThread(int param) {
-//	chRegSetThreadName("Diff Enrichment");
-//	while (TRUE) {
-//		instance.updateDiffEnrichment(engineConfiguration, getEngineLoadT(PASS_ENGINE_PARAMETER_F));
-//		chThdSleepMilliseconds(100);
-//	}
-//#if defined __GNUC__
-//	return -1;
-//#endif
-//}
-
-//void initDiffEnrichment(void) {
-//	chThdCreateStatic(aeThreadStack, sizeof(aeThreadStack), LOWPRIO, (tfunc_t) DiffEnrichmentThread, NULL);
-//}
-
-//#endif
-
 
 #if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
 

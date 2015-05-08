@@ -18,8 +18,6 @@
 class AccelEnrichmemnt {
 public:
 	AccelEnrichmemnt();
-	void updateDiffEnrichment(engine_configuration_s *engineConfiguration,
-			float engineLoad);
 	float getMapEnrichment(DECLARE_ENGINE_PARAMETER_F);
 	floatms_t getTpsEnrichment(DECLARE_ENGINE_PARAMETER_F);
 	float getDelta();

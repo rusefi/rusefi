@@ -109,21 +109,22 @@ end_struct
 
 injector_s injector
 
+
 int16_t directSelfStimulation;Should the trigger emulator push data right into trigger input, eliminating the need for physical jumper wires?\nPS: Funny name, right? :)\ntodo: make this a bit on some bit field
+uint16_t unused334;
 
 int16_t tpsMin;todo: extract these two fields into a structure\ntodo: we need two sets of TPS parameters - modern ETBs have two sensors;"ADC",      1,     0,    0, 1023,      0
 int16_t tpsMax;tpsMax value as 10 bit ADC value. Not Voltage!;"ADC",      1,     0,    0, 1023,      0
 
-uint16_t unused334;
-
-
 int16_t tpsErrorLowValue;todo: finish implementation. These values are used for TPS disconnect detection;"*C",       1,     0,    -40, 200,     1
 int16_t tpsErrorHighValue;;"*C",       1,     0,    -40, 200,     1
 
-float primingSquirtDurationMs;;"*C",       1,     0,    -40, 200,     1
-int engineCycle;360 for two-stroke\n720 for four-stroke;"engine cycle",      1,      0,       0, 1000,      0
-
 cranking_parameters_s cranking
+float primingSquirtDurationMs;;"*C",       1,     0,    -40, 200,     1
+	float ignitionDwellForCrankingMs;;"ms",        1,     0,    0, 200,     1
+float crankingChargeAngle;While cranking (which causes battery voltage to drop) we can calculate dwell time in shaft\ndegrees, not in absolute time as in running mode.;"deg",    1,      0,       0,  3000.0,      0
+
+
 MAP_sensor_config_s map;@see hasMapSensor\n@see isMapAveragingEnabled
 
 
@@ -132,18 +133,6 @@ ThermistorConf iat;
 
 float[DWELL_COUNT] sparkDwellBins;;"RPM",     1,   0.0,      0.0,  18000,   2
 	float[DWELL_COUNT] sparkDwell;;"ms",	   1,   0.0,      0.0,  30.0,    2
-
-
-float ignitionBaseAngle;this value could be used to offset the whole ignition timing table by a constant;"RPM",    1,      0,       0,  3000.0,      0
-
-
-float crankingChargeAngle;While cranking (which causes battery voltage to drop) we can calculate dwell time in shaft\ndegrees, not in absolute time as in running mode.;"deg",    1,      0,       0,  3000.0,      0
-
-custom timing_mode_e 4 bits, U32, @OFFSET@ [0:0], "dynamic", "fixed"
-
-timing_mode_e timingMode;
-
-float fixedModeTiming;This value is used in 'fixed timing' mode, i.e. constant timing\nThis mode is useful for instance while adjusting distributor location;"RPM",    1,      0,       0,  3000.0,      0
 
 struct_no_prefix specs_s
 float displacement;Engine displacement, in liters\nsee also cylindersCount;"L",    1,      0,       0,  1000.0,        2
@@ -156,19 +145,38 @@ firing_order_e firingOrder;
 end_struct
 
     specs_s specs
+	float cylinderBore;Cylinder diameter, in mm.
+int engineCycle;360 for two-stroke\n720 for four-stroke;"engine cycle",      1,      0,       0, 1000,      0
 
 	int rpmHardLimit;;"rpm",    1,      0,       0, 20000.0,        2
 
-custom injection_mode_e 4 bits, U32, @OFFSET@, [0:1], "Simultaneous", "Sequential", "Batch", "INVALID"
-injection_mode_e crankingInjectionMode;
-	injection_mode_e injectionMode;
-
-float globalTriggerAngleOffset;This field is the angle between Top Dead Center (TDC) and the first trigger event.\nKnowing this angle allows us to control timing and other angles in reference to TDC.;"deg",    1,      0,       0,  720, 0
-float analogInputDividerCoefficient;This parameter holds the coefficient of input voltage dividers;"coef",    1,      0,    0.01,  10.0,   2
-
 custom engine_load_mode_e 4 bits, U32, @OFFSET@, [0:1], "MAF", "Alpha-N/TPS", "MAP", "SPEED DENSITY"
 engine_load_mode_e algorithm;This setting controls which algorithm is used for ENGINE LOAD
-float vbattDividerCoeff;;"coef",    1,      0,    0.01,  20.0,        2
+
+custom injection_mode_e 4 bits, U32, @OFFSET@, [0:1], "Simultaneous", "Sequential", "Batch", "INVALID"
+injection_mode_e crankingInjectionMode;
+injection_mode_e injectionMode;
+float injectionAngle;this is about deciding when the injector starts it's squirt;"deg",    1,      0.0,       0,  1000.0,        2
+float crankingTimingAngle;;     "deg",    1,      0.0,    -360,     360,        2
+
+custom ignition_mode_e 4 bits,    U32,    @OFFSET@, [0:1], "One coil", "Individual Coils", "Wasted", "INVALID"
+ignition_mode_e ignitionMode;
+
+float ignitionBaseAngle;this value could be used to offset the whole ignition timing table by a constant;"RPM",    1,      0,       0,  3000.0,      0
+
+custom timing_mode_e 4 bits, U32, @OFFSET@ [0:0], "dynamic", "fixed"
+timing_mode_e timingMode;
+
+float fixedModeTiming;This value is used in 'fixed timing' mode, i.e. constant timing\nThis mode is useful for instance while adjusting distributor location;"RPM",    1,      0,       0,  3000.0,      0
+
+float globalTriggerAngleOffset;This field is the angle between Top Dead Center (TDC) and the first trigger event.\nKnowing this angle allows us to control timing and other angles in reference to TDC.;"deg",    1,      0,       0,  720, 0
+
+
+
+float analogInputDividerCoefficient;This parameter holds the coefficient of input voltage dividers;"coef",    1,      0,    0.01,  10.0,   2
+float vbattDividerCoeff;Battery Voltage input resistor divider coefficient;"coef",    1,      0,    0.01,  20.0,        2
+adc_channel_e vbattAdcChannel;
+
 float fanOnTemperature;Cooling fan turn-on temperature threshold, in Celsuis;"*C",    1,      0,       0,  1000.0,        2
 float fanOffTemperature;Cooling fan turn-off temperature threshold, in Celsuis;"*C",    1,      0,       0,  1000.0,        2
 
@@ -178,10 +186,8 @@ float vehicleSpeedCoef;This coefficient translates vehicle speed input frequency
 custom can_nbc_e 4 bits, U32, @OFFSET@, [0:1], "BMW", "FIAT", "VAG" , "INVALID"
 can_nbc_e canNbcType;
 
-int canSleepPeriod;;"ms",    1,      0,       0,  1000.0,        2
+int canSleepPeriod;CANbus thread period, ms;"ms",    1,      0,       0,  1000.0,        2
 
-custom ignition_mode_e 4 bits,    U32,    @OFFSET@, [0:1], "One coil", "Individual Coils", "Wasted", "INVALID"
-ignition_mode_e ignitionMode;
 
 custom operation_mode_e 4 bits,    U32,    @OFFSET@, [0:1], "INVALID", "4 stroke without cam sensor", "4 stroke with cam sensor", "2 stroke"
 operation_mode_e operationMode;
@@ -225,7 +231,6 @@ trigger_config_s trigger;
 
 custom spi_device_e 4 bits,U32,   @OFFSET@, [0:1], "Off", "SPI1", "SPI2", "SPI3" 
 	spi_device_e hip9011SpiDevice;
-	adc_channel_e vbattAdcChannel;
 	
 	
 float globalFuelCorrection;;"coef",    1,      0.0,       0,  1000.0,        2
@@ -245,10 +250,8 @@ struct afr_sensor_s
 end_struct	
 	
 afr_sensor_s afr;@see hasAfrSensor
-float injectionAngle;this is about deciding when the injector starts it's squirt;"deg",    1,      0.0,       0,  1000.0,        2
-	float crankingTimingAngle;;     "deg",    1,      0.0,    -360,     360,        2
 
-	float diffLoadEnrichmentCoef;
+	float unused596;
 	
 air_pressure_sensor_config_s baroSensor;@see hasBaroSensor	
 
@@ -456,7 +459,6 @@ bit cutSparkOnHardLimit
 
 	uint32_t engineChartSize;;"count",      1,      0,       0, 300,      0
 
-	float ignitionDwellForCrankingMs;;"ms",        1,     0,    0, 200,     1
 
 	int targetIdleRpm;
 
@@ -475,7 +477,6 @@ bit cutSparkOnHardLimit
 	float knockDetectionWindowStart;
 	float knockDetectionWindowEnd;
 
-	float cylinderBore;Cylinder diameter, in mm.
 
 float idleStepperReactionTime;;"ms",      1,      0,       1, 300,      0
 	float hipThreshold;
