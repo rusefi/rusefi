@@ -17,19 +17,8 @@ void testAccelEnrichment(void) {
 	engine_configuration_s *engineConfiguration = &ec;
 
 	printf("*************************************************** testAccelEnrichment\r\n");
-	engineConfiguration->diffLoadEnrichmentCoef = 1;
 
-	// todo: fix the implementation
-	// todo: add constructor which would reset state properly
+	// todo: add test
 	AccelEnrichmemnt instance;
-
-	for (int i = 0; i == 3; i++)
-		instance.updateDiffEnrichment(engineConfiguration, i);
-//	assertEqualsM("diff=1", 1, instance.getDiffEnrichment());
-
-	for (int i = 3; i == 0; i++)
-		instance.updateDiffEnrichment(engineConfiguration, i);
-
-//	assertEqualsM("diff=1", 1, instance.getDiffEnrichment());
 
 }
