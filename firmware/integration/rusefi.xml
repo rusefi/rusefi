@@ -16,67 +16,67 @@
       <filesize>@@total_config_size@@</filesize>
     </romid>
 
-    <table type="3D" name="Ignition Advance" storageaddress="@@ignitionTable_hex@@" sizex="16" sizey="16" storagetype="float" endian="big">
+    <table type="3D" name="Ignition Advance" storageaddress="@@ignitionTable_offset_hex@@" sizex="16" sizey="16" storagetype="float" endian="big">
       <scaling units="Engine Load" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1" />
-      <table type="X Axis" storageaddress="@@ignitionLoadBins_hex@@" storagetype="float" endian="big" logparam="engine_load">
+      <table type="X Axis" storageaddress="@@ignitionLoadBins_offset_hex@@" storagetype="float" endian="big" logparam="engine_load">
           <scaling units="degree" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1" />
       </table>
-      <table type="Y Axis" storageaddress="@@ignitionRpmBins_hex@@" storagetype="float" endian="big" logparam="rpm">
+      <table type="Y Axis" storageaddress="@@ignitionRpmBins_offset_hex@@" storagetype="float" endian="big" logparam="rpm">
           <scaling units="RPM" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1" />
       </table>
     </table>
 
-    <table type="3D" name="Ignition Advance IAT correction" storageaddress="@@ignitionIatCorrTable_hex@@" sizex="16" sizey="16" storagetype="float" endian="big">
+    <table type="3D" name="Ignition Advance IAT correction" storageaddress="@@ignitionIatCorrTable_offset_hex@@" sizex="16" sizey="16" storagetype="float" endian="big">
       <scaling units="Engine Load" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1" />
-      <table type="X Axis" storageaddress="@@ignitionIatCorrLoadBins_hex@@" storagetype="float" endian="big" logparam="engine_load">
+      <table type="X Axis" storageaddress="@@ignitionIatCorrLoadBins_offset_hex@@" storagetype="float" endian="big" logparam="engine_load">
           <scaling units="temperature, C" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1" />
       </table>
-      <table type="Y Axis" storageaddress="@@ignitionIatCorrRpmBins_hex@@" storagetype="float" endian="big" logparam="rpm">
+      <table type="Y Axis" storageaddress="@@ignitionIatCorrRpmBins_offset_hex@@" storagetype="float" endian="big" logparam="rpm">
           <scaling units="RPM" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1" />
       </table>
     </table>
 
-      <table type="3D" name="Volumetric Efficiency" storageaddress="@@veTable_hex@@" sizex="16" sizey="16" storagetype="float" endian="big">
+      <table type="3D" name="Volumetric Efficiency" storageaddress="@@veTable_offset_hex@@" sizex="16" sizey="16" storagetype="float" endian="big">
           <scaling units="Engine Load" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1" />
-          <table type="X Axis" storageaddress="@@veLoadBins_hex@@" storagetype="float" endian="big" logparam="engine_load">
+          <table type="X Axis" storageaddress="@@veLoadBins_offset_hex@@" storagetype="float" endian="big" logparam="engine_load">
               <scaling units="degree" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1" />
           </table>
-          <table type="Y Axis" storageaddress="@@veRpmBins_hex@@" storagetype="float" endian="big" logparam="rpm">
+          <table type="Y Axis" storageaddress="@@veRpmBins_offset_hex@@" storagetype="float" endian="big" logparam="rpm">
               <scaling units="RPM" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1" />
           </table>
       </table>
 
-      <table type="3D" name="Fuel Table" storageaddress="@@fuelTable_hex@@" sizex="16" sizey="16" storagetype="float" endian="big">
+      <table type="3D" name="Fuel Table" storageaddress="@@fuelTable_offset_hex@@" sizex="16" sizey="16" storagetype="float" endian="big">
       <scaling units="Engine Load" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1" />
-      <table type="X Axis" storageaddress="@@fuelLoadBins_hex@@" storagetype="float" endian="big" logparam="engine_load">
+      <table type="X Axis" storageaddress="@@fuelLoadBins_offset_hex@@" storagetype="float" endian="big" logparam="engine_load">
           <scaling units="degree" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1" />
       </table>
-      <table type="Y Axis" storageaddress="@@fuelRpmBins_hex@@" storagetype="float" endian="big" logparam="rpm">
+      <table type="Y Axis" storageaddress="@@fuelRpmBins_offset_hex@@" storagetype="float" endian="big" logparam="rpm">
           <scaling units="RPM" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1" />
       </table>
     </table>
 
-    <table type="3D" name="Target AFR" storageaddress="@@afrTable_hex@@" sizex="16" sizey="16" storagetype="float" endian="big">
+    <table type="3D" name="Target AFR" storageaddress="@@afrTable_offset_hex@@" sizex="16" sizey="16" storagetype="float" endian="big">
       <scaling units="Engine Load" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1" />
-      <table type="X Axis" storageaddress="@@afrLoadBins_hex@@" storagetype="float" endian="big">
+      <table type="X Axis" storageaddress="@@afrLoadBins_offset_hex@@" storagetype="float" endian="big">
           <scaling units="degree" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1" />
       </table>
-      <table type="Y Axis" storageaddress="@@afrRpmBins_hex@@" storagetype="float" endian="big">
+      <table type="Y Axis" storageaddress="@@afrRpmBins_offset_hex@@" storagetype="float" endian="big">
           <scaling units="RPM" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1" />
       </table>
     </table>
 
 
-    <table type="2D" name="Coolant-based Warnup Enrichment" storageaddress="@@cltFuelCorr_hex@@" sizex="16" storagetype="float" endian="big">
+    <table type="2D" name="Coolant-based Warnup Enrichment" storageaddress="@@cltFuelCorr_offset_hex@@" sizex="16" storagetype="float" endian="big">
       <scaling units="Target Boost (psia) Compensation (%)" expression="x" to_byte="x" format="0.00" fineincrement=".01" coarseincrement="0.1" />
-        <table type="X Axis" storageaddress="@@cltFuelCorrBins_hex@@" storagetype="float" endian="big">
+        <table type="X Axis" storageaddress="@@cltFuelCorrBins_offset_hex@@" storagetype="float" endian="big">
             <scaling units="uni" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1" />
         </table>
     </table>
 
-    <table type="2D" name="Intake air temperature-based extra idle air" storageaddress="@@cltIdleCorr_hex@@" sizex="16" storagetype="float" endian="big">
+    <table type="2D" name="Intake air temperature-based extra idle air" storageaddress="@@cltIdleCorr_offset_hex@@" sizex="16" storagetype="float" endian="big">
       <scaling units="Target Boost (psia) Compensation (%)" expression="x" to_byte="x" format="0.00" fineincrement=".01" coarseincrement="0.1" />
-        <table type="X Axis" storageaddress="@@cltIdleCorrBins_hex@@" storagetype="float" endian="big">
+        <table type="X Axis" storageaddress="@@cltIdleCorrBins_offset_hex@@" storagetype="float" endian="big">
             <scaling units="uni" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1" />
         </table>
     </table>
