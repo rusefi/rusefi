@@ -1,9 +1,11 @@
+#define LE_COMMAND_LENGTH 200
+#define TS_FILE_VERSION 20150506
 #define MAP_ANGLE_SIZE 8
 #define MAP_WINDOW_SIZE 8
 #define CLT_CURVE_SIZE 16
 #define IAT_CURVE_SIZE 16
 #define VBAT_INJECTOR_CURVE_SIZE 8
-#define DWELL_COUNT 8
+#define DWELL_CURVE_SIZE 8
 #define CRANKING_CURVE_SIZE 8
 #define IGN_LOAD_COUNT 16
 #define IGN_RPM_COUNT 16
@@ -18,6 +20,7 @@
 #define LE_COMMAND_COUNT 16
 #define FUEL_RPM_COUNT 16
 #define FUEL_LOAD_COUNT 16
+#define BARO_CORR_SIZE 4
 #define MAF_DECODING_COUNT 256
 #define engineConfiguration_offset 0
 #define engineConfiguration_offset_hex 0
@@ -631,8 +634,13 @@
 #define noAccelAfterHardLimitPeriodSecs_offset 1644
 #define mapAveragingSchedulingAtIndex_offset 1648
 #define mapAveragingSchedulingAtIndex_offset_hex 670
-#define unused3_offset 1652
-#define unused3_offset_hex 674
+#define baroCorrBins_offset 1652
+#define baroCorrBins_offset_hex 674
+#define baroCorr_offset 1668
+#define baroCorr_offset_hex 684
+#define baroCorrTable_offset 1684
+#define baroCorrTable_offset_hex 694
+#define unused3_offset 1748
 #define tpsAccelLength_offset 2184
 #define tpsAccelLength_offset_hex 888
 #define tpsAccelEnrichmentThreshold_offset 2188

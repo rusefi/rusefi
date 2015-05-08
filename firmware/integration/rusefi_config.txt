@@ -14,15 +14,31 @@ struct persistent_config_s
 
 struct_no_prefix engine_configuration_s
 
+! todo there is still a spot where this 200 is hard-coded
+#define LE_COMMAND_LENGTH 200
+
+!
+! this is used to confirm that firmware and TunerStudio are using the same rusefi.ini version
+! 
+#define TS_FILE_VERSION 20150506
+
+
 #define MAP_ANGLE_SIZE 8
 #define MAP_WINDOW_SIZE 8
+
 #define CLT_CURVE_SIZE 16
+
 #define IAT_CURVE_SIZE 16
+
 #define VBAT_INJECTOR_CURVE_SIZE 8
-#define DWELL_COUNT 8
+
+#define DWELL_CURVE_SIZE 8
+
 #define CRANKING_CURVE_SIZE 8
+
 #define IGN_LOAD_COUNT 16
 #define IGN_RPM_COUNT 16
+
 #define INJECTION_PIN_COUNT 12
 #define IGNITION_PIN_COUNT 12
 #define EGT_CHANNEL_COUNT 8
@@ -36,12 +52,18 @@ struct_no_prefix engine_configuration_s
 #define FUEL_RPM_COUNT 16
 #define FUEL_LOAD_COUNT 16
 
+#define BARO_CORR_SIZE 4
+
 #define MAF_DECODING_COUNT 256
 
 ! please note that 1024 here is 4 * FUEL_RPM_COUNT * FUEL_LOAD_COUNT  
 custom fuel_table_t	1024 array,   F32,   @OFFSET@, [16x16],"ms",      1,     0,      0.0,   300.0,   2
 custom ve_table_t 1024 array,   F32,   @OFFSET@, [16x16],"%", 1, 0, 0, 999.0, 2
 custom afr_table_t 1024 array,   F32,   @OFFSET@, [16x16],"deg",	   1,     0,        0,  25.0,     2 
+
+! todo support table size multiplocation
+custom baro_corr_table_t 64 array,   F32,   @OFFSET@, [@@BARO_CORR_SIZE@@x@@BARO_CORR_SIZE@@],"%", 1, 0, 0, 999.0, 2
+
 
 ! please note that 1024 here is 4 * IGN_LOAD_COUNT * IGN_RPM_COUNT  
 custom ignition_table_t	1024 array,   F32,   @OFFSET@, [16x16],"deg",	   1,     0,     -360,  360,    2
@@ -128,8 +150,8 @@ MAP_sensor_config_s map;@see hasMapSensor\n@see isMapAveragingEnabled
 ThermistorConf clt;todo: merge with channel settings, use full-scale Thermistor here!
 ThermistorConf iat;
 
-float[DWELL_COUNT] sparkDwellBins;;"RPM",     1,   0.0,      0.0,  18000,   2
-	float[DWELL_COUNT] sparkDwell;;"ms",	   1,   0.0,      0.0,  30.0,    2
+float[DWELL_CURVE_SIZE] sparkDwellBins;;"RPM",     1,   0.0,      0.0,  18000,   2
+	float[DWELL_CURVE_SIZE] sparkDwell;;"ms",	   1,   0.0,      0.0,  30.0,    2
 
 struct_no_prefix specs_s
 float displacement;Engine displacement, in liters\nsee also cylindersCount;"L",    1,      0,       0,  1000.0,        2
@@ -492,7 +514,11 @@ float noAccelAfterHardLimitPeriodSecs;;"sec",      1,      0,       0, 60,      
 
 int mapAveragingSchedulingAtIndex;
 
-	int[133] unused3;
+float[BARO_CORR_SIZE] baroCorrBins;
+float[BARO_CORR_SIZE] baroCorr;
+
+baro_corr_table_t baroCorrTable;
+	int[109] unused3;
 
 	int tpsAccelLength;;"len",        1,     0,    1, 200,     3
 	float tpsAccelEnrichmentThreshold;;"roc",        1,     0,    0, 200,     3
