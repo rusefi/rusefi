@@ -21,6 +21,7 @@
 #include "engine_controller.h"
 
 static adc_channel_mode_e adcHwChannelEnabled[HW_MAX_ADC_INDEX];
+static const char * adcHwChannelUsage[HW_MAX_ADC_INDEX];
 
 AdcDevice::AdcDevice(ADCConversionGroup* hwConfig) {
 	this->hwConfig = hwConfig;
@@ -297,7 +298,7 @@ GPIO_TypeDef* getAdcChannelPort(adc_channel_e hwChannel) {
 	case ADC_CHANNEL_IN15:
 		return GPIOC;
 	default:
-		firmwareError("Unknown hw channel");
+		firmwareError("Unknown hw channel %d", hwChannel);
 		return NULL;
 	}
 }
@@ -348,7 +349,7 @@ int getAdcChannelPin(adc_channel_e hwChannel) {
 	case ADC_CHANNEL_IN15:
 		return 5;
 	default:
-		firmwareError("Unknown hw channel");
+		firmwareError("Unknown hw channel %d", hwChannel);
 		return -1;
 	}
 }
@@ -477,11 +478,13 @@ static void addChannel(const char *name, adc_channel_e setting, adc_channel_mode
 		firmwareError("ADC mapping error: input %s for %s already used?", errorMsgBuff, name);
 	}
 
+	adcHwChannelUsage[setting] = name;
 	adcHwChannelEnabled[setting] = mode;
 }
 
 static void configureInputs(void) {
 	memset(adcHwChannelEnabled, 0, sizeof(adcHwChannelEnabled));
+	memset(adcHwChannelUsage, 0, sizeof(adcHwChannelUsage));
 
 	addChannel("TPS", engineConfiguration->tpsAdcChannel, ADC_FAST);
 	addChannel("MAP", engineConfiguration->map.sensor.hwChannel, ADC_FAST);

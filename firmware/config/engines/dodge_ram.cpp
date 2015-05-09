@@ -9,11 +9,13 @@
 
 #include "main.h"
 #include "dodge_ram.h"
+#include "custom_engine.h"
 
 EXTERN_ENGINE
 ;
 
 void setDodgeRam1996(DECLARE_ENGINE_PARAMETER_F) {
+	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_F);
 	board_configuration_s * boardConfiguration = &engineConfiguration->bc;
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
