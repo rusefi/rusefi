@@ -298,6 +298,11 @@ extern AdcDevice fastAdc;
 
 static void printAnalogChannelInfoExt(const char *name, adc_channel_e hwChannel, float adcVoltage) {
 #if HAL_USE_ADC || defined(__DOXYGEN__)
+	if (hwChannel == EFI_ADC_NONE) {
+		scheduleMsg(&logger, "ADC is not assigned for %s", name);
+		return;
+	}
+
 	if (fastAdc.isHwUsed(hwChannel)) {
 		scheduleMsg(&logger, "fast enabled=%s", boolToString(boardConfiguration->isFastAdcEnabled));
 	}
@@ -310,9 +315,7 @@ static void printAnalogChannelInfoExt(const char *name, adc_channel_e hwChannel,
 
 static void printAnalogChannelInfo(const char *name, adc_channel_e hwChannel) {
 #if HAL_USE_ADC || defined(__DOXYGEN__)
-	if (hwChannel != EFI_ADC_NONE) {
-		printAnalogChannelInfoExt(name, hwChannel, getVoltage("print", hwChannel));
-	}
+	printAnalogChannelInfoExt(name, hwChannel, getVoltage("print", hwChannel));
 #endif
 }
 
