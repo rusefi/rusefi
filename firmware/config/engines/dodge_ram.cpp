@@ -42,9 +42,13 @@ void setDodgeRam1996(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->injectionPins[7] = GPIOD_3;
 
 	boardConfiguration->ignitionPins[0] = GPIOC_9;
+	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
+	boardConfiguration->ignitionPins[2] = GPIO_UNASSIGNED;
+	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
 
 	boardConfiguration->mainRelayPin = GPIOE_5;
 	boardConfiguration->fuelPumpPin = GPIOE_6;
+	boardConfiguration->fanPin = GPIO_UNASSIGNED;
 
 	engineConfiguration->engineChartSize = 450;
 
