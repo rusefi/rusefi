@@ -623,6 +623,10 @@ static void setMainRelayPin(const char *pinName) {
 	setIndividualPin(pinName, &boardConfiguration->mainRelayPin, "main relay");
 }
 
+static void setAlternatorPin(const char *pinName) {
+	setIndividualPin(pinName, &boardConfiguration->alternatorControlPin, "alternator");
+}
+
 static void setACPin(const char *pinName) {
 	setIndividualPin(pinName, &boardConfiguration->acRelayPin, "A/C");
 }
@@ -1007,6 +1011,7 @@ void initSettings(engine_configuration_s *engineConfiguration) {
 	addConsoleActionSS("set_trigger_simulator_mode", setTriggerSimulatorMode);
 	addConsoleActionS("set_fuel_pump_pin", setFuelPumpPin);
 	addConsoleActionS("set_ac_pin", setACPin);
+	addConsoleActionS("set_alternator_pin", setAlternatorPin);
 	addConsoleActionS("set_idle_pin", setIdlePin);
 	addConsoleActionS("set_main_relay_pin", setMainRelayPin);
 

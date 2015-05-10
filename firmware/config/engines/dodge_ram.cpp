@@ -58,6 +58,11 @@ void setDodgeRam1996(DECLARE_ENGINE_PARAMETER_F) {
 	// set_global_trigger_offset_angle -50
 	engineConfiguration->globalTriggerAngleOffset = -50;
 
+	boardConfiguration->alternatorControlPin = GPIOD_7;
+	engineConfiguration->alternatorControlPFactor = 22;
+
+	boardConfiguration->idle.solenoidPin = GPIOC_13;
+	boardConfiguration->idle.solenoidFrequency = 300;
 
 
 	engineConfiguration->vbattAdcChannel = EFI_ADC_NONE; // todo: conflict with what?
