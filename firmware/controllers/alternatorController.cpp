@@ -69,7 +69,8 @@ static void applyAlternatorPinState(PwmConfig *state, int stateIndex) {
 }
 
 static void showAltInfo(void) {
-	scheduleMsg(logger, "atl=%s", boolToString(engineConfiguration->isAlternatorControlEnabled));
+	scheduleMsg(logger, "alt=%s @ %s", boolToString(engineConfiguration->isAlternatorControlEnabled),
+			hwPortname(boardConfiguration->alternatorControlPin));
 	scheduleMsg(logger, "p=%f/i=%f/d=%f", engineConfiguration->alternatorControlPFactor,
 			0, 0); // todo: i & d
 	scheduleMsg(logger, "vbatt=%f/duty=%f", getVBatt(engineConfiguration), currentAltDuty);

@@ -801,7 +801,7 @@ void setFrankenso0_1_joystick(engine_configuration_s *engineConfiguration) {
 	boardConfiguration->joystickCenterPin = GPIOC_8;
 	boardConfiguration->joystickAPin = GPIOD_10;
 	boardConfiguration->joystickBPin = GPIO_UNASSIGNED;
-	boardConfiguration->joystickCPin = GPIOD_9;
+	boardConfiguration->joystickCPin = GPIO_UNASSIGNED;
 	boardConfiguration->joystickDPin = GPIOD_11;
 }
 
