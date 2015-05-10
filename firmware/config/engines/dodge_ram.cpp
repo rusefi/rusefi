@@ -20,6 +20,8 @@ void setDodgeRam1996(DECLARE_ENGINE_PARAMETER_F) {
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
 	engineConfiguration->trigger.type = TT_DODGE_RAM;
+	engineConfiguration->injector.flow = 243.6;
+	engineConfiguration->map.sensor.type = MT_DODGE_NEON_2003;
 
 	// set_cranking_charge_angle 30
 	engineConfiguration->crankingChargeAngle = 30;
