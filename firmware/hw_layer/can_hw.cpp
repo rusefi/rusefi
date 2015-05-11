@@ -28,8 +28,8 @@ EXTERN_ENGINE
 ;
 
 static int canReadCounter = 0;
-static int can_write_ok = 0;
-static int can_write_not_ok = 0;
+static int canWriteOk = 0;
+static int canWriteNotOk = 0;
 static LoggingWithStorage logger("CAN driver");
 static THD_WORKING_AREA(canTreadStack, UTILITY_THREAD_STACK_SIZE);
 
@@ -94,9 +94,9 @@ static void sendMessage2(int size) {
 	txmsg.DLC = size;
 	msg_t result = canTransmit(&EFI_CAN_DEVICE, CAN_ANY_MAILBOX, &txmsg, TIME_INFINITE);
 	if (result == RDY_OK) {
-		can_write_ok++;
+		canWriteOk++;
 	} else {
-		can_write_not_ok++;
+		canWriteNotOk++;
 	}
 }
 
@@ -242,7 +242,7 @@ static void canInfo(void) {
 			boolToString(engineConfiguration->canReadEnabled), boolToString(engineConfiguration->canWriteEnabled),
 			engineConfiguration->canSleepPeriod);
 
-	scheduleMsg(&logger, "CAN rx count %d/tx ok %d/tx not ok %d", canReadCounter, can_write_ok, can_write_not_ok);
+	scheduleMsg(&logger, "CAN rx count %d/tx ok %d/tx not ok %d", canReadCounter, canWriteOk, canWriteNotOk);
 }
 
 #endif /* EFI_PROD_CODE */
