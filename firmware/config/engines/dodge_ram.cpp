@@ -66,6 +66,5 @@ void setDodgeRam1996(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->idle.solenoidPin = GPIOC_13;
 	boardConfiguration->idle.solenoidFrequency = 300;
 
-
-	engineConfiguration->vbattAdcChannel = EFI_ADC_NONE; // todo: conflict with what?
+	engineConfiguration->vbattAdcChannel = EFI_ADC_14;
 }

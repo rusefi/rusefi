@@ -188,7 +188,7 @@ typedef enum {
 	 */
 	LM_MAP = 2,
 	/**
-	 * Speed Density algorithm - Engile Load is a function of MAP, VE and target AFR
+	 * Speed Density algorithm - Engine Load is a function of MAP, VE and target AFR
 	 * http://articles.sae.org/8539/
 	 */
 	LM_SPEED_DENSITY = 3,

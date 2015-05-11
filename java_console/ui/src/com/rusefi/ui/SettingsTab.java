@@ -12,6 +12,7 @@ public class SettingsTab {
     private final JPanel panel = new JPanel(new GridLayout(3, 3));
 
     public SettingsTab() {
+        panel.add(UiUtils.wrap(new EnumConfigField(Fields.algorithm, "algorithm").getContent()));
         panel.add(UiUtils.wrap(new EnumConfigField(Fields.triggerType, "trigger type").getContent()));
         panel.add(UiUtils.wrap(new EnumConfigField(Fields.triggerInputPins1, "trigger #1 input").getContent()));
         panel.add(UiUtils.wrap(new EnumConfigField(Fields.triggerInputPins2, "trigger #2 input").getContent()));
