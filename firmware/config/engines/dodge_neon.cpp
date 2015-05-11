@@ -21,6 +21,7 @@
 #include "thermistors.h"
 #include "engine_math.h"
 #include "fsio_impl.h"
+#include "allsensors.h"
 #if EFI_PROD_CODE
 #include "HIP9011.h"
 #endif
@@ -307,10 +308,10 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	 */
 
 
-	setThermistorConfiguration(&engineConfiguration->clt, 0, 32500, 30, 7550, 100, 700);
+	setDodgeSensor(&engineConfiguration->clt);
 	engineConfiguration->clt.bias_resistor = 10000;
 
-	setThermistorConfiguration(&engineConfiguration->iat, 0, 32500, 30, 7550, 100, 700);
+	setDodgeSensor(&engineConfiguration->iat);
 	engineConfiguration->iat.bias_resistor = 10000;
 
 	/**

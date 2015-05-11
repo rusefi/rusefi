@@ -50,5 +50,6 @@ class Engine;
 void initThermistors(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S);
 
 void setCommonNTCSensor(ThermistorConf *thermistorConf);
+void setDodgeSensor(ThermistorConf *thermistorConf);
 
 #endif /* THERMISTORS_H_ */
