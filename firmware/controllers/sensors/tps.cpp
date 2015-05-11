@@ -53,19 +53,14 @@ float getTpsRateOfChange(void) {
  * Return current TPS position based on configured ADC levels, and adc
  *
  * */
-static float getTpsValue(int adc DECLARE_ENGINE_PARAMETER_S) {
-	if (adc < engineConfiguration->tpsMin) {
-		return 0.0f;
-	}
-	if (adc > engineConfiguration->tpsMax) {
-		return 100.0f;
-	}
-	// todo: double comparison using EPS
+percent_t getTpsValue(int adc DECLARE_ENGINE_PARAMETER_S) {
 	if (engineConfiguration->tpsMin == engineConfiguration->tpsMax) {
-		firmwareError("Invalid TPS configuration: same value");
-		return 0.0f;
+		warning(OBD_PCM_Processor_Fault, "Invalid TPS configuration: same value %d", engineConfiguration->tpsMin);
+		return NAN;
 	}
-	return interpolate(engineConfiguration->tpsMin, 0, engineConfiguration->tpsMax, 100, adc);
+	float result = interpolate(engineConfiguration->tpsMin, 0, engineConfiguration->tpsMax, 100, adc);
+	// this would put the value into the 0-100 range
+	return maxF(0, minF(100, result));
 }
 
 /*
@@ -111,8 +106,8 @@ static float getPrimatyRawTPS(DECLARE_ENGINE_PARAMETER_F) {
  *
  * @return Current TPS position, percent of WOT. 0 means idle and 100 means Wide Open Throttle
  */
-float getTPS(DECLARE_ENGINE_PARAMETER_F) {
-	if(!engineConfiguration->hasTpsSensor)
+percent_t getTPS(DECLARE_ENGINE_PARAMETER_F) {
+	if (!engineConfiguration->hasTpsSensor)
 		return NO_TPS_MAGIC_VALUE;
 	// todo: if (config->isDualTps)
 	// todo: blah blah

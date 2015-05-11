@@ -13,10 +13,11 @@
 #include "global.h"
 #include "engine_configuration.h"
 
-float getTPS(DECLARE_ENGINE_PARAMETER_F);
+percent_t getTPS(DECLARE_ENGINE_PARAMETER_F);
 int convertVoltageTo10bitADC(float voltage);
 int getTPS10bitAdc(DECLARE_ENGINE_PARAMETER_F);
 float getTPSVoltage(DECLARE_ENGINE_PARAMETER_F);
+percent_t getTpsValue(int adc DECLARE_ENGINE_PARAMETER_S);
 
 typedef struct {
 	// time in systicks

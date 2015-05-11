@@ -373,9 +373,9 @@ static void printThermistor(const char *msg, Thermistor *thermistor) {
 
 	float t = getTemperatureC(thermistor);
 
-	scheduleMsg(&logger, "%s v=%f C=%f R=%f on channel %d", msg, voltage, t, r, adcChannel);
+	scheduleMsg(&logger, "%s volts=%f Celsius=%f sensorR=%f on channel %d", msg, voltage, t, r, adcChannel);
 	scheduleMsg(&logger, "@%s", getPinNameByAdcChannel(adcChannel, pinNameBuffer));
-	scheduleMsg(&logger, "bias=%f A=%..100000f B=%..100000f C=%..100000f", thermistor->config->bias_resistor,
+	scheduleMsg(&logger, "bias resistor=%fK A=%..100000f B=%..100000f C=%..100000f", thermistor->config->bias_resistor / 1000,
 			thermistor->config->s_h_a, thermistor->config->s_h_b, thermistor->config->s_h_c);
 	scheduleMsg(&logger, "==============================");
 }
