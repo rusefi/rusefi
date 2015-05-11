@@ -10,6 +10,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 
 import static com.rusefi.ui.util.LocalizedMessages.PAUSE;
@@ -113,5 +114,13 @@ public class UiUtils {
             return new ImageIcon(imgURL);
         else
             return null;
+    }
+
+    public static void invokeAndWait(Runnable runnable) throws InterruptedException, InvocationTargetException {
+        if (SwingUtilities.isEventDispatchThread()) {
+            runnable.run();
+        } else {
+            SwingUtilities.invokeAndWait(runnable);
+        }
     }
 }
