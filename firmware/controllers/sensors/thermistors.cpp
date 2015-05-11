@@ -190,6 +190,10 @@ static void initThermistorCurve(Thermistor * t, ThermistorConf *config, adc_chan
 	t->channel = channel;
 }
 
+void setDodgeSensor(ThermistorConf *thermistorConf) {
+	setThermistorConfiguration(thermistorConf, -40, 336660, 30, 7550, 120, 390);
+}
+
 // todo: better method name?
 void setCommonNTCSensor(ThermistorConf *thermistorConf) {
 	/**

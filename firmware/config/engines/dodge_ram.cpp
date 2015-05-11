@@ -10,6 +10,7 @@
 #include "main.h"
 #include "dodge_ram.h"
 #include "custom_engine.h"
+#include "allsensors.h"
 
 EXTERN_ENGINE
 ;
@@ -67,4 +68,11 @@ void setDodgeRam1996(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->idle.solenoidFrequency = 300;
 
 	engineConfiguration->vbattAdcChannel = EFI_ADC_14;
+
+	setDodgeSensor(&engineConfiguration->clt);
+	engineConfiguration->clt.bias_resistor = 2700;
+
+	setDodgeSensor(&engineConfiguration->iat);
+	engineConfiguration->iat.bias_resistor = 2700;
+
 }
