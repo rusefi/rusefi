@@ -20,33 +20,9 @@ class SerialManager {
             LinkManager.engineState.processNewData(new String(freshData));
         }
     };
-    private static LinkManager.LinkStateListener listener;
+    public static LinkManager.LinkStateListener listener;
 
-    public static void scheduleOpening(LinkManager.LinkStateListener listener) {
-        SerialManager.listener = listener;
-        FileLog.MAIN.logLine("scheduleOpening");
-        LinkManager.IO_EXECUTOR.execute(new Runnable() {
-            @Override
-            public void run() {
-                FileLog.MAIN.logLine("scheduleOpening>openPort");
-                PortHolder.getInstance().openPort(port, SerialManager.dataListener, SerialManager.listener);
-            }
-        });
-    }
-
-    public static void restart() {
-        LinkManager.IO_EXECUTOR.execute(new Runnable() {
-            @Override
-            public void run() {
-                MessagesCentral.getInstance().postMessage(SerialManager.class, "Restarting serial IO");
-//                if (closed)
-//                    return;
-                PortHolder.getInstance().close();
-                PortHolder.getInstance().openPort(port, dataListener, SerialManager.listener);
-            }
-        });
-    }
-/*
+    /*
     static String[] findSerialPorts() {
         List<String> result = new ArrayList<String>();
 
