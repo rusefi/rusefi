@@ -9,6 +9,7 @@
 #include "thermistors.h"
 #include "allsensors.h"
 #include "hip9011_lookup.h"
+#include "engine_test_helper.h"
 
 static ThermistorConf tc;
 
@@ -23,6 +24,23 @@ static void testMapDecoding(void) {
 	s.type = MT_MPX4250;
 	assertEqualsM("MPX_4250 0 volts", 8, decodePressure(0, &s));
 	assertEquals(58.4, decodePressure(1, &s));
+}
+
+void testTps(void) {
+	print("************************************************** testTps\r\n");
+
+	EngineTestHelper eth(DODGE_RAM);
+	EXPAND_EngineTestHelper;
+
+	engineConfiguration->tpsMin = 43;
+	engineConfiguration->tpsMax = 193;
+
+	assertEquals(49.3333, getTpsValue(117 PASS_ENGINE_PARAMETER));
+
+
+	engineConfiguration->tpsMin = 193;
+	engineConfiguration->tpsMax = 43;
+	assertEquals(50.6667, getTpsValue(117 PASS_ENGINE_PARAMETER));
 }
 
 void testTpsRateOfChange(void) {
@@ -64,6 +82,7 @@ static void testHip9011lookup(void) {
 void testSensors(void) {
 	print("************************************************** testSensors\r\n");
 	testMapDecoding();
+	testTps();
 	testTpsRateOfChange();
 	testHip9011lookup();
 
