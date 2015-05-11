@@ -51,6 +51,10 @@ float getEngineLoadT(DECLARE_ENGINE_PARAMETER_F) {
 	efiAssert(engineConfiguration!=NULL, "engineConfiguration 2NULL", NAN);
 	switch (engineConfiguration->algorithm) {
 	case LM_PLAIN_MAF:
+		if (!hasMafSensor(PASS_ENGINE_PARAMETER_F)) {
+			warning(OBD_PCM_Processor_Fault, "MAF sensor needed for current fuel algorithm");
+			return NAN;
+		}
 		return getMafT(engineConfiguration);
 	case LM_SPEED_DENSITY:
 		// SD engine load is used for timing lookup but not for fuel calculation
