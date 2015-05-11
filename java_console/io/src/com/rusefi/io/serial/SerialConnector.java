@@ -1,11 +1,10 @@
 package com.rusefi.io.serial;
 
 import com.rusefi.FileLog;
-import com.rusefi.core.EngineState;
+import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.io.LinkConnector;
 import com.rusefi.io.LinkManager;
-import com.rusefi.io.tcp.TcpConnector;
 
 /**
  * @author Andrey Belomutskiy
@@ -19,12 +18,29 @@ public class SerialConnector implements LinkConnector {
     @Override
     public void connect(LinkManager.LinkStateListener listener) {
         FileLog.MAIN.logLine("SerialConnector: connecting");
-        SerialManager.scheduleOpening(listener);
+        SerialManager.listener = listener;
+        FileLog.MAIN.logLine("scheduleOpening");
+        LinkManager.IO_EXECUTOR.execute(new Runnable() {
+            @Override
+            public void run() {
+                FileLog.MAIN.logLine("scheduleOpening>openPort");
+                PortHolder.getInstance().openPort(SerialManager.port, SerialManager.dataListener, SerialManager.listener);
+            }
+        });
     }
 
     @Override
     public void restart() {
-        SerialManager.restart();
+        LinkManager.IO_EXECUTOR.execute(new Runnable() {
+            @Override
+            public void run() {
+                MessagesCentral.getInstance().postMessage(SerialManager.class, "Restarting serial IO");
+//                if (closed)
+//                    return;
+                PortHolder.getInstance().close();
+                PortHolder.getInstance().openPort(SerialManager.port, SerialManager.dataListener, SerialManager.listener);
+            }
+        });
     }
 
     @Override
