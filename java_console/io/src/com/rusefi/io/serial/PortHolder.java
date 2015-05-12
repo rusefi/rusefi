@@ -2,7 +2,6 @@ package com.rusefi.io.serial;
 
 import com.rusefi.FileLog;
 import com.rusefi.Timeouts;
-import com.rusefi.TsPageSize;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.CommandQueue;
@@ -50,7 +49,7 @@ public class PortHolder {
         return result;
     }
 
-    public boolean open(String port, final DataListener listener) {
+    private boolean open(String port, final DataListener listener) {
         SerialPort serialPort = new SerialPort(port);
         try {
             FileLog.MAIN.logLine("Opening " + port + " @ " + BAUD_RATE);
@@ -78,37 +77,7 @@ public class PortHolder {
 
         bp = new BinaryProtocol(FileLog.LOGGER, new SerialIoStream(serialPort, FileLog.LOGGER));
 
-        bp.switchToBinaryProtocol();
-        bp.readImage(TsPageSize.IMAGE_SIZE);
-        if (bp.isClosed)
-            return false;
-
-        if (!LinkManager.COMMUNICATION_QUEUE.isEmpty()) {
-            System.out.println("Current queue: " + LinkManager.COMMUNICATION_QUEUE.size());
-        }
-        Runnable textPull = new Runnable() {
-            @Override
-            public void run() {
-                while (!bp.isClosed) {
-//                    FileLog.rlog("queue: " + LinkManager.COMMUNICATION_QUEUE.toString());
-                    if (LinkManager.COMMUNICATION_QUEUE.isEmpty()) {
-                        LinkManager.COMMUNICATION_EXECUTOR.submit(new Runnable() {
-                            @Override
-                            public void run() {
-                                String text = bp.requestText();
-                                if (text != null)
-                                    listener.onDataArrived((text + "\r\n").getBytes());
-                            }
-                        });
-                    }
-                    sleep();
-                }
-                FileLog.MAIN.logLine("Stopping text pull");
-            }
-        };
-        Thread tr = new Thread(textPull);
-        tr.setName("text pull");
-        tr.start();
+        return bp.connect(listener);
 
 //
 //        try {
@@ -121,15 +90,6 @@ public class PortHolder {
 //        } catch (SerialPortException e) {
 //            return false;
 //        }
-        return true;
-    }
-
-    private void sleep() {
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            throw new IllegalStateException(e);
-        }
     }
 
     public static void setupPort(SerialPort serialPort, int baudRate) throws SerialPortException {

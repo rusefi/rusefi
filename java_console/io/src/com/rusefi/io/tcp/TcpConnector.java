@@ -2,9 +2,8 @@ package com.rusefi.io.tcp;
 
 import com.rusefi.FileLog;
 import com.rusefi.core.EngineState;
-import com.rusefi.io.CommandQueue;
-import com.rusefi.io.LinkConnector;
-import com.rusefi.io.LinkManager;
+import com.rusefi.core.ResponseBuffer;
+import com.rusefi.io.*;
 
 import java.io.*;
 import java.net.Socket;
@@ -19,8 +18,9 @@ public class TcpConnector implements LinkConnector {
     public final static int DEFAULT_PORT = 29001;
     public static final String LOCALHOST = "localhost";
     private final int port;
-    private BufferedWriter writer;
     private boolean withError;
+    private BufferedInputStream stream;
+    private IoStream ioStream;
 
     public TcpConnector(String port) {
         try {
@@ -86,34 +86,29 @@ public class TcpConnector implements LinkConnector {
     @Override
     public void connect(LinkManager.LinkStateListener listener) {
         FileLog.MAIN.logLine("Connecting to " + port);
-        BufferedInputStream stream;
         try {
             Socket socket = new Socket(LOCALHOST, port);
-            writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+            OutputStream os = socket.getOutputStream();
             stream = new BufferedInputStream(socket.getInputStream());
+            ioStream = new TcpIoStream(os, stream);
         } catch (IOException e) {
             throw new IllegalStateException("Failed to connect to simulator", e);
         }
+//        listener.onConnectionEstablished();
 
-        final BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-
-        LinkManager.IO_EXECUTOR.execute(new Runnable() {
+        final ResponseBuffer rb = new ResponseBuffer(new ResponseBuffer.ResponseListener() {
             @Override
-            public void run() {
-                Thread.currentThread().setName("TCP connector loop");
-                FileLog.MAIN.logLine("Running TCP connection loop");
-                while (true) {
-                    try {
-                        String line = reader.readLine();
-                        LinkManager.engineState.processNewData(line + "\r\n");
-                    } catch (IOException e) {
-                        System.err.println("End of connection");
-                        return;
-                    }
-                }
+            public void onResponse(String line) {
+                LinkManager.engineState.processNewData(line + "\r\n");
             }
         });
 
+        ioStream.addEventListener(new DataListener() {
+            @Override
+            public void onDataArrived(byte[] freshData) {
+                rb.append(new String(freshData));
+            }
+        });
     }
 
     @Override
@@ -136,8 +131,7 @@ public class TcpConnector implements LinkConnector {
         String command = LinkManager.encodeCommand(text);
         FileLog.MAIN.logLine("Writing " + command);
         try {
-            writer.write(command + "\n");
-            writer.flush();
+            ioStream.write((command + "\n").getBytes());
         } catch (IOException e) {
             withError = true;
             System.err.println("err in send");
