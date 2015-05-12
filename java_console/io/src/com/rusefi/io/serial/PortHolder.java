@@ -76,7 +76,7 @@ public class PortHolder {
             portLock.notifyAll();
         }
 
-        bp = new BinaryProtocol(FileLog.LOGGER, serialPort);
+        bp = new BinaryProtocol(FileLog.LOGGER, new SerialIoStream(serialPort, FileLog.LOGGER));
 
         bp.switchToBinaryProtocol();
         bp.readImage(TsPageSize.IMAGE_SIZE);
