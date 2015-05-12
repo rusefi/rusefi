@@ -390,6 +390,8 @@ static void showFuelInfo2(float rpm, float engineLoad) {
 
 	scheduleMsg(&logger2, "phase=%f correction=%f", getInjectionAngle(rpm), engineConfiguration->globalFuelCorrection);
 
+	scheduleMsg(&logger2, "baro correction=%f", engine->engineState.baroCorrection);
+
 #if EFI_ENGINE_CONTROL
 	scheduleMsg(&logger, "base cranking fuel %f", engineConfiguration->cranking.baseFuel);
 	scheduleMsg(&logger2, "cranking fuel: %f", getCrankingFuel(PASS_ENGINE_PARAMETER_F));
@@ -559,7 +561,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->vBatt = getVBatt(engineConfiguration);
 	tsOutputChannels->tpsADC = getTPS10bitAdc(PASS_ENGINE_PARAMETER_F);
 #if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
-	tsOutputChannels->atmospherePressure = getBaroPressure();
+	tsOutputChannels->baroPressure = getBaroPressure();
 #endif /* EFI_ANALOG_SENSORS */
 	tsOutputChannels->manifold_air_pressure = getMap();
 	tsOutputChannels->engineLoad = engineLoad;
@@ -568,6 +570,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->tpsAccelFuel = engine->tpsAccelEnrichment.getTpsEnrichment(PASS_ENGINE_PARAMETER_F);
 	tsOutputChannels->deltaTps = engine->tpsAccelEnrichment.getDelta();
 	tsOutputChannels->triggerErrorsCounter = triggerCentral.triggerState.totalTriggerErrorCounter;
+	tsOutputChannels->baroCorrection = engine->engineState.baroCorrection;
 
 	tsOutputChannels->checkEngine = hasErrorCodes();
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
