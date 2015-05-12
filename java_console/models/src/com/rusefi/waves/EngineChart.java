@@ -3,16 +3,16 @@ package com.rusefi.waves;
 import java.util.Map;
 
 /**
- * A collection of {@link WaveReport}
+ * A collection of {@link EngineReport}
  * <p/>
  * <p/>
  *
- * @see WaveChartParser
+ * @see EngineChartParser
  * <p/>
  * Date: 3/17/14
  * (c) Andrey Belomutskiy
  */
-public class WaveChart {
+public class EngineChart {
     // todo: merge with NameUtil
     public static final String INJECTOR_1 = "i1";
     public static final String INJECTOR_2 = "i2";
@@ -33,7 +33,7 @@ public class WaveChart {
 
     public final Map<String, StringBuilder> map;
 
-    public WaveChart(Map<String, StringBuilder> map) {
+    public EngineChart(Map<String, StringBuilder> map) {
         this.map = map;
     }
 
@@ -48,7 +48,7 @@ public class WaveChart {
 
     @Override
     public String toString() {
-        return "WaveChart{" +
+        return "EngineChart{" +
                 "size=" + map.size() +
                 '}';
     }

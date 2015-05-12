@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 
-// todo: merge with WaveChart
+// todo: merge with EngineChart
 public class NameUtil {
     /**
      * See also 'CRANK1' in rusEfi firmware code

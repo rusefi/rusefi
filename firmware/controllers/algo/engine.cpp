@@ -198,7 +198,7 @@ void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_F) {
 		/**
 		 * *0.01 because of https://sourceforge.net/p/rusefi/tickets/153/
 		 */
-		engine->engineState.currentVE = veMap.getValue(map, rpm) * 0.01;
+		engine->engineState.currentVE = engine->engineState.baroCorrection * veMap.getValue(map, rpm) * 0.01;
 		engine->engineState.targerAFR = afrMap.getValue(map, rpm);
 	} else {
 		float engineLoad = getEngineLoadT(PASS_ENGINE_PARAMETER_F);

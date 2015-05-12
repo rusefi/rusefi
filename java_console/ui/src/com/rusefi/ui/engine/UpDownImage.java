@@ -3,9 +3,9 @@ package com.rusefi.ui.engine;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.ui.util.UiUtils;
+import com.rusefi.waves.EngineReport;
 import com.rusefi.waves.RevolutionLog;
 import com.rusefi.waves.TimeAxisTranslator;
-import com.rusefi.waves.WaveReport;
 import com.rusefi.waves.ZoomProvider;
 
 import javax.swing.*;
@@ -18,14 +18,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * This is a renderer of an individual {@link WaveReport} - this makes a simple Logical Analyzer
+ * This is a renderer of an individual {@link EngineReport} - this makes a simple Logical Analyzer
  * <p/>
  * <p/>
  * Date: 6/23/13
  * (c) Andrey Belomutskiy
  *
  * @see EngineSnifferPanel
- * @see WaveReport
+ * @see EngineReport
  */
 public class UpDownImage extends JPanel {
     private static final SimpleDateFormat FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
@@ -35,7 +35,7 @@ public class UpDownImage extends JPanel {
 
     private long lastUpdateTime;
     private ZoomProvider zoomProvider = ZoomProvider.DEFAULT;
-    private WaveReport wr;
+    private EngineReport wr;
     private StringBuilder revolutions;
     private final String name;
     private TimeAxisTranslator translator;
@@ -50,7 +50,7 @@ public class UpDownImage extends JPanel {
     });
 
     public UpDownImage(final String name) {
-        this(WaveReport.MOCK, name);
+        this(EngineReport.MOCK, name);
         setToolTip();
     }
 
@@ -62,7 +62,7 @@ public class UpDownImage extends JPanel {
         this.zoomProvider = zoomProvider;
     }
 
-    public UpDownImage(WaveReport wr, String name) {
+    public UpDownImage(EngineReport wr, String name) {
         this.name = name;
         setWaveReport(wr, null);
         setOpaque(true);
@@ -106,7 +106,7 @@ public class UpDownImage extends JPanel {
         };
     }
 
-    public void setWaveReport(WaveReport wr, StringBuilder revolutions) {
+    public void setWaveReport(EngineReport wr, StringBuilder revolutions) {
         this.wr = wr;
         propagateDwellIntoSensor(wr);
         this.revolutions = revolutions;
@@ -114,13 +114,13 @@ public class UpDownImage extends JPanel {
         UiUtils.trueRepaint(this);
     }
 
-    private void propagateDwellIntoSensor(WaveReport wr) {
+    private void propagateDwellIntoSensor(EngineReport wr) {
         Sensor sensor = NameUtil.name2sensor.get(name);
         if (sensor == null)
             return;
 
         if (!wr.getList().isEmpty()) {
-            WaveReport.UpDown last = wr.getList().get(wr.getList().size() - 1);
+            EngineReport.UpDown last = wr.getList().get(wr.getList().size() - 1);
             SensorCentral.getInstance().setValue(last.getDuration(), sensor);
         }
     }
@@ -134,7 +134,7 @@ public class UpDownImage extends JPanel {
         g.setColor(getBackground());
         g.fillRect(0, 0, d.width, d.height);
 
-        for (WaveReport.UpDown upDown : wr.getList())
+        for (EngineReport.UpDown upDown : wr.getList())
             paintUpDown(d, upDown, g);
 
         paintScaleLines(g2, d);
@@ -157,7 +157,7 @@ public class UpDownImage extends JPanel {
         }
 
         g.drawString("Tick length: " + duration + "; count=" + wr.getList().size(), 5, ++line * LINE_SIZE);
-        g.drawString("Total seconds: " + (duration / WaveReport.SYS_TICKS_PER_MS / 000.0), 5, ++line * LINE_SIZE);
+        g.drawString("Total seconds: " + (duration / EngineReport.SYS_TICKS_PER_MS / 000.0), 5, ++line * LINE_SIZE);
         g.drawString(FORMAT.format(new Date(lastUpdateTime)), 5, ++line * LINE_SIZE);
 
         drawStartOfRevolution(g2, d);
@@ -184,11 +184,11 @@ public class UpDownImage extends JPanel {
      * This method draws a vertical line every millisecond
      */
     private void paintScaleLines(Graphics2D g2, Dimension d) {
-        int fromMs = translator.getMinTime() / WaveReport.mult;
+        int fromMs = translator.getMinTime() / EngineReport.mult;
         g2.setStroke(LONG_STROKE);
         g2.setColor(TIME_SCALE_COLOR);
 
-        int toMs = translator.getMaxTime() / WaveReport.mult;
+        int toMs = translator.getMaxTime() / EngineReport.mult;
 
         if (toMs - fromMs > d.getWidth() / 5) {
             /**
@@ -200,13 +200,13 @@ public class UpDownImage extends JPanel {
         }
 
         for (int ms = fromMs; ms <= toMs; ms++) {
-            int tick = ms * WaveReport.mult;
+            int tick = ms * EngineReport.mult;
             int x = translator.timeToScreen(tick, d.width, zoomProvider);
             g2.drawLine(x, 0, x, d.height);
         }
     }
 
-    private void paintUpDown(Dimension d, WaveReport.UpDown upDown, Graphics g) {
+    private void paintUpDown(Dimension d, EngineReport.UpDown upDown, Graphics g) {
 
         int x1 = translator.timeToScreen(upDown.upTime, d.width, zoomProvider);
         int x2 = translator.timeToScreen(upDown.downTime, d.width, zoomProvider);
@@ -226,7 +226,7 @@ public class UpDownImage extends JPanel {
         g.drawLine(x2, y, x2, d.height);
 
         g.setColor(Color.red);
-        String durationString = String.format(" %.2fms", upDown.getDuration() / WaveReport.SYS_TICKS_PER_MS);
+        String durationString = String.format(" %.2fms", upDown.getDuration() / EngineReport.SYS_TICKS_PER_MS);
 
         g.drawString(durationString, x1, (int) (0.5 * d.height));
 

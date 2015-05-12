@@ -9,13 +9,13 @@ import java.util.Map;
  * 1/26/14
  * Andrey Belomutskiy (c) 2012-2014
  */
-public class WaveChartParser {
+public class EngineChartParser {
     private static final String DELI = "!";
 
     /**
      * This method unpacks a mixed-key message into a Map of messages by key
      */
-    public static WaveChart unpackToMap(String value) {
+    public static EngineChart unpackToMap(String value) {
         if (value == null)
             throw new NullPointerException("value");
         FileLog.MAIN.logLine(": " + value);
@@ -40,6 +40,6 @@ public class WaveChartParser {
             sb.append(signal).append(DELI).append(val).append(DELI);
             index += 3;
         }
-        return new WaveChart(map);
+        return new EngineChart(map);
     }
 }

@@ -15,9 +15,9 @@ import java.util.List;
  *
  * @see com.rusefi.AnalogChartPanel.AnalogChart
  */
-public class WaveReport implements TimeAxisTranslator {
-    public static final String WAVE_CHART = "wave_chart";
-    public static final WaveReport MOCK = new WaveReport(Collections.singletonList(new UpDown(0, -1, 1, -1)));
+public class EngineReport implements TimeAxisTranslator {
+    public static final String ENGINE_CHART = "wave_chart";
+    public static final EngineReport MOCK = new EngineReport(Collections.singletonList(new UpDown(0, -1, 1, -1)));
     /**
      * number of ChibiOS systicks per ms
      */
@@ -34,11 +34,11 @@ public class WaveReport implements TimeAxisTranslator {
      */
     private int minTime;
 
-    public WaveReport(String report) {
+    public EngineReport(String report) {
         this(parse(report));
     }
 
-    public WaveReport(List<UpDown> list) {
+    public EngineReport(List<UpDown> list) {
         this.list = list;
         if (!list.isEmpty()) {
             minTime = list.get(0).upTime;
@@ -137,7 +137,7 @@ public class WaveReport implements TimeAxisTranslator {
 
     @Override
     public String toString() {
-        return "WaveReport{" +
+        return "EngineReport{" +
                 "size=" + list.size() +
                 ", maxTime=" + maxTime +
                 ", minTime=" + minTime +

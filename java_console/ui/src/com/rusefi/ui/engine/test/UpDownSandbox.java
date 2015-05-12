@@ -1,7 +1,7 @@
 package com.rusefi.ui.engine.test;
 
-import com.rusefi.waves.WaveReport;
-import com.rusefi.waves.test.WaveReportTest;
+import com.rusefi.waves.EngineReport;
+import com.rusefi.waves.test.EngineReportTest;
 import com.rusefi.ui.util.FrameHelper;
 import com.rusefi.ui.engine.UpDownImage;
 
@@ -16,7 +16,7 @@ public class UpDownSandbox extends FrameHelper {
 
     public UpDownSandbox() {
 
-        WaveReport wr = new WaveReport(WaveReportTest.report);
+        EngineReport wr = new EngineReport(EngineReportTest.report);
 
         showFrame(new UpDownImage(wr, "test"));
 
