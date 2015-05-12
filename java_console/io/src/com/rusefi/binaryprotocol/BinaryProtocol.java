@@ -89,8 +89,6 @@ public class BinaryProtocol {
         Future f = LinkManager.COMMUNICATION_EXECUTOR.submit(new Runnable() {
             @Override
             public void run() {
-                if (this == null)
-                    throw new NullPointerException("bp");
                 sendTextCommand(command);
             }
 
