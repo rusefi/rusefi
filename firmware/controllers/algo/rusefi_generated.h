@@ -634,10 +634,10 @@
 #define noAccelAfterHardLimitPeriodSecs_offset 1644
 #define mapAveragingSchedulingAtIndex_offset 1648
 #define mapAveragingSchedulingAtIndex_offset_hex 670
-#define baroCorrBins_offset 1652
-#define baroCorrBins_offset_hex 674
-#define baroCorr_offset 1668
-#define baroCorr_offset_hex 684
+#define baroCorrLoadBins_offset 1652
+#define baroCorrLoadBins_offset_hex 674
+#define baroCorrRpmBins_offset 1668
+#define baroCorrRpmBins_offset_hex 684
 #define baroCorrTable_offset 1684
 #define baroCorrTable_offset_hex 694
 #define unused3_offset 1748
