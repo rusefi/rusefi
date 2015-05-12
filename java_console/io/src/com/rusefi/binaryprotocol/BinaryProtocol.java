@@ -4,6 +4,8 @@ import com.rusefi.*;
 import com.rusefi.core.Pair;
 import com.rusefi.io.DataListener;
 import com.rusefi.io.IoStream;
+import com.rusefi.io.LinkManager;
+import com.rusefi.io.serial.PortHolder;
 import com.rusefi.io.serial.SerialIoStream;
 import etch.util.CircularByteBuffer;
 import jssc.SerialPort;
@@ -38,7 +40,7 @@ public class BinaryProtocol {
     public static BinaryProtocol instance;
     public boolean isClosed;
 
-    public BinaryProtocol(final Logger logger, SerialIoStream stream) {
+    public BinaryProtocol(final Logger logger, IoStream stream) {
         this.logger = logger;
         this.stream = stream;
 
@@ -59,11 +61,58 @@ public class BinaryProtocol {
                 }
             }
         };
-        this.stream.addEventListener(listener);
+        stream.addEventListener(listener);
     }
 
     public BinaryProtocol(Logger logger, SerialPort serialPort) {
         this(logger, new SerialIoStream(serialPort, logger));
+    }
+
+    private static void sleep() {
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    public boolean connect(DataListener listener) {
+        switchToBinaryProtocol();
+        readImage(TsPageSize.IMAGE_SIZE);
+        if (isClosed)
+            return false;
+
+        startTextPullThread(listener);
+        return true;
+    }
+
+    public void startTextPullThread(final DataListener listener) {
+        if (!LinkManager.COMMUNICATION_QUEUE.isEmpty()) {
+            System.out.println("Current queue: " + LinkManager.COMMUNICATION_QUEUE.size());
+        }
+        Runnable textPull = new Runnable() {
+            @Override
+            public void run() {
+                while (!isClosed) {
+//                    FileLog.rlog("queue: " + LinkManager.COMMUNICATION_QUEUE.toString());
+                    if (LinkManager.COMMUNICATION_QUEUE.isEmpty()) {
+                        LinkManager.COMMUNICATION_EXECUTOR.submit(new Runnable() {
+                            @Override
+                            public void run() {
+                                String text = requestText();
+                                if (text != null)
+                                    listener.onDataArrived((text + "\r\n").getBytes());
+                            }
+                        });
+                    }
+                    sleep();
+                }
+                FileLog.MAIN.logLine("Stopping text pull");
+            }
+        };
+        Thread tr = new Thread(textPull);
+        tr.setName("text pull");
+        tr.start();
     }
 
     public Logger getLogger() {
