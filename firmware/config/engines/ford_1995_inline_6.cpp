@@ -7,6 +7,7 @@
  * This config overrides some values of the default configuration which is set by setDefaultConfiguration() method
  *
  * FORD_INLINE_6_1995 = 7
+ * set_engine_type 7
  *
  * @date Feb 12, 2014
  * @author Andrey Belomutskiy, (c) 2012-2015
@@ -35,6 +36,7 @@ void setFordInline6(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_BATCH;
 	engineConfiguration->twoWireBatch = true;
+
 
 	/**
 	 * 0.5ms dweel time just to be sure it would fit within camshaft revolution, dwell is not controlled by us anyway
@@ -96,7 +98,8 @@ void setFordInline6(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->tpsMax = convertVoltageTo10bitADC(4.538);
 
 	//	engineConfiguration->vbattAdcChannel = 0; //
-//	engineConfiguration->mafAdcChannel = 1;
+	engineConfiguration->mafAdcChannel = EFI_ADC_1;
+	engineConfiguration->hasMafSensor = true;
 
 	boardConfiguration->triggerInputPins[0] = GPIOA_8;
 	boardConfiguration->triggerInputPins[1] = GPIOA_5;

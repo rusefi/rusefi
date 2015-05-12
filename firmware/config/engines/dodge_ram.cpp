@@ -68,6 +68,7 @@ void setDodgeRam1996(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->idle.solenoidFrequency = 300;
 
 	engineConfiguration->vbattAdcChannel = EFI_ADC_14;
+	engineConfiguration->vbattDividerCoeff = ((float) (9.02 + 41.1)) / 9.02 * 2;
 
 	setDodgeSensor(&engineConfiguration->clt);
 	engineConfiguration->clt.bias_resistor = 2700;
