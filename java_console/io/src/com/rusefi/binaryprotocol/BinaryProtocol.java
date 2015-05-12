@@ -1,7 +1,9 @@
 package com.rusefi.binaryprotocol;
 
 import com.rusefi.*;
+import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Pair;
+import com.rusefi.io.CommandQueue;
 import com.rusefi.io.DataListener;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
@@ -14,6 +16,10 @@ import jssc.SerialPortException;
 import java.io.EOFException;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * (c) Andrey Belomutskiy
@@ -74,6 +80,38 @@ public class BinaryProtocol {
         } catch (InterruptedException e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    public void doSend(final String command) throws InterruptedException {
+        FileLog.MAIN.logLine("Sending [" + command + "]");
+        PortHolder.portHolderListener.onPortHolderMessage(PortHolder.class, "Sending [" + command + "]");
+
+        Future f = LinkManager.COMMUNICATION_EXECUTOR.submit(new Runnable() {
+            @Override
+            public void run() {
+                if (this == null)
+                    throw new NullPointerException("bp");
+                sendTextCommand(command);
+            }
+
+            @Override
+            public String toString() {
+                return "Runnable for " + command;
+            }
+        });
+
+        try {
+            f.get(Timeouts.COMMAND_TIMEOUT_SEC, TimeUnit.SECONDS);
+        } catch (ExecutionException e) {
+            throw new IllegalStateException(e);
+        } catch (TimeoutException e) {
+            getLogger().error("timeout, giving up: " + e);
+            return;
+        }
+        /**
+         * this here to make CommandQueue happy
+         */
+        MessagesCentral.getInstance().postMessage(PortHolder.class, CommandQueue.CONFIRMATION_PREFIX + command);
     }
 
     public boolean connect(DataListener listener) {

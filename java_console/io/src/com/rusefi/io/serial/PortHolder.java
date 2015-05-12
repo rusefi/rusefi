@@ -1,18 +1,13 @@
 package com.rusefi.io.serial;
 
 import com.rusefi.FileLog;
-import com.rusefi.Timeouts;
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.core.MessagesCentral;
-import com.rusefi.io.CommandQueue;
 import com.rusefi.io.DataListener;
 import com.rusefi.io.LinkManager;
 import jssc.SerialPort;
 import jssc.SerialPortException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.concurrent.*;
 
 /**
  * This class holds the reference to the actual Serial port object
@@ -27,7 +22,8 @@ public class PortHolder {
     private static PortHolder instance = new PortHolder();
     private final Object portLock = new Object();
 
-    public PortHolderListener portHolderListener = PortHolderListener.VOID;
+    // todo: rename class & move field to not-serial-specific class
+    public static PortHolderListener portHolderListener = PortHolderListener.VOID;
     private BinaryProtocol bp;
 
     private PortHolder() {
@@ -118,35 +114,7 @@ public class PortHolder {
      * this method blocks till a connection is available
      */
     public void packAndSend(final String command) throws InterruptedException {
-        FileLog.MAIN.logLine("Sending [" + command + "]");
-        portHolderListener.onPortHolderMessage(PortHolder.class, "Sending [" + command + "]");
-
-        Future f = LinkManager.COMMUNICATION_EXECUTOR.submit(new Runnable() {
-            @Override
-            public void run() {
-                if (bp == null)
-                    throw new NullPointerException("bp");
-                bp.sendTextCommand(command);
-            }
-
-            @Override
-            public String toString() {
-                return "Runnable for " + command;
-            }
-        });
-
-        try {
-            f.get(Timeouts.COMMAND_TIMEOUT_SEC, TimeUnit.SECONDS);
-        } catch (ExecutionException e) {
-            throw new IllegalStateException(e);
-        } catch (TimeoutException e) {
-            bp.getLogger().error("timeout, giving up: " + e);
-            return;
-        }
-        /**
-         * this here to make CommandQueue happy
-         */
-        MessagesCentral.getInstance().postMessage(PortHolder.class, CommandQueue.CONFIRMATION_PREFIX + command);
+        bp.doSend(command);
 
 
 //        long now = System.currentTimeMillis();
