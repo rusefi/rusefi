@@ -3,12 +3,14 @@ package com.rusefi.binaryprotocol;
 import com.rusefi.*;
 import com.rusefi.core.Pair;
 import com.rusefi.io.DataListener;
-import com.rusefi.io.serial.SerialPortReader;
+import com.rusefi.io.IoStream;
+import com.rusefi.io.serial.SerialIoStream;
 import etch.util.CircularByteBuffer;
 import jssc.SerialPort;
 import jssc.SerialPortException;
 
 import java.io.EOFException;
+import java.io.IOException;
 import java.util.Arrays;
 
 /**
@@ -23,7 +25,7 @@ public class BinaryProtocol {
     private static final int SWITCH_TO_BINARY_RESPONSE = 0xA7E;
 
     private final Logger logger;
-    private final SerialPort serialPort;
+    private final IoStream stream;
     private static final int BUFFER_SIZE = 10000;
     private final CircularByteBuffer cbb;
     private boolean isBurnPending;
@@ -36,9 +38,9 @@ public class BinaryProtocol {
     public static BinaryProtocol instance;
     public boolean isClosed;
 
-    public BinaryProtocol(final Logger logger, SerialPort serialPort) {
+    public BinaryProtocol(final Logger logger, SerialIoStream stream) {
         this.logger = logger;
-        this.serialPort = serialPort;
+        this.stream = stream;
 
         instance = this;
 
@@ -57,11 +59,11 @@ public class BinaryProtocol {
                 }
             }
         };
-        try {
-            serialPort.addEventListener(new SerialPortReader(serialPort, listener));
-        } catch (SerialPortException e) {
-            throw new IllegalStateException(e);
-        }
+        this.stream.addEventListener(listener);
+    }
+
+    public BinaryProtocol(Logger logger, SerialPort serialPort) {
+        this(logger, new SerialIoStream(serialPort, logger));
     }
 
     public Logger getLogger() {
@@ -81,7 +83,7 @@ public class BinaryProtocol {
             dropPending();
 
             try {
-                serialPort.writeBytes("~\n".getBytes());
+                stream.write("~\n".getBytes());
                 synchronized (cbb) {
                     boolean isTimeout = waitForBytes(2, start, "switch to binary");
                     if (isTimeout) {
@@ -96,7 +98,7 @@ public class BinaryProtocol {
                     }
                     logger.info("Switched to binary protocol");
                 }
-            } catch (SerialPortException | EOFException e) {
+            } catch (IOException e) {
                 close();
                 FileLog.MAIN.logLine("exception: " + e);
                 return;
@@ -116,12 +118,7 @@ public class BinaryProtocol {
                 logger.error("Unexpected pending data: " + pending + " byte(s)");
                 cbb.get(new byte[pending]);
             }
-            try {
-                serialPort.purgePort(SerialPort.PURGE_RXCLEAR | SerialPort.PURGE_TXCLEAR);
-            } catch (SerialPortException e) {
-                logger.info("Error while purge: " + e);
-                close();
-            }
+            stream.purge();
         }
     }
 
@@ -261,7 +258,7 @@ public class BinaryProtocol {
             return receivePacket(msg, allowLongResponse);
         } catch (InterruptedException e) {
             throw new IllegalStateException(e);
-        } catch (SerialPortException | EOFException e) {
+        } catch (IOException e) {
             logger.error(msg + ": exchange failed: " + e);
             close();
             return null;
@@ -272,13 +269,7 @@ public class BinaryProtocol {
         if (isClosed)
             return;
         isClosed = true;
-        try {
-            FileLog.MAIN.logLine("CLOSING PORT...");
-            serialPort.closePort();
-            FileLog.MAIN.logLine("PORT CLOSED");
-        } catch (SerialPortException e) {
-            logger.error("Error closing port: " + e);
-        }
+        stream.close();
     }
 
     public void writeData(byte[] content, Integer offset, int size, Logger logger) throws SerialPortException, EOFException, InterruptedException {
@@ -378,10 +369,10 @@ public class BinaryProtocol {
         }
     }
 
-    private void sendCrcPacket(byte[] command) throws SerialPortException {
+    private void sendCrcPacket(byte[] command) throws IOException {
         byte[] packet = makePacket(command);
         logger.info("Sending " + Arrays.toString(packet));
-        serialPort.writeBytes(packet);
+        stream.write(packet);
     }
 
     /**
@@ -410,8 +401,7 @@ public class BinaryProtocol {
         if (isClosed)
             return null;
         try {
-            byte[] response = new byte[0];
-            response = exchange(new byte[]{'G'}, "text", true);
+            byte[] response = exchange(new byte[]{'G'}, "text", true);
             if (response != null && response.length == 1)
                 Thread.sleep(100);
             //        System.out.println(result);
