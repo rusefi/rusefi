@@ -81,11 +81,15 @@ Engine::Engine(persistent_config_s *config) {
 	clt.config = NULL;
 	clt.channel = EFI_ADC_NONE;
 
-	injectorLagMs = advance = dwellAngle = fuelMs = 0;
+	injectorLagMs = fuelMs = 0;
 	clutchDownState = clutchUpState = false;
 	memset(&m, 0, sizeof(m));
 
 	addConfigurationListener(invokeEnginePreCalculate);
+}
+
+EngineState::EngineState() {
+	advance = dwellAngle = 0;
 }
 
 /**
@@ -174,16 +178,12 @@ void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineState.sparkDwell = getSparkDwellMsT(rpm PASS_ENGINE_PARAMETER);
 	// todo: move this field to engineState
-	dwellAngle = engineState.sparkDwell / getOneDegreeTimeMs(rpm);
+	engine->engineState.dwellAngle = engineState.sparkDwell / getOneDegreeTimeMs(rpm);
 
 	engine->engineState.iatFuelCorrection = getIatCorrection(engine->engineState.iat PASS_ENGINE_PARAMETER);
 	engine->engineState.cltFuelCorrection = getCltCorrection(engine->engineState.clt PASS_ENGINE_PARAMETER);
 
-	if (hasBaroSensor()) {
-		engine->engineState.baroCorrection = getBaroCorrection(PASS_ENGINE_PARAMETER_F);
-	} else {
-		engine->engineState.baroCorrection = 1;
-	}
+	engine->engineState.baroCorrection = getBaroCorrection(PASS_ENGINE_PARAMETER_F);
 
 	engine->engineState.injectionAngle = getInjectionAngle(rpm PASS_ENGINE_PARAMETER);
 	engine->engineState.timingAdvance = getAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER);

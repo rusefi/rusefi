@@ -100,7 +100,7 @@ void incrementGlobalConfigurationVersion(void) {
 /**
  * @brief Sets the same dwell time across the whole getRpm() range
  */
-void setConstantDwell(float dwellMs DECLARE_ENGINE_PARAMETER_S) {
+void setConstantDwell(floatms_t dwellMs DECLARE_ENGINE_PARAMETER_S) {
 	for (int i = 0; i < DWELL_CURVE_SIZE; i++) {
 		engineConfiguration->sparkDwellBins[i] = 1000 * i;
 		engineConfiguration->sparkDwell[i] = dwellMs;
@@ -141,7 +141,7 @@ void setWholeIatCorrTimingTable(float value DECLARE_ENGINE_PARAMETER_S) {
 	setTimingMap(config->ignitionIatCorrTable, value);
 }
 
-void setWholeTimingTable(float value DECLARE_ENGINE_PARAMETER_S) {
+void setWholeTimingTable(angle_t value DECLARE_ENGINE_PARAMETER_S) {
 	setTimingMap(config->ignitionTable, value);
 }
 

@@ -189,7 +189,11 @@ floatms_t getBaseTableFuel(engine_configuration_s *engineConfiguration, int rpm,
 }
 
 float getBaroCorrection(DECLARE_ENGINE_PARAMETER_F) {
-	return baroCorrMap.getValue(getBaroPressure(), getRpm());
+	if (hasBaroSensor(PASS_ENGINE_PARAMETER_F)) {
+		return baroCorrMap.getValue(getBaroPressure(PASS_ENGINE_PARAMETER_F), getRpm());
+	} else {
+		return 1;
+	}
 }
 
 #if EFI_ENGINE_CONTROL

@@ -293,7 +293,7 @@ static void ignitionCalc(int rpm DECLARE_ENGINE_PARAMETER_S) {
 		return;
 	}
 	// todo: eliminate this field
-	engine->advance = -ENGINE(engineState.timingAdvance);
+	engine->engineState.advance = -ENGINE(engineState.timingAdvance);
 }
 
 #if EFI_PROD_CODE
@@ -382,20 +382,20 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECL
 			maxAllowedDwellAngle = engineConfiguration->engineCycle / engineConfiguration->specs.cylindersCount / 1.1;
 		}
 
-		if (engine->dwellAngle == 0) {
+		if (engine->engineState.dwellAngle == 0) {
 			warning(OBD_PCM_Processor_Fault, "dwell is zero?");
 		}
-		if (engine->dwellAngle > maxAllowedDwellAngle) {
-			warning(OBD_PCM_Processor_Fault, "dwell angle too long: %f", engine->dwellAngle);
+		if (engine->engineState.dwellAngle > maxAllowedDwellAngle) {
+			warning(OBD_PCM_Processor_Fault, "dwell angle too long: %f", engine->engineState.dwellAngle);
 		}
 
 		// todo: add some check for dwell overflow? like 4 times 6 ms while engine cycle is less then that
 
-		if (cisnan(engine->advance)) {
+		if (cisnan(engine->engineState.advance)) {
 			// error should already be reported
 			return;
 		}
-		initializeIgnitionActions(engine->advance, engine->dwellAngle,
+		initializeIgnitionActions(engine->engineState.advance, engine->engineState.dwellAngle,
 				&engine->engineConfiguration2->ignitionEvents[revolutionIndex] PASS_ENGINE_PARAMETER);
 		engine->m.ignitionSchTime = GET_TIMESTAMP() - engine->m.beforeIgnitionSch;
 
