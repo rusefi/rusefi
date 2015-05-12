@@ -72,6 +72,7 @@ public:
 
 class EngineState {
 public:
+	EngineState();
 	/**
 	 * WIP: accessing these values here would be a performance optimization since log() function needed for
 	 * thermistor logic is relatively heavy
@@ -84,8 +85,15 @@ public:
 	angle_t mapAveragingDuration;
 
 	// spark-related
-	float sparkDwell;
-	float timingAdvance;
+	floatms_t sparkDwell;
+	angle_t timingAdvance;
+
+	/**
+	 * ignition dwell duration as crankshaft angle
+	 */
+	angle_t dwellAngle;
+	angle_t advance;
+
 
 	// fuel-related;
 	float iatFuelCorrection;
@@ -176,11 +184,6 @@ public:
 	 */
 	floatms_t fuelMs;
 
-	/**
-	 * ignition dwell duration as crankshaft angle
-	 */
-	angle_t dwellAngle;
-	angle_t advance;
 
 	void periodicFastCallback(DECLARE_ENGINE_PARAMETER_F);
 

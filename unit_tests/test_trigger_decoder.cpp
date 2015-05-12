@@ -410,7 +410,7 @@ static void testRpmCalculator(void) {
 
 	eth.triggerCentral.handleShaftSignal(SHAFT_PRIMARY_UP PASS_ENGINE_PARAMETER);
 
-	assertEqualsM("dwell", 4.5, eth.engine.dwellAngle);
+	assertEqualsM("dwell", 4.5, eth.engine.engineState.dwellAngle);
 	assertEqualsM("fuel", 3.03, eth.engine.fuelMs);
 	assertEqualsM("one degree", 111.1111, eth.engine.rpmCalculator.oneDegreeUs);
 	assertEqualsM("size", 6, ilist->size);
