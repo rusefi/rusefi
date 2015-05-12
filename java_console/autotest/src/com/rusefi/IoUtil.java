@@ -12,7 +12,7 @@ import jssc.SerialPortList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import static com.rusefi.waves.WaveReport.isCloseEnough;
+import static com.rusefi.waves.EngineReport.isCloseEnough;
 
 /**
  * @author Andrey Belomutskiy

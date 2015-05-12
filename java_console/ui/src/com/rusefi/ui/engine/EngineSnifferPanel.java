@@ -13,10 +13,10 @@ import com.rusefi.ui.storage.Node;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.widgets.AnyCommand;
 import com.rusefi.ui.util.URLLabel;
+import com.rusefi.waves.EngineChart;
+import com.rusefi.waves.EngineReport;
 import com.rusefi.waves.RevolutionLog;
-import com.rusefi.waves.WaveChart;
-import com.rusefi.waves.WaveChartParser;
-import com.rusefi.waves.WaveReport;
+import com.rusefi.waves.EngineChartParser;
 
 import javax.swing.*;
 import java.awt.*;
@@ -96,7 +96,7 @@ public class EngineSnifferPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 for (UpDownImage image : images.values())
-                    image.setWaveReport(WaveReport.MOCK, null);
+                    image.setWaveReport(EngineReport.MOCK, null);
             }
         });
 
@@ -166,7 +166,7 @@ public class EngineSnifferPanel {
 //        createSecondaryImage("input2 E5");
 //
 
-        LinkManager.engineState.registerStringValueAction(WaveReport.WAVE_CHART, new EngineState.ValueCallback<String>() {
+        LinkManager.engineState.registerStringValueAction(EngineReport.ENGINE_CHART, new EngineState.ValueCallback<String>() {
             @Override
             public void onUpdate(String value) {
                 if (isPaused)
@@ -188,7 +188,7 @@ public class EngineSnifferPanel {
     }
 
     public void displayChart(String value) {
-        WaveChart map = WaveChartParser.unpackToMap(value);
+        EngineChart map = EngineChartParser.unpackToMap(value);
 
         StringBuilder revolutions = map.get(RevolutionLog.TOP_DEAD_CENTER_MESSAGE);
 
@@ -210,8 +210,8 @@ public class EngineSnifferPanel {
             String report = sb == null ? "" : sb.toString();
 
             image.setRevolutions(revolutions);
-            List<WaveReport.UpDown> list = WaveReport.parse(report);
-            WaveReport wr = new WaveReport(list);
+            List<EngineReport.UpDown> list = EngineReport.parse(report);
+            EngineReport wr = new EngineReport(list);
             image.setWaveReport(wr, revolutions);
         }
         /**

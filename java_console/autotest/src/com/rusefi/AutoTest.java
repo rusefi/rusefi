@@ -3,14 +3,14 @@ package com.rusefi;
 
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
-import com.rusefi.waves.WaveChart;
-import com.rusefi.waves.WaveReport;
+import com.rusefi.waves.EngineChart;
+import com.rusefi.waves.EngineReport;
 
 import static com.rusefi.TestingUtils.nextChart;
 import static com.rusefi.IoUtil.sendCommand;
 import static com.rusefi.IoUtil.sleep;
 import static com.rusefi.TestingUtils.*;
-import static com.rusefi.waves.WaveReport.isCloseEnough;
+import static com.rusefi.waves.EngineReport.isCloseEnough;
 
 /**
  * rusEfi firmware simulator functional test suite
@@ -50,20 +50,20 @@ public class AutoTest {
         setEngineType(25);
         sendCommand("chart 1");
         String msg = "BMW";
-        WaveChart chart;
+        EngineChart chart;
         IoUtil.changeRpm(200);
         chart = nextChart();
         double x = 173.988;
-        assertWave(msg, chart, WaveChart.SPARK_1, 0.0199666, x, x + 180, x + 360, x + 540);
+        assertWave(msg, chart, EngineChart.SPARK_1, 0.0199666, x, x + 180, x + 360, x + 540);
 
 
         IoUtil.changeRpm(1200);
         chart = nextChart();
 
         x = 688.464;
-        assertWave(msg, chart, WaveChart.SPARK_1, 0.0597999999, x, x + 180, x + 360, x + 540);
+        assertWave(msg, chart, EngineChart.SPARK_1, 0.0597999999, x, x + 180, x + 360, x + 540);
 
-        assertWave(msg, chart, WaveChart.MAP_AVERAGING, 0.139, 17.784);
+        assertWave(msg, chart, EngineChart.MAP_AVERAGING, 0.139, 17.784);
     }
 
     private static void testMitsu() {
@@ -93,75 +93,75 @@ public class AutoTest {
         setEngineType(28);
         String msg = "mazda 626 default cranking";
         IoUtil.changeRpm(200);
-        WaveChart chart;
+        EngineChart chart;
         chart = nextChart();
 
         double x = 102;
-        assertWave(msg, chart, WaveChart.SPARK_1, 0.1944, x, x + 180, x + 360, x + 540);
+        assertWave(msg, chart, EngineChart.SPARK_1, 0.1944, x, x + 180, x + 360, x + 540);
     }
 
     private static void test2003DodgeNeon() {
         setEngineType(23);
-        WaveChart chart;
+        EngineChart chart;
         String msg = "2003 Neon cranking ";
         IoUtil.changeRpm(200);
 
         chart = nextChart();
         double x = 100;
-        assertWave(true, msg, chart, WaveChart.SPARK_1, 0.194433, 0.01, WaveReport.RATIO, x + 180, x + 540);
-        assertWaveNull(msg, chart, WaveChart.SPARK_2);
-        assertWave(true, msg, chart, WaveChart.SPARK_3, 0.194433, 0.01, WaveReport.RATIO, x, x + 360);
-        assertWaveNull(msg, chart, WaveChart.SPARK_4);
+        assertWave(true, msg, chart, EngineChart.SPARK_1, 0.194433, 0.01, EngineReport.RATIO, x + 180, x + 540);
+        assertWaveNull(msg, chart, EngineChart.SPARK_2);
+        assertWave(true, msg, chart, EngineChart.SPARK_3, 0.194433, 0.01, EngineReport.RATIO, x, x + 360);
+        assertWaveNull(msg, chart, EngineChart.SPARK_4);
 
         x = 176.856;
         // todo: why is width precision so low here? is that because of loaded Windows with 1ms precision?
         double widthRatio = 0.25;
-        assertWave(true, msg, chart, WaveChart.INJECTOR_1, 0.006266666666, 0.01, widthRatio, x, x + 180, x + 360, x + 540);
-        assertWave(true, msg, chart, WaveChart.INJECTOR_2, 0.006266666666, 0.01, widthRatio, x, x + 180, x + 360, x + 540);
-        assertWave(true, msg, chart, WaveChart.INJECTOR_3, 0.006266666666, 0.01, widthRatio, x, x + 180, x + 360, x + 540);
-        assertWave(true, msg, chart, WaveChart.INJECTOR_4, 0.006266666666, 0.01, widthRatio, x, x + 180, x + 360, x + 540);
+        assertWave(true, msg, chart, EngineChart.INJECTOR_1, 0.006266666666, 0.01, widthRatio, x, x + 180, x + 360, x + 540);
+        assertWave(true, msg, chart, EngineChart.INJECTOR_2, 0.006266666666, 0.01, widthRatio, x, x + 180, x + 360, x + 540);
+        assertWave(true, msg, chart, EngineChart.INJECTOR_3, 0.006266666666, 0.01, widthRatio, x, x + 180, x + 360, x + 540);
+        assertWave(true, msg, chart, EngineChart.INJECTOR_4, 0.006266666666, 0.01, widthRatio, x, x + 180, x + 360, x + 540);
 
         msg = "2003 Neon running";
         IoUtil.changeRpm(2000);
         chart = nextChart();
         x = 113.28;
-        assertWave(true, msg, chart, WaveChart.SPARK_1, 0.13299999999999998, 0.005, WaveReport.RATIO, x + 180, x + 540);
-        assertWaveNull(msg, chart, WaveChart.SPARK_2);
-        assertWave(true, msg, chart, WaveChart.SPARK_3, 0.13299999999999998, 0.005, WaveReport.RATIO, x, x + 360);
-        assertWaveNull(msg, chart, WaveChart.SPARK_4);
+        assertWave(true, msg, chart, EngineChart.SPARK_1, 0.13299999999999998, 0.005, EngineReport.RATIO, x + 180, x + 540);
+        assertWaveNull(msg, chart, EngineChart.SPARK_2);
+        assertWave(true, msg, chart, EngineChart.SPARK_3, 0.13299999999999998, 0.005, EngineReport.RATIO, x, x + 360);
+        assertWaveNull(msg, chart, EngineChart.SPARK_4);
 
         x = 168.12;
-        assertWave(true, msg, chart, WaveChart.INJECTOR_1, 0.03333333333333302, 0.01, 0.1, x + 360);
-        assertWave(true, msg, chart, WaveChart.INJECTOR_2, 0.03333333333333302, 0.01, 0.1, x + 180);
-        assertWave(true, msg, chart, WaveChart.INJECTOR_3, 0.03333333333333302, 0.01, 0.1, x + 540);
-        assertWave(true, msg, chart, WaveChart.INJECTOR_4, 0.03333333333333302, 0.01, 0.1, x);
+        assertWave(true, msg, chart, EngineChart.INJECTOR_1, 0.03333333333333302, 0.01, 0.1, x + 360);
+        assertWave(true, msg, chart, EngineChart.INJECTOR_2, 0.03333333333333302, 0.01, 0.1, x + 180);
+        assertWave(true, msg, chart, EngineChart.INJECTOR_3, 0.03333333333333302, 0.01, 0.1, x + 540);
+        assertWave(true, msg, chart, EngineChart.INJECTOR_4, 0.03333333333333302, 0.01, 0.1, x);
     }
 
     private static void testMazdaProtege() {
         setEngineType(14);
-        WaveChart chart;
+        EngineChart chart;
         IoUtil.changeRpm(200);
         String msg = "ProtegeLX cranking";
         chart = nextChart();
         double x = 107;
-        assertWave(msg, chart, WaveChart.SPARK_1, 0.194433, x, x + 180, x + 360, x + 540);
+        assertWave(msg, chart, EngineChart.SPARK_1, 0.194433, x, x + 180, x + 360, x + 540);
         x = 0;
-        assertWaveFall(msg, chart, WaveChart.INJECTOR_1, 0.004666666666, x, x + 180, x + 360, x + 540);
-        assertWaveFall(msg, chart, WaveChart.INJECTOR_2, 0.004666666666, x, x + 180, x + 360, x + 540);
+        assertWaveFall(msg, chart, EngineChart.INJECTOR_1, 0.004666666666, x, x + 180, x + 360, x + 540);
+        assertWaveFall(msg, chart, EngineChart.INJECTOR_2, 0.004666666666, x, x + 180, x + 360, x + 540);
 
         msg = "ProtegeLX running";
         IoUtil.changeRpm(2000);
         chart = nextChart();
         x = 127.92;
-        assertWave(msg, chart, WaveChart.SPARK_1, 0.13333333333333333, x, x + 180, x + 360, x + 540);
+        assertWave(msg, chart, EngineChart.SPARK_1, 0.13333333333333333, x, x + 180, x + 360, x + 540);
         x = 0;
-        assertWaveFall(msg, chart, WaveChart.INJECTOR_1, 0.09766666666666689, x + 180, x + 540);
-        assertWaveFall(msg, chart, WaveChart.INJECTOR_2, 0.09766666666666689, x, x + 360);
+        assertWaveFall(msg, chart, EngineChart.INJECTOR_1, 0.09766666666666689, x + 180, x + 540);
+        assertWaveFall(msg, chart, EngineChart.INJECTOR_2, 0.09766666666666689, x, x + 360);
     }
 
     private static void test1995DodgeNeon() {
         setEngineType(2);
-        WaveChart chart;
+        EngineChart chart;
         sendComplexCommand("set_whole_fuel_map 3");
         sendComplexCommand("set_ignition_mode 1");
         /**
@@ -172,16 +172,16 @@ public class AutoTest {
 
         String msg = "1995 Neon";
         double x = -70;
-        assertWaveFall(msg, chart, WaveChart.INJECTOR_4, 0.133, x + 540);
-        assertWaveFall(msg, chart, WaveChart.INJECTOR_2, 0.133, x + 720);
-        assertWaveFall(msg, chart, WaveChart.INJECTOR_1, 0.133, x + 180);
-        assertWaveFall(msg, chart, WaveChart.INJECTOR_3, 0.133, x + 360);
+        assertWaveFall(msg, chart, EngineChart.INJECTOR_4, 0.133, x + 540);
+        assertWaveFall(msg, chart, EngineChart.INJECTOR_2, 0.133, x + 720);
+        assertWaveFall(msg, chart, EngineChart.INJECTOR_1, 0.133, x + 180);
+        assertWaveFall(msg, chart, EngineChart.INJECTOR_3, 0.133, x + 360);
 
         x = 115.92;
-        assertWave(msg, chart, WaveChart.SPARK_4, 0.13333, x + 540);
-        assertWave(msg, chart, WaveChart.SPARK_2, 0.13333, x);
-        assertWave(msg, chart, WaveChart.SPARK_1, 0.13333, x + 180);
-        assertWave(msg, chart, WaveChart.SPARK_3, 0.13333, x + 360);
+        assertWave(msg, chart, EngineChart.SPARK_4, 0.13333, x + 540);
+        assertWave(msg, chart, EngineChart.SPARK_2, 0.13333, x);
+        assertWave(msg, chart, EngineChart.SPARK_1, 0.13333, x + 180);
+        assertWave(msg, chart, EngineChart.SPARK_3, 0.13333, x + 360);
 
         // switching to Speed Density
         if (!TestingUtils.isRealHardware)
@@ -189,44 +189,44 @@ public class AutoTest {
         sendComplexCommand("set_algorithm 3");
         chart = nextChart();
         x = -70;
-        assertWaveFall(msg, chart, WaveChart.INJECTOR_4, 0.463, x + 540);
+        assertWaveFall(msg, chart, EngineChart.INJECTOR_4, 0.463, x + 540);
     }
 
     private static void testFordFiesta() {
         setEngineType(4);
-        WaveChart chart;
+        EngineChart chart;
         IoUtil.changeRpm(2000);
         chart = nextChart();
 
         String msg = "Fiesta";
         double x = 312;
-        assertWave("wasted spark #1 with Fiesta", chart, WaveChart.SPARK_1, 0.1333333, x, x + 360);
-        assertWaveNull(chart, WaveChart.SPARK_2);
-        assertWave("wasted spark #3 with Fiesta", chart, WaveChart.SPARK_3, 0.1333333, x + 180, x + 540);
-        assertWaveNull(msg, chart, WaveChart.SPARK_4);
+        assertWave("wasted spark #1 with Fiesta", chart, EngineChart.SPARK_1, 0.1333333, x, x + 360);
+        assertWaveNull(chart, EngineChart.SPARK_2);
+        assertWave("wasted spark #3 with Fiesta", chart, EngineChart.SPARK_3, 0.1333333, x + 180, x + 540);
+        assertWaveNull(msg, chart, EngineChart.SPARK_4);
     }
 
     private static void testFord6() {
         setEngineType(7);
-        WaveChart chart;
+        EngineChart chart;
         IoUtil.changeRpm(2000);
         chart = nextChart();
 
         String msg = "ford 6";
 
         double x = 12.84;
-        assertWave(msg, chart, WaveChart.SPARK_1, 0.01666, x, x + 120, x + 240, x + 360, x + 480, x + 600);
+        assertWave(msg, chart, EngineChart.SPARK_1, 0.01666, x, x + 120, x + 240, x + 360, x + 480, x + 600);
 
-        assertWaveNull(msg, chart, WaveChart.TRIGGER_2);
+        assertWaveNull(msg, chart, EngineChart.TRIGGER_2);
         sendComplexCommand("set_trigger_type 1"); // TT_FORD_ASPIRE
         chart = nextChart();
-        assertTrue(msg, chart.get(WaveChart.TRIGGER_2) != null);
+        assertTrue(msg, chart.get(EngineChart.TRIGGER_2) != null);
     }
 
     private static void testFordAspire() {
         setEngineType(3);
         String msg;
-        WaveChart chart;
+        EngineChart chart;
         // todo: interesting changeRpm(100);
         sendComplexCommand("set_cranking_rpm 500");
         IoUtil.changeRpm(200);
@@ -234,13 +234,13 @@ public class AutoTest {
         double x;
         chart = nextChart();
         x = 55;
-        assertWave("aspire default cranking ", chart, WaveChart.SPARK_1, 0.1944, x, x + 180, x + 360, x + 540);
+        assertWave("aspire default cranking ", chart, EngineChart.SPARK_1, 0.1944, x, x + 180, x + 360, x + 540);
 
 
         IoUtil.changeRpm(600);
         chart = nextChart();
         x = 76;
-        assertWave("aspire default running ", chart, WaveChart.SPARK_1, 0.04, x, x + 180, x + 360, x + 540);
+        assertWave("aspire default running ", chart, EngineChart.SPARK_1, 0.04, x, x + 180, x + 360, x + 540);
 
         IoUtil.changeRpm(200);
 
@@ -249,25 +249,25 @@ public class AutoTest {
 
         chart = nextChart();
         x = 55;
-        assertWave("aspire cranking", chart, WaveChart.SPARK_1, 0.18, x, x + 180, x + 360, x + 540);
+        assertWave("aspire cranking", chart, EngineChart.SPARK_1, 0.18, x, x + 180, x + 360, x + 540);
 
         sendCommand("set_cranking_timing_angle -40");
         chart = nextChart();
         x = 64;
-        assertWave("aspire", chart, WaveChart.SPARK_1, 0.18, x, x + 180, x + 360, x + 540);
+        assertWave("aspire", chart, EngineChart.SPARK_1, 0.18, x, x + 180, x + 360, x + 540);
         sendCommand("set_cranking_timing_angle 149");
 
         sendCommand("set_cranking_charge_angle 40");
         chart = nextChart();
         x = 80;
-        assertWave("aspire", chart, WaveChart.SPARK_1, 40.0 / 360, x, x + 180, x + 360, x + 540);
+        assertWave("aspire", chart, EngineChart.SPARK_1, 40.0 / 360, x, x + 180, x + 360, x + 540);
         sendCommand("set_cranking_charge_angle 65");
 
         IoUtil.changeRpm(600);
         sendComplexCommand("set_cranking_rpm 700");
         chart = nextChart();
         x = 55;
-        assertWave("cranking@600", chart, WaveChart.SPARK_1, 0.18, x, x + 180, x + 360, x + 540);
+        assertWave("cranking@600", chart, EngineChart.SPARK_1, 0.18, x, x + 180, x + 360, x + 540);
 
         IoUtil.changeRpm(2000);
         sendCommand("set_whole_fuel_map 1.57");
@@ -276,13 +276,13 @@ public class AutoTest {
 
         msg = "aspire running";
 
-        assertWaveFall(msg, chart, WaveChart.INJECTOR_1, 0.086, 238.75);
-        assertWaveFall(msg, chart, WaveChart.INJECTOR_2, 0.086, 53.04);
-        assertWaveFall(msg, chart, WaveChart.INJECTOR_3, 0.086, 417.04);
-        assertWaveFall(msg, chart, WaveChart.INJECTOR_4, 0.086, 594.04);
+        assertWaveFall(msg, chart, EngineChart.INJECTOR_1, 0.086, 238.75);
+        assertWaveFall(msg, chart, EngineChart.INJECTOR_2, 0.086, 53.04);
+        assertWaveFall(msg, chart, EngineChart.INJECTOR_3, 0.086, 417.04);
+        assertWaveFall(msg, chart, EngineChart.INJECTOR_4, 0.086, 594.04);
 
         x = 22.32;
-        assertWave(chart, WaveChart.SPARK_1, 0.133, x, x + 180, x + 360, x + 540);
+        assertWave(chart, EngineChart.SPARK_1, 0.133, x, x + 180, x + 360, x + 540);
 
         sendCommand("set_fuel_map 2200 4 15.66");
         sendCommand("set_fuel_map 2000 4 15.66");
@@ -294,31 +294,31 @@ public class AutoTest {
         sendComplexCommand("set_global_trigger_offset_angle 175");
         chart = nextChart();
 
-        assertWaveFall(msg + " fuel", chart, WaveChart.INJECTOR_1, 0.555, 238.75);
-        assertWaveFall(msg + " fuel", chart, WaveChart.INJECTOR_2, 0.555, 53.04);
-        assertWaveFall(msg + " fuel", chart, WaveChart.INJECTOR_3, 0.555, 417.04);
-        assertWaveFall(msg + " fuel", chart, WaveChart.INJECTOR_4, 0.555, 594.04);
+        assertWaveFall(msg + " fuel", chart, EngineChart.INJECTOR_1, 0.555, 238.75);
+        assertWaveFall(msg + " fuel", chart, EngineChart.INJECTOR_2, 0.555, 53.04);
+        assertWaveFall(msg + " fuel", chart, EngineChart.INJECTOR_3, 0.555, 417.04);
+        assertWaveFall(msg + " fuel", chart, EngineChart.INJECTOR_4, 0.555, 594.04);
 
         x = 45;
-        assertWave(chart, WaveChart.SPARK_1, 0.133, x, x + 180, x + 360, x + 540);
-        assertWaveNull(chart, WaveChart.SPARK_2);
+        assertWave(chart, EngineChart.SPARK_1, 0.133, x, x + 180, x + 360, x + 540);
+        assertWaveNull(chart, EngineChart.SPARK_2);
 
         sendComplexCommand("set_global_trigger_offset_angle 130");
         sendComplexCommand("set_injection_offset 369");
         chart = nextChart();
         x = 585;
-        assertWave(chart, WaveChart.SPARK_1, 0.133, x, x + 180, x + 360, x + 540);
+        assertWave(chart, EngineChart.SPARK_1, 0.133, x, x + 180, x + 360, x + 540);
 
         // let's enable more channels dynamically
         sendComplexCommand("set_ignition_mode 1");
         chart = nextChart();
-        assertWave("Switching Aspire into INDIVIDUAL_COILS mode", chart, WaveChart.SPARK_2, 0.133, x);
-        assertWave(chart, WaveChart.SPARK_3, 0.133, x + 360);
+        assertWave("Switching Aspire into INDIVIDUAL_COILS mode", chart, EngineChart.SPARK_2, 0.133, x);
+        assertWave(chart, EngineChart.SPARK_3, 0.133, x + 360);
 
         sendCommand("set_whole_timing_map 520");
         chart = nextChart();
         x = 64.8;
-        assertWave(chart, WaveChart.SPARK_2, 0.133, x);
+        assertWave(chart, EngineChart.SPARK_2, 0.133, x);
 
 
         // switching to Speed Density
@@ -332,15 +332,15 @@ public class AutoTest {
         assertEquals(1, SensorCentral.getInstance().getValue(Sensor.MAP));
         //assertEquals(1, SensorCentral.getInstance().getValue(Sensor.));
         x = 8.88;
-        assertWaveFall(msg + " fuel SD #1", chart, WaveChart.INJECTOR_1, 0.329, x + 180);
-        assertWaveFall(msg + " fuel SD #2", chart, WaveChart.INJECTOR_2, 0.329, x);
-        assertWaveFall(msg + " fuel SD #3", chart, WaveChart.INJECTOR_3, 0.329, x + 360);
-        assertWaveFall(msg + " fuel SD #4", chart, WaveChart.INJECTOR_4, 0.329, x + 540);
+        assertWaveFall(msg + " fuel SD #1", chart, EngineChart.INJECTOR_1, 0.329, x + 180);
+        assertWaveFall(msg + " fuel SD #2", chart, EngineChart.INJECTOR_2, 0.329, x);
+        assertWaveFall(msg + " fuel SD #3", chart, EngineChart.INJECTOR_3, 0.329, x + 360);
+        assertWaveFall(msg + " fuel SD #4", chart, EngineChart.INJECTOR_4, 0.329, x + 540);
 
         // above hard limit
         IoUtil.changeRpm(10000);
         chart = nextChart();
-        assertWaveNull("hard limit check", chart, WaveChart.INJECTOR_1);
+        assertWaveNull("hard limit check", chart, EngineChart.INJECTOR_1);
     }
 
     private static void assertEquals(double expected, double actual) {
@@ -356,11 +356,11 @@ public class AutoTest {
         sendCommand(command, COMPLEX_COMMAND_RETRY, Timeouts.CMD_TIMEOUT);
     }
 
-    private static void assertWaveNull(WaveChart chart, String key) {
+    private static void assertWaveNull(EngineChart chart, String key) {
         assertWaveNull("", chart, key);
     }
 
-    private static void assertWaveNull(String msg, WaveChart chart, String key) {
+    private static void assertWaveNull(String msg, EngineChart chart, String key) {
         assertNull(msg + "chart for " + key, chart.get(key));
     }
 

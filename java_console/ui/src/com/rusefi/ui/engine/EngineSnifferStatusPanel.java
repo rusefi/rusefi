@@ -1,7 +1,7 @@
 package com.rusefi.ui.engine;
 
 import com.rusefi.waves.TimeAxisTranslator;
-import com.rusefi.waves.WaveReport;
+import com.rusefi.waves.EngineReport;
 import com.rusefi.waves.ZoomProvider;
 import com.rusefi.waves.RevolutionLog;
 
@@ -24,7 +24,7 @@ public class EngineSnifferStatusPanel {
     private final JLabel timeLabel = new JLabel();
     private final JLabel angleLabel = new JLabel();
     private final JLabel rpmLabel = new JLabel();
-    private TimeAxisTranslator translator = WaveReport.MOCK;
+    private TimeAxisTranslator translator = EngineReport.MOCK;
 
     private RevolutionLog time2rpm = RevolutionLog.parseRevolutions(null);
 
