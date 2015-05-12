@@ -333,7 +333,7 @@ static void printAnalogInfo(void) {
 	if (engineConfiguration->hasMapSensor) {
 		printAnalogChannelInfo("MAP", engineConfiguration->map.sensor.hwChannel);
 	}
-	if (engineConfiguration->hasBaroSensor) {
+	if (hasBaroSensor()) {
 		printAnalogChannelInfo("BARO", engineConfiguration->baroSensor.hwChannel);
 	}
 	if (engineConfiguration->externalKnockSenseAdc != EFI_ADC_NONE) {
