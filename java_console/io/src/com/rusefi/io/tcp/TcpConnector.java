@@ -1,9 +1,11 @@
 package com.rusefi.io.tcp;
 
 import com.rusefi.FileLog;
+import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.EngineState;
 import com.rusefi.core.ResponseBuffer;
 import com.rusefi.io.*;
+import com.rusefi.io.serial.SerialIoStream;
 
 import java.io.*;
 import java.net.Socket;
@@ -20,7 +22,8 @@ public class TcpConnector implements LinkConnector {
     private final int port;
     private boolean withError;
     private BufferedInputStream stream;
-    private IoStream ioStream;
+//    private IoStream ioStream;
+    private BinaryProtocol bp;
 
     public TcpConnector(String port) {
         try {
@@ -59,9 +62,7 @@ public class TcpConnector implements LinkConnector {
     }
 
     static class InvalidTcpPort extends Exception {
-
     }
-
 
     public static int getTcpPort(String port) throws InvalidTcpPort {
         try {
@@ -86,15 +87,15 @@ public class TcpConnector implements LinkConnector {
     @Override
     public void connect(LinkManager.LinkStateListener listener) {
         FileLog.MAIN.logLine("Connecting to " + port);
+        OutputStream os;
         try {
             Socket socket = new Socket(LOCALHOST, port);
-            OutputStream os = socket.getOutputStream();
+            os = socket.getOutputStream();
             stream = new BufferedInputStream(socket.getInputStream());
-            ioStream = new TcpIoStream(os, stream);
+//            ioStream = new TcpIoStream(os, stream);
         } catch (IOException e) {
             throw new IllegalStateException("Failed to connect to simulator", e);
         }
-//        listener.onConnectionEstablished();
 
         final ResponseBuffer rb = new ResponseBuffer(new ResponseBuffer.ResponseListener() {
             @Override
@@ -103,15 +104,22 @@ public class TcpConnector implements LinkConnector {
             }
         });
 
-        ioStream.addEventListener(new DataListener() {
+        DataListener listener1 = new DataListener() {
             @Override
             public void onDataArrived(byte[] freshData) {
                 rb.append(new String(freshData));
             }
-        });
+        };
+//        ioStream.addEventListener(listener1);
 
+        bp = new BinaryProtocol(FileLog.LOGGER, new TcpIoStream(os, stream));
 
-
+        boolean result = bp.connect(listener1);
+        if (result) {
+            listener.onConnectionEstablished();
+        } else {
+            listener.onConnectionFailed();
+        }
     }
 
     @Override
@@ -126,20 +134,22 @@ public class TcpConnector implements LinkConnector {
 
     @Override
     public String unpack(String packet) {
-        return EngineState.unpackString(packet);
+        return packet;
+//        return EngineState.unpackString(packet);
     }
 
     @Override
-    public void send(String text) throws InterruptedException {
-        String command = LinkManager.encodeCommand(text);
-        FileLog.MAIN.logLine("Writing " + command);
-        try {
-            ioStream.write((command + "\n").getBytes());
-        } catch (IOException e) {
-            withError = true;
-            System.err.println("err in send");
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
+    public void send(String command) throws InterruptedException {
+        bp.doSend(command);
+//        String command = LinkManager.encodeCommand(text);
+//        FileLog.MAIN.logLine("Writing " + command);
+//        try {
+//            ioStream.write((command + "\n").getBytes());
+//        } catch (IOException e) {
+//            withError = true;
+//            System.err.println("err in send");
+//            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+//        }
     }
 
     @Override

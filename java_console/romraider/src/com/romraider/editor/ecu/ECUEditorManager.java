@@ -19,7 +19,7 @@
 
 package com.romraider.editor.ecu;
 
-import javax.swing.SwingUtilities;
+import com.rusefi.ui.util.UiUtils;
 
 
 public class ECUEditorManager {
@@ -32,7 +32,7 @@ public class ECUEditorManager {
     public static ECUEditor getECUEditor() {
         if (editor == null) {
             try {
-                SwingUtilities.invokeAndWait(new Runnable() {
+                UiUtils.invokeAndWait(new Runnable() {
                     public void run() {
                         editor = new ECUEditor();
                     }
@@ -43,4 +43,5 @@ public class ECUEditorManager {
         }
         return editor;
     }
+
 }
