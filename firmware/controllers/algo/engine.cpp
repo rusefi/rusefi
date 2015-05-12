@@ -179,6 +179,12 @@ void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_F) {
 	engine->engineState.iatFuelCorrection = getIatCorrection(engine->engineState.iat PASS_ENGINE_PARAMETER);
 	engine->engineState.cltFuelCorrection = getCltCorrection(engine->engineState.clt PASS_ENGINE_PARAMETER);
 
+	if (hasBaroSensor()) {
+		engine->engineState.baroCorrection = getBaroCorrection(PASS_ENGINE_PARAMETER_F);
+	} else {
+		engine->engineState.baroCorrection = 1;
+	}
+
 	engine->engineState.injectionAngle = getInjectionAngle(rpm PASS_ENGINE_PARAMETER);
 	engine->engineState.timingAdvance = getAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER);
 

@@ -92,6 +92,8 @@ public:
 	float cltFuelCorrection;
 	float injectorLag;
 
+	float baroCorrection;
+
 	// speed density
 	float tChargeK;
 	float currentVE;

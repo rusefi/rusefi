@@ -169,7 +169,7 @@ static void printSensors(Logging *log, bool fileFormat) {
 		reportSensorF(log, fileFormat, "MAP", "kPa", getMap(), 2);
 //		reportSensorF(log, fileFormat, "map_r", "V", getRawMap(), 2);
 	}
-	if (engineConfiguration->hasBaroSensor) {
+	if (hasBaroSensor()) {
 		reportSensorF(log, fileFormat, "baro", "kPa", getBaroPressure(), 2);
 	}
 	if (engineConfiguration->hasAfrSensor) {

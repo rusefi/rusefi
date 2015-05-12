@@ -93,6 +93,13 @@ float getSpeedDensityFuel(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	return sdMath(engineConfiguration, ENGINE(engineState.currentVE), adjMap, ENGINE(engineState.targerAFR), tChargeK) * 1000;
 }
 
+static const baro_corr_table_t default_baro_corr = {
+		{1.141, 1.086, 1.039, 1},
+		{1.141, 1.086, 1.039, 1},
+		{1.141, 1.086, 1.039, 1},
+		{1.141, 1.086, 1.039, 1}
+};
+
 void setDefaultVETable(DECLARE_ENGINE_PARAMETER_F) {
 	setRpmTableBin(config->veRpmBins, FUEL_RPM_COUNT);
 	veMap.setAll(80);
@@ -103,11 +110,15 @@ void setDefaultVETable(DECLARE_ENGINE_PARAMETER_F) {
 
 	setRpmTableBin(config->afrRpmBins, FUEL_RPM_COUNT);
 	afrMap.setAll(14.7);
+
+	setRpmTableBin(engineConfiguration->baroCorrRpmBins, BARO_CORR_SIZE);
+	setTableBin2(engineConfiguration->baroCorrPressureBins, BARO_CORR_SIZE, 75, 105, 1);
+	memcpy(engineConfiguration->baroCorrTable, default_baro_corr, sizeof(default_baro_corr));
 }
 
 void initSpeedDensity(DECLARE_ENGINE_PARAMETER_F) {
 	veMap.init(config->veTable, config->veLoadBins, config->veRpmBins);
 //	ve2Map.init(engineConfiguration->ve2Table, engineConfiguration->ve2LoadBins, engineConfiguration->ve2RpmBins);
 	afrMap.init(config->afrTable, config->afrLoadBins, config->afrRpmBins);
-	baroCorrMap.init(engineConfiguration->baroCorrTable, engineConfiguration->baroCorrLoadBins, engineConfiguration->baroCorrRpmBins);
+	baroCorrMap.init(engineConfiguration->baroCorrTable, engineConfiguration->baroCorrPressureBins, engineConfiguration->baroCorrRpmBins);
 }

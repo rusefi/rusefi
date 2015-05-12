@@ -519,7 +519,7 @@ float noAccelAfterHardLimitPeriodSecs;;"sec",      1,      0,       0, 60,      
 
 int mapAveragingSchedulingAtIndex;
 
-float[BARO_CORR_SIZE] baroCorrLoadBins;
+float[BARO_CORR_SIZE] baroCorrPressureBins;
 float[BARO_CORR_SIZE] baroCorrRpmBins;
 
 baro_corr_table_t baroCorrTable;

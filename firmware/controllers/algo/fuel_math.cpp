@@ -48,6 +48,7 @@ static fuel_Map3D_t fuelMap;
 static fuel_Map3D_t fuelPhaseMap;
 extern fuel_Map3D_t ve2Map;
 extern fuel_Map3D_t afrMap;
+extern baroCorr_Map3D_t baroCorrMap;
 
 /**
  * @return total duration of fuel injection per engine cycle, in milliseconds
@@ -185,6 +186,10 @@ floatms_t getBaseTableFuel(engine_configuration_s *engineConfiguration, int rpm,
 		return NAN;
 	}
 	return fuelMap.getValue(engineLoad, rpm);
+}
+
+float getBaroCorrection(DECLARE_ENGINE_PARAMETER_F) {
+	return baroCorrMap.getValue(getBaroPressure(), getRpm());
 }
 
 #if EFI_ENGINE_CONTROL
