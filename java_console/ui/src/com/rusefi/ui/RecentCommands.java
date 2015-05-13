@@ -24,7 +24,7 @@ public class RecentCommands {
     private static final String KEY = "recent_commands";
     private static final String DELIMETER = "|";
 
-    private final JPanel content = new JPanel(new GridLayout(NUMBER_OF_COMMANDS, 1));
+    private final JPanel content = new JPanel(new GridLayout(NUMBER_OF_COMMANDS + 1, 1));
 
     private final LinkedHashMap<Entry, Object> entries = new LinkedHashMap<Entry, Object>() {
         @Override
@@ -78,9 +78,8 @@ public class RecentCommands {
 
         add("sparkbench 5 400 2");
         add("fuelbench 5 400 2");
-        add("fuelpumpbench");
-        add("fanbench");
-        add("milbench");
+        add("altinfo");
+        add("accelinfo");
     }
 
     public void add(String command) {
@@ -92,8 +91,21 @@ public class RecentCommands {
             @Override
             public void run() {
                 content.removeAll();
+                JButton reset = new JButton(UiUtils.loadIcon("undo.jpg"));
+                reset.setContentAreaFilled(false);
+                reset.setFocusPainted(false);
+                reset.setBorder(BorderFactory.createEmptyBorder());
+                content.add(UiUtils.wrap(reset));
+                reset.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        entries.clear();
+                        addDefaults();
+                    }
+                });
+
                 synchronized (entries) {
-                    Set<Entry> sorted = new TreeSet<Entry>();
+                    Set<Entry> sorted = new TreeSet<>();
                     sorted.addAll(entries.keySet());
 
                     for (Entry entry : sorted) {
