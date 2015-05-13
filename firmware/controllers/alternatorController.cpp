@@ -36,7 +36,7 @@ static msg_t AltCtrlThread(int param) {
 	while (true) {
 		chThdSleepMilliseconds(100);
 
-		currentAltDuty = altPid.getValue(14, getVBatt(engineConfiguration), 1);
+		currentAltDuty = altPid.getValue(boardConfiguration->targetVBatt, getVBatt(engineConfiguration), 1);
 		if (boardConfiguration->isVerboseAlternator) {
 			scheduleMsg(logger, "alt duty: %f/vbatt=%f/p=%f/i=%f/d=%f int=%f", currentAltDuty, getVBatt(engineConfiguration),
 					altPid.getP(), altPid.getI(), altPid.getD(), altPid.getIntegration());
@@ -73,7 +73,8 @@ static void showAltInfo(void) {
 			hwPortname(boardConfiguration->alternatorControlPin));
 	scheduleMsg(logger, "p=%f/i=%f/d=%f", engineConfiguration->alternatorControlPFactor,
 			0, 0); // todo: i & d
-	scheduleMsg(logger, "vbatt=%f/duty=%f", getVBatt(engineConfiguration), currentAltDuty);
+	scheduleMsg(logger, "vbatt=%f/duty=%f/target=%f", getVBatt(engineConfiguration), currentAltDuty,
+			boardConfiguration->targetVBatt);
 }
 
 void initAlternatorCtrl(Logging *sharedLogger) {

@@ -922,9 +922,13 @@ static void setInjectorLag(float value) {
 }
 
 static void setValue(const char *paramStr, const char *valueStr) {
-
 	float value = atoff(valueStr);
-	engineConfiguration->vehicleSpeedCoef = value;
+
+	if (strEqualCaseInsensitive(paramStr, "vsscoeff")) {
+		engineConfiguration->vehicleSpeedCoef = value;
+	} else if (strEqualCaseInsensitive(paramStr, "targetvbatt")) {
+		boardConfiguration->targetVBatt = value;
+	}
 }
 
 void initSettings(engine_configuration_s *engineConfiguration) {
