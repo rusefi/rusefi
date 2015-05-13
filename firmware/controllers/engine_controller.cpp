@@ -296,7 +296,8 @@ static char pinNameBuffer[16];
 extern AdcDevice fastAdc;
 #endif
 
-static void printAnalogChannelInfoExt(const char *name, adc_channel_e hwChannel, float adcVoltage) {
+static void printAnalogChannelInfoExt(const char *name, adc_channel_e hwChannel, float adcVoltage,
+		float dividerCoeff) {
 #if HAL_USE_ADC || defined(__DOXYGEN__)
 	if (hwChannel == EFI_ADC_NONE) {
 		scheduleMsg(&logger, "ADC is not assigned for %s", name);
@@ -307,15 +308,15 @@ static void printAnalogChannelInfoExt(const char *name, adc_channel_e hwChannel,
 		scheduleMsg(&logger, "fast enabled=%s", boolToString(boardConfiguration->isFastAdcEnabled));
 	}
 
-	float voltage = adcVoltage * engineConfiguration->analogInputDividerCoefficient;
-	scheduleMsg(&logger, "%s ADC%d %s %s rawValue=%f/divided=%fv", name, hwChannel, getAdcMode(hwChannel),
-			getPinNameByAdcChannel(hwChannel, pinNameBuffer), adcVoltage, voltage);
+	float voltage = adcVoltage * dividerCoeff;
+	scheduleMsg(&logger, "%s ADC%d %s %s rawValue=%f/divided=%fv/divider=%f", name, hwChannel, getAdcMode(hwChannel),
+			getPinNameByAdcChannel(hwChannel, pinNameBuffer), adcVoltage, voltage, dividerCoeff);
 #endif
 }
 
 static void printAnalogChannelInfo(const char *name, adc_channel_e hwChannel) {
 #if HAL_USE_ADC || defined(__DOXYGEN__)
-	printAnalogChannelInfoExt(name, hwChannel, getVoltage("print", hwChannel));
+	printAnalogChannelInfoExt(name, hwChannel, getVoltage("print", hwChannel), engineConfiguration->analogInputDividerCoefficient);
 #endif
 }
 
@@ -342,7 +343,8 @@ static void printAnalogInfo(void) {
 
 	printAnalogChannelInfo("A/C sw", engineConfiguration->acSwitchAdc);
 	printAnalogChannelInfo("HIP9011", engineConfiguration->hipOutputChannel);
-	printAnalogChannelInfoExt("Vbatt", engineConfiguration->vbattAdcChannel, getVBatt(engineConfiguration));
+	printAnalogChannelInfoExt("Vbatt", engineConfiguration->vbattAdcChannel, getVoltage("vbatt", engineConfiguration->vbattAdcChannel),
+			engineConfiguration->vbattDividerCoeff);
 }
 
 static THD_WORKING_AREA(csThreadStack, UTILITY_THREAD_STACK_SIZE);	// declare thread stack
