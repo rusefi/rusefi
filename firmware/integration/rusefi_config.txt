@@ -336,7 +336,8 @@ spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stoc
 	brain_pin_e[DIGIPOT_COUNT iterate] digitalPotentiometerChipSelect;
 
 custom adc_channel_mode_e 4 bits,    U32,   @OFFSET@, [0:1], "Off", "Slow", "Fast", "INVALID" 
-	adc_channel_mode_e[HW_MAX_ADC_INDEX iterate] unusedADC;
+	float[15] unusedADC;
+	float targetVBatt;
 
 
 	brain_input_pin_e[3 iterate] triggerInputPins;

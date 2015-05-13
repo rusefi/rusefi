@@ -23,9 +23,13 @@ void setDodgeRam1996(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->trigger.type = TT_DODGE_RAM;
 	engineConfiguration->injector.flow = 243.6; // 23.2lb/h
 	engineConfiguration->map.sensor.type = MT_DODGE_NEON_2003;
+	engineConfiguration->algorithm = LM_ALPHA_N;
 
 	// set_cranking_charge_angle 30
 	engineConfiguration->crankingChargeAngle = 30;
+
+	// set_whole_fuel_map 6
+	setWholeFuelMap(6 PASS_ENGINE_PARAMETER);
 
 	//Base engine setting
 	engineConfiguration->specs.cylindersCount = 8;

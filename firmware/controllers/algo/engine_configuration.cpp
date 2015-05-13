@@ -324,6 +324,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->algorithm = LM_PLAIN_MAF;
 
 	engineConfiguration->vbattDividerCoeff = ((float) (15 + 65)) / 15;
+	boardConfiguration->targetVBatt = 14;
 
 	engineConfiguration->fanOnTemperature = 75;
 	engineConfiguration->fanOffTemperature = 70;
