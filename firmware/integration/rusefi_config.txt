@@ -434,7 +434,7 @@ brain_input_pin_e vehicleSpeedSensorInputPin;
 	pin_input_mode_e clutchUpPinMode;
 	brain_pin_e[LE_COMMAND_COUNT iterate] fsioDigitalInputs;These input pins allow us to pull toggle buttons state;
 
-	int unusedbs;
+	int alternatorDT;
 
 
 end_struct	
