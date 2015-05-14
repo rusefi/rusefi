@@ -358,6 +358,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->HD44780height = 4;
 
 	engineConfiguration->alternatorControlPFactor = 30;
+	boardConfiguration->alternatorDT = 100;
 
 	engineConfiguration->vbattAdcChannel = EFI_ADC_NONE;
 	engineConfiguration->cltAdcChannel = EFI_ADC_6;
