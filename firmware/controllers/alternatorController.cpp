@@ -53,16 +53,17 @@ static void applySettings(void) {
 	altPid.updateFactors(engineConfiguration->alternatorControlPFactor, 0, 0);
 }
 
-static void showAltInfo(void) {
-	scheduleMsg(logger, "alt=%s @ %s", boolToString(engineConfiguration->isAlternatorControlEnabled),
-			hwPortname(boardConfiguration->alternatorControlPin));
+void showAltInfo(void) {
+	scheduleMsg(logger, "alt=%s @%s t=%dms", boolToString(engineConfiguration->isAlternatorControlEnabled),
+			hwPortname(boardConfiguration->alternatorControlPin),
+			boardConfiguration->alternatorDT);
 	scheduleMsg(logger, "p=%f/i=%f/d=%f", engineConfiguration->alternatorControlPFactor,
 			0, 0); // todo: i & d
 	scheduleMsg(logger, "vbatt=%f/duty=%f/target=%f", getVBatt(engineConfiguration), currentAltDuty,
 			boardConfiguration->targetVBatt);
 }
 
-static void setAltPFactor(float p) {
+void setAltPFactor(float p) {
 	engineConfiguration->alternatorControlPFactor = p;
 	scheduleMsg(logger, "setAltPid: %f", p);
 	applySettings();
