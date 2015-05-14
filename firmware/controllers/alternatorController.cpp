@@ -53,10 +53,20 @@ static void applySettings(void) {
 	altPid.updateFactors(engineConfiguration->alternatorControlPFactor, 0, 0);
 }
 
+static void showAltInfo(void) {
+	scheduleMsg(logger, "alt=%s @ %s", boolToString(engineConfiguration->isAlternatorControlEnabled),
+			hwPortname(boardConfiguration->alternatorControlPin));
+	scheduleMsg(logger, "p=%f/i=%f/d=%f", engineConfiguration->alternatorControlPFactor,
+			0, 0); // todo: i & d
+	scheduleMsg(logger, "vbatt=%f/duty=%f/target=%f", getVBatt(engineConfiguration), currentAltDuty,
+			boardConfiguration->targetVBatt);
+}
+
 static void setAltPFactor(float p) {
 	engineConfiguration->alternatorControlPFactor = p;
 	scheduleMsg(logger, "setAltPid: %f", p);
 	applySettings();
+	showAltInfo();
 }
 
 static void applyAlternatorPinState(PwmConfig *state, int stateIndex) {
@@ -66,15 +76,6 @@ static void applyAlternatorPinState(PwmConfig *state, int stateIndex) {
 	int value = state->multiWave.waves[0].pinStates[stateIndex];
 	if (!value || engineConfiguration->isAlternatorControlEnabled)
 		output->setValue(value);
-}
-
-static void showAltInfo(void) {
-	scheduleMsg(logger, "alt=%s @ %s", boolToString(engineConfiguration->isAlternatorControlEnabled),
-			hwPortname(boardConfiguration->alternatorControlPin));
-	scheduleMsg(logger, "p=%f/i=%f/d=%f", engineConfiguration->alternatorControlPFactor,
-			0, 0); // todo: i & d
-	scheduleMsg(logger, "vbatt=%f/duty=%f/target=%f", getVBatt(engineConfiguration), currentAltDuty,
-			boardConfiguration->targetVBatt);
 }
 
 void initAlternatorCtrl(Logging *sharedLogger) {
