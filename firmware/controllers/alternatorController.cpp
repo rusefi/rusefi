@@ -34,7 +34,7 @@ static float currentAltDuty;
 static msg_t AltCtrlThread(int param) {
 	chRegSetThreadName("AlternatorController");
 	while (true) {
-		chThdSleepMilliseconds(100);
+		chThdSleepMilliseconds(boardConfiguration->alternatorDT);
 
 		currentAltDuty = altPid.getValue(boardConfiguration->targetVBatt, getVBatt(engineConfiguration), 1);
 		if (boardConfiguration->isVerboseAlternator) {
