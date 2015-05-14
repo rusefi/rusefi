@@ -22,6 +22,7 @@
 #include "engine.h"
 #include "efiGpio.h"
 #include "engine_math.h"
+#include "alternatorController.h"
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 #include "rusefi.h"
@@ -922,12 +923,20 @@ static void setInjectorLag(float value) {
 }
 
 static void setValue(const char *paramStr, const char *valueStr) {
-	float value = atoff(valueStr);
+	float valueF = atoff(valueStr);
+	int valueI = atoi(valueStr);
 
 	if (strEqualCaseInsensitive(paramStr, "vsscoeff")) {
-		engineConfiguration->vehicleSpeedCoef = value;
+		engineConfiguration->vehicleSpeedCoef = valueF;
+	} else if (strEqualCaseInsensitive(paramStr, "alt_t")) {
+		if (valueI > 10) {
+			boardConfiguration->alternatorDT = valueI;
+		}
+		showAltInfo();
+	} else if (strEqualCaseInsensitive(paramStr, "alt_p")) {
+		setAltPFactor(valueF);
 	} else if (strEqualCaseInsensitive(paramStr, "targetvbatt")) {
-		boardConfiguration->targetVBatt = value;
+		boardConfiguration->targetVBatt = valueF;
 	}
 }
 
