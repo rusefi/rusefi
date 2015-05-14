@@ -65,6 +65,9 @@ void setDodgeRam1996(DECLARE_ENGINE_PARAMETER_F) {
 	// set_global_trigger_offset_angle -50
 	engineConfiguration->globalTriggerAngleOffset = -50;
 
+	// set_global_fuel_correction 1
+
+
 	boardConfiguration->alternatorControlPin = GPIOD_7;
 	engineConfiguration->alternatorControlPFactor = 22;
 

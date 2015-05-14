@@ -515,7 +515,7 @@
 #define fsioDigitalInputs14_offset 1480
 #define fsioDigitalInputs15_offset 1484
 #define fsioDigitalInputs16_offset 1488
-#define unusedbs_offset 1492
+#define alternatorDT_offset 1492
 #define hasMapSensor_offset 1496
 #define hasIatSensor_offset 1496
 #define hasBaroSensor_offset 1496
