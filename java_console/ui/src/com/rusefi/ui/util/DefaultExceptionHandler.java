@@ -20,6 +20,8 @@ public class DefaultExceptionHandler implements Thread.UncaughtExceptionHandler 
     }
 
     public static void handleException(Throwable e) {
+        if (e == null)
+            throw new NullPointerException("Throwable e");
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         PrintStream ps = new PrintStream(baos);
         e.printStackTrace(ps);

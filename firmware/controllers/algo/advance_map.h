@@ -10,7 +10,7 @@
 
 #include "engine.h"
 
-float getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_S);
+angle_t getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_S);
 void setDefaultIatTimingCorrection(DECLARE_ENGINE_PARAMETER_F);
 void prepareTimingMap(DECLARE_ENGINE_PARAMETER_F);
 

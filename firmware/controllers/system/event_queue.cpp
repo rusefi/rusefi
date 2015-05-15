@@ -103,7 +103,7 @@ uint64_t EventQueue::getNextEventTime(uint64_t nowX) {
 	return EMPTY_QUEUE;
 }
 
-// static scheduling_s * longScheduling;
+static scheduling_s * longScheduling;
 uint32_t maxEventQueueTime = 0;
 uint32_t lastEventQueueTime;
 
@@ -158,10 +158,10 @@ int EventQueue::executeAll(uint64_t now) {
 		lastEventQueueTime = GET_TIMESTAMP() - before;
 		if (lastEventQueueTime > maxEventQueueTime)
 			maxEventQueueTime = lastEventQueueTime;
-//		if (cost > 2000) {
-//			longScheduling = current;
-//			cost++;
-//		}
+		if (lastEventQueueTime > 2000) {
+			longScheduling = current;
+			lastEventQueueTime++;
+		}
 	}
 	return executionCounter;
 }

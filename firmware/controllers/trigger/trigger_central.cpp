@@ -295,7 +295,7 @@ void triggerInfo(Engine *engine) {
 	scheduleMsg(logger, "zeroTestTime=%d maxHowFarOff=%d", engine->m.zeroTestTime, maxHowFarOff);
 	maxHowFarOff = 0;
 
-	scheduleMsg(logger, "advanceLookupTime=%d t=%d fuelCalcTime=%d",
+	scheduleMsg(logger, "advanceLookupTime=%d now=%d fuelCalcTime=%d",
 			engine->m.advanceLookupTime, *cyccnt,
 			engine->m.fuelCalcTime);
 
