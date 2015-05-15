@@ -54,8 +54,15 @@
 
 
 #if EFI_CLOCK_LOCKS
+#ifdef __cplusplus
+extern "C"
+{
+#endif /* __cplusplus */
   void onLockHook(void);
   void onUnlockHook(void);
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
   #define ON_LOCK_HOOK onLockHook()
   #define ON_UNLOCK_HOOK onUnlockHook()
 #else /* EFI_CLOCK_LOCKS */

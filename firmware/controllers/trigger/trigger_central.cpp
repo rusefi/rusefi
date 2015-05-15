@@ -311,6 +311,7 @@ void triggerInfo(Engine *engine) {
 			engine->m.mainTriggerCallbackTime);
 
 	scheduleMsg(logger, "maxLockTime=%d / maxTriggerReentraint=%d", maxLockTime, maxTriggerReentraint);
+	maxLockTime = 0;
 	scheduleMsg(logger, "maxEventQueueTime=%d", maxEventQueueTime);
 
 	scheduleMsg(logger, "hipLastExecutionCount=%d", hipLastExecutionCount);
