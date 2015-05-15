@@ -72,10 +72,10 @@ uint32_t skipUntilEngineCycle = 0;
 
 #if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
 extern WaveChart waveChart;
-static void resetWaveChartNow(void) {
-	skipUntilEngineCycle = engine->rpmCalculator.getRevolutionCounter() + 3;
-	waveChart.resetWaveChart();
-}
+//static void resetWaveChartNow(void) {
+//	skipUntilEngineCycle = engine->rpmCalculator.getRevolutionCounter() + 3;
+//	waveChart.resetWaveChart();
+//}
 #endif
 
 void WaveChart::resetWaveChart() {
@@ -106,8 +106,8 @@ bool_t WaveChart::isWaveChartFull() {
 }
 
 static void printStatus(void) {
-	scheduleMsg(&logger, "digital chart: %s", boolToString(engineConfiguration->isEngineChartEnabled));
-	scheduleMsg(&logger, "chartsize=%d", engineConfiguration->engineChartSize);
+	scheduleMsg(&logger, "engine chart: %s", boolToString(engineConfiguration->isEngineChartEnabled));
+	scheduleMsg(&logger, "engine chart size=%d", engineConfiguration->engineChartSize);
 }
 
 static void setChartActive(int value) {
@@ -260,9 +260,9 @@ void initWaveChart(WaveChart *chart) {
 
 	addConsoleActionI("chartsize", setChartSize);
 	addConsoleActionI("chart", setChartActive);
-#if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
-	addConsoleAction("reset_wave_chart", resetWaveChartNow);
-#endif
+//#if ! EFI_UNIT_TEST || defined(__DOXYGEN__)
+//	addConsoleAction("reset_engine_chart", resetWaveChartNow);
+//#endif
 }
 
 #endif /* EFI_WAVE_CHART */
