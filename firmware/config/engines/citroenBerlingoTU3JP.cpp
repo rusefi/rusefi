@@ -70,8 +70,6 @@ static const ignition_table_t tps_advance_table = {
 EXTERN_ENGINE;
 
 void setCitroenBerlingoTU3JPConfiguration(DECLARE_ENGINE_PARAMETER_F) {
-	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
-
 	engineConfiguration->engineType = CITROEN_TU3JP;
 
 	/**

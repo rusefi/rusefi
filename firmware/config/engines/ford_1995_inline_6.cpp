@@ -26,7 +26,6 @@ EXTERN_ENGINE;
  * @brief Default values for persistent properties
  */
 void setFordInline6(DECLARE_ENGINE_PARAMETER_F) {
-	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 	engineConfiguration->specs.cylindersCount = 6;
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);

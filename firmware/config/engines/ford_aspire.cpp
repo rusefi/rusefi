@@ -79,7 +79,6 @@ static void setDefaultAspireMaps(DECLARE_ENGINE_PARAMETER_F) {
 }
 
 void setFordAspireEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
-	board_configuration_s * boardConfiguration = &engineConfiguration->bc;
 	engineConfiguration->tpsMin = 100;
 	engineConfiguration->tpsMax = 750;
 

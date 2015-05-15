@@ -20,8 +20,6 @@ EXTERN_ENGINE
 ;
 
 void setBmwE34(DECLARE_ENGINE_PARAMETER_F) {
-	board_configuration_s * boardConfiguration = &engineConfiguration->bc;
-
 	// chartsize 450
 	engineConfiguration->engineChartSize = 450;
 

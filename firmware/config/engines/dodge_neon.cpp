@@ -93,8 +93,6 @@ static float dodge_map_advance_table[16][16] = {
 EXTERN_ENGINE;
 
 void setDodgeNeon1995EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
-	board_configuration_s * boardConfiguration = &engineConfiguration->bc;
-
 	engineConfiguration->trigger.type = TT_DODGE_NEON_1995;
 
 	engineConfiguration->algorithm = LM_ALPHA_N;
@@ -187,7 +185,6 @@ void setDodgeNeon1995EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 }
 
 void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
-	board_configuration_s * boardConfiguration = &engineConfiguration->bc;
 	engineConfiguration->trigger.type = TT_DODGE_NEON_2003;
 	setFrankenso_01_LCD(boardConfiguration);
 	setFrankenso0_1_joystick(engineConfiguration);
