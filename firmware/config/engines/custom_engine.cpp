@@ -16,7 +16,6 @@ EXTERN_ENGINE;
 void setCustomEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->trigger.type = TT_ONE_PLUS_ONE;
 
-	board_configuration_s * boardConfiguration = &engineConfiguration->bc;
 	setFrankenso_01_LCD(boardConfiguration);
 	setFrankenso0_1_joystick(engineConfiguration);
 
