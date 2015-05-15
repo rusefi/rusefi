@@ -9,6 +9,7 @@
 #include "error_handling.h"
 #include "io_pins.h"
 #include "memstreams.h"
+#include "efilib2.h"
 
 #if EFI_HD44780_LCD
 #include "lcd_HD44780.h"
@@ -83,17 +84,17 @@ char *getWarninig(void) {
 	return warningBuffer;
 }
 
-uint64_t lastLockTime;
+uint32_t lastLockTime;
 uint32_t maxLockTime = 0;
 
 bool isInsideTriggerHandler = false;
 
 void onLockHook(void) {
-	lastLockTime = getTimeNowNt();
+	lastLockTime = GET_TIMESTAMP();
 }
 
 void onUnlockHook(void) {
-	uint64_t t = getTimeNowNt() - lastLockTime;
+	uint64_t t = GET_TIMESTAMP() - lastLockTime;
 	if (t > maxLockTime) {
 		maxLockTime = t;
 	}

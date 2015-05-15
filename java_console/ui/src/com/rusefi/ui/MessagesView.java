@@ -27,6 +27,7 @@ public class MessagesView {
     public final JScrollPane messagesScroll = new JScrollPane(messages, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
     public MessagesView() {
+        messages.setEditable(false);
         StyledDocument d = (StyledDocument) messages.getDocument();
         bold = d.addStyle("StyleName", null);
         bold.addAttribute(StyleConstants.CharacterConstants.Bold, Boolean.TRUE);

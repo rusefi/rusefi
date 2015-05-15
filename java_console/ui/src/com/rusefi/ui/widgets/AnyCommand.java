@@ -1,6 +1,7 @@
 package com.rusefi.ui.widgets;
 
 import com.rusefi.io.CommandQueue;
+import com.rusefi.ui.RecentCommands;
 import com.rusefi.ui.storage.Node;
 
 import javax.swing.*;
@@ -9,6 +10,8 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 /**
  * Date: 3/20/13
@@ -26,6 +29,7 @@ public class AnyCommand {
 
     private JPanel content = new JPanel(new FlowLayout(FlowLayout.LEFT));
     private boolean reentrant;
+    private int index;
 
     public AnyCommand(final Node config, boolean listenToCommands) {
         this(config, config.getProperty(KEY, ""), listenToCommands);
@@ -36,6 +40,15 @@ public class AnyCommand {
         content.setBorder(BorderFactory.createLineBorder(Color.PINK));
         content.add(new JLabel("Command: "));
         content.add(text);
+        JButton go = new JButton("Go");
+        go.setContentAreaFilled(false);
+        go.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                go();
+            }
+        });
+        content.add(go);
 
         CommandQueue.getInstance().addListener(new CommandQueue.CommandQueueListener() {
             @Override
@@ -45,16 +58,23 @@ public class AnyCommand {
             }
         });
 
+        text.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_UP) {
+                    String command = RecentCommands.getRecent(++index);
+                    text.setText(command);
+                } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+                    String command = RecentCommands.getRecent(--index);
+                    text.setText(command);
+                }
+            }
+        });
+
         text.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String cmd = text.getText();
-                if (!isValidInput(text))
-                    return;
-                int timeout = CommandQueue.getTimeout(cmd);
-                reentrant = true;
-                CommandQueue.getInstance().write(cmd.toLowerCase(), timeout);
-                reentrant = false;
+                go();
             }
         });
         text.getDocument().addDocumentListener(new DocumentListener() {
@@ -87,14 +107,20 @@ public class AnyCommand {
         // todo: limit the length of text in the text field
     }
 
+    private void go() {
+        index = 0;
+        String cmd = text.getText();
+        if (!isValidInput(text))
+            return;
+        int timeout = CommandQueue.getTimeout(cmd);
+        reentrant = true;
+        CommandQueue.getInstance().write(cmd.toLowerCase(), timeout);
+        reentrant = false;
+    }
+
     public JTextField getText() {
         return text;
     }
-
-//    @Override
-//    public boolean requestFocusInWindow() {
-//        return text.requestFocusInWindow();
-//    }
 
     private static boolean isValidInput(JTextField text) {
         boolean isOk = true;
