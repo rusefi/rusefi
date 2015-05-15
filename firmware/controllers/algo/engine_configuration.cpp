@@ -665,7 +665,7 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 		break;
 #endif /* EFI_SUPPORT_1995_FORD_INLINE_6 */
 	case GY6_139QMB:
-		setGy6139qmbDefaultEngineConfiguration(engineConfiguration);
+		setGy6139qmbDefaultEngineConfiguration(PASS_ENGINE_PARAMETER_F);
 		break;
 	case MAZDA_MIATA_NB:
 		setMazdaMiataNbEngineConfiguration(PASS_ENGINE_PARAMETER_F);
