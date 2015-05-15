@@ -28,7 +28,7 @@ public class SensorGauge {
         return createGauge(sensor, GaugeChangeListener.VOID);
     }
 
-    private static Component createGauge(Sensor sensor, GaugeChangeListener listener) {
+    public static Component createGauge(Sensor sensor, GaugeChangeListener listener) {
         JPanel wrapper = new JPanel(new BorderLayout());
 
         createGaugeBody(sensor, wrapper, listener);
@@ -36,7 +36,7 @@ public class SensorGauge {
         return wrapper;
     }
 
-    interface GaugeChangeListener {
+    public interface GaugeChangeListener {
         GaugeChangeListener VOID = new GaugeChangeListener() {
             @Override
             public void onSensorChange(Sensor sensor) {

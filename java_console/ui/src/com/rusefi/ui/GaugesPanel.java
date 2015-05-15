@@ -6,6 +6,7 @@ import com.rusefi.ui.storage.Node;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.widgets.PopupMenuButton;
 import com.rusefi.ui.widgets.SensorGauge;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -160,17 +161,28 @@ public class GaugesPanel {
         gauges.removeAll();
 
         for (int i = 0; i < rows * columns; i++) {
-            String gaugeName = config.getProperty("gauge_" + i, DEFAULT_LAYOUT[i].name());
+            String gaugeName = config.getProperty(getKey(i), DEFAULT_LAYOUT[i].name());
             Sensor sensor;
             try {
                 sensor = Sensor.valueOf(Sensor.class, gaugeName);
             } catch (IllegalArgumentException e) {
                 sensor = DEFAULT_LAYOUT[i];
             }
-            gauges.add(SensorGauge.createGauge(sensor));
+            final int currentGaugeIndex = i;
+            gauges.add(SensorGauge.createGauge(sensor, new SensorGauge.GaugeChangeListener() {
+                @Override
+                public void onSensorChange(Sensor sensor) {
+                    config.setProperty(getKey(currentGaugeIndex), sensor.name());
+                }
+            }));
         }
 
         saveConfig(rows, columns);
+    }
+
+    @NotNull
+    private String getKey(int i) {
+        return "gauge_" + i;
     }
 
     private void saveConfig(int rows, int columns) {

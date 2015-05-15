@@ -81,6 +81,7 @@ static void applyAlternatorPinState(PwmConfig *state, int stateIndex) {
 
 void initAlternatorCtrl(Logging *sharedLogger) {
 	logger = sharedLogger;
+	addConsoleAction("altinfo", showAltInfo);
 	if (boardConfiguration->alternatorControlPin == GPIO_UNASSIGNED)
 		return;
 
@@ -91,7 +92,6 @@ void initAlternatorCtrl(Logging *sharedLogger) {
 			(tfunc_t) AltCtrlThread, NULL);
 
 	addConsoleActionF("set_alt_p", setAltPFactor);
-	addConsoleAction("altinfo", showAltInfo);
 
 	applySettings();
 }

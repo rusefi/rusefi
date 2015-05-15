@@ -7,10 +7,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
@@ -26,7 +24,7 @@ public class RecentCommands {
 
     private final JPanel content = new JPanel(new GridLayout(NUMBER_OF_COMMANDS + 1, 1));
 
-    private final LinkedHashMap<Entry, Object> entries = new LinkedHashMap<Entry, Object>() {
+    private static final LinkedHashMap<Entry, Object> entries = new LinkedHashMap<Entry, Object>() {
         @Override
         protected boolean removeEldestEntry(Map.Entry<Entry, Object> eldest) {
             return size() > NUMBER_OF_COMMANDS;
@@ -187,5 +185,16 @@ public class RecentCommands {
         public int compareTo(Entry o) {
             return command.compareTo(o.command);
         }
+    }
+
+    public static String getRecent(int index) {
+        List<Entry> elements;
+        index = Math.max(0, index);
+        synchronized (entries) {
+            elements = new ArrayList<>(entries.keySet());
+        }
+        if (index >= elements.size())
+            return elements.get(0).command;
+        return elements.get(elements.size() - 1 - index).command;
     }
 }
