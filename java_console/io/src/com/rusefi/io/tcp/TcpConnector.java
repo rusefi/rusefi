@@ -154,7 +154,9 @@ public class TcpConnector implements LinkConnector {
 
     @Override
     public String unpackConfirmation(String message) {
-        return doUnpackConfirmation(message);
+        if (message.startsWith(CommandQueue.CONFIRMATION_PREFIX))
+            return message.substring(CommandQueue.CONFIRMATION_PREFIX.length());
+        return null;
     }
 
     public static Collection<String> getAvailablePorts() {
