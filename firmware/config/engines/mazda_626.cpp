@@ -21,7 +21,6 @@ EXTERN_ENGINE;
 void setMazda626EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_F);
 
-	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 	engineConfiguration->trigger.type = TT_MAZDA_DOHC_1_4;
 
 	engineConfiguration->engineChartSize = 150;

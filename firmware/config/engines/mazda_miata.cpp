@@ -128,7 +128,6 @@ static void setDefaultCrankingFuel(engine_configuration_s *engineConfiguration) 
 EXTERN_ENGINE;
 
 static void commonMiataNa(DECLARE_ENGINE_PARAMETER_F) {
-	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 	engineConfiguration->trigger.type = TT_MAZDA_MIATA_NA;
 	engineConfiguration->engineChartSize = 100;
 
@@ -202,8 +201,6 @@ static void common079721_2351(engine_configuration_s *engineConfiguration, board
 }
 
 void setMiata1990(DECLARE_ENGINE_PARAMETER_F) {
-	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
-
 	common079721_2351(engineConfiguration, boardConfiguration);
 
 	commonMiataNa(PASS_ENGINE_PARAMETER_F);
@@ -238,7 +235,6 @@ void setMiata1990(DECLARE_ENGINE_PARAMETER_F) {
  * set_engine_type 14
  */
 void setFordEscortGt(DECLARE_ENGINE_PARAMETER_F) {
-	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 	engineConfiguration->trigger.type = TT_MAZDA_DOHC_1_4;
 
 	common079721_2351(engineConfiguration, boardConfiguration);
@@ -363,7 +359,6 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_F) {
 }
 
 static void setMiata1994_common(DECLARE_ENGINE_PARAMETER_F) {
-	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 	commonMiataNa(PASS_ENGINE_PARAMETER_F);
 	engineConfiguration->specs.displacement = 1.839;
 
@@ -438,7 +433,6 @@ static void setMiata1994_common(DECLARE_ENGINE_PARAMETER_F) {
  * set_engine_type 20
  */
 void setMiata1994_d(DECLARE_ENGINE_PARAMETER_F) {
-	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 	setMiata1994_common(PASS_ENGINE_PARAMETER_F);
 	engineConfiguration->vbattDividerCoeff = ((float) (8.2 + 33)) / 8.2 * 2;
 	/**
@@ -454,7 +448,6 @@ void setMiata1994_d(DECLARE_ENGINE_PARAMETER_F) {
 }
 
 void setMiata1994_s(DECLARE_ENGINE_PARAMETER_F) {
-	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 	setMiata1994_common(PASS_ENGINE_PARAMETER_F);
 	engineConfiguration->vbattDividerCoeff = ((float) (10.0 + 33)) / 10 * 2;
 
@@ -501,7 +494,6 @@ void setMiata1994_s(DECLARE_ENGINE_PARAMETER_F) {
  * Tom tomiata, Frankenstein board
  */
 void setMiata1996(DECLARE_ENGINE_PARAMETER_F) {
-	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 	commonMiataNa(PASS_ENGINE_PARAMETER_F);
 	engineConfiguration->specs.displacement = 1.839;
 

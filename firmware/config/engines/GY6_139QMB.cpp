@@ -76,8 +76,6 @@ static void setDefault139qmbMaps(DECLARE_ENGINE_PARAMETER_F) {
 }
 
 void setGy6139qmbDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
-	board_configuration_s * boardConfiguration = &engineConfiguration->bc;
-
 	setDefault139qmbMaps(PASS_ENGINE_PARAMETER_F);
 //        engineConfiguration->map.sensor.type = MT_3V_SENSOR;
 	initEgoSensor(&engineConfiguration->afr, ES_NarrowBand);
