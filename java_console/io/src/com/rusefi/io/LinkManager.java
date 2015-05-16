@@ -48,7 +48,7 @@ public class LinkManager {
 
         @Override
         public String unpackConfirmation(String message) {
-            return TcpConnector.doUnpackConfirmation(message);
+            return message;
         }
     };
     public static final LinkedBlockingQueue<Runnable> COMMUNICATION_QUEUE = new LinkedBlockingQueue<>();
