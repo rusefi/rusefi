@@ -132,8 +132,6 @@ static void setFsioOutputPin(const char *indexStr, const char *pinName) {
 #endif
 
 void setFsioExt(int index, brain_pin_e pin, const char * exp, int freq DECLARE_ENGINE_PARAMETER_S) {
-	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
-
 	boardConfiguration->fsioPins[index] = pin;
 	int len = strlen(exp);
 	if (len >= LE_COMMAND_LENGTH) {
@@ -148,7 +146,6 @@ void setFsio(int index, brain_pin_e pin, const char * exp DECLARE_ENGINE_PARAMET
 }
 
 void applyFsioConfiguration(DECLARE_ENGINE_PARAMETER_F) {
-	board_configuration_s * boardConfiguration = &engineConfiguration->bc;
 	for (int i = 0; i < LE_COMMAND_COUNT; i++) {
 		brain_pin_e brainPin = boardConfiguration->fsioPins[i];
 
