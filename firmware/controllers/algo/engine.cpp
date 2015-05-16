@@ -37,6 +37,7 @@ EXTERN_ENGINE
  */
 void Engine::updateSlowSensors() {
 	Engine *engine = this;
+	board_configuration_s * boardConfiguration = &engineConfiguration->bc;
 	engineState.iat = getIntakeAirTemperature(PASS_ENGINE_PARAMETER_F);
 	engineState.clt = getCoolantTemperature(PASS_ENGINE_PARAMETER_F);
 

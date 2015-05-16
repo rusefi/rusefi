@@ -7,8 +7,8 @@
 #ifndef SUBARU_H_
 #define SUBARU_H_
 
-#include "engine_configuration.h"
+#include "engine.h"
 
-void setSubaru2003Wrx(engine_configuration_s *engineConfiguration);
+void setSubaru2003Wrx(DECLARE_ENGINE_PARAMETER_F);
 
 #endif /* SUBARU_H_ */

@@ -170,7 +170,6 @@ void prepareVoidConfiguration(engine_configuration_s *activeConfiguration) {
  * and the settings saves in flash memory.
  */
 void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
-	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 	// technically these regions currently overlap, but I will reset all individually for readability
 	memset(engineConfiguration, 0, sizeof(engine_configuration_s));
 	memset(boardConfiguration, 0, sizeof(board_configuration_s));
@@ -612,8 +611,6 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 	engineConfiguration->engineType = engineType;
 	engineConfiguration->headerMagicValue = HEADER_MAGIC_NUMBER;
 
-	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
-
 	/**
 	 * And override them with engine-specific defaults
 	 */
@@ -704,7 +701,7 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 		setRoverv8(PASS_ENGINE_PARAMETER_F);
 		break;
 	case SUBARU_2003_WRX:
-		setSubaru2003Wrx(engineConfiguration);
+		setSubaru2003Wrx(PASS_ENGINE_PARAMETER_F);
 		break;
 	case BMW_E34:
 		setBmwE34(PASS_ENGINE_PARAMETER_F);

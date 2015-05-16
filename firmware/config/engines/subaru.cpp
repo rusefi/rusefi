@@ -11,10 +11,9 @@
 #include "subaru.h"
 #include "honda_accord.h"
 
-void setSubaru2003Wrx(engine_configuration_s *engineConfiguration) {
+EXTERN_ENGINE;
 
-	board_configuration_s * boardConfiguration = &engineConfiguration->bc;
-
+void setSubaru2003Wrx(DECLARE_ENGINE_PARAMETER_F) {
 	setFrankenso_01_LCD(boardConfiguration);
 	setFrankenso0_1_joystick(engineConfiguration);
 
