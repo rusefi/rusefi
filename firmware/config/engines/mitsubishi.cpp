@@ -16,7 +16,6 @@
 EXTERN_ENGINE;
 
 void setMitsubishiConfiguration(DECLARE_ENGINE_PARAMETER_F) {
-	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 	engineConfiguration->engineType = MITSU_4G93;
 
 	engineConfiguration->trigger.type = TT_MITSU;

@@ -31,11 +31,8 @@ void setFrankenso_01_LCD(board_configuration_s *boardConfiguration) {
 EXTERN_ENGINE;
 
 static void setHondaAccordConfigurationCommon(DECLARE_ENGINE_PARAMETER_F) {
-	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
-
 	engineConfiguration->map.sensor.type = MT_DENSO183;
 	boardConfiguration->isFastAdcEnabled = true;
-
 
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
 	engineConfiguration->injectionMode = IM_BATCH;

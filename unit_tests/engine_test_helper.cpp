@@ -17,6 +17,7 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType) : engine (&persiste
 	ec = &persistentConfig.engineConfiguration;
 
 	engineConfiguration = ec;
+	board_configuration_s * boardConfiguration = &engineConfiguration->bc;
 	persistent_config_s *config = &persistentConfig;
 
 	setTableValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, -40, 1.5);
@@ -49,9 +50,10 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType) : engine (&persiste
 void EngineTestHelper::fireTriggerEvents() {
 	for (int i = 0; i < 24; i++) {
 		timeNow += 5000; // 5ms
-		triggerCentral.handleShaftSignal(SHAFT_PRIMARY_UP, &engine, engine.engineConfiguration, &persistentConfig);
+		board_configuration_s * boardConfiguration = &engine.engineConfiguration->bc;
+		triggerCentral.handleShaftSignal(SHAFT_PRIMARY_UP, &engine, engine.engineConfiguration, &persistentConfig, boardConfiguration);
 		timeNow += 5000;
-		triggerCentral.handleShaftSignal(SHAFT_PRIMARY_DOWN, &engine, engine.engineConfiguration, &persistentConfig);
+		triggerCentral.handleShaftSignal(SHAFT_PRIMARY_DOWN, &engine, engine.engineConfiguration, &persistentConfig, boardConfiguration);
 	}
 }
 

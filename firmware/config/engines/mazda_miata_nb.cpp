@@ -13,7 +13,6 @@
 EXTERN_ENGINE;
 
 void setMazdaMiataNbEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
-	board_configuration_s *boardConfiguration = &engineConfiguration->bc;
 	// set_rpm_hard_limit 3000
 	engineConfiguration->rpmHardLimit = 3000; // yes, 3k. let's play it safe for now
 
