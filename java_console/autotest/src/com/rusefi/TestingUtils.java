@@ -105,6 +105,8 @@ public class TestingUtils {
     }
 
     static EngineChart nextChart() {
+        getNextWaveChart();
+        getNextWaveChart();
         return EngineChartParser.unpackToMap(getNextWaveChart());
     }
 

@@ -165,9 +165,9 @@ public class BinaryProtocol {
         long start = System.currentTimeMillis();
 
         while (true) {
-            dropPending();
-
             try {
+                dropPending();
+
                 stream.write("~\n".getBytes());
                 synchronized (cbb) {
                     boolean isTimeout = waitForBytes(2, start, "switch to binary");
@@ -194,7 +194,7 @@ public class BinaryProtocol {
         }
     }
 
-    private void dropPending() {
+    private void dropPending() throws IOException {
         synchronized (cbb) {
             if (isClosed)
                 return;
@@ -337,8 +337,9 @@ public class BinaryProtocol {
     public byte[] exchange(byte[] packet, String msg, boolean allowLongResponse) {
         if (isClosed)
             return null;
-        dropPending();
         try {
+            dropPending();
+
             sendCrcPacket(packet);
             return receivePacket(msg, allowLongResponse);
         } catch (InterruptedException e) {
