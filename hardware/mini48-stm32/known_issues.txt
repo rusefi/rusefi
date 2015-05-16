@@ -1,0 +1,1 @@
+              PA13 mention SWDIO in schematics, PA14 mention SWCLK
