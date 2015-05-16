@@ -74,7 +74,7 @@ public class IoUtil {
         };
         SensorCentral.getInstance().addListener(Sensor.RPM, listener);
         try {
-            rpmLatch.await(10, TimeUnit.SECONDS);
+            rpmLatch.await(40, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             throw new IllegalStateException(e);
         }
