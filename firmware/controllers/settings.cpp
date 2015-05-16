@@ -928,6 +928,7 @@ static void setValue(const char *paramStr, const char *valueStr) {
 
 	if (strEqualCaseInsensitive(paramStr, "vsscoeff")) {
 		engineConfiguration->vehicleSpeedCoef = valueF;
+#if EFI_PROD_CODE
 	} else if (strEqualCaseInsensitive(paramStr, "alt_t")) {
 		if (valueI > 10) {
 			boardConfiguration->alternatorDT = valueI;
@@ -935,6 +936,7 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		showAltInfo();
 	} else if (strEqualCaseInsensitive(paramStr, "alt_p")) {
 		setAltPFactor(valueF);
+#endif
 	} else if (strEqualCaseInsensitive(paramStr, "targetvbatt")) {
 		boardConfiguration->targetVBatt = valueF;
 	}
