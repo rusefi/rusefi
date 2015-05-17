@@ -11,7 +11,7 @@
 11) RESOLVED IN R0.2 SD card PB4 should be SO not SI PB5 should be SI not SO. 
 12) RESOLVED IN R0.2 USB D- and D+ were on wrong pins, D+ now on USB pin 3, TTL RX and TX were also on the wrong pins 
 13) RESOLVED IN R0.2 JP212 is to close to the LCD mounting slot.
-14)                  separate VP lines of our three hi-side mosfers
+14) RESOLVED IN R0.4 separate VP lines of our three hi-side mosfers
 15) RESOLVED IN R0.2 look into flipping the VR + and - pins
 16) RESOLVED IN R0.2 add vias for GND, 12V and 5V for test purposes
 17) RESOLVED IN R0.2 add option to GND one side of VR in ECU
@@ -81,6 +81,18 @@
 80) RESOLVED IN R0.4 set analog input values to match https://docs.google.com/spreadsheets/d/1LTvS7I-128Hft9uXHG1JrBxetVjGJDSBkySgVDQ6MGk/edit#gid=0
 81) RESOLVED IN R0.4 remove 'REAR-DEFROSTER-SW' and etc from schematics
 82) RESOLVED IN R0.4 Add silk screen note that fire extinguisher is minimal required equipment. 
+83)                  Add baro sensor. 
+84)                  add humidity sensor perhaps HIH6120-021-001 or DHT11
+85) RESOLVED IN R0.4 Add 2 more hi/low drivers
+
+
+
+  )                  route unused stm32 pins (D3 PC13 etc) to unused connector pins
+  )                  cheaper battery holder - through-hole (need to find out footprint)
+  )                  remove some/all EGT?
+  )                  idle valve SMD diode?
+  )                  silkscreen for analog inputs - PA1/PC1/etc?
+
 
 For honda add-on / rewiring board
 -- Add 2A high side solinoid drive for VTec sol

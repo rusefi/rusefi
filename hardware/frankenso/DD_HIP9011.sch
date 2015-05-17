@@ -58,7 +58,7 @@ $Descr A4 11693 8268
 encoding utf-8
 Sheet 5 15
 Title "Frankenso"
-Date "4 may 2015"
+Date "15 may 2015"
 Rev ".02"
 Comp "rusEFI.com"
 Comment1 ""
@@ -173,15 +173,7 @@ $EndComp
 NoConn ~ 4650 4450
 NoConn ~ 4650 4550
 Wire Wire Line
-	2300 2900 2050 2900
-Wire Wire Line
-	2050 2900 2050 2600
-Wire Wire Line
 	2050 2400 2500 2400
-Wire Wire Line
-	2300 3650 2050 3650
-Wire Wire Line
-	2050 3650 2050 3350
 Wire Wire Line
 	2050 3150 2550 3150
 Connection ~ 2300 3150

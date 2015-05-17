@@ -58,7 +58,7 @@ $Descr A4 11693 8268
 encoding utf-8
 Sheet 14 15
 Title "Electronic Industrial Temperature Interface (EITI)"
-Date "4 may 2015"
+Date "15 may 2015"
 Rev ".02"
 Comp "Mrk Industries"
 Comment1 ""
@@ -116,14 +116,14 @@ Text Notes 5600 4900 0    30   ~ 0
 Datasheet:\nhttp://datasheets.maxim-ic.com/en/ds/MAX31855.pdf
 NoConn ~ 6500 4250
 $Comp
-L GND #PWR0173
+L GND #PWR0175
 U 1 1 4E13FFF9
 P 7000 4000
-AR Path="/53BE1FC9/4E13FFF9" Ref="#PWR0173"  Part="1" 
-AR Path="/53BF9BE2/4E13FFF9" Ref="#PWR0175"  Part="1" 
-AR Path="/53BF9F6F/4E13FFF9" Ref="#PWR0177"  Part="1" 
-AR Path="/53BFED1D/4E13FFF9" Ref="#PWR0179"  Part="1" 
-F 0 "#PWR0179" H 7000 4000 30  0001 C CNN
+AR Path="/53BE1FC9/4E13FFF9" Ref="#PWR0175"  Part="1" 
+AR Path="/53BF9BE2/4E13FFF9" Ref="#PWR0177"  Part="1" 
+AR Path="/53BF9F6F/4E13FFF9" Ref="#PWR0179"  Part="1" 
+AR Path="/53BFED1D/4E13FFF9" Ref="#PWR0181"  Part="1" 
+F 0 "#PWR0181" H 7000 4000 30  0001 C CNN
 F 1 "GND" H 7000 3930 30  0001 C CNN
 F 2 "" H 7000 4000 60  0001 C CNN
 F 3 "" H 7000 4000 60  0001 C CNN
@@ -149,14 +149,14 @@ F 5 "DIGI,478-1395-1-ND" V 1130 2600 60  0001 C CNN "vend1,vend1#"
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR0174
+L GND #PWR0176
 U 1 1 4E13FFDB
 P 5400 4250
-AR Path="/53BE1FC9/4E13FFDB" Ref="#PWR0174"  Part="1" 
-AR Path="/53BF9BE2/4E13FFDB" Ref="#PWR0176"  Part="1" 
-AR Path="/53BF9F6F/4E13FFDB" Ref="#PWR0178"  Part="1" 
-AR Path="/53BFED1D/4E13FFDB" Ref="#PWR0180"  Part="1" 
-F 0 "#PWR0180" H 5400 4250 30  0001 C CNN
+AR Path="/53BE1FC9/4E13FFDB" Ref="#PWR0176"  Part="1" 
+AR Path="/53BF9BE2/4E13FFDB" Ref="#PWR0178"  Part="1" 
+AR Path="/53BF9F6F/4E13FFDB" Ref="#PWR0180"  Part="1" 
+AR Path="/53BFED1D/4E13FFDB" Ref="#PWR0182"  Part="1" 
+F 0 "#PWR0182" H 5400 4250 30  0001 C CNN
 F 1 "GND" H 5400 4180 30  0001 C CNN
 F 2 "" H 5400 4250 60  0001 C CNN
 F 3 "" H 5400 4250 60  0001 C CNN
