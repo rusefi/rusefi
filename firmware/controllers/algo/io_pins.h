@@ -12,8 +12,6 @@
 
 #define GPIO_NULL NULL
 
-#define ENGINE_CHANNEL_COUNT 12
-
 typedef enum {
 	INJECTOR_1,
 	INJECTOR_2,

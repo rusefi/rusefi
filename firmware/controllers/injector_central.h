@@ -16,10 +16,16 @@
 
 void fanBench(void);
 void fuelPumpBench(void);
-void initInjectorCentral(Engine *engine);
+void initInjectorCentral(void);
 void initIgnitionCentral(void);
 bool_t isRunningBenchTest(void);
 int isInjectorEnabled(int cylinderId);
 void assertCylinderId(int cylinderId, const char *msg);
+
+void stopInjectionPins(void);
+void startInjectionPins(void);
+
+void stopIgnitionPins(void);
+void startIgnitionPins(void);
 
 #endif /* INJECTOR_CENTRAL_H_ */

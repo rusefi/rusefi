@@ -153,15 +153,52 @@ static void initTemperatureCurve(int size, float *bins, float *values) {
 }
 
 void prepareVoidConfiguration(engine_configuration_s *activeConfiguration) {
-	memset(activeConfiguration, 0xFF, sizeof(engine_configuration_s));
+	memset(activeConfiguration, 0, sizeof(engine_configuration_s));
 	board_configuration_s *boardConfiguration = &activeConfiguration->bc;
 
-	/**
-	 * -1 everywhere is probably good, but explicit values are probably better. Too bad GPIO_UNASSIGNED is not zero :(
-	 */
 	boardConfiguration->triggerInputPins[0] = GPIO_UNASSIGNED;
 	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
 	boardConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
+
+	for (int i = 0; i < JOYSTICK_PIN_COUNT; i++) {
+		boardConfiguration->joystickPins[i] = GPIO_UNASSIGNED;
+	}
+
+	boardConfiguration->acRelayPin = GPIO_UNASSIGNED;
+	boardConfiguration->acRelayPinMode = OM_DEFAULT;
+
+	boardConfiguration->alternatorControlPin = GPIO_UNASSIGNED;
+	boardConfiguration->alternatorControlPinMode = OM_DEFAULT;
+	boardConfiguration->mainRelayPin = GPIO_UNASSIGNED;
+	boardConfiguration->mainRelayPinMode = OM_DEFAULT;
+	boardConfiguration->idle.solenoidPin = GPIO_UNASSIGNED;
+	boardConfiguration->idle.solenoidPinMode = OM_DEFAULT;
+	boardConfiguration->fuelPumpPin = GPIO_UNASSIGNED;
+	boardConfiguration->fuelPumpPinMode = OM_DEFAULT;
+	boardConfiguration->electronicThrottlePin1 = GPIO_UNASSIGNED;
+	boardConfiguration->o2heaterPin = GPIO_UNASSIGNED;
+
+	boardConfiguration->malfunctionIndicatorPin = GPIO_UNASSIGNED;
+	boardConfiguration->malfunctionIndicatorPinMode = OM_DEFAULT;
+
+	boardConfiguration->fanPin = GPIO_UNASSIGNED;
+	boardConfiguration->fanPinMode = OM_DEFAULT;
+
+	boardConfiguration->clutchDownPin = GPIO_UNASSIGNED;
+	boardConfiguration->clutchDownPinMode = PI_PULLUP;
+	boardConfiguration->clutchUpPin = GPIO_UNASSIGNED;
+	boardConfiguration->clutchUpPinMode = PI_PULLUP;
+
+	for (int i = 0;i < INJECTION_PIN_COUNT;i++) {
+		boardConfiguration->injectionPins[i] = GPIO_UNASSIGNED;
+	}
+	boardConfiguration->injectionPinMode = OM_DEFAULT;
+
+	for (int i = 0;i < IGNITION_PIN_COUNT;i++) {
+		boardConfiguration->ignitionPins[i] = GPIO_UNASSIGNED;
+	}
+	boardConfiguration->ignitionPinMode = OM_DEFAULT;
+
 }
 
 /**
@@ -170,9 +207,8 @@ void prepareVoidConfiguration(engine_configuration_s *activeConfiguration) {
  * and the settings saves in flash memory.
  */
 void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
-	// technically these regions currently overlap, but I will reset all individually for readability
-	memset(engineConfiguration, 0, sizeof(engine_configuration_s));
-	memset(boardConfiguration, 0, sizeof(board_configuration_s));
+	prepareVoidConfiguration(engineConfiguration);
+
 #if ! EFI_UNIT_TEST
 	memset(&persistentState.persistentConfiguration, 0, sizeof(persistentState.persistentConfiguration));
 #endif
@@ -395,12 +431,6 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 //	engineConfiguration->idleMode = IM_AUTO;
 	engineConfiguration->idleMode = IM_MANUAL;
 
-	boardConfiguration->acRelayPin = GPIO_UNASSIGNED;
-	boardConfiguration->acRelayPinMode = OM_DEFAULT;
-
-	boardConfiguration->alternatorControlPin = GPIO_UNASSIGNED;
-	boardConfiguration->alternatorControlPinMode = OM_DEFAULT;
-
 	engineConfiguration->acSwitchAdc = EFI_ADC_NONE;
 
 	engineConfiguration->externalKnockSenseAdc = EFI_ADC_NONE;
@@ -460,58 +490,6 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 		boardConfiguration->fsioDigitalInputs[i] = GPIO_UNASSIGNED;
 		engineConfiguration->fsioInputModes[i] = PI_DEFAULT;
 	}
-	for (int i = 0; i < JOYSTICK_PIN_COUNT; i++) {
-		boardConfiguration->joystickPins[i] = GPIO_UNASSIGNED;
-	}
-
-	boardConfiguration->mainRelayPin = GPIO_UNASSIGNED;
-	boardConfiguration->mainRelayPinMode = OM_DEFAULT;
-	boardConfiguration->idle.solenoidPin = GPIO_UNASSIGNED;
-	boardConfiguration->idle.solenoidPinMode = OM_DEFAULT;
-	boardConfiguration->fuelPumpPin = GPIO_UNASSIGNED;
-	boardConfiguration->fuelPumpPinMode = OM_DEFAULT;
-	boardConfiguration->electronicThrottlePin1 = GPIO_UNASSIGNED;
-	boardConfiguration->o2heaterPin = GPIO_UNASSIGNED;
-
-	boardConfiguration->injectionPins[0] = GPIO_UNASSIGNED;
-	boardConfiguration->injectionPins[1] = GPIO_UNASSIGNED;
-	boardConfiguration->injectionPins[2] = GPIO_UNASSIGNED;
-	boardConfiguration->injectionPins[3] = GPIO_UNASSIGNED;
-	boardConfiguration->injectionPins[4] = GPIO_UNASSIGNED;
-	boardConfiguration->injectionPins[5] = GPIO_UNASSIGNED;
-	boardConfiguration->injectionPins[6] = GPIO_UNASSIGNED;
-	boardConfiguration->injectionPins[7] = GPIO_UNASSIGNED;
-	boardConfiguration->injectionPins[8] = GPIO_UNASSIGNED;
-	boardConfiguration->injectionPins[9] = GPIO_UNASSIGNED;
-	boardConfiguration->injectionPins[10] = GPIO_UNASSIGNED;
-	boardConfiguration->injectionPins[11] = GPIO_UNASSIGNED;
-	boardConfiguration->injectionPinMode = OM_DEFAULT;
-
-
-	boardConfiguration->ignitionPins[0] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPins[2] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPins[4] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPins[5] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPins[6] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPins[7] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPins[8] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPins[9] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPins[10] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPins[11] = GPIO_UNASSIGNED;
-	boardConfiguration->ignitionPinMode = OM_DEFAULT;
-
-	boardConfiguration->malfunctionIndicatorPin = GPIO_UNASSIGNED;
-	boardConfiguration->malfunctionIndicatorPinMode = OM_DEFAULT;
-
-	boardConfiguration->fanPin = GPIO_UNASSIGNED;
-	boardConfiguration->fanPinMode = OM_DEFAULT;
-
-	boardConfiguration->clutchDownPin = GPIO_UNASSIGNED;
-	boardConfiguration->clutchDownPinMode = PI_PULLUP;
-	boardConfiguration->clutchUpPin = GPIO_UNASSIGNED;
-	boardConfiguration->clutchUpPinMode = PI_PULLUP;
 
 	boardConfiguration->triggerSimulatorPins[0] = GPIOD_1;
 	boardConfiguration->triggerSimulatorPins[1] = GPIOD_2;

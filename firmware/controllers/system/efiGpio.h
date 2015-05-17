@@ -53,8 +53,8 @@ typedef struct {
 //	OutputPin alternatorField;
 	OutputPin errorLedPin;
 
-	NamedOutputPin injectors[ENGINE_CHANNEL_COUNT];
-	NamedOutputPin coils[ENGINE_CHANNEL_COUNT];
+	NamedOutputPin injectors[INJECTION_PIN_COUNT];
+	NamedOutputPin coils[IGNITION_PIN_COUNT];
 } engine_pins_s;
 
 /**

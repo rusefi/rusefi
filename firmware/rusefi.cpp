@@ -168,14 +168,14 @@ void swo_init() {
 //     *((volatile unsigned *)(ITM_BASE + 0x40304)) = 0x00000100; // Formatter and Flush Control Register
 }
 
-static engine_configuration_s activeConfiguration;
+engine_configuration_s activeConfiguration;
 
 static void rememberCurrentConfiguration(void) {
 	memcpy(&activeConfiguration, engineConfiguration, sizeof(engine_configuration_s));
 }
 
 void applyNewConfiguration() {
-	applyNewHardwareSettings(&activeConfiguration);
+	applyNewHardwareSettings();
 }
 
 void runRusEfi(void) {
@@ -208,7 +208,7 @@ void runRusEfi(void) {
 	/**
 	 * Initialize hardware drivers
 	 */
-	initHardware(&sharedLogger, engine);
+	initHardware(&sharedLogger);
 
 	initStatusLoop(engine);
 	/**
@@ -290,5 +290,5 @@ int getRusEfiVersion(void) {
 		return 123; // this is here to make the compiler happy about the unused array
 	if (UNUSED_CCM_SIZE[0] * 0 != 0)
 		return 3211; // this is here to make the compiler happy about the unused array
-	return 20150514;
+	return 20150517;
 }

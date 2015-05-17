@@ -12,6 +12,6 @@
 #include "engine.h"
 
 void turnOnTriggerInputPins(Logging *sharedLogger);
-void applyNewTriggerInputPins(engine_configuration_s *oldConfiguration);
+void applyNewTriggerInputPins(void);
 
 #endif /* CRANK_INPUT_H_ */
