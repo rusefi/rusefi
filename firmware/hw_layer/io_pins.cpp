@@ -165,9 +165,11 @@ void initOutputPins(void) {
  * The whole method is pretty naive, but that's at least something.
  */
 void turnAllPinsOff(void) {
-	for (int i = 0; i < ENGINE_CHANNEL_COUNT; i++) {
-		enginePins.coils[i].setValue(false);
+	for (int i = 0; i < INJECTION_PIN_COUNT; i++) {
 		enginePins.injectors[i].setValue(false);
+	}
+	for (int i = 0; i < IGNITION_PIN_COUNT; i++) {
+		enginePins.coils[i].setValue(false);
 	}
 }
 #endif
