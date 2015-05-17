@@ -111,21 +111,27 @@ void turnOnTriggerInputPins(Logging *sharedLogger) {
 	rememberPrimaryChannel();
 }
 
-void applyNewTriggerInputPins(engine_configuration_s *oldConfiguration) {
-	// first we will turn off all the changed pins
+extern engine_configuration_s activeConfiguration;
+
+void stopTriggerInputPins(void) {
 	for (int i = 0; i < TRIGGER_SUPPORTED_CHANNELS; i++) {
-		if (boardConfiguration->triggerInputPins[i] != oldConfiguration->bc.triggerInputPins[i]) {
-			turnOffTriggerInputPin(oldConfiguration->bc.triggerInputPins[i]);
+		if (boardConfiguration->triggerInputPins[i] != activeConfiguration.bc.triggerInputPins[i]) {
+			turnOffTriggerInputPin(activeConfiguration.bc.triggerInputPins[i]);
 		}
 	}
+}
+
+void applyNewTriggerInputPins(void) {
+	// first we will turn off all the changed pins
+	stopTriggerInputPins();
+
 	// then we will enable all the changed pins
 	for (int i = 0; i < TRIGGER_SUPPORTED_CHANNELS; i++) {
-		if (boardConfiguration->triggerInputPins[i] != oldConfiguration->bc.triggerInputPins[i]) {
+		if (boardConfiguration->triggerInputPins[i] != activeConfiguration.bc.triggerInputPins[i]) {
 			turnOnTriggerInputPin(boardConfiguration->triggerInputPins[i]);
 		}
 	}
 
-	turnOffTriggerInputPin(oldConfiguration->bc.triggerInputPins[1]);
 	rememberPrimaryChannel();
 }
 

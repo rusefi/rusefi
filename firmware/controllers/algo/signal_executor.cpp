@@ -43,17 +43,18 @@ extern WaveChart waveChart;
 
 extern engine_pins_s enginePins;
 
-static const char *sparkNames[ENGINE_CHANNEL_COUNT] = { "c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8",
+static const char *sparkNames[IGNITION_PIN_COUNT] = { "c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8",
 		"c9", "cA", "cB", "cD"};
 
-static const char *injectorNames[ENGINE_CHANNEL_COUNT] = { "i1", "i2", "i3", "i4", "i5", "i6", "i7", "i8",
+static const char *injectorNames[INJECTION_PIN_COUNT] = { "i1", "i2", "i3", "i4", "i5", "i6", "i7", "i8",
 		"j9", "iA", "iB", "iC"};
 
 void initSignalExecutor(void) {
 	initSignalExecutorImpl();
-
-	for (int i = 0; i < ENGINE_CHANNEL_COUNT;i++) {
+	for (int i = 0; i < IGNITION_PIN_COUNT;i++) {
 		enginePins.coils[i].name = sparkNames[i];
+	}
+	for (int i = 0; i < INJECTION_PIN_COUNT;i++) {
 		enginePins.injectors[i].name = injectorNames[i];
 	}
 }

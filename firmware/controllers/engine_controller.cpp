@@ -532,7 +532,7 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 	chThdCreateStatic(csThreadStack, sizeof(csThreadStack), LOWPRIO, (tfunc_t) csThread, NULL);
 
 #if (EFI_PROD_CODE && EFI_ENGINE_CONTROL) || defined(__DOXYGEN__)
-	initInjectorCentral(engine);
+	initInjectorCentral();
 	initIgnitionCentral();
 	/**
 	 * This has to go after 'initInjectorCentral' and 'initInjectorCentral' in order to

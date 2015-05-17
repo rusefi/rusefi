@@ -78,7 +78,6 @@ static volatile bool fullLog = true;
 int warningEnabled = true;
 //int warningEnabled = FALSE;
 
-extern board_configuration_s *boardConfiguration;
 extern bool hasFirmwareErrorFlag;
 #define FULL_LOGGING_KEY "fl"
 
