@@ -214,12 +214,12 @@ static msg_t benchThread(int param) {
 #endif
 }
 
-extern engine_configuration_s *activeConfiguration;
+extern engine_configuration_s activeConfiguration;
 
 void stopInjectionPins(void) {
 	for (int i = 0; i < INJECTION_PIN_COUNT; i++) {
 		NamedOutputPin *output = &enginePins.injectors[i];
-		if (engineConfiguration->bc.injectionPins[i] != activeConfiguration->bc.injectionPins[i]) {
+		if (engineConfiguration->bc.injectionPins[i] != activeConfiguration.bc.injectionPins[i]) {
 //			unmarkPin
 		}
 	}
@@ -229,7 +229,7 @@ void startInjectionPins(void) {
 	// todo: should we move this code closer to the injection logic?
 	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 		NamedOutputPin *output = &enginePins.injectors[i];
-		if (engineConfiguration->bc.injectionPins[i] != activeConfiguration->bc.injectionPins[i]) {
+		if (engineConfiguration->bc.injectionPins[i] != activeConfiguration.bc.injectionPins[i]) {
 
 			outputPinRegisterExt2(output->name, output, boardConfiguration->injectionPins[i],
 					&boardConfiguration->injectionPinMode);

@@ -207,11 +207,10 @@ void prepareVoidConfiguration(engine_configuration_s *activeConfiguration) {
  * and the settings saves in flash memory.
  */
 void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
-	prepareVoidConfiguration(engineConfiguration);
-
 #if ! EFI_UNIT_TEST
 	memset(&persistentState.persistentConfiguration, 0, sizeof(persistentState.persistentConfiguration));
 #endif
+	prepareVoidConfiguration(engineConfiguration);
 
 	boardConfiguration->mafSensorType = Bosch0280218037;
 	setBosch0280218037(config);

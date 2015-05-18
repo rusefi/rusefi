@@ -490,6 +490,12 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 	initSettings(engineConfiguration);
 #endif
 
+#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
+	if (engineConfiguration->isTunerStudioEnabled) {
+		startTunerStudioConnectivity();
+	}
+#endif
+
 	if (hasFirmwareError()) {
 		return;
 	}
@@ -519,12 +525,6 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 	 */
 	initRpmCalculator(engine);
 #endif /* EFI_SHAFT_POSITION_INPUT */
-
-#if EFI_TUNER_STUDIO || defined(__DOXYGEN__)
-	if (engineConfiguration->isTunerStudioEnabled) {
-		startTunerStudioConnectivity();
-	}
-#endif
 
 // multiple issues with this	initMapAdjusterThread();
 	initPeriodicEvents(PASS_ENGINE_PARAMETER_F);
