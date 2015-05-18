@@ -83,7 +83,8 @@
 82) RESOLVED IN R0.4 Add silk screen note that fire extinguisher is minimal required equipment. 
 83)                  Add baro sensor. 
 84)                  add humidity sensor perhaps HIH6120-021-001 or DHT11
-85) RESOLVED IN R0.4 Add 2 more hi/low drivers
+85) RESOLVED IN R0.4 Add 2 more hi/low drivers re-used 2x IO from unused joystick leads. Joystick leads are jumper connected to PD0 and PD2
+86) RESOLVED IN R0.4 Move low side 7 to PD3, and low side 10 to PD5 (removes yellow and blue jumper wires)
 
 
 
@@ -92,7 +93,6 @@
   )                  remove some/all EGT?
   )                  idle valve SMD diode?
   )                  silkscreen for analog inputs - PA1/PC1/etc?
-
 
 For honda add-on / rewiring board
 -- Add 2A high side solinoid drive for VTec sol
