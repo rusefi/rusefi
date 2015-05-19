@@ -17,7 +17,6 @@
 void fanBench(void);
 void fuelPumpBench(void);
 void initInjectorCentral(void);
-void initIgnitionCentral(void);
 bool_t isRunningBenchTest(void);
 int isInjectorEnabled(int cylinderId);
 void assertCylinderId(int cylinderId, const char *msg);

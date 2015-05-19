@@ -603,6 +603,7 @@ static void setIgnitionPin(const char *indexStr, const char *pinName) {
 	}
 	scheduleMsg(&logger, "setting ignition pin[%d] to %s please save&restart", index, hwPortname(pin));
 	boardConfiguration->ignitionPins[index] = pin;
+	applyNewConfiguration();
 }
 
 static void setIndividualPin(const char *pinName, brain_pin_e *targetPin, const char *name) {
@@ -613,6 +614,7 @@ static void setIndividualPin(const char *pinName, brain_pin_e *targetPin, const 
 	}
 	scheduleMsg(&logger, "setting %s pin to %s please save&restart", name, hwPortname(pin));
 	*targetPin = pin;
+	applyNewConfiguration();
 }
 
 // set_idle_pin none
@@ -648,6 +650,7 @@ static void setInjectionPin(const char *indexStr, const char *pinName) {
 	}
 	scheduleMsg(&logger, "setting injection pin[%d] to %s please save&restart", index, hwPortname(pin));
 	boardConfiguration->injectionPins[index] = pin;
+	applyNewConfiguration();
 }
 
 static void setTriggerInputPin(const char *indexStr, const char *pinName) {
@@ -662,6 +665,7 @@ static void setTriggerInputPin(const char *indexStr, const char *pinName) {
 	}
 	scheduleMsg(&logger, "setting trigger pin[%d] to %s please save&restart", index, hwPortname(pin));
 	boardConfiguration->triggerInputPins[index] = pin;
+	applyNewConfiguration();
 }
 
 static void setTriggerSimulatorMode(const char *indexStr, const char *modeCode) {
@@ -687,6 +691,7 @@ static void setEgtCSPin(const char *indexStr, const char *pinName, board_configu
 	}
 	scheduleMsg(&logger, "setting EGT CS pin[%d] to %s please save&restart", index, hwPortname(pin));
 	boardConfiguration->max31855_cs[index] = pin;
+	applyNewConfiguration();
 }
 
 static void setTriggerSimulatorPin(const char *indexStr, const char *pinName) {
@@ -700,6 +705,7 @@ static void setTriggerSimulatorPin(const char *indexStr, const char *pinName) {
 	}
 	scheduleMsg(&logger, "setting trigger simulator pin[%d] to %s please save&restart", index, hwPortname(pin));
 	boardConfiguration->triggerSimulatorPins[index] = pin;
+	applyNewConfiguration();
 }
 
 #if HAL_USE_ADC || defined(__DOXYGEN__)
@@ -727,6 +733,7 @@ static void setAnalogInputPin(const char *sensorStr, const char *pinName) {
 		engineConfiguration->tpsAdcChannel = channel;
 		scheduleMsg(&logger, "setting TPS to %s/%d", pinName, channel);
 	}
+	applyNewConfiguration();
 }
 #endif
 

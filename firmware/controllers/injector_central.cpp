@@ -43,14 +43,6 @@ static int is_injector_enabled[MAX_INJECTOR_COUNT];
 
 extern engine_pins_s enginePins;
 
-void initIgnitionCentral(void) {
-	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
-		NamedOutputPin *output = &enginePins.coils[i];
-		outputPinRegisterExt2(output->name, output, boardConfiguration->ignitionPins[i],
-				&boardConfiguration->ignitionPinMode);
-	}
-}
-
 bool_t isRunningBenchTest(void) {
 	return isRunningBench;
 }
@@ -216,11 +208,40 @@ static msg_t benchThread(int param) {
 
 extern engine_configuration_s activeConfiguration;
 
+static void unregister(brain_pin_e currentPin, OutputPin *output) {
+	if (currentPin == GPIO_UNASSIGNED)
+		return;
+	scheduleMsg(&logger, "unregistering %s", hwPortname(currentPin));
+	unmarkPin(currentPin);
+	output->unregister();
+}
+
+void stopIgnitionPins(void) {
+	for (int i = 0; i < IGNITION_PIN_COUNT; i++) {
+		NamedOutputPin *output = &enginePins.injectors[i];
+		brain_pin_e currentPin = activeConfiguration.bc.ignitionPins[i];
+		if (engineConfiguration->bc.ignitionPins[i] != currentPin) {
+			unregister(currentPin, output);
+		}
+	}
+}
+
 void stopInjectionPins(void) {
 	for (int i = 0; i < INJECTION_PIN_COUNT; i++) {
 		NamedOutputPin *output = &enginePins.injectors[i];
-		if (engineConfiguration->bc.injectionPins[i] != activeConfiguration.bc.injectionPins[i]) {
-//			unmarkPin
+		brain_pin_e currentPin = activeConfiguration.bc.injectionPins[i];
+		if (engineConfiguration->bc.injectionPins[i] != currentPin) {
+			unregister(currentPin, output);
+		}
+	}
+}
+
+void startIgnitionPins(void) {
+	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
+		NamedOutputPin *output = &enginePins.coils[i];
+		if (boardConfiguration->ignitionPins[i] != activeConfiguration.bc.ignitionPins[i]) {
+			outputPinRegisterExt2(output->name, output, boardConfiguration->ignitionPins[i],
+				&boardConfiguration->ignitionPinMode);
 		}
 	}
 }
@@ -245,7 +266,7 @@ void initInjectorCentral(void) {
 	}
 
 	startInjectionPins();
-
+	startIgnitionPins();
 
 	printStatus();
 	addConsoleActionII("injector", setInjectorEnabled);
