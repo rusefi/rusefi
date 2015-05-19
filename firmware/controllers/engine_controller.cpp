@@ -387,6 +387,7 @@ static void setBit(const char *offsetStr, const char *bitStr, const char *valueS
 	 * this response is part of dev console API
 	 */
 	scheduleMsg(&logger, "bit @%d/%d is %d", offset, bit, value);
+	applyNewConfiguration();
 }
 
 static void setShort(const int offset, const int value) {
@@ -395,6 +396,7 @@ static void setShort(const int offset, const int value) {
 	uint16_t *ptr = (uint16_t *) (&((char *) engineConfiguration)[offset]);
 	*ptr = (uint16_t) value;
 	getShort(offset);
+	applyNewConfiguration();
 }
 
 static void getBit(int offset, int bit) {
@@ -425,6 +427,7 @@ static void setInt(const int offset, const int value) {
 	int *ptr = (int *) (&((char *) engineConfiguration)[offset]);
 	*ptr = value;
 	getInt(offset);
+	applyNewConfiguration();
 }
 
 static void getFloat(int offset) {
@@ -533,7 +536,6 @@ void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 
 #if (EFI_PROD_CODE && EFI_ENGINE_CONTROL) || defined(__DOXYGEN__)
 	initInjectorCentral();
-	initIgnitionCentral();
 	/**
 	 * This has to go after 'initInjectorCentral' and 'initInjectorCentral' in order to
 	 * properly detect un-assigned output pins
