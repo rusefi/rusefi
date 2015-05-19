@@ -127,6 +127,11 @@ bool isConsoleReady(void) {
 	return isSerialOverTcpReady;
 }
 
+void applyNewConfiguration(void) {
+
+}
+
+
 bool hasFirmwareErrorFlag = false;
 
 void onFatalError(const char *msg, const char * file, int line) {

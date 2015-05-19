@@ -70,6 +70,7 @@ int getRemainingStack(Thread *otp);
 // todo: move somewhere else?
 bool_t lockAnyContext(void);
 void unlockAnyContext(void);
+void applyNewConfiguration(void);
 
 #ifdef __cplusplus
 }
