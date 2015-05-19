@@ -21,6 +21,30 @@ public class RecentCommands {
     private final static int NUMBER_OF_COMMANDS = 40;
     private static final String KEY = "recent_commands";
     private static final String DELIMETER = "|";
+    private static final String STOPENGINE = "stopengine";
+    private static final String SHOWCONFIG = "showconfig";
+    private static final String HELP = "help";
+    private static final String ANALOGINFO = "analoginfo";
+    private static final String TRIGGERINFO = "triggerinfo";
+    private static final String IDLEINFO = "idleinfo";
+    private static final String ALTINFO = "altinfo";
+    private static final String ACCELINFO = "accelinfo";
+    private static final String TSINFO = "tsinfo";
+
+    private final static Map<String, Icon> COMMAND_ICONS = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+
+    static {
+        COMMAND_ICONS.put(STOPENGINE, UiUtils.loadIcon("stop.jpg"));
+        ImageIcon infoIcon = UiUtils.loadIcon("info.png");
+        COMMAND_ICONS.put(SHOWCONFIG, infoIcon);
+        COMMAND_ICONS.put(HELP, infoIcon);
+        COMMAND_ICONS.put(ANALOGINFO, infoIcon);
+        COMMAND_ICONS.put(TRIGGERINFO, infoIcon);
+        COMMAND_ICONS.put(IDLEINFO, infoIcon);
+        COMMAND_ICONS.put(ALTINFO, infoIcon);
+        COMMAND_ICONS.put(ACCELINFO, infoIcon);
+        COMMAND_ICONS.put(TSINFO, infoIcon);
+    }
 
     private final JPanel content = new JPanel(new GridLayout(NUMBER_OF_COMMANDS + 1, 1));
 
@@ -60,11 +84,12 @@ public class RecentCommands {
     }
 
     private void addDefaults() {
-        add("help");
-        add("showconfig");
-        add("stopengine");
-        add("analoginfo");
-        add("triggerinfo");
+        add(HELP);
+        add(SHOWCONFIG);
+        add(STOPENGINE);
+        add(ANALOGINFO);
+        add(TRIGGERINFO);
+        add(TSINFO);
         add("writeconfig");
         add("rewriteconfig");
         add("enable injection");
@@ -78,9 +103,9 @@ public class RecentCommands {
         add("set_idle_position 50");
         add("sparkbench 5 400 2");
         add("fuelbench 5 400 2");
-        add("idleinfo");
-        add("altinfo");
-        add("accelinfo");
+        add(IDLEINFO);
+        add(ALTINFO);
+        add(ACCELINFO);
     }
 
     public void add(String command) {
@@ -122,6 +147,9 @@ public class RecentCommands {
 
     public static JComponent createButton(final AtomicBoolean reentrant, final String command) {
         JButton button = new JButton(command);
+        Icon icon = COMMAND_ICONS.get(command);
+        if (icon != null)
+            button.setIcon(icon);
         button.setBorder(BorderFactory.createEmptyBorder(3, 5, 0, 5));
 
         button.addActionListener(new ActionListener() {
