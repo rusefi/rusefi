@@ -82,6 +82,9 @@ void setBmwE34(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->vbattDividerCoeff = 5.33;
 	engineConfiguration->vbattAdcChannel = EFI_ADC_15; // PC5
 
+	engineConfiguration->tpsAdcChannel = EFI_ADC_3;
+
+
 	boardConfiguration->triggerInputPins[0] = GPIOA_5;
 	boardConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
 
