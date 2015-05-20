@@ -85,7 +85,11 @@
 84)                  add humidity sensor perhaps HIH6120-021-001 or DHT11
 85) RESOLVED IN R0.4 Add 2 more hi/low drivers re-used 2x IO from unused joystick leads. Joystick leads are jumper connected to PD0 and PD2
 86) RESOLVED IN R0.4 Move low side 7 to PD3, and low side 10 to PD5 (removes yellow and blue jumper wires)
-
+87) RESOLVED IN R0.4.1 R167 and R168 should be 0805 not 1206 CORRECTED TO 0805
+88) RESOLVED IN R0.4.1 1K parts call for 100k part, CORRECTED TO 1K
+89) RESOLVED IN R0.4.1 C103 should be 0805 current part calls for 1206 CORRECTED TO 0805
+90) RESOLVED IN R0.4.1 Can we use 1oz internal layers ADDED MIN NOTE TO THE PCB FILE WHICH ALLOWS THICKER CU. 
+91) RESOLVED IN R0.4.1 L1001 and L1002 "ref" part is confusing ADDED SOME NOTES TO CLARIFY TO USE THE SKYMACAU PART
 
 
   )                  route unused stm32 pins (D3 PC13 etc) to unused connector pins
