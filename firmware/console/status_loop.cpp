@@ -383,6 +383,8 @@ static void showFuelInfo2(float rpm, float engineLoad) {
 	float baseFuelMs = getBaseTableFuel(engineConfiguration, (int) rpm, engineLoad);
 
 	scheduleMsg(&logger, "SD magic fuel %f", sdMath(engineConfiguration, 100, 100, 14.7, convertCelsiusToKelvin(20)));
+	scheduleMsg(&logger, "inj flow %fcc/min displacement %fL", engineConfiguration->injector.flow,
+			engineConfiguration->specs.displacement);
 
 	scheduleMsg(&logger2, "algo=%s/pump=%s", getEngine_load_mode_e(engineConfiguration->algorithm),
 			boolToString(enginePins.fuelPumpRelay.getLogicValue()));

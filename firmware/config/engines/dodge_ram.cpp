@@ -33,6 +33,7 @@ void setDodgeRam1996(DECLARE_ENGINE_PARAMETER_F) {
 	//Base engine setting
 	engineConfiguration->specs.cylindersCount = 8;
 	engineConfiguration->specs.firingOrder = FO_1_8_4_3_6_5_7_2;
+	engineConfiguration->specs.displacement = 5.2;
 
 	boardConfiguration->triggerInputPins[0] = GPIOC_6;
 	boardConfiguration->triggerInputPins[1] = GPIOA_5;
