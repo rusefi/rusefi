@@ -30,6 +30,7 @@ public class RecentCommands {
     private static final String ALTINFO = "altinfo";
     private static final String ACCELINFO = "accelinfo";
     private static final String TSINFO = "tsinfo";
+    private static final String FUELINFO = "fuelinfo";
 
     private final static Map<String, Icon> COMMAND_ICONS = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
@@ -43,6 +44,7 @@ public class RecentCommands {
         COMMAND_ICONS.put(IDLEINFO, infoIcon);
         COMMAND_ICONS.put(ALTINFO, infoIcon);
         COMMAND_ICONS.put(ACCELINFO, infoIcon);
+        COMMAND_ICONS.put(TSINFO, infoIcon);
         COMMAND_ICONS.put(TSINFO, infoIcon);
     }
 
@@ -106,6 +108,7 @@ public class RecentCommands {
         add(IDLEINFO);
         add(ALTINFO);
         add(ACCELINFO);
+        add(FUELINFO);
     }
 
     public void add(String command) {

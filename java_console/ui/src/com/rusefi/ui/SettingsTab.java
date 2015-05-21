@@ -1,6 +1,7 @@
 package com.rusefi.ui;
 
 import com.rusefi.config.Fields;
+import com.rusefi.ui.config.ConfigField;
 import com.rusefi.ui.config.EnumConfigField;
 import com.rusefi.ui.util.UiUtils;
 
@@ -18,6 +19,10 @@ public class SettingsTab {
         panel.add(UiUtils.wrap(new EnumConfigField(Fields.triggerInputPins2, "trigger #2 input").getContent()));
 //        panel.add(UiUtils.wrap(new EnumConfigField(Fields.triggerInputPins3, "trigger #3 input").getContent()));
         panel.add(UiUtils.wrap(new EnumConfigField(Fields.injector1, "injector #1").getContent()));
+
+
+        panel.add(UiUtils.wrap(new ConfigField(Fields.gloFuelCorr, "fuel corr").getContent()));
+        panel.add(UiUtils.wrap(new ConfigField(Fields.gloTriggerOffset, "trig offset").getContent()));
 
         panel.add(UiUtils.wrap(RecentCommands.createButton(new AtomicBoolean(), "writeconfig")));
     }
