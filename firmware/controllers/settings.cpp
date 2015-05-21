@@ -376,6 +376,11 @@ static void printThermistor(const char *msg, Thermistor *thermistor) {
 
 	scheduleMsg(&logger, "%s volts=%f Celsius=%f sensorR=%f on channel %d", msg, voltage, t, r, adcChannel);
 	scheduleMsg(&logger, "@%s", getPinNameByAdcChannel(adcChannel, pinNameBuffer));
+	scheduleMsg(&logger, "C=%f/R=%f C=%f/R=%f C=%f/R=%f",
+			thermistor->config->tempC_1, thermistor->config->resistance_1,
+			thermistor->config->tempC_2, thermistor->config->resistance_2,
+			thermistor->config->tempC_3, thermistor->config->resistance_3);
+
 	scheduleMsg(&logger, "bias resistor=%fK A=%..100000f B=%..100000f C=%..100000f", thermistor->config->bias_resistor / 1000,
 			thermistor->config->s_h_a, thermistor->config->s_h_b, thermistor->config->s_h_c);
 	scheduleMsg(&logger, "==============================");
