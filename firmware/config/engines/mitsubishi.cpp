@@ -53,7 +53,7 @@ void setMitsubishiConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	setCommonNTCSensor(&engineConfiguration->clt);
 
 
-	engineConfiguration->clt.bias_resistor = 2700;
+	engineConfiguration->clt.config.bias_resistor = 2700;
 
 	// Frankenstein: low side - out #1: PC14
 	// Frankenstein: low side - out #2: PC15

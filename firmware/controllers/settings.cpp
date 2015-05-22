@@ -374,15 +374,18 @@ static void printThermistor(const char *msg, Thermistor *thermistor) {
 
 	float t = getTemperatureC(thermistor);
 
+	thermistor_conf_s *tc = &thermistor->config->config;
+
 	scheduleMsg(&logger, "%s volts=%f Celsius=%f sensorR=%f on channel %d", msg, voltage, t, r, adcChannel);
 	scheduleMsg(&logger, "@%s", getPinNameByAdcChannel(adcChannel, pinNameBuffer));
 	scheduleMsg(&logger, "C=%f/R=%f C=%f/R=%f C=%f/R=%f",
-			thermistor->config->tempC_1, thermistor->config->resistance_1,
-			thermistor->config->tempC_2, thermistor->config->resistance_2,
-			thermistor->config->tempC_3, thermistor->config->resistance_3);
+			tc->tempC_1, tc->resistance_1,
+			tc->tempC_2, tc->resistance_2,
+			tc->tempC_3, tc->resistance_3);
 
-	scheduleMsg(&logger, "bias resistor=%fK A=%..100000f B=%..100000f C=%..100000f", thermistor->config->bias_resistor / 1000,
-			thermistor->config->s_h_a, thermistor->config->s_h_b, thermistor->config->s_h_c);
+	thermistor_curve_s * curve = &thermistor->config->curve;
+	scheduleMsg(&logger, "bias resistor=%fK A=%..100000f B=%..100000f C=%..100000f", tc->bias_resistor / 1000,
+			curve->s_h_a, curve->s_h_b, curve->s_h_c);
 	scheduleMsg(&logger, "==============================");
 }
 
@@ -530,7 +533,7 @@ static void setGlobalFuelCorrection(float value) {
 }
 
 static void setCltBias(float value) {
-	engineConfiguration->clt.bias_resistor = value;
+	engineConfiguration->clt.config.bias_resistor = value;
 }
 
 static void setFanSetting(float onTempC, float offTempC) {
@@ -543,7 +546,7 @@ static void setFanSetting(float onTempC, float offTempC) {
 }
 
 static void setIatBias(float value) {
-	engineConfiguration->iat.bias_resistor = value;
+	engineConfiguration->iat.config.bias_resistor = value;
 }
 
 static void setVBattDivider(float value) {

@@ -87,6 +87,7 @@
 #define clt_resistance_3_offset_hex 114
 #define clt_bias_resistor_offset 280
 #define clt_bias_resistor_offset_hex 118
+#define clt_curve_offset 284
 #define clt_s_h_a_offset 284
 #define clt_s_h_b_offset 288
 #define clt_s_h_b_offset_hex 120
@@ -108,6 +109,8 @@
 #define iat_resistance_3_offset 316
 #define iat_bias_resistor_offset 320
 #define iat_bias_resistor_offset_hex 140
+#define iat_curve_offset 324
+#define iat_curve_offset_hex 144
 #define iat_s_h_a_offset 324
 #define iat_s_h_a_offset_hex 144
 #define iat_s_h_b_offset 328

@@ -42,9 +42,9 @@ void setCustomEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->afr.hwChannel = EFI_ADC_13;
 
 	setCommonNTCSensor(&engineConfiguration->clt);
-	engineConfiguration->clt.bias_resistor = 2700;
+	engineConfiguration->clt.config.bias_resistor = 2700;
 	setCommonNTCSensor(&engineConfiguration->iat);
-	engineConfiguration->iat.bias_resistor = 2700;
+	engineConfiguration->iat.config.bias_resistor = 2700;
 
 
 	/**

@@ -179,7 +179,7 @@ void setDodgeNeon1995EngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->ignitionPinMode = OM_DEFAULT;
 
 	setThermistorConfiguration(&engineConfiguration->clt, 0, 32500, 30, 7550, 100, 700);
-	engineConfiguration->clt.bias_resistor = 2700;
+	engineConfiguration->clt.config.bias_resistor = 2700;
 
 	engineConfiguration->sensorChartFrequency = 7;
 }
@@ -306,10 +306,10 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 
 	setDodgeSensor(&engineConfiguration->clt);
-	engineConfiguration->clt.bias_resistor = 10000;
+	engineConfiguration->clt.config.bias_resistor = 10000;
 
 	setDodgeSensor(&engineConfiguration->iat);
-	engineConfiguration->iat.bias_resistor = 10000;
+	engineConfiguration->iat.config.bias_resistor = 10000;
 
 	/**
 	 * MAP PA6

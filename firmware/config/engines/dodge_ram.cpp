@@ -82,9 +82,9 @@ void setDodgeRam1996(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->vbattDividerCoeff = 9.6;
 
 	setDodgeSensor(&engineConfiguration->clt);
-	engineConfiguration->clt.bias_resistor = 2700;
+	engineConfiguration->clt.config.bias_resistor = 2700;
 
 	setDodgeSensor(&engineConfiguration->iat);
-	engineConfiguration->iat.bias_resistor = 2700;
+	engineConfiguration->iat.config.bias_resistor = 2700;
 
 }

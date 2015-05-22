@@ -149,9 +149,9 @@ void setBmwE34(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->hasCltSensor = true;
 	engineConfiguration->hasIatSensor = true;
 	setThermistorConfiguration(&engineConfiguration->clt, -10, 9300, 20, 2500, 80, 335);
-	engineConfiguration->iat.bias_resistor = 2200;
+	engineConfiguration->iat.config.bias_resistor = 2200;
 	setThermistorConfiguration(&engineConfiguration->iat, -10, 9300, 20, 2500, 80, 335);
-	engineConfiguration->clt.bias_resistor = 2200;
+	engineConfiguration->clt.config.bias_resistor = 2200;
 
 //	/**
 //	 * This saves a couple of ticks in trigger emulation methods

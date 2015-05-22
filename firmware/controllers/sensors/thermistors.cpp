@@ -51,7 +51,8 @@ float convertResistanceToKelvinTemperature(float resistance, ThermistorConf *the
 		return 0.0f;
 	}
 	float logR = logf(resistance);
-	return 1 / (thermistor->s_h_a + thermistor->s_h_b * logR + thermistor->s_h_c * logR * logR * logR);
+	thermistor_curve_s * curve = &thermistor->curve;
+	return 1 / (curve->s_h_a + curve->s_h_b * logR + curve->s_h_c * logR * logR * logR);
 }
 
 float convertCelsiustoF(float tempC) {
@@ -80,7 +81,9 @@ float getKelvinTemperature(float resistance, ThermistorConf *thermistor) {
 float getResistance(Thermistor *thermistor) {
 	float voltage = getVoltageDivided("term", thermistor->channel);
 	efiAssert(thermistor->config != NULL, "thermistor config is null", NAN);
-	float resistance = getR2InVoltageDividor(voltage, _5_VOLTS, thermistor->config->bias_resistor);
+	thermistor_conf_s *tc = &thermistor->config->config;
+
+	float resistance = getR2InVoltageDividor(voltage, _5_VOLTS, tc->bias_resistor);
 	return resistance;
 }
 
@@ -120,8 +123,9 @@ float getCoolantTemperature(DECLARE_ENGINE_PARAMETER_F) {
 	return temperature;
 }
 
-void setThermistorConfiguration(ThermistorConf * tc, float tempC1, float r1, float tempC2, float r2, float tempC3,
+void setThermistorConfiguration(ThermistorConf * thermistor, float tempC1, float r1, float tempC2, float r2, float tempC3,
 		float r3) {
+	thermistor_conf_s *tc = &thermistor->config;
 	tc->tempC_1 = tempC1;
 	tc->resistance_1 = r1;
 
@@ -134,19 +138,20 @@ void setThermistorConfiguration(ThermistorConf * tc, float tempC1, float r1, flo
 
 void prepareThermistorCurve(ThermistorConf * config) {
 	efiAssertVoid(config!=NULL, "therm config");
-	float T1 = config->tempC_1 + KELV;
-	float T2 = config->tempC_2 + KELV;
-	float T3 = config->tempC_3 + KELV;
+	thermistor_conf_s *tc = &config->config;
+	float T1 = tc->tempC_1 + KELV;
+	float T2 = tc->tempC_2 + KELV;
+	float T3 = tc->tempC_3 + KELV;
 	scheduleMsg(logger, "T1=%..100000f/T2=%..100000f/T3=%..100000f", T1, T2, T3);
 
-	float L1 = logf(config->resistance_1);
-	if (L1 == config->resistance_1) {
+	float L1 = logf(tc->resistance_1);
+	if (L1 == tc->resistance_1) {
 		firmwareError("log is broken?");
 	}
-	float L2 = logf(config->resistance_2);
-	float L3 = logf(config->resistance_3);
-	scheduleMsg(logger, "R1=%..100000f/R2=%..100000f/R3=%..100000f", config->resistance_1, config->resistance_2,
-			config->resistance_3);
+	float L2 = logf(tc->resistance_2);
+	float L3 = logf(tc->resistance_3);
+	scheduleMsg(logger, "R1=%..100000f/R2=%..100000f/R3=%..100000f", tc->resistance_1, tc->resistance_2,
+			tc->resistance_3);
 	scheduleMsg(logger, "L1=%..100000f/L2=%..100000f/L3=%..100000f", L1, L2, L3);
 
 	float Y1 = 1 / T1;
@@ -160,12 +165,14 @@ void prepareThermistorCurve(ThermistorConf * config) {
 
 	scheduleMsg(logger, "U2=%..100000f/U3=%..100000f", U2, U3);
 
-	config->s_h_c = (U3 - U2) / (L3 - L2) * pow(L1 + L2 + L3, -1);
-	config->s_h_b = U2 - config->s_h_c * (L1 * L1 + L1 * L2 + L2 * L2);
-	config->s_h_a = Y1 - (config->s_h_b + L1 * L1 * config->s_h_c) * L1;
+	thermistor_curve_s * curve = &config->curve;
 
-	scheduleMsg(logger, "s_h_c=%..100000f/s_h_b=%..100000f/s_h_a=%..100000f", config->s_h_c, config->s_h_b,
-			config->s_h_a);
+	curve->s_h_c = (U3 - U2) / (L3 - L2) * pow(L1 + L2 + L3, -1);
+	curve->s_h_b = U2 - curve->s_h_c * (L1 * L1 + L1 * L2 + L2 * L2);
+	curve->s_h_a = Y1 - (curve->s_h_b + L1 * L1 * curve->s_h_c) * L1;
+
+	scheduleMsg(logger, "s_h_c=%..100000f/s_h_b=%..100000f/s_h_a=%..100000f", curve->s_h_c, curve->s_h_b,
+			curve->s_h_a);
 
 }
 

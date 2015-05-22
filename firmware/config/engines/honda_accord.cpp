@@ -58,10 +58,10 @@ static void setHondaAccordConfigurationCommon(DECLARE_ENGINE_PARAMETER_F) {
 	 * 100 Ohm @ 120C
 	 */
 	setCommonNTCSensor(&engineConfiguration->clt);
-	engineConfiguration->clt.bias_resistor = 1500; // same as OEM ECU
+	engineConfiguration->clt.config.bias_resistor = 1500; // same as OEM ECU
 
 	setCommonNTCSensor(&engineConfiguration->iat);
-	engineConfiguration->iat.bias_resistor = 1500; // same as OEM ECU
+	engineConfiguration->iat.config.bias_resistor = 1500; // same as OEM ECU
 
 	// set_cranking_charge_angle 35
 	engineConfiguration->crankingChargeAngle = 70;
