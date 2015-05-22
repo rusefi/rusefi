@@ -367,12 +367,12 @@ static void setOM(int value) {
 
 static char pinNameBuffer[16];
 
-static void printThermistor(const char *msg, Thermistor *thermistor) {
+static void printThermistor(const char *msg, Thermistor *thermistor, thermistor_curve_s * curve) {
 	adc_channel_e adcChannel = thermistor->channel;
 	float voltage = getVoltageDivided("term", adcChannel);
 	float r = getResistance(thermistor);
 
-	float t = getTemperatureC(thermistor);
+	float t = getTemperatureC(thermistor, curve);
 
 	thermistor_conf_s *tc = &thermistor->config->config;
 
@@ -383,7 +383,6 @@ static void printThermistor(const char *msg, Thermistor *thermistor) {
 			tc->tempC_2, tc->resistance_2,
 			tc->tempC_3, tc->resistance_3);
 
-	thermistor_curve_s * curve = &thermistor->config->curve;
 	scheduleMsg(&logger, "bias resistor=%fK A=%..100000f B=%..100000f C=%..100000f", tc->bias_resistor / 1000,
 			curve->s_h_a, curve->s_h_b, curve->s_h_c);
 	scheduleMsg(&logger, "==============================");
@@ -429,11 +428,11 @@ static void printTPSInfo(void) {
 
 static void printTemperatureInfo(void) {
 #if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
-	printThermistor("CLT", &engine->clt);
+	printThermistor("CLT", &engine->clt, &engine->engineState.cltCurve.curve);
 	if (!isValidCoolantTemperature(getCoolantTemperature(PASS_ENGINE_PARAMETER_F))) {
 		scheduleMsg(&logger, "CLT sensing error");
 	}
-	printThermistor("IAT", &engine->iat);
+	printThermistor("IAT", &engine->iat, &engine->engineState.iatCurve.curve);
 	if (!isValidIntakeAirTemperature(getIntakeAirTemperature(PASS_ENGINE_PARAMETER_F))) {
 		scheduleMsg(&logger, "IAT sensing error");
 	}

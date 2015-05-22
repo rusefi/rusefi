@@ -31,19 +31,19 @@ float getTempK(float resistance);
 float convertCelciustoF(float tempC);
 float convertFtoCelcius(float tempF);
 
-float getKelvinTemperature(float resistance, ThermistorConf *thermistor);
+float getKelvinTemperature(float resistance, thermistor_curve_s * curve);
 float getResistance(Thermistor *thermistor);
-float getTemperatureC(Thermistor *thermistor);
+float getTemperatureC(Thermistor *thermistor, thermistor_curve_s * curve);
 float getCoolantTemperature(DECLARE_ENGINE_PARAMETER_F);
 bool isValidCoolantTemperature(float temperature);
 float getIntakeAirTemperature(DECLARE_ENGINE_PARAMETER_F);
 bool isValidIntakeAirTemperature(float temperature);
 
 float convertResistanceToKelvinTemperature(float resistance,
-		ThermistorConf *thermistor);
+		thermistor_curve_s * curve);
 void setThermistorConfiguration(ThermistorConf * tc, float temp1, float r1, float temp2, float r2, float temp3,
 		float r3);
-void prepareThermistorCurve(ThermistorConf * config);
+void prepareThermistorCurve(ThermistorConf * config, thermistor_curve_s * curve);
 
 class Engine;
 

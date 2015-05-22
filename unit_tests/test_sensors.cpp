@@ -86,32 +86,31 @@ void testSensors(void) {
 	testTpsRateOfChange();
 	testHip9011lookup();
 
+	thermistor_curve_s c;
+	thermistor_curve_s *curve = &c;
 	{
 		setThermistorConfiguration(&tc, 32, 9500, 75, 2100, 120, 1000);
 
-		prepareThermistorCurve(&tc);
-
-		thermistor_curve_s * curve = &tc.curve;
+		prepareThermistorCurve(&tc, curve);
 
 		assertEquals(-0.003, curve->s_h_a);
 		assertEquals(0.001, curve->s_h_b);
 		assertEquals(0.0, curve->s_h_c);
 
-		float t = convertResistanceToKelvinTemperature(2100, &tc);
+		float t = convertResistanceToKelvinTemperature(2100, curve);
 		assertEquals(75 + KELV, t);
 	}
 
 	{
 		// 2003 Neon sensor
 		setThermistorConfiguration(&tc, 0, 32500, 30, 7550, 100, 700);
-		prepareThermistorCurve(&tc);
 
-		thermistor_curve_s * curve = &tc.curve;
+		prepareThermistorCurve(&tc, curve);
 
 		assertEqualsM("A", 0.0009, curve->s_h_a);
 		assertEqualsM("B", 0.0003, curve->s_h_b);
 		assertEquals(0.0, curve->s_h_c);
-		float t = convertResistanceToKelvinTemperature(38000, &tc);
+		float t = convertResistanceToKelvinTemperature(38000, curve);
 		assertEquals(-2.7983, t - KELV);
 	}
 }

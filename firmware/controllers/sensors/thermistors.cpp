@@ -45,13 +45,14 @@ float getVoutInVoltageDividor(float Vin, float r1, float r2) {
 	return r2 * Vin / (r1 + r2);
 }
 
-float convertResistanceToKelvinTemperature(float resistance, ThermistorConf *thermistor) {
+float convertResistanceToKelvinTemperature(float resistance, thermistor_curve_s * curve) {
+	efiAssert(curve != NULL, "thermistor pointer is NULL", NAN);
+
 	if (resistance <= 0) {
 		//warning("Invalid resistance in convertResistanceToKelvinTemperature=", resistance);
 		return 0.0f;
 	}
 	float logR = logf(resistance);
-	thermistor_curve_s * curve = &thermistor->curve;
 	return 1 / (curve->s_h_a + curve->s_h_b * logR + curve->s_h_c * logR * logR * logR);
 }
 
@@ -68,14 +69,9 @@ float convertKelvinToFahrenheit(float kelvin) {
 	return convertCelsiustoF(tempC);
 }
 
-float getKelvinTemperature(float resistance, ThermistorConf *thermistor) {
-	if (thermistor == NULL) {
-		firmwareError("thermistor pointer is NULL");
-		return NAN;
-	}
-
-	float kelvinTemperature = convertResistanceToKelvinTemperature(resistance, thermistor);
-	return kelvinTemperature;
+float getKelvinTemperature(float resistance, thermistor_curve_s * curve) {
+	// todo: inline thid method
+	return convertResistanceToKelvinTemperature(resistance, curve);
 }
 
 float getResistance(Thermistor *thermistor) {
@@ -87,14 +83,14 @@ float getResistance(Thermistor *thermistor) {
 	return resistance;
 }
 
-float getTemperatureC(Thermistor *thermistor) {
+float getTemperatureC(Thermistor *thermistor, thermistor_curve_s * curve) {
 	if (!initialized) {
 		firmwareError("thermstr not initialized");
 		return NAN;
 	}
 	float resistance = getResistance(thermistor);
 
-	float kelvinTemperature = getKelvinTemperature(resistance, thermistor->config);
+	float kelvinTemperature = getKelvinTemperature(resistance, curve);
 	return convertKelvinToCelcius(kelvinTemperature);
 }
 
@@ -112,7 +108,7 @@ bool isValidIntakeAirTemperature(float temperature) {
  * @return coolant temperature, in Celsius
  */
 float getCoolantTemperature(DECLARE_ENGINE_PARAMETER_F) {
-	float temperature = getTemperatureC(&engine->clt);
+	float temperature = getTemperatureC(&engine->clt, &engine->engineState.cltCurve.curve);
 	if (!isValidCoolantTemperature(temperature)) {
 		efiAssert(engineConfiguration!=NULL, "NULL engineConfiguration", NAN);
 		if (engineConfiguration->hasCltSensor) {
@@ -136,7 +132,7 @@ void setThermistorConfiguration(ThermistorConf * thermistor, float tempC1, float
 	tc->resistance_3 = r3;
 }
 
-void prepareThermistorCurve(ThermistorConf * config) {
+void prepareThermistorCurve(ThermistorConf * config, thermistor_curve_s * curve) {
 	efiAssertVoid(config!=NULL, "therm config");
 	thermistor_conf_s *tc = &config->config;
 	float T1 = tc->tempC_1 + KELV;
@@ -165,22 +161,19 @@ void prepareThermistorCurve(ThermistorConf * config) {
 
 	scheduleMsg(logger, "U2=%..100000f/U3=%..100000f", U2, U3);
 
-	thermistor_curve_s * curve = &config->curve;
-
 	curve->s_h_c = (U3 - U2) / (L3 - L2) * pow(L1 + L2 + L3, -1);
 	curve->s_h_b = U2 - curve->s_h_c * (L1 * L1 + L1 * L2 + L2 * L2);
 	curve->s_h_a = Y1 - (curve->s_h_b + L1 * L1 * curve->s_h_c) * L1;
 
 	scheduleMsg(logger, "s_h_c=%..100000f/s_h_b=%..100000f/s_h_a=%..100000f", curve->s_h_c, curve->s_h_b,
 			curve->s_h_a);
-
 }
 
 /**
  * @return Celsius value
  */
 float getIntakeAirTemperature(DECLARE_ENGINE_PARAMETER_F) {
-	float temperature = getTemperatureC(&engine->iat);
+	float temperature = getTemperatureC(&engine->iat, &engine->engineState.iatCurve.curve);
 	if (!isValidIntakeAirTemperature(temperature)) {
 		efiAssert(engineConfiguration!=NULL, "NULL engineConfiguration", NAN);
 		if (engineConfiguration->hasIatSensor) {
@@ -191,8 +184,9 @@ float getIntakeAirTemperature(DECLARE_ENGINE_PARAMETER_F) {
 	return temperature;
 }
 
-static void initThermistorCurve(Thermistor * t, ThermistorConf *config, adc_channel_e channel) {
-	prepareThermistorCurve(config);
+static void initThermistorCurve(Thermistor * t, ThermistorConf *config, adc_channel_e channel,
+		thermistor_curve_s * curve) {
+	prepareThermistorCurve(config, curve);
 	t->config = config;
 	t->channel = channel;
 }
@@ -215,10 +209,11 @@ void setCommonNTCSensor(ThermistorConf *thermistorConf) {
 #if EFI_PROD_CODE
 static void testCltByR(float resistance) {
 	Thermistor *thermistor = &engine->clt;
-	float kTemp = getKelvinTemperature(resistance, thermistor->config);
+	float kTemp = getKelvinTemperature(resistance, &engine->engineState.cltCurve.curve);
 	scheduleMsg(logger, "for R=%f we have %f", resistance, (kTemp - KELV));
 
-	initThermistorCurve(&engine->clt, &engineConfiguration->clt, engineConfiguration->cltAdcChannel);
+	initThermistorCurve(&engine->clt, &engineConfiguration->clt, engineConfiguration->cltAdcChannel,
+			&engine->engineState.cltCurve.curve);
 
 }
 #endif
@@ -227,12 +222,22 @@ void initThermistors(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 	logger = sharedLogger;
 	efiAssertVoid(engine!=NULL, "e NULL initThermistors");
 	efiAssertVoid(engine->engineConfiguration2!=NULL, "e2 NULL initThermistors");
-	initThermistorCurve(&engine->clt, &engineConfiguration->clt, engineConfiguration->cltAdcChannel);
-	initThermistorCurve(&engine->iat, &engineConfiguration->iat, engineConfiguration->iatAdcChannel);
+	initThermistorCurve(&engine->clt, &engineConfiguration->clt, engineConfiguration->cltAdcChannel,
+			&engine->engineState.cltCurve.curve);
+	initThermistorCurve(&engine->iat, &engineConfiguration->iat, engineConfiguration->iatAdcChannel,
+			&engine->engineState.iatCurve.curve);
 
 #if EFI_PROD_CODE
 	addConsoleActionF("test_clt_by_r", testCltByR);
 #endif
 
 	initialized = true;
+}
+
+ThermistorMath::ThermistorMath() {
+
+}
+
+void ThermistorMath::init(thermistor_conf_s currentConfig) {
+
 }
