@@ -161,9 +161,9 @@ static void commonMiataNa(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->triggerSimulatorPinModes[1] = OM_OPENDRAIN;
 
 	setCommonNTCSensor(&engineConfiguration->clt);
-	engineConfiguration->clt.bias_resistor = 2700;
+	engineConfiguration->clt.config.bias_resistor = 2700;
 	setCommonNTCSensor(&engineConfiguration->iat);
-	engineConfiguration->iat.bias_resistor = 2700;
+	engineConfiguration->iat.config.bias_resistor = 2700;
 
 }
 
@@ -341,9 +341,9 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_F) {
 
 	commonFrankensoAnalogInputs(engineConfiguration);
 	setCommonNTCSensor(&engineConfiguration->clt);
-	engineConfiguration->clt.bias_resistor = 2700;
+	engineConfiguration->clt.config.bias_resistor = 2700;
 	setCommonNTCSensor(&engineConfiguration->iat);
-	engineConfiguration->iat.bias_resistor = 2700;
+	engineConfiguration->iat.config.bias_resistor = 2700;
 
 	engineConfiguration->hasTpsSensor = false;
 	engineConfiguration->tpsAdcChannel = EFI_ADC_NONE;

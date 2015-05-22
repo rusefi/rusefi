@@ -90,7 +90,7 @@ void setFordAspireEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	 * 1K Ohm @ 49C
 	 */
 	setThermistorConfiguration(&engineConfiguration->clt, -20, 18000, 23.8889, 2100, 48.8889, 1000);
-	engineConfiguration->clt.bias_resistor = 3300; // that's my custom resistor value!
+	engineConfiguration->clt.config.bias_resistor = 3300; // that's my custom resistor value!
 
 	engineConfiguration->cranking.baseFuel = 3;
 
