@@ -391,6 +391,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->HD44780width = 20;
 	engineConfiguration->HD44780height = 4;
 
+	engineConfiguration->alternatorOffset = 0;
 	engineConfiguration->alternatorControlPFactor = 30;
 	boardConfiguration->alternatorDT = 100;
 

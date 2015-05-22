@@ -192,7 +192,7 @@
 #define afr_v2_offset_hex 254
 #define afr_value2_offset 600
 #define afr_value2_offset_hex 258
-#define unused596_offset 604
+#define alternatorOffset_offset 604
 #define baroSensor_offset 608
 #define baroSensor_offset_hex 260
 #define baroSensor_valueAt0_offset 608

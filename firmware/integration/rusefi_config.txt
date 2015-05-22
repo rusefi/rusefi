@@ -278,7 +278,7 @@ end_struct
 	
 afr_sensor_s afr;@see hasAfrSensor
 
-	float unused596;
+	float alternatorOffset;
 	
 air_pressure_sensor_config_s baroSensor;@see hasBaroSensor	
 
