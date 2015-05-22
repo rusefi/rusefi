@@ -69,6 +69,13 @@ public:
 	IgnitionEventList ignitionEvents[2];
 };
 
+class ThermistorMath {
+public:
+	ThermistorMath();
+	thermistor_conf_s currentConfig;
+	thermistor_curve_s curve;
+	void init(thermistor_conf_s currentConfig);
+};
 
 class EngineState {
 public:
@@ -80,6 +87,9 @@ public:
 	 */
 	float iat;
 	float clt;
+
+	ThermistorMath iatCurve;
+	ThermistorMath cltCurve;
 
 	angle_t mapAveragingStart;
 	angle_t mapAveragingDuration;

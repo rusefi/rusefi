@@ -119,7 +119,7 @@ end_struct
 
 struct ThermistorConf @brief Thermistor curve parameters
 	thermistor_conf_s config;
-	thermistor_curve_s curve;
+	float[3] unused;
 end_struct
 
 custom engine_type_e 4 bits, S32, @OFFSET@,   [0:2], "AUDI_AAN", "DODGE_NEON_1995", "FORD_ASPIRE_1996", "FORD_FIESTA", "NISSAN_PRIMERA", "HONDA_ACCORD", "FORD_INLINE_6_1995", "GY6_139QMB"
