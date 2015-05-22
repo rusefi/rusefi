@@ -72,6 +72,8 @@
 #define map_sensor_hwChannel_offset 252
 #define clt_offset 256
 #define clt_offset_hex 100
+#define clt_config_offset 256
+#define clt_config_offset_hex 100
 #define clt_tempC_1_offset 256
 #define clt_tempC_1_offset_hex 100
 #define clt_tempC_2_offset 260
@@ -92,6 +94,8 @@
 #define clt_s_h_c_offset_hex 124
 #define iat_offset 296
 #define iat_offset_hex 128
+#define iat_config_offset 296
+#define iat_config_offset_hex 128
 #define iat_tempC_1_offset 296
 #define iat_tempC_1_offset_hex 128
 #define iat_tempC_2_offset 300
