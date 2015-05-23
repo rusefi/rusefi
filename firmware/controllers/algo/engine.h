@@ -72,9 +72,10 @@ public:
 class ThermistorMath {
 public:
 	ThermistorMath();
-	thermistor_conf_s currentConfig;
 	thermistor_curve_s curve;
-	void init(thermistor_conf_s currentConfig);
+	void init(thermistor_conf_s *config);
+private:
+	thermistor_conf_s currentConfig;
 };
 
 class EngineState {
