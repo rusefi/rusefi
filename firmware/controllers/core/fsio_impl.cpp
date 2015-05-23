@@ -68,7 +68,7 @@ float getLEValue(Engine *engine, calc_stack_t *s, le_action_e action) {
 	case LE_METHOD_FAN:
 		return enginePins.fanRelay.getLogicValue();
 	case LE_METHOD_AC_TOGGLE:
-		return getAcToggle(engine);
+		return getAcToggle(PASS_ENGINE_PARAMETER_F);
 	case LE_METHOD_COOLANT:
 		return getCoolantTemperature(PASS_ENGINE_PARAMETER_F);
 	case LE_METHOD_INTAKE_AIR:
@@ -82,7 +82,7 @@ float getLEValue(Engine *engine, calc_stack_t *s, le_action_e action) {
 	case LE_METHOD_FAN_ON_SETTING:
 		return engineConfiguration->fanOnTemperature;
 	case LE_METHOD_VBATT:
-		return getVBatt(engine->engineConfiguration);
+		return getVBatt(PASS_ENGINE_PARAMETER_F);
 	default:
 		warning(OBD_PCM_Processor_Fault, "FSIO unexpected %d", action);
 		return NAN;

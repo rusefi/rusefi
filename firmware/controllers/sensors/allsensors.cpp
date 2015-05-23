@@ -10,14 +10,15 @@
 #include "engine.h"
 #include "allsensors.h"
 
+EXTERN_ENGINE;
+
 void initSensors(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 	initThermistors(sharedLogger PASS_ENGINE_PARAMETER);
 	initMapDecoder(PASS_ENGINE_PARAMETER_F);
 }
 
 // todo: move this somewhere else? maybe.
-bool getAcToggle(Engine *engine) {
-	engine_configuration_s *engineConfiguration = engine->engineConfiguration;
+bool getAcToggle(DECLARE_ENGINE_PARAMETER_F) {
 	/**
 	 * todo: make this flexible
 	 *

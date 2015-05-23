@@ -200,7 +200,7 @@ int getInternalAdcValue(const char *msg, adc_channel_e hwChannel) {
 		return fastAdc.samples[internalIndex];
 	}
 	if (adcHwChannelEnabled[hwChannel] != ADC_SLOW) {
-		warning(OBD_PCM_Processor_Fault, "ADC is off %d", hwChannel);
+		warning(OBD_PCM_Processor_Fault, "ADC is off [%s] index=%d", msg, hwChannel);
 	}
 
 	return slowAdc.getAdcValueByHwChannel(hwChannel);
@@ -492,6 +492,7 @@ static void configureInputs(void) {
 	addChannel("hip", engineConfiguration->hipOutputChannel, ADC_FAST);
 
 	addChannel("VBatt", engineConfiguration->vbattAdcChannel, ADC_SLOW);
+	addChannel("Vref", engineConfiguration->vRefAdcChannel, ADC_SLOW);
 	addChannel("CLT", engineConfiguration->clt.adcChannel, ADC_SLOW);
 	addChannel("IAT", engineConfiguration->iat.adcChannel, ADC_SLOW);
 	addChannel("AFR", engineConfiguration->afr.hwChannel, ADC_SLOW);

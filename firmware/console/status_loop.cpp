@@ -181,8 +181,8 @@ static void printSensors(Logging *log, bool fileFormat) {
 		reportSensorF(log, fileFormat, "vss", "kph", getVehicleSpeed(), 2);
 	}
 #endif /* EFI_PROD_CODE */
-	reportSensorF(log, fileFormat, "vref", "V", getVRef(engineConfiguration), 2);
-	reportSensorF(log, fileFormat, "vbatt", "V", getVBatt(engineConfiguration), 2);
+//	reportSensorF(log, fileFormat, "vref", "V", getVRef(engineConfiguration), 2);
+	reportSensorF(log, fileFormat, "vbatt", "V", getVBatt(PASS_ENGINE_PARAMETER_F), 2);
 
 	reportSensorF(log, fileFormat, "TP", "%", getTPS(PASS_ENGINE_PARAMETER_F), 2);
 
@@ -559,7 +559,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->massAirFlowValue = getRealMaf();
 	tsOutputChannels->veValue = veMap.getValue(getMap(), rpm);
 	tsOutputChannels->airFuelRatio = getAfr();
-	tsOutputChannels->vBatt = getVBatt(engineConfiguration);
+	tsOutputChannels->vBatt = getVBatt(PASS_ENGINE_PARAMETER_F);
 	tsOutputChannels->tpsADC = getTPS10bitAdc(PASS_ENGINE_PARAMETER_F);
 #if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
 	tsOutputChannels->baroPressure = getBaroPressure();

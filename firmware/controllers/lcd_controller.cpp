@@ -103,7 +103,7 @@ void initLcdController(void) {
 static char * prepareVBattMapLine(engine_configuration_s *engineConfiguration, char *buffer) {
 	char *ptr = buffer;
 	*ptr++ = 'V';
-	ptr = ftoa(ptr, getVBatt(engineConfiguration), 10.0f);
+	ptr = ftoa(ptr, getVBatt(PASS_ENGINE_PARAMETER_F), 10.0f);
 
 	ptr = appendStr(ptr, " M");
 	ptr = ftoa(ptr, getRawMap(), 10.0f);
@@ -228,7 +228,7 @@ static void showLine(lcd_line_e line, int screenY) {
 		lcdPrintf("Throttle %f%%", getTPS());
 		return;
 	case LL_VBATT:
-		lcdPrintf("Battery %fv", getVBatt(engineConfiguration));
+		lcdPrintf("Battery %fv", getVBatt(PASS_ENGINE_PARAMETER_F));
 		return;
 #if	EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
 	case LL_BARO:
