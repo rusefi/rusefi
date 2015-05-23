@@ -45,7 +45,9 @@ float getVoutInVoltageDividor(float Vin, float r1, float r2) {
 	return r2 * Vin / (r1 + r2);
 }
 
-float getKelvinTemperature(float resistance, thermistor_curve_s * curve) {
+float getKelvinTemperature(ThermistorConf *config, float resistance, ThermistorMath *tm) {
+	tm->init(&config->config); // implementation checks if config has changed or not
+	thermistor_curve_s * curve = &tm->curve;
 	efiAssert(curve != NULL, "thermistor pointer is NULL", NAN);
 
 	if (resistance <= 0) {
@@ -78,14 +80,14 @@ float getResistance(ThermistorConf *config) {
 	return resistance;
 }
 
-float getTemperatureC(ThermistorConf *config, thermistor_curve_s * curve) {
+float getTemperatureC(ThermistorConf *config, ThermistorMath *tm) {
 	if (!initialized) {
 		firmwareError("thermstr not initialized");
 		return NAN;
 	}
 	float resistance = getResistance(config);
 
-	float kelvinTemperature = getKelvinTemperature(resistance, curve);
+	float kelvinTemperature = getKelvinTemperature(config, resistance, tm);
 	return convertKelvinToCelcius(kelvinTemperature);
 }
 
@@ -103,7 +105,7 @@ bool isValidIntakeAirTemperature(float temperature) {
  * @return coolant temperature, in Celsius
  */
 float getCoolantTemperature(DECLARE_ENGINE_PARAMETER_F) {
-	float temperature = getTemperatureC(&engineConfiguration->clt, &engine->engineState.cltCurve.curve);
+	float temperature = getTemperatureC(&engineConfiguration->clt, &engine->engineState.cltCurve);
 	if (!isValidCoolantTemperature(temperature)) {
 		efiAssert(engineConfiguration!=NULL, "NULL engineConfiguration", NAN);
 		if (engineConfiguration->hasCltSensor) {
@@ -127,9 +129,7 @@ void setThermistorConfiguration(ThermistorConf * thermistor, float tempC1, float
 	tc->resistance_3 = r3;
 }
 
-void prepareThermistorCurve(ThermistorConf * config, thermistor_curve_s * curve) {
-	efiAssertVoid(config!=NULL, "therm config");
-	thermistor_conf_s *tc = &config->config;
+static void prepareThermistorCurve(thermistor_conf_s *tc, thermistor_curve_s * curve) {
 	float T1 = tc->tempC_1 + KELV;
 	float T2 = tc->tempC_2 + KELV;
 	float T3 = tc->tempC_3 + KELV;
@@ -168,7 +168,7 @@ void prepareThermistorCurve(ThermistorConf * config, thermistor_curve_s * curve)
  * @return Celsius value
  */
 float getIntakeAirTemperature(DECLARE_ENGINE_PARAMETER_F) {
-	float temperature = getTemperatureC(&engineConfiguration->iat, &engine->engineState.iatCurve.curve);
+	float temperature = getTemperatureC(&engineConfiguration->iat, &engine->engineState.iatCurve);
 	if (!isValidIntakeAirTemperature(temperature)) {
 		efiAssert(engineConfiguration!=NULL, "NULL engineConfiguration", NAN);
 		if (engineConfiguration->hasIatSensor) {
@@ -196,11 +196,8 @@ void setCommonNTCSensor(ThermistorConf *thermistorConf) {
 
 #if EFI_PROD_CODE
 static void testCltByR(float resistance) {
-	float kTemp = getKelvinTemperature(resistance, &engine->engineState.cltCurve.curve);
+	float kTemp = getKelvinTemperature(&engineConfiguration->clt, resistance, &engine->engineState.cltCurve);
 	scheduleMsg(logger, "for R=%f we have %f", resistance, (kTemp - KELV));
-
-	prepareThermistorCurve(&engineConfiguration->clt, &engine->engineState.cltCurve.curve);
-
 }
 #endif
 
@@ -208,10 +205,6 @@ void initThermistors(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 	logger = sharedLogger;
 	efiAssertVoid(engine!=NULL, "e NULL initThermistors");
 	efiAssertVoid(engine->engineConfiguration2!=NULL, "e2 NULL initThermistors");
-	prepareThermistorCurve(&engineConfiguration->clt,
-			&engine->engineState.cltCurve.curve);
-	prepareThermistorCurve(&engineConfiguration->iat,
-			&engine->engineState.iatCurve.curve);
 
 #if EFI_PROD_CODE
 	addConsoleActionF("test_clt_by_r", testCltByR);
@@ -221,9 +214,15 @@ void initThermistors(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 }
 
 ThermistorMath::ThermistorMath() {
+	memset(&currentConfig, 0, sizeof(currentConfig));
 
 }
 
-void ThermistorMath::init(thermistor_conf_s currentConfig) {
-
+void ThermistorMath::init(thermistor_conf_s *config) {
+	bool_t isSameConfig = memcmp(config, &currentConfig, sizeof(currentConfig)) == 0;
+	if (isSameConfig) {
+		return;
+	}
+	memcpy(&currentConfig, config, sizeof(currentConfig));
+	prepareThermistorCurve(config, &curve);
 }
