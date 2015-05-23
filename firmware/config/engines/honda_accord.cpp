@@ -122,12 +122,12 @@ static void setHondaAccordConfigurationCommon(DECLARE_ENGINE_PARAMETER_F) {
 	/**
 	 * IAT D15/W7
 	 */
-	engineConfiguration->iatAdcChannel = EFI_ADC_11;
+	engineConfiguration->iat.adcChannel = EFI_ADC_11;
 
 	/**
 	 * CLT D13/W9
 	 */
-	engineConfiguration->cltAdcChannel = EFI_ADC_12;
+	engineConfiguration->clt.adcChannel = EFI_ADC_12;
 
 
 	/**

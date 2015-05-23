@@ -367,14 +367,14 @@ static void setOM(int value) {
 
 static char pinNameBuffer[16];
 
-static void printThermistor(const char *msg, Thermistor *thermistor, thermistor_curve_s * curve) {
-	adc_channel_e adcChannel = thermistor->channel;
+static void printThermistor(const char *msg, ThermistorConf *config, thermistor_curve_s * curve) {
+	adc_channel_e adcChannel = config->adcChannel;
 	float voltage = getVoltageDivided("term", adcChannel);
-	float r = getResistance(thermistor);
+	float r = getResistance(config);
 
-	float t = getTemperatureC(thermistor, curve);
+	float t = getTemperatureC(config, curve);
 
-	thermistor_conf_s *tc = &thermistor->config->config;
+	thermistor_conf_s *tc = &config->config;
 
 	scheduleMsg(&logger, "%s volts=%f Celsius=%f sensorR=%f on channel %d", msg, voltage, t, r, adcChannel);
 	scheduleMsg(&logger, "@%s", getPinNameByAdcChannel(adcChannel, pinNameBuffer));
@@ -428,11 +428,11 @@ static void printTPSInfo(void) {
 
 static void printTemperatureInfo(void) {
 #if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
-	printThermistor("CLT", &engine->clt, &engine->engineState.cltCurve.curve);
+	printThermistor("CLT", &engineConfiguration->clt, &engine->engineState.cltCurve.curve);
 	if (!isValidCoolantTemperature(getCoolantTemperature(PASS_ENGINE_PARAMETER_F))) {
 		scheduleMsg(&logger, "CLT sensing error");
 	}
-	printThermistor("IAT", &engine->iat, &engine->engineState.iatCurve.curve);
+	printThermistor("IAT", &engineConfiguration->iat, &engine->engineState.iatCurve.curve);
 	if (!isValidIntakeAirTemperature(getIntakeAirTemperature(PASS_ENGINE_PARAMETER_F))) {
 		scheduleMsg(&logger, "IAT sensing error");
 	}
@@ -731,10 +731,10 @@ static void setAnalogInputPin(const char *sensorStr, const char *pinName) {
 		engineConfiguration->map.sensor.hwChannel = channel;
 		scheduleMsg(&logger, "setting MAP to %s/%d", pinName, channel);
 	} else if (strEqual("clt", sensorStr)) {
-		engineConfiguration->cltAdcChannel = channel;
+		engineConfiguration->clt.adcChannel = channel;
 		scheduleMsg(&logger, "setting CLT to %s/%d", pinName, channel);
 	} else if (strEqual("iat", sensorStr)) {
-		engineConfiguration->iatAdcChannel = channel;
+		engineConfiguration->iat.adcChannel = channel;
 		scheduleMsg(&logger, "setting IAT to %s/%d", pinName, channel);
 	} else if (strEqual("tps", sensorStr)) {
 		engineConfiguration->tpsAdcChannel = channel;

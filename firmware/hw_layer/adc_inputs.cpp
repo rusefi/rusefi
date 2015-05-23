@@ -492,8 +492,8 @@ static void configureInputs(void) {
 	addChannel("hip", engineConfiguration->hipOutputChannel, ADC_FAST);
 
 	addChannel("VBatt", engineConfiguration->vbattAdcChannel, ADC_SLOW);
-	addChannel("CLT", engineConfiguration->cltAdcChannel, ADC_SLOW);
-	addChannel("IAT", engineConfiguration->iatAdcChannel, ADC_SLOW);
+	addChannel("CLT", engineConfiguration->clt.adcChannel, ADC_SLOW);
+	addChannel("IAT", engineConfiguration->iat.adcChannel, ADC_SLOW);
 	addChannel("AFR", engineConfiguration->afr.hwChannel, ADC_SLOW);
 	addChannel("AC", engineConfiguration->acSwitchAdc, ADC_SLOW);
 }

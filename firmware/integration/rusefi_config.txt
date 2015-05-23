@@ -20,7 +20,7 @@ struct_no_prefix engine_configuration_s
 !
 ! this is used to confirm that firmware and TunerStudio are using the same rusefi.ini version
 ! 
-#define TS_FILE_VERSION 20150506
+#define TS_FILE_VERSION 20150522
 
 
 #define MAP_ANGLE_SIZE 8
@@ -119,7 +119,7 @@ end_struct
 
 struct ThermistorConf @brief Thermistor curve parameters
 	thermistor_conf_s config;
-	float[3] unused;
+	adc_channel_e adcChannel;
 end_struct
 
 custom engine_type_e 4 bits, S32, @OFFSET@,   [0:2], "AUDI_AAN", "DODGE_NEON_1995", "FORD_ASPIRE_1996", "FORD_FIESTA", "NISSAN_PRIMERA", "HONDA_ACCORD", "FORD_INLINE_6_1995", "GY6_139QMB"
@@ -158,6 +158,9 @@ MAP_sensor_config_s map;@see hasMapSensor\n@see isMapAveragingEnabled
 
 ThermistorConf clt;todo: merge with channel settings, use full-scale Thermistor here!
 ThermistorConf iat;
+	
+	float[4] unused;
+
 
 float[DWELL_CURVE_SIZE] sparkDwellBins;;"RPM",     1,   0.0,      0.0,  18000,   2
 	float[DWELL_CURVE_SIZE] sparkDwell;;"ms",	   1,   0.0,      0.0,  30.0,    2
@@ -269,8 +272,8 @@ custom spi_device_e 4 bits,U32,   @OFFSET@, [0:1], "Off", "SPI1", "SPI2", "SPI3"
 float globalFuelCorrection;;"coef",    1,      0.0,       0,  1000.0,        2
 
 
-	adc_channel_e cltAdcChannel;todo: merge with channel settings, use full-scale Thermistor!
-	adc_channel_e iatAdcChannel;
+	int unused11;
+	int unused12;
 	adc_channel_e mafAdcChannel;	
 	
 struct afr_sensor_s

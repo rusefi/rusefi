@@ -39,8 +39,8 @@ void setMazdaMiataNbEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->vbattAdcChannel = EFI_ADC_0; // 1 is the old value
 //  engineConfiguration->map.channel = 1;
 	engineConfiguration->mafAdcChannel = EFI_ADC_1;
-	engineConfiguration->cltAdcChannel = EFI_ADC_11;
-	engineConfiguration->iatAdcChannel = EFI_ADC_13;
+	engineConfiguration->clt.adcChannel = EFI_ADC_11;
+	engineConfiguration->iat.adcChannel = EFI_ADC_13;
 	engineConfiguration->afr.hwChannel = EFI_ADC_2;
 
 	boardConfiguration->idle.solenoidPin = GPIOE_0;
