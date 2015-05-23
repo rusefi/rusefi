@@ -144,8 +144,8 @@ void setFordAspireEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->vbattAdcChannel = EFI_ADC_0;
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
 	engineConfiguration->mafAdcChannel = EFI_ADC_1;
-	engineConfiguration->cltAdcChannel = EFI_ADC_11;
-//	engineConfiguration->iatAdcChannel =
+	engineConfiguration->clt.adcChannel = EFI_ADC_11;
+//	engineConfiguration->iat.adcChannel =
 
 	engineConfiguration->map.sensor.type = MT_DENSO183;
 }

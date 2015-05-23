@@ -25,11 +25,11 @@ static void setVoltage(int hwChannel, float voltage) {
 }
 
 static void setCltVoltage(float voltage) {
-	setVoltage(engineConfiguration->cltAdcChannel, voltage);
+	setVoltage(engineConfiguration->clt.adcChannel, voltage);
 }
 
 static void setIatVoltage(float voltage) {
-	setVoltage(engineConfiguration->iatAdcChannel, voltage);
+	setVoltage(engineConfiguration->iat.adcChannel, voltage);
 }
 
 static void setMafVoltage(float voltage) {

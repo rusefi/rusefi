@@ -37,8 +37,8 @@ void setCustomEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_0;
 
-	engineConfiguration->cltAdcChannel = EFI_ADC_12;
-	engineConfiguration->iatAdcChannel = EFI_ADC_11;
+	engineConfiguration->clt.adcChannel = EFI_ADC_12;
+	engineConfiguration->iat.adcChannel = EFI_ADC_11;
 	engineConfiguration->afr.hwChannel = EFI_ADC_13;
 
 	setCommonNTCSensor(&engineConfiguration->clt);

@@ -196,7 +196,7 @@ static void common079721_2351(engine_configuration_s *engineConfiguration, board
 	// Frankenstein analog input #12: adc
 	engineConfiguration->mafAdcChannel = EFI_ADC_1;
 	engineConfiguration->tpsAdcChannel = EFI_ADC_3;
-	engineConfiguration->cltAdcChannel = EFI_ADC_11;
+	engineConfiguration->clt.adcChannel = EFI_ADC_11;
 
 }
 
@@ -349,8 +349,8 @@ void setFordEscortGt(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->tpsAdcChannel = EFI_ADC_NONE;
 //	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
 	engineConfiguration->mafAdcChannel = EFI_ADC_0;
-	engineConfiguration->cltAdcChannel = EFI_ADC_12;
-	engineConfiguration->iatAdcChannel = EFI_ADC_11;
+	engineConfiguration->clt.adcChannel = EFI_ADC_12;
+	engineConfiguration->iat.adcChannel = EFI_ADC_11;
 
 	// todo: 8.2 or 10k?
 	engineConfiguration->vbattDividerCoeff = ((float) (10 + 33)) / 10 * 2;
@@ -423,8 +423,8 @@ static void setMiata1994_common(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->tpsAdcChannel = EFI_ADC_2;
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
 	engineConfiguration->mafAdcChannel = EFI_ADC_0;
-	engineConfiguration->cltAdcChannel = EFI_ADC_12;
-	engineConfiguration->iatAdcChannel = EFI_ADC_11;
+	engineConfiguration->clt.adcChannel = EFI_ADC_12;
+	engineConfiguration->iat.adcChannel = EFI_ADC_11;
 // end of 1994 commond
 }
 
@@ -508,7 +508,7 @@ void setMiata1996(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->idle.solenoidPin = GPIOE_5;
 
 	engineConfiguration->mafAdcChannel = EFI_ADC_1;
-	engineConfiguration->cltAdcChannel = EFI_ADC_11;
+	engineConfiguration->clt.adcChannel = EFI_ADC_11;
 	engineConfiguration->tpsAdcChannel = EFI_ADC_13;
 
 	boardConfiguration->ignitionPins[0] = GPIOE_12; // Frankenstein: high side #3

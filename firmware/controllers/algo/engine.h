@@ -124,11 +124,6 @@ public:
 
 class RpmCalculator;
 
-typedef struct {
-	ThermistorConf *config;
-	adc_channel_e channel;
-} Thermistor;
-
 #define MAF_DECODING_CACHE_SIZE 256
 
 #define MAF_DECODING_CACHE_MULT (MAF_DECODING_CACHE_SIZE / 5.0)
@@ -182,9 +177,6 @@ public:
 	 * this is about 'stopengine' command
 	 */
 	uint64_t stopEngineRequestTimeNt;
-
-	Thermistor iat;
-	Thermistor clt;
 
 	AccelEnrichmemnt mapAccelEnrichment;
 	AccelEnrichmemnt tpsAccelEnrichment;

@@ -45,11 +45,11 @@ float getVoutInVoltageDividor(float Vin, float r1, float r2) {
 	return r2 * Vin / (r1 + r2);
 }
 
-float convertResistanceToKelvinTemperature(float resistance, thermistor_curve_s * curve) {
+float getKelvinTemperature(float resistance, thermistor_curve_s * curve) {
 	efiAssert(curve != NULL, "thermistor pointer is NULL", NAN);
 
 	if (resistance <= 0) {
-		//warning("Invalid resistance in convertResistanceToKelvinTemperature=", resistance);
+		//warning("Invalid resistance in getKelvinTemperature=", resistance);
 		return 0.0f;
 	}
 	float logR = logf(resistance);
@@ -69,26 +69,21 @@ float convertKelvinToFahrenheit(float kelvin) {
 	return convertCelsiustoF(tempC);
 }
 
-float getKelvinTemperature(float resistance, thermistor_curve_s * curve) {
-	// todo: inline thid method
-	return convertResistanceToKelvinTemperature(resistance, curve);
-}
-
-float getResistance(Thermistor *thermistor) {
-	float voltage = getVoltageDivided("term", thermistor->channel);
-	efiAssert(thermistor->config != NULL, "thermistor config is null", NAN);
-	thermistor_conf_s *tc = &thermistor->config->config;
+float getResistance(ThermistorConf *config) {
+	float voltage = getVoltageDivided("term", config->adcChannel);
+	efiAssert(config != NULL, "thermistor config is null", NAN);
+	thermistor_conf_s *tc = &config->config;
 
 	float resistance = getR2InVoltageDividor(voltage, _5_VOLTS, tc->bias_resistor);
 	return resistance;
 }
 
-float getTemperatureC(Thermistor *thermistor, thermistor_curve_s * curve) {
+float getTemperatureC(ThermistorConf *config, thermistor_curve_s * curve) {
 	if (!initialized) {
 		firmwareError("thermstr not initialized");
 		return NAN;
 	}
-	float resistance = getResistance(thermistor);
+	float resistance = getResistance(config);
 
 	float kelvinTemperature = getKelvinTemperature(resistance, curve);
 	return convertKelvinToCelcius(kelvinTemperature);
@@ -108,7 +103,7 @@ bool isValidIntakeAirTemperature(float temperature) {
  * @return coolant temperature, in Celsius
  */
 float getCoolantTemperature(DECLARE_ENGINE_PARAMETER_F) {
-	float temperature = getTemperatureC(&engine->clt, &engine->engineState.cltCurve.curve);
+	float temperature = getTemperatureC(&engineConfiguration->clt, &engine->engineState.cltCurve.curve);
 	if (!isValidCoolantTemperature(temperature)) {
 		efiAssert(engineConfiguration!=NULL, "NULL engineConfiguration", NAN);
 		if (engineConfiguration->hasCltSensor) {
@@ -173,7 +168,7 @@ void prepareThermistorCurve(ThermistorConf * config, thermistor_curve_s * curve)
  * @return Celsius value
  */
 float getIntakeAirTemperature(DECLARE_ENGINE_PARAMETER_F) {
-	float temperature = getTemperatureC(&engine->iat, &engine->engineState.iatCurve.curve);
+	float temperature = getTemperatureC(&engineConfiguration->iat, &engine->engineState.iatCurve.curve);
 	if (!isValidIntakeAirTemperature(temperature)) {
 		efiAssert(engineConfiguration!=NULL, "NULL engineConfiguration", NAN);
 		if (engineConfiguration->hasIatSensor) {
@@ -182,13 +177,6 @@ float getIntakeAirTemperature(DECLARE_ENGINE_PARAMETER_F) {
 		return LIMPING_MODE_IAT_TEMPERATURE;
 	}
 	return temperature;
-}
-
-static void initThermistorCurve(Thermistor * t, ThermistorConf *config, adc_channel_e channel,
-		thermistor_curve_s * curve) {
-	prepareThermistorCurve(config, curve);
-	t->config = config;
-	t->channel = channel;
 }
 
 void setDodgeSensor(ThermistorConf *thermistorConf) {
@@ -208,12 +196,10 @@ void setCommonNTCSensor(ThermistorConf *thermistorConf) {
 
 #if EFI_PROD_CODE
 static void testCltByR(float resistance) {
-	Thermistor *thermistor = &engine->clt;
 	float kTemp = getKelvinTemperature(resistance, &engine->engineState.cltCurve.curve);
 	scheduleMsg(logger, "for R=%f we have %f", resistance, (kTemp - KELV));
 
-	initThermistorCurve(&engine->clt, &engineConfiguration->clt, engineConfiguration->cltAdcChannel,
-			&engine->engineState.cltCurve.curve);
+	prepareThermistorCurve(&engineConfiguration->clt, &engine->engineState.cltCurve.curve);
 
 }
 #endif
@@ -222,9 +208,9 @@ void initThermistors(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 	logger = sharedLogger;
 	efiAssertVoid(engine!=NULL, "e NULL initThermistors");
 	efiAssertVoid(engine->engineConfiguration2!=NULL, "e2 NULL initThermistors");
-	initThermistorCurve(&engine->clt, &engineConfiguration->clt, engineConfiguration->cltAdcChannel,
+	prepareThermistorCurve(&engineConfiguration->clt,
 			&engine->engineState.cltCurve.curve);
-	initThermistorCurve(&engine->iat, &engineConfiguration->iat, engineConfiguration->iatAdcChannel,
+	prepareThermistorCurve(&engineConfiguration->iat,
 			&engine->engineState.iatCurve.curve);
 
 #if EFI_PROD_CODE

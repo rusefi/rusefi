@@ -70,8 +70,8 @@ void setFordInline6(DECLARE_ENGINE_PARAMETER_F) {
 	// input channel 12 is PC1, that's ADC11
 
 	engineConfiguration->tpsAdcChannel = EFI_ADC_4;
-	engineConfiguration->iatAdcChannel = EFI_ADC_2;
-	engineConfiguration->cltAdcChannel = EFI_ADC_1;
+	engineConfiguration->iat.adcChannel = EFI_ADC_2;
+	engineConfiguration->clt.adcChannel = EFI_ADC_1;
 	engineConfiguration->afr.hwChannel = EFI_ADC_11;
 
 	engineConfiguration->map.sensor.type = MT_MPX4250;
