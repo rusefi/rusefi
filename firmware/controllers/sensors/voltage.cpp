@@ -8,14 +8,16 @@
  */
 
 #include "main.h"
-#include "engine_configuration.h"
+#include "engine.h"
 #include "adc_inputs.h"
 #include "voltage.h"
 
-float getVRef(engine_configuration_s *engineConfiguration) {
+EXTERN_ENGINE;
+
+float getVRef(DECLARE_ENGINE_PARAMETER_F) {
 	return getVoltageDivided("vref", engineConfiguration->vRefAdcChannel);
 }
 
-float getVBatt(engine_configuration_s *engineConfiguration) {
+float getVBatt(DECLARE_ENGINE_PARAMETER_F) {
 	return getVoltage("vbatt", engineConfiguration->vbattAdcChannel) * engineConfiguration->vbattDividerCoeff;
 }

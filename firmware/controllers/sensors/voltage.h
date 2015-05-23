@@ -13,7 +13,7 @@
 #include "main.h"
 #include "engine_configuration.h"
 
-float getVRef(engine_configuration_s *engineConfiguration);
-float getVBatt(engine_configuration_s *engineConfiguration);
+float getVRef(DECLARE_ENGINE_PARAMETER_F);
+float getVBatt(DECLARE_ENGINE_PARAMETER_F);
 
 #endif

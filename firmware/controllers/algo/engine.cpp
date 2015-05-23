@@ -41,7 +41,7 @@ void Engine::updateSlowSensors() {
 	engineState.iat = getIntakeAirTemperature(PASS_ENGINE_PARAMETER_F);
 	engineState.clt = getCoolantTemperature(PASS_ENGINE_PARAMETER_F);
 
-	injectorLagMs = getInjectorLag(getVBatt(engineConfiguration) PASS_ENGINE_PARAMETER);
+	injectorLagMs = getInjectorLag(getVBatt(PASS_ENGINE_PARAMETER_F) PASS_ENGINE_PARAMETER);
 }
 
 void Engine::onTriggerEvent(uint64_t nowNt) {

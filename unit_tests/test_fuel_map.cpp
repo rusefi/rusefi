@@ -95,7 +95,7 @@ void testFuelMap(void) {
 	assertEqualsM("IAT", 2, iatCorrection);
 	float cltCorrection = getCltCorrection(getCoolantTemperature(PASS_ENGINE_PARAMETER_F) PASS_ENGINE_PARAMETER);
 	assertEqualsM("CLT", 1, cltCorrection);
-	float injectorLag = getInjectorLag(getVBatt(engineConfiguration) PASS_ENGINE_PARAMETER);
+	float injectorLag = getInjectorLag(getVBatt(PASS_ENGINE_PARAMETER_F) PASS_ENGINE_PARAMETER);
 	assertEquals(0, injectorLag);
 
 	testMafValue = 5;

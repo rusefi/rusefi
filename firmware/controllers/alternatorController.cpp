@@ -36,9 +36,9 @@ static msg_t AltCtrlThread(int param) {
 	while (true) {
 		chThdSleepMilliseconds(boardConfiguration->alternatorDT);
 
-		currentAltDuty = engineConfiguration->alternatorOffset + altPid.getValue(boardConfiguration->targetVBatt, getVBatt(engineConfiguration), 1);
+		currentAltDuty = engineConfiguration->alternatorOffset + altPid.getValue(boardConfiguration->targetVBatt, getVBatt(PASS_ENGINE_PARAMETER_F), 1);
 		if (boardConfiguration->isVerboseAlternator) {
-			scheduleMsg(logger, "alt duty: %f/vbatt=%f/p=%f/i=%f/d=%f int=%f", currentAltDuty, getVBatt(engineConfiguration),
+			scheduleMsg(logger, "alt duty: %f/vbatt=%f/p=%f/i=%f/d=%f int=%f", currentAltDuty, getVBatt(PASS_ENGINE_PARAMETER_F),
 					altPid.getP(), altPid.getI(), altPid.getD(), altPid.getIntegration());
 		}
 
@@ -59,7 +59,7 @@ void showAltInfo(void) {
 			boardConfiguration->alternatorDT);
 	scheduleMsg(logger, "p=%f/i=%f/d=%f offset=%f", engineConfiguration->alternatorControlPFactor,
 			0, 0, engineConfiguration->alternatorOffset); // todo: i & d
-	scheduleMsg(logger, "vbatt=%f/duty=%f/target=%f", getVBatt(engineConfiguration), currentAltDuty,
+	scheduleMsg(logger, "vbatt=%f/duty=%f/target=%f", getVBatt(PASS_ENGINE_PARAMETER_F), currentAltDuty,
 			boardConfiguration->targetVBatt);
 }
 

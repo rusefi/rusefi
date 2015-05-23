@@ -32,6 +32,7 @@ public class RecentCommands {
     private static final String TSINFO = "tsinfo";
     private static final String FUELINFO = "fuelinfo";
     private static final String TEMPINFO = "tempinfo";
+    private static final String HIPINFO = "hipinfo";
 
     private final static Map<String, Icon> COMMAND_ICONS = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
@@ -48,6 +49,7 @@ public class RecentCommands {
         COMMAND_ICONS.put(TSINFO, infoIcon);
         COMMAND_ICONS.put(FUELINFO, infoIcon);
         COMMAND_ICONS.put(TEMPINFO, infoIcon);
+        COMMAND_ICONS.put(HIPINFO, infoIcon);
     }
 
     private final JPanel content = new JPanel(new GridLayout(NUMBER_OF_COMMANDS + 1, 1));
@@ -112,6 +114,7 @@ public class RecentCommands {
         add(ACCELINFO);
         add(FUELINFO);
         add(TEMPINFO);
+        add(HIPINFO);
     }
 
     public void add(String command) {
