@@ -74,6 +74,9 @@ int getHip9011GainIndex(float gain) {
 	return i == GAIN_LOOKUP_SIZE ? GAIN_LOOKUP_SIZE - 1 : i;
 }
 
-int getHip9011BandIndex(float bore) {
-	return findIndex(bandFreqLookup, BAND_LOOKUP_SIZE, BAND(bore));
+/**
+ * @param frequency knock frequencey, in kHz
+ */
+int getHip9011BandIndex(float frequency) {
+	return findIndex(bandFreqLookup, BAND_LOOKUP_SIZE, frequency);
 }
