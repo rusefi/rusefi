@@ -290,7 +290,7 @@ end_struct
 	
 afr_sensor_s afr;@see hasAfrSensor
 
-	float alternatorOffset;
+int unused123;
 	
 air_pressure_sensor_config_s baroSensor;@see hasBaroSensor	
 
@@ -351,8 +351,7 @@ spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stoc
 	brain_pin_e[DIGIPOT_COUNT iterate] digitalPotentiometerChipSelect;
 
 custom adc_channel_mode_e 4 bits,    U32,   @OFFSET@, [0:1], "Off", "Slow", "Fast", "INVALID" 
-	float[15] unusedADC;
-	float targetVBatt;
+	float[16] unusedADC;
 
 
 	brain_input_pin_e[3 iterate] triggerInputPins;
@@ -419,8 +418,7 @@ custom fsio_pwm_freq_t 2 scalar,  U16,   @OFFSET@,         "Hz",      1,      0,
 
 	brain_pin_e hip9011CsPin;
 	brain_pin_e hip9011IntHoldPin;
-	float alternatorOffAboveTps;Turn off alternator output above specified TPS;"%",  1,      0,       0, 200,      2
-
+int unused113234;
 custom fsio_setting_t 4 scalar,  F32,   @OFFSET@, 		"Val",	   1,	   0,       0, 18000,	  0
 	fsio_setting_t[LE_COMMAND_COUNT iterate] fsio_setting;
 	brain_pin_e spi1mosiPin;
@@ -450,7 +448,7 @@ brain_input_pin_e vehicleSpeedSensorInputPin;
 	pin_input_mode_e clutchUpPinMode;
 	brain_pin_e[LE_COMMAND_COUNT iterate] fsioDigitalInputs;These input pins allow us to pull toggle buttons state;
 
-	int alternatorDT;
+int unused2342342;
 
 
 end_struct	
@@ -526,9 +524,7 @@ custom pin_input_mode_e 4 scalar, F32,	@OFFSET@,	"ms", 1, 0, 0, 200, 1
 	pin_input_mode_e[LE_COMMAND_COUNT iterate] fsioInputModes;
 	
 	adc_channel_e externalKnockSenseAdc;
-	float alternatorControlPFactor;
-	float alternatorControlIFactor;
-	float alternatorControlDFactor;
+	int[3] unsed2342342;
 	int idleStepperTotalSteps;;"count",      1,      0,       5, 3000,      0
 	brain_pin_e stepperEnablePin;
 
@@ -540,7 +536,15 @@ float[BARO_CORR_SIZE] baroCorrPressureBins;;"kPa",      1,     0,   0.0,    200,
 float[BARO_CORR_SIZE] baroCorrRpmBins;;"RPM",      1,     0,   0.0,    18000,   2
 
 baro_corr_table_t baroCorrTable;
-	int[109] unused3;
+	int[102] unused3;
+	
+	float targetVBatt;;"Volts",      1,      0,       0,30,      1
+	float alternatorOffAboveTps;Turn off alternator output above specified TPS;"%",  1,      0,       0, 200,      2
+	int alternatorDT;PID dTime;"ms",      1,      0,       0, 3000,      0
+	float alternatorOffset;Linear addition to PID logic;"%",      1,      0,       0, 100,      2
+	float alternatorControlPFactor;;"value",      1,      0,       0, 1000,      2
+	float alternatorControlIFactor;;"value",      1,      0,       0, 1000,      2
+	float alternatorControlDFactor;;"value",      1,      0,       0, 1000,      2
 
 	int tpsAccelLength;;"len",        1,     0,    1, 200,     3
 	float tpsAccelEnrichmentThreshold;;"roc",        1,     0,    0, 200,     3
