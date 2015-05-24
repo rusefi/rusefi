@@ -96,7 +96,6 @@ public class TestingUtils {
                 System.out.println("t " + revolutionLog.getCrankAngleByTime(ud.upTime));
             }
             assertCloseEnough(msg + " width for " + key, actualWidth, widthRatio, expectedWidth);
-
         }
     }
 

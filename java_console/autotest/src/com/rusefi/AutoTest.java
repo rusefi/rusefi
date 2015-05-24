@@ -214,7 +214,7 @@ public class AutoTest {
 
         String msg = "ford 6";
 
-        double x = 12.84;
+        double x = 8.16;
         assertWave(msg, chart, EngineChart.SPARK_1, 0.01666, x, x + 120, x + 240, x + 360, x + 480, x + 600);
 
         assertWaveNull(msg, chart, EngineChart.TRIGGER_2);

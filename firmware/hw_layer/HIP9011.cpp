@@ -34,6 +34,7 @@
 #include "HIP9011.h"
 #include "adc_inputs.h"
 #include "efilib2.h"
+#include "engine_controller.h"
 
 #if EFI_HIP_9011 || defined(__DOXYGEN__)
 
@@ -102,6 +103,7 @@ static SPIDriver *driver = &SPID2;
 EXTERN_ENGINE
 ;
 
+static char pinNameBuffer[16];
 static void showHipInfo(void) {
 	if (!boardConfiguration->isHip9011Enabled) {
 		scheduleMsg(logger, "hip9011 driver not active");
@@ -109,18 +111,18 @@ static void showHipInfo(void) {
 	}
 
 	printSpiState(logger, boardConfiguration);
-	scheduleMsg(logger, "bore=%f freq=%f", engineConfiguration->cylinderBore, BAND(engineConfiguration->cylinderBore));
+	scheduleMsg(logger, "bore=%fmm freq=%fkHz", engineConfiguration->cylinderBore, BAND(engineConfiguration->cylinderBore));
 
 	scheduleMsg(logger, "band_index=%d gain %f/index=%d", bandIndex, boardConfiguration->hip9011Gain, currentGainIndex);
 	scheduleMsg(logger, "integrator index=%d hip_threshold=%f totalKnockEventsCount=%d", currentIntergratorIndex,
 			engineConfiguration->hipThreshold, totalKnockEventsCount);
 
-	scheduleMsg(logger, "spi= int=%s response count=%d", hwPortname(boardConfiguration->hip9011IntHoldPin),
+	scheduleMsg(logger, "spi= IntHold@%s response count=%d", hwPortname(boardConfiguration->hip9011IntHoldPin),
 			nonZeroResponse);
-	scheduleMsg(logger, "CS=%s updateCount=%d", hwPortname(boardConfiguration->hip9011CsPin), settingUpdateCount);
+	scheduleMsg(logger, "CS@%s updateCount=%d", hwPortname(boardConfiguration->hip9011CsPin), settingUpdateCount);
 
-	scheduleMsg(logger, "value=%f@#%d", getVoltageDivided("hip", engineConfiguration->hipOutputChannel),
-			engineConfiguration->hipOutputChannel);
+	scheduleMsg(logger, "hip output=%fv@%s", getVoltageDivided("hip", engineConfiguration->hipOutputChannel),
+			getPinNameByAdcChannel(engineConfiguration->hipOutputChannel, pinNameBuffer));
 }
 
 void setHip9011FrankensoPinout(void) {

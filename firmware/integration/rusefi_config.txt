@@ -159,7 +159,8 @@ MAP_sensor_config_s map;@see hasMapSensor\n@see isMapAveragingEnabled
 ThermistorConf clt;todo: merge with channel settings, use full-scale Thermistor here!
 ThermistorConf iat;
 	
-	float[4] unused;
+	float[3] unused;
+	float knockBandCustom;
 
 
 float[DWELL_CURVE_SIZE] sparkDwellBins;;"RPM",     1,   0.0,      0.0,  18000,   2
