@@ -108,6 +108,8 @@
 #define iat_adcChannel_offset 316
 #define unused_offset 320
 #define unused_offset_hex 140
+#define hip9011PrescalerAndSDO_offset 328
+#define hip9011PrescalerAndSDO_offset_hex 148
 #define knockBandCustom_offset 332
 #define sparkDwellBins_offset 336
 #define sparkDwellBins_offset_hex 150
@@ -432,8 +434,8 @@
 #define fsioFrequency16_offset 1270
 #define hip9011CsPin_offset 1272
 #define hip9011IntHoldPin_offset 1276
-#define hip9011OutPin_offset 1280
-#define hip9011OutPin_offset_hex 500
+#define unused1280_offset 1280
+#define unused1280_offset_hex 500
 #define fsio_setting1_offset 1284
 #define fsio_setting1_offset_hex 504
 #define fsio_setting2_offset 1288

@@ -50,7 +50,7 @@ uint32_t hipLastExecutionCount;
 /**
  * band index is only send to HIP chip on startup
  */
-static int bandIndex;
+static int currentBandIndex;
 static int currentGainIndex = -1;
 static int currentIntergratorIndex = -1;
 static int settingUpdateCount = 0;
@@ -104,6 +104,12 @@ EXTERN_ENGINE
 ;
 
 static char pinNameBuffer[16];
+
+static float getBand(void) {
+	return engineConfiguration->knockBandCustom == 0 ?
+			BAND(engineConfiguration->cylinderBore) : engineConfiguration->knockBandCustom;
+}
+
 static void showHipInfo(void) {
 	if (!boardConfiguration->isHip9011Enabled) {
 		scheduleMsg(logger, "hip9011 driver not active");
@@ -111,9 +117,10 @@ static void showHipInfo(void) {
 	}
 
 	printSpiState(logger, boardConfiguration);
-	scheduleMsg(logger, "bore=%fmm freq=%fkHz", engineConfiguration->cylinderBore, BAND(engineConfiguration->cylinderBore));
+	scheduleMsg(logger, "bore=%fmm freq=%fkHz PaSDO=%d", engineConfiguration->cylinderBore, getBand(),
+			engineConfiguration->hip9011PrescalerAndSDO);
 
-	scheduleMsg(logger, "band_index=%d gain %f/index=%d", bandIndex, boardConfiguration->hip9011Gain, currentGainIndex);
+	scheduleMsg(logger, "band_index=%d gain %f/index=%d", currentBandIndex, boardConfiguration->hip9011Gain, currentGainIndex);
 	scheduleMsg(logger, "integrator index=%d hip_threshold=%f totalKnockEventsCount=%d", currentIntergratorIndex,
 			engineConfiguration->hipThreshold, totalKnockEventsCount);
 
@@ -186,14 +193,29 @@ static void intHoldCallback(trigger_event_e ckpEventType, uint32_t index DECLARE
 	engine->m.hipCbTime = GET_TIMESTAMP() - engine->m.beforeHipCb;
 }
 
+static void setPrescalerAndSDO(int value) {
+	engineConfiguration->hip9011PrescalerAndSDO = value;
+	scheduleMsg(logger, "Reboot to apply %d", value);
+}
+
+static void setBand(float value) {
+	engineConfiguration->knockBandCustom = value;
+	showHipInfo();
+}
+
 static void setGain(float value) {
 	boardConfiguration->hip9011Gain = value;
 	showHipInfo();
 }
 
-static void endOfSpiCommunication(SPIDriver *spip) {
+static void endOfSpiExchange(SPIDriver *spip) {
 	spiUnselectI(driver);
 	state = READY_TO_INTEGRATE;
+}
+
+static int getBandIndex(void) {
+	float freq = getBand();
+	return getHip9011BandIndex(freq);
 }
 
 void hipAdcCallback(adcsample_t value) {
@@ -207,19 +229,27 @@ void hipAdcCallback(adcsample_t value) {
 
 		int integratorIndex = getIntegrationIndexByRpm(engine->rpmCalculator.rpmValue);
 		int gainIndex = getHip9011GainIndex(boardConfiguration->hip9011Gain);
+		int bandIndex = getBandIndex();
 
 		if (currentGainIndex != gainIndex) {
-			state = IS_SENDING_SPI_COMMAND;
-			tx_buff[0] = gainIndex;
 			currentGainIndex = gainIndex;
+			tx_buff[0] = gainIndex;
 
+			state = IS_SENDING_SPI_COMMAND;
 			spiSelectI(driver);
 			spiStartExchangeI(driver, 1, tx_buff, rx_buff);
 		} else if (currentIntergratorIndex != integratorIndex) {
-			state = IS_SENDING_SPI_COMMAND;
-			tx_buff[0] = integratorIndex;
 			currentIntergratorIndex = integratorIndex;
+			tx_buff[0] = integratorIndex;
 
+			state = IS_SENDING_SPI_COMMAND;
+			spiSelectI(driver);
+			spiStartExchangeI(driver, 1, tx_buff, rx_buff);
+		} else if (currentBandIndex != bandIndex) {
+			currentBandIndex = bandIndex;
+			tx_buff[0] = bandIndex;
+
+			state = IS_SENDING_SPI_COMMAND;
 			spiSelectI(driver);
 			spiStartExchangeI(driver, 1, tx_buff, rx_buff);
 		} else {
@@ -231,21 +261,38 @@ void hipAdcCallback(adcsample_t value) {
 static bool_t needToInit = true;
 
 static void hipStartupCode(void) {
+//	D[4:1] = 0000 : 4 MHz
+//	D[4:1] = 0001 : 5 MHz
+//	D[4:1] = 0010 : 6 MHz
+//	D[4:1] = 0011 ; 8 MHz
+//	D[4:1] = 0100 ; 10 MHz
+//	D[4:1] = 0101 ; 12 MHz
+//	D[4:1] = 0110 : 16 MHz
+//	D[4:1] = 0111 : 20 MHz
+//	D[4:1] = 1000 : 24 MHz
+
+
 	// '0' for 4MHz
-	SPI_SYNCHRONOUS(SET_PRESCALER_CMD + 0);
+	SPI_SYNCHRONOUS(SET_PRESCALER_CMD + engineConfiguration->hip9011PrescalerAndSDO);
+
+	chThdSleepMilliseconds(10);
 
 	// '0' for channel #1
 	SPI_SYNCHRONOUS(SET_CHANNEL_CMD + 0);
 
+	chThdSleepMilliseconds(10);
+
 	// band index depends on cylinder bore
-	SPI_SYNCHRONOUS(SET_BAND_PASS_CMD + bandIndex);
+	SPI_SYNCHRONOUS(SET_BAND_PASS_CMD + currentBandIndex);
+
+	chThdSleepMilliseconds(10);
 
 	/**
 	 * Let's restart SPI to switch it from synchronous mode into
 	 * asynchronous mode
 	 */
 	spiStop(driver);
-	spicfg.end_cb = endOfSpiCommunication;
+	spicfg.end_cb = endOfSpiExchange;
 	spiStart(driver, &spicfg);
 	state = READY_TO_INTEGRATE;
 }
@@ -255,8 +302,8 @@ static THD_WORKING_AREA(hipTreadStack, UTILITY_THREAD_STACK_SIZE);
 static msg_t hipThread(void *arg) {
 	chRegSetThreadName("hip9011 init");
 	while (true) {
-		// 100 ms to let the hardware to start
-		chThdSleepMilliseconds(100);
+		// some time to let the hardware start
+		chThdSleepMilliseconds(500);
 		if (needToInit) {
 			hipStartupCode();
 			needToInit = false;
@@ -287,7 +334,7 @@ void initHip9011(Logging *sharedLogger) {
 	scheduleMsg(logger, "Starting HIP9011/TPIC8101 driver");
 	spiStart(driver, &spicfg);
 
-	bandIndex = getHip9011BandIndex(engineConfiguration->cylinderBore);
+	currentBandIndex = getBandIndex();
 
 	/**
 	 * this engine cycle callback would be scheduling actual integration start and end callbacks
@@ -300,6 +347,8 @@ void initHip9011(Logging *sharedLogger) {
 //	palSetPadMode(GPIOB, 15, PAL_MODE_ALTERNATE(EFI_SPI2_AF) | PAL_STM32_OTYPE_OPENDRAIN);
 
 	addConsoleActionF("set_gain", setGain);
+	addConsoleActionF("set_band", setBand);
+	addConsoleActionI("set_hip_prescalerandsdo", setPrescalerAndSDO);
 	chThdCreateStatic(hipTreadStack, sizeof(hipTreadStack), NORMALPRIO, (tfunc_t) hipThread, NULL);
 }
 
