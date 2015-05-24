@@ -78,6 +78,8 @@ case SUBARU_2003_WRX:
   return "SUBARU_2003_WRX";
 case TEST_ENGINE:
   return "TEST_ENGINE";
+case VW_ABA:
+  return "VW_ABA";
   }
  return NULL;
 }

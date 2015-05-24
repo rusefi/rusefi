@@ -171,6 +171,8 @@ const char* getConfigurationName(engine_type_e engineType) {
 		return "BMWe34";
 	case TEST_ENGINE:
 		return "Test";
+	case VW_ABA:
+		return "VW_ABA";
 	case SACHS:
 		return "SACHS";
 	case GM_2_2:
@@ -946,7 +948,7 @@ static void setValue(const char *paramStr, const char *valueStr) {
 #if EFI_PROD_CODE
 	} else if (strEqualCaseInsensitive(paramStr, "alt_t")) {
 		if (valueI > 10) {
-			boardConfiguration->alternatorDT = valueI;
+			engineConfiguration->alternatorDT = valueI;
 		}
 		showAltInfo();
 	} else if (strEqualCaseInsensitive(paramStr, "alt_offset")) {
@@ -955,7 +957,7 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		setAltPFactor(valueF);
 #endif
 	} else if (strEqualCaseInsensitive(paramStr, "targetvbatt")) {
-		boardConfiguration->targetVBatt = valueF;
+		engineConfiguration->targetVBatt = valueF;
 	}
 }
 

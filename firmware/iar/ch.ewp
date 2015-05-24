@@ -2063,6 +2063,12 @@
       <file>
         <name>$PROJ_DIR$\..\config\engines\test_engine.h</name>
       </file>
+      <file>
+        <name>$PROJ_DIR$\..\config\engines\vw.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\config\engines\vw.h</name>
+      </file>
     </group>
     <group>
       <name>stm32f4ems</name>
@@ -2566,12 +2572,6 @@
       </file>
     </group>
     <file>
-      <name>$PROJ_DIR$\..\development\sensor_chart.cpp</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\development\sensor_chart.h</name>
-    </file>
-    <file>
       <name>$PROJ_DIR$\..\development\engine_emulator.cpp</name>
     </file>
     <file>
@@ -2582,6 +2582,12 @@
     </file>
     <file>
       <name>$PROJ_DIR$\..\development\rfi_perftest.h</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\development\sensor_chart.cpp</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\development\sensor_chart.h</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\development\trigger_emulator.cpp</name>

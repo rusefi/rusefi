@@ -9,10 +9,9 @@
 #ifndef FLASH_MAIN_H_
 #define FLASH_MAIN_H_
 
-#include "engine_configuration.h"
 #include "engine.h"
 
-#define FLASH_DATA_VERSION 8100
+#define FLASH_DATA_VERSION 8201
 
 void readFromFlash(void);
 void initFlash(Logging *sharedLogger, Engine *engine);

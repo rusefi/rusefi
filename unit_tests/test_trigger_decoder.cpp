@@ -543,6 +543,8 @@ void testTriggerDecoder(void) {
 	testTriggerDecoder3("neon NGC", DODGE_NEON_2003, 0, 0.4786, 0.0, CHRYSLER_NGC_GAP);
 	testTriggerDecoder2("sachs", SACHS, 0, 0.4800, 0.000);
 
+	testTriggerDecoder2("vw ABA", VW_ABA, 0, 0.7500, 0.25);
+
 	testMazda323();
 
 	testStartupFuelPumping();
