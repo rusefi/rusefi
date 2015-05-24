@@ -106,8 +106,10 @@
 #define iat_bias_resistor_offset 312
 #define iat_bias_resistor_offset_hex 138
 #define iat_adcChannel_offset 316
-#define unused_offset 320
-#define unused_offset_hex 140
+#define step1rpm_offset 320
+#define step1rpm_offset_hex 140
+#define step1timing_offset 324
+#define step1timing_offset_hex 144
 #define hip9011PrescalerAndSDO_offset 328
 #define hip9011PrescalerAndSDO_offset_hex 148
 #define knockBandCustom_offset 332
@@ -329,6 +331,7 @@
 #define isVerboseAlternator_offset 1008
 #define useSerialPort_offset 1008
 #define useStepperIdle_offset 1008
+#define enabledStep1Limiter_offset 1008
 #define logicAnalyzerPins1_offset 1012
 #define logicAnalyzerPins2_offset 1016
 #define logicAnalyzerPins3_offset 1020
@@ -434,8 +437,8 @@
 #define fsioFrequency16_offset 1270
 #define hip9011CsPin_offset 1272
 #define hip9011IntHoldPin_offset 1276
-#define unused1280_offset 1280
-#define unused1280_offset_hex 500
+#define alternatorOffAboveTps_offset 1280
+#define alternatorOffAboveTps_offset_hex 500
 #define fsio_setting1_offset 1284
 #define fsio_setting1_offset_hex 504
 #define fsio_setting2_offset 1288

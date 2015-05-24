@@ -14,5 +14,6 @@
 void initAlternatorCtrl(Logging *sharedLogger);
 void setAltPFactor(float p);
 void showAltInfo(void);
+void setDefaultAlternatorParameters(void);
 
 #endif /* ALTERNATORCONTROLLER_H_ */
