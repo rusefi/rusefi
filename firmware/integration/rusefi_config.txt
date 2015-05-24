@@ -159,7 +159,8 @@ MAP_sensor_config_s map;@see hasMapSensor\n@see isMapAveragingEnabled
 ThermistorConf clt;todo: merge with channel settings, use full-scale Thermistor here!
 ThermistorConf iat;
 	
-	float[2] unused;
+	int step1rpm;
+	int step1timing;
 	int hip9011PrescalerAndSDO;;"integer", 1, 0.0, 0.0, 32, 0
 	float knockBandCustom;;"kHz", 1, 0.0, 0.0, 10.0, 2
 
@@ -388,6 +389,7 @@ bit is_enabled_spi_2
 	bit useSerialPort
 	bit useStepperIdle
 	
+	bit enabledStep1Limiter;
 
 	brain_input_pin_e[LOGIC_ANALYZER_CHANNEL_COUNT iterate] logicAnalyzerPins;
 	uint8_t[LOGIC_ANALYZER_CHANNEL_COUNT] logicAnalyzerMode;default or inverted input
@@ -417,7 +419,7 @@ custom fsio_pwm_freq_t 2 scalar,  U16,   @OFFSET@,         "Hz",      1,      0,
 
 	brain_pin_e hip9011CsPin;
 	brain_pin_e hip9011IntHoldPin;
-	int unused1280;
+	float alternatorOffAboveTps;Turn off alternator output above specified TPS;"%",  1,      0,       0, 200,      2
 
 custom fsio_setting_t 4 scalar,  F32,   @OFFSET@, 		"Val",	   1,	   0,       0, 18000,	  0
 	fsio_setting_t[LE_COMMAND_COUNT iterate] fsio_setting;

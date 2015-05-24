@@ -79,6 +79,17 @@ static void applyAlternatorPinState(PwmConfig *state, int stateIndex) {
 		output->setValue(value);
 }
 
+void setDefaultAlternatorParameters(void) {
+	boardConfiguration->alternatorOffAboveTps = 120;
+
+	boardConfiguration->alternatorControlPin = GPIO_UNASSIGNED;
+	boardConfiguration->alternatorControlPinMode = OM_DEFAULT;
+
+	engineConfiguration->alternatorOffset = 0;
+	engineConfiguration->alternatorControlPFactor = 30;
+	boardConfiguration->alternatorDT = 100;
+}
+
 void initAlternatorCtrl(Logging *sharedLogger) {
 	logger = sharedLogger;
 	addConsoleAction("altinfo", showAltInfo);
