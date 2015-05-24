@@ -395,6 +395,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->alternatorControlPFactor = 30;
 	boardConfiguration->alternatorDT = 100;
 
+	engineConfiguration->vRefAdcChannel = EFI_ADC_NONE;
 	engineConfiguration->vbattAdcChannel = EFI_ADC_NONE;
 	engineConfiguration->clt.adcChannel = EFI_ADC_6;
 	engineConfiguration->iat.adcChannel = EFI_ADC_7;
