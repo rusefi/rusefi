@@ -16,7 +16,20 @@ EXTERN_ENGINE;
 void setVwAba(DECLARE_ENGINE_PARAMETER_F) {
 	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_F);
 
-	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
+//	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
+
+	//Base engine setting
+	engineConfiguration->specs.cylindersCount = 4;
+	engineConfiguration->specs.displacement = 2.5;
+
+	engineConfiguration->ignitionMode = IM_ONE_COIL;
+
+	boardConfiguration->ignitionPins[0] = GPIOE_14; // Frankenso high side - pin 1G
+	boardConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
+	boardConfiguration->ignitionPins[2] = GPIO_UNASSIGNED;
+	boardConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
+	boardConfiguration->ignitionPinMode = OM_DEFAULT;
+
 
 }
 
