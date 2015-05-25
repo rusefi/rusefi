@@ -295,6 +295,10 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 // todo: this value is way off! I am pretty sure temp coeffs are off also
 	engineConfiguration->iat.config.bias_resistor = 2700;
 
+
+	engineConfiguration->step1rpm = 3000;
+	engineConfiguration->step1timing = 10;
+
 	engineConfiguration->rpmHardLimit = 7000;
 	engineConfiguration->cranking.rpm = 550;
 	engineConfiguration->cutFuelOnHardLimit = true;
