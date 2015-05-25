@@ -52,7 +52,14 @@ static const ignition_table_t defaultIatTiming = {
 		{-4.4, -4.9, -5.9, -5.9, -5.9, -5.9, -4.9, -4.9, -4.9, -4.9, -4.9, -3.9, -3.9, -3.9, -3.9, -3.9},
 };
 
-float getBaseAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_S) {
+bool_t isStep1Condition(int rpm DECLARE_ENGINE_PARAMETER_S) {
+	return  boardConfiguration->enabledStep1Limiter && rpm >= engineConfiguration->step1rpm;
+}
+
+/**
+ * @return ignition timing angle advance before TDC
+ */
+static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_S) {
 	engine->m.beforeAdvance = GET_TIMESTAMP();
 	if (cisnan(engineLoad)) {
 		warning(OBD_PCM_Processor_Fault, "NaN engine load");
@@ -62,6 +69,10 @@ float getBaseAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_S) {
 	efiAssert(!cisnan(engineLoad), "invalid rpm", NAN);
 	engine->m.beforeZeroTest = GET_TIMESTAMP();
 	engine->m.zeroTestTime = GET_TIMESTAMP() - engine->m.beforeZeroTest;
+
+	if (isStep1Condition(rpm PASS_ENGINE_PARAMETER)) {
+		return engineConfiguration->step1timing;
+	}
 
 	float iatCorrection = iatAdvanceCorrectionMap.getValue(engine->engineState.clt, (float) rpm);
 
@@ -75,7 +86,7 @@ angle_t getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_S) {
 	if (isCrankingR(rpm)) {
 		angle = engineConfiguration->crankingTimingAngle;
 	} else {
-		angle = getBaseAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER);
+		angle = getRunningAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER);
 	}
 	angle -= engineConfiguration->ignitionBaseAngle;
 	fixAngle(angle);
