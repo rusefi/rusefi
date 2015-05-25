@@ -821,6 +821,8 @@ static void setSpiMode(int index, bool mode) {
 static void enableOrDisable(const char *param, bool isEnabled) {
 	if (strEqualCaseInsensitive(param, "fastadc")) {
 		boardConfiguration->isFastAdcEnabled = isEnabled;
+	} else if (strEqualCaseInsensitive(param, "step1limimter")) {
+		boardConfiguration->enabledStep1Limiter = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "serial")) {
 		boardConfiguration->useSerialPort = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "stepperidle")) {
@@ -956,6 +958,10 @@ static void setValue(const char *paramStr, const char *valueStr) {
 	} else if (strEqualCaseInsensitive(paramStr, "alt_p")) {
 		setAltPFactor(valueF);
 #endif
+	} else if (strEqualCaseInsensitive(paramStr, "step1rpm")) {
+		engineConfiguration->step1rpm = valueI;
+	} else if (strEqualCaseInsensitive(paramStr, "step1timing")) {
+		engineConfiguration->step1timing = valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "targetvbatt")) {
 		engineConfiguration->targetVBatt = valueF;
 	}
