@@ -87,4 +87,5 @@ void setDodgeRam1996(DECLARE_ENGINE_PARAMETER_F) {
 	setDodgeSensor(&engineConfiguration->iat);
 	engineConfiguration->iat.config.bias_resistor = 2700;
 
+	boardConfiguration->useStepperIdle = true;
 }
