@@ -1,12 +1,12 @@
 /*
- * @file	wave_analyzer_hw.cpp
+ * @file	digital_input_hw.cpp
  * @brief	Helper methods related to Input Capture Unit (ICU)
  *
  * @date Jun 23, 2013
  * @author Andrey Belomutskiy, (c) 2012-2015
  */
 
-#include "wave_analyzer_hw.h"
+#include "digital_input_hw.h"
 #include "mpu_util.h"
 #include "fl_stack.h"
 
@@ -26,16 +26,16 @@ static void icuPeriordCallBack(ICUDriver *driver);
 static ICUConfig wave_icucfg = { ICU_INPUT_ACTIVE_LOW, CORE_CLOCK / 100, icuWidthCallback, icuPeriordCallBack, 0,
 		ICU_CHANNEL_1, 0 };
 
-static ArrayList<WaveReaderHw, 8> registeredIcus;
+static ArrayList<digital_input_s, 8> registeredIcus;
 
-static WaveReaderHw * findWaveReaderHw(ICUDriver *driver) {
+static digital_input_s * finddigital_input_s(ICUDriver *driver) {
 	for (int i = 0; i < registeredIcus.size; i++) {
 		if (registeredIcus.elements[i].driver == driver) {
 			return &registeredIcus.elements[i];
 		}
 	}
 	firmwareError("reader not found");
-	return (WaveReaderHw *) NULL;
+	return (digital_input_s *) NULL;
 }
 
 static void icuWidthCallback(ICUDriver *driver) {
@@ -43,7 +43,7 @@ static void icuWidthCallback(ICUDriver *driver) {
 	 * see comment in icuPeriordCallBack
 	 int rowWidth = icuGetWidth(driver);
 	 */
-	WaveReaderHw * hw = findWaveReaderHw(driver);
+	digital_input_s * hw = finddigital_input_s(driver);
 	hw->widthListeners.invokeJustArgCallbacks();
 }
 
@@ -54,7 +54,7 @@ static void icuPeriordCallBack(ICUDriver *driver) {
 	 * 	int period = icuGetPeriod(driver);
 	 */
 
-	WaveReaderHw * hw = findWaveReaderHw(driver);
+	digital_input_s * hw = finddigital_input_s(driver);
 	hw->periodListeners.invokeJustArgCallbacks();
 }
 
@@ -151,17 +151,17 @@ void turnOnCapturePin(brain_pin_e brainPin) {
 	}
 }
 
-WaveReaderHw * initWaveAnalyzerDriver(brain_pin_e brainPin) {
+digital_input_s * initWaveAnalyzerDriver(brain_pin_e brainPin) {
 	ICUDriver *driver = getInputCaptureDriver(brainPin);
 
-	WaveReaderHw *hw = registeredIcus.add();
+	digital_input_s *hw = registeredIcus.add();
 
 	hw->driver = driver;
 	turnOnCapturePin(brainPin);
 	return hw;
 }
 
-void startInputDriver(WaveReaderHw *hw, bool isActiveHigh) {
+void startInputDriver(digital_input_s *hw, bool isActiveHigh) {
 	hw->isActiveHigh = isActiveHigh;
 	if (hw->isActiveHigh) {
 		wave_icucfg.mode = ICU_INPUT_ACTIVE_HIGH;

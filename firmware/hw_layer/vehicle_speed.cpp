@@ -10,7 +10,7 @@
 #if EFI_VEHICLE_SPEED || defined(__DOXYGEN__)
 
 #include "engine.h"
-#include "wave_analyzer_hw.h"
+#include "digital_input_hw.h"
 #include "pin_repository.h"
 
 EXTERN_ENGINE
@@ -54,7 +54,7 @@ void initVehicleSpeed(Logging *l) {
 	logger = l;
 	if (boardConfiguration->vehicleSpeedSensorInputPin == GPIO_UNASSIGNED)
 		return;
-	WaveReaderHw* vehicleSpeedInput = initWaveAnalyzerDriver(boardConfiguration->vehicleSpeedSensorInputPin);
+	digital_input_s* vehicleSpeedInput = initWaveAnalyzerDriver(boardConfiguration->vehicleSpeedSensorInputPin);
 	startInputDriver(vehicleSpeedInput, true);
 
 	vehicleSpeedInput->widthListeners.registerCallback((VoidInt) vsAnaWidthCallback, NULL);
