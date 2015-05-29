@@ -448,7 +448,7 @@ brain_input_pin_e vehicleSpeedSensorInputPin;
 	pin_input_mode_e clutchUpPinMode;
 	brain_pin_e[LE_COMMAND_COUNT iterate] fsioDigitalInputs;These input pins allow us to pull toggle buttons state;
 
-int unused2342342;
+brain_input_pin_e frequencyReportingMapInputPin;
 
 
 end_struct	
@@ -473,7 +473,7 @@ bit hasMapSensor;@see isMapAveragingEnabled
 	bit hasTpsSensor
 bit cutFuelOnHardLimit
 bit cutSparkOnHardLimit
-
+bit hasFrequencyReportingMapSensor;
 	adc_channel_e hipOutputChannel;
 
 	idle_mode_e idleMode;

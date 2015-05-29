@@ -518,7 +518,7 @@
 #define fsioDigitalInputs14_offset 1480
 #define fsioDigitalInputs15_offset 1484
 #define fsioDigitalInputs16_offset 1488
-#define unused2342342_offset 1492
+#define frequencyReportingMapInputPin_offset 1492
 #define hasMapSensor_offset 1496
 #define hasIatSensor_offset 1496
 #define hasBaroSensor_offset 1496
@@ -537,6 +537,7 @@
 #define hasTpsSensor_offset 1496
 #define cutFuelOnHardLimit_offset 1496
 #define cutSparkOnHardLimit_offset 1496
+#define hasFrequencyReportingMapSensor_offset 1496
 #define hipOutputChannel_offset 1500
 #define idleMode_offset 1504
 #define isInjectionEnabled_offset 1508
