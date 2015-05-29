@@ -12,7 +12,7 @@ HW_LAYER_EMS = $(HW_LAYER_EGT) \
 HW_LAYER_EMS_CPP = $(HW_LAYER_EGT_CPP) \
 	$(PROJECT_DIR)/hw_layer/pin_repository.cpp \
 	$(PROJECT_DIR)/hw_layer/microsecond_timer.cpp \
-	$(PROJECT_DIR)/hw_layer/wave_analyzer_hw.cpp \
+	$(PROJECT_DIR)/hw_layer/digital_input_hw.cpp \
 	$(PROJECT_DIR)/hw_layer/hardware.cpp \
 	$(PROJECT_DIR)/hw_layer/neo6m.cpp \
 	$(PROJECT_DIR)/hw_layer/mmc_card.cpp \

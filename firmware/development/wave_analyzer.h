@@ -15,7 +15,7 @@
 
 #include "datalogging.h"
 
-#include "wave_analyzer_hw.h"
+#include "digital_input_hw.h"
 #include "wave_chart.h"
 
 #define WA_CHANNEL_1 "input1"
@@ -28,7 +28,7 @@ public:
 	WaveReader();
 	void onFallEvent();
 
-	WaveReaderHw *hw;
+	digital_input_s *hw;
 	const char *name;
 	volatile int eventCounter;
 

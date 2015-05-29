@@ -11,12 +11,11 @@
 #if EFI_SHAFT_POSITION_INPUT || defined(__DOXYGEN__)
 
 #include "trigger_input.h"
-#include "wave_analyzer_hw.h"
+#include "digital_input_hw.h"
 #include "pin_repository.h"
 #include "trigger_structure.h"
 #include "trigger_central.h"
 #include "engine_configuration.h"
-#include "wave_analyzer_hw.h"
 
 #define TRIGGER_SUPPORTED_CHANNELS 2
 
