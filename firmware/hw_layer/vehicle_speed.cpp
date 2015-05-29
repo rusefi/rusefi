@@ -18,8 +18,8 @@ EXTERN_ENGINE
 
 static Logging *logger;
 
-static uint64_t lastSignalTimeNt = 0;
-static uint64_t vssDiff = 0;
+static efitick_t lastSignalTimeNt = 0;
+static efitick_t vssDiff = 0;
 static int vssCounter = 0;
 
 /**
@@ -35,7 +35,7 @@ float getVehicleSpeed(void) {
 
 static void vsAnaWidthCallback(void) {
 	vssCounter++;
-	uint64_t nowNt = getTimeNowNt();
+	efitick_t nowNt = getTimeNowNt();
 	vssDiff = nowNt - lastSignalTimeNt;
 	lastSignalTimeNt = nowNt;
 }

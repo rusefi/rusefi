@@ -59,7 +59,7 @@ RpmCalculator::RpmCalculator() {
  * @return true if there was a full shaft revolution within the last second
  */
 bool RpmCalculator::isRunning(DECLARE_ENGINE_PARAMETER_F) {
-	uint64_t nowNt = getTimeNowNt();
+	efitick_t nowNt = getTimeNowNt();
 	if (engine->stopEngineRequestTimeNt != 0) {
 		if (nowNt - engine->stopEngineRequestTimeNt < 3 * US2NT(US_PER_SECOND_LL)) {
 			return false;
@@ -138,7 +138,7 @@ bool isCranking(void) {
  */
 void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index DECLARE_ENGINE_PARAMETER_S) {
 	RpmCalculator *rpmState = &engine->rpmCalculator;
-	uint64_t nowNt = getTimeNowNt();
+	efitick_t nowNt = getTimeNowNt();
 	engine->m.beforeRpmCb = GET_TIMESTAMP();
 #if EFI_PROD_CODE
 	efiAssertVoid(getRemainingStack(chThdSelf()) > 256, "lowstck#2z");
