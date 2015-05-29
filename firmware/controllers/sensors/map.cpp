@@ -6,11 +6,16 @@
 #include "error_handling.h"
 #include "map.h"
 
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+#include "digital_input_hw.h"
+#endif
+
 #if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
 
 EXTERN_ENGINE;
 
 static FastInterpolation customMap;
+static efitick_t digitalMapDiff = 0;
 
 /**
  * @brief	MAP value decoded for a 1.83 Honda sensor
@@ -115,12 +120,27 @@ static void applyConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	mapDecoder = getDecoder(engineConfiguration->map.sensor.type);
 }
 
+static void digitalMapWidthCallback(void) {
+
+}
+
 void initMapDecoder(DECLARE_ENGINE_PARAMETER_F) {
 	applyConfiguration(PASS_ENGINE_PARAMETER_F);
 	//engine->configurationListeners.registerCallback(applyConfiguration);
+
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+	if (engineConfiguration->hasFrequencyReportingMapSensor) {
+		digital_input_s* digitalMapInput = initWaveAnalyzerDriver(boardConfiguration->frequencyReportingMapInputPin);
+		startInputDriver(digitalMapInput, true);
+
+		digitalMapInput->widthListeners.registerCallback((VoidInt) digitalMapWidthCallback, NULL);
+
+	}
+
+#endif
 }
 
-#else
+#else /* EFI_ANALOG_SENSORS */
 
 void initMapDecoder(DECLARE_ENGINE_PARAMETER_F) {
 }

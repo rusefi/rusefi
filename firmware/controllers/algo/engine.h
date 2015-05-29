@@ -218,9 +218,9 @@ public:
 	 */
 	NamedOutputPin *ignitionPin[IGNITION_PIN_COUNT];
 
-	void onTriggerEvent(uint64_t nowNt);
+	void onTriggerEvent(efitick_t nowNt);
 	EngineState engineState;
-	uint64_t lastTriggerEventTimeNt;
+	efitick_t lastTriggerEventTimeNt;
 
 	/**
 	 * this value depends on a slow-changing VBatt value, so

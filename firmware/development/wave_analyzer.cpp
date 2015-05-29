@@ -56,7 +56,7 @@ static void ensureInitialized(WaveReader *reader) {
 #if EFI_WAVE_ANALYZER || defined(__DOXYGEN__)
 
 static void waAnaWidthCallback(WaveReader *reader) {
-	uint64_t nowUs = getTimeNowUs();
+	efitick_t nowUs = getTimeNowUs();
 	reader->eventCounter++;
 	reader->lastActivityTimeUs = nowUs;
 	addWaveChartEvent(reader->name, WC_UP);
@@ -69,12 +69,12 @@ static void waAnaWidthCallback(WaveReader *reader) {
 }
 
 void WaveReader::onFallEvent() {
-	uint64_t nowUs = getTimeNowUs();
+	efitick_t nowUs = getTimeNowUs();
 	eventCounter++;
 	lastActivityTimeUs = nowUs;
 	addWaveChartEvent(name, WC_DOWN);
 
-	uint64_t width = nowUs - widthEventTimeUs;
+	efitick_t width = nowUs - widthEventTimeUs;
 	last_wave_high_widthUs = width;
 
 	int revolutionCounter = getRevolutionCounter();
@@ -145,7 +145,7 @@ static void waTriggerEventListener(trigger_event_e ckpSignalType, uint32_t index
 	if (index != 0) {
 		return;
 	}
-	uint64_t nowUs = getTimeNowUs();
+	efitick_t nowUs = getTimeNowUs();
 	engineCycleDurationUs = nowUs - previousEngineCycleTimeUs;
 	previousEngineCycleTimeUs = nowUs;
 }

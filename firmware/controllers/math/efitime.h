@@ -45,7 +45,7 @@ efitimeus_t getTimeNowUs(void);
  */
 efitick_t getTimeNowNt(void);
 
-uint64_t getHalTimer(void);
+efitick_t getHalTimer(void);
 
 /**
  * @brief   Returns the number of milliseconds since the board initialization.

@@ -2797,10 +2797,10 @@
       <name>$PROJ_DIR$\..\hw_layer\vehicle_speed.h</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\hw_layer\wave_analyzer_hw.cpp</name>
+      <name>$PROJ_DIR$\..\hw_layer\digital_input_hw.cpp</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\hw_layer\wave_analyzer_hw.h</name>
+      <name>$PROJ_DIR$\..\hw_layer\digital_input_hw.h</name>
     </file>
   </group>
   <group>

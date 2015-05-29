@@ -44,7 +44,7 @@ void Engine::updateSlowSensors() {
 	injectorLagMs = getInjectorLag(getVBatt(PASS_ENGINE_PARAMETER_F) PASS_ENGINE_PARAMETER);
 }
 
-void Engine::onTriggerEvent(uint64_t nowNt) {
+void Engine::onTriggerEvent(efitick_t nowNt) {
 	isSpinning = true;
 	lastTriggerEventTimeNt = nowNt;
 }
