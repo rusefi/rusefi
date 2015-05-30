@@ -491,6 +491,7 @@ static void configureInputs(void) {
 	addChannel("MAF", engineConfiguration->mafAdcChannel, ADC_FAST);
 	addChannel("hip", engineConfiguration->hipOutputChannel, ADC_FAST);
 
+	addChannel("pPS", engineConfiguration->pedalPositionChannel, ADC_SLOW);
 	addChannel("VBatt", engineConfiguration->vbattAdcChannel, ADC_SLOW);
 	addChannel("Vref", engineConfiguration->vRefAdcChannel, ADC_SLOW);
 	addChannel("CLT", engineConfiguration->clt.adcChannel, ADC_SLOW);

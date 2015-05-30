@@ -275,7 +275,8 @@ custom spi_device_e 4 bits,U32,   @OFFSET@, [0:1], "Off", "SPI1", "SPI2", "SPI3"
 float globalFuelCorrection;;"coef",    1,      0.0,       0,  1000.0,        2
 
 
-	int unused11;
+int16_t pedalPositionMin;
+int16_t pedalPositionMax;
 	int unused12;
 	adc_channel_e mafAdcChannel;	
 	
@@ -290,7 +291,7 @@ end_struct
 	
 afr_sensor_s afr;@see hasAfrSensor
 
-int unused123;
+adc_channel_e pedalPositionChannel;
 	
 air_pressure_sensor_config_s baroSensor;@see hasBaroSensor	
 
