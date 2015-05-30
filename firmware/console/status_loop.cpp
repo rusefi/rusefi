@@ -572,6 +572,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->deltaTps = engine->tpsAccelEnrichment.getDelta();
 	tsOutputChannels->triggerErrorsCounter = triggerCentral.triggerState.totalTriggerErrorCounter;
 	tsOutputChannels->baroCorrection = engine->engineState.baroCorrection;
+	tsOutputChannels->pedalPosition = getPedalPosition(PASS_ENGINE_PARAMETER_F);
 
 	tsOutputChannels->checkEngine = hasErrorCodes();
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
