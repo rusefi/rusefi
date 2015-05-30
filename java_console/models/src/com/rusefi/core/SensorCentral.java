@@ -178,6 +178,7 @@ public class SensorCentral {
         addDoubleSensor("baro", Sensor.BARO, es);
         addDoubleSensor("clt", Sensor.CLT, es);
         addDoubleSensor("tp", Sensor.TPS, es);
+        addDoubleSensor("pps", Sensor.TPS, es);
 
         addDoubleSensor(Sensor.VSS, es);
         addDoubleSensor(Sensor.ENGINE_LOAD, es);

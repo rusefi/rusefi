@@ -310,7 +310,7 @@ struct_no_prefix board_configuration_s
 	idle_hardware_s idle;
 
 
-	float idlePosition;value between 0 and 100;"%", 1, 0, 0, 100, 0
+	float idlePosition;value between 0 and 100 used in Manual mode;"%", 1, 0, 0, 100, 0
 
 	brain_pin_e fuelPumpPin;
 	pin_output_mode_e fuelPumpPinMode;
@@ -486,6 +486,7 @@ bit cutSparkOnHardLimit
 bit hasFrequencyReportingMapSensor;
 	adc_channel_e hipOutputChannel;
 
+custom idle_mode_e 4 bits,    U32,   @OFFSET@, [0:0], "false", "true"
 	idle_mode_e idleMode;
 
 	bit isInjectionEnabled
@@ -509,7 +510,7 @@ bit hasFrequencyReportingMapSensor;
 	uint32_t engineChartSize;;"count",      1,      0,       0, 300,      0
 
 
-	int targetIdleRpm;
+	int targetIdleRpm;;"RPM",      1,      0,       0, 7000,      0
 
 	adc_channel_e acSwitchAdc;A/C button input handled as analog input
 

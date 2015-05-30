@@ -23,7 +23,6 @@ import java.util.Hashtable;
  */
 
 public class SensorGauge {
-
     public static Component createGauge(final Sensor sensor) {
         return createGauge(sensor, GaugeChangeListener.VOID);
     }
