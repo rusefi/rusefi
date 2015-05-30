@@ -69,7 +69,6 @@ void setMazdaMiataNbEngineConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->fanPin = GPIOE_6;
 	boardConfiguration->fanPinMode = OM_DEFAULT;
 
-	boardConfiguration->electronicThrottlePin1 = GPIO_UNASSIGNED;
 	boardConfiguration->clutchDownPin = GPIO_UNASSIGNED;
 
 	// set_whole_fuel_map 3
