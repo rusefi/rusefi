@@ -13,6 +13,12 @@
 #include "global.h"
 #include "engine_configuration.h"
 
+percent_t getPedalPosition(DECLARE_ENGINE_PARAMETER_F);
+/**
+ * Throttle Position Sensor
+ * In case of dual TPS this function would return logical TPS position
+ * @return Current TPS position, percent of WOT. 0 means idle and 100 means Wide Open Throttle
+ */
 percent_t getTPS(DECLARE_ENGINE_PARAMETER_F);
 int convertVoltageTo10bitADC(float voltage);
 int getTPS10bitAdc(DECLARE_ENGINE_PARAMETER_F);

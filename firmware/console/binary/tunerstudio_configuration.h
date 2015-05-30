@@ -90,7 +90,8 @@ typedef struct {
 	float currentMapAccelDelta;
 	float tpsAccelFuel;
 	float baroCorrection;
-	int unused3[15];
+	float pedalPosition;
+	int unused3[14];
 } TunerStudioOutputChannels;
 
 #endif /* TUNERSTUDIO_CONFIGURATION_H_ */
