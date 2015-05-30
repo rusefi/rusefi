@@ -30,10 +30,13 @@
 #include "engine_configuration.h"
 #include "pwm_generator.h"
 #include "pwm_generator_logic.h"
+#include "pid.h"
 
 #if EFI_ELECTRONIC_THROTTLE_BODY || defined(__DOXYGEN__)
 
-static Logging logger;
+#define ETB_FREQ 400
+
+static LoggingWithStorage logger("ETB");
 /**
  * @brief Control Thread stack
  */
@@ -41,12 +44,16 @@ static THD_WORKING_AREA(etbTreadStack, UTILITY_THREAD_STACK_SIZE);
 /**
  * @brief Pulse-Width Modulation state
  */
-static SimplePwm etbPwm;
+static SimplePwm etbPwmUp;
+static OutputPin output1;
+static SimplePwm etbPwmDown;
+static OutputPin output2;
+
+static Pid pid(10, 0, 0, 1, 90);
 
 static float prevTps;
 
-extern engine_configuration_s *engineConfiguration;
-extern board_configuration_s *boardConfiguration;
+EXTERN_ENGINE;
 
 static msg_t etbThread(void *arg) {
 	while (TRUE) {
@@ -68,26 +75,29 @@ static msg_t etbThread(void *arg) {
 static void setThrottleConsole(int level) {
 	scheduleMsg(&logger, "setting throttle=%d", level);
 
-	etbPwm.multiWave.switchTimes[0] = 0.01 + (minI(level, 98)) / 100.0;
-	print("st = %f\r\n", etbPwm.multiWave.switchTimes[0]);
+	float dc = 0.01 + (minI(level, 98)) / 100.0;
+	etbPwmUp.setSimplePwmDutyCycle(dc);
+	print("st = %f\r\n", dc);
 }
 
 void initElectronicThrottle(void) {
-	initLogging(&logger, "Electronic Throttle");
-
-	engineConfiguration->tpsMin = 140;
-	engineConfiguration->tpsMax = 898;
-
 	// these two lines are controlling direction
 //	outputPinRegister("etb1", ELECTRONIC_THROTTLE_CONTROL_1, ETB_CONTROL_LINE_1_PORT, ETB_CONTROL_LINE_1_PIN);
 //	outputPinRegister("etb2", ELECTRONIC_THROTTLE_CONTROL_2, ETB_CONTROL_LINE_2_PORT, ETB_CONTROL_LINE_2_PIN);
 
 	// this line used for PWM
-	startSimplePwmExt(&etbPwm, "etb",
-			boardConfiguration->electronicThrottlePin1,
-			ELECTRONIC_THROTTLE_CONTROL_1,
-			500,
-			0.80);
+	startSimplePwmExt(&etbPwmUp, "etb1",
+			boardConfiguration->etbControlPin1,
+			&output1,
+			ETB_FREQ,
+			0.80,
+			applyPinState);
+	startSimplePwmExt(&etbPwmUp, "etb2",
+			boardConfiguration->etbControlPin2,
+			&output2,
+			ETB_FREQ,
+			0.80,
+			applyPinState);
 
 	addConsoleActionI("e", setThrottleConsole);
 	chThdCreateStatic(etbTreadStack, sizeof(etbTreadStack), NORMALPRIO, (tfunc_t) etbThread, NULL);

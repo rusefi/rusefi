@@ -181,7 +181,10 @@ void prepareVoidConfiguration(engine_configuration_s *activeConfiguration) {
 	boardConfiguration->idle.solenoidPinMode = OM_DEFAULT;
 	boardConfiguration->fuelPumpPin = GPIO_UNASSIGNED;
 	boardConfiguration->fuelPumpPinMode = OM_DEFAULT;
-	boardConfiguration->electronicThrottlePin1 = GPIO_UNASSIGNED;
+	boardConfiguration->etbControlPin1 = GPIO_UNASSIGNED;
+	boardConfiguration->etbControlPin2 = GPIO_UNASSIGNED;
+	boardConfiguration->etbDirectionPin1 = GPIO_UNASSIGNED;
+	boardConfiguration->etbDirectionPin2 = GPIO_UNASSIGNED;
 	boardConfiguration->o2heaterPin = GPIO_UNASSIGNED;
 
 	boardConfiguration->malfunctionIndicatorPin = GPIO_UNASSIGNED;

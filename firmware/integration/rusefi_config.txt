@@ -326,9 +326,8 @@ struct_no_prefix board_configuration_s
 	brain_pin_e fanPin;
 	pin_output_mode_e fanPinMode;
 
-	brain_pin_e electronicThrottlePin1;
-	pin_output_mode_e electronicThrottlePin1Mode;
-
+int unuseddddd1;
+int unuseddddd2;
 brain_pin_e clutchDownPin;some cars have a switch to indicate that clutch pedal is all the way down
 	pin_input_mode_e clutchDownPinMode;
 
@@ -351,7 +350,17 @@ spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stoc
 	brain_pin_e[DIGIPOT_COUNT iterate] digitalPotentiometerChipSelect;
 
 custom adc_channel_mode_e 4 bits,    U32,   @OFFSET@, [0:1], "Off", "Slow", "Fast", "INVALID" 
-	float[16] unusedADC;
+
+	brain_pin_e etbDirectionPin1;
+	brain_pin_e etbDirectionPin2;
+	brain_pin_e etbControlPin1;
+	brain_pin_e etbControlPin2;
+	pin_output_mode_e electronicThrottlePin1Mode;
+
+float etbPFactor;
+float etbIFactor;
+
+	float[9] unusedADC;
 
 
 	brain_input_pin_e[3 iterate] triggerInputPins;
