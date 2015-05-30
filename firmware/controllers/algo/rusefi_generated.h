@@ -180,7 +180,8 @@
 #define hip9011SpiDevice_offset_hex 234
 #define globalFuelCorrection_offset 568
 #define globalFuelCorrection_offset_hex 238
-#define unused11_offset 572
+#define pedalPositionMin_offset 572
+#define pedalPositionMax_offset 574
 #define unused12_offset 576
 #define unused12_offset_hex 240
 #define mafAdcChannel_offset 580
@@ -196,7 +197,7 @@
 #define afr_v2_offset_hex 254
 #define afr_value2_offset 600
 #define afr_value2_offset_hex 258
-#define unused123_offset 604
+#define pedalPositionChannel_offset 604
 #define baroSensor_offset 608
 #define baroSensor_offset_hex 260
 #define baroSensor_valueAt0_offset 608
