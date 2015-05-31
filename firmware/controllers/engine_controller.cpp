@@ -321,7 +321,7 @@ static void printAnalogChannelInfo(const char *name, adc_channel_e hwChannel) {
 }
 
 static void printAnalogInfo(void) {
-	printAnalogChannelInfo("hip9011", EFI_ADC_10);
+	printAnalogChannelInfo("hip9011", engineConfiguration->hipOutputChannel);
 	printAnalogChannelInfo("TPS", engineConfiguration->tpsAdcChannel);
 	printAnalogChannelInfo("pPS", engineConfiguration->pedalPositionChannel);
 	printAnalogChannelInfo("CLT", engineConfiguration->clt.adcChannel);
