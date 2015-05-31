@@ -129,6 +129,18 @@ bool_t Engine::stopPins() {
 	return result;
 }
 
+void Engine::printKnockState(void) {
+	scheduleMsg(&logger, "knock now=%s/ever=%s", boolToString(knockNow), boolToString(knockEver));
+}
+
+void Engine::setKnockNow(bool_t isKnockNow) {
+	this->knockNow = isKnockNow;
+	knockEver |= isKnockNow;
+	if (isKnockNow) {
+		timeOfLastKnockEvent = getTimeNowUs();
+	}
+}
+
 void Engine::watchdog() {
 #if EFI_ENGINE_CONTROL
 	if (isRunningPwmTest)

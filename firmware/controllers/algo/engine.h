@@ -204,6 +204,8 @@ public:
 	 */
 	bool_t knockEver;
 
+	efitimeus_t timeOfLastKnockEvent;
+
 	/**
 	 * are we running any kind of functional test? this affect
 	 * some areas
@@ -276,6 +278,9 @@ public:
 	IntListenerArray configurationListeners;
 
 	monitoring_timestamps_s m;
+
+	void setKnockNow(bool_t isKnockNow);
+	void printKnockState(void);
 
 private:
 	/**
