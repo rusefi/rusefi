@@ -21,6 +21,7 @@
  *
  * @date Nov 27, 2013
  * @author Andrey Belomutskiy, (c) 2012-2015
+ * @Spilly
  */
 
 #include "main.h"
@@ -55,6 +56,7 @@ static int currentGainIndex = -1;
 static int currentIntergratorIndex = -1;
 static int settingUpdateCount = 0;
 static int totalKnockEventsCount = 0;
+static int currentPrescaler;
 
 static efitimeus_t timeOfLastKnockEvent = 0;
 
@@ -195,7 +197,6 @@ static void intHoldCallback(trigger_event_e ckpEventType, uint32_t index DECLARE
 
 static void setPrescalerAndSDO(int value) {
 	engineConfiguration->hip9011PrescalerAndSDO = value;
-	scheduleMsg(logger, "Reboot to apply %d", value);
 }
 
 static void setBand(float value) {
@@ -230,24 +231,32 @@ void hipAdcCallback(adcsample_t value) {
 		int integratorIndex = getIntegrationIndexByRpm(engine->rpmCalculator.rpmValue);
 		int gainIndex = getHip9011GainIndex(boardConfiguration->hip9011Gain);
 		int bandIndex = getBandIndex();
+		int prescalerIndex = engineConfiguration->hip9011PrescalerAndSDO;
 
 		if (currentGainIndex != gainIndex) {
 			currentGainIndex = gainIndex;
-			tx_buff[0] = gainIndex;
+			tx_buff[0] = SET_GAIN_CMD + gainIndex;
 
 			state = IS_SENDING_SPI_COMMAND;
 			spiSelectI(driver);
 			spiStartExchangeI(driver, 1, tx_buff, rx_buff);
 		} else if (currentIntergratorIndex != integratorIndex) {
 			currentIntergratorIndex = integratorIndex;
-			tx_buff[0] = integratorIndex;
+			tx_buff[0] = SET_INTEGRATOR_CMD + integratorIndex;
 
 			state = IS_SENDING_SPI_COMMAND;
 			spiSelectI(driver);
 			spiStartExchangeI(driver, 1, tx_buff, rx_buff);
 		} else if (currentBandIndex != bandIndex) {
 			currentBandIndex = bandIndex;
-			tx_buff[0] = bandIndex;
+			tx_buff[0] = SET_BAND_PASS_CMD + bandIndex;
+
+			state = IS_SENDING_SPI_COMMAND;
+			spiSelectI(driver);
+			spiStartExchangeI(driver, 1, tx_buff, rx_buff);
+		} else if (currentPrescaler != prescalerIndex) {
+			currentPrescaler = prescalerIndex;
+			tx_buff[0] = SET_PRESCALER_CMD + prescalerIndex;
 
 			state = IS_SENDING_SPI_COMMAND;
 			spiSelectI(driver);
@@ -257,7 +266,6 @@ void hipAdcCallback(adcsample_t value) {
 		}
 	}
 }
-
 static bool_t needToInit = true;
 
 static void hipStartupCode(void) {
@@ -272,8 +280,9 @@ static void hipStartupCode(void) {
 //	D[4:1] = 1000 : 24 MHz
 
 
-	// '0' for 4MHz
-	SPI_SYNCHRONOUS(SET_PRESCALER_CMD + engineConfiguration->hip9011PrescalerAndSDO);
+// '0' for 4MHz
+	currentPrescaler = engineConfiguration->hip9011PrescalerAndSDO;
+	SPI_SYNCHRONOUS(SET_PRESCALER_CMD + currentPrescaler);
 
 	chThdSleepMilliseconds(10);
 
