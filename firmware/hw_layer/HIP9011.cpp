@@ -57,6 +57,7 @@ static int currentIntergratorIndex = -1;
 static int settingUpdateCount = 0;
 static int totalKnockEventsCount = 0;
 static int currentPrescaler;
+static float hipValueMax = 0;
 
 /**
  * Int/Hold pin is controlled from scheduler callbacks which are set according to current RPM
@@ -131,8 +132,11 @@ static void showHipInfo(void) {
 			nonZeroResponse);
 	scheduleMsg(logger, "CS@%s updateCount=%d", hwPortname(boardConfiguration->hip9011CsPin), settingUpdateCount);
 
-	scheduleMsg(logger, "hip output=%fv@%s", getVoltageDivided("hip", engineConfiguration->hipOutputChannel),
-			getPinNameByAdcChannel(engineConfiguration->hipOutputChannel, pinNameBuffer));
+	scheduleMsg(logger, "hip output=%fv@%s/max=%f", getVoltageDivided("hip", engineConfiguration->hipOutputChannel),
+			getPinNameByAdcChannel(engineConfiguration->hipOutputChannel, pinNameBuffer),
+			hipValueMax);
+	hipValueMax = 0;
+	engine->printKnockState();
 }
 
 void setHip9011FrankensoPinout(void) {
@@ -144,10 +148,10 @@ void setHip9011FrankensoPinout(void) {
 	boardConfiguration->hip9011IntHoldPin = GPIOB_11;
 	boardConfiguration->is_enabled_spi_2 = true;
 
-	boardConfiguration->hip9011Gain = 0.1;
-	engineConfiguration->hipThreshold = 2;
+	boardConfiguration->hip9011Gain = 1;
+	engineConfiguration->hipThreshold = 4;
 
-	engineConfiguration->hipOutputChannel = EFI_ADC_10;
+	engineConfiguration->hipOutputChannel = EFI_ADC_10; // PC0
 }
 
 static void startIntegration(void) {
@@ -224,7 +228,9 @@ void hipAdcCallback(adcsample_t value) {
 	if (state == WAITING_FOR_ADC_TO_SKIP) {
 		state = WAITING_FOR_RESULT_ADC;
 	} else if (state == WAITING_FOR_RESULT_ADC) {
-		bool isKnockNow = adcToVoltsDivided(value) > engineConfiguration->hipThreshold;
+		float hipValue = adcToVoltsDivided(value);
+		hipValueMax = maxF(hipValue, hipValueMax);
+		bool isKnockNow = hipValue > engineConfiguration->hipThreshold;
 		engine->setKnockNow(isKnockNow);
 		if (isKnockNow) {
 			totalKnockEventsCount++;
