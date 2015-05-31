@@ -322,10 +322,10 @@ static msg_t hipThread(void *arg) {
 }
 
 void initHip9011(Logging *sharedLogger) {
+	logger = sharedLogger;
 	addConsoleAction("hipinfo", showHipInfo);
 	if (!boardConfiguration->isHip9011Enabled)
 		return;
-	logger = sharedLogger;
 
 	// todo: apply new properties on the fly
 	prepareHip9011RpmLookup(
