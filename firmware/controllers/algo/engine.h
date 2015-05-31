@@ -195,7 +195,13 @@ public:
 
 	bool_t isRunningPwmTest;
 
+	/**
+	 * Are we experiencing knock right now?
+	 */
 	bool_t knockNow;
+	/**
+	 * Have we experienced knock since engine was started?
+	 */
 	bool_t knockEver;
 
 	/**
