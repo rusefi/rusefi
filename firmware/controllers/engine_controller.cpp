@@ -483,7 +483,7 @@ static void getKnockInfo(void) {
 	adc_channel_e hwChannel = engineConfiguration->externalKnockSenseAdc;
 	scheduleMsg(&logger, "externalKnockSenseAdc on ADC", getPinNameByAdcChannel(hwChannel, pinNameBuffer));
 
-	scheduleMsg(&logger, "knock now=%s/ever=%s", boolToString(engine->knockNow), boolToString(engine->knockEver));
+	engine->printKnockState();
 }
 
 void initEngineContoller(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
