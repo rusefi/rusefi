@@ -126,7 +126,7 @@ static void showHipInfo(void) {
 
 	scheduleMsg(logger, "band_index=%d gain %f/index=%d", currentBandIndex, boardConfiguration->hip9011Gain, currentGainIndex);
 	scheduleMsg(logger, "integrator index=%d hip_threshold=%f totalKnockEventsCount=%d", currentIntergratorIndex,
-			engineConfiguration->hipThreshold, totalKnockEventsCount);
+			engineConfiguration->knockVThreshold, totalKnockEventsCount);
 
 	scheduleMsg(logger, "spi= IntHold@%s response count=%d", hwPortname(boardConfiguration->hip9011IntHoldPin),
 			nonZeroResponse);
@@ -149,7 +149,7 @@ void setHip9011FrankensoPinout(void) {
 	boardConfiguration->is_enabled_spi_2 = true;
 
 	boardConfiguration->hip9011Gain = 1;
-	engineConfiguration->hipThreshold = 4;
+	engineConfiguration->knockVThreshold = 4;
 
 	engineConfiguration->hipOutputChannel = EFI_ADC_10; // PC0
 }
@@ -230,11 +230,7 @@ void hipAdcCallback(adcsample_t value) {
 	} else if (state == WAITING_FOR_RESULT_ADC) {
 		float hipValue = adcToVoltsDivided(value);
 		hipValueMax = maxF(hipValue, hipValueMax);
-		bool isKnockNow = hipValue > engineConfiguration->hipThreshold;
-		engine->setKnockNow(isKnockNow);
-		if (isKnockNow) {
-			totalKnockEventsCount++;
-		}
+		engine->knockLogic(hipValue);
 
 		int integratorIndex = getIntegrationIndexByRpm(engine->rpmCalculator.rpmValue);
 		int gainIndex = getHip9011GainIndex(boardConfiguration->hip9011Gain);

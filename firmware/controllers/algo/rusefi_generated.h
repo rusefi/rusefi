@@ -182,8 +182,8 @@
 #define globalFuelCorrection_offset_hex 238
 #define pedalPositionMin_offset 572
 #define pedalPositionMax_offset 574
-#define unused12_offset 576
-#define unused12_offset_hex 240
+#define maxKnockSubDeg_offset 576
+#define maxKnockSubDeg_offset_hex 240
 #define mafAdcChannel_offset 580
 #define mafAdcChannel_offset_hex 244
 #define afr_offset 584
@@ -343,6 +343,7 @@
 #define useSerialPort_offset 1008
 #define useStepperIdle_offset 1008
 #define enabledStep1Limiter_offset 1008
+#define useTpicAdvancedMode_offset 1008
 #define logicAnalyzerPins1_offset 1012
 #define logicAnalyzerPins2_offset 1016
 #define logicAnalyzerPins3_offset 1020
@@ -583,8 +584,8 @@
 #define knockDetectionWindowEnd_offset 1544
 #define knockDetectionWindowEnd_offset_hex 608
 #define idleStepperReactionTime_offset 1548
-#define hipThreshold_offset 1552
-#define hipThreshold_offset_hex 610
+#define knockVThreshold_offset 1552
+#define knockVThreshold_offset_hex 610
 #define fsioInputModes1_offset 1556
 #define fsioInputModes1_offset_hex 614
 #define fsioInputModes2_offset 1560
