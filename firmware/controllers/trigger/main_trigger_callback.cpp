@@ -354,7 +354,7 @@ void mainTriggerCallback(trigger_event_e ckpSignalType, uint32_t eventIndex DECL
 	if (eventIndex == engineConfiguration->ignMathCalculateAtIndex) {
 		if (engineConfiguration->externalKnockSenseAdc != EFI_ADC_NONE) {
 			float externalKnockValue = getVoltageDivided("knock", engineConfiguration->externalKnockSenseAdc);
-			engine->setKnockNow(externalKnockValue > 2.5);
+			engine->knockLogic(externalKnockValue);
 		}
 
 		engine->m.beforeIgnitionMath = GET_TIMESTAMP();

@@ -203,6 +203,11 @@ public:
 	 * Have we experienced knock since engine was started?
 	 */
 	bool_t knockEver;
+	/**
+     * KnockCount is directly proportional to the degrees of ignition
+     * advance removed
+     */
+    int knockCount;
 
 	efitimeus_t timeOfLastKnockEvent;
 
@@ -279,7 +284,7 @@ public:
 
 	monitoring_timestamps_s m;
 
-	void setKnockNow(bool_t isKnockNow);
+	void knockLogic(float knockVolts);
 	void printKnockState(void);
 
 private:
