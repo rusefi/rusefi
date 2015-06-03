@@ -58,6 +58,12 @@ static int settingUpdateCount = 0;
 static int totalKnockEventsCount = 0;
 static int currentPrescaler;
 static float hipValueMax = 0;
+static int spiCount = 0;
+
+static unsigned char tx_buff[1];
+static unsigned char rx_buff[1];
+static int nonZeroResponse = 0;
+static char pinNameBuffer[16];
 
 /**
  * Int/Hold pin is controlled from scheduler callbacks which are set according to current RPM
@@ -87,10 +93,6 @@ SPI_CR1_MSTR |
 //SPI_CR1_BR_1 // 5MHz
 		SPI_CR1_CPHA | SPI_CR1_BR_0 | SPI_CR1_BR_1 | SPI_CR1_BR_2 };
 
-static unsigned char tx_buff[1];
-static unsigned char rx_buff[1];
-static int nonZeroResponse = 0;
-
 #define SPI_SYNCHRONOUS(value) \
 	spiSelect(driver); \
 	tx_buff[0] = value; \
@@ -103,8 +105,6 @@ static SPIDriver *driver = &SPID2;
 
 EXTERN_ENGINE
 ;
-
-static char pinNameBuffer[16];
 
 static float getBand(void) {
 	return engineConfiguration->knockBandCustom == 0 ?
@@ -125,16 +125,16 @@ static void showHipInfo(void) {
 			engineConfiguration->hip9011PrescalerAndSDO);
 
 	scheduleMsg(logger, "band_index=%d gain %f/index=%d", currentBandIndex, boardConfiguration->hip9011Gain, currentGainIndex);
-	scheduleMsg(logger, "integrator index=%d hip_threshold=%f totalKnockEventsCount=%d", currentIntergratorIndex,
-			engineConfiguration->knockVThreshold, totalKnockEventsCount);
+	scheduleMsg(logger, "integrator index=%d knockVThreshold=%f knockCount=%d maxKnockSubDeg=%f",
+	            currentIntergratorIndex, engineConfiguration->knockVThreshold,
+	            engine->knockCount, engineConfiguration->maxKnockSubDeg);
 
 	scheduleMsg(logger, "spi= IntHold@%s response count=%d", hwPortname(boardConfiguration->hip9011IntHoldPin),
 			nonZeroResponse);
 	scheduleMsg(logger, "CS@%s updateCount=%d", hwPortname(boardConfiguration->hip9011CsPin), settingUpdateCount);
 
-	scheduleMsg(logger, "hip output=%fv@%s/max=%f", getVoltageDivided("hip", engineConfiguration->hipOutputChannel),
-			getPinNameByAdcChannel(engineConfiguration->hipOutputChannel, pinNameBuffer),
-			hipValueMax);
+	scheduleMsg(logger, "hip v@%s spiCount=%d adv=%d",
+			getPinNameByAdcChannel(engineConfiguration->hipOutputChannel, pinNameBuffer), spiCount, boardConfiguration->useTpicAdvancedMode);
 	hipValueMax = 0;
 	engine->printKnockState();
 }
@@ -150,8 +150,12 @@ void setHip9011FrankensoPinout(void) {
 
 	boardConfiguration->hip9011Gain = 1;
 	engineConfiguration->knockVThreshold = 4;
+	engineConfiguration->maxKnockSubDeg = 20;
 
-	engineConfiguration->hipOutputChannel = EFI_ADC_10; // PC0
+
+	if (!boardConfiguration->useTpicAdvancedMode) {
+	    engineConfiguration->hipOutputChannel = EFI_ADC_10; // PC0
+	}
 }
 
 static void startIntegration(void) {
@@ -309,6 +313,13 @@ static void hipStartupCode(void) {
 	SPI_SYNCHRONOUS(SET_BAND_PASS_CMD + currentBandIndex);
 
 	chThdSleepMilliseconds(10);
+
+	if (boardConfiguration->useTpicAdvancedMode) {
+		// enable advanced mode for digital integrator output
+		SPI_SYNCHRONOUS(SET_ADVANCED_MODE);
+
+    	chThdSleepMilliseconds(10);
+	}
 
 	/**
 	 * Let's restart SPI to switch it from synchronous mode into
