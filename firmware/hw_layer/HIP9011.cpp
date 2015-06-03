@@ -200,6 +200,16 @@ static void intHoldCallback(trigger_event_e ckpEventType, uint32_t index DECLARE
 	engine->m.hipCbTime = GET_TIMESTAMP() - engine->m.beforeHipCb;
 }
 
+static void setMaxKnockSubDeg(int value){
+    engineConfiguration->maxKnockSubDeg = value;
+    showHipInfo();
+}
+
+static void setKnockThresh(float value){
+    engineConfiguration->knockVThreshold = value;
+    showHipInfo();
+}
+
 static void setPrescalerAndSDO(int value) {
 	engineConfiguration->hip9011PrescalerAndSDO = value;
 }
@@ -362,6 +372,8 @@ void initHip9011(Logging *sharedLogger) {
 	addConsoleActionF("set_gain", setGain);
 	addConsoleActionF("set_band", setBand);
 	addConsoleActionI("set_hip_prescalerandsdo", setPrescalerAndSDO);
+    addConsoleActionF("set_knock_threshold", setKnockThresh);
+    addConsoleActionI("set_max_knock_sub_deg", setMaxKnockSubDeg);
 	chThdCreateStatic(hipTreadStack, sizeof(hipTreadStack), NORMALPRIO, (tfunc_t) hipThread, NULL);
 }
 
