@@ -209,6 +209,8 @@ public:
      */
     int knockCount;
 
+    bool_t knockDebug;
+
 	efitimeus_t timeOfLastKnockEvent;
 
 	/**

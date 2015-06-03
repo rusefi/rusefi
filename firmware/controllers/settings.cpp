@@ -839,6 +839,10 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		boardConfiguration->isHip9011Enabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "altdebug")) {
 		boardConfiguration->isVerboseAlternator = isEnabled;
+	} else if (strEqualCaseInsensitive(param, "tpic_advanced_mode")) {
+		boardConfiguration->useTpicAdvancedMode = isEnabled;
+	} else if (strEqualCaseInsensitive(param, "knockdebug")) {
+		engine->knockDebug = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "altcontrol")) {
 		engineConfiguration->isAlternatorControlEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "sd")) {
