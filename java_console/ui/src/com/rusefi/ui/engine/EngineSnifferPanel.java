@@ -141,8 +141,8 @@ public class EngineSnifferPanel {
         upperPanel.add(new URLLabel(HELP_TEXT, HELP_URL));
 
         JPanel lowerButtons = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
-        lowerButtons.add(new BitConfigField(Fields.isDigitalChartEnabled, "Collect Engine Data").getContent());
-        lowerButtons.add(new ConfigField(Fields.ENGINE_SNIFFER_SIZE, "Engine Sniffer size").getContent());
+        lowerButtons.add(new BitConfigField(Fields.ISENGINECHARTENABLED, "Collect Engine Data").getContent());
+        lowerButtons.add(new ConfigField(Fields.ENGINECHARTSIZE, "Engine Sniffer size").getContent());
 
         JPanel bottomPanel = new JPanel(new BorderLayout());
         bottomPanel.add(lowerButtons, BorderLayout.NORTH);
