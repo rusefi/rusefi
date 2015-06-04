@@ -94,7 +94,7 @@ float getInjectionAngle(int rpm DECLARE_ENGINE_PARAMETER_S) {
 /**
  * Number of injections into each cylinder per engine cycle
  */
-static int getNumberOfInjections(engine_configuration_s const *engineConfiguration, injection_mode_e mode) {
+static int getNumberOfInjections(injection_mode_e mode DECLARE_ENGINE_PARAMETER_S) {
 	switch (mode) {
 	case IM_SIMULTANEOUS:
 		return engineConfiguration->specs.cylindersCount;
@@ -108,6 +108,11 @@ static int getNumberOfInjections(engine_configuration_s const *engineConfigurati
 	}
 }
 
+percent_t getInjectorDutyCycle(int rpm DECLARE_ENGINE_PARAMETER_S) {
+//	float totalPerCycle = getFuelMs(rpm) * getNumberOfInjections()
+	return 0;
+}
+
 /**
  * @returns	Length of fuel injection, in milliseconds
  */
@@ -115,12 +120,12 @@ floatms_t getFuelMs(int rpm DECLARE_ENGINE_PARAMETER_S) {
 	float theoreticalInjectionLength;
 	if (isCrankingR(rpm)) {
 		theoreticalInjectionLength = getCrankingFuel(PASS_ENGINE_PARAMETER_F)
-				/ getNumberOfInjections(engineConfiguration, engineConfiguration->crankingInjectionMode);
+				/ getNumberOfInjections(engineConfiguration->crankingInjectionMode PASS_ENGINE_PARAMETER);
 	} else {
 		float baseFuel = getBaseFuel(rpm PASS_ENGINE_PARAMETER);
 		float fuelPerCycle = getRunningFuel(baseFuel, rpm PASS_ENGINE_PARAMETER);
 		theoreticalInjectionLength = fuelPerCycle
-				/ getNumberOfInjections(engineConfiguration, engineConfiguration->injectionMode);
+				/ getNumberOfInjections(engineConfiguration->injectionMode PASS_ENGINE_PARAMETER);
 	}
 	return theoreticalInjectionLength + ENGINE(injectorLagMs);
 }
