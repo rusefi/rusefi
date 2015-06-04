@@ -90,14 +90,14 @@
 89) RESOLVED IN R0.4.1 C103 should be 0805 current part calls for 1206 CORRECTED TO 0805
 90) RESOLVED IN R0.4.1 Can we use 1oz internal layers ADDED MIN NOTE TO THE PCB FILE WHICH ALLOWS THICKER CU. 
 91) RESOLVED IN R0.4.1 L1001 and L1002 "ref" part is confusing ADDED SOME NOTES TO CLARIFY TO USE THE SKYMACAU PART
+92)                    added pololu stepper driver Perhaps should be an add-on board. 
+93) RESOLVED IN R0.4.2 C701, LD601, LD602, LD605, LD606 silk screen mangled. 
 
 
   )                  route unused stm32 pins (D3 PC13 etc) to unused connector pins
   )                  cheaper battery holder - through-hole (need to find out footprint)
-  )                  remove some/all EGT?
   )                  idle valve SMD diode?
   )                  silkscreen for analog inputs - PA1/PC1/etc?
-
 For honda add-on / rewiring board
 -- Add 2A high side solinoid drive for VTec sol
 -- Add 3rd VR chip for 3rd signal
