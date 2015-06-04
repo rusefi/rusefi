@@ -67,7 +67,7 @@ static void testDodgeNeonDecoder(void) {
 
 	assertFalseM("1 shaft_is_synchronized", state.shaft_is_synchronized);
 
-	int r = 0;
+//	int r = 0;
 //	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_UP, r + 60);
 //	assertFalseM("2 shaft_is_synchronized", state.shaft_is_synchronized); // still no synchronization
 
@@ -543,7 +543,7 @@ void testTriggerDecoder(void) {
 	testTriggerDecoder3("neon NGC", DODGE_NEON_2003, 0, 0.4786, 0.0, CHRYSLER_NGC_GAP);
 	testTriggerDecoder2("sachs", SACHS, 0, 0.4800, 0.000);
 
-	testTriggerDecoder2("vw ABA", VW_ABA, 0, 0.7500, 0.25);
+	testTriggerDecoder2("vw ABA", VW_ABA, 0, 0.4833, 0.0);
 
 	testMazda323();
 

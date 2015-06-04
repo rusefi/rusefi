@@ -16,11 +16,15 @@ EXTERN_ENGINE;
 void setVwAba(DECLARE_ENGINE_PARAMETER_F) {
 	setCustomEngineConfiguration(PASS_ENGINE_PARAMETER_F);
 
-//	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
+	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
+	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
 
 	//Base engine setting
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.displacement = 2.5;
+	engineConfiguration->injector.flow = 320; // 30lb/h
+	// engineConfiguration->algorithm = LM_SPEED_DENSITY;
+	engineConfiguration->map.sensor.type = MT_GM_3_BAR;
 
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
 

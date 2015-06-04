@@ -606,6 +606,8 @@ case MT_MPX4250:
   return "MT_MPX4250";
 case MT_SUBY_DENSO:
   return "MT_SUBY_DENSO";
+case MT_GM_3_BAR:
+  return "MT_GM_3_BAR";
   }
  return NULL;
 }
