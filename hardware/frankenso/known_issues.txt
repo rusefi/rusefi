@@ -92,6 +92,7 @@
 91) RESOLVED IN R0.4.1 L1001 and L1002 "ref" part is confusing ADDED SOME NOTES TO CLARIFY TO USE THE SKYMACAU PART
 92)                    added pololu stepper driver Perhaps should be an add-on board. 
 93) RESOLVED IN R0.4.2 C701, LD601, LD602, LD605, LD606 silk screen mangled. 
+94) RESOLVED IN R0.4.2 D1001 doesn't have a polarity indicator in the silk screen
 
 
   )                  route unused stm32 pins (D3 PC13 etc) to unused connector pins
