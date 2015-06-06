@@ -742,7 +742,7 @@ INPUT                  = . \
 	console_util \
 	util \
 	console \
-	console/tunerstudio \
+	console/binary \
 	controllers \
 	controllers/algo \
 	controllers/core \
