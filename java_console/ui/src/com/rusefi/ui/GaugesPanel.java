@@ -58,30 +58,52 @@ public class GaugesPanel {
 
     private boolean showRpmPanel = true;
     private boolean showMessagesPanel = true;
-    private JPanel lowerRpmPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
-    private JPanel smallMessagePanel = new JPanel(new BorderLayout());
+    private final JPanel lowerRpmPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+    private final JPanel messagesPanel = new JPanel(new BorderLayout());
 
     public GaugesPanel(final Node config) {
         this.config = config;
         showRpmPanel = config.getBoolProperty(SHOW_RPM, true);
         showMessagesPanel = config.getBoolProperty(SHOW_MESSAGES, true);
 
-        MessagesPanel mp = new MessagesPanel(config, false);
-        smallMessagePanel.add(BorderLayout.NORTH, mp.getButtonPanel());
-        smallMessagePanel.add(BorderLayout.CENTER, mp.getMessagesScroll());
+        prepareMessagesPanel(config);
 
-        JButton saveImageButton = UiUtils.createSaveImageButton();
-        saveImageButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String fileName = FileLog.getDate() + "_gauges.png";
+        lowerRpmPanel.add(new RpmLabel(15).getContent());
 
-                UiUtils.saveImageWithPrompt(fileName, content, gauges);
-            }
-        });
+        int rows = config.getIntProperty(GAUGES_ROWS, SizeSelectorPanel.HEIGHT);
+        int columns = config.getIntProperty(GAUGES_COLUMNS, SizeSelectorPanel.WIDTH);
 
+        applySize(rows, columns);
+
+        content.add(createTopPanel(config), BorderLayout.NORTH);
+
+        content.add(createMiddleLeftPanel(), BorderLayout.CENTER);
+        content.add(messagesPanel, BorderLayout.EAST);
+
+        content.add(new WarningPanel().getPanel(), BorderLayout.SOUTH);
+
+        applyShowFlags();
+    }
+
+    @NotNull
+    private JPanel createMiddleLeftPanel() {
+        JPanel middleLeftPanel = new JPanel(new BorderLayout());
+        middleLeftPanel.add(gauges, BorderLayout.CENTER);
+        middleLeftPanel.add(lowerRpmPanel, BorderLayout.SOUTH);
+        return middleLeftPanel;
+    }
+
+    @NotNull
+    private JPanel createTopPanel(Node config) {
+        JPanel upperPanel = new JPanel(new BorderLayout());
+        upperPanel.add(createLeftTopPanel(), BorderLayout.CENTER);
+        upperPanel.add(createRightTopPanel(config), BorderLayout.EAST);
+        return upperPanel;
+    }
+
+    @NotNull
+    private JPanel createRightTopPanel(Node config) {
         JPanel rightUpperPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
-
 
         final JPopupMenu selectorMenu = new JPopupMenu();
         selectorMenu.add(new SizeSelectorPanel(new SizeSelectorPanel.SizeSelectorListener() {
@@ -91,8 +113,6 @@ public class GaugesPanel {
                 applySize(row, column);
             }
         }));
-
-        lowerRpmPanel.add(new RpmLabel(15).getContent());
 
         JButton selector = new JButton("O");
         selector.addActionListener(new ActionListener() {
@@ -104,6 +124,13 @@ public class GaugesPanel {
         });
         rightUpperPanel.add(selector);
 
+        JButton menuButton = new PopupMenuButton("#", createMenu(config));
+        rightUpperPanel.add(menuButton);
+        return rightUpperPanel;
+    }
+
+    @NotNull
+    private JPopupMenu createMenu(final Node config) {
         JPopupMenu menu = new JPopupMenu();
         final JCheckBoxMenuItem showRpmItem = new JCheckBoxMenuItem("Show RPM");
         final JCheckBoxMenuItem showCommandsItem = new JCheckBoxMenuItem("Show Commands");
@@ -120,40 +147,41 @@ public class GaugesPanel {
         };
         showRpmItem.addActionListener(showCheckboxListener);
         showCommandsItem.addActionListener(showCheckboxListener);
-        
+
         menu.add(showRpmItem);
         showCommandsItem.setSelected(showMessagesPanel);
         menu.add(showCommandsItem);
         menu.add(new JPopupMenu.Separator());
         menu.add(new JPopupMenu("Reset Config"));
+        return menu;
+    }
 
-        JButton menuButton = new PopupMenuButton("#", menu);
-        rightUpperPanel.add(menuButton);
+    private void prepareMessagesPanel(Node config) {
+        MessagesPanel mp = new MessagesPanel(config, false);
+        messagesPanel.add(BorderLayout.NORTH, mp.getButtonPanel());
+        messagesPanel.add(BorderLayout.CENTER, mp.getMessagesScroll());
+    }
 
+    @NotNull
+    private JPanel createLeftTopPanel() {
         JPanel leftUpperPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
-        leftUpperPanel.add(saveImageButton);
+        leftUpperPanel.add(createSaveImageButton());
         leftUpperPanel.add(new RpmLabel(2).getContent());
+        return leftUpperPanel;
+    }
 
-        JPanel upperPanel = new JPanel(new BorderLayout());
-        upperPanel.add(leftUpperPanel, BorderLayout.CENTER);
-        upperPanel.add(rightUpperPanel, BorderLayout.EAST);
+    @NotNull
+    private JButton createSaveImageButton() {
+        JButton saveImageButton = UiUtils.createSaveImageButton();
+        saveImageButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String fileName = FileLog.getDate() + "_gauges.png";
 
-        int rows = config.getIntProperty(GAUGES_ROWS, SizeSelectorPanel.HEIGHT);
-        int columns = config.getIntProperty(GAUGES_COLUMNS, SizeSelectorPanel.WIDTH);
-
-        applySize(rows, columns);
-
-        JPanel middlePanel = new JPanel(new BorderLayout());
-        middlePanel.add(gauges, BorderLayout.CENTER);
-        middlePanel.add(lowerRpmPanel, BorderLayout.SOUTH);
-
-        //add(rpmGauge);
-        content.add(upperPanel, BorderLayout.NORTH);
-        content.add(middlePanel, BorderLayout.CENTER);
-        content.add(smallMessagePanel, BorderLayout.EAST);
-        content.add(new WarningPanel().getPanel(), BorderLayout.SOUTH);
-//        add(new JLabel("fd"), BorderLayout.EAST);
-        applyShowFlags();
+                UiUtils.saveImageWithPrompt(fileName, content, gauges);
+            }
+        });
+        return saveImageButton;
     }
 
     private void applySize(int rows, int columns) {
@@ -192,7 +220,7 @@ public class GaugesPanel {
 
     private void applyShowFlags() {
         lowerRpmPanel.setVisible(showRpmPanel);
-        smallMessagePanel.setVisible(showMessagesPanel);
+        messagesPanel.setVisible(showMessagesPanel);
     }
 
     public JComponent getContent() {

@@ -15,13 +15,22 @@ import static javax.swing.JOptionPane.OK_OPTION;
  * (c) Andrey Belomutskiy
  */
 public class DefaultExceptionHandler implements Thread.UncaughtExceptionHandler {
+    private static boolean hadExceptionAlready;
+
     public void uncaughtException(Thread t, Throwable e) {
         handleException(e);
     }
 
     public static void handleException(Throwable e) {
-        if (e == null)
+        if (e == null) {
+            FileLog.MAIN.logLine("Null exception?");
             throw new NullPointerException("Throwable e");
+        }
+        e.printStackTrace(); // output to error log
+        if (hadExceptionAlready)
+            return;
+        hadExceptionAlready = true;
+
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         PrintStream ps = new PrintStream(baos);
         e.printStackTrace(ps);
@@ -43,7 +52,6 @@ public class DefaultExceptionHandler implements Thread.UncaughtExceptionHandler 
         content.add(scrollPane, BorderLayout.CENTER);
 
         JOptionPane.showConfirmDialog(findActiveFrame(), content, CONSOLE_VERSION + ": Exception Occurred", JOptionPane.DEFAULT_OPTION);
-        e.printStackTrace();
         FileLog.MAIN.logLine("handleException: " + baos.toString());
     }
 
