@@ -1,5 +1,0 @@
-Testsuite: com.autsia.bracer.test.BracerParserTest
-Tests run: 6, Failures: 0, Errors: 0, Skipped: 2, Time elapsed: 0.013 sec
-
-Testcase: testEvaluateNoVar(com.autsia.bracer.test.BracerParserTest):SKIPPED
-Testcase: testBooleanNot1(com.autsia.bracer.test.BracerParserTest):SKIPPED
