@@ -1,3 +1,7 @@
 .svn*
 .dep*
 *.o.d
+build/
+Debug_EMS/
+Release_EMS/
+Debug/
