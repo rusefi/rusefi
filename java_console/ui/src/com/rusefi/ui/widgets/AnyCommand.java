@@ -31,14 +31,16 @@ public class AnyCommand {
     private boolean reentrant;
     private int index;
 
-    public AnyCommand(final Node config, boolean listenToCommands) {
-        this(config, config.getProperty(KEY, ""), listenToCommands);
+    public AnyCommand(final Node config, boolean listenToCommands, boolean withCommandCaption) {
+        this(config, config.getProperty(KEY, ""), listenToCommands, withCommandCaption);
     }
 
-    public AnyCommand(final Node config, String defaultCommand, final boolean listenToCommands) {
+    public AnyCommand(final Node config, String defaultCommand, final boolean listenToCommands, boolean withCommandCaption) {
         text.setText(defaultCommand);
         content.setBorder(BorderFactory.createLineBorder(Color.PINK));
-        content.add(new JLabel("Command: "));
+        if (withCommandCaption) {
+            content.add(new JLabel("Command: "));
+        }
         content.add(text);
         JButton go = new JButton("Go");
         go.setContentAreaFilled(false);

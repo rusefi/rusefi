@@ -53,6 +53,8 @@ StepperMotor::StepperMotor() {
 	targetPosition = 0;
 	directionPort = NULL;
 	directionPin = 0;
+	enablePort = NULL;
+	enablePin = 0;
 	stepPort = NULL;
 	stepPin = 0;
 	reactionTime = 0;

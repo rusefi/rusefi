@@ -28,10 +28,7 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
-import javax.swing.JToolBar;
+import javax.swing.*;
 
 import com.romraider.Settings;
 import com.romraider.editor.ecu.ECUEditor;
@@ -45,8 +42,8 @@ public class ECUEditorToolBar extends JToolBar {
 
     private static final long serialVersionUID = 7778170684606193919L;
     //    private final JButton saveImage = new JButton();
-    private final JButton refreshImage = new JButton();
-//    private final JButton closeImage = new JButton();
+    private final JButton uploadImage = new JButton();
+    private final JButton downloadImage = new JButton();
 
     public ECUEditorToolBar(String name) {
         super(name);
@@ -59,24 +56,27 @@ public class ECUEditorToolBar extends JToolBar {
         this.updateIcons();
 
 //        this.add(saveImage);
-//        this.add(closeImage);
-        this.add(refreshImage);
+        this.add(downloadImage);
+        this.add(uploadImage);
 
-        refreshImage.setToolTipText("Burn changes into controller");
+        uploadImage.setToolTipText("Burn changes into controller");
+        downloadImage.setToolTipText("Read configuration from controller");
 
 
 //        saveImage.setMaximumSize(new Dimension(50, 50));
 //        saveImage.setBorder(createLineBorder(new Color(150, 150, 150), 0));
-//        closeImage.setMaximumSize(new Dimension(50, 50));
-//        closeImage.setBorder(createLineBorder(new Color(150, 150, 150), 0));
-        refreshImage.setMaximumSize(new Dimension(50, 50));
-        refreshImage.setBorder(createLineBorder(new Color(150, 150, 150), 0));
+        downloadImage.setMaximumSize(new Dimension(50, 50));
+        downloadImage.setBorder(
+                BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5),
+                createLineBorder(new Color(150, 150, 150), 0)));
+        uploadImage.setMaximumSize(new Dimension(50, 50));
+        uploadImage.setBorder(createLineBorder(new Color(150, 150, 150), 0));
 
         this.updateButtons();
 
 //        saveImage.addActionListener(this);
 //        closeImage.addActionListener(this);
-        refreshImage.addActionListener(new ActionListener() {
+        uploadImage.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Rom lastSelectedRom = ECUEditorManager.getECUEditor().getLastSelectedRom();
@@ -85,12 +85,19 @@ public class ECUEditorToolBar extends JToolBar {
                 BinaryProtocolCmd.scheduleBurn(new ConfigurationImage(newVersion));
             }
         });
+        downloadImage.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
     }
 
     public void updateIcons() {
         int iconScale = getSettings().getEditorIconScale();
 //        saveImage.setIcon(rescaleImageIcon(new ImageIcon(getClass().getResource("/graphics/icon-save.png")), iconScale));
-        refreshImage.setIcon(rescaleImageIcon(new ImageIcon(getClass().getResource("/graphics/icon-refresh.png")), iconScale));
+        uploadImage.setIcon(rescaleImageIcon(new ImageIcon(getClass().getResource("/com/rusefi/upload48.jpg")), iconScale));
+        downloadImage.setIcon(rescaleImageIcon(new ImageIcon(getClass().getResource("/com/rusefi/download48.jpg")), iconScale));
 //        closeImage.setIcon(rescaleImageIcon(new ImageIcon( getClass().getResource("/graphics/icon-close.png")), iconScale));
         repaint();
     }
@@ -113,11 +120,11 @@ public class ECUEditorToolBar extends JToolBar {
 //
 //        if ("".equals(file)) {
 ////            saveImage.setEnabled(false);
-//            refreshImage.setEnabled(false);
+//            uploadImage.setEnabled(false);
 //            closeImage.setEnabled(false);
 //        } else {
 //            saveImage.setEnabled(true);
-//            refreshImage.setEnabled(true);
+//            uploadImage.setEnabled(true);
 //            closeImage.setEnabled(true);
 //        }
         revalidate();

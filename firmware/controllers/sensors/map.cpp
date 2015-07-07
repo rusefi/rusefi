@@ -8,14 +8,19 @@
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 #include "digital_input_hw.h"
+#include "pin_repository.h"
 #endif
 
 #if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
 
 EXTERN_ENGINE;
 
+static Logging *logger;
+
 static FastInterpolation customMap;
-static efitick_t digitalMapDiff = 0;
+static efitick_t prevWidthTimeNt = 0;
+
+static float mapFreq = 0;
 
 /**
  * @brief	MAP value decoded for a 1.83 Honda sensor
@@ -85,6 +90,10 @@ float getMapByVoltage(float voltage DECLARE_ENGINE_PARAMETER_S) {
  * @return Manifold Absolute Pressure, in kPa
  */
 float getRawMap(DECLARE_ENGINE_PARAMETER_F) {
+	if (engineConfiguration->hasFrequencyReportingMapSensor) {
+		return interpolate(boardConfiguration->mapFrequency0Kpa, 0, boardConfiguration->mapFrequency100Kpa, 100, mapFreq);
+	}
+
 	float voltage = getVoltageDivided("map", engineConfiguration->map.sensor.hwChannel);
 	return getMapByVoltage(voltage PASS_ENGINE_PARAMETER);
 }
@@ -127,28 +136,61 @@ static void applyConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 }
 
 static void digitalMapWidthCallback(void) {
+	efitick_t nowNt = getTimeNowNt();
 
+	mapFreq = 1000000.0 / NT2US(nowNt - prevWidthTimeNt);
+
+	prevWidthTimeNt = nowNt;
 }
 
-void initMapDecoder(DECLARE_ENGINE_PARAMETER_F) {
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
+static void printMAPInfo(void) {
+#if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
+	scheduleMsg(logger, "instant value=%fkPa", getRawMap());
+
+	if (engineConfiguration->hasFrequencyReportingMapSensor) {
+		scheduleMsg(logger, "instant value=%fHz @ %s", mapFreq, hwPortname(boardConfiguration->frequencyReportingMapInputPin));
+	} else {
+		scheduleMsg(logger, "map type=%d/%s MAP=%fkPa", engineConfiguration->map.sensor.type,
+				getAir_pressure_sensor_type_e(engineConfiguration->map.sensor.type),
+				getMap());
+
+		if (engineConfiguration->map.sensor.type == MT_CUSTOM) {
+			scheduleMsg(logger, "at0=%f at5=%f", engineConfiguration->map.sensor.valueAt0,
+					engineConfiguration->map.sensor.valueAt5);
+		}
+	}
+
+	scheduleMsg(logger, "baro type=%d value=%f", engineConfiguration->baroSensor.type, getBaroPressure());
+	if (engineConfiguration->baroSensor.type == MT_CUSTOM) {
+		scheduleMsg(logger, "min=%f max=%f", engineConfiguration->baroSensor.valueAt0,
+				engineConfiguration->baroSensor.valueAt5);
+	}
+#endif /* EFI_ANALOG_SENSORS */
+}
+#endif /* EFI_PROD_CODE */
+
+
+void initMapDecoder(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
+	logger = sharedLogger;
 	applyConfiguration(PASS_ENGINE_PARAMETER_F);
 	//engine->configurationListeners.registerCallback(applyConfiguration);
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
 	if (engineConfiguration->hasFrequencyReportingMapSensor) {
-		digital_input_s* digitalMapInput = initWaveAnalyzerDriver(boardConfiguration->frequencyReportingMapInputPin);
+		digital_input_s* digitalMapInput = initWaveAnalyzerDriver("map freq", boardConfiguration->frequencyReportingMapInputPin);
 		startInputDriver(digitalMapInput, true);
 
 		digitalMapInput->widthListeners.registerCallback((VoidInt) digitalMapWidthCallback, NULL);
-
 	}
 
+	addConsoleAction("mapinfo", printMAPInfo);
 #endif
 }
 
 #else /* EFI_ANALOG_SENSORS */
 
-void initMapDecoder(DECLARE_ENGINE_PARAMETER_F) {
+void initMapDecoder(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_S) {
 }
 
 #endif /* EFI_ANALOG_SENSORS */

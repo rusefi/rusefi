@@ -14,7 +14,7 @@ float getAfr(DECLARE_ENGINE_PARAMETER_F) {
 	return interpolate(sensor->v1, sensor->value1, sensor->v2, sensor->value2, volts);
 }
 
-void initEgoSensor(afr_sensor_s *sensor, ego_sensor_e type) {
+static void initEgoSensor(afr_sensor_s *sensor, ego_sensor_e type) {
 
 	switch (type) {
 	case ES_BPSX_D1:
@@ -39,6 +39,13 @@ void initEgoSensor(afr_sensor_s *sensor, ego_sensor_e type) {
 		sensor->v2 = 5;
 		sensor->value2 = 19.992;
 		break;
+		// technically 14Point7 and PLX use the same scale
+	case ES_PLX:
+		sensor->v1 = 0;
+		sensor->value1 = 10;
+		sensor->v2 = 5;
+		sensor->value2 = 20;
+		break;
 	case ES_NarrowBand:
 		sensor->v1 = 0.1;
 		sensor->value1 = 15;
@@ -49,4 +56,9 @@ void initEgoSensor(afr_sensor_s *sensor, ego_sensor_e type) {
 		firmwareError("Unexpected EGO %d", type);
 		break;
 	}
+}
+
+void setEgoSensor(ego_sensor_e type DECLARE_ENGINE_PARAMETER_S) {
+	boardConfiguration->afr_type = type;
+	initEgoSensor(&engineConfiguration->afr, type);
 }

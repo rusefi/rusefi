@@ -39,7 +39,7 @@ public class TcpIoStream implements IoStream {
     }
 
     @Override
-    public void addEventListener(final DataListener listener) {
+    public void setDataListener(final DataListener listener) {
         LinkManager.IO_EXECUTOR.execute(new Runnable() {
             @Override
             public void run() {

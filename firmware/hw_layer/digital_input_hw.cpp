@@ -140,24 +140,24 @@ ICUDriver * getInputCaptureDriver(brain_pin_e hwPin) {
 	return (ICUDriver *) NULL;
 }
 
-void turnOnCapturePin(brain_pin_e brainPin) {
+void turnOnCapturePin(const char *msg, brain_pin_e brainPin) {
 	ioportid_t port = getHwPort(brainPin);
 	ioportmask_t pin = getHwPin(brainPin);
 
 	ICUDriver *driver = getInputCaptureDriver(brainPin);
 	if (driver != NULL) {
 		iomode_t mode = (iomode_t) PAL_MODE_ALTERNATE(getAlternateFunctions(driver));
-		mySetPadMode("wave input", port, pin, mode);
+		mySetPadMode(msg, port, pin, mode);
 	}
 }
 
-digital_input_s * initWaveAnalyzerDriver(brain_pin_e brainPin) {
+digital_input_s * initWaveAnalyzerDriver(const char *msg, brain_pin_e brainPin) {
 	ICUDriver *driver = getInputCaptureDriver(brainPin);
 
 	digital_input_s *hw = registeredIcus.add();
 
 	hw->driver = driver;
-	turnOnCapturePin(brainPin);
+	turnOnCapturePin(msg, brainPin);
 	return hw;
 }
 

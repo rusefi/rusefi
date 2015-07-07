@@ -49,8 +49,7 @@ public class BinaryProtocolCmd {
         if (!checkForDefinitionFile())
             return;
         RomRaiderWrapper.startRomRaider();
-        ECUEditor.openImage(image.getFileContent(), SettingsManager.getSettings().getEcuDefinitionFiles().elementAt(0),
-                "rusEfi");
+        ECUEditor.openImage(image.getFileContent());
     }
 
     public static boolean checkForDefinitionFile() {

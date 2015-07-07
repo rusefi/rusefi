@@ -28,7 +28,6 @@ public class XYData {
 
     String date = FileLog.getDate();
 
-
     public XYData() {
         clear();
     }

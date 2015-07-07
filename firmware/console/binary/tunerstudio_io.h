@@ -16,7 +16,7 @@
 
 // that's hex for "~\n", see
 #define BINARY_SWITCH_TAG 0x7e0a
-#define BINARY_COMMAND "~"
+#define SWITCH_TO_BINARY_COMMAND "~"
 
 #define PROTOCOL  "001"
 #define TS_SIGNATURE "MShift v0.01"

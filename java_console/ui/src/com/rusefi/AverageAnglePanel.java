@@ -6,8 +6,6 @@ import com.rusefi.core.SensorCentral;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
 
 import static com.rusefi.ui.util.LocalizedMessages.RESET;
 
@@ -47,9 +45,8 @@ public class AverageAnglePanel {
     }
 
     private void showResults() {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        aa.printReport(new PrintStream(byteArrayOutputStream));
-        text.setText(byteArrayOutputStream.toString());
+        String test = aa.getReport();
+        text.setText(test);
     }
 
     public JPanel getPanel() {

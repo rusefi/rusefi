@@ -87,13 +87,11 @@ static void testParsing(void) {
 static void testExpression(const char *line, float expected) {
 	LEElement thepool[TEST_POOL_SIZE];
 	LEElementPool pool(thepool, TEST_POOL_SIZE);
-	pool.reset();
 	LEElement * element = pool.parseExpression(line);
 	print("Parsing [%s]", line);
 	assertTrueM("Not NULL expected", element != NULL);
 	LECalculator c;
-	c.add(element);
-	assertEqualsM(line, expected, c.getValue(NULL));
+	assertEqualsM(line, expected, c.getValue2(element, NULL));
 }
 
 void testLogicExpressions(void) {
@@ -173,6 +171,19 @@ void testLogicExpressions(void) {
 	testExpression("10 99 max", 99);
 
 	testExpression("fan NOT coolant 90 > AND fan coolant 85 > AND OR", 1);
+	{
+		LEElement thepool[TEST_POOL_SIZE];
+		LEElementPool pool(thepool, TEST_POOL_SIZE);
+		LEElement * element = pool.parseExpression("fan NOT coolant 90 > AND fan coolant 85 > AND OR");
+		assertTrueM("Not NULL expected", element != NULL);
+		LECalculator c;
+		assertEqualsM("that expression", 1, c.getValue2(element, NULL));
+
+		assertEquals(12, c.currentCalculationLogPosition);
+		assertEquals(102, c.calcLogAction[0]);
+		assertEquals(0, c.calcLogValue[0]);
+	}
+
 	testExpression("coolant", 100);
 	testExpression("fan_off_setting", 0);
 	testExpression("coolant fan_off_setting >", 1);

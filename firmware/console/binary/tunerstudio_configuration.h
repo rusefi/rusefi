@@ -80,6 +80,7 @@ typedef struct {
 	unsigned int isIatError : 1; // bit 3
 	unsigned int isAcSwitchEngaged : 1; // bit 4
 	unsigned int isTriggerError : 1; // bit 5
+	unsigned int hasFatalError : 1; // bit 6
 	int tsConfigVersion;
 	egt_values_s egtValues;
 	float rpmAcceleration;
@@ -93,7 +94,8 @@ typedef struct {
 	float pedalPosition;
 	float injectorDutyCycle;
 	int knockCount;
-	int unused3[12];
+	float fuelLevel;
+	int unused3[11];
 } TunerStudioOutputChannels;
 
 #endif /* TUNERSTUDIO_CONFIGURATION_H_ */

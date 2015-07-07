@@ -3,7 +3,7 @@ package com.rusefi.config;
 import com.rusefi.core.Pair;
 
 /**
- * @see com.rusefi.config.Fields
+ * @see Fields
  */
 
 public class Field {
@@ -12,24 +12,26 @@ public class Field {
     private static final String FLOAT_VALUE_PREFIX = "float @";
     public static final int NO_BIT_OFFSET = -1;
 
+    private final String name;
     private final int offset;
     private final FieldType type;
     private final int bitOffset;
     private final String[] options;
 
-    public Field(int offset, FieldType type) {
-        this(offset, type, NO_BIT_OFFSET);
+    public Field(String name, int offset, FieldType type) {
+        this(name, offset, type, NO_BIT_OFFSET);
     }
 
-    public Field(int offset, FieldType type, String... options) {
-        this(offset, type, NO_BIT_OFFSET, options);
+    public Field(String name, int offset, FieldType type, String... options) {
+        this(name, offset, type, NO_BIT_OFFSET, options);
     }
 
-    public Field(int offset, FieldType type, int bitOffset) {
-        this(offset, type, bitOffset, null);
+    public Field(String name, int offset, FieldType type, int bitOffset) {
+        this(name, offset, type, bitOffset, null);
     }
 
-    public Field(int offset, FieldType type, int bitOffset, String[] options) {
+    public Field(String name, int offset, FieldType type, int bitOffset, String[] options) {
+        this.name = name;
         this.offset = offset;
         this.type = type;
         this.bitOffset = bitOffset;
@@ -106,6 +108,7 @@ public class Field {
     @Override
     public String toString() {
         return "Field{" +
+                "name=" + name +
                 "offset=" + offset +
                 ", type=" + type +
                 '}';

@@ -1,7 +1,5 @@
 package com.rusefi.io.serial;
 
-import com.rusefi.FileLog;
-import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.DataListener;
 import com.rusefi.io.LinkManager;
 
@@ -17,7 +15,7 @@ class SerialManager {
     static DataListener dataListener = new DataListener() {
         public void onDataArrived(byte freshData[]) {
             //                jTextAreaIn.append(string);
-            LinkManager.engineState.processNewData(new String(freshData));
+            LinkManager.engineState.processNewData(new String(freshData), LinkManager.ENCODER);
         }
     };
     public static LinkManager.LinkStateListener listener;

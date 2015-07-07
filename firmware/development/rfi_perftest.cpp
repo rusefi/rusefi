@@ -261,7 +261,7 @@ static void runTests(const int count) {
 
 extern Overflow64Counter halTime;
 
-#if EFI_RTC
+#if EFI_RTC || defined(__DOXYGEN__)
 static int rtcStartTime;
 #endif
 
@@ -271,7 +271,7 @@ static void timeInfo(void) {
 	scheduleMsg(logger, "chTimeNow as seconds = %d", getTimeNowSeconds());
 	scheduleMsg(logger, "hal seconds = %d", halTime.get() / 168000000LL);
 
-#if EFI_RTC
+#if EFI_RTC || defined(__DOXYGEN__)
 	int unix = rtcGetTimeUnixSec(&RTCD1) - rtcStartTime;
 	scheduleMsg(logger, "unix seconds = %d", unix);
 #endif
@@ -299,7 +299,7 @@ static void runChibioTest(void) {
 
 void initTimePerfActions(Logging *sharedLogger) {
 	logger = sharedLogger;
-#if EFI_RTC
+#if EFI_RTC || defined(__DOXYGEN__)
 	rtcStartTime = rtcGetTimeUnixSec(&RTCD1);
 #endif
 

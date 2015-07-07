@@ -30,7 +30,8 @@ static LENameOrdinalPair leAcToggle(LE_METHOD_AC_TOGGLE, "ac_on_switch");
 static LENameOrdinalPair leFanOnSetting(LE_METHOD_FAN_ON_SETTING, "fan_on_setting");
 static LENameOrdinalPair leFanOffSetting(LE_METHOD_FAN_OFF_SETTING, "fan_off_setting");
 static LENameOrdinalPair leTimeSinceBoot(LE_METHOD_TIME_SINCE_BOOT, "time_since_boot");
-static LENameOrdinalPair leFsioSsetting(LE_METHOD_FSIO_SETTING, "fsio_setting");
+static LENameOrdinalPair leFsioSetting(LE_METHOD_FSIO_SETTING, "fsio_setting");
+static LENameOrdinalPair leKnock(LE_METHOD_KNOCK, "knock");
 
 #define LE_EVAL_POOL_SIZE 32
 
@@ -229,14 +230,42 @@ static void handleFsio(Engine *engine, int index) {
 	}
 }
 
+
+static const char * action2String(le_action_e action) {
+	static char buffer[10];
+	switch(action) {
+		case LE_METHOD_RPM:
+			return "RPM";
+		case LE_METHOD_COOLANT:
+			return "CLT";
+		case LE_METHOD_FAN_ON_SETTING:
+			return "fan_on";
+		case LE_METHOD_FAN_OFF_SETTING:
+			return "fan_off";
+		case LE_METHOD_FAN:
+			return "fan";
+		default: {
+			// this is here to make compiler happy
+		}
+	}
+	itoa10(buffer, (int)action);
+	return buffer;
+}
+
 static void setPinState(const char * msg, OutputPin *pin, LEElement *element, Engine *engine) {
 	if (element == NULL) {
 		warning(OBD_PCM_Processor_Fault, "invalid expression for %s", msg);
 	} else {
 		int value = calc.getValue2(element, engine);
 		if (pin->isInitialized() && value != pin->getLogicValue()) {
-			if (isRunningBenchTest())
+			if (isRunningBenchTest()) {
 				return; // let's not mess with bench testing
+			}
+
+			for (int i = 0;i < calc.currentCalculationLogPosition;i++) {
+				scheduleMsg(logger, "calc %d: action %s value %f", i, action2String(calc.calcLogAction[i]), calc.calcLogValue[i]);
+			}
+
 			scheduleMsg(logger, "setPin %s %s", msg, value ? "on" : "off");
 			pin->setValue(value);
 		}

@@ -18,6 +18,10 @@ float getVRef(DECLARE_ENGINE_PARAMETER_F) {
 	return getVoltageDivided("vref", engineConfiguration->vRefAdcChannel);
 }
 
+bool_t hasVBatt(DECLARE_ENGINE_PARAMETER_F) {
+	return engineConfiguration->vbattAdcChannel != EFI_ADC_NONE;
+}
+
 float getVBatt(DECLARE_ENGINE_PARAMETER_F) {
 	return getVoltage("vbatt", engineConfiguration->vbattAdcChannel) * engineConfiguration->vbattDividerCoeff;
 }

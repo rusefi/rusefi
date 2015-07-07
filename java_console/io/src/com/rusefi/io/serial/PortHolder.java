@@ -2,11 +2,11 @@ package com.rusefi.io.serial;
 
 import com.rusefi.FileLog;
 import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.io.CommunicationLoggingHolder;
 import com.rusefi.io.DataListener;
 import com.rusefi.io.LinkManager;
 import jssc.SerialPort;
 import jssc.SerialPortException;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -22,8 +22,6 @@ public class PortHolder {
     private static PortHolder instance = new PortHolder();
     private final Object portLock = new Object();
 
-    // todo: rename class & move field to not-serial-specific class
-    public static PortHolderListener portHolderListener = PortHolderListener.VOID;
     private BinaryProtocol bp;
 
     private PortHolder() {
@@ -33,7 +31,7 @@ public class PortHolder {
     private SerialPort serialPort;
 
     boolean openPort(String port, DataListener dataListener, LinkManager.LinkStateListener listener) {
-        this.portHolderListener.onPortHolderMessage(SerialManager.class, "Opening port: " + port);
+        CommunicationLoggingHolder.communicationLoggingListener.onPortHolderMessage(SerialManager.class, "Opening port: " + port);
         if (port == null)
             return false;
         boolean result = open(port, dataListener);
@@ -45,6 +43,9 @@ public class PortHolder {
         return result;
     }
 
+    /**
+     * @return true if everything fine
+     */
     private boolean open(String port, final DataListener listener) {
         SerialPort serialPort = new SerialPort(port);
         try {
@@ -53,7 +54,7 @@ public class PortHolder {
             if (!opened)
                 FileLog.MAIN.logLine("not opened!");
             setupPort(serialPort, BAUD_RATE);
-//            serialPort.addEventListener(new SerialPortReader(serialPort, portHolderListener));
+//            serialPort.setDataListener(new SerialPortReader(serialPort, communicationLoggingListener));
         } catch (SerialPortException e) {
             FileLog.MAIN.logLine("ERROR " + e.getMessage());
             return false;
@@ -73,19 +74,7 @@ public class PortHolder {
 
         bp = new BinaryProtocol(FileLog.LOGGER, new SerialIoStream(serialPort, FileLog.LOGGER));
 
-        return bp.connect(listener);
-
-//
-//        try {
-//            FileLog.rlog("PortHolder: test command");
-//            /**
-//             * Let's make sure we have not connected to Tuner Studio port?
-//             * @see EngineState#TS_PROTOCOL_TAG
-//             */
-//            doWriteCommand("test");
-//        } catch (SerialPortException e) {
-//            return false;
-//        }
+        return bp.connectAndReadConfiguration(listener);
     }
 
     public static void setupPort(SerialPort serialPort, int baudRate) throws SerialPortException {
@@ -113,31 +102,10 @@ public class PortHolder {
     /**
      * this method blocks till a connection is available
      */
-    public void packAndSend(final String command) throws InterruptedException {
-        bp.doSend(command);
-
-
-//        long now = System.currentTimeMillis();
-//
-//        synchronized (portLock) {
-//            while (serialPort == null) {
-//                if (System.currentTimeMillis() - now > 3 * MINUTE)
-//                    portHolderListener.onPortHolderMessage(PortHolder.class, "Looks like connection is gone :(");
-//                portLock.wait(MINUTE);
-//            }
-//            // we are here only when serialPort!=null, that means we have a connection
-//            try {
-//                doWriteCommand(command);
-//            } catch (SerialPortException e) {
-//                throw new IllegalStateException(e);
-//            }
-//        }
-    }
-
-    private void doWriteCommand(@NotNull String command) throws SerialPortException {
-        if (serialPort == null)
-            throw new NullPointerException("serialPort");
-        serialPort.writeBytes((command + "\n").getBytes());
+    public void packAndSend(final String command, boolean fireEvent) throws InterruptedException {
+        if (bp == null)
+            throw new NullPointerException("bp");
+        bp.doSend(command, fireEvent);
     }
 
     public static PortHolder getInstance() {

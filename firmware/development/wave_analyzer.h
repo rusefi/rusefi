@@ -37,25 +37,25 @@ public:
 	/**
 	 * Total ON time during last engine cycle
 	 */
-	uint64_t prevTotalOnTimeUs;
+	efitimeus_t prevTotalOnTimeUs;
 
-	uint64_t totalOnTimeAccumulatorUs;
+	efitimeus_t totalOnTimeAccumulatorUs;
 
-	volatile uint64_t lastActivityTimeUs; // timestamp in microseconds ticks
+	volatile efitimeus_t lastActivityTimeUs; // timestamp in microseconds ticks
 	/**
 	 * time of signal fall event, in microseconds
 	 */
-	volatile uint64_t periodEventTimeUs;
-	volatile uint64_t widthEventTimeUs; // time of signal rise in microseconds
+	volatile efitimeus_t periodEventTimeUs;
+	volatile efitimeus_t widthEventTimeUs; // time of signal rise in microseconds
 
-	volatile uint32_t signalPeriodUs; // period between two signal rises in microseconds
+	volatile efitimeus_t signalPeriodUs; // period between two signal rises in microseconds
 
 	/**
 	 * offset from engine cycle start in microseconds
 	 */
-	volatile uint64_t waveOffsetUs;
-	volatile uint32_t last_wave_low_widthUs; // time period in systimer ticks
-	volatile uint64_t last_wave_high_widthUs; // time period in systimer ticks
+	volatile efitimeus_t waveOffsetUs;
+	volatile efitimeus_t last_wave_low_widthUs; // time period in systimer ticks
+	volatile efitimeus_t last_wave_high_widthUs; // time period in systimer ticks
 };
 
 void initWaveAnalyzer(Logging *sharedLogger);

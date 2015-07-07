@@ -8,6 +8,18 @@
 
 #include "main.h"
 #include "rusefi_enums.h"
+const char *getTiming_mode_e(timing_mode_e value) {
+	switch(value) {
+	case Internal_ForceMyEnumIntSize_timing_mode:
+	  return "Internal_ForceMyEnumIntSize_timing_mode";
+	case TM_DYNAMIC:
+		return "TM_DYNAMIC";
+	case TM_FIXED:
+		return "TM_FIXED";
+	}
+	return NULL;
+}
+
 const char *getEngine_type_e(engine_type_e value){
 switch(value) {
 case ACURA_RSX:
@@ -103,6 +115,8 @@ case TT_GM_7X:
   return "TT_GM_7X";
 case TT_HONDA_ACCORD_CD:
   return "TT_HONDA_ACCORD_CD";
+case TT_HONDA_ACCORD_1_24:
+	return "TT_HONDA_ACCORD_1_24";
 case TT_HONDA_ACCORD_CD_DIP:
   return "TT_HONDA_ACCORD_CD_DIP";
 case TT_HONDA_ACCORD_CD_TWO_WIRES:
@@ -125,8 +139,12 @@ case TT_ONE_PLUS_TOOTHED_WHEEL_60_2:
 	return "TT_ONE_PLUS_TOOTHED_WHEEL_60_2";
 case TT_ONE:
 	return "TT_ONE";
+case TT_60_2_VW:
+	return "TT_60_2_VW";
 case TT_DODGE_RAM:
 	return "TT_DODGE_RAM";
+case TT_UNUSED:
+	return "TT_UNUSED";
   }
  return NULL;
 }
@@ -414,6 +432,8 @@ case ES_Innovate_MTX_L:
   return "ES_Innovate_MTX_L";
 case ES_NarrowBand:
   return "ES_NarrowBand";
+case ES_PLX:
+	return "ES_PLX";
 case Force_4b_ego_sensor:
   return "Force_4b_ego_sensor";
   }

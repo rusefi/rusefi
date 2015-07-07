@@ -3,6 +3,8 @@ package com.rusefi;
 import org.apache.commons.math3.stat.descriptive.moment.Mean;
 import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +22,16 @@ public class AverageAngles {
 
     public AverageAngles() {
         clear();
+    }
+
+    public String getReport() {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        try {
+            printReport(new PrintStream(byteArrayOutputStream));
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+        return byteArrayOutputStream.toString();
     }
 
     public void clear() {
@@ -59,12 +71,12 @@ public class AverageAngles {
         }
     }
 
-    public void printReport(PrintStream stream) {
+    public void printReport(Appendable stream) throws IOException {
         List<Double> angles = new ArrayList<>();
 
-        stream.println("Based on " + angleData.size() + " charts");
+        stream.append("Based on " + angleData.size() + " charts\r\n");
 
-        stream.println("index,average,stdev,diff");
+        stream.append("index,average,stdev,diff\r\n");
 
         double prev = 0;
 
@@ -85,15 +97,15 @@ public class AverageAngles {
 
             double diff = mean - prev;
             prev = mean;
-            stream.println(k + "," + mean + "," + sdv + "," + diff);
+            stream.append(k + "," + mean + "," + sdv + "," + diff + "\r\n");
         }
         if (angleData.isEmpty())
             return;
         Double lastValue = angles.get(angles.size() - 1);
-        stream.println("Last value = " + lastValue);
+        stream.append("Last value = " + lastValue + "\r\n");
         double delta = 720 - lastValue;
         for (double v : angles) {
-            stream.println((delta + v));
+            stream.append((delta + v) + "\r\n");
         }
     }
 }

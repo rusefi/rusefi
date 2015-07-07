@@ -16,11 +16,10 @@ public class EnumConfigField extends BaseConfigField {
     private final Map<String, Integer> ordinals = new HashMap<>();
 
     public EnumConfigField(final Field field, String caption) {
-        this(field, caption, field.getOptions());
-    }
-
-    public EnumConfigField(final Field field, String caption, final String... options) {
         super(field);
+        final String[] options = field.getOptions();
+        if (options == null)
+            throw new NullPointerException("options for " + field);
 
         int ordinal = 0;
         for (String option : options) {

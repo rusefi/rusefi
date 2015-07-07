@@ -30,6 +30,7 @@
 #include "speed_density.h"
 #include "advance_map.h"
 #if EFI_PROD_CODE
+#include "electronic_throttle.h"
 #include "alternatorController.h"
 #endif
 
@@ -145,6 +146,9 @@ void setWholeIatCorrTimingTable(float value DECLARE_ENGINE_PARAMETER_S) {
 	setTimingMap(config->ignitionIatCorrTable, value);
 }
 
+/**
+ * See also crankingTimingAngle
+ */
 void setWholeTimingTable(angle_t value DECLARE_ENGINE_PARAMETER_S) {
 	setTimingMap(config->ignitionTable, value);
 }
@@ -173,7 +177,11 @@ void prepareVoidConfiguration(engine_configuration_s *activeConfiguration) {
 
 #if EFI_PROD_CODE
 	setDefaultAlternatorParameters();
+	setDefaultEtbParameters();
 #endif
+
+	boardConfiguration->wboHeaterPin = GPIO_UNASSIGNED;
+	boardConfiguration->wboPumpPin = GPIO_UNASSIGNED;
 
 	boardConfiguration->mainRelayPin = GPIO_UNASSIGNED;
 	boardConfiguration->mainRelayPinMode = OM_DEFAULT;
@@ -365,8 +373,8 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
 	engineConfiguration->globalTriggerAngleOffset = 0;
-	engineConfiguration->injectionAngle = 0;
-	engineConfiguration->ignitionBaseAngle = 0;
+	engineConfiguration->injectionOffset = 0;
+	engineConfiguration->ignitionOffset = 0;
 	engineConfiguration->overrideCrankingIgnition = true;
 	engineConfiguration->sensorChartFrequency = 20;
 
@@ -414,7 +422,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 
 	engineConfiguration->cylinderBore = 87.5;
 
-	initEgoSensor(&engineConfiguration->afr, ES_14Point7_Free);
+	setEgoSensor(ES_14Point7_Free PASS_ENGINE_PARAMETER);
 
 	engineConfiguration->globalFuelCorrection = 1;
 
@@ -482,6 +490,10 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->knockDetectionWindowStart = 35;
 	engineConfiguration->knockDetectionWindowEnd = 135;
 
+	engineConfiguration->fuelLevelSensor = EFI_ADC_NONE;
+	boardConfiguration->fuelLevelEmptyTankVoltage = 0;
+	boardConfiguration->fuelLevelFullTankVoltage = 5;
+
 	engineConfiguration->hipOutputChannel = EFI_ADC_NONE;
 
 	/**
@@ -543,7 +555,7 @@ void setDefaultConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	boardConfiguration->boardTestModeJumperPin = GPIOB_0;
 
 	boardConfiguration->canDeviceMode = CD_USE_CAN2;
-	boardConfiguration->canTxPin = GPIOB_0;
+	boardConfiguration->canTxPin = GPIOB_6;
 	boardConfiguration->canRxPin = GPIOB_12;
 
 	// set this to SPI_DEVICE_3 to enable stimulation
@@ -625,7 +637,7 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 #endif /* EFI_SUPPORT_FORD_ASPIRE */
 #if EFI_SUPPORT_FORD_FIESTA || defined(__DOXYGEN__)
 	case FORD_FIESTA:
-		setFordFiestaDefaultEngineConfiguration(engineConfiguration);
+		setFordFiestaDefaultEngineConfiguration(PASS_ENGINE_PARAMETER_F);
 		break;
 #endif /* EFI_SUPPORT_FORD_FIESTA */
 #if EFI_SUPPORT_NISSAN_PRIMERA || defined(__DOXYGEN__)
@@ -637,7 +649,7 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 		setHondaAccordConfigurationThreeWires(PASS_ENGINE_PARAMETER_F);
 		break;
 	case HONDA_ACCORD_CD_TWO_WIRES:
-		setHondaAccordConfigurationTwoWires(PASS_ENGINE_PARAMETER_F);
+		setHondaAccordConfiguration1_24(PASS_ENGINE_PARAMETER_F);
 		break;
 	case HONDA_ACCORD_CD_DIP:
 		setHondaAccordConfigurationDip(PASS_ENGINE_PARAMETER_F);
@@ -711,7 +723,7 @@ void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_EN
 		setSachs(PASS_ENGINE_PARAMETER_F);
 		break;
 	default:
-		firmwareError("Unexpected engine type: %d", engineType);
+		warning(OBD_PCM_Processor_Fault, "Unexpected engine type: %d", engineType);
 	}
 	applyNonPersistentConfiguration(logger PASS_ENGINE_PARAMETER);
 	// todo: eliminate triggerShape.operationMode?
@@ -734,7 +746,7 @@ void applyNonPersistentConfiguration(Logging * logger DECLARE_ENGINE_PARAMETER_S
 	scheduleMsg(logger, "applyNonPersistentConfiguration()");
 #endif
 #if EFI_ENGINE_CONTROL
-	initializeTriggerShape(logger, engineConfiguration, engine);
+	engine->triggerShape.initializeTriggerShape(logger PASS_ENGINE_PARAMETER);
 #endif
 	if (engine->triggerShape.getSize() == 0) {
 		firmwareError("triggerShape size is zero");

@@ -34,17 +34,17 @@ void updateAndSet(State64 *state, uint32_t value) {
 }
 
 #if EFI_UNIT_TEST
-uint64_t Overflow64Counter::update(uint32_t value) {
+efitime_t Overflow64Counter::update(uint32_t value) {
 	updateAndSet(&state, value);
 	return state.highBits + state.lowBits;
 }
 #endif
 
 // todo: make this a macro? always inline?
-uint64_t Overflow64Counter::get() {
+efitime_t Overflow64Counter::get() {
 #if EFI_PROD_CODE
 	bool alreadyLocked = lockAnyContext();
-	uint64_t localH = state.highBits;
+	efitime_t localH = state.highBits;
 	uint32_t localLow = state.lowBits;
 
 	uint32_t value = GET_TIMESTAMP();
@@ -54,8 +54,7 @@ uint64_t Overflow64Counter::get() {
 		localH += 0x100000000LL;
 	}
 
-	uint64_t result = localH + value;
-
+	efitime_t result = localH + value;
 
 	if (!alreadyLocked) {
 		unlockAnyContext();
@@ -69,13 +68,13 @@ uint64_t Overflow64Counter::get() {
 	 *
 	 * http://stackoverflow.com/questions/5162673/how-to-read-two-32bit-counters-as-a-64bit-integer-without-race-condition
 	 */
-	uint64_t localH;
+	efitime_t localH;
 	uint32_t localLow;
 	int counter = 0;
 	while (true) {
 		localH = state.highBits;
 		localLow = state.lowBits;
-		uint64_t localH2 = state.highBits;
+		efitime_t localH2 = state.highBits;
 		if (localH == localH2)
 			break;
 #if EFI_PROD_CODE || defined(__DOXYGEN__)

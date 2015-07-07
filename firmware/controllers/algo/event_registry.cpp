@@ -24,8 +24,21 @@
 #include "main.h"
 #include "engine_math.h"
 
+InjectionEvent::InjectionEvent() {
+	isSimultanious = false;
+}
+
+event_trigger_position_s::event_trigger_position_s() {
+	eventIndex = 0;
+	eventAngle = 0;
+	angleOffset = 0;
+}
+
 IgnitionEvent::IgnitionEvent() {
 	name = NULL;
+	next = NULL;
+	output = NULL;
+	advance = NAN;
 }
 
 //void registerActuatorEventWhat(InjectionEventList *list, int eventIndex, OutputSignal *actuator, float angleOffset) {

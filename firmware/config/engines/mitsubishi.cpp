@@ -85,7 +85,7 @@ void setMitsubishiConfiguration(DECLARE_ENGINE_PARAMETER_F) {
 	engineConfiguration->HD44780width = 20;
 	engineConfiguration->HD44780height = 4;
 
-	initEgoSensor(&engineConfiguration->afr, ES_Innovate_MTX_L);
+	setEgoSensor(ES_Innovate_MTX_L PASS_ENGINE_PARAMETER);
 #if EFI_FSIO || defined(__DOXYGEN__)
 	setFsio(0, GPIOD_11, "rpm 5500 >" PASS_ENGINE_PARAMETER);
 #endif

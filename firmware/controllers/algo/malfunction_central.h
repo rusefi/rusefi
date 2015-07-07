@@ -41,7 +41,7 @@ void addError(obd_code_e errorCode);
  */
 void removeError(obd_code_e errorCode);
 
-void setError(int flag, obd_code_e errorCode);
+void setError(bool_t isError, obd_code_e errorCode);
 
 /**
  * @brief Copies the current set of errors into the specified buffer

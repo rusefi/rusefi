@@ -76,7 +76,9 @@ static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAME
 
 	float iatCorrection = iatAdvanceCorrectionMap.getValue(engine->engineState.clt, (float) rpm);
 
-	float result = advanceMap.getValue(engineLoad, (float) rpm) + iatCorrection - engine->knockCount;
+	float result = advanceMap.getValue(engineLoad, (float) rpm) + iatCorrection
+			// todo: uncomment once we get useable knock   - engine->knockCount
+			;
 	engine->m.advanceLookupTime = GET_TIMESTAMP() - engine->m.beforeAdvance;
 	return result;
 }
@@ -88,7 +90,7 @@ angle_t getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_S) {
 	} else {
 		angle = getRunningAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER);
 	}
-	angle -= engineConfiguration->ignitionBaseAngle;
+	angle -= engineConfiguration->ignitionOffset;
 	fixAngle(angle);
 	return angle;
 }

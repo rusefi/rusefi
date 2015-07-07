@@ -30,7 +30,7 @@ public:
 private:
 	Logging logging;
 	uint32_t counter;
-	uint64_t startTimeNt;
+	efitime_t startTimeNt;
 	volatile int isInitialized;
 };
 

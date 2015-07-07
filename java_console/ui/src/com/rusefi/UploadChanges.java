@@ -1,6 +1,7 @@
 package com.rusefi;
 
 import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.io.ConfigurationImageFile;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.PortHolder;
 import com.rusefi.ui.StatusWindow;
@@ -49,9 +50,9 @@ public class UploadChanges {
         PortHolder.setupPort(serialPort, 38400);
         logger.info("Looks good");
 
-        final ConfigurationImage ci1 = ConfigurationImage.readFromFile("rus_saved.bin", logger);
+        final ConfigurationImage ci1 = ConfigurationImageFile.readFromFile("rus_saved.bin");
 
-        final ConfigurationImage ci2 = ConfigurationImage.readFromFile("rusefi_configuration.bin", logger);
+        final ConfigurationImage ci2 = ConfigurationImageFile.readFromFile("rusefi_configuration.bin");
 
         final BinaryProtocol bp = new BinaryProtocol(logger, serialPort);
         bp.setController(ci1);

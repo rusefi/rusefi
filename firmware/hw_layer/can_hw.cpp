@@ -12,8 +12,9 @@
 #include "main.h"
 #include "can_hw.h"
 #include "string.h"
+#include "obd2.h"
 
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 
 #include "pin_repository.h"
 #include "engine_state.h"
@@ -49,7 +50,7 @@ CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP,
 CAN_BTR_SJW(0) | CAN_BTR_TS2(1) | CAN_BTR_TS1(8) | CAN_BTR_BRP(6) };
 
 static CANRxFrame rxBuffer;
-static CANTxFrame txmsg;
+CANTxFrame txmsg;
 
 // todo: we would need a data structure here
 static int engine_rpm = 0;
@@ -82,7 +83,11 @@ static void setShortValue(CANTxFrame *txmsg, int value, int offset) {
 	txmsg->data8[offset + 1] = value >> 8;
 }
 
-static void commonTxInit(int eid) {
+void setTxBit(int offset, int index) {
+	txmsg.data8[offset] = txmsg.data8[offset] | (1 << index);
+}
+
+void commonTxInit(int eid) {
 	memset(&txmsg, 0, sizeof(txmsg));
 	txmsg.IDE = CAN_IDE_STD;
 	txmsg.EID = eid;
@@ -90,7 +95,7 @@ static void commonTxInit(int eid) {
 	txmsg.DLC = 8;
 }
 
-static void sendMessage2(int size) {
+void sendMessage2(int size) {
 	txmsg.DLC = size;
 	msg_t result = canTransmit(&EFI_CAN_DEVICE, CAN_ANY_MAILBOX, &txmsg, TIME_INFINITE);
 	if (result == RDY_OK) {
@@ -100,7 +105,7 @@ static void sendMessage2(int size) {
 	}
 }
 
-static void sendMessage() {
+void sendMessage() {
 	sendMessage2(8);
 }
 
@@ -205,6 +210,7 @@ static void canRead(void) {
 
 	canReadCounter++;
 	printPacket(&rxBuffer);
+	obdOnCanPacketRx(&rxBuffer);
 }
 
 static void writeStateToCan(void) {

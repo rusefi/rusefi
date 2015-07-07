@@ -432,7 +432,8 @@ static char confirmation[200];
 static char handleBuffer[200];
 
 static bool handleConsoleLineInternal(const char *commandLine, int lineLength) {
-	strncpy(handleBuffer, commandLine, sizeof(handleBuffer));
+	strncpy(handleBuffer, commandLine, sizeof(handleBuffer) - 1);
+	handleBuffer[sizeof(handleBuffer) - 1] = 0; // we want this to be null-terminated for sure
 	char *line = handleBuffer;
 	int firstTokenLength = tokenLength(line);
 

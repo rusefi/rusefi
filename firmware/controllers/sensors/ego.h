@@ -15,6 +15,6 @@
 #include "engine_configuration.h"
 
 float getAfr(DECLARE_ENGINE_PARAMETER_F);
-void initEgoSensor(afr_sensor_s *sensor, ego_sensor_e type);
+void setEgoSensor(ego_sensor_e type DECLARE_ENGINE_PARAMETER_S);
 
 #endif

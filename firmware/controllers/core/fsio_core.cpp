@@ -33,7 +33,7 @@ static LENameOrdinalPair leOr2(LE_OPERATOR_OR, "|");
 static LENameOrdinalPair leNot(LE_OPERATOR_NOT, "not");
 
 static LENameOrdinalPair leAdd(LE_OPERATOR_ADDITION, "+");
-static LENameOrdinalPair leSub(LE_OPERATOR_SUBSTRACTION, "-");
+static LENameOrdinalPair leSub(LE_OPERATOR_SUBTRACTION, "-");
 static LENameOrdinalPair leMul(LE_OPERATOR_MULTIPLICATION, "*");
 static LENameOrdinalPair leDiv(LE_OPERATOR_DIVISION, "/");
 
@@ -82,11 +82,11 @@ LECalculator::LECalculator() {
 void LECalculator::reset() {
 	first = NULL;
 	stack.reset();
+	currentCalculationLogPosition = 0;
 }
 
 void LECalculator::reset(LEElement *element) {
-	first = NULL;
-	stack.reset();
+	reset();
 	add(element);
 }
 
@@ -114,6 +114,15 @@ float LECalculator::pop(le_action_e action) {
 	return stack.pop();
 }
 
+void LECalculator::push(le_action_e action, float value) {
+	stack.push(value);
+	if (currentCalculationLogPosition < MAX_CALC_LOG) {
+		calcLogAction[currentCalculationLogPosition] = action;
+		calcLogValue[currentCalculationLogPosition] = value;
+		currentCalculationLogPosition++;
+	}
+}
+
 /**
  * @return true in case of error, false otherwise
  */
@@ -124,20 +133,20 @@ bool_t LECalculator::doJob(Engine *engine, LEElement *element) {
 	switch (element->action) {
 
 	case LE_NUMERIC_VALUE:
-		stack.push(element->fValue);
+		push(element->action, element->fValue);
 		break;
 	case LE_OPERATOR_AND: {
 		float v1 = pop(LE_OPERATOR_AND);
 		float v2 = pop(LE_OPERATOR_AND);
 
-		stack.push(float2bool(v1) && float2bool(v2));
+		push(element->action, float2bool(v1) && float2bool(v2));
 	}
 		break;
 	case LE_OPERATOR_OR: {
 		float v1 = pop(LE_OPERATOR_OR);
 		float v2 = pop(LE_OPERATOR_OR);
 
-		stack.push(float2bool(v1) || float2bool(v2));
+		push(element->action, float2bool(v1) || float2bool(v2));
 	}
 		break;
 	case LE_OPERATOR_LESS: {
@@ -145,12 +154,12 @@ bool_t LECalculator::doJob(Engine *engine, LEElement *element) {
 		float v2 = pop(LE_OPERATOR_LESS);
 		float v1 = pop(LE_OPERATOR_LESS);
 
-		stack.push(v1 < v2);
+		push(element->action, v1 < v2);
 	}
 		break;
 	case LE_OPERATOR_NOT: {
 		float v = pop(LE_OPERATOR_NOT);
-		stack.push(!float2bool(v));
+		push(element->action, !float2bool(v));
 	}
 		break;
 	case LE_OPERATOR_MORE: {
@@ -158,7 +167,7 @@ bool_t LECalculator::doJob(Engine *engine, LEElement *element) {
 		float v2 = pop(LE_OPERATOR_MORE);
 		float v1 = pop(LE_OPERATOR_MORE);
 
-		stack.push(v1 > v2);
+		push(element->action, v1 > v2);
 	}
 		break;
 	case LE_OPERATOR_ADDITION: {
@@ -166,15 +175,15 @@ bool_t LECalculator::doJob(Engine *engine, LEElement *element) {
 		float v2 = pop(LE_OPERATOR_MORE);
 		float v1 = pop(LE_OPERATOR_MORE);
 
-		stack.push(v1 + v2);
+		push(element->action, v1 + v2);
 	}
 		break;
-	case LE_OPERATOR_SUBSTRACTION: {
+	case LE_OPERATOR_SUBTRACTION: {
 		// elements on stack are in reverse order
 		float v2 = pop(LE_OPERATOR_MORE);
 		float v1 = pop(LE_OPERATOR_MORE);
 
-		stack.push(v1 - v2);
+		push(element->action, v1 - v2);
 	}
 		break;
 	case LE_OPERATOR_MULTIPLICATION: {
@@ -182,7 +191,7 @@ bool_t LECalculator::doJob(Engine *engine, LEElement *element) {
 		float v2 = pop(LE_OPERATOR_MORE);
 		float v1 = pop(LE_OPERATOR_MORE);
 
-		stack.push(v1 * v2);
+		push(element->action, v1 * v2);
 	}
 		break;
 	case LE_OPERATOR_DIVISION: {
@@ -190,7 +199,7 @@ bool_t LECalculator::doJob(Engine *engine, LEElement *element) {
 		float v2 = pop(LE_OPERATOR_MORE);
 		float v1 = pop(LE_OPERATOR_MORE);
 
-		stack.push(v1 / v2);
+		push(element->action, v1 / v2);
 	}
 		break;
 	case LE_OPERATOR_LESS_OR_EQUAL: {
@@ -198,7 +207,7 @@ bool_t LECalculator::doJob(Engine *engine, LEElement *element) {
 		float v2 = pop(LE_OPERATOR_LESS_OR_EQUAL);
 		float v1 = pop(LE_OPERATOR_LESS_OR_EQUAL);
 
-		stack.push(v1 <= v2);
+		push(element->action, v1 <= v2);
 	}
 		break;
 	case LE_OPERATOR_MORE_OR_EQUAL: {
@@ -206,7 +215,7 @@ bool_t LECalculator::doJob(Engine *engine, LEElement *element) {
 		float v2 = pop(LE_OPERATOR_MORE_OR_EQUAL);
 		float v1 = pop(LE_OPERATOR_MORE_OR_EQUAL);
 
-		stack.push(v1 >= v2);
+		push(element->action, v1 >= v2);
 	}
 		break;
 	case LE_METHOD_IF: {
@@ -214,36 +223,39 @@ bool_t LECalculator::doJob(Engine *engine, LEElement *element) {
 		float vFalse = pop(LE_METHOD_IF);
 		float vTrue = pop(LE_METHOD_IF);
 		float vCond = pop(LE_METHOD_IF);
-		stack.push(vCond != 0 ? vTrue : vFalse);
+		push(element->action, vCond != 0 ? vTrue : vFalse);
 	}
 		break;
 	case LE_METHOD_MAX: {
 		float v2 = pop(LE_METHOD_MAX);
 		float v1 = pop(LE_METHOD_MAX);
-		stack.push(maxF(v1, v2));
+		push(element->action, maxF(v1, v2));
 	}
 		break;
 	case LE_METHOD_MIN: {
 		float v2 = pop(LE_METHOD_MIN);
 		float v1 = pop(LE_METHOD_MIN);
-		stack.push(minF(v1, v2));
+		push(element->action, minF(v1, v2));
 	}
 		break;
 	case LE_METHOD_FSIO_SETTING: {
 		float i = pop(LE_METHOD_FSIO_SETTING);
 		int index = (int) i;
 		if (index >= 0 && index < LE_COMMAND_COUNT) {
-			stack.push(engine->engineConfiguration->bc.fsio_setting[index]);
+			push(element->action, engine->engineConfiguration->bc.fsio_setting[index]);
 		} else {
-			stack.push(NAN);
+			push(element->action, NAN);
 		}
 	}
+		break;
+	case LE_METHOD_KNOCK:
+		push(element->action, engine->knockCount);
 		break;
 	case LE_UNDEFINED:
 		warning(OBD_PCM_Processor_Fault, "FSIO undefined action");
 		return true;
 	default:
-		stack.push(getLEValue(engine, &stack, element->action));
+		push(element->action, getLEValue(engine, &stack, element->action));
 	}
 	return false;
 }

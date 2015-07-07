@@ -49,11 +49,11 @@ public:
 	/**
 	 * O(size)
 	 */
-	bool_t insertTask(scheduling_s *scheduling, uint64_t timeX, schfunc_t callback, void *param);
+	bool_t insertTask(scheduling_s *scheduling, efitime_t timeX, schfunc_t callback, void *param);
 
-	int executeAll(uint64_t now);
+	int executeAll(efitime_t now);
 
-	uint64_t getNextEventTime(uint64_t nowUs);
+	efitime_t getNextEventTime(efitime_t nowUs);
 	void clear(void);
 	int size(void);
 	scheduling_s *getForUnitText(int index);
@@ -66,7 +66,7 @@ private:
 	 * this list is sorted
 	 */
 	scheduling_s *head;
-	uint64_t lateDelay;
+	efitime_t lateDelay;
 };
 
 #endif /* EVENT_SCHEDULER_H_ */

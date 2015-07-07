@@ -29,11 +29,11 @@ static Executor instance;
 extern schfunc_t globalTimerCallback;
 
 //static int timerIsLate = 0;
-//static uint64_t callbackTime = 0;
+//static efitime_t callbackTime = 0;
 /**
  * these fields are global in order to facilitate debugging
  */
-static uint64_t nextEventTimeNt = 0;
+static efitime_t nextEventTimeNt = 0;
 
 uint32_t beforeHwSetTimer;
 uint32_t hwSetTimerTime;
@@ -83,7 +83,7 @@ void Executor::scheduleByTime(scheduling_s *scheduling, efitimeus_t timeUs, schf
 	}
 }
 
-void Executor::schedule(scheduling_s *scheduling, uint64_t nowUs, int delayUs, schfunc_t callback,
+void Executor::schedule(scheduling_s *scheduling, efitime_t nowUs, int delayUs, schfunc_t callback,
 		void *param) {
 	scheduleByTime(scheduling, nowUs + delayUs, callback, param);
 }
@@ -116,7 +116,7 @@ void Executor::doExecute() {
 		/**
 		 * It's worth noting that that the actions might be adding new actions into the queue
 		 */
-		uint64_t nowNt = getTimeNowNt();
+		efitick_t nowNt = getTimeNowNt();
 		shouldExecute = queue.executeAll(nowNt);
 		totalExecuted += shouldExecute;
 	}
@@ -128,11 +128,14 @@ void Executor::doExecute() {
 	reentrantFlag = false;
 }
 
+/**
+ * This method is always invoked under a lock
+ */
 void Executor::scheduleTimerCallback() {
 	/**
 	 * Let's grab fresh time value
 	 */
-	uint64_t nowNt = getTimeNowNt();
+	efitick_t nowNt = getTimeNowNt();
 	nextEventTimeNt = queue.getNextEventTime(nowNt);
 	efiAssertVoid(nextEventTimeNt > nowNt, "setTimer constraint");
 	if (nextEventTimeNt == EMPTY_QUEUE)

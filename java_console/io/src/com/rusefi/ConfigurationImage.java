@@ -8,7 +8,12 @@ import java.util.Arrays;
  * 3/6/2015
  */
 public class ConfigurationImage {
-    private final static String BIN_HEADER = "RUSEFI0.1";
+    /**
+     * This constant is used
+     * 1) as a header while saving configuration to a binary file
+     * 2) as RomRaider RomID#internalIdString
+     */
+    public final static String BIN_HEADER = "RUSEFI0.1";
     private byte content[];
 
     public ConfigurationImage(int size) {
@@ -43,24 +48,6 @@ public class ConfigurationImage {
         fos.write(getFileContent());
         fos.close();
         System.out.println("Saved to " + fileName);
-    }
-
-    public static ConfigurationImage readFromFile(String fileName, Logger logger) throws IOException {
-        File file = new File(fileName);
-        int size = (int) file.length();
-
-        int contentSize = size - BIN_HEADER.length();
-
-        FileInputStream fis = new FileInputStream(fileName);
-        byte[] header = new byte[BIN_HEADER.length()];
-        int result = fis.read(header);
-        if (result != header.length)
-            return null;
-        if (!Arrays.equals(header, BIN_HEADER.getBytes()))
-            return null;
-        ConfigurationImage image = new ConfigurationImage(contentSize);
-        result = fis.read(image.content);
-        return result == image.getContent().length ? image : null;
     }
 
     public static byte[] extractContent(byte[] rom) {

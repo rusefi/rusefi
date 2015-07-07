@@ -28,20 +28,21 @@ public:
 	int getHwEventCounter(int index);
 	void resetCounters();
 	TriggerState triggerState;
-	uint64_t nowNt;
+	efitick_t nowNt;
 private:
 	IntListenerArray triggerListeneres;
 	int hwEventCounters[HW_EVENT_TYPES];
 };
 #endif
 
-void triggerInfo(Engine *engine);
-uint64_t getCrankEventCounter(void);
-uint64_t getStartOfRevolutionIndex(void);
+void triggerInfo(void);
+efitime_t getCrankEventCounter(void);
+efitime_t getStartOfRevolutionIndex(void);
 void hwHandleShaftSignal(trigger_event_e signal);
 float getTriggerDutyCycle(int index);
 void initTriggerCentral(Logging *sharedLogger, Engine *engine);
 void printAllCallbacksHistogram(void);
+void printAllTriggers();
 
 void addTriggerEventListener(ShaftPositionListener handler, const char *name, Engine *engine);
 int isSignalDecoderError(void);

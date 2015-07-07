@@ -13,7 +13,7 @@ import java.util.List;
  * Date: 6/23/13
  * (c) Andrey Belomutskiy
  *
- * @see com.rusefi.AnalogChartPanel.AnalogChart
+ * @see com.rusefi.ui.engine.EngineSnifferPanel.AnalogChart
  */
 public class EngineReport implements TimeAxisTranslator {
     public static final String ENGINE_CHART = "wave_chart";
@@ -46,6 +46,12 @@ public class EngineReport implements TimeAxisTranslator {
         }
     }
 
+    public EngineReport(List<UpDown> list, int minTime, int maxTime) {
+        this.list = list;
+        this.minTime = minTime;
+        this.maxTime = maxTime;
+    }
+
     public static boolean isCloseEnough(double v1, double v2) {
         return isCloseEnough(v1, v2, RATIO);
     }
@@ -74,8 +80,6 @@ public class EngineReport implements TimeAxisTranslator {
     @NotNull
     public static List<UpDown> parse(String report) {
         String[] array = report.split("!");
-//        if (array.length % 4 != 0)
-//            throw new IllegalArgumentException("Unexpected length " + array.length);
 
         List<UpDown> times = new ArrayList<>();
 
@@ -151,7 +155,7 @@ public class EngineReport implements TimeAxisTranslator {
         public final int downTime;
         public final int downIndex;
 
-        UpDown(int upTime, int upIndex, int downTime, int downIndex) {
+        public UpDown(int upTime, int upIndex, int downTime, int downIndex) {
             this.upTime = upTime;
             this.upIndex = upIndex;
             this.downTime = downTime;

@@ -9,9 +9,9 @@
 #define FORD_FIESTA_H_
 #if EFI_SUPPORT_FORD_FIESTA || defined(__DOXYGEN__)
 
-#include "engine_configuration.h"
+#include "engine.h"
 
-void setFordFiestaDefaultEngineConfiguration(engine_configuration_s *engineConfiguration);
+void setFordFiestaDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_F);
 
 #endif /* EFI_SUPPORT_FORD_FIESTA */
 #endif /* FORD_FIESTA_H_ */

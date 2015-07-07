@@ -15,7 +15,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import static com.rusefi.io.tcp.TcpConnector.parseIntWithReason;
+import static com.rusefi.models.Utils.parseIntWithReason;
 
 /**
  * Date: 1/22/13

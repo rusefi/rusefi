@@ -6,8 +6,7 @@ HW_LAYER_EGT_CPP = $(PROJECT_DIR)/hw_layer/can_hw.cpp \
 
 HW_LAYER_EMS = $(HW_LAYER_EGT) \
 	$(PROJECT_DIR)/hw_layer/mcp3208.c \
-	$(PROJECT_DIR)/hw_layer/flash.c \
-	$(PROJECT_DIR)/hw_layer/rtc_helper.c
+	$(PROJECT_DIR)/hw_layer/flash.c
 	
 HW_LAYER_EMS_CPP = $(HW_LAYER_EGT_CPP) \
 	$(PROJECT_DIR)/hw_layer/pin_repository.cpp \
@@ -28,5 +27,7 @@ HW_LAYER_EMS_CPP = $(HW_LAYER_EGT_CPP) \
 	$(PROJECT_DIR)/hw_layer/servo.cpp \
 	$(PROJECT_DIR)/hw_layer/io_pins.cpp \
 	$(PROJECT_DIR)/hw_layer/gpio_helper.cpp \
-	$(PROJECT_DIR)/hw_layer/stm32f4/mpu_util.cpp
+	$(PROJECT_DIR)/hw_layer/stm32f4/mpu_util.cpp \
+	$(PROJECT_DIR)/hw_layer/rtc_helper.cpp \
+	$(PROJECT_DIR)/hw_layer/wbo.cpp
 	

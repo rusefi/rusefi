@@ -16,7 +16,7 @@
 
 #if EFI_MALFUNCTION_INDICATOR || defined(__DOXYGEN__)
 
-void initMalfunctionIndicator(Engine *engine);
+void initMalfunctionIndicator(void);
 
 #endif /* EFI_MALFUNCTION_INDICATOR */
 

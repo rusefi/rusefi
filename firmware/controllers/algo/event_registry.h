@@ -19,6 +19,7 @@
  */
 class event_trigger_position_s {
 public:
+	event_trigger_position_s();
 	/**
 	 * That's trigger event index
 	 */
@@ -32,6 +33,7 @@ public:
 
 class InjectionEvent {
 public:
+	InjectionEvent();
 	event_trigger_position_s injectionStart;
 	OutputSignal actuator;
 	/**
@@ -47,7 +49,7 @@ public:
 	NamedOutputPin *output;
 	scheduling_s signalTimerUp;
 	scheduling_s signalTimerDown;
-	float advance;
+	angle_t advance;
 	event_trigger_position_s dwellPosition;
 	event_trigger_position_s sparkPosition;
 	IgnitionEvent *next;

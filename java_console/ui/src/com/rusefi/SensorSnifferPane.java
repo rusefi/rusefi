@@ -107,7 +107,7 @@ public class SensorSnifferPane {
         lowerPanel.setBorder(BorderFactory.createLineBorder(Color.cyan));
         content.add(lowerPanel, BorderLayout.SOUTH);
 
-        lowerPanel.add(new EnumConfigField(Fields.SENSORCHARTMODE, "Mode", "Off", "Trigger", "MAP").getContent());
+        lowerPanel.add(new EnumConfigField(Fields.SENSORCHARTMODE, "Mode").getContent());
         lowerPanel.add(new ConfigField(Fields.SENSORCHARTFREQUENCY, "Every XXX engine cycles").getContent());
     }
 

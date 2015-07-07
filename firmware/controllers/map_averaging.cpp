@@ -168,6 +168,7 @@ static void endAveraging(void *arg) {
  */
 static void mapAveragingCallback(trigger_event_e ckpEventType, uint32_t index DECLARE_ENGINE_PARAMETER_S) {
 	// this callback is invoked on interrupt thread
+        UNUSED(ckpEventType);
 	engine->m.beforeMapAveragingCb = GET_TIMESTAMP();
 	if (index != CONFIG(mapAveragingSchedulingAtIndex))
 		return;
@@ -219,6 +220,10 @@ float getMapVoltage(void) {
  * @return Manifold Absolute Pressure, in kPa
  */
 float getMap(void) {
+	if (engineConfiguration->hasFrequencyReportingMapSensor) {
+		return getRawMap();
+	}
+
 #if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
 	if (!isValidRpm(engine->rpmCalculator.rpmValue))
 		return getRawMap(); // maybe return NaN in case of stopped engine?

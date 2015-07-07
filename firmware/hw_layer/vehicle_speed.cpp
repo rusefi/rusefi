@@ -26,7 +26,7 @@ static int vssCounter = 0;
  * @return vehicle speed, in kilometers per hour
  */
 float getVehicleSpeed(void) {
-	uint64_t nowNt = getTimeNowNt();
+	efitick_t nowNt = getTimeNowNt();
 	if (nowNt - lastSignalTimeNt > US2NT(US_PER_SECOND_LL))
 		return 0; // previous signal time is too long ago - we are stopped
 
@@ -54,7 +54,7 @@ void initVehicleSpeed(Logging *l) {
 	logger = l;
 	if (boardConfiguration->vehicleSpeedSensorInputPin == GPIO_UNASSIGNED)
 		return;
-	digital_input_s* vehicleSpeedInput = initWaveAnalyzerDriver(boardConfiguration->vehicleSpeedSensorInputPin);
+	digital_input_s* vehicleSpeedInput = initWaveAnalyzerDriver("VSS", boardConfiguration->vehicleSpeedSensorInputPin);
 	startInputDriver(vehicleSpeedInput, true);
 
 	vehicleSpeedInput->widthListeners.registerCallback((VoidInt) vsAnaWidthCallback, NULL);

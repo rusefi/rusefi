@@ -8,15 +8,6 @@
 #ifndef TEST_EVENT_REGISTRY_H_
 #define TEST_EVENT_REGISTRY_H_
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
-
 void testEventRegistry(void);
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
 
 #endif /* TEST_EVENT_REGISTRY_H_ */

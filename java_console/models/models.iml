@@ -7,19 +7,9 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$APPLICATION_HOME_DIR$/lib/junit-4.10.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
     <orderEntry type="library" name="annotations" level="project" />
     <orderEntry type="library" name="junit" level="project" />
     <orderEntry type="library" name="SteelSeries" level="project" />
-    <orderEntry type="module" module-name="io" />
-    <orderEntry type="module" module-name="romraider" />
+    <orderEntry type="module" module-name="logging" />
   </component>
 </module>

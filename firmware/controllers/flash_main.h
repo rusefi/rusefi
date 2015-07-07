@@ -11,10 +11,10 @@
 
 #include "engine.h"
 
-#define FLASH_DATA_VERSION 8220
+#define FLASH_DATA_VERSION 8400
 
 void readFromFlash(void);
-void initFlash(Logging *sharedLogger, Engine *engine);
+void initFlash(Logging *sharedLogger);
 
 /**
  * Because of hardware-related issues, stm32f4 chip is totally

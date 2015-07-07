@@ -48,6 +48,7 @@ public class UpDownImage extends JPanel {
             UiUtils.trueRepaint(UpDownImage.this);
         }
     });
+    public boolean showText = true;
 
     public UpDownImage(final String name) {
         this(EngineReport.MOCK, name);
@@ -137,7 +138,8 @@ public class UpDownImage extends JPanel {
         for (EngineReport.UpDown upDown : wr.getList())
             paintUpDown(d, upDown, g);
 
-        paintScaleLines(g2, d);
+        if (showText)
+            paintScaleLines(g2, d);
 
         int duration = wr.getDuration();
         g2.setColor(Color.black);
@@ -149,16 +151,19 @@ public class UpDownImage extends JPanel {
             g.setFont(f.deriveFont(Font.BOLD, f.getSize() * 3));
             g.setColor(Color.red);
         }
-        g.drawString(NameUtil.getUiName(name), 5, ++line * LINE_SIZE + (justEntered ? 30 : 0));
+        if (showText)
+            g.drawString(NameUtil.getUiName(name), 5, ++line * LINE_SIZE + (justEntered ? 30 : 0));
         if (justEntered) {
             // revert font & color
             g.setFont(f);
             g.setColor(Color.black);
         }
 
-        g.drawString("Tick length: " + duration + "; count=" + wr.getList().size(), 5, ++line * LINE_SIZE);
-        g.drawString("Total seconds: " + (duration / EngineReport.SYS_TICKS_PER_MS / 000.0), 5, ++line * LINE_SIZE);
-        g.drawString(FORMAT.format(new Date(lastUpdateTime)), 5, ++line * LINE_SIZE);
+        if (showText) {
+            g.drawString("Tick length: " + duration + "; count=" + wr.getList().size(), 5, ++line * LINE_SIZE);
+            g.drawString("Total seconds: " + (duration / EngineReport.SYS_TICKS_PER_MS / 000.0), 5, ++line * LINE_SIZE);
+            g.drawString(FORMAT.format(new Date(lastUpdateTime)), 5, ++line * LINE_SIZE);
+        }
 
         drawStartOfRevolution(g2, d);
     }
@@ -207,18 +212,13 @@ public class UpDownImage extends JPanel {
     }
 
     private void paintUpDown(Dimension d, EngineReport.UpDown upDown, Graphics g) {
-
         int x1 = translator.timeToScreen(upDown.upTime, d.width, zoomProvider);
         int x2 = translator.timeToScreen(upDown.downTime, d.width, zoomProvider);
 
         int y = (int) (0.2 * d.height);
 
-//        g.setColor(Color.cyan);
-//        g.fillRect(x1, y, x2 - x1, d.height);
-
         g.setColor(Color.lightGray);
         g.fillRect(x1, y, x2 - x1, d.height - y);
-
 
         g.setColor(Color.blue);
         g.drawLine(x1, y, x2, y);
@@ -228,27 +228,29 @@ public class UpDownImage extends JPanel {
         g.setColor(Color.red);
         String durationString = String.format(" %.2fms", upDown.getDuration() / EngineReport.SYS_TICKS_PER_MS);
 
-        g.drawString(durationString, x1, (int) (0.5 * d.height));
+        if (showText) {
+            g.drawString(durationString, x1, (int) (0.5 * d.height));
 
-        String fromAngle = time2rpm.getCrankAngleByTimeString(upDown.upTime);
-        String toAngle = time2rpm.getCrankAngleByTimeString(upDown.downTime);
+            String fromAngle = time2rpm.getCrankAngleByTimeString(upDown.upTime);
+            String toAngle = time2rpm.getCrankAngleByTimeString(upDown.downTime);
 
-        g.setColor(Color.darkGray);
-        if (upDown.upIndex != -1) {
-            g.drawString("" + upDown.upIndex, x1, (int) (0.25 * d.height));
+            g.setColor(Color.darkGray);
+            if (upDown.upIndex != -1) {
+                g.drawString("" + upDown.upIndex, x1, (int) (0.25 * d.height));
 //            System.out.println("digital_event," + upDown.upIndex + "," + fromAngle);
-        }
-        if (upDown.downIndex != -1) {
-            g.drawString("" + upDown.downIndex, x2, (int) (0.25 * d.height));
+            }
+            if (upDown.downIndex != -1) {
+                g.drawString("" + upDown.downIndex, x2, (int) (0.25 * d.height));
 //            System.out.println("digital_event," + upDown.downIndex + "," + toAngle);
+            }
+
+            int offset = 3;
+            g.setColor(Color.black);
+            g.drawString(fromAngle, x1 + offset, (int) (0.75 * d.height));
+
+            g.setColor(Color.green);
+            g.drawString(toAngle, x1 + offset, (int) (1.0 * d.height));
         }
-
-        int offset = 3;
-        g.setColor(Color.black);
-        g.drawString(fromAngle, x1 + offset, (int) (0.75 * d.height));
-
-        g.setColor(Color.green);
-        g.drawString(toAngle, x1 + offset, (int) (1.0 * d.height));
     }
 
     public void setRevolutions(StringBuilder revolutions) {

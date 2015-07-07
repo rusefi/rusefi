@@ -89,6 +89,8 @@ public:
 	float iat;
 	float clt;
 
+	percent_t fuelLevel;
+
 	ThermistorMath iatCurve;
 	ThermistorMath cltCurve;
 
@@ -120,7 +122,7 @@ public:
 
 	float baseTableFuel;
 
-	angle_t injectionAngle;
+	angle_t injectionOffset;
 };
 
 class RpmCalculator;
@@ -177,7 +179,7 @@ public:
 	/**
 	 * this is about 'stopengine' command
 	 */
-	uint64_t stopEngineRequestTimeNt;
+	efitick_t stopEngineRequestTimeNt;
 
 	AccelEnrichmemnt mapAccelEnrichment;
 	AccelEnrichmemnt tpsAccelEnrichment;
@@ -256,6 +258,7 @@ public:
 	bool_t isCylinderCleanupMode;
 
 	/**
+	 * value of 'triggerShape.getLength()'
 	 * pre-calculating this value is a performance optimization
 	 */
 	int engineCycleEventCount;

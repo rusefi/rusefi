@@ -8,22 +8,21 @@
 #ifndef TRIGGER_STRUCTURE_H_
 #define TRIGGER_STRUCTURE_H_
 
-#include "global.h"
+#include "main.h"
 
 #include "rusefi_enums.h"
 #include "EfiWave.h"
 #include "engine_configuration.h"
 
-class TriggerShape;
-
 #define TRIGGER_CHANNEL_COUNT 3
 
 class trigger_shape_helper {
-	pin_state_t pinStates[TRIGGER_CHANNEL_COUNT][PWM_PHASE_MAX_COUNT];
 public:
 	trigger_shape_helper();
 
 	single_wave_s waves[TRIGGER_CHANNEL_COUNT];
+private:
+	pin_state_t pinStates[TRIGGER_CHANNEL_COUNT][PWM_PHASE_MAX_COUNT];
 };
 
 class Engine;
@@ -31,6 +30,8 @@ class Engine;
 class TriggerShape {
 public:
 	TriggerShape();
+	void initializeTriggerShape(Logging *logger DECLARE_ENGINE_PARAMETER_S);
+
 	bool_t isSynchronizationNeeded;
 	bool_t needSecondTriggerInput;
 
@@ -67,6 +68,10 @@ public:
 	 * This is used for signal validation
 	 */
 	uint32_t expectedEventCount[PWM_PHASE_MAX_WAVE_PER_PWM];
+
+#if EFI_UNIT_TEST
+	int events[PWM_PHASE_MAX_COUNT];
+#endif
 
 	multi_wave_s wave;
 
@@ -112,10 +117,7 @@ public:
 
 	int getTriggerShapeSynchPointIndex();
 
-	void calculateTriggerSynchPoint(DECLARE_ENGINE_PARAMETER_F);
-
 private:
-
 	trigger_shape_helper h;
 
 	/**
@@ -145,8 +147,15 @@ private:
 	float getAngle(int phaseIndex) const;
 
 	int getCycleDuration() const;
+	void calculateTriggerSynchPoint(DECLARE_ENGINE_PARAMETER_F);
 };
 
+void setVwConfiguration(TriggerShape *s);
+
 void setToothedWheelConfiguration(TriggerShape *s, int total, int skipped, operation_mode_e operationMode);
+void configureHondaAccordCD(TriggerShape *s, bool withOneEventSignal, bool withFourEventSignal,
+		trigger_wheel_e const oneEventWave,
+		trigger_wheel_e const fourEventWave,
+		float d);
 
 #endif /* TRIGGER_STRUCTURE_H_ */

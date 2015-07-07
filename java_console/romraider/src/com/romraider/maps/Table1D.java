@@ -25,13 +25,12 @@ import javax.swing.JLabel;
 
 import com.romraider.Settings;
 
-public class Table1D extends Table {
+public class Table1D extends TableWithData {
+    public static final String TYPE_1D = "1D";
+    public static final String TYPE_X_AXIS = "X Axis";
+    public static final String TYPE_Y_AXIS = "Y Axis";
     private static final long serialVersionUID = -8747180767803835631L;
     private Table axisParent = null;
-
-    public Table1D() {
-        super();
-    }
 
     public void setAxisParent(Table axisParent) {
         this.axisParent = axisParent;
@@ -52,7 +51,7 @@ public class Table1D extends Table {
     }
 
     @Override
-    public void populateTable(byte[] input, int romRamOffset) throws ArrayIndexOutOfBoundsException, IndexOutOfBoundsException  {
+    public void populateTable(byte[] input, int romRamOffset)  {
         centerLayout.setRows(1);
         centerLayout.setColumns(this.getDataSize());
 
@@ -101,8 +100,9 @@ public class Table1D extends Table {
                     selectCellAt(highlightY + 1);
                 }
             } else if (getAxisParent().getType() == Settings.TABLE_2D) {
+                Table2D axisParent = (Table2D) getAxisParent();
                 if (data[highlightY].isSelected()) {
-                    getAxisParent().selectCellAt(highlightY);
+                    axisParent.selectCellAt(highlightY);
                 }
             }
         } else if (type == Settings.TABLE_X_AXIS && data[highlightY].isSelected()) {
@@ -240,7 +240,7 @@ public class Table1D extends Table {
 
     @Override
     public boolean equals(Object other) {
-        try {
+    //    try {
             if(null == other) {
                 return false;
             }
@@ -277,10 +277,10 @@ public class Table1D extends Table {
             }
 
             return true;
-        } catch(Exception ex) {
-            // TODO: Log Exception.
-            return false;
-        }
+//        } catch(Exception ex) {
+//            // TODO: Log Exception.
+//            return false;
+//        }
     }
 
     boolean ec = false;

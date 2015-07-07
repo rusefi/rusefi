@@ -1,6 +1,7 @@
 package com.rusefi.file;
 
 import com.rusefi.core.EngineState;
+import com.rusefi.io.LinkManager;
 
 import java.io.*;
 import java.util.List;
@@ -22,7 +23,7 @@ public class FileUtils {
             String line;
             while ((line = reader.readLine()) != null) {
                 String packed = EngineState.packString(line);
-                engineState.processNewData(packed + "\r\n");
+                engineState.processNewData(packed + "\r\n", LinkManager.ENCODER);
             }
         } catch (IOException e) {
             throw new IllegalStateException(e);

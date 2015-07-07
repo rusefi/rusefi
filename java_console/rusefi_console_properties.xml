@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="1.7.0_51" class="java.beans.XMLDecoder">
+ <object class="java.util.HashMap">
+  <void method="put">
+   <string>root</string>
+   <object class="com.rusefi.ui.storage.Node">
+    <void property="config">
+     <void method="put">
+      <string>port</string>
+      <string>29001</string>
+     </void>
+     <void method="put">
+      <string>main_tab</string>
+      <string>1</string>
+     </void>
+     <void method="put">
+      <string>recent_commands</string>
+      <string>help|showconfig|stopengine|analoginfo|triggerinfo|tsinfo|writeconfig|rewriteconfig|enable injection|disable injection|enable ignition|disable ignition|enable self_stimulation|disable self_stimulation|set_idle_position 50|sparkbench 5 400 2|fuelbench 5 400 2|idleinfo|altinfo|accelinfo|fuelinfo|tempinfo|hipinfo|sdinfo|fsioinfo|pins|set_engine_type 4</string>
+     </void>
+     <void method="put">
+      <string>digital_sniffer</string>
+      <object class="com.rusefi.ui.storage.Node">
+       <void property="config">
+        <void method="put">
+         <string>last_value</string>
+         <string>set_engine_type 4</string>
+        </void>
+       </void>
+       <void property="prefix">
+        <string>digital_sniffer</string>
+       </void>
+      </object>
+     </void>
+     <void method="put">
+      <string>gauges</string>
+      <object class="com.rusefi.ui.storage.Node">
+       <void property="config">
+        <void method="put">
+         <string>gauges_rows</string>
+         <string>2</string>
+        </void>
+        <void method="put">
+         <string>show_rpm</string>
+         <string>true</string>
+        </void>
+        <void method="put">
+         <string>show_messages</string>
+         <string>true</string>
+        </void>
+        <void method="put">
+         <string>gauges_cols</string>
+         <string>4</string>
+        </void>
+        <void method="put">
+         <string>SPLIT_LOCATION</string>
+         <string>790</string>
+        </void>
+       </void>
+       <void property="prefix">
+        <string>gauges</string>
+       </void>
+      </object>
+     </void>
+     <void method="put">
+      <string>messages</string>
+      <object class="com.rusefi.ui.storage.Node">
+       <void property="config">
+        <void method="put">
+         <string>last_value</string>
+         <string>set_engine_type 4</string>
+        </void>
+        <void method="put">
+         <string>font_name</string>
+         <string>Dialog</string>
+        </void>
+        <void method="put">
+         <string>font_size</string>
+         <string>12</string>
+        </void>
+       </void>
+       <void property="prefix">
+        <string>messages</string>
+       </void>
+      </object>
+     </void>
+     <void method="put">
+      <string>version</string>
+      <string>20150703</string>
+     </void>
+    </void>
+    <void property="prefix">
+     <string>root</string>
+    </void>
+   </object>
+  </void>
+ </object>
+</java>

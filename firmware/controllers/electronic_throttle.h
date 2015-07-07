@@ -9,5 +9,6 @@
 #define ELECTRONIC_THROTTLE_H_
 
 void initElectronicThrottle(void);
+void setDefaultEtbParameters(void);
 
 #endif /* ELECTRONIC_THROTTLE_H_ */

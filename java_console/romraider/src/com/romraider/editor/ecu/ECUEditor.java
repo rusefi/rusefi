@@ -170,6 +170,10 @@ public class ECUEditor {
 //        frame.toFront();
     }
 
+    public static void openImage(byte[] fileContent) throws IOException, SAXException, RomNotFoundException, XMLParseException, NameNotFoundException {
+        openImage(fileContent, SettingsManager.getSettings().getEcuDefinitionFiles().elementAt(0), "rusEfi");
+    }
+
     public JPanel getContent() {
         return content;
     }

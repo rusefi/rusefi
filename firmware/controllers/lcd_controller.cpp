@@ -22,6 +22,7 @@
 #include "memstreams.h"
 #include "settings.h"
 #include "injector_central.h"
+#include "engine_controller.h"
 
 #if EFI_HD44780_LCD || defined(__DOXYGEN__)
 
@@ -31,6 +32,8 @@ EXTERN_ENGINE
 static MenuItem ROOT(NULL, NULL);
 
 static MenuTree tree(&ROOT);
+
+extern float knockVolts; // todo: nicer getter
 
 static MenuItem miRpm(tree.root, LL_RPM);
 static MenuItem miSensors(tree.root, "sensors");
@@ -49,6 +52,7 @@ static MenuItem miAfr(&miSensors, LL_AFR);
 static MenuItem miBaro(&miSensors, LL_BARO);
 static MenuItem miMapV(&miSensors, LL_MAF_V);
 static MenuItem miMapKgHr(&miSensors, LL_MAF_KG_HR);
+static MenuItem miKnock(&miSensors, LL_KNOCK);
 
 static MenuItem miStopEngine(&miBench, "stop engine", stopEngine);
 static MenuItem miTestFan(&miBench, "test fan", fanBench);
@@ -189,6 +193,7 @@ static void lcdPrintf(const char *fmt, ...) {
 }
 
 static void showLine(lcd_line_e line, int screenY) {
+	static char buffer[10];
 
 	switch (line) {
 	case LL_VERSION:
@@ -225,11 +230,18 @@ static void showLine(lcd_line_e line, int screenY) {
 		lcdPrintf(getIgnition_mode_e(engineConfiguration->ignitionMode));
 		return;
 	case LL_TPS:
-		lcdPrintf("Throttle %f%%", getTPS());
+		getPinNameByAdcChannel(engineConfiguration->tpsAdcChannel, buffer);
+
+		lcdPrintf("Throttle %s %f%%", buffer, getTPS());
 		return;
 	case LL_VBATT:
 		lcdPrintf("Battery %fv", getVBatt(PASS_ENGINE_PARAMETER_F));
 		return;
+	case LL_KNOCK:
+		getPinNameByAdcChannel(engineConfiguration->hipOutputChannel, buffer);
+		lcdPrintf("Knock %s %fv", buffer, knockVolts);
+		return;
+
 #if	EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
 	case LL_BARO:
 		if (hasBaroSensor()) {

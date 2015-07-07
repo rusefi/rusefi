@@ -2,10 +2,8 @@ package com.rusefi.io.tcp;
 
 import com.rusefi.FileLog;
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.core.EngineState;
 import com.rusefi.core.ResponseBuffer;
 import com.rusefi.io.*;
-import com.rusefi.io.serial.SerialIoStream;
 
 import java.io.*;
 import java.net.Socket;
@@ -72,14 +70,6 @@ public class TcpConnector implements LinkConnector {
         }
     }
 
-    public static int parseIntWithReason(String number, String reason) {
-        try {
-            return Integer.parseInt(number);
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Unexpected [" + number + "] for " + reason, e);
-        }
-    }
-
     /**
      * this implementation is blocking
      * @param listener
@@ -100,21 +90,21 @@ public class TcpConnector implements LinkConnector {
         final ResponseBuffer rb = new ResponseBuffer(new ResponseBuffer.ResponseListener() {
             @Override
             public void onResponse(String line) {
-                LinkManager.engineState.processNewData(line + "\r\n");
+                LinkManager.engineState.processNewData(line + "\r\n", LinkManager.ENCODER);
             }
         });
 
         DataListener listener1 = new DataListener() {
             @Override
             public void onDataArrived(byte[] freshData) {
-                rb.append(new String(freshData));
+                rb.append(new String(freshData), LinkManager.ENCODER);
             }
         };
-//        ioStream.addEventListener(listener1);
+//        ioStream.setDataListener(listener1);
 
         bp = new BinaryProtocol(FileLog.LOGGER, new TcpIoStream(os, stream));
 
-        boolean result = bp.connect(listener1);
+        boolean result = bp.connectAndReadConfiguration(listener1);
         if (result) {
             listener.onConnectionEstablished();
         } else {
@@ -139,8 +129,8 @@ public class TcpConnector implements LinkConnector {
     }
 
     @Override
-    public void send(String command) throws InterruptedException {
-        bp.doSend(command);
+    public void send(String command, boolean fireEvent) throws InterruptedException {
+        bp.doSend(command, fireEvent);
 //        String command = LinkManager.encodeCommand(text);
 //        FileLog.MAIN.logLine("Writing " + command);
 //        try {

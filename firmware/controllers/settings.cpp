@@ -25,6 +25,7 @@
 #include "alternatorController.h"
 
 #if EFI_PROD_CODE || defined(__DOXYGEN__)
+#include "rtc_helper.h"
 #include "rusefi.h"
 #include "pin_repository.h"
 #include "hardware.h"
@@ -182,8 +183,7 @@ const char* getConfigurationName(engine_type_e engineType) {
 	case MAZDA_626:
 		return "Mazda626";
 	default:
-		firmwareError("Unexpected: engineType %d", engineType);
-		return NULL;
+		return "UnknownType";
 	}
 }
 
@@ -192,11 +192,10 @@ const char* getConfigurationName(engine_type_e engineType) {
  */
 void printConfiguration(engine_configuration_s *engineConfiguration) {
 
-	scheduleMsg(&logger, "Template %s/%d trigger %s/%s", getConfigurationName(engineConfiguration->engineType),
+	scheduleMsg(&logger, "Template %s/%d trigger %s/%s/%d", getConfigurationName(engineConfiguration->engineType),
 			engineConfiguration->engineType, getTrigger_type_e(engineConfiguration->trigger.type),
-			getEngine_load_mode_e(engineConfiguration->algorithm));
+			getEngine_load_mode_e(engineConfiguration->algorithm), engineConfiguration->algorithm);
 
-	scheduleMsg(&logger, "templog %x", engineConfiguration->algorithm);
 
 	scheduleMsg(&logger, "configurationVersion=%d", getGlobalConfigurationVersion());
 
@@ -208,34 +207,27 @@ void printConfiguration(engine_configuration_s *engineConfiguration) {
 //		print("\r\n");
 	}
 
-	printFloatArray("RPM bin: ", config->fuelRpmBins, FUEL_RPM_COUNT);
-
-	printFloatArray("Y bin: ", config->fuelLoadBins, FUEL_LOAD_COUNT);
-
-	printFloatArray("CLT: ", config->cltFuelCorr, CLT_CURVE_SIZE);
-	printFloatArray("CLT bins: ", config->cltFuelCorrBins, CLT_CURVE_SIZE);
-
-	printFloatArray("IAT: ", config->iatFuelCorr, IAT_CURVE_SIZE);
-	printFloatArray("IAT bins: ", config->iatFuelCorrBins, IAT_CURVE_SIZE);
-
-	printFloatArray("vBatt: ", engineConfiguration->injector.battLagCorr, VBAT_INJECTOR_CURVE_SIZE);
-	printFloatArray("vBatt bins: ", engineConfiguration->injector.battLagCorrBins, VBAT_INJECTOR_CURVE_SIZE);
-
-//	appendMsgPrefix(&logger);
+//	printFloatArray("RPM bin: ", config->fuelRpmBins, FUEL_RPM_COUNT);
+//
+//	printFloatArray("Y bin: ", config->fuelLoadBins, FUEL_LOAD_COUNT);
+//
+//	printFloatArray("CLT: ", config->cltFuelCorr, CLT_CURVE_SIZE);
+//	printFloatArray("CLT bins: ", config->cltFuelCorrBins, CLT_CURVE_SIZE);
+//
+//	printFloatArray("IAT: ", config->iatFuelCorr, IAT_CURVE_SIZE);
+//	printFloatArray("IAT bins: ", config->iatFuelCorrBins, IAT_CURVE_SIZE);
+//
+//	printFloatArray("vBatt: ", engineConfiguration->injector.battLagCorr, VBAT_INJECTOR_CURVE_SIZE);
+//	printFloatArray("vBatt bins: ", engineConfiguration->injector.battLagCorrBins, VBAT_INJECTOR_CURVE_SIZE);
 
 	scheduleMsg(&logger, "rpmHardLimit: %d/operationMode=%d", engineConfiguration->rpmHardLimit,
 			engineConfiguration->operationMode);
 
-	scheduleMsg(&logger, "tpsMin: %d/tpsMax: %d", engineConfiguration->tpsMin, engineConfiguration->tpsMax);
-
-	scheduleMsg(&logger, "ignitionMode: %s/enabled=%s", getIgnition_mode_e(engineConfiguration->ignitionMode),
-			boolToString(engineConfiguration->isIgnitionEnabled));
 	scheduleMsg(&logger, "globalTriggerAngleOffset=%f", engineConfiguration->globalTriggerAngleOffset);
-	scheduleMsg(&logger, "timingMode: %d", /*getTiming_mode_etodo*/(engineConfiguration->timingMode));
-	scheduleMsg(&logger, "fixedModeTiming: %d", (int) engineConfiguration->fixedModeTiming);
-	scheduleMsg(&logger, "ignitionOffset=%f", engineConfiguration->ignitionBaseAngle);
-	scheduleMsg(&logger, "injection %s offset=%f/enabled=%s", getInjection_mode_e(engineConfiguration->injectionMode),
-			(double) engineConfiguration->injectionAngle, boolToString(engineConfiguration->isInjectionEnabled));
+
+	scheduleMsg(&logger, "=== cranking ===");
+	scheduleMsg(&logger, "crankingRpm: %d", engineConfiguration->cranking.rpm);
+	scheduleMsg(&logger, "cranking injection %s", getInjection_mode_e(engineConfiguration->crankingInjectionMode));
 
 	if (engineConfiguration->useConstantDwellDuringCranking) {
 		scheduleMsg(&logger, "ignitionDwellForCrankingMs=%f", engineConfiguration->ignitionDwellForCrankingMs);
@@ -244,11 +236,19 @@ void printConfiguration(engine_configuration_s *engineConfiguration) {
 				engineConfiguration->crankingTimingAngle);
 	}
 
-//	scheduleMsg(&logger, "analogChartMode: %d", engineConfiguration->analogChartMode);
+	scheduleMsg(&logger, "=== ignition ===");
 
-	scheduleMsg(&logger, "crankingRpm: %d", engineConfiguration->cranking.rpm);
+	scheduleMsg(&logger, "ignitionMode: %s/enabled=%s", getIgnition_mode_e(engineConfiguration->ignitionMode),
+			boolToString(engineConfiguration->isIgnitionEnabled));
+	scheduleMsg(&logger, "timingMode: %s", getTiming_mode_e(engineConfiguration->timingMode));
+	if (engineConfiguration->timingMode == TM_FIXED) {
+		scheduleMsg(&logger, "fixedModeTiming: %d", (int) engineConfiguration->fixedModeTiming);
+	}
+	scheduleMsg(&logger, "ignitionOffset=%f", engineConfiguration->ignitionOffset);
 
-	scheduleMsg(&logger, "analogInputDividerCoefficient: %f", engineConfiguration->analogInputDividerCoefficient);
+	scheduleMsg(&logger, "=== injection ===");
+	scheduleMsg(&logger, "injection %s offset=%f/enabled=%s", getInjection_mode_e(engineConfiguration->injectionMode),
+			(double) engineConfiguration->injectionOffset, boolToString(engineConfiguration->isInjectionEnabled));
 
 	printOutputs(engineConfiguration);
 
@@ -336,13 +336,13 @@ static void setIdlePinMode(int value) {
 }
 
 static void setInjectionOffset(float value) {
-	engineConfiguration->injectionAngle = value;
+	engineConfiguration->injectionOffset = value;
 	doPrintConfiguration(engine);
 	incrementGlobalConfigurationVersion();
 }
 
 static void setIgnitionOffset(float value) {
-	engineConfiguration->ignitionBaseAngle = value;
+	engineConfiguration->ignitionOffset = value;
 	doPrintConfiguration(engine);
 	incrementGlobalConfigurationVersion();
 }
@@ -390,27 +390,6 @@ static void printThermistor(const char *msg, ThermistorConf *config, ThermistorM
 			curve->s_h_a, curve->s_h_b, curve->s_h_c);
 	scheduleMsg(&logger, "==============================");
 }
-
-#if EFI_PROD_CODE || defined(__DOXYGEN__)
-static void printMAPInfo(void) {
-#if EFI_ANALOG_SENSORS || defined(__DOXYGEN__)
-	scheduleMsg(&logger, "map type=%d/%s raw=%f MAP=%f", engineConfiguration->map.sensor.type,
-			getAir_pressure_sensor_type_e(engineConfiguration->map.sensor.type),
-
-			getRawMap(), getMap());
-	if (engineConfiguration->map.sensor.type == MT_CUSTOM) {
-		scheduleMsg(&logger, "at0=%f at5=%f", engineConfiguration->map.sensor.valueAt0,
-				engineConfiguration->map.sensor.valueAt5);
-	}
-
-	scheduleMsg(&logger, "baro type=%d value=%f", engineConfiguration->baroSensor.type, getBaroPressure());
-	if (engineConfiguration->baroSensor.type == MT_CUSTOM) {
-		scheduleMsg(&logger, "min=%f max=%f", engineConfiguration->baroSensor.valueAt0,
-				engineConfiguration->baroSensor.valueAt5);
-	}
-#endif /* EFI_ANALOG_SENSORS */
-}
-#endif /* EFI_PROD_CODE */
 
 static void printTPSInfo(void) {
 #if (EFI_PROD_CODE && HAL_USE_ADC) || defined(__DOXYGEN__)
@@ -935,7 +914,6 @@ static void printAllInfo(void) {
 	scheduleMsg(&logger, "waveChartUsedSize=%d", waveChartUsedSize);
 #endif
 #if EFI_PROD_CODE
-	printMAPInfo();
 	scheduleMsg(&logger, "console mode jumper: %s", boolToString(!GET_CONSOLE_MODE_VALUE()));
 	scheduleMsg(&logger, "board test mode jumper: %s", boolToString(GET_BOARD_TEST_MODE_VALUE()));
 #endif
@@ -945,13 +923,25 @@ static void setInjectorLag(float value) {
 	engineConfiguration->injector.lag = value;
 }
 
+static void getValue(const char *paramStr) {
+	if (strEqualCaseInsensitive(paramStr, "todo")) {
+		scheduleMsg(&logger, "something");
+	}
+
+#if EFI_RTC || defined(__DOXYGEN__)
+	else if (strEqualCaseInsensitive(paramStr, "date")) {
+		printDateTime();
+	}
+#endif
+}
+
 static void setValue(const char *paramStr, const char *valueStr) {
 	float valueF = atoff(valueStr);
 	int valueI = atoi(valueStr);
 
 	if (strEqualCaseInsensitive(paramStr, "vsscoeff")) {
 		engineConfiguration->vehicleSpeedCoef = valueF;
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || defined(__DOXYGEN__)
 	} else if (strEqualCaseInsensitive(paramStr, "alt_t")) {
 		if (valueI > 10) {
 			engineConfiguration->alternatorDT = valueI;
@@ -968,6 +958,10 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		engineConfiguration->step1timing = valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "targetvbatt")) {
 		engineConfiguration->targetVBatt = valueF;
+#if EFI_RTC || defined(__DOXYGEN__)
+	} else if (strEqualCaseInsensitive(paramStr, "date")) {
+		setDateTime(valueStr);
+#endif
 	}
 }
 
@@ -1060,8 +1054,8 @@ void initSettings(engine_configuration_s *engineConfiguration) {
 	addConsoleActionS("set_main_relay_pin", setMainRelayPin);
 
 	addConsoleActionSS("set", setValue);
+	addConsoleActionS("get", getValue);
 
-	addConsoleAction("mapinfo", printMAPInfo);
 #if HAL_USE_ADC || defined(__DOXYGEN__)
 	addConsoleActionSS("set_analog_input_pin", setAnalogInputPin);
 #endif

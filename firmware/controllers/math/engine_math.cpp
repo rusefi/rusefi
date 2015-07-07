@@ -164,8 +164,8 @@ void FuelSchedule::addFuelEvents(injection_mode_e mode DECLARE_ENGINE_PARAMETER_
 	 * injection phase is scheduled by injection end, so we need to step the angle back
 	 * for the duration of the injection
 	 */
-	float baseAngle = ENGINE(engineState.injectionAngle)
-			+ CONFIG(injectionAngle) - MS2US(ENGINE(fuelMs)) / ENGINE(rpmCalculator.oneDegreeUs);
+	float baseAngle = ENGINE(engineState.injectionOffset)
+			+ CONFIG(injectionOffset) - MS2US(ENGINE(fuelMs)) / ENGINE(rpmCalculator.oneDegreeUs);
 
 	switch (mode) {
 	case IM_SEQUENTIAL:
@@ -270,7 +270,7 @@ void findTriggerPosition(event_trigger_position_s *position, angle_t angleOffset
 	int index = TRIGGER_SHAPE(triggerIndexByAngle[(int)angleOffset]);
 	angle_t eventAngle = TRIGGER_SHAPE(eventAngles[index]);
 	if (angleOffset < eventAngle) {
-		warning(OBD_PCM_Processor_Fault, "angle constraint violation in registerActuatorEventExt(): %f/%f", angleOffset, eventAngle);
+		warning(OBD_PCM_Processor_Fault, "angle constraint violation in findTriggerPosition(): %f/%f", angleOffset, eventAngle);
 		return;
 	}
 
@@ -357,9 +357,6 @@ static NamedOutputPin * getIgnitionPinForIndex(int i DECLARE_ENGINE_PARAMETER_S
 void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_F) {
 
 	engine_configuration2_s *engineConfiguration2 = engine->engineConfiguration2;
-
-	// todo: move this reset into decoder
-	engine->triggerShape.calculateTriggerSynchPoint(PASS_ENGINE_PARAMETER_F);
 
 	for (int i = 0; i < CONFIG(specs.cylindersCount); i++) {
 		ENGINE(angleExtra[i])= (float) CONFIG(engineCycle) * i / CONFIG(specs.cylindersCount);

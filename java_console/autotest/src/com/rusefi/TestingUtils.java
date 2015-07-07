@@ -6,6 +6,7 @@ import com.rusefi.waves.EngineChart;
 import com.rusefi.waves.EngineReport;
 import com.rusefi.waves.RevolutionLog;
 import com.rusefi.waves.EngineChartParser;
+import sun.misc.IOUtils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -110,7 +111,7 @@ public class TestingUtils {
     }
 
     static String getNextWaveChart() {
-        IoUtil.sendCommand("reset_wave_chart");
+        IoUtil.sendCommand(IoUtil.RESET_ENGINE_CHART);
         String result = getEngineChart();
         FileLog.MAIN.logLine("current chart: " + result);
         return result;

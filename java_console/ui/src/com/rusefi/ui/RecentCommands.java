@@ -1,12 +1,19 @@
 package com.rusefi.ui;
 
+import com.rusefi.AverageAngles;
+import com.rusefi.AverageAnglesUtil;
+import com.rusefi.FileLog;
+import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.CommandQueue;
+import com.rusefi.io.LinkManager;
 import com.rusefi.ui.util.UiUtils;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -33,7 +40,9 @@ public class RecentCommands {
     private static final String FUELINFO = "fuelinfo";
     private static final String TEMPINFO = "tempinfo";
     private static final String HIPINFO = "hipinfo";
+    private static final String SDINFO = "sdinfo";
     private static final String FSIOINFO = "fsioinfo";
+    private static final String PINS = "pins";
 
     private final static Map<String, Icon> COMMAND_ICONS = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
@@ -51,7 +60,9 @@ public class RecentCommands {
         COMMAND_ICONS.put(FUELINFO, infoIcon);
         COMMAND_ICONS.put(TEMPINFO, infoIcon);
         COMMAND_ICONS.put(HIPINFO, infoIcon);
+        COMMAND_ICONS.put(SDINFO, infoIcon);
         COMMAND_ICONS.put(FSIOINFO, infoIcon);
+        COMMAND_ICONS.put(PINS, infoIcon);
     }
 
     private final JPanel content = new JPanel(new GridLayout(NUMBER_OF_COMMANDS + 1, 1));
@@ -117,7 +128,9 @@ public class RecentCommands {
         add(FUELINFO);
         add(TEMPINFO);
         add(HIPINFO);
+        add(SDINFO);
         add(FSIOINFO);
+        add(PINS);
     }
 
     public void add(String command) {
@@ -129,6 +142,10 @@ public class RecentCommands {
             @Override
             public void run() {
                 content.removeAll();
+
+                if (LinkManager.isLogViewer())
+                    content.add(                            createButton()                    );
+
                 JButton reset = new JButton(UiUtils.loadIcon("undo.jpg"));
                 reset.setContentAreaFilled(false);
                 reset.setFocusPainted(false);
@@ -236,5 +253,27 @@ public class RecentCommands {
         if (index >= elements.size())
             return elements.get(0).command;
         return elements.get(elements.size() - 1 - index).command;
+    }
+
+
+    public static JButton createButton() {
+        JButton button = new JButton("Read trigger log");
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                JFileChooser fc = UiUtils.getFileChooser(new FileNameExtensionFilter("CSV files", "csv"));
+                if (fc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+                    String fileName = fc.getSelectedFile().getAbsolutePath();
+                    String report;
+                    try {
+                        report = AverageAnglesUtil.runUtil(fileName, FileLog.LOGGER);
+                    } catch (IOException e) {
+                        throw new IllegalStateException(e);
+                    }
+                    MessagesCentral.getInstance().postMessage(AverageAnglesUtil.class, report);
+                }
+            }
+        });
+        return button;
     }
 }

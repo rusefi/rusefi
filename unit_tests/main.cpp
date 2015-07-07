@@ -26,29 +26,25 @@
 #include "test_idle_controller.h"
 
 #include "test_signal_executor.h"
-
+#include "trigger_central.h"
 #include "test_util.h"
-
-extern "C"
-{
 #include "map_resize.h"
 #include "test_event_registry.h"
-}
-
 #include "engine_math.h"
 #include "test_engine_math.h"
 #include "test_trigger_decoder.h"
 
 static engine_configuration_s ec;
 engine_configuration_s *engineConfiguration = &ec;
+extern bool printTriggerDebug;
 
 int timeNow = 0;
 
-uint64_t getTimeNowUs(void) {
+efitimeus_t getTimeNowUs(void) {
 	return timeNow;
 }
 
-uint64_t getTimeNowNt(void) {
+efitick_t getTimeNowNt(void) {
 	return getTimeNowUs() * US_TO_NT_MULTIPLIER;
 }
 
@@ -151,6 +147,7 @@ int main(void) {
 
 	//	resizeMap();
 	printf("Success 20150407\r\n");
+	printAllTriggers();
 	return EXIT_SUCCESS;
 }
 

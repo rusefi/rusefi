@@ -1,6 +1,7 @@
 package com.rusefi.core.test;
 
 import com.rusefi.core.ResponseBuffer;
+import com.rusefi.io.LinkDecoder;
 import org.junit.Test;
 
 import java.util.concurrent.atomic.AtomicReference;
@@ -22,15 +23,15 @@ public class ResponseBufferTest {
                 currentReference.set(response);
             }
         });
-        rb.append("\r");
+        rb.append("\r", LinkDecoder.VOID);
         assertNull(currentReference.get());
-        rb.append("\n");
+        rb.append("\n", LinkDecoder.VOID);
         assertNull(currentReference.get());
 
-        rb.append("hi\n");
+        rb.append("hi\n", LinkDecoder.VOID);
         assertEquals("hi", currentReference.get());
 
-        rb.append("\r\n\r\n\r\nhi2\n\n\n");
+        rb.append("\r\n\r\n\r\nhi2\n\n\n", LinkDecoder.VOID);
         assertEquals("hi2", currentReference.get());
     }
 }
